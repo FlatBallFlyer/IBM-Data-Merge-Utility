@@ -16,7 +16,6 @@
 	<script type="text/javascript" charset="utf-8" src="/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js"></script>
 	<script type="text/javascript" charset="utf-8" src="/Editor/js/dataTables.editor.min.js"></script>
 	
-	<link rel="stylesheet" type="text/css" href="css/toolkit.css"/>
 	<script type="text/javascript" charset="utf-8" src="js/table.collection.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/table.template.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/table.directive.js"></script>	
