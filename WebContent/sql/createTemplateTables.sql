@@ -5,20 +5,20 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema tk
+-- Schema MergeTool
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema tk
+-- Schema MergeTool
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `tk` DEFAULT CHARACTER SET utf8 ;
-USE `tk` ;
+CREATE SCHEMA IF NOT EXISTS `MergeTool` DEFAULT CHARACTER SET utf8 ;
+USE `MergeTool` ;
 
 
 -- -----------------------------------------------------
--- Table `tk`.`codesDtype`
+-- Table `MergeTool`.`codesDtype`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tk`.`codesDtype` (
+CREATE TABLE IF NOT EXISTS `MergeTool`.`codesDtype` (
   `code` INT(11) NOT NULL AUTO_INCREMENT,
   `meaning` VARCHAR(45) NULL DEFAULT '',
   PRIMARY KEY (`code`))
@@ -29,9 +29,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `tk`.`codesTtype`
+-- Table `MergeTool`.`codesTtype`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tk`.`codesTtype` (
+CREATE TABLE IF NOT EXISTS `MergeTool`.`codesTtype` (
   `code` INT(11) NOT NULL AUTO_INCREMENT,
   `meaning` VARCHAR(45) NULL DEFAULT ' ',
   PRIMARY KEY (`code`))
@@ -41,9 +41,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `tk`.`collection`
+-- Table `MergeTool`.`collection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tk`.`collection` (
+CREATE TABLE IF NOT EXISTS `MergeTool`.`collection` (
   `idcollection` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL DEFAULT '',
   `tableName` VARCHAR(45) NULL DEFAULT '',
@@ -58,9 +58,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `tk`.`template`
+-- Table `MergeTool`.`template`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tk`.`template` (
+CREATE TABLE IF NOT EXISTS `MergeTool`.`template` (
   `idtemplate` INT(11) NOT NULL AUTO_INCREMENT,
   `idcollection` INT(11) NOT NULL,
   `columnValue` VARCHAR(45) NULL DEFAULT '',
@@ -74,11 +74,11 @@ CREATE TABLE IF NOT EXISTS `tk`.`template` (
   INDEX `fk_template_codeGroup1_idx` (`idcollection` ASC),
   CONSTRAINT `fk_template_codeGroup1`
     FOREIGN KEY (`idcollection`)
-    REFERENCES `tk`.`collection` (`idcollection`)
+    REFERENCES `MergeTool`.`collection` (`idcollection`)
     ON UPDATE CASCADE,
   CONSTRAINT `fk_template_codeType1`
     FOREIGN KEY (`type`)
-    REFERENCES `tk`.`codesTtype` (`code`)
+    REFERENCES `MergeTool`.`codesTtype` (`code`)
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 14
@@ -86,9 +86,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `tk`.`directive`
+-- Table `MergeTool`.`directive`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tk`.`directive` (
+CREATE TABLE IF NOT EXISTS `MergeTool`.`directive` (
   `iddirective` INT(11) NOT NULL AUTO_INCREMENT,
   `idtemplate` INT(11) NOT NULL,
   `idcollection` INT(11) NOT NULL,
@@ -107,15 +107,15 @@ CREATE TABLE IF NOT EXISTS `tk`.`directive` (
   INDEX `fk_sqlDirective_template1` (`idtemplate` ASC),
   CONSTRAINT `fk_directive_codeDirective1`
     FOREIGN KEY (`type`)
-    REFERENCES `tk`.`codesDtype` (`code`)
+    REFERENCES `MergeTool`.`codesDtype` (`code`)
     ON UPDATE CASCADE,
   CONSTRAINT `fk_directive_collection1`
     FOREIGN KEY (`idcollection`)
-    REFERENCES `tk`.`collection` (`idcollection`)
+    REFERENCES `MergeTool`.`collection` (`idcollection`)
     ON UPDATE CASCADE,
   CONSTRAINT `fk_sqlDirective_template1`
     FOREIGN KEY (`idtemplate`)
-    REFERENCES `tk`.`template` (`idtemplate`)
+    REFERENCES `MergeTool`.`template` (`idtemplate`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -125,9 +125,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `tk`.`report`
+-- Table `MergeTool`.`report`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tk`.`report` (
+CREATE TABLE IF NOT EXISTS `MergeTool`.`report` (
   `idreport` INT(11) NOT NULL AUTO_INCREMENT,
   `idtemplate` INT(11) NOT NULL,
   `outputRoot` VARCHAR(255) NOT NULL DEFAULT '',
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `tk`.`report` (
   INDEX `fk_report_template1_idx` (`idtemplate` ASC),
   CONSTRAINT `fk_report_template1`
     FOREIGN KEY (`idtemplate`)
-    REFERENCES `tk`.`template` (`idtemplate`)
+    REFERENCES `MergeTool`.`template` (`idtemplate`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -144,9 +144,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `tk`.`reportReplace`
+-- Table `MergeTool`.`reportReplace`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tk`.`reportReplace` (
+CREATE TABLE IF NOT EXISTS `MergeTool`.`reportReplace` (
   `idreportReplace` INT NOT NULL AUTO_INCREMENT,
   `idreport` INT(11) NOT NULL,
   `fromValue` VARCHAR(255) NOT NULL DEFAULT '',
@@ -155,63 +155,63 @@ CREATE TABLE IF NOT EXISTS `tk`.`reportReplace` (
   UNIQUE INDEX `UnqueFrom` (`idreport` ASC, `fromValue` ASC),
   CONSTRAINT `fk_reportReplace_report1`
     FOREIGN KEY (`idreport`)
-    REFERENCES `tk`.`report` (`idreport`)
+    REFERENCES `MergeTool`.`report` (`idreport`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-USE `tk` ;
+USE `MergeTool` ;
 -- -----------------------------------------------------
--- View `tk`.`directivefull`
+-- View `MergeTool`.`directivefull`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tk`.`directivefull`;
-USE `tk`;
-CREATE VIEW `tk`.`directivefull` AS 
-select `tk`.`directive`.`iddirective` AS `iddirective`,
-	`tk`.`directive`.`idtemplate` AS `idtemplate`,
-	`tk`.`directive`.`idcollection` AS `idcollection`,
-	`tk`.`directive`.`type` AS `type`,
-	`tk`.`directive`.`selectColumns` AS `selectColumns`,
-	`tk`.`directive`.`fromTables` AS `fromTables`,
-	`tk`.`directive`.`whereCondition` AS `whereCondition`,
-	`tk`.`directive`.`fromValue` AS `fromValue`,
-	`tk`.`directive`.`toValue` AS `toValue`,
-	`tk`.`directive`.`notLast` AS `notLast`,
-	`tk`.`directive`.`onlyLast` AS `onlyLast`,
-	`tk`.`collection`.`name` AS `collection`,
-	`tk`.`collection`.`tableName` AS `tableName`,
-	`tk`.`collection`.`columnName` AS `columnName`,
-	`tk`.`collection`.`sampleValue` AS `sampleValue`,
-	`tk`.`codesdtype`.`code` AS `code`,
-	`tk`.`codesdtype`.`meaning` AS `directiveType` 
-from ((`tk`.`directive` join `tk`.`collection`) join `tk`.`codesdtype`) 
-	where ((`tk`.`directive`.`idcollection` = `tk`.`collection`.`idcollection`) and 
-		(`tk`.`directive`.`type` = `tk`.`codesdtype`.`code`));
+DROP TABLE IF EXISTS `MergeTool`.`directivefull`;
+USE `MergeTool`;
+CREATE VIEW `MergeTool`.`directivefull` AS 
+select `MergeTool`.`directive`.`iddirective` AS `iddirective`,
+	`MergeTool`.`directive`.`idtemplate` AS `idtemplate`,
+	`MergeTool`.`directive`.`idcollection` AS `idcollection`,
+	`MergeTool`.`directive`.`type` AS `type`,
+	`MergeTool`.`directive`.`selectColumns` AS `selectColumns`,
+	`MergeTool`.`directive`.`fromTables` AS `fromTables`,
+	`MergeTool`.`directive`.`whereCondition` AS `whereCondition`,
+	`MergeTool`.`directive`.`fromValue` AS `fromValue`,
+	`MergeTool`.`directive`.`toValue` AS `toValue`,
+	`MergeTool`.`directive`.`notLast` AS `notLast`,
+	`MergeTool`.`directive`.`onlyLast` AS `onlyLast`,
+	`MergeTool`.`collection`.`name` AS `collection`,
+	`MergeTool`.`collection`.`tableName` AS `tableName`,
+	`MergeTool`.`collection`.`columnName` AS `columnName`,
+	`MergeTool`.`collection`.`sampleValue` AS `sampleValue`,
+	`MergeTool`.`codesdtype`.`code` AS `code`,
+	`MergeTool`.`codesdtype`.`meaning` AS `directiveType` 
+from ((`MergeTool`.`directive` join `MergeTool`.`collection`) join `MergeTool`.`codesdtype`) 
+	where ((`MergeTool`.`directive`.`idcollection` = `MergeTool`.`collection`.`idcollection`) and 
+		(`MergeTool`.`directive`.`type` = `MergeTool`.`codesdtype`.`code`));
 
 -- -----------------------------------------------------
--- View `tk`.`templatefull`
+-- View `MergeTool`.`templatefull`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tk`.`templatefull`;
-USE `tk`;
-CREATE VIEW `tk`.`templatefull` AS 
-select `tk`.`template`.`idtemplate` AS `idtemplate`,
-	`tk`.`template`.`idcollection` AS `idcollection`,
-	`tk`.`template`.`columnValue` AS `columnValue`,
-	`tk`.`template`.`name` AS `name`,
-	`tk`.`template`.`type` AS `type`,
-	`tk`.`template`.`output` AS `output`,
-	`tk`.`template`.`description` AS `description`,
-	`tk`.`template`.`content` AS `content`,
-	`tk`.`collection`.`name` AS `collectionName`,
-	`tk`.`collection`.`tableName` AS `tableName`,
-	`tk`.`collection`.`columnName` AS `columnName`,
-	`tk`.`codesttype`.`code` AS `code`,
-	`tk`.`codesttype`.`meaning` AS `typeName`,
-	concat(`tk`.`collection`.`name`,':',`tk`.`template`.`name`,':',`tk`.`template`.`columnValue`) AS `fullName` 
-from ((`tk`.`template` join `tk`.`collection`) join `tk`.`codesttype`) 
-	where ((`tk`.`template`.`idcollection` = `tk`.`collection`.`idcollection`) and 
-		(`tk`.`template`.`type` = `tk`.`codesttype`.`code`));
+DROP TABLE IF EXISTS `MergeTool`.`templatefull`;
+USE `MergeTool`;
+CREATE VIEW `MergeTool`.`templatefull` AS 
+select `MergeTool`.`template`.`idtemplate` AS `idtemplate`,
+	`MergeTool`.`template`.`idcollection` AS `idcollection`,
+	`MergeTool`.`template`.`columnValue` AS `columnValue`,
+	`MergeTool`.`template`.`name` AS `name`,
+	`MergeTool`.`template`.`type` AS `type`,
+	`MergeTool`.`template`.`output` AS `output`,
+	`MergeTool`.`template`.`description` AS `description`,
+	`MergeTool`.`template`.`content` AS `content`,
+	`MergeTool`.`collection`.`name` AS `collectionName`,
+	`MergeTool`.`collection`.`tableName` AS `tableName`,
+	`MergeTool`.`collection`.`columnName` AS `columnName`,
+	`MergeTool`.`codesttype`.`code` AS `code`,
+	`MergeTool`.`codesttype`.`meaning` AS `typeName`,
+	concat(`MergeTool`.`collection`.`name`,':',`MergeTool`.`template`.`name`,':',`MergeTool`.`template`.`columnValue`) AS `fullName` 
+from ((`MergeTool`.`template` join `MergeTool`.`collection`) join `MergeTool`.`codesttype`) 
+	where ((`MergeTool`.`template`.`idcollection` = `MergeTool`.`collection`.`idcollection`) and 
+		(`MergeTool`.`template`.`type` = `MergeTool`.`codesttype`.`code`));
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
