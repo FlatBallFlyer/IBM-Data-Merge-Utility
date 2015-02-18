@@ -16,5 +16,5 @@ INSERT INTO `MergeTool`.`collection` (`idcollection`, `name`, `tableName`, `colu
 (2,'test','','',''),
 (3,'testDirective','directiveFull','directiveType',''),
 (4,'Sample','','',''),
-(5,'Sample.Type','contacts','preffer','');
+(5,'Sample.Type','contacts','prefer','');
 COMMIT;

@@ -19,6 +19,12 @@
 (function($){
 
 $(document).ready(function() {
+	var templateTable;
+	var theTemplate;
+	var theName;
+	var theCollection;
+	var theColumn;
+	
 	var editor = new $.fn.dataTable.Editor( {
 		"ajax": "php/table.template.php",
 		"table": "#template",
@@ -77,7 +83,10 @@ $(document).ready(function() {
 			"aButtons": [
 				{ "sExtends": "editor_create", "editor": editor },
 				{ "sExtends": "editor_edit",   "editor": editor },
-				{ "sExtends": "editor_remove", "editor": editor }
+				{ "sExtends": "editor_remove", "editor": editor },
+				{ "sExtends": "text", "sButtonText": "Generate", 
+					"fnClick": function ( nButton, oConfig, oFlash ) {merge();} 
+                }  
 			]
 		}
 	} );
@@ -85,10 +94,23 @@ $(document).ready(function() {
 
 	function setTemplate(table, nodes) {
 		theTemplate = table.row(nodes).data().template.idtemplate;
-		var theName = table.row(nodes).data().template.name;
+		theCollection = table.row(nodes).data().collection.name;
+		theName = table.row(nodes).data().template.name;
+		theColumn = table.row(nodes).data().template.columnValue;
+		var theDisplayName = theCollection + ":" + theName + ":" + theColumn;
 		var event = new CustomEvent('templateSet');
-		$( ".listener" ).trigger( "templateSet", [theName, theTemplate]  );
+		$( ".listener" ).trigger( "templateSet", [theDisplayName, theTemplate]  );
 	}
+
+	function merge() {
+		if (theTemplate == 0) {
+			alert( 'Please select a Template' );
+		} else {
+			var win=window.open("http://localhost:8080/MergeTool/Merge.html?collection=" + theCollection + "&name=" + theName + "&column=" + theColumn, '_blank');
+			win.focus();
+		}
+	}
+
 	
 	$('#searchCollection').on( 'keyup', function () {
 	    hostTable

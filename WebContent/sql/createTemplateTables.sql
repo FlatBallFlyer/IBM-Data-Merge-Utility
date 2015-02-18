@@ -7,6 +7,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema MergeTool
 -- -----------------------------------------------------
+DROP SCHEMA `MergeTool`;
 
 -- -----------------------------------------------------
 -- Schema MergeTool
@@ -183,11 +184,11 @@ select `MergeTool`.`directive`.`iddirective` AS `iddirective`,
 	`MergeTool`.`collection`.`tableName` AS `tableName`,
 	`MergeTool`.`collection`.`columnName` AS `columnName`,
 	`MergeTool`.`collection`.`sampleValue` AS `sampleValue`,
-	`MergeTool`.`codesdtype`.`code` AS `code`,
-	`MergeTool`.`codesdtype`.`meaning` AS `directiveType` 
-from ((`MergeTool`.`directive` join `MergeTool`.`collection`) join `MergeTool`.`codesdtype`) 
+	`MergeTool`.`codesDtype`.`code` AS `code`,
+	`MergeTool`.`codesDtype`.`meaning` AS `directiveType` 
+from ((`MergeTool`.`directive` join `MergeTool`.`collection`) join `MergeTool`.`codesDtype`) 
 	where ((`MergeTool`.`directive`.`idcollection` = `MergeTool`.`collection`.`idcollection`) and 
-		(`MergeTool`.`directive`.`type` = `MergeTool`.`codesdtype`.`code`));
+		(`MergeTool`.`directive`.`type` = `MergeTool`.`codesDtype`.`code`));
 
 -- -----------------------------------------------------
 -- View `MergeTool`.`templatefull`
@@ -206,13 +207,15 @@ select `MergeTool`.`template`.`idtemplate` AS `idtemplate`,
 	`MergeTool`.`collection`.`name` AS `collectionName`,
 	`MergeTool`.`collection`.`tableName` AS `tableName`,
 	`MergeTool`.`collection`.`columnName` AS `columnName`,
-	`MergeTool`.`codesttype`.`code` AS `code`,
-	`MergeTool`.`codesttype`.`meaning` AS `typeName`,
+	`MergeTool`.`codesTtype`.`code` AS `code`,
+	`MergeTool`.`codesTtype`.`meaning` AS `typeName`,
 	concat(`MergeTool`.`collection`.`name`,':',`MergeTool`.`template`.`name`,':',`MergeTool`.`template`.`columnValue`) AS `fullName` 
-from ((`MergeTool`.`template` join `MergeTool`.`collection`) join `MergeTool`.`codesttype`) 
+from ((`MergeTool`.`template` join `MergeTool`.`collection`) join `MergeTool`.`codesTtype`) 
 	where ((`MergeTool`.`template`.`idcollection` = `MergeTool`.`collection`.`idcollection`) and 
-		(`MergeTool`.`template`.`type` = `MergeTool`.`codesttype`.`code`));
+		(`MergeTool`.`template`.`type` = `MergeTool`.`codesTtype`.`code`));
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
