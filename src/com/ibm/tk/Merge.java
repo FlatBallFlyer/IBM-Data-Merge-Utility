@@ -73,8 +73,8 @@ public class Merge extends HttpServlet {
 		
 
 		// Testing Values for test template
-		//replace.put("{collection}", "test");
-		//replace.put("{name}", "testRoot");
+		// replace.put("{collection}", "test");
+		// replace.put("{name}", "testRoot");
 		
 		// Iterate parameters, setting replace values or loging levels
 		Enumeration<String> parameterNames = request.getParameterNames();
