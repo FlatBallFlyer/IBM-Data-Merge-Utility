@@ -33,6 +33,7 @@ import com.ibm.tk.tkException;
  */
 public class ReplaceValue {
 	private static final Logger log = Logger.getLogger( ReplaceValue.class.getName() );
+	private String description;
 	private String fromValue;
 	private String toValue;
 
@@ -47,6 +48,7 @@ public class ReplaceValue {
 	public ReplaceValue (ResultSet dbRow) throws tkException {
 		log.finest("Constructing ReplaceValue Directive");
 		try {
+			this.description	= dbRow.getString("description");
 			this.fromValue 	= dbRow.getString("fromValue");
 			this.toValue 	= dbRow.getString("toValue");
 		} catch (SQLException e) {
@@ -62,5 +64,14 @@ public class ReplaceValue {
 	public void getValues(Map<String,String> replace) {
 		log.finest("Adding " + this.fromValue + "->" + this.toValue);
 		replace.put(this.fromValue, this.toValue);
+	}
+
+	/**
+	 * <p>Get Description</p>
+	 *
+	 * @return Description
+	 */
+	public String getDescription() {
+		return description;
 	}
 }

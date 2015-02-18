@@ -18,12 +18,16 @@
 package com.ibm.tk;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
 
 
 /**
@@ -37,18 +41,31 @@ import javax.sql.DataSource;
  * @see     Merge
  */
 final public class ConnectionFactory {
-
+	private static final Logger log = Logger.getLogger( ConnectionFactory.class.getName() );
 	private static DataSource templateDB;
 	private static DataSource dataDB;
 	
     public static Connection getTemplateConnection() throws tkSqlException, tkException {
     	if (templateDB == null) {
-        	try {
+        	try { // Get the naming context
             	Context initContext = new InitialContext();
             	templateDB = (DataSource) initContext.lookup("java:/comp/env/jdbc/TemplateDB");
         	} catch (NamingException e) {
         		throw new tkException(e.getMessage(), "JNDI Connection Error");
         	}
+        	
+        	try { // Validate Template DB
+    			Connection con = templateDB.getConnection();
+    			DatabaseMetaData dbmeta = con.getMetaData();
+    			ResultSet rs = dbmeta.getTables(null, null, "%", null);
+    			while (rs.next()) {
+    				log.info("Table Found: " + rs.getString(1) + "." + rs.getString(3) );
+    				// todo, validate all template tables are in the db.
+    			}			
+    			    			
+        	} catch (SQLException e) {
+        		throw new tkSqlException("Error getting table metadata", "Template Datasource Error", "meta.getTables", e.getMessage());
+			}
     	}
     	
 		try {

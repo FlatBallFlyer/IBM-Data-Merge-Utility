@@ -40,6 +40,7 @@ import java.util.logging.Logger;
  */
 public class ReplaceRow {
 	private static final Logger log = Logger.getLogger( ReplaceRow.class.getName() );
+	private String description;
 	private SqlQuery theQuery;
 
 	/**
@@ -52,6 +53,7 @@ public class ReplaceRow {
 	 */
 	public ReplaceRow(ResultSet dbRow) throws tkException  {
 		try {
+			this.description	= dbRow.getString("description");
 			this.theQuery 	= new SqlQuery( dbRow.getString("selectColumns"),
 											dbRow.getString("fromTables"),
 											dbRow.getString("whereCondition"));
@@ -91,4 +93,13 @@ public class ReplaceRow {
 			throw new tkException("Replace Row Error: "+e.getMessage(), "Invalid Merge Data");
 		}
 	}		
+
+	/**
+	 * <p>Get Description</p>
+	 *
+	 * @return Description
+	 */
+	public String getDescription() {
+		return description;
+	}
 }

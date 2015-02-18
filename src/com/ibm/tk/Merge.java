@@ -21,6 +21,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,13 +36,14 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/Merge")
 public class Merge extends HttpServlet {
+	private static final Logger log = Logger.getLogger( Merge.class.getName() );
 	private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor. 
      */
     public Merge() {
-        // TODO Auto-generated constructor stub
+    	log.fine("Servlet Constructed");
     }
 
 	/**
@@ -62,6 +67,11 @@ public class Merge extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	public void merge(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// Configure Logging
+		ConsoleHandler handler = new ConsoleHandler();
+		handler.setFormatter(new SimpleFormatter());
+		handler.setLevel(Level.WARNING);
+		
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();			
 		
@@ -73,10 +83,10 @@ public class Merge extends HttpServlet {
 		
 
 		// Testing Values for test template
-		// replace.put("{collection}", "test");
-		// replace.put("{name}", "testRoot");
+		replace.put("{collection}", "test");
+		replace.put("{name}", "testRoot");
 		
-		// Iterate parameters, setting replace values or loging levels
+		// Iterate parameters, setting replace values 
 		Enumeration<String> parameterNames = request.getParameterNames();
 		while (parameterNames.hasMoreElements()) {
 			String paramName = parameterNames.nextElement();

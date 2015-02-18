@@ -69,7 +69,17 @@ $(document).ready(function() {
 		}
 	} );
 	reportTable =  $('#report').DataTable();
-	
+
+	$('#reportListener').on('templateSubmit', function( event, name, id ) {
+		reportTable.ajax.reload();
+		theReport = 0;
+		theTemplateCollection ='';
+		theTemplateName = '';
+		theTemplateColumn = '';
+		var event = new CustomEvent('reportSet');
+		$( ".listener" ).trigger( "reportSet", ["", 0]  );
+	});	
+
 	function setReport(table, nodes) {
 		theReport = table.row(nodes).data().report.idreport;
 		theTemplateCollection = table.row(nodes).data().templateFull.collectionName;

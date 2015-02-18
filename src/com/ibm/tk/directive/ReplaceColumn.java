@@ -41,6 +41,7 @@ import java.sql.Statement;
  */
 public class ReplaceColumn {
 	private static final Logger log = Logger.getLogger( ReplaceColumn.class.getName() );
+	private String description;
 	private SqlQuery theQuery;
 	
 	/**
@@ -53,6 +54,7 @@ public class ReplaceColumn {
 	 */
 	public ReplaceColumn(ResultSet dbRow) throws tkException  {
 		try {
+			this.description	= dbRow.getString("description");
 			this.theQuery = new SqlQuery( 	dbRow.getString("selectColumns"),
 											dbRow.getString("fromTables"),
 											dbRow.getString("whereCondition"));
@@ -88,5 +90,14 @@ public class ReplaceColumn {
 		} catch (SQLException e) {
 			throw new tkException("Replace Column Error - did you select columns fromValue or toValue? "+e.getMessage(), "Invalid Merge Data");
 		}		
+	}
+
+	/**
+	 * <p>Get Description</p>
+	 *
+	 * @return Description
+	 */
+	public String getDescription() {
+		return description;
 	}
 }

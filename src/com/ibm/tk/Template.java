@@ -195,15 +195,15 @@ public class Template {
 			directive.getValues(this.replaceValues);
 		}		
 		for(ReplaceColumn directive : this.replaceCol) {
-			log.finer("Processing Replace Val directive");
+			log.finer("Processing Replace Column directive");
 			directive.getValues(this.replaceValues);
 		}		
 		for(ReplaceRow directive : this.replaceRow) {
-			log.finer("Processing Replace Val directive");
+			log.finer("Processing Replace Row directive");
 			directive.getValues(this);
 		}		
 		for(InsertRows directive : this.insert) {
-			log.finer("Processing Replace Val directive");
+			log.finer("Processing Insert Rows directive");
 			directive.insertTemplates(this);
 		}		
 		
@@ -317,8 +317,9 @@ public class Template {
 		if (from.isEmpty()) {return;}	
 		to = to.replace("{tkReplaceValues}", "{- tkReplaceValues}"); // safety
 		if ( to.lastIndexOf(from) > 0 ) {
-			// log "Warning replace to contins from value!"
-			return;
+			log.warning("Replace Attempted with Replace Value containg Replace Key:" + from + "\n Value:" + to);
+			String fromDistored = "{**" + from.substring(1);
+			to = fromDistored + " NOT REPLACED - TO Value COMTAINS " + fromDistored;
 		}
 		
 		// do the replace

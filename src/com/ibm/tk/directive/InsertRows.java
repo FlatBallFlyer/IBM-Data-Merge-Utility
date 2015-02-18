@@ -45,6 +45,7 @@ import java.sql.Statement;
  */
 public class InsertRows {
 	private static final Logger log = Logger.getLogger( InsertRows.class.getName() );
+	private String description;
 	private String collection;
 	private String columnName;
 	private SqlQuery theQuery;
@@ -61,6 +62,7 @@ public class InsertRows {
 	 */
 	public InsertRows(ResultSet dbRow) throws tkSqlException, tkException  {
 		try {
+			this.description	= dbRow.getString("description");
 			this.collection		= dbRow.getString("collection");
 			this.columnName		= dbRow.getString("columnName");
 			this.theQuery		= new SqlQuery(	dbRow.getString("selectColumns"),
@@ -137,5 +139,14 @@ public class InsertRows {
 		} catch (SQLException e) {
 			throw new tkSqlException("Insert Rows Error", "Error Iterating Resultset", queryString, e.getMessage());			
 		}
-	}	
+	}
+	
+	/**
+	 * <p>Get Description</p>
+	 *
+	 * @return Description
+	 */
+	public String getDescription() {
+		return description;
+	}
 }
