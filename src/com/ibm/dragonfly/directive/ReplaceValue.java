@@ -14,13 +14,13 @@
  * limitations under the License.
  *
  */
-package com.ibm.tk.directive;
+package com.ibm.dragonfly.directive;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.ibm.tk.tkException;
+import com.ibm.dragonfly.tkException;
 
 /**
  * A simple replace From -> To directive 

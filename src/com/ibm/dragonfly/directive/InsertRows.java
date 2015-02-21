@@ -14,23 +14,19 @@
  * limitations under the License.
  *
  */
-package com.ibm.tk.directive;
-import com.ibm.tk.ConnectionFactory;
-import com.ibm.tk.TemplateFactory;
-import com.ibm.tk.tkException;
-import com.ibm.tk.SqlQuery;
-import com.ibm.tk.Bookmark;
-import com.ibm.tk.Template;
-import com.ibm.tk.tkSqlException;
+package com.ibm.dragonfly.directive;
+import com.ibm.dragonfly.Bookmark;
+import com.ibm.dragonfly.Template;
+import com.ibm.dragonfly.TemplateFactory;
+import com.ibm.dragonfly.tkException;
+import com.ibm.dragonfly.tkSqlException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * <p>This class represents a insertRows directive which inserts sub-templates
@@ -65,7 +61,8 @@ public class InsertRows {
 			this.description	= dbRow.getString("description");
 			this.collection		= dbRow.getString("collection");
 			this.columnName		= dbRow.getString("columnName");
-			this.theQuery		= new SqlQuery(	dbRow.getString("selectColumns"),
+			this.theQuery		= new SqlQuery(	dbRow.getString("jndiSource"),
+												dbRow.getString("selectColumns"),
 												dbRow.getString("fromTables"),
 												dbRow.getString("whereCondition"));
 			
@@ -88,20 +85,9 @@ public class InsertRows {
 	 */
 	public void insertTemplates(Template target) throws tkException, IOException, tkSqlException {
 		log.fine("Inserting Subtemplates into: " + target.getFullName());
-		Connection con;
-		Statement st;
-		ResultSet rs;
-		String queryString = theQuery.queryString(target.getReplaceValues());
+
 		try {
-			// Get a connection and execute the query
-			con = ConnectionFactory.getDataConnection();
-			st = con.createStatement();
-			rs = st.executeQuery(queryString);
-		} catch (SQLException e) {
-			throw new tkSqlException("Insert Rows Error", "Connection Failure", queryString, e.getMessage());
-		}
-		
-		try {
+			ResultSet rs = this.theQuery.getResultSet(target.getReplaceValues());
 			int count = 0;
 			// Iterate over the result set 
 			while (rs.next()) {
@@ -113,7 +99,9 @@ public class InsertRows {
 					try {
 						colName = (this.columnName.isEmpty()) ? "" : rs.getString(this.columnName);
 					} catch (SQLException e) {
-						throw new tkSqlException("Insert Rows Error", "Column " + this.columnName + " was not found", queryString, e.getMessage());
+						throw new tkSqlException("Insert Rows Error", "Column " + this.columnName + " was not found", 
+								this.theQuery.getQueryString(target.getReplaceValues()), 
+								e.getMessage());
 					}
 
 	 				// Create the new sub-template
@@ -133,11 +121,12 @@ public class InsertRows {
 					target.insertText(subTemplate.merge(), bookmark);
 	 			}		
 			}
-			rs.close();
-			st.close();
-			con.close();
+			this.theQuery.close();
 		} catch (SQLException e) {
-			throw new tkSqlException("Insert Rows Error", "Error Iterating Resultset", queryString, e.getMessage());			
+			throw new tkSqlException("Insert Rows Error", "Error Iterating Resultset", 
+					this.theQuery.getQueryString(target.getReplaceValues()), 
+					e.getMessage());			
+			
 		}
 	}
 	

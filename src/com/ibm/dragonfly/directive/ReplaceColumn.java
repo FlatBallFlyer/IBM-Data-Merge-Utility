@@ -14,20 +14,16 @@
  * limitations under the License.
  *
  */
-package com.ibm.tk.directive;
-import com.ibm.tk.ConnectionFactory;
-import com.ibm.tk.SqlQuery;
-import com.ibm.tk.Merge;
-import com.ibm.tk.Template;
-import com.ibm.tk.tkException;
-import com.ibm.tk.tkSqlException;
+package com.ibm.dragonfly.directive;
+import com.ibm.dragonfly.Merge;
+import com.ibm.dragonfly.Template;
+import com.ibm.dragonfly.tkException;
+import com.ibm.dragonfly.tkSqlException;
 
 import java.util.Map;
 import java.util.logging.Logger;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * <p>This class represents a replaceColumn directive which loads the Replace hashmap
@@ -55,7 +51,8 @@ public class ReplaceColumn {
 	public ReplaceColumn(ResultSet dbRow) throws tkException  {
 		try {
 			this.description	= dbRow.getString("description");
-			this.theQuery = new SqlQuery( 	dbRow.getString("selectColumns"),
+			this.theQuery = new SqlQuery( 	dbRow.getString("jndiSource"),
+											dbRow.getString("selectColumns"),
 											dbRow.getString("fromTables"),
 											dbRow.getString("whereCondition"));
 		} catch (SQLException e) {
@@ -74,19 +71,14 @@ public class ReplaceColumn {
 	public void getValues(Map<String,String> replaceValues) throws tkException, tkSqlException {
 		log.fine("Adding Replace Column values");
 		try {
-			String queryString = this.theQuery.queryString(replaceValues);
-			Connection con = ConnectionFactory.getDataConnection();
-			Statement st = con.createStatement();
- 			ResultSet rs = st.executeQuery(queryString );
+			ResultSet rs = this.theQuery.getResultSet(replaceValues);
  			int count = 0;
 			while (rs.next()) {
 				count++;
 				replaceValues.put(rs.getString("FromValue"), rs.getString("ToValue"));
 			}
 			log.fine("ReplaceCol added " + count + " replace values");
-			rs.close();
-			st.close();
-			con.close();
+			this.theQuery.close();
 		} catch (SQLException e) {
 			throw new tkException("Replace Column Error - did you select columns fromValue or toValue? "+e.getMessage(), "Invalid Merge Data");
 		}		

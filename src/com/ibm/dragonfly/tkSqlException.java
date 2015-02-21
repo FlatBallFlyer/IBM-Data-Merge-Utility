@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package com.ibm.tk;
+package com.ibm.dragonfly;
 
 /**
  * @author Mike Storey

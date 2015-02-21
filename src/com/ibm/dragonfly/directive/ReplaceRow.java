@@ -14,17 +14,13 @@
  * limitations under the License.
  *
  */
-package com.ibm.tk.directive;
-import com.ibm.tk.ConnectionFactory;
-import com.ibm.tk.Template;
-import com.ibm.tk.SqlQuery;
-import com.ibm.tk.tkException;
-import com.ibm.tk.tkSqlException;
+package com.ibm.dragonfly.directive;
+import com.ibm.dragonfly.Template;
+import com.ibm.dragonfly.tkException;
+import com.ibm.dragonfly.tkSqlException;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.Logger;
 
 /**
@@ -54,7 +50,8 @@ public class ReplaceRow {
 	public ReplaceRow(ResultSet dbRow) throws tkException  {
 		try {
 			this.description	= dbRow.getString("description");
-			this.theQuery 	= new SqlQuery( dbRow.getString("selectColumns"),
+			this.theQuery 	= new SqlQuery( dbRow.getString("jndiSource"),
+											dbRow.getString("selectColumns"),
 											dbRow.getString("fromTables"),
 											dbRow.getString("whereCondition"));
 		} catch (SQLException e) {
@@ -73,22 +70,23 @@ public class ReplaceRow {
 	public void getValues(Template target) throws tkException, tkSqlException {
 		log.fine("Adding Replace Row to " + target.getFullName());
 		try {
-			String queryString = this.theQuery.queryString(target.getReplaceValues());
-			Connection con = ConnectionFactory.getDataConnection();
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(queryString);
+			ResultSet rs = this.theQuery.getResultSet(target.getReplaceValues());
 			rs.next();
 			if ( rs.isBeforeFirst() ) {
-				throw new tkException("Empty Result set returned by:" + queryString , "Data Source Error");
+				throw new tkException(
+						"Empty Result set returned by:" + 
+						this.theQuery.getQueryString(target.getReplaceValues()), 
+						"Data Source Error");
 			}
 			if ( !rs.isLast() ) {
-				throw new tkException("Multiple rows returned when single row expected:" + queryString, "Data Source Error");
+				throw new tkException(
+						"Multiple rows returned when single row expected:" + 
+						this.theQuery.getQueryString(target.getReplaceValues()), 
+						"Data Source Error");
 			}
 			
 			target.addRowReplace(rs);
-			rs.close();
-			st.close();
-			con.close();
+			this.theQuery.close();
 		} catch (SQLException e) {
 			throw new tkException("Replace Row Error: "+e.getMessage(), "Invalid Merge Data");
 		}

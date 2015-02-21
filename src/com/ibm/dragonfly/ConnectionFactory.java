@@ -15,12 +15,13 @@
  *
  */
 
-package com.ibm.tk;
+package com.ibm.dragonfly;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import javax.naming.Context;
@@ -43,8 +44,15 @@ import javax.sql.DataSource;
 final public class ConnectionFactory {
 	private static final Logger log = Logger.getLogger( ConnectionFactory.class.getName() );
 	private static DataSource templateDB;
-	private static DataSource dataDB;
+	private static final HashMap<String,DataSource> dataDbHash = new HashMap<String,DataSource>();
 	
+    /**********************************************************************************
+	 * <p>Template Connection Factory</p>
+	 *
+	 * @throws tkException - JNDI Connection Error
+	 * @throws tkSqlException - Tempalte Table validation error
+	 * @return The new template database connection 
+	 */
     public static Connection getTemplateConnection() throws tkSqlException, tkException {
     	if (templateDB == null) {
         	try { // Get the naming context
@@ -76,21 +84,31 @@ final public class ConnectionFactory {
 		}
     }
 
-    public static Connection getDataConnection() throws tkSqlException, tkException {
-    	if (dataDB == null) {
+    /**********************************************************************************
+	 * <p>Data Source connection factory</p>
+	 *
+	 * @param  JNDI Data Source name
+	 * @throws tkException - JNDI Naming Errors
+	 * @throws tkSqlException - Database Connection Errors
+	 * @return The new Data Source connection 
+	 */
+    public static Connection getDataConnection(String jndiSource) throws tkSqlException, tkException {
+    	// If the data source is not in the cache, create it and add it to the cache
+    	if ( !dataDbHash.containsKey(jndiSource) ) { 
         	try {
             	Context initContext = new InitialContext();
-            	dataDB = (DataSource) initContext.lookup("java:/comp/env/jdbc/DataDB");
+            	DataSource newSource = (DataSource) initContext.lookup("java:/comp/env/jdbc/" + jndiSource);
+            	dataDbHash.put(jndiSource, newSource);
         	} catch (NamingException e) {
         		throw new tkException(e.getMessage(), "JNDI Connection Error");
         	}
     	}
     	
+    	// Cet a connection from the JNDI pool.
 		try {
-			Connection con = dataDB.getConnection();
-			return con;
+			return dataDbHash.get(jndiSource).getConnection();
 		} catch (SQLException e) {
-			throw new tkSqlException("Error Connecting to Data Database", "Database Connection Error", "Connect to Database", e.getMessage());
+			throw new tkSqlException("Error Connecting to Data Database " + jndiSource, "Database Connection Error", "Connect to Database", e.getMessage());
 		}
     }
 

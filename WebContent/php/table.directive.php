@@ -19,7 +19,7 @@
  */
 
 // DataTables PHP library
-include( "../../../Editor/php/DataTables.php" );
+include( "config.php" );
 
 // Alias Editor classes so they are easy to use
 use
@@ -38,6 +38,7 @@ Editor::inst( $db, 'directive', 'iddirective' )
 		Field::inst( 'directive.idcollection' )->options( 'collection', 'idcollection', 'name' ),
 		Field::inst( 'directive.type' )->options( 'codesDtype', 'code', 'meaning' ),
 		Field::inst( 'directive.description' ),
+		Field::inst( 'directive.jndiSource' ),
 		Field::inst( 'directive.selectColumns' ),
 		Field::inst( 'directive.fromTables' ),
 		Field::inst( 'directive.whereCondition' ),

@@ -51,6 +51,11 @@ $(document).ready(function() {
 				"type": "select",
 			},
 			{
+				"label": "JNDI Source",
+				"name": "directive.jndiSource",
+				"type": "text"
+			},
+			{
 				"label": "Select Columns",
 				"name": "directive.selectColumns",
 				"type": "textarea"
@@ -169,7 +174,8 @@ $(document).ready(function() {
 		if (val === '1' ) {  // 'Insert' {
 			return { 
 				show: [	"directive.idcollection",
-				         	"directive.selectColumns",
+				       		"directive.jndiSource",
+				       		"directive.selectColumns",
 				         	"directive.fromTables",
 				         	"directive.whereCondition",
 				         	"directive.notLast",
@@ -180,6 +186,7 @@ $(document).ready(function() {
 		} else if (val === '2' ) { //'ReplaceRow') {
 			return {
 				show: [ 	"directive.selectColumns",
+				       		"directive.jndiSource",
 				        	"directive.fromTables",
 				        	"directive.whereCondition"],
 		        hide: [		"directive.idcollection",
@@ -191,6 +198,7 @@ $(document).ready(function() {
 		} else if (val === '3' ) { //'ReplaceCol') {
 			return {
 				show: [ 	"directive.selectColumns",
+				       		"directive.jndiSource",
 		               		"directive.fromTables",
 				        	"directive.whereCondition"],
 				hide: [		"directive.idcollection",
@@ -205,6 +213,7 @@ $(document).ready(function() {
 		        show: [ 	"directive.fromValue",
 		                	"directive.toValue"],
 		        hide: [		"directive.selectColumns",
+				       		"directive.jndiSource",
 		               		"directive.fromTables",
 		               		"directive.whereCondition",
 		               		"directive.idcollection",

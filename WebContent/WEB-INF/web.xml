@@ -12,7 +12,7 @@
   
 	<servlet>
 		<servlet-name>Merge</servlet-name>
-		<servlet-class>com.ibm.tk.Merge</servlet-class>
+		<servlet-class>com.ibm.dragonfly.Merge</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>

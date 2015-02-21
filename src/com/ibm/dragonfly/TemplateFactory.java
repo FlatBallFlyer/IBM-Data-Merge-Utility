@@ -15,10 +15,10 @@
  *
  */
 
-package com.ibm.tk;
+package com.ibm.dragonfly;
 import java.util.HashMap;
 
-import com.ibm.tk.Template;
+import com.ibm.dragonfly.Template;
 
 /**
  * <p>This implements a cacheing factory for Templates</p>

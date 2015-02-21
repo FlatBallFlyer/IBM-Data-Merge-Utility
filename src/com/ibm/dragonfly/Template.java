@@ -15,10 +15,10 @@
  *
  */
 
-package com.ibm.tk;
-import com.ibm.tk.directive.*;
-import com.ibm.tk.Template;
-import com.ibm.tk.ConnectionFactory;
+package com.ibm.dragonfly;
+import com.ibm.dragonfly.ConnectionFactory;
+import com.ibm.dragonfly.Template;
+import com.ibm.dragonfly.directive.*;
 
 import java.util.ArrayList;
 import java.util.List;

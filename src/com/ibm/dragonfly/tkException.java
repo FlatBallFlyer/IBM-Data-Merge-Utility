@@ -14,21 +14,29 @@
  * limitations under the License.
  *
  */
-package com.ibm.tk.directive;
+package com.ibm.dragonfly;
 
 /**
- * A validation directive (Not currently implemented)
- * Allows a template to specify a replace value that must be on the 
- * replace stack. Supports more meaningful error messages on merge failures.
- * 
- * DEFERRED IMPLEMENTATION
+ * @author Mike Storey
+ * Simple custom Exception Class
  *
- * @author  Mike Storey
- * @version 3.0
- * @since   1.0
- * @see     Template
- * @see     Merge
  */
-public class Require {
+public class tkException extends Exception {
+	private static final long serialVersionUID = 1L;
+	private String errorCode="-Code Not Set-";
+	
+	/**
+	 * Constructor
+	 */
+	public tkException(String message, String errorCode){
+        super(message);
+        this.errorCode=errorCode;
+    }
 
+	/**
+	 * Get the Error Code
+	 */
+    public String getErrorCode(){
+        return this.errorCode;
+    }
 }

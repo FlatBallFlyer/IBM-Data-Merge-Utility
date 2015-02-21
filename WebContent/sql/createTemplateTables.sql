@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS `MergeTool`.`directive` (
   `idcollection` INT(11) NOT NULL,
   `type` INT(11) NOT NULL,
   `description` VARCHAR(45) NULL DEFAULT '',
+  `jndiSource` VARCHAR(16) NULL DEFAULT '',
   `selectColumns` VARCHAR(1024) NULL DEFAULT '',
   `fromTables` VARCHAR(1024) NULL DEFAULT '',
   `whereCondition` VARCHAR(1024) NULL DEFAULT '',
