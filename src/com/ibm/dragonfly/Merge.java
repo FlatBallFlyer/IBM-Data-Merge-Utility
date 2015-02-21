@@ -83,8 +83,8 @@ public class Merge extends HttpServlet {
 		
 
 		// Testing Values for test template
-		replace.put("{collection}", "test");
-		replace.put("{name}", "testRoot");
+		// replace.put("{collection}", "test");
+		// replace.put("{name}", "testRoot");
 		
 		// Iterate parameters, setting replace values 
 		Enumeration<String> parameterNames = request.getParameterNames();
@@ -108,6 +108,9 @@ public class Merge extends HttpServlet {
 			
 			// Perform the merge and write output
 			out.write(root.merge());
+			
+			// TODO - Tar and return additional generated output files
+			// 
 			
 		} catch (tkException e) {
 			out.write("MERGE FAILED! tkException " + e.getErrorCode() + "\n");

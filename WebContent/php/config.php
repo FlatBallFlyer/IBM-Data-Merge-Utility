@@ -12,6 +12,6 @@ $sql_details = array(
 	"db"   => "MergeTool"
 );
 
-include( "../../../Editor/php/DataTables.php" );
+include( getenv('PHP_LIB_ROOT') . "/Editor/php/DataTables.php" );
 
 ?>

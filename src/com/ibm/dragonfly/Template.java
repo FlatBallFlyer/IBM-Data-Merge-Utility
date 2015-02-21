@@ -107,7 +107,7 @@ public class Template {
 			this.description 	= rs.getString("description");
 			this.content 		= new StringBuilder(rs.getString("content"));
 			this.outputFile 	= rs.getString("output");
-			this.outputDir 		= System.getenv("TK_MERGE_OUTPUT");
+			this.outputDir 		= System.getenv("DRAGONFLY_OUTPUT_ROOT");
 			if ( this.outputDir == null ) {this.outputDir = "/tmp/output/";}
 		} catch (SQLException e) {
 			throw new tkSqlException("Template Database Error", "Invalid Template Data", queryString, e.getMessage());
