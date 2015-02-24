@@ -277,6 +277,7 @@ public class Template {
 	    // if file doesnt exists, then create it 
 		File file = new File( fileName );
 	    if ( ! file.exists( ) ) { 
+	    	file.getParentFile().mkdirs();
 	    	file.createNewFile( );
 	    }
 
