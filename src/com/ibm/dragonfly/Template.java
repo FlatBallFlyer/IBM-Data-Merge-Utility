@@ -372,7 +372,7 @@ public class Template {
 	 */
 	public boolean isEmpty() {
 		for (int i=1; i < this.content.length(); i++) {
-			if (Character.isWhitespace(this.content.charAt(i))) {
+			if (!Character.isWhitespace(this.content.charAt(i))) {
 				return false;
 			}
 		}

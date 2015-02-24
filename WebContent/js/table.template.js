@@ -127,10 +127,11 @@ $(document).ready(function() {
 			alert( 'Please select a Template' );
 		} else {
 			var parameters = "";
-			parameters += "collection=" + theCollection;
+			parameters += "CacheReset=Yes";
+			parameters += "&collection=" + theCollection;
 			parameters += "&name=" + theName;
 			if ( theColumn != "" ) {
-				parameters += "&column=" + thColumn;
+				parameters += "&column=" + theColumn;
 			} 
 			win=window.open("http://localhost:8080/MergeTool/Merge.html?" + parameters, '_blank');
 			win.focus();
