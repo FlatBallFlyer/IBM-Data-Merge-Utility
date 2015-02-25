@@ -387,12 +387,13 @@ public class Template {
 	 */
 	private String getQueryString(String collection, String column, String name) {
 		if (column == null || column.isEmpty()) {
-			return "select * from templatefull where collectionName = '" + collection + 
-					"' and name = '" + name + "'";		
+			return "select * from templatefull where collectionName = '" + collection + "'" + 
+					" and columnValue = ''" +
+					" and name = '" + name + "'";		
 		} else {
-		    return "select * from templatefull where collectionName = '" + collection + 
-		    		"' and columnValue = '" + column + 
-		    		"' and name = '" + name + "'";			
+		    return "select * from templatefull where collectionName = '" + collection + "'" + 
+		    		" and columnValue = '" + column + "'" +  
+		    		" and name = '" + name + "'";			
 		}
 	}
 

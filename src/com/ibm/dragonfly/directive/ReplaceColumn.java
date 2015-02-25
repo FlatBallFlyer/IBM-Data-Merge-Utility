@@ -75,7 +75,7 @@ public class ReplaceColumn {
  			int count = 0;
 			while (rs.next()) {
 				count++;
-				replaceValues.put(rs.getString("FromValue"), rs.getString("ToValue"));
+				replaceValues.put("{" + rs.getString("FromValue") + "}", rs.getString("ToValue"));
 			}
 			log.fine("ReplaceCol added " + count + " replace values");
 			this.theQuery.close();

@@ -57,9 +57,9 @@ final public class ConnectionFactory {
     	if (templateDB == null) {
         	try { // Get the naming context
             	Context initContext = new InitialContext();
-            	templateDB = (DataSource) initContext.lookup("java:/comp/env/jdbc/TemplateDB");
+            	templateDB = (DataSource) initContext.lookup("java:/comp/env/jdbc/dragonflyDB");
         	} catch (NamingException e) {
-        		throw new tkException(e.getMessage(), "JNDI Connection Error");
+        		throw new tkException(e.getMessage(), "JNDI Connection Error connection to dragonflyDB");
         	}
         	
         	try { // Validate Template DB
@@ -80,7 +80,7 @@ final public class ConnectionFactory {
 			Connection con = templateDB.getConnection();
 			return con;
 		} catch (SQLException e) {
-			throw new tkSqlException("Error Connecting to Template Database", "Database Connection Error", "Connect to Database", e.getMessage());
+			throw new tkSqlException("Error Connecting to Template Database", "Database Connection Error", "Connect to Database dragonflyDB", e.getMessage());
 		}
     }
 
@@ -100,7 +100,7 @@ final public class ConnectionFactory {
             	DataSource newSource = (DataSource) initContext.lookup("java:/comp/env/jdbc/" + jndiSource);
             	dataDbHash.put(jndiSource, newSource);
         	} catch (NamingException e) {
-        		throw new tkException(e.getMessage(), "JNDI Connection Error");
+        		throw new tkException(e.getMessage(), "JNDI Connection Error " + jndiSource);
         	}
     	}
     	
@@ -108,7 +108,7 @@ final public class ConnectionFactory {
 		try {
 			return dataDbHash.get(jndiSource).getConnection();
 		} catch (SQLException e) {
-			throw new tkSqlException("Error Connecting to Data Database " + jndiSource, "Database Connection Error", "Connect to Database", e.getMessage());
+			throw new tkSqlException("Error Connecting to Data Database " + jndiSource, "Database Connection Error", "Connect to Database " + jndiSource, e.getMessage());
 		}
     }
 

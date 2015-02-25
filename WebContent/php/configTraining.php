@@ -9,7 +9,7 @@ $sql_details = array(
 	"pass" => getenv('OPENSHIFT_MYSQL_DB_PASSWORD'),
 	"host" => getenv('OPENSHIFT_MYSQL_DB_HOST'),
 	"port" => getenv('OPENSHIFT_MYSQL_DB_PORT'),
-	"db"   => "dragonfly"
+	"db"   => "testgen"
 );
 
 include( getenv('PHP_LIB_ROOT') . "/Editor/php/DataTables.php" );

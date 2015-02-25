@@ -62,7 +62,10 @@ public class SqlQuery {
 	 *  
 	 */
 	public String getQueryString(Map<String,String> replaceValues) {
-		String queryString = "SELECT " + this.selectColumns + " FROM " + this.fromTables;
+		String queryString = "SELECT " + this.selectColumns;
+		if ( !this.fromTables.isEmpty()) {
+			queryString += " FROM " + this.fromTables;
+		}
 		if ( !this.whereCondition.isEmpty() ) {
 			// run replace stack over where condition
 			String where = this.whereCondition;
