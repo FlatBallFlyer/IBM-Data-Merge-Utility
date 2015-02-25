@@ -5,7 +5,7 @@
 
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		
-	<title>Dragon Fly Testing</title>
+	<title>DragonFly Traning</title>
 
 	<link rel="stylesheet" type="text/css" href="/DataTables/css/jquery.dataTables.css"/>
 	<link rel="stylesheet" type="text/css" href="/DataTables/extensions/TableTools/css/dataTables.tableTools.css"/>
@@ -54,21 +54,17 @@
 					<div id="Replace">					
 						<p>Processing a "Replace Stack" is a core feature of DragonFly</p>
 						<img src="images/overview2.png"/>
-						<p>There are 4 ways to add values to the replace stack.
+						<p>There are 4 ways to add values to the replace stack.</p>						
 						<ul>
 							<li><button id="parameters">http Parameters</button></li>
 							<li><button id="replaceVal">the Replace Value directive</button></li>
 							<li><button id="replaceCol">the Replace Col directive</button></li>
 							<li><button id="replaceRow">the Replace Row directive</button></li>
 						</ul>
-						</p>
 					</div>
 					<div id="Insert">					
 						<p>Sub-Templates are inserted at Bookmarks, by the Insert directive. 
-						One sub-template is inserted for each row in the Insert Directive result set.
-						<ul>
-						</ul>
-						</p>
+						One sub-template is inserted for each row in the Insert Directive result set.</p>
 						<img src="images/overview3.png"/>
 					</div>
 					<div id="Collection">					
@@ -77,10 +73,7 @@
 						from the collection, with the name specified in the bookmark and 
 						the value for the collections column. If no template is found for the 
 						column value, the empty value is used. If no template exists for 
-						either the current column or empty value the merge will fail.
-						<ul>
-						</ul>
-						</p>
+						either the current column or empty value the merge will fail.</p>
 						<img src="images/overview4.png"/>
 					</div>
 				</div>
@@ -139,7 +132,7 @@
 
 	<div id="eMailDialog" title="eMail Submission">
 		<p>You should generate 1 file per eMail, in the SendMail format below, as well as a "SendEmAll.sh" 
-		file that contains the following sendmail command for each file generated:
+		file that contains the following sendmail command for each file generated:</p>
 		<ul><li>cat <i>theFileName</i> | sendmail -i -t</li></ul>
 		<textarea cols="70" rows="15">
 From: "You" <You@yourDoman.com>
@@ -154,7 +147,7 @@ Content-Disposition: inline
         This is the HTML version of the email. Put your content here.
     </body>
 </html>
-		</textarea></p>
+		</textarea>
 	</div>
 
 	<div id="smsDialog" title="SMS Submission Format">
@@ -163,7 +156,7 @@ Content-Disposition: inline
 curl http://textbelt.com/text -d number=########## -d "message=Your Message Here";
 curl http://textbelt.com/text -d number=########## -d "message=Your Message Here";
 curl http://textbelt.com/text -d number=########## -d "message=Your Message Here";
-		</textarea></p>
+		</textarea>
 	</div>
 	<div id="bulkDialog" title="Bulk Mail Submission Format">
 		<p>Outbound Bulk Mail should be submitted, 1 file per envelope, in the following format
@@ -282,12 +275,11 @@ $( "#merge" ).click(function() {
 				</tr>
 			</tbody>
 		</table>
-		<p>Notes:
+		<p>Notes:</p>
 		<ul>
 			<li>If either of the columns fromValue or toValue are not in the result set the merge fails.</li>
 			<li>The curly braces { and } are added to the fromValue</li> 
 		</ul>
-		</p>
 	</div>
 	
 	<div id="replaceRowDialog" title="Replace Row Directive">
@@ -339,13 +331,12 @@ $( "#merge" ).click(function() {
 					<td>15313</td>
 				</tr>
 			</tbody>
-		</table border="1">
-		<p>Notes:
+		</table>
+		<p>Notes:</p>
 			<ul>
 				<li>The curly braces { and } are added to the column name</li>
 				<li>If the result is not exactly 1 row, the merge fails</li>
 			</ul>
-		</p> 
 	</div>
 	
 	
