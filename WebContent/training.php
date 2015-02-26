@@ -176,8 +176,8 @@ Your message here
 	<div id="scriptDialog" title="Merge Command Execution">
 	<textarea rows="6" cols="70">
 $( "#merge" ).click(function() {
-	var parameters = "collection=test.root&name=root";
-	var url = "http://localhost:8080/MergeTool/Merge.html"
+	var parameters = "collection=test.root&name=allReports";
+	var url = "http://localhost:8080/dragonfly/Merge.html"
 	win=window.open(url + "?" + parameters, '_blank');
 	win.focus();
 });
@@ -365,8 +365,8 @@ $( "#replaceRow" ).click(function() {  $( "#replaceRowDialog" ).dialog( "open" )
 
 
 $( "#merge" ).click(function() {
-	var parameters = "collection=test.root&name=root";
-	var url = "http://localhost:8080/MergeTool/Merge.html"
+	var parameters = "collection=test.root&name=allReports";
+	var url = "http://localhost:8080/dragonfly/Merge.html"
 	win=window.open(url + "?" + parameters, '_blank');
 	win.focus();
 });

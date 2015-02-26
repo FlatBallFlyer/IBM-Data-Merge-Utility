@@ -107,7 +107,7 @@ $(document).ready(function() {
 				var rowData = replaceTable.row(row).data();
 				parameters += "&" + rowData.reportReplace.fromValue + "=" + rowData.reportReplace.toValue;
 			}
-			win=window.open("http://localhost:8080/MergeTool/Merge.html?" + parameters, '_blank');
+			win=window.open("http://localhost:8080/dragonfly/Merge.html?" + parameters, '_blank');
 			win.focus();
 		}
 	}

@@ -247,23 +247,16 @@ INSERT INTO `dragonfly`.`template` (`idtemplate`,`idcollection`,`columnValue`,`n
 INSERT INTO `dragonfly`.`template` (`idtemplate`,`idcollection`,`columnValue`,`name`,`type`,`output`,`description`,`content`) VALUES (23,3,'ReplaceVal','directive',1,'','ReplaceVal Directive Report','<tr>\n	<td>{directiveType}</td>\n	<td colspan=\"3\">Replace {fromValue} with {toValue}</td>\n</tr>');
 COMMIT;
 
-INSERT INTO `dragonfly`.`directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`,`jndiSource`) VALUES (15,19,2,1,'Insert Templates','*','templatefull','','','','','','TemplateDB');
-INSERT INTO `dragonfly`.`directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`,`jndiSource`) VALUES (16,20,3,1,'Insert Directives','*','directivefull','idtemplate = {idtemplate}','','','{and},{or},{coma}','{semi},{period}','TemplateDB');
-INSERT INTO `dragonfly`.`directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`,`jndiSource`) VALUES (17,20,1,4,'and','','','','{and}','and','{and}','and','');
 INSERT INTO `dragonfly`.`directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`,`jndiSource`) VALUES (18,20,1,4,'or','','','','{or}','or','{or}','or','');
 INSERT INTO `dragonfly`.`directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`,`jndiSource`) VALUES (19,20,1,4,'coma','','','','{coma}',',','{coma}',',','');
 INSERT INTO `dragonfly`.`directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`,`jndiSource`) VALUES (20,20,1,4,'semicolin','','','','{semi}',';','{semi}',';','');
 INSERT INTO `dragonfly`.`directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`,`jndiSource`) VALUES (21,20,1,4,'period','','','','{period}','.','{period}','.','');
 INSERT INTO `dragonfly`.`directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`,`jndiSource`) VALUES (22,20,1,5,'Require idtemplate','','','','{idtemplate}','','{idtemplate}','','');
 INSERT INTO `dragonfly`.`directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`,`jndiSource`) VALUES (23,21,1,2,'get collection','*','collection','idcollection = {idcollection}','','','','','TemplateDB');
-INSERT INTO `dragonfly`.`directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`,`jndiSource`) VALUES (24,21,1,3,'Get Special Replace Values','fromValue, toValue','reportReplace','idreport = \'1\'','','','','','TemplateDB');
-INSERT INTO `dragonfly`.`directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`,`jndiSource`) VALUES (33,41,2,3,'Get Corporate Wide replace values','*','corporate','','','','','','testgenDB');
 COMMIT;
 
 INSERT INTO `dragonfly`.`report` (`idreport`,`idtemplate`,`outputRoot`,`name`) VALUES (1,19,'','test');
-INSERT INTO `dragonfly`.`report` (`idreport`,`idtemplate`,`outputRoot`,`name`) VALUES (4,34,'','testRoot');
 COMMIT;
 
 INSERT INTO `dragonfly`.`reportReplace` (`idreportReplace`,`idreport`,`fromValue`,`toValue`) VALUES (1,1,'CacheReset','Yes');
-INSERT INTO `dragonfly`.`reportReplace` (`idreportReplace`,`idreport`,`fromValue`,`toValue`) VALUES (5,4,'CacheReset','Yes');
 COMMIT;
