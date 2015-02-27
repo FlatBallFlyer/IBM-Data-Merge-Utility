@@ -115,7 +115,7 @@ public class Template {
 	    
 		// load directives
 		try {
-		    rs = st.executeQuery("select * from directiveFull where idtemplate = " + this.idtemplate);	
+		    rs = st.executeQuery("select * from directivefull where idtemplate = " + this.idtemplate);	
 			while (rs.next()) {
 				String type = rs.getString("directiveType");
 				log.finer("Loading Directive " + type);

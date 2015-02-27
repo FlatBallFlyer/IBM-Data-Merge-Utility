@@ -34,14 +34,14 @@ use
 Editor::inst( $db, 'report', 'idreport' )
 	->fields(
 		Field::inst( 'report.idreport' ),
-		Field::inst( 'report.idtemplate' )->options( 'templateFull', 'idtemplate', 'fullName' ),
+		Field::inst( 'report.idtemplate' )->options( 'templatefull', 'idtemplate', 'fullName' ),
 		Field::inst( 'report.name' ),
 		Field::inst( 'report.outputRoot' ),
-		Field::inst( 'templateFull.fullName' ),
-		Field::inst( 'templateFull.collectionName' ),
-		Field::inst( 'templateFull.name' ),
-		Field::inst( 'templateFull.columnValue' )
+		Field::inst( 'templatefull.fullName' ),
+		Field::inst( 'templatefull.collectionName' ),
+		Field::inst( 'templatefull.name' ),
+		Field::inst( 'templatefull.columnValue' )
 	)
-	->leftJoin( 'templateFull', 'templateFull.idtemplate', '=', 'report.idtemplate' )
+	->leftJoin( 'templatefull', 'templatefull.idtemplate', '=', 'report.idtemplate' )
 	->process( $_POST )
 	->json();

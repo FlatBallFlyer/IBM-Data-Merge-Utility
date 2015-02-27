@@ -133,7 +133,7 @@ $(document).ready(function() {
 			if ( theColumn != "" ) {
 				parameters += "&column=" + theColumn;
 			} 
-			win=window.open("http://localhost:8080/dragonfly/Merge.html?" + parameters, '_blank');
+			win=window.open(dragonFlyUrl + "?" + parameters, '_blank');
 			win.focus();
 		}		
 	}

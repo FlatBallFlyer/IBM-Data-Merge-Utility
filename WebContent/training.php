@@ -2,7 +2,7 @@
 <html>
  
 <head>
-
+	<script>var dragonFlyUrl="http://localhost:8080/dragonfly/Merge.html"</script>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		
 	<title>DragonFly Traning</title>
@@ -176,9 +176,9 @@ Your message here
 	<div id="scriptDialog" title="Merge Command Execution">
 	<textarea rows="6" cols="70">
 $( "#merge" ).click(function() {
+	var dragonFlyUrl="http://localhost:8080/dragonfly/Merge.html"
 	var parameters = "collection=test.root&name=allReports";
-	var url = "http://localhost:8080/dragonfly/Merge.html"
-	win=window.open(url + "?" + parameters, '_blank');
+	win=window.open(dragonFlyUrl + "?" + parameters, '_blank');
 	win.focus();
 });
 	</textarea>
@@ -366,8 +366,7 @@ $( "#replaceRow" ).click(function() {  $( "#replaceRowDialog" ).dialog( "open" )
 
 $( "#merge" ).click(function() {
 	var parameters = "collection=test.root&name=allReports";
-	var url = "http://localhost:8080/dragonfly/Merge.html"
-	win=window.open(url + "?" + parameters, '_blank');
+	win=window.open(dragonFlyUrl + "?" + parameters, '_blank');
 	win.focus();
 });
 </script>

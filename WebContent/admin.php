@@ -2,7 +2,7 @@
 <html>
  
 <head>
-
+	<script>var dragonFlyUrl="http://localhost:8080/dragonfly/Merge.html"</script>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		
 	<title>Template Admin</title>

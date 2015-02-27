@@ -13,5 +13,3 @@ $sql_details = array(
 );
 
 include( getenv('PHP_LIB_ROOT') . "/Editor/php/DataTables.php" );
-
-?>

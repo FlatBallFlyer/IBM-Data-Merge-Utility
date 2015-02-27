@@ -52,7 +52,7 @@ $(document).ready(function() {
 		"ajax": "php/table.report.php",
 		"columns": [
 			{"data": "report.name"},
-			{"data": "templateFull.fullName"},
+			{"data": "templatefull.fullName"},
 			{"data": "report.outputRoot"},
 		],
 		"tableTools": {
@@ -82,9 +82,9 @@ $(document).ready(function() {
 
 	function setReport(table, nodes) {
 		theReport = table.row(nodes).data().report.idreport;
-		theTemplateCollection = table.row(nodes).data().templateFull.collectionName;
-		theTemplateName = table.row(nodes).data().templateFull.name;
-		theTemplateColumn = table.row(nodes).data().templateFull.columnValue;		
+		theTemplateCollection = table.row(nodes).data().templatefull.collectionName;
+		theTemplateName = table.row(nodes).data().templatefull.name;
+		theTemplateColumn = table.row(nodes).data().templatefull.columnValue;		
 		var theName = table.row(nodes).data().report.name;
 		var event = new CustomEvent('reportSet');
 		$( ".listener" ).trigger( "reportSet", [theName, theReport]  );
