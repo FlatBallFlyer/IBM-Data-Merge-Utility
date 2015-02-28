@@ -257,7 +257,6 @@ INSERT INTO `directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`descr
 INSERT INTO `directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`jndiSource`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`) VALUES (22,20,1,5,'Require idtemplate','','','','','{idtemplate}','','{idtemplate}','');
 INSERT INTO `directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`jndiSource`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`) VALUES (23,21,1,2,'get collection','dragonflyDB','*','collection','idcollection = {idcollection}','','','','');
 INSERT INTO `directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`jndiSource`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`) VALUES (24,21,1,3,'Get Special Replace Values','dragonflyDB','fromValue, toValue','reportReplace','idreport = \'1\'','','','','');
-INSERT INTO `directive` (`iddirective`,`idtemplate`,`idcollection`,`type`,`description`,`jndiSource`,`selectColumns`,`fromTables`,`whereCondition`,`fromValue`,`toValue`,`notLast`,`onlyLast`) VALUES (33,41,2,3,'Get Corporate Wide replace values','testgenDB','*','corporate','','','','','');
 COMMIT;
 
 INSERT INTO `dragonfly`.`report` (`idreport`,`idtemplate`,`outputRoot`,`name`) VALUES (1,19,'','test');

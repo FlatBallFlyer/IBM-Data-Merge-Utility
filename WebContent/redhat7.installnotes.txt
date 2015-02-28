@@ -1,11 +1,15 @@
 Download the DataTables pre-req at: http://datatables.net/releases/DataTables-1.10.zip (extract into /tmp/DataTables-1.10)
 Download the Editor pre-req at: http://editor.datatables.net/download/download?type=php (extract into /tmp/Editor-PHP-1.4)
 Download the dragonfly WAR and TAR files - copy the dragonfly.tar file to /tmp 
-If you don't have access to run wget, download the following files
+If you don't have access to run wget, download the following files and copy them - adjust instructions below
 http://apache.mirrors.tds.net/tomcat/tomcat-7/v7.0.59/bin/apache-tomcat-7.0.59.tar.gz
 http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.34.tar.gz
 
-
+Installed RHEL 7, Did not use VMWare simple install
+ - Selected "Server with GUI" - No optional components
+ - Configured as 2GB and 2CPU, Shared Drives, Network ID and host name domain
+ - Set root password during startup
+ 
 Installed RHEL 6.5.5 from DVD media
 Add dirve sharing, configure network as bridged
 vi /etc/selinux/config - 
