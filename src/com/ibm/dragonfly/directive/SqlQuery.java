@@ -62,16 +62,25 @@ public class SqlQuery {
 	 *  
 	 */
 	public String getQueryString(Map<String,String> replaceValues) {
-		String queryString = "SELECT " + this.selectColumns;
-		if ( !this.fromTables.isEmpty()) {
-			queryString += " FROM " + this.fromTables;
+		String columns = this.selectColumns;
+		for (Map.Entry<String, String> entry : replaceValues.entrySet()) {
+			columns = columns.replace(entry.getKey(), entry.getValue());
 		}
+		String queryString = "SELECT " + columns;
+		
+		if ( !this.fromTables.isEmpty()) {
+			String tables = this.fromTables;
+			for (Map.Entry<String, String> entry : replaceValues.entrySet()) {
+				tables = tables.replace(entry.getKey(), entry.getValue());
+			}
+			queryString += " FROM " + tables;
+		}
+		
 		if ( !this.whereCondition.isEmpty() ) {
-			// run replace stack over where condition
 			String where = this.whereCondition;
 			for (Map.Entry<String, String> entry : replaceValues.entrySet()) {
-				  where = where.replace(entry.getKey(), entry.getValue());
-				}
+			  where = where.replace(entry.getKey(), entry.getValue());
+			}
 			queryString += " WHERE " + where;
 		}
 		return queryString;
