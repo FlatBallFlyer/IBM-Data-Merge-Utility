@@ -16,20 +16,15 @@
  */
 
 package com.ibm.dragonfly;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.*;
 
 /**
- * This class represents a bookmark which is an insertion point in a template. 
+ * A location within a template where sub-templates will be inserted. 
  *
  * @author  Mike Storey
- * @version 3.0
- * @since   1.0
- * @see     Template
- * @see     Merge
  */
-public class Bookmark {
+class Bookmark {
 	private static final Logger log = Logger.getLogger( Bookmark.class.getName() );
 	private String element;
 	private String name;
@@ -39,12 +34,11 @@ public class Bookmark {
 	/********************************************************************************
 	 * <p>Bookmark constructor</p>
 	 *
-	 * @param  Bookmark String in the form <tkBookmark name="THENAME"/>
-	 * @param  The location within the template of this bookmark
-	 * @throws tkException - Invalid Bookmark
-	 * @return The new bookmark object
+	 * @param  contents Bookmark String in the form &lt;tkBookmark name="THENAME"/&gt;
+	 * @param  initialStart The location within the template of this bookmark
+	 * @throws DragonFlyException Invalid Bookmark
 	 */
-	public Bookmark (String contents, int initialStart) throws tkException {
+	public Bookmark (String contents, int initialStart) throws DragonFlyException {
 		Pattern p = Pattern.compile("=\"(.*)\"");
 		Matcher m = p.matcher(contents);
 		if (m.find()) {
@@ -53,17 +47,15 @@ public class Bookmark {
 			start = initialStart;
 			size = element.length();
 		} else {
-			log.log(Level.SEVERE, "Malformed Bookmark " + contents);
-			throw new tkException("Invalid Bookmark found: " + contents, "Invalid Bookmark");
+			log.severe("Malformed Bookmark " + contents);
+			throw new DragonFlyException("Invalid Bookmark found: " + contents, "Invalid Bookmark");
 		}
 	}
 	
 	/********************************************************************************
 	 * <p>Bookmark Clone constructor</p>
 	 *
-	 * @param  Bookmark to clone
-	 * @throws tkException - Invalid Bookmark
-	 * @return The new bookmark object
+	 * @param  from Bookmark to clone
 	 */
 	public Bookmark (Bookmark from) {
 		this.element = from.element;
@@ -75,7 +67,7 @@ public class Bookmark {
 	/**********************************************************************************
 	 * <p>Offset method to call when the bookmark is shifted</p>
 	 *
-	 * @param  The number of bytes (positive or negative) to offset
+	 * @param  amount The number of bytes (positive or negative) to offset
 	 */
 	public void offest (int amount) {
 		start += amount;

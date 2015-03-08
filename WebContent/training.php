@@ -46,7 +46,7 @@
 						<li><a href="#Collection">Dynamic Sub-Templates</a></li>
 					</ul>
 					<div id="Introduction">					
-						<p>DragonFly is a general purpose SLQ / Template merge tool that allows you to create 
+						<p>DragonFly is a general purpose SQL / Template merge tool that allows you to create 
 						any type of text output, to one or multiple files based on a set of Templates and SQL based Merge Directives.
 						</p>
 						<img src="images/overview1.png"/>
@@ -101,11 +101,11 @@
 			</div>
 
 			<div id="Templates">
-				<table><tr><td valign="top">
+				<table width="100%"><tr><td valign="top" width="80%">
 					<div class="container" id="divTemplate">
 						<?php require 'html/table.template.html';?>
 					</div>
-				</td><td class="validationTable">
+				</td><td valign="top" width="20%">
 					<div class="container" id="divDirective">
 						<?php require 'html/table.directive.html';?>
 					</div>

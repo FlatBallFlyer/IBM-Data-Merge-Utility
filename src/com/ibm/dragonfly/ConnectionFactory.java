@@ -32,34 +32,31 @@ import javax.sql.DataSource;
 
 
 /**
- * <p>This implements a connection factory for the TemplateDB and DataDB JNDI Data Sources</p>
+ * A connection factory for JNDI Data Sources Supports TemplateDB and DataDB connections.
  *
  * @author  Mike Storey
- * @version 3.0
- * @since   1.0
- * @see     Template
- * @see     Directive
- * @see     Merge
  */
-final public class ConnectionFactory {
+final class ConnectionFactory {
 	private static final Logger log = Logger.getLogger( ConnectionFactory.class.getName() );
+	private static final String DBROOT = "java:/comp/env/jdbc/";
+	private static final String DBNAME = "dragonflyDB";
 	private static DataSource templateDB;
 	private static final HashMap<String,DataSource> dataDbHash = new HashMap<String,DataSource>();
 	
     /**********************************************************************************
 	 * <p>Template Connection Factory</p>
 	 *
-	 * @throws tkException - JNDI Connection Error
-	 * @throws tkSqlException - Tempalte Table validation error
+	 * @throws DragonFlyException JNDI Connection Error
+	 * @throws DragonFlySqlException Tempalte Table validation error
 	 * @return The new template database connection 
 	 */
-    public static Connection getTemplateConnection() throws tkSqlException, tkException {
+    public static Connection getTemplateConnection() throws DragonFlySqlException, DragonFlyException {
     	if (templateDB == null) {
         	try { // Get the naming context
             	Context initContext = new InitialContext();
-            	templateDB = (DataSource) initContext.lookup("java:/comp/env/jdbc/dragonflyDB");
+            	templateDB = (DataSource) initContext.lookup(DBROOT + DBNAME);
         	} catch (NamingException e) {
-        		throw new tkException(e.getMessage(), "JNDI Connection Error connection to dragonflyDB");
+        		throw new DragonFlyException(e.getMessage(), "JNDI Connection Error connection to " + DBNAME );
         	}
         	
         	try { // Validate Template DB
@@ -72,7 +69,7 @@ final public class ConnectionFactory {
     			}			
     			    			
         	} catch (SQLException e) {
-        		throw new tkSqlException("Error getting table metadata", "Template Datasource Error", "meta.getTables", e.getMessage());
+        		throw new DragonFlySqlException("Error getting table metadata", "Template Datasource Error", "meta.getTables", e.getMessage());
 			}
     	}
     	
@@ -80,27 +77,27 @@ final public class ConnectionFactory {
 			Connection con = templateDB.getConnection();
 			return con;
 		} catch (SQLException e) {
-			throw new tkSqlException("Error Connecting to Template Database", "Database Connection Error", "Connect to Database dragonflyDB", e.getMessage());
+			throw new DragonFlySqlException("Error Connecting to Template Database", "Database Connection Error", "Connect to Database dragonflyDB", e.getMessage());
 		}
     }
 
     /**********************************************************************************
 	 * <p>Data Source connection factory</p>
 	 *
-	 * @param  JNDI Data Source name
-	 * @throws tkException - JNDI Naming Errors
-	 * @throws tkSqlException - Database Connection Errors
-	 * @return The new Data Source connection 
+	 * @param  jndiSource JNDI Data Source name
+	 * @throws DragonFlyException JNDI Naming Errors
+	 * @throws DragonFlySqlException Database Connection Errors
+	 * @return Connection The new Data Source connection 
 	 */
-    public static Connection getDataConnection(String jndiSource) throws tkSqlException, tkException {
+    public static Connection getDataConnection(String jndiSource) throws DragonFlySqlException, DragonFlyException {
     	// If the data source is not in the cache, create it and add it to the cache
     	if ( !dataDbHash.containsKey(jndiSource) ) { 
         	try {
             	Context initContext = new InitialContext();
-            	DataSource newSource = (DataSource) initContext.lookup("java:/comp/env/jdbc/" + jndiSource);
+            	DataSource newSource = (DataSource) initContext.lookup(DBROOT + jndiSource);
             	dataDbHash.put(jndiSource, newSource);
         	} catch (NamingException e) {
-        		throw new tkException(e.getMessage(), "JNDI Connection Error " + jndiSource);
+        		throw new DragonFlyException(e.getMessage(), "JNDI Connection Error " + DBROOT + jndiSource);
         	}
     	}
     	
@@ -108,7 +105,7 @@ final public class ConnectionFactory {
 		try {
 			return dataDbHash.get(jndiSource).getConnection();
 		} catch (SQLException e) {
-			throw new tkSqlException("Error Connecting to Data Database " + jndiSource, "Database Connection Error", "Connect to Database " + jndiSource, e.getMessage());
+			throw new DragonFlySqlException("Error Connecting to Data Database " + jndiSource, "Database Connection Error", "Connect to Database " + jndiSource, e.getMessage());
 		}
     }
 

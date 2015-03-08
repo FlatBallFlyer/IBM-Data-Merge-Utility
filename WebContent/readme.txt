@@ -1,3 +1,11 @@
+BlueMix Notes
+cd ~/GitHub/Bluemix/DragonFly
+cf api https://api.ng.bluemix.net
+cf login -u Mike.Storey@us.ibm.com -o Mike.Storey@us.ibm.com -s dev
+cf push DragonFly
+dragonfly.mybluemix.net
+
+
 Download the DataTables pre-req at: http://datatables.net/releases/DataTables-1.10.zip (extract into /tmp/DataTables-1.10)
 Download the Editor pre-req at: http://editor.datatables.net/download/download?type=php (extract into /tmp/Editor-PHP-1.4)
 Download the dragonfly WAR and TAR files - copy the dragonfly.tar file to /tmp 

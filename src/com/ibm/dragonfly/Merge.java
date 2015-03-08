@@ -19,12 +19,6 @@ package com.ibm.dragonfly;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,100 +26,91 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class Merge
+ * Servlet implementation - instantiates a template, merges the output and finalizes the output archive.
+ * @see TemplateFactory
+ * @see Template
  */
 @WebServlet("/Merge")
 public class Merge extends HttpServlet {
-	private static final Logger log = Logger.getLogger( Merge.class.getName() );
 	private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor. 
      */
     public Merge() {
-    	log.fine("Servlet Constructed");
     }
 
 	/**
-	 * @throws IOException 
+	 * @throws IOException getWriter failed  
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	 * @param req the Http Request object
+	 * @param res the Http Response Object
+	 */ 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
     	merge(req, res);
     }
 
 	/**
-	 * @throws IOException 
+	 * @throws IOException getWriter failed
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @param req the Http Request object
+	 * @param res the Http Response Object
 	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 	    merge(req, res);
 	}
 
 	/**
-	 * @throws IOException - getWriter failed
+	 * This is the Servlet - Template interface:
+	 * <ul>
+	 * 		<li>A template is retrieved from the TemplateFactory</li>
+	 * 		<li>The Template is Merged and written to the response</li>
+	 * 		<li>The ZIP file containing generated documents is Finalized</li>
+	 * </ul>
+	 * 
+	 * @throws IOException getWriter failed
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @param request the Http Request object
+	 * @param response the Http Response Object
 	 */
 	public void merge(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// Configure Logging
-		ConsoleHandler handler = new ConsoleHandler();
-		handler.setFormatter(new SimpleFormatter());
-		handler.setLevel(Level.WARNING);
-		
+		// Create the response object
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();			
-		
-		// Initialize initial replace hash map
-		HashMap<String,String> replace = new HashMap<String,String>();
-		replace.put("{collection}", "root");
-		replace.put("{column}","");
-		replace.put("{name}", "default");
-		
 
-		// Testing Values for test template
-		// replace.put("{collection}", "dragonfly");
-		// replace.put("{name}", "testRoot");
-		
-		// Iterate parameters, setting replace values 
-		Enumeration<String> parameterNames = request.getParameterNames();
-		while (parameterNames.hasMoreElements()) {
-			String paramName = parameterNames.nextElement();
-			String paramValue = request.getParameterValues(paramName)[0];
-			if ("CacheReset".equals(paramName) && "Yes".equals(paramValue) ) {
-				TemplateFactory.reset();
-			} else {
-				replace.put("{" + paramName + "}", paramValue);
-			}
-		}
-				
 		// Do the Merge and Handle all Exceptions
 		try {
-			// Get a template from the factory
-			Template root = TemplateFactory.getTemplate(replace.get("{collection}"), replace.get("{column}"), replace.get("{name}"));
-			
-			// Add replace values from the parameter list
-			root.getReplaceValues().putAll(replace);
+			// Get a template using the httpServletRequest constructor
+			Template root = TemplateFactory.getTemplate(request);
 			
 			// Perform the merge and write output
 			out.write(root.merge());
 			
-			// TODO - Tar and return additional generated output files
-			// 
+			// Finalize ZIP file for any additional generated output files up.
+			root.packageOutput(); 
 			
-		} catch (tkException e) {
-			out.write("MERGE FAILED! tkException " + e.getErrorCode() + "\n");
-			out.write(e.getMessage() + "\n");
+		} catch (DragonFlyException e) {
+			out.write("<html><head></head><body><h1>DragonFly Exception - MERGE FAILED!</h1>");
+			out.write("<p>DragonFLy Exception: " + e.getErrorCode() + "</p>");
+			out.write("<p>Message: " + e.getMessage() + "</p>");
+			out.write("<p>StackTrace: <textarea width=80 height=24>");
 			e.printStackTrace(out);
-		} catch (tkSqlException e) {
-			out.write("MERGE FAILED! SQLException" + e.getErrorCode() + "\n");
-			out.write(" - QueryString:" + e.getQueryString() + "\n");
-			out.write(" - SQL Error:" + e.getSqlError() + "\n");
-			out.write(e.getMessage() + "\n");
+			out.write("</textarea></p></body></html>");
+		} catch (DragonFlySqlException e) {
+			out.write("<html><head></head><body><h1>SQL Exception - MERGE FAILED!</h1>");
+			out.write("<p>SQL Exception: " + e.getErrorCode() + "</p>");
+			out.write("<p>Message: " + e.getMessage() + "</p>");
+			out.write("<p>QueryString: " + e.getQueryString() + "</p>");
+			out.write("<p>SQL Error:" + e.getSqlError() + "</p>");
+			out.write("<p>StackTrace: <textarea width=80 height=24>");
 			e.printStackTrace(out);
+			out.write("</textarea></p></body></html>");
 		} catch (IOException e) {
-			out.write("MERGE FAILED! IOException"  + "\n");
-			out.write(e.getMessage());
+			out.write("<html><head></head><body><h1>IO Exception - MERGE FAILED!</h1>");
+			out.write("<p>Message: " + e.getMessage() + "</p>");
+			out.write("<p>StackTrace: <textarea width=80 height=24>");
 			e.printStackTrace(out);
+			out.write("</textarea></p></body></html>");
 		}
 	}
 }

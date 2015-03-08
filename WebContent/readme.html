@@ -3,15 +3,27 @@
 <body>
 <h1>DragonFly Install Notes</h1>
 <h2>Download Pre-requisits</h2>
+	<p>These install instructions are provided as a series of commands to execute.</p>
+	<p> The scripts assume you are installing on a server named "dragonfly.ibm.com" that is accessable from your client workstation as simply dragonfly in the hosts file.</p>
+	<p>The scripts rely on 2 mount points for software:</p>
 	<ul>
-		<li>Download the DataTables pre-req at: http://datatables.net/releases/DataTables-1.10.zip (extract into /tmp/DataTables-1.10)</li>
-		<li>Download the Editor pre-req at: http://editor.datatables.net/download/download?type=php (extract into /tmp/Editor-PHP-1.4)</li>
-		<li>Download the dragonfly WAR and TAR files - copy the dragonfly.tar file to /tmp </li>
-		<li>If you don't have access to run wget, download the following files and copy them - adjust instructions below</li>
+		<li>/mnt/hgfs/iso - Linux ISO Images
+		<li>/mnt/hgfs/dragonfly/ - Dragonfly and Prerequisite Source
+	</ul>
+	<ul>
+		<li>Download the DataTables pre-req at: http://datatables.net/releases/DataTables-1.10.zip (extract into /mnt/hgfs/dragonfly/DataTables-1.10)</li>
+		<li>Download the Editor pre-req at: http://editor.datatables.net/download/download?type=php (extract into /mnt/hgfs/dragonfly/Editor-PHP-1.4)</li>
+		<li>Download the dragonfly WAR and TAR files - copy the dragonfly.tar file to /mnt/hgfs/dragonfly/ </li>
+		<li>If you don't have access to run wget, download the following files and copy them to /mnt/hgfs/dragonfly and adjust the Tomcat install step</li>
 		<ul>
 			<li>http://apache.mirrors.tds.net/tomcat/tomcat-7/v7.0.59/bin/apache-tomcat-7.0.59.tar.gz</li>
 			<li>http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.34.tar.gz</li>
 		</ul>
+	</ul>
+	<p> If you will be using the RHEL ISO images for Yum repositories, place the appropriate file in the /mnt/hgfs/iso folder:</p>
+	<ul>
+		<li>RHEL-7.0-20140507.0-Server-x86_64-dvd1.iso</li>
+		<li>RHEL6.5-20131111.0-Server-x86_64-DVD1.iso</li>
 	</ul>
 
 <h2>Installed RHEL</h2>
@@ -21,13 +33,14 @@
 		<ul>
 		 	<li>Add dirve sharing</li>
 		 	<li>Configure network as bridged</li>
-		 	<li>Configure as 2GB and 2CPU
+		 	<li>Configure as 2GB and 2CPU</li>
 		</ul>	
 	<h3>Post-Install Configurations</h3>
 		<ul>
 		 	<li>run "setup" 
 		 	<ul><li>Network ID</li>
 		 	<li>Host name and domain</li></ul>
+		 	<li>Shared Drives (iso and dragonfly)</li>
 		 	<li>Disable Firewall </li>
 		</ul>
 	</td><td>
@@ -35,7 +48,9 @@
 	<textarea cols="80" rows="1"></textarea>
 		<ul>
 		 	<li>Selected "Server with GUI" - No optional components</li>
-		 	<li>Configured as 2GB and 2CPU, Shared Drives, Network ID and host name domain</li>
+		 	<li>Configured as 2GB and 2CPU</li>
+		 	<li>Shared Drives (iso and dragonfly)</li>
+		 	<li>Network ID and host name domain</li>
 		 	<li>Set root password during startup</li>
 		</ul>
 	<h3>Post-Install Configurations</h3>
@@ -66,14 +81,14 @@ SELINUX=disabled
 		<textarea cols="80" rows="13">
 cat <<EOF > /etc/yum.repos.d/iso.repo	
 [iso64]
-name=RHEL7_64ISO
+name=RHEL6_64ISO
 baseurl=file:///mnt/RHEL6_64/
 enabled=1
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
 EOF
 mkdir -p /mnt/RHEL6_64
-mount -o loop /mnt/hgfs/LaCie\ 30T/downloads/software/linux/RHEL6.5-20131111.0-Server-x86_64-DVD1.iso /mnt/RHEL6_64/
+mount -o loop /mnt/hgfs/iso/RHEL6.5-20131111.0-Server-x86_64-DVD1.iso /mnt/RHEL6_64/
 yum clean all	
 </textarea></td><td><textarea rows="13" cols="80">
 cat <<EOF > /etc/yum.repos.d/iso.repo	
@@ -85,7 +100,7 @@ gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
 EOF
 mkdir -p /mnt/RHEL7_64
-mount -o loop /mnt/hgfs/LaCie\ 30T/downloads/software/linux/RHEL-7.0-20140507.0-Server-x86_64-dvd1.iso /mnt/RHEL7_64/
+mount -o loop /mnt/hgfs/iso/RHEL-7.0-20140507.0-Server-x86_64-dvd1.iso /mnt/RHEL7_64/
 yum clean all	
 </textarea></td></tr></table>
 	</ul>
@@ -94,23 +109,31 @@ yum clean all
 <h2>Install Appache HTTP Server</h2>
 	<ul>
 		<li>Install and configure Apache</li>
-		<textarea cols="80" rows="7">
+		<table><tr><th>RHEL 6</th><th>RHEL 7</th></tr>
+		<tr><td><textarea cols="80" rows="7">
+yum install -y httpd
+echo "ServerName www.dragonfly.ibm.com:80" >> /etc/httpd/conf/httpd.conf
+echo "<html><head></head><body><h1>It Works</h1></body></html>" > /var/www/html/index.html
+/sbin/service httpd start
+chkconfig httpd on
+</textarea>
+		</td><td><textarea cols="80" rows="7">
 yum install -y httpd
 echo "ServerName www.dragonfly.ibm.com:80" >> /etc/httpd/conf/httpd.conf
 echo "<html><head></head><body><h1>It Works</h1></body></html>" > /var/www/html/index.html
 systemctl start  httpd
 systemctl enable httpd
-
-		</textarea>
-		<p>You should now be able to visit <a href="http://dragonfly/index.html"  target="_blank">http://dragonfly/index.html</a> and you should get your "It Works!" page</p>
+</textarea>
+	</td></tr></table>
 	</ul>
+	<p>You should now be able to visit <a href="http://dragonfly/index.html"  target="_blank">http://dragonfly/index.html</a> and you should get your "It Works!" page</p>
 	
 <h2>Install and Configure Database and PHP</h2>
 	<ul>
 		<li>Install and configure MySQL/MariaDB and Php</li>
 		<table><tr><th>RHEL 6</th><th>RHEL 7</th></tr>
 		<tr><td>
-		<textarea cols="80" rows="9">
+		<textarea cols="80" rows="8">
 yum install -y mysql-server
 service mysqld start
 mysqladmin -u root password drowssap
@@ -118,7 +141,7 @@ chkconfig mysqld on
 yum install -y php php-mysql
 echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
 /sbin/service httpd  restart
-</textarea></td><td><textarea  cols="80" rows="9">
+</textarea></td><td><textarea  cols="80" rows="8">
 yum install -y mariadb-server mariadb
 systemctl start mariadb
 mysqladmin -u root password drowssap
@@ -129,6 +152,7 @@ systemctl restart httpd
 </textarea>
 		</td></tr></table>
 	</ul>
+	<p>You should now be able to visit <a href="http://dragonfly/phpinfo.php"  target="_blank">http://dragonfly/phpinfo.php</a> and you should get your "It Works!" page</p>
 
 <h2>Install and Configure Tomcat</h2>
 	<ul>
@@ -194,14 +218,10 @@ vi /usr/local/tomcat7/conf/context.xml
 		<li>Untar DragonFly app</li>
 		<li>Load the DragonFly database</li>
 		<li>Restart Everything</li>
-		<textarea cols="80" rows="17">
-# Copy the dragonfly tar to /tmp
-cd /tmp
-cp /mnt/hgfs/Macintosh\ HD/Users/flatballflyer/Desktop/dragonfly.tar .
-#
+		<textarea cols="80" rows="13">
 # Extract Dragonfly War
 cd /var/www/html
-tar -xvf /tmp/dragonfly.tar
+tar -xvf /mnt/hgfs/dragonfly/dragonfly.tar
 #
 # Create and Load Database
 cd /var/www/html/sql
@@ -218,27 +238,11 @@ systemctl restart httpd
 <h2>Install and configure DragonFly Template Editor Web-UI</h2>
 	<h3>Instal Web Application</h3>
 	<ul>
+		<li>Setup Environment Vars</li>
 		<li>Copy files to /tmp - adjust to your share volume</li>
 		<li>Extract and arrange files</li>
 		<li>Configure Environment Vars</li>
-		<textarea cols="80" rows="27">
-cd /tmp
-mkdir Editor-PHP-1.4
-cp -r /mnt/hgfs/Macintosh\ HD/Users/flatballflyer/Desktop/Editor-PHP-1.4-3.0/* ./Editor-PHP-1.4/
-mkdir DataTables-1.10
-cp -r /mnt/hgfs/Macintosh\ HD/Users/flatballflyer/Desktop/DataTables-1.10.5/* ./DataTables-1.10/
-#
-# Exract and Arrange Files
-cd /var/www/html
-mkdir Editor
-mv /tmp/Editor-PHP-1.4/* ./Editor
-cd /var/www/html
-mkdir -p DataTables
-cd DataTables
-cp -r /tmp/DataTables-1.10/media/* ./
-cp -r /tmp/DataTables-1.10/extensions/ .
-rm -f  /var/www/html/Editor/php/Bootstrap.php
-cp    /var/www/html/Bootstrap.php /var/www/html/Editor/php/Bootstrap.php
+		<textarea cols="80" rows="22">
 #
 # Configure PHP Environment Vars
 cat <<EOF > /etc/httpd/conf.d/dragonfly.conf
@@ -249,11 +253,22 @@ SetEnv OPENSHIFT_MYSQL_DB_PORT "3306"
 SetEnv OPENSHIFT_APP_NAME "dragonfly"
 SetEnv PHP_LIB_ROOT "/var/www/html"
 EOF
+#
+# Exract and Arrange Files
+cd /var/www/html
+mkdir Editor
+cp -r /mnt/hgfs/dragonfly/Editor-PHP-1.4/* ./Editor/
+mkdir -p DataTables
+cd DataTables
+cp -r /mnt/hgfs/dragonfly/DataTables-1.10/media/* ./
+cp -r /mnt/hgfs/dragonfly/DataTables-1.10/extensions/ .
+rm -f  /var/www/html/Editor/php/Bootstrap.php
+cp    /var/www/html/Bootstrap.php /var/www/html/Editor/php/Bootstrap.php
 </textarea>
-		<li>Change the Merge ULR from "localhost" to your host name</li>
+		<li>Change the Merge URL from "localhost" to your host name</li>
 		<textarea cols="80" rows="2">
 vi /var/www/html/admin.php
-		</textarea>
+</textarea>
 		<li>Restart Everything</li>
 		<textarea cols="80" rows="4">
 /usr/local/tomcat7/bin/shutdown.sh
@@ -293,7 +308,7 @@ mysql -pdrowssap < createSampleDatabase.sql
 		<li>Change merge host from "localhost" to your host name</li>
 		<textarea cols="80" rows="2">
 vi /var/www/html/training.php
-		</textarea>
+</textarea>
 		<li>Restart Everything</li>
 		<textarea cols="80" rows="4">
 /usr/local/tomcat7/bin/shutdown.sh
@@ -331,7 +346,7 @@ vi /usr/local/tomcat7/conf/context.xml
 		<textarea cols="80" rows="16">
 # Copy the sitgen tar to /tmp
 cd /tmp
-cp /mnt/hgfs/Macintosh\ HD/Users/flatballflyer/Desktop/sitgen.tar .
+cp /mnt/hgfs/dragonfly/sitgen.tar .
 #
 # Extract the file
 cd /var/www/html
