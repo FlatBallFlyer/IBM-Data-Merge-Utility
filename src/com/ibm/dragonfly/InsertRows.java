@@ -17,10 +17,11 @@
 package com.ibm.dragonfly;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Logger;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
 
 /**
  * <p>This class represents a insertRows directive which inserts sub-templates

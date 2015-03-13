@@ -21,6 +21,8 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+
 import com.ibm.dragonfly.Template;
 
 /**
@@ -33,6 +35,7 @@ import com.ibm.dragonfly.Template;
  */
 final public class TemplateFactory {
 	// Factory Constants
+	private static final Logger 	log = Logger.getLogger( TemplateFactory.class.getName() );
 	private static final String		KEY_CACHE_RESET		= "CacheReset";
 	private static final String		KEY_COLLECTION		= Template.wrap("collection");
 	private static final String		KEY_NAME			= Template.wrap("name");
@@ -69,6 +72,7 @@ final public class TemplateFactory {
 			String paramValue = request.getParameterValues(paramName)[0];
 			if (KEY_CACHE_RESET.equals(paramName) && "Yes".equals(paramValue) ) {
 				TemplateFactory.reset();
+				log.info("Cache Reset");
 			} else {
 				replace.put(Template.wrap(paramName), paramValue);
 			}
@@ -101,6 +105,7 @@ final public class TemplateFactory {
     	if ( !templateCache.containsKey(fullName) ) { 
     		Template newTemplate = new Template(collection, column, name);
     		templateCache.put(fullName, newTemplate);
+    		log.info("Constructed Template: " + fullName);
     	}
     	return new Template(templateCache.get(fullName),seedReplace);
     }

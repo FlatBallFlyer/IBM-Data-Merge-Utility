@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 /**
  * Servlet implementation - instantiates a template, merges the output and finalizes the output archive.
  * @see TemplateFactory
@@ -33,8 +35,9 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/Merge")
 public class Merge extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final Logger log = Logger.getLogger(HttpServlet.class.getName());
 
-    /**
+	/**
      * Default constructor. 
      */
     public Merge() {
@@ -86,10 +89,11 @@ public class Merge extends HttpServlet {
 			// Perform the merge and write output
 			out.write(root.merge());
 			
-			// Finalize ZIP file for any additional generated output files up.
+			// Finalize ZIP file for any additional generated output files
 			root.packageOutput(); 
 			
 		} catch (DragonFlyException e) {
+			log.fatal("DragonFlyException: " + e.getErrorCode());
 			out.write("<html><head></head><body><h1>DragonFly Exception - MERGE FAILED!</h1>");
 			out.write("<p>DragonFLy Exception: " + e.getErrorCode() + "</p>");
 			out.write("<p>Message: " + e.getMessage() + "</p>");
@@ -97,6 +101,7 @@ public class Merge extends HttpServlet {
 			e.printStackTrace(out);
 			out.write("</textarea></p></body></html>");
 		} catch (DragonFlySqlException e) {
+			log.fatal("DragonFlySqlException: " + e.getErrorCode() + ":" + e.getQueryString());
 			out.write("<html><head></head><body><h1>SQL Exception - MERGE FAILED!</h1>");
 			out.write("<p>SQL Exception: " + e.getErrorCode() + "</p>");
 			out.write("<p>Message: " + e.getMessage() + "</p>");
@@ -106,6 +111,7 @@ public class Merge extends HttpServlet {
 			e.printStackTrace(out);
 			out.write("</textarea></p></body></html>");
 		} catch (IOException e) {
+			log.fatal("DragonFlySqlException: " + e.getMessage() );
 			out.write("<html><head></head><body><h1>IO Exception - MERGE FAILED!</h1>");
 			out.write("<p>Message: " + e.getMessage() + "</p>");
 			out.write("<p>StackTrace: <textarea width=80 height=24>");

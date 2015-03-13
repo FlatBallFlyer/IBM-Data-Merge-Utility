@@ -30,10 +30,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Logger;
 import java.util.regex.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import org.apache.log4j.Logger;
 
 /**********************************************************************************
  * A template and it's collection of directives. This class represents the primary 
@@ -121,7 +122,7 @@ public class Template {
 
 		    // If still not found, throw tkException
 		    if (!rs.isBeforeFirst()) {
-		    	log.severe("Second Template Not Found by: " + queryString);
+		    	log.fatal("Second Template Not Found by: " + queryString);
 		    	throw new DragonFlyException("Template Not Found by " + queryString, "Invalid Template Data");
 		    }	    
 		    rs.next();
@@ -350,8 +351,8 @@ public class Template {
 		if (from.isEmpty()) {return;}	
 		to = to.replace("{tkReplaceValues}", "{- tkReplaceValues}"); // safety
 		if ( to.lastIndexOf(from) > 0 ) {
-			String message = "Replace Attempted with Replace Value containg Replace Key:" + from + "\n Value:" + to; 
-			log.severe(message);
+			String message = "Replace Attempted with Replace Value containg Replace Key:" + from + "\n Value:" + to + " in " + this.getFullName(); 
+			log.fatal(message);
 			throw new DragonFlyException("Replace Error!", message);
 		}
 		

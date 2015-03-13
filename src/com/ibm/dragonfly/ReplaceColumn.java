@@ -15,9 +15,10 @@
  *
  */
 package com.ibm.dragonfly;
-import java.util.logging.Logger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
 
 /**
  * <p>This class represents a replaceColumn directive which loads the Replace hashmap
@@ -50,13 +51,15 @@ class ReplaceColumn extends SqlDirective {
 	 * @throws DragonFlySqlException Database Connection Error
 	 */
 	public void getValues(Template target) throws DragonFlyException, DragonFlySqlException {
-		log.info("Adding Replace Column values");
 		try {
+			int count = 0;
 			ResultSet rs = this.getResultSet(target.getReplaceValues());
 			while (rs.next()) {
 				target.addColReplace(rs.getString("FromValue"), rs.getString("ToValue"));
+				count++;
 			}
 			this.close();
+			log.info("Added " + String.valueOf(count) + " Replace Column values");
 		} catch (SQLException e) {
 			throw new DragonFlyException("Replace Column Error - did you select columns fromValue or toValue? "+e.getMessage(), "Invalid Merge Data");
 		}		

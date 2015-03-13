@@ -18,12 +18,15 @@ package com.ibm.dragonfly;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 /**
  * A simple replace From with To directive 
  *
  * @author  Mike Storey
  */
 class ReplaceValue {
+	private static final Logger log = Logger.getLogger( ReplaceValue.class.getName() );
 	private String description;
 	private String fromValue;
 	private String toValue;
@@ -51,6 +54,7 @@ class ReplaceValue {
 	 */
 	public void getValues(Template target) {
 		target.getReplaceValues().put(this.fromValue, this.toValue);
+		log.info("Replace Value " + this.fromValue + " -> " + this.toValue);
 	}
 
 	/**

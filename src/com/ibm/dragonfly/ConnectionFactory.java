@@ -22,12 +22,13 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
+import org.apache.log4j.Logger;
 
 
 
@@ -65,7 +66,6 @@ final class ConnectionFactory {
     			ResultSet rs = dbmeta.getTables(null, null, "%", null);
     			while (rs.next()) {
     				log.info("Table Found: " + rs.getString(1) + "." + rs.getString(3) );
-    				// todo, validate all template tables are in the db.
     			}			
     			    			
         	} catch (SQLException e) {
@@ -97,7 +97,9 @@ final class ConnectionFactory {
             	DataSource newSource = (DataSource) initContext.lookup(DBROOT + jndiSource);
             	dataDbHash.put(jndiSource, newSource);
         	} catch (NamingException e) {
-        		throw new DragonFlyException(e.getMessage(), "JNDI Connection Error " + DBROOT + jndiSource);
+        		String msg = "JNDI Connection Error " + DBROOT + jndiSource;
+        		log.fatal(msg);
+        		throw new DragonFlyException(e.getMessage(), msg);
         	}
     	}
     	
@@ -105,7 +107,9 @@ final class ConnectionFactory {
 		try {
 			return dataDbHash.get(jndiSource).getConnection();
 		} catch (SQLException e) {
-			throw new DragonFlySqlException("Error Connecting to Data Database " + jndiSource, "Database Connection Error", "Connect to Database " + jndiSource, e.getMessage());
+			String msg = "Error Connecting to Data Database " + jndiSource;
+			log.fatal(msg);
+			throw new DragonFlySqlException(msg, "Database Connection", jndiSource, e.getMessage() );
 		}
     }
 

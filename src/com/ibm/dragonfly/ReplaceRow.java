@@ -18,6 +18,8 @@ package com.ibm.dragonfly;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 /**
  * <p>This class represents a replaceRow directive which loads the Replace hashmap
  * with the values of "{columnName}" to column.Value in a single row sql result set.</p>
@@ -25,6 +27,7 @@ import java.sql.SQLException;
  * @author  Mike Storey
  */
 class ReplaceRow extends SqlDirective {
+	private static final Logger log = Logger.getLogger( ReplaceRow.class.getName() );
 
 	/**
 	 * <p>Constructor</p>
@@ -62,6 +65,7 @@ class ReplaceRow extends SqlDirective {
 			
 			target.addRowReplace(rs);
 			this.close();
+			log.info("Replace Row Query " + this.getQueryString(target.getReplaceValues()) + " found and used 1 row");
 		} catch (SQLException e) {
 			throw new DragonFlyException("Replace Row Error: "+e.getMessage(), "Invalid Merge Data");
 		}

@@ -16,8 +16,10 @@
  */
 
 package com.ibm.dragonfly;
-import java.util.logging.Logger;
+
 import java.util.regex.*;
+
+import org.apache.log4j.Logger;
 
 /**
  * A location within a template where sub-templates will be inserted. 
@@ -47,7 +49,7 @@ class Bookmark {
 			start = initialStart;
 			size = element.length();
 		} else {
-			log.severe("Malformed Bookmark " + contents);
+			log.fatal("Malformed Bookmark " + contents);
 			throw new DragonFlyException("Invalid Bookmark found: " + contents, "Invalid Bookmark");
 		}
 	}
