@@ -15,8 +15,10 @@
  *
  */
 package com.ibm.dragonfly;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
@@ -40,6 +42,15 @@ class ReplaceRow extends SqlDirective {
 	}
 
 	/**
+	 * <p>Clone Constructor</p>
+	 *
+	 * @param  from object to clone 
+	 */
+	public ReplaceRow(ReplaceRow from) {
+		super(from);
+	}
+
+	/**
 	 * <p>Get Values will execute the SQL query add values to the provided HashMap</p>
 	 * 
 	 * @param  target The Template to place values in
@@ -47,27 +58,35 @@ class ReplaceRow extends SqlDirective {
 	 * @throws DragonFlySqlException Database Connection Error
 	 */
 	public void getValues(Template target) throws DragonFlyException, DragonFlySqlException {
+		Connection con = null;
+		
 		try {
-			ResultSet rs = this.getResultSet(target.getReplaceValues());
+			String queryString = this.getQueryString(target.getReplaceValues());
+			con = ConnectionFactory.getDataConnection(this.jndiSource, target.getOutputFile());
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(queryString);
 			rs.next();
+			
+			// Make sure we don't have an empty result set
 			if ( rs.isBeforeFirst() ) {
-				throw new DragonFlyException(
-						"Empty Result set returned by:" + 
-						this.getQueryString(target.getReplaceValues()), 
-						"Data Source Error");
-			}
-			if ( !rs.isLast() ) {
-				throw new DragonFlyException(
-						"Multiple rows returned when single row expected:" + 
-						this.getQueryString(target.getReplaceValues()), 
-						"Data Source Error");
+				String message = "Empty Result set returned by:" + this.getQueryString(target.getReplaceValues()); 
+				log.fatal(message);
+				throw new DragonFlyException(message,"Data Source Error"); 
 			}
 			
+			// Make sure we don't have a multi-row result ste
+			if ( !rs.isLast() ) {
+				String message = "Multiple rows returned when single row expected:" + this.getQueryString(target.getReplaceValues());
+				log.fatal(message);
+				throw new DragonFlyException(message, "Data Source Error");
+			}
+			
+			// Add the row replace
 			target.addRowReplace(rs);
-			this.close();
-			log.info("Replace Row Query " + this.getQueryString(target.getReplaceValues()) + " found and used 1 row");
 		} catch (SQLException e) {
 			throw new DragonFlyException("Replace Row Error: "+e.getMessage(), "Invalid Merge Data");
+		} finally {
+			log.info("Replace Row Query " + this.getQueryString(target.getReplaceValues()) + " found and used 1 row");			
 		}
 	}		
 }

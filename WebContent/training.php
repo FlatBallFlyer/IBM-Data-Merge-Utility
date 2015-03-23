@@ -46,9 +46,10 @@
 						<li><a href="#Collection">Dynamic Sub-Templates</a></li>
 					</ul>
 					<div id="Introduction">					
-						<p>DragonFly is a general purpose SQL / Template merge tool that allows you to create 
-						any type of text output, to one or multiple files based on a set of Templates and SQL based Merge Directives.
-						</p>
+						<p>DragonFly is a general purpose tool that allows you to create output files, based on your data and a set of templates, without any coding. <br/>
+						Any type of text output can be created, and a single merge can create multiple files<br/>
+						Templates are defined with Merge Directives that dive the merge process by building a Replace Stack and inserting Sub-Templates<br/>
+						Most merge directives are based around a SQL query that retrieves data from your JDBC data source for the merge.</p>
 						<img src="images/overview1.png"/>
 					</div>
 					<div id="Replace">					

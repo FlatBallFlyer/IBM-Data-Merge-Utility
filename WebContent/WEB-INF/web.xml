@@ -11,20 +11,17 @@
   </welcome-file-list>
   
   <servlet>
-    <servlet-name>log4j-init</servlet-name>
-    <servlet-class>com.ibm.Log4jServlet</servlet-class>
-
-    <init-param>
-      <param-name>log4j-init-file</param-name>
-      <param-value>WEB-INF/classes/log4j.lcf</param-value>
-    </init-param>
-
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  
-  <servlet>
     <servlet-name>Merge</servlet-name>
     <servlet-class>com.ibm.dragonfly.Merge</servlet-class>
+    <init-param>
+      <param-name>log4j-init-file</param-name>
+      <param-value>/WEB-INF/classes/log4j.properties</param-value>
+    </init-param>
+    <init-param>
+		<param-name>merge-output-root</param-name>
+		<param-value>/tmp/merge/</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>Merge</servlet-name>

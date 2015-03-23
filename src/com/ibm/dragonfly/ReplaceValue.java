@@ -32,7 +32,7 @@ class ReplaceValue {
 	private String toValue;
 
 	/**
-	 * <p>Constructor</p>
+	 * <p>Constructor from Database Row</p>
 	 *
 	 * @param  dbRow Directive database row
 	 * @throws DragonFlyException Bad dbRow bad Template Data
@@ -48,13 +48,24 @@ class ReplaceValue {
 	}
 	
 	/**
+	 * <p>Clone</p>
+	 *
+	 * @param  from Replace Value object to clone
+	 */
+	public ReplaceValue (ReplaceValue from) {
+		this.description	= from.description;	
+		this.fromValue 		= from.fromValue;
+		this.toValue 		= from.toValue;
+	}
+
+	/**
 	 * <p>Get Hashtable From/To</p>
 	 *
 	 * @param  target The template to place values in
 	 */
 	public void getValues(Template target) {
 		target.getReplaceValues().put(this.fromValue, this.toValue);
-		log.info("Replace Value " + this.fromValue + " -> " + this.toValue);
+		log.debug("Replace Value " + this.fromValue + " -> " + this.toValue);
 	}
 
 	/**

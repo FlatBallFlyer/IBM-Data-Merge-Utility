@@ -20,7 +20,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.log4j.Logger;
@@ -36,7 +36,8 @@ import com.ibm.dragonfly.Template;
 final class ZipFactory {
 	// Factory Constants
 	private static final Logger log = Logger.getLogger( ZipFactory.class.getName() );
-	private static final HashMap<String,ZipOutputStream> archiveList = new HashMap<String,ZipOutputStream>();
+	private static final ConcurrentHashMap<String,ZipOutputStream> archiveList = new ConcurrentHashMap<String,ZipOutputStream>();
+	private static String outputroot = System.getProperty("java.io.tmpdir");
 	
     /**********************************************************************************
 	 * <p>Zip Factory</p>
@@ -47,9 +48,9 @@ final class ZipFactory {
 	 */
     public static ZipOutputStream getZipStream(String guid) throws FileNotFoundException {
     	if ( !archiveList.containsKey(guid) ) { 
-    		FileOutputStream newFile = new FileOutputStream(guid);
+    		FileOutputStream newFile = new FileOutputStream(outputroot + "/" + guid);
     		ZipOutputStream newStream = new ZipOutputStream(new BufferedOutputStream(newFile));
-    		archiveList.put(guid, newStream);
+    		archiveList.putIfAbsent(guid, newStream);
     		log.info("Created ZipOutput " + guid);
     	}
     	return archiveList.get(guid);
@@ -67,6 +68,16 @@ final class ZipFactory {
 	    	archiveList.remove(guid);
     		log.info("Closed ZipOutput " + guid);
     	}
+    }
+    
+    /**********************************************************************************
+	 * <p>Close the Zip File and remove from cache</p>
+	 *
+	 * @param  guid GUID of Zip output
+     * @throws IOException Zip File Close Error
+	 */
+    public static void setOutputroot(String newRoot) {
+    	outputroot = newRoot;
     }
     
 }

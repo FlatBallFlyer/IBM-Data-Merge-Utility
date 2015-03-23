@@ -18,6 +18,7 @@
 package com.ibm.dragonfly;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,14 +37,14 @@ import com.ibm.dragonfly.Template;
 final public class TemplateFactory {
 	// Factory Constants
 	private static final Logger 	log = Logger.getLogger( TemplateFactory.class.getName() );
-	private static final String		KEY_CACHE_RESET		= "CacheReset";
+	private static final String		KEY_CACHE_RESET		= "DragonFlyCacheReset";
 	private static final String		KEY_COLLECTION		= Template.wrap("collection");
 	private static final String		KEY_NAME			= Template.wrap("name");
 	private static final String		KEY_COLUMN			= Template.wrap("column");
 	private static final String		DEFAULT_COLLECETION	= "root";
 	private static final String 	DEFAULT_NAME		= "default";
 	private static final String		DEFAULT_COLUMN		= "";
-	private static final HashMap<String,Template> templateCache = new HashMap<String,Template>();
+	private static final ConcurrentHashMap<String,Template> templateCache = new ConcurrentHashMap<String,Template>();
 	
 	/**********************************************************************************
 	 * <p>Template from Servlet request Constructor. Initiates a template based on http Servlet Request
@@ -70,7 +71,7 @@ final public class TemplateFactory {
 		while (parameterNames.hasMoreElements()) {
 			String paramName = parameterNames.nextElement();
 			String paramValue = request.getParameterValues(paramName)[0];
-			if (KEY_CACHE_RESET.equals(paramName) && "Yes".equals(paramValue) ) {
+			if (KEY_CACHE_RESET.equals(paramName) ) {
 				TemplateFactory.reset();
 				log.info("Cache Reset");
 			} else {
@@ -104,7 +105,7 @@ final public class TemplateFactory {
     	String fullName = collection + ":" + column + ":" + name;
     	if ( !templateCache.containsKey(fullName) ) { 
     		Template newTemplate = new Template(collection, column, name);
-    		templateCache.put(fullName, newTemplate);
+    		templateCache.putIfAbsent(fullName, newTemplate);
     		log.info("Constructed Template: " + fullName);
     	}
     	return new Template(templateCache.get(fullName),seedReplace);
@@ -115,6 +116,7 @@ final public class TemplateFactory {
 	 *
 	 */
     public static void reset() {
+    	log.warn("Template Cache Reset");
     	templateCache.clear();
     }
 

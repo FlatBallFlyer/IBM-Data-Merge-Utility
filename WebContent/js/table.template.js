@@ -127,7 +127,7 @@ $(document).ready(function() {
 			alert( 'Please select a Template' );
 		} else {
 			var parameters = "";
-			parameters += "CacheReset=Yes";
+			parameters += "DragonFlyCacheReset=Yes";
 			parameters += "&collection=" + theCollection;
 			parameters += "&name=" + theName;
 			if ( theColumn != "" ) {

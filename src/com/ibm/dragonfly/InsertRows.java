@@ -20,8 +20,11 @@ import java.util.Arrays;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Connection;
 
 import org.apache.log4j.Logger;
+
 
 /**
  * <p>This class represents a insertRows directive which inserts sub-templates
@@ -60,6 +63,21 @@ class InsertRows extends SqlDirective {
 	}
 
 	/**
+	 * <p>Clone Constructor</p>
+	 *
+	 * @param  from object to clone 
+	 */
+	public InsertRows(InsertRows from) {
+		super(from);
+		this.collection = from.collection;
+		this.columnName = from.columnName;
+		this.notLast 	= new ArrayList<String>();
+		this.onlyLast	= new ArrayList<String>();
+		this.notLast.addAll(from.notLast);
+		this.onlyLast.addAll(from.onlyLast);
+	}
+
+	/**
 	 * <p>getValues will insert sub Templates into a parent template</p>
 	 *
 	 * @param  target Template to insert sub-templates into
@@ -68,36 +86,41 @@ class InsertRows extends SqlDirective {
 	 */
 	public void getValues(Template target) throws DragonFlyException, DragonFlySqlException {
 		log.info("Inserting Subtemplates into: " + target.getFullName());
+		int count = 0;
+		Connection con = null;
 		
 		// Depth counter - infinite loop safety mechinism
 		if (!target.getReplaceValues().containsKey(Template.TAG_STACK)) {
 			throw new DragonFlyException("Template Insert Stack Tag Not Found!",Template.TAG_STACK);
 		} else if (target.getReplaceValues().get(Template.TAG_STACK).split("/").length >= DEPTH_MAX) {
-			throw new DragonFlyException("Sub-Template Insert Depth exceeded! Infinite Loop Saftey triggered", 
-					target.getReplaceValues().get(Template.TAG_STACK) );
+			String message = "Sub-Template Insert Depth exceeded! Infinite Loop Saftey triggered" + target.getReplaceValues().get(Template.TAG_STACK);
+			log.fatal(message);
+			throw new DragonFlyException(message, "Stack Safety"); 
 		}
 
 		// Select the result set, and insert sub-templates at bookmarks
 		try {
-			ResultSet rs = this.getResultSet(target.getReplaceValues());
+			String queryString = this.getQueryString(target.getReplaceValues());
+			con = ConnectionFactory.getDataConnection(this.jndiSource, target.getOutputFile());
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(queryString);
 			String colName = "";
-			int count = 0;
 			// Iterate over the result set 
 			while (rs.next()) {
 				count ++;
 				log.info("Inserting Record #" + count + " into: " + target.getFullName());
 				// Iterate over target bookmarks
-	 			for(Bookmark bookmark: target.getBookmarks()) {
+	 			for(Bookmark bookmark : target.getBookmarks()) {
 					try {
 						colName = (this.columnName.isEmpty()) ? "" : rs.getString(this.columnName);
 					} catch (SQLException e) {
 						throw new DragonFlySqlException("Insert Rows Error", "Column " + this.columnName + " was not found", 
-								this.getQueryString(target.getReplaceValues()), 
-								e.getMessage());
+								queryString, 
+								e.getMessage());							
 					}
 
 	 				// Create the new sub-template
-					Template subTemplate = TemplateFactory.getTemplate(this.collection, colName, bookmark.getName(),target.getReplaceValues());
+					Template subTemplate = TemplateFactory.getTemplate(this.collection, colName, bookmark.getName(), target.getReplaceValues());
 					
 					// Add the row-level replace values
 					subTemplate.addRowReplace(rs);
@@ -105,18 +128,28 @@ class InsertRows extends SqlDirective {
 					// Take care of "Not Last" and "Only Last"
 					subTemplate.addEmptyReplace(rs.isLast() ? this.notLast : this.onlyLast);
 					
-					// Merge the SubTemplate and insert the text into the Parent Template
-					log.info("Inserting Template " + subTemplate.getFullName() + " into " + target.getFullName());
-					target.insertText(subTemplate.merge(), bookmark);
+					// Merge the SubTemplate and insert the text into the Target Template
+					try {
+						log.info("Inserting Template " + subTemplate.getFullName() + " into " + target.getFullName());
+						target.insertText(subTemplate.merge(), bookmark);
+					} catch (DragonFlyException e) {
+						if ( target.getReplaceValues().containsKey(Template.TAG_SOFTFAIL) ) {
+							log.warn("Soft Fail on Insert");
+							target.insertText("Soft Fail Exception" + e.getMessage(), bookmark);
+						} else {
+							throw e;
+						}
+					}
 	 			}		
 			}
-			this.close();
 		} catch (SQLException e) {
 			throw new DragonFlySqlException("Insert Rows Error", "Error Iterating Resultset", 
 					this.getQueryString(target.getReplaceValues()), 
 					e.getMessage());			
 		} catch (IOException e) {
 			throw new DragonFlyException( "SubTemplate Save IO Exception", e.getMessage());			
+		} finally {
+			log.info("Inserted " + String.valueOf(count) + " Sub Templates into " + target.getFullName());
 		}
 	}
 

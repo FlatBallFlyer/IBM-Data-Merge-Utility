@@ -21,7 +21,8 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -42,7 +43,7 @@ final class ConnectionFactory {
 	private static final String DBROOT = "java:/comp/env/jdbc/";
 	private static final String DBNAME = "dragonflyDB";
 	private static DataSource templateDB;
-	private static final HashMap<String,DataSource> dataDbHash = new HashMap<String,DataSource>();
+	private static final ConcurrentHashMap<String,Connection> dataDbHash = new ConcurrentHashMap<String,Connection>();
 	
     /**********************************************************************************
 	 * <p>Template Connection Factory</p>
@@ -82,35 +83,55 @@ final class ConnectionFactory {
     }
 
     /**********************************************************************************
-	 * <p>Data Source connection factory</p>
+	 * <p>Data Source connection factory, creates and cache's connections that are valid
+	 * throughout the life of a merge. Connections are released by calling close</p>
 	 *
 	 * @param  jndiSource JNDI Data Source name
+	 * @param guid - a Guid associed with a template
 	 * @throws DragonFlyException JNDI Naming Errors
 	 * @throws DragonFlySqlException Database Connection Errors
 	 * @return Connection The new Data Source connection 
 	 */
-    public static Connection getDataConnection(String jndiSource) throws DragonFlySqlException, DragonFlyException {
+    public static Connection getDataConnection(String jndiSource, String guid) throws DragonFlySqlException, DragonFlyException {
+    	String key = jndiSource + ":" + guid;
     	// If the data source is not in the cache, create it and add it to the cache
-    	if ( !dataDbHash.containsKey(jndiSource) ) { 
+    	if ( !dataDbHash.containsKey(key) ) { 
         	try {
             	Context initContext = new InitialContext();
             	DataSource newSource = (DataSource) initContext.lookup(DBROOT + jndiSource);
-            	dataDbHash.put(jndiSource, newSource);
+            	Connection con = newSource.getConnection();
+            	dataDbHash.putIfAbsent(key, con);
         	} catch (NamingException e) {
         		String msg = "JNDI Connection Error " + DBROOT + jndiSource;
         		log.fatal(msg);
         		throw new DragonFlyException(e.getMessage(), msg);
-        	}
+        	} catch (SQLException e) {
+        		String msg = "Failed to get Connection to " + DBROOT + jndiSource;
+        		log.fatal(msg);
+        		throw new DragonFlyException(e.getMessage(), msg);
+			}
     	}
     	
-    	// Cet a connection from the JNDI pool.
-		try {
-			return dataDbHash.get(jndiSource).getConnection();
-		} catch (SQLException e) {
-			String msg = "Error Connecting to Data Database " + jndiSource;
-			log.fatal(msg);
-			throw new DragonFlySqlException(msg, "Database Connection", jndiSource, e.getMessage() );
-		}
+    	// Return the Connection
+		return dataDbHash.get(key);
     }
-
+    
+    /**********************************************************************************
+	 * <p>Release a set of connections for a guid</p>
+	 *
+	 * @param  guid Guid of template to release files for.
+	 */
+    public static void close(String guid) {
+    	for (Map.Entry<String, Connection> entry : dataDbHash.entrySet()) {
+    		if (entry.getKey().endsWith(guid)) {
+				try {
+					entry.getValue().close();
+				} catch (SQLException e) {
+					log.error("Error Colsing Connection: ", e);
+				}
+    			dataDbHash.remove(entry);
+    		}
+		}    	
+    }
+    
 }

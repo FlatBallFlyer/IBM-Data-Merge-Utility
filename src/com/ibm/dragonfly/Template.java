@@ -47,9 +47,12 @@ import org.apache.log4j.Logger;
  */
 public class Template {
 	// Global Constants
-	public static final String 		LFT 				= "{";
-	public static final String		RGT 				= "}";
-	public static final String 		TAG_STACK			= "DragonFlyTemplateStack";
+	public static final String 	LFT 				= "{";
+	public static final String	RGT 				= "}";
+	public static final String 	TAG_STACK			= wrap("DragonFlyTemplateStack");
+	public static final String 	TAG_ALL_VALUES		= wrap("DragonFlyReplaceValues");
+	public static final String 	TAG_OUTPUTFILE		= wrap("DragonFlyOutputFile");
+	public static final String 	TAG_SOFTFAIL		= wrap("DragonFlySoftFail");
 	
 	// Template Constants
 	private static final Logger 	log = Logger.getLogger( Template.class.getName() );
@@ -58,8 +61,6 @@ public class Template {
 	private static final String 	TYPE_REPLACE_COL 	= "ReplaceCol";
 	private static final String 	TYPE_REPLACE_VAL 	= "ReplaceVal";
 	private static final String 	TYPE_REQUIRE 		= "Require";
-	private static final String 	TAG_ALL_VALUES		= wrap("DragonFlyReplaceValues");
-	private static final String 	TAG_OUTPUTDIR		= wrap("DragonFlyOutputFile");
 	private static final Pattern 	BOOKMARK_PATTERN 	= Pattern.compile("(<tkBookmark.*/>)");
 
 
@@ -90,7 +91,7 @@ public class Template {
 
 	
 	/**********************************************************************************
-	 * <p>Template constructor Collection, Column, Name parameters to load from database</p>
+	 * Template constructor that reads data from templateDB. 
 	 *
 	 * @param  collection Collection Name
 	 * @param  column Column Value
@@ -99,7 +100,7 @@ public class Template {
 	 * @throws DragonFlySqlException Template Datasource errors
 	 */
 	public Template(String collection, String column, String name) throws DragonFlyException, DragonFlySqlException {
-		log.info("Constructing Template " + collection + ", " + column + ", " + name);
+		log.warn("Constructing Template " + collection + ", " + column + ", " + name);
 		Connection con;
 		Statement st;
 		ResultSet rs;
@@ -183,23 +184,34 @@ public class Template {
 		this.name 			= from.name;
 		this.description 	= from.description;
 		this.outputFile 	= from.outputFile;
-		this.replaceVal 	= from.replaceVal;
-		this.replaceCol 	= from.replaceCol;
-		this.replaceRow 	= from.replaceRow;
-		this.insert 		= from.insert;
+		this.replaceValues 	= new HashMap<String,String>();
 		this.content 		= new StringBuilder(from.content);
 
-		// Deep Copy Bookamrks		
-		for(Bookmark fromBookmark : from.bookmarks) {
-			this.bookmarks.add(new Bookmark(fromBookmark));
-		}		
+		// Deep Copy Collections
+		this.bookmarks		= new ArrayList<Bookmark>();
+		for(Bookmark 	 	fromBkm : from.bookmarks) 	{ this.bookmarks.add(new Bookmark(fromBkm)); 		}
 
+		this.replaceVal 	= from.replaceVal;
+		//this.replaceVal 	= new ArrayList<ReplaceValue>();
+		//for(ReplaceValue 	fromRep : from.replaceVal) 	{ this.replaceVal.add(new ReplaceValue(fromRep)); 	}
+		this.replaceCol 	= from.replaceCol;
+		//this.replaceCol 	= new ArrayList<ReplaceColumn>();
+		//for(ReplaceColumn	fromCol : from.replaceCol) 	{ this.replaceCol.add(new ReplaceColumn(fromCol)); 	}
+		this.replaceRow 	= from.replaceRow;
+		//this.replaceRow 	= new ArrayList<ReplaceRow>();
+		//for(ReplaceRow	 	fromRow : from.replaceRow) 	{ this.replaceRow.add(new ReplaceRow(fromRow)); 	}
+		this.insert 		= from.insert;
+		//this.insert 		= new ArrayList<InsertRows>();
+		//for(InsertRows 	 	fromIns : from.insert) 		{ this.insert.add(new InsertRows(fromIns)); 		}
+
+
+		
 		// Load Initial Replace Values
 		this.replaceValues.putAll(seedReplace);
 		
 		// Make sure we have an output dir guid
-		if (!this.replaceValues.containsKey(TAG_OUTPUTDIR)) {
-			this.replaceValues.put(TAG_OUTPUTDIR, System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID().toString() + ".zip"); 
+		if (!this.replaceValues.containsKey(TAG_OUTPUTFILE)) {
+			this.replaceValues.put(TAG_OUTPUTFILE, UUID.randomUUID().toString() + ".zip"); 
 		}
 		
 		// Add our name to the Template Stack
@@ -238,8 +250,8 @@ public class Template {
 		}		
 		
 		// Clear out template all-values replace tag
-		if ( this.replaceValues.get(wrap(TAG_ALL_VALUES)) != null ) {
-			this.replaceValues.put(wrap(TAG_ALL_VALUES), "");			
+		if ( this.replaceValues.get(TAG_ALL_VALUES) != null ) {
+			this.replaceValues.put(TAG_ALL_VALUES, "");			
 		}
 		
 		// Process Replace Stack  
@@ -262,7 +274,7 @@ public class Template {
 		}
 
 		// Replace the all values tag
-		this.replaceThis(wrap(TAG_ALL_VALUES), allValues);
+		this.replaceThis(TAG_ALL_VALUES, allValues);
 		
 		// Remove all the bookmarks
 		this.replaceAllThis(BOOKMARK_PATTERN, "");
@@ -281,7 +293,7 @@ public class Template {
 	/********************************************************************************
 	 * <p>Save As. Write the contents to the Zip file</p> 
 	 * @throws IOException Zip File writing errors
-	 * @throws DragonFlyException TAG_OUTPUTDIR not in replace stack
+	 * @throws DragonFlyException TAG_OUTPUTFILE not in replace stack
 	 */
 	public void saveAs() throws IOException, DragonFlyException  {
 		// don't save /dev/null or empty file names
@@ -295,10 +307,10 @@ public class Template {
 		}
 
 	    // Create an file entry in the output zip.
-		if (!this.replaceValues.containsKey(TAG_OUTPUTDIR)) {
-			throw new DragonFlyException("System Tag Not Found", TAG_OUTPUTDIR);
+		if (!this.replaceValues.containsKey(TAG_OUTPUTFILE)) {
+			throw new DragonFlyException("System Tag Not Found", TAG_OUTPUTFILE);
 		}
-		ZipOutputStream out = ZipFactory.getZipStream(this.replaceValues.get(TAG_OUTPUTDIR));
+		ZipOutputStream out = ZipFactory.getZipStream(this.replaceValues.get(TAG_OUTPUTFILE));
 		ZipEntry entry = new ZipEntry(fileName);
 		out.putNextEntry(entry);
 		
@@ -314,7 +326,8 @@ public class Template {
 	 * @throws IOException File Save errors 
 	 */
 	public void packageOutput() throws IOException  {
-		ZipFactory.closeStream(this.replaceValues.get(TAG_OUTPUTDIR));
+		ZipFactory.closeStream(this.replaceValues.get(TAG_OUTPUTFILE));
+		ConnectionFactory.close(this.replaceValues.get(TAG_OUTPUTFILE));
 	}
 	
 	/********************************************************************************
@@ -340,20 +353,27 @@ public class Template {
 	}
 
 	/********************************************************************************
-	 * Replace all occurances of a string within the template content
+	 * Replace all occurrences of a string within the template content
 	 * 
 	 * @param from The string to replace
 	 * @param to The value to replace with
 	 * @throws DragonFlyException Replace To contains From value
 	 */
 	public void replaceThis(String from, String to) throws DragonFlyException {
-		// Infinite loop safety
+		// don't waste time
 		if (from.isEmpty()) {return;}	
-		to = to.replace("{tkReplaceValues}", "{- tkReplaceValues}"); // safety
+
+		// Infinite loop safety
+		to = to.replace(TAG_ALL_VALUES, "{ALL VALUES TAG}"); // all values tag safety
 		if ( to.lastIndexOf(from) > 0 ) {
 			String message = "Replace Attempted with Replace Value containg Replace Key:" + from + "\n Value:" + to + " in " + this.getFullName(); 
 			log.fatal(message);
-			throw new DragonFlyException("Replace Error!", message);
+			if ( replaceValues.containsKey(TAG_SOFTFAIL) ) {
+				log.warn("SOFT FAIL -" + message);
+				to = "SOFT FAIL - VALUE NOT REPLACED, TO CONTAINS FROM";
+			} else {
+				throw new DragonFlyException("Replace Error!", message);
+			}
 		}
 		
 		// do the replace
@@ -444,6 +464,21 @@ public class Template {
 				" and name = '" + name + "'";		
 	}
 
+	/********************************************************************************
+	 * Get the TAG_OUTPUTFILE Guid from the replace stack
+	 * @throws DragonFlyException  if Outputfile is not in the stack (should be impossible)
+	 * @return The output file GUID
+	 */
+	public String getOutputFile() throws DragonFlyException  {
+		if (this.replaceValues.containsKey(TAG_OUTPUTFILE)) {
+			return this.replaceValues.get(TAG_OUTPUTFILE);
+		} else {
+			String msg = "TAG_OUTPUTFILE " + TAG_OUTPUTFILE + " Was not found!";
+			log.error(msg);
+			throw new DragonFlyException(msg, "Cat N");
+		}
+	}
+	
 	// - SIMPLE GETTER'S BELOW HERE -
 	/**
 	 * @return the full name

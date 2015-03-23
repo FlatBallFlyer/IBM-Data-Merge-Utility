@@ -16,10 +16,10 @@
  */
 package com.ibm.dragonfly;
 import java.util.Map;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
+import org.apache.log4j.Logger;
 
 /**
  * <p>Abstract base class for all replace directives that are SQL based.
@@ -33,18 +33,16 @@ import java.sql.Statement;
  */
 
 abstract class SqlDirective {
-	protected String description;
-	private String jndiSource;
-	private String selectColumns;
-	private String fromTables;
-	private String whereCondition;
+	private static final Logger log = Logger.getLogger( SqlDirective.class.getName() );
 
-	private Connection con;
-	private Statement st;
-	private ResultSet rs;
-		
+	protected String description;
+	protected String jndiSource;
+	protected String selectColumns;
+	protected String fromTables;
+	protected String whereCondition;
+
 	/**
-	 * <p>Constructor</p>
+	 * <p>Database Row Constructor</p>
 	 *
 	 * @param  dbRow Database Result Set Single Row Hash of Directive Table
 	 * @throws DragonFlyException Invalid Row or Missing Column in Directive SQL Construction
@@ -57,10 +55,24 @@ abstract class SqlDirective {
 			this.fromTables = dbRow.getString("fromTables");
 			this.whereCondition = dbRow.getString("whereCondition");
 		} catch (SQLException e) {
+			log.fatal("Directive Construction Error, invalid Tempalte Directive table? " + e.getMessage() );
 			throw new DragonFlyException("Replace Column Error: "+e.getMessage(), "Invalid Directive Data");
 		}
 	}
 
+	/**
+	 * <p>Clone Constructor</p>
+	 *
+	 * @param  from Object to clone
+	 */
+	public SqlDirective(SqlDirective from) {
+		this.description = from.description;
+		this.jndiSource = from.jndiSource;
+		this.selectColumns = from.selectColumns;
+		this.fromTables = from.fromTables;
+		this.whereCondition = from.whereCondition;
+	}
+	
 	/**
 	 * <p>Get Values must be implemented by sub-class and is the execut the directive method</p>
 	 * 
@@ -99,43 +111,6 @@ abstract class SqlDirective {
 			queryString += " WHERE " + where;
 		}
 		return queryString;
-	}
-	
-	/**
-	 * Create and execute the query, returing the results set. 
-	 *  NOTE: Close should be called when you are through with the result set!
-	 *  
-	 * @param replaceValues From/To hash used on the SQL Select Statment
-	 * @throws DragonFlyException JNDI Data Source Connection Errors
-	 * @throws DragonFlySqlException  SQL Database Errors
-	 * @return ResultSet The result of the SQL Query
-	 */
-	public ResultSet getResultSet(Map<String,String> replaceValues ) throws DragonFlySqlException, DragonFlyException {
-		String queryString = this.getQueryString(replaceValues);
-
-		try {
-			this.con = ConnectionFactory.getDataConnection(this.jndiSource);
-			this.st = con.createStatement();
-			this.rs = st.executeQuery(queryString);
-			return this.rs;
-		} catch (SQLException e) {
-			throw new DragonFlySqlException("Insert Rows Error", "Connection Failure", queryString, e.getMessage());
-		}
-	}
-	
-	/**
-	 * Close the database connection 
-	 *  
-	 * @throws DragonFlySqlException  SQL Database Errors
-	 */
-	public void close() throws DragonFlySqlException {
-		try {
-			this.rs.close();
-			this.st.close();
-			this.con.close();
-		} catch (SQLException e) {
-			throw new DragonFlySqlException("SQL Query - Housekeeping Error!", "Connection Failure", "Close Connection", e.getMessage());
-		}
 	}
 	
 	/**

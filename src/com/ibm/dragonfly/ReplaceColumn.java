@@ -15,8 +15,10 @@
  *
  */
 package com.ibm.dragonfly;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
@@ -34,13 +36,22 @@ class ReplaceColumn extends SqlDirective {
 	private static final Logger log = Logger.getLogger( ReplaceColumn.class.getName() );
 	
 	/**
-	 * <p>Constructor</p>
+	 * <p>Database Constructor</p>
 	 *
 	 * @param  dbRow Database Result Set Row Hash 
 	 * @throws DragonFlyException Invalid Row or Missing Column in Directive SQL Construction
 	 */
 	public ReplaceColumn(ResultSet dbRow) throws DragonFlyException  {
 		super(dbRow);
+	}
+
+	/**
+	 * <p>Clone Constructor</p>
+	 *
+	 * @param  from object to clone 
+	 */
+	public ReplaceColumn(ReplaceColumn from) {
+		super(from);
 	}
 
 	/**
@@ -51,17 +62,22 @@ class ReplaceColumn extends SqlDirective {
 	 * @throws DragonFlySqlException Database Connection Error
 	 */
 	public void getValues(Template target) throws DragonFlyException, DragonFlySqlException {
+		int count = 0;
+		Connection con = null;
+		
 		try {
-			int count = 0;
-			ResultSet rs = this.getResultSet(target.getReplaceValues());
+			String queryString = this.getQueryString(target.getReplaceValues());
+			con = ConnectionFactory.getDataConnection(this.jndiSource, target.getOutputFile());
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(queryString);
 			while (rs.next()) {
 				target.addColReplace(rs.getString("FromValue"), rs.getString("ToValue"));
 				count++;
 			}
-			this.close();
-			log.info("Added " + String.valueOf(count) + " Replace Column values");
 		} catch (SQLException e) {
 			throw new DragonFlyException("Replace Column Error - did you select columns fromValue or toValue? "+e.getMessage(), "Invalid Merge Data");
-		}		
+		} finally {
+			log.info("Added " + String.valueOf(count) + " Replace Column values");
+		}
 	}
 }
