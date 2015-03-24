@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package com.ibm.dragonfly;
+package com.ibm.util.merge;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

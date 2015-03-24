@@ -15,7 +15,7 @@
  *
  */
 
-package com.ibm.dragonfly;
+package com.ibm.util.merge;
 import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -25,7 +25,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.dragonfly.Template;
+import com.ibm.util.merge.Template;
 
 /**
  * Manages an output archive for generated files

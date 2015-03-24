@@ -15,7 +15,7 @@
  *
  */
 
-package com.ibm.dragonfly;
+package com.ibm.util.merge;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

@@ -14,33 +14,37 @@
  * limitations under the License.
  *
  */
-package com.ibm.dragonfly;
+package com.ibm.util.merge;
 
 /**
- * Simple custom Exception Class
+ * Simple custom Exception Class for wrapping SQL errors
  *
  * @author Mike Storey
  */
-public class DragonFlyException extends Exception {
+public class DragonFlySqlException extends Exception {
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 	private String errorCode="-Code Not Set-";
+	private String queryString = "";
+	private String sqlError = "";
 	
-	/**
-	 * Constructor
-	 * 
-	 * @param message The exception message
-	 * @param errorCode The error code
-	 */
-	public DragonFlyException(String message, String errorCode){
+	public DragonFlySqlException(String message, String code, String query, String sqlError ){
         super(message);
-        this.errorCode=errorCode;
+        this.errorCode = code;
+        this.queryString = query;
+        this.sqlError = sqlError;
     }
 
-	/**
-	 * Get the Error Code
-	 * @return String the error code
-	 */
     public String getErrorCode(){
         return this.errorCode;
     }
+	public String getQueryString() {
+		return queryString;
+	}
+	public String getSqlError() {
+		return sqlError;
+	}
+
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package com.ibm.dragonfly;
+package com.ibm.util.merge;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.IOException;

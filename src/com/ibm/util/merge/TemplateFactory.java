@@ -15,7 +15,7 @@
  *
  */
 
-package com.ibm.dragonfly;
+package com.ibm.util.merge;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.dragonfly.Template;
+import com.ibm.util.merge.Template;
 
 /**
  * Caching Template Facotory 

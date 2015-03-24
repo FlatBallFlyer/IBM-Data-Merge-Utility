@@ -15,9 +15,9 @@
  *
  */
 
-package com.ibm.dragonfly;
-import com.ibm.dragonfly.ConnectionFactory;
-import com.ibm.dragonfly.Template;
+package com.ibm.util.merge;
+import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.Template;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -184,28 +184,17 @@ public class Template {
 		this.name 			= from.name;
 		this.description 	= from.description;
 		this.outputFile 	= from.outputFile;
+		this.replaceVal 	= from.replaceVal;
+		this.replaceCol 	= from.replaceCol;
+		this.replaceRow 	= from.replaceRow;
+		this.insert 		= from.insert;
 		this.replaceValues 	= new HashMap<String,String>();
 		this.content 		= new StringBuilder(from.content);
 
 		// Deep Copy Collections
 		this.bookmarks		= new ArrayList<Bookmark>();
 		for(Bookmark 	 	fromBkm : from.bookmarks) 	{ this.bookmarks.add(new Bookmark(fromBkm)); 		}
-
-		this.replaceVal 	= from.replaceVal;
-		//this.replaceVal 	= new ArrayList<ReplaceValue>();
-		//for(ReplaceValue 	fromRep : from.replaceVal) 	{ this.replaceVal.add(new ReplaceValue(fromRep)); 	}
-		this.replaceCol 	= from.replaceCol;
-		//this.replaceCol 	= new ArrayList<ReplaceColumn>();
-		//for(ReplaceColumn	fromCol : from.replaceCol) 	{ this.replaceCol.add(new ReplaceColumn(fromCol)); 	}
-		this.replaceRow 	= from.replaceRow;
-		//this.replaceRow 	= new ArrayList<ReplaceRow>();
-		//for(ReplaceRow	 	fromRow : from.replaceRow) 	{ this.replaceRow.add(new ReplaceRow(fromRow)); 	}
-		this.insert 		= from.insert;
-		//this.insert 		= new ArrayList<InsertRows>();
-		//for(InsertRows 	 	fromIns : from.insert) 		{ this.insert.add(new InsertRows(fromIns)); 		}
-
-
-		
+ 
 		// Load Initial Replace Values
 		this.replaceValues.putAll(seedReplace);
 		
