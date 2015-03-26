@@ -18,6 +18,7 @@ package com.ibm.util.merge;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -102,8 +103,8 @@ class InsertRows extends SqlDirective {
 		try {
 			String queryString = this.getQueryString(target.getReplaceValues());
 			con = ConnectionFactory.getDataConnection(this.jndiSource, target.getOutputFile());
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(queryString);
+			PreparedStatement st = con.prepareStatement(queryString, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = st.executeQuery();
 			String colName = "";
 			// Iterate over the result set 
 			while (rs.next()) {

@@ -12,7 +12,7 @@
   
   <servlet>
     <servlet-name>Merge</servlet-name>
-    <servlet-class>com.ibm.dragonfly.Merge</servlet-class>
+    <servlet-class>com.ibm.util.merge.Merge</servlet-class>
     <init-param>
       <param-name>log4j-init-file</param-name>
       <param-value>/WEB-INF/classes/log4j.properties</param-value>
