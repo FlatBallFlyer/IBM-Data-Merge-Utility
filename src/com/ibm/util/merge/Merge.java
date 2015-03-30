@@ -32,6 +32,7 @@ import org.apache.log4j.PropertyConfigurator;
  * Servlet implementation - instantiates a template, merges the output and finalizes the output archive.
  * @see TemplateFactory
  * @see Template
+ * @author  Mike Storey
  */
 @WebServlet("/Merge")
 public class Merge extends HttpServlet {
