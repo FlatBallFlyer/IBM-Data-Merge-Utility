@@ -1,0 +1,19 @@
+<hibernate-mapping package="com.ibm.util.merge">
+
+    <class name="Template" table="TEMPLATE">
+        <id name="idtemplate" column="ID_TEMPLATE">
+            <generator class="native"/>
+        </id>
+		<property name="collection" 	column="COLLECTION"		/>
+		<property name="name" 			column="NAME"			/>
+		<property name="columnValue" 	column="COLUMN_VALUE"	/>
+		<property name="description" 	column="DESCRIPTION"	/>
+		<property name="outputFile" 	column="OUTPUT_FILE"	/>
+		<property name="content" 		column="CONTENT"		/>
+		<set name="directives" table="DIRECTIVE">
+	        <key column="ID_TEMPLATE"/>
+	        <one-to-many column="ID_DIRECTIVE" class="Directive"/>
+	    </set>
+    </class>
+
+</hibernate-mapping>

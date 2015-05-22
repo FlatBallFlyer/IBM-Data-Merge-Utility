@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--AgileJ Ltd. (http://www.agilej.com)--><ajsv>
+    <diagram creationDate="2015-May-20 11:08" licenseGrade="evaluation" licenseeName="anon" licenseeOrganization="unknown" populationMethod="manual" version="1.8.1.v20150317-1212">
+        <class className="com.ibm.util.merge.Template" project="DragonFly" xLocation="100" yLocation="100"/>
+        <class className="com.ibm.util.merge.directive.Directive" project="DragonFly" xLocation="581" yLocation="103"/>
+        <class className="com.ibm.util.merge.directive.provider.Provider" project="DragonFly" xLocation="981" yLocation="695"/>
+        <class className="com.ibm.util.merge.directive.provider.DataTable" project="DragonFly" xLocation="1280" yLocation="687"/>
+        <class className="com.ibm.util.merge.directive.InsertSubs" project="DragonFly" xLocation="219" yLocation="1395"/>
+        <class className="com.ibm.util.merge.directive.ReplaceCol" project="DragonFly" xLocation="569" yLocation="1439"/>
+        <class className="com.ibm.util.merge.directive.ReplaceRow" project="DragonFly" xLocation="901" yLocation="817"/>
+        <class className="com.ibm.util.merge.directive.ReplaceValue" project="DragonFly" xLocation="1145" yLocation="1405"/>
+        <class className="com.ibm.util.merge.directive.Require" project="DragonFly" xLocation="1028" yLocation="1098"/>
+    </diagram>
+</ajsv>

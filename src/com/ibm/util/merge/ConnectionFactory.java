@@ -38,7 +38,7 @@ import org.apache.log4j.Logger;
  *
  * @author  Mike Storey
  */
-final class ConnectionFactory {
+public final class ConnectionFactory {
 	private static final Logger log = Logger.getLogger( ConnectionFactory.class.getName() );
 	private static final String DBROOT = "java:/comp/env/jdbc/";
 	private static final String DBNAME = "dragonflyDB";
@@ -48,17 +48,17 @@ final class ConnectionFactory {
     /**********************************************************************************
 	 * <p>Template Connection Factory</p>
 	 *
-	 * @throws DragonFlyException JNDI Connection Error
+	 * @throws MergeException JNDI Connection Error
 	 * @throws DragonFlySqlException Tempalte Table validation error
 	 * @return The new template database connection 
 	 */
-    public static Connection getTemplateConnection() throws DragonFlySqlException, DragonFlyException {
+    public static Connection getTemplateConnection() throws MergeException {
     	if (templateDB == null) {
         	try { // Get the naming context
             	Context initContext = new InitialContext();
             	templateDB = (DataSource) initContext.lookup(DBROOT + DBNAME);
         	} catch (NamingException e) {
-        		throw new DragonFlyException(e.getMessage(), "JNDI Connection Error connection to " + DBNAME );
+        		throw new MergeException(e.getMessage(), "JNDI Connection Error connection to " + DBNAME );
         	}
         	
         	try { // Validate Template DB
@@ -70,7 +70,7 @@ final class ConnectionFactory {
     			}			
     			    			
         	} catch (SQLException e) {
-        		throw new DragonFlySqlException("Error getting table metadata", "Template Datasource Error", "meta.getTables", e.getMessage());
+        		throw new MergeException("Error getting table metadata", "Template Datasource Error");
 			}
     	}
     	
@@ -78,7 +78,7 @@ final class ConnectionFactory {
 			Connection con = templateDB.getConnection();
 			return con;
 		} catch (SQLException e) {
-			throw new DragonFlySqlException("Error Connecting to Template Database", "Database Connection Error", "Connect to Database dragonflyDB", e.getMessage());
+			throw new MergeException("Error Connecting to Template Database", "Database Connection Error");
 		}
     }
 
@@ -88,11 +88,11 @@ final class ConnectionFactory {
 	 *
 	 * @param  jndiSource JNDI Data Source name
 	 * @param guid - a Guid associed with a template
-	 * @throws DragonFlyException JNDI Naming Errors
+	 * @throws MergeException JNDI Naming Errors
 	 * @throws DragonFlySqlException Database Connection Errors
 	 * @return Connection The new Data Source connection 
 	 */
-    public static Connection getDataConnection(String jndiSource, String guid) throws DragonFlySqlException, DragonFlyException {
+    public static Connection getDataConnection(String jndiSource, String guid) throws MergeException {
     	String key = jndiSource + ":" + guid;
     	// If the data source is not in the cache, create it and add it to the cache
     	if ( !dataDbHash.containsKey(key) ) { 
@@ -102,13 +102,9 @@ final class ConnectionFactory {
             	Connection con = newSource.getConnection();
             	dataDbHash.putIfAbsent(key, con);
         	} catch (NamingException e) {
-        		String msg = "JNDI Connection Error " + DBROOT + jndiSource;
-        		log.fatal(msg);
-        		throw new DragonFlyException(e.getMessage(), msg);
+        		throw new MergeException(e, "JNDI Connection Error ", DBROOT + jndiSource);
         	} catch (SQLException e) {
-        		String msg = "Failed to get Connection to " + DBROOT + jndiSource;
-        		log.fatal(msg);
-        		throw new DragonFlyException(e.getMessage(), msg);
+        		throw new MergeException(e, "Failed to get Connection", DBROOT + jndiSource);
 			}
     	}
     	

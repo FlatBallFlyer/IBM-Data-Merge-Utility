@@ -1,0 +1,55 @@
+<hibernate-mapping package="com.ibm.util.merge.directive">
+
+    <class name="Directive" table="DIRECTIVE">
+        <id name="idDirective" column="ID_DIRECTIVE">
+            <generator class="native"/>
+        </id>
+        <property name="softFail"	 		column="SOFT_FAIL"			/>
+        <property name="type"	 			column="TYPE"				/>
+        <property name="description"	 	column="DESCRIPTION"		/>
+        <discriminator column="TYPE" type="int">
+	        <subclass name="ReplaceValue" extends="Directive" discriminator-value="1">
+		        <property name="from"	 			column="DIRECTIVE_FROM"		/>
+		        <property name="to"	 				column="DIRECTIVE_TO"		/>
+    		</subclass>
+	        <subclass name="Require" extends="Directive" discriminator-value="2">
+        		<property name="tags"	 			column="DIRECTIVE_FROM"		/>
+        	</subclass>
+	        <subclass name="ReplaceMarkupHtml" extends="Directive" discriminator-value="24">
+		        <property name="pattern"	 		column="DIRECTIVE_FIRST"	/>
+		        <property name="fromKey"	 		column="DIRECTIVE_FROM"		/>
+		        <property name="toKey"	 			column="DIRECTIVE_TO"		/>
+	        </subclass>
+	        <subclass name="InsertSubs" extends="Directive" discriminator-value="?">
+		        <property name="collectionName"	 	column="DIRECTIVE_FROM"		/>
+		        <property name="collectionColumn"	column="DIRECTIVE_TO"		/>
+		        <property name="notLast"	 		column="DIRECTIVE_FIRST"	/>
+		        <property name="onlyLast"	 		column="DIRECTIVE_LAST"		/>
+	        </subclass>
+	        <subclass name="ReplaceCol" extends="Directive" discriminator-value="?">
+		        <property name="fromColumn"	 		column="DIRECTIVE_FROM"		/>
+		        <property name="toColumn"	 		column="DIRECTIVE_TO"		/>
+	        </subclass>
+    	</discriminator>
+
+	<subclass name="ProviderSql" extends="Provider">
+        <property name="source"	 			column="PROVIDER_SOURCE"	/>
+        <property name="columns"	 		column="PROVIDER_DATA"		/>
+        <property name="tables"	 			column="PROVIDER_LOCATION"	/>
+        <property name="where"	 			column="PROVIDER_FILTER"	/>
+	</subclass>
+
+	<subclass name="ProviderHttp" extends="Provider">
+        <property name="url"	 			column="PROVIDER_SOURCE"	/>
+        <property name="tag"	 			column="PROVIDER_FILTER"	/>
+        <property name="staticData"	 		column="PROVIDER_DATA"		/>
+    </subclass>
+        
+	<subclass name="ProviderIf" extends="Provider">
+        <property name="matchAll"	 		column="PROVIDER_FILTER"	/>
+        <property name="tags"	 			column="PROVIDER_DATA"		/>
+	</subclass>
+
+    </class>
+
+</hibernate-mapping>

@@ -3,6 +3,7 @@
 	<name>DragonFly</name>
 	<comment></comment>
 	<projects>
+		<project>DragonFlyEar</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

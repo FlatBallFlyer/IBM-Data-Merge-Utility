@@ -18,16 +18,17 @@
 package com.ibm.util.merge;
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.Template;
+import com.ibm.util.merge.directive.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.regex.*;
@@ -44,6 +45,8 @@ import org.apache.log4j.Logger;
  * @see #merge()
  * @see #packageOutput()
  * @author  Mike Storey
+ * @Entity
+ * @Table( name = "TEMPLATE" )
  */
 public class Template {
 	// Global Constants
@@ -53,16 +56,23 @@ public class Template {
 	public static final String 	TAG_ALL_VALUES		= wrap("DragonFlyReplaceValues");
 	public static final String 	TAG_OUTPUTFILE		= wrap("DragonFlyOutputFile");
 	public static final String 	TAG_SOFTFAIL		= wrap("DragonFlySoftFail");
+	public static final String 	TAG_OUTPUT_TYPE		= wrap("DragonOutputType");
 	
 	// Template Constants
 	private static final Logger 	log = Logger.getLogger( Template.class.getName() );
-	private static final String		TYPE_INSERT 		= "Insert";
-	private static final String 	TYPE_REPLACE_ROW 	= "ReplaceRow";
-	private static final String 	TYPE_REPLACE_COL 	= "ReplaceCol";
-	private static final String 	TYPE_REPLACE_VAL 	= "ReplaceVal";
-	private static final String 	TYPE_REQUIRE 		= "Require";
 	private static final Pattern 	BOOKMARK_PATTERN 	= Pattern.compile("(<tkBookmark.*/>)");
 
+	// Instance Variables
+	private int    					idtemplate;
+	private String 					collection	= "";
+	private String 					columnValue	= "";
+	private String 					name		= "";
+	private String 					description;
+	private StringBuilder 			content;
+	private String 					outputFile;
+	private List<Bookmark> 			bookmarks 	= new ArrayList<Bookmark>();
+	private List<Directive> 		directives 	= new ArrayList<Directive>();
+	private HashMap<String,String> 	replaceValues 	= new HashMap<String,String>();
 
 	/********************************************************************************
 	 * Static Helper to wrap a value in the Tag brackets
@@ -74,21 +84,6 @@ public class Template {
 		return LFT + value + RGT;
 	}
 
-	// Instance Variables
-	private int    					idtemplate;
-	private String 					collection;
-	private String 					columnValue;
-	private String 					name;
-	private String 					description;
-	private StringBuilder 			content;
-	private String 					outputFile;
-	private List<Bookmark> 			bookmarks 		= new ArrayList<Bookmark>();
-	private List<InsertRows> 		insert			= new ArrayList<InsertRows>();
-	private List<ReplaceRow> 		replaceRow		= new ArrayList<ReplaceRow>(); 
-	private List<ReplaceColumn> 	replaceCol		= new ArrayList<ReplaceColumn>();
-	private List<ReplaceValue> 		replaceVal		= new ArrayList<ReplaceValue>();
-	private HashMap<String,String> 	replaceValues 	= new HashMap<String,String>();
-
 	
 	/**********************************************************************************
 	 * Template constructor that reads data from templateDB. 
@@ -96,71 +91,65 @@ public class Template {
 	 * @param  collection Collection Name
 	 * @param  column Column Value
 	 * @param  name Template Name
-	 * @throws DragonFlyException Invalid Directive Type
-	 * @throws DragonFlySqlException Template Datasource errors
+	 * @throws MergeException Load Data from Database Errors
 	 */
-	public Template(String collection, String column, String name) throws DragonFlyException, DragonFlySqlException {
+	public Template(String collection, String column, String name) throws MergeException {
 		log.warn("Constructing Template " + collection + ", " + column + ", " + name);
 		Connection con;
 		Statement st;
 		ResultSet rs;
-		String queryString = "";
+		String queryString = "select * from templatefull where collectionName = '" + collection + "'" + 
+				" and columnValue = '" + ((column == null || column.isEmpty()) ? "" : column) + "'" + 
+				" and name = '" + name + "'";
 		try {
 			// Get a database connection from the pool
 			con = ConnectionFactory.getTemplateConnection();
 		    st = con.createStatement();
 
 		    // Read the template record
-		    queryString = getQueryString(collection, column, name);
 		    rs = st.executeQuery(queryString);	
 
 		    // If not found, look for the "default" template column value
 		    if (!rs.isBeforeFirst()) {
 		    	log.info("First Template not found by: " + queryString);
-		    	queryString = getQueryString(collection, "", name);
+		    	queryString = "select * from templatefull where collectionName = '" + collection + "'" + 
+						" and columnValue = '' " + 
+						" and name = '" + name + "'";
 		        rs = st.executeQuery(queryString);
 		    }
 
 		    // If still not found, throw tkException
 		    if (!rs.isBeforeFirst()) {
 		    	log.fatal("Second Template Not Found by: " + queryString);
-		    	throw new DragonFlyException("Template Not Found by " + queryString, "Invalid Template Data");
+		    	throw new MergeException("Template Not Found by " + queryString, "Invalid Template Data");
 		    }	    
+		    
+		    // Instantiate the instance
 		    rs.next();
-		    this.idtemplate 	= rs.getInt("idtemplate");
-			this.collection 	= rs.getString("collectionName");
-			this.columnValue 	= rs.getString("columnValue");
-			this.name 			= rs.getString("name");
-			this.description 	= rs.getString("description");
-			this.content 		= new StringBuilder(rs.getString("content"));
-			this.outputFile 	= rs.getString("output");
+/*		    this.idtemplate 	= rs.getInt(Template.COL_ID);
+			this.collection 	= rs.getString(Template.COL_COLLECTION);
+			this.columnValue 	= rs.getString(Template.COL_COLUMN);
+			this.name 			= rs.getString(Template.COL_NAME);
+			this.description 	= rs.getString(Template.COL_DESCRIPTION);
+			this.content 		= new StringBuilder(rs.getString(Template.COL_CONTENT));
+			this.outputFile 	= rs.getString(Template.COL_OUTPUT); */
 		} catch (SQLException e) {
-			throw new DragonFlySqlException("Template Database Error", "Invalid Template Data", queryString, e.getMessage());
+			throw new MergeException(e, "System Error - Template Database SQL Fault", queryString);
 		}
 	    
 		// load directives
 		try {
 		    rs = st.executeQuery("select * from directivefull where idtemplate = " + this.idtemplate);	
 			while (rs.next()) {
-				String type = rs.getString("directiveType");
-				log.info("Loading Directive " + type);
-				if (TYPE_INSERT.equals(type)) { 
-					this.insert.add(new InsertRows(rs)); 
-				} else if (TYPE_REPLACE_ROW.equals(type)) 	{
-					this.replaceRow.add(new ReplaceRow(rs)); 
-				} else if (TYPE_REPLACE_COL.equals(type)) 	{
-					this.replaceCol.add(new ReplaceColumn(rs)); 
-				} else if (TYPE_REPLACE_VAL.equals(type)) 	{
-					this.replaceVal.add(new ReplaceValue(rs)); 
-				} else if (TYPE_REQUIRE.equals(type)) 	{
-					// Add support for Require directive 
-				} else {
-					throw new DragonFlyException("Invalid Directive Found: " + type, "Invalid Template Data");
+				int type = rs.getInt("TYPE");
+				Directive newDirective = newDirective(type,rs);
+				if (newDirective != null) {
+					this.directives.add(newDirective);
 				}
-			}						
+			} 	
 			con.close();
 		} catch (SQLException e) {
-			throw new DragonFlySqlException("Template Database Error", "Invalid Directive Data", queryString, e.getMessage());
+			throw new MergeException(e, "System Error - Template Database - Load Directives", this.getFullName());
 		}
 	
 		// Parse bookmarks array from text		
@@ -171,81 +160,126 @@ public class Template {
 	}
 
 	/**********************************************************************************
-	 * <p>Template Clone constructor, performs a deep copy of Bookmarks. 
-	 * Directives are shared common objects (read only from construction)</p>
+	 * <p>Simple helper to construct the Directive object based on the Type provided</p>
 	 *
-	 * @param  from Template to clone
-	 * @param  seedReplace Initial replace hash
+	 * @param  int Template Type (from Constants TYPE_*)
+	 * @param  rs Sql ResultSet Row containing Directive data
+	 * @throws MergeExeception - Constructor Errors
 	 */
-	public Template(Template from, HashMap<String,String> seedReplace) {
-	    this.idtemplate 	= from.idtemplate;
-		this.collection 	= from.collection;
-		this.columnValue 	= from.columnValue;
-		this.name 			= from.name;
-		this.description 	= from.description;
-		this.outputFile 	= from.outputFile;
-		this.replaceVal 	= from.replaceVal;
-		this.replaceCol 	= from.replaceCol;
-		this.replaceRow 	= from.replaceRow;
-		this.insert 		= from.insert;
-		this.replaceValues 	= new HashMap<String,String>();
-		this.content 		= new StringBuilder(from.content);
-
-		// Deep Copy Collections
-		this.bookmarks		= new ArrayList<Bookmark>();
-		for(Bookmark 	 	fromBkm : from.bookmarks) 	{ this.bookmarks.add(new Bookmark(fromBkm)); 		}
- 
-		// Load Initial Replace Values
-		this.replaceValues.putAll(seedReplace);
-		
-		// Make sure we have an output dir guid
-		if (!this.replaceValues.containsKey(TAG_OUTPUTFILE)) {
-			this.replaceValues.put(TAG_OUTPUTFILE, UUID.randomUUID().toString() + ".zip"); 
-		}
-		
-		// Add our name to the Template Stack
-		if (!this.replaceValues.containsKey(TAG_STACK)) {
-			this.replaceValues.put(TAG_STACK, this.getFullName()); 
-		} else {
-			this.replaceValues.put(TAG_STACK, this.replaceValues.get(TAG_STACK) + "/" + this.getFullName());
-		}
-		
+	private Directive newDirective(int type, ResultSet rs) throws MergeException {
+		switch(type) {
+			case Directive.TYPE_REQUIRE:
+				return new Require(rs, this);
+			case Directive.TYPE_REPLACE_VALUE: 
+				return new ReplaceValue(rs, this);
+			case Directive.TYPE_IF_INSERT: 
+				return new InsertSubsIf(rs, this);
+			case Directive.TYPE_SQL_INSERT: 
+				return new InsertSubsSql(rs, this);
+			case Directive.TYPE_SQL_REPLACE_ROW: 
+				return new ReplaceRowSql(rs, this);
+			case Directive.TYPE_SQL_REPLACE_COL: 	
+				return new ReplaceColSql(rs, this);
+			case Directive.TYPE_CSV_INSERT: 
+				return new InsertSubsCsv(rs, this);
+			case Directive.TYPE_CSV_REPLACE_ROW: 
+				return new ReplaceRowCsv(rs, this);
+			case Directive.TYPE_CSV_REPLACE_COL: 
+				return new ReplaceColCsv(rs, this);
+			case Directive.TYPE_HTML_INSERT: 
+				return new InsertSubsHtml(rs, this);
+			case Directive.TYPE_HTML_REPLACE_ROW: 
+				return new ReplaceRowHtml(rs, this);
+			case Directive.TYPE_HTML_REPLACE_COL: 
+				return new ReplaceColHtml(rs, this);
+			case Directive.TYPE_HTML_REPLACE_MARKUP: 
+				return new ReplaceMarkupHtml(rs, this);
+			default: 
+				throw new MergeException("Invalid Directive Type: ", Integer.toString(type));
+		} // end Switch type
 	}
+
+	/**********************************************************************************
+	 * <p>Template Clone constructor, initializes replace values based on the passed parameter 
+	 * and performs a deep copy of Bookmarks and Directives. Initialization of the output file name
+	 * and construction of the template stack are performed in the clone as well. </p>
+	 *
+	 * @param  seedReplace Initial replace hash
+	 * @throws MergeException - Wrapper of clone not supported exceptions
+	 */
+	public Template clone(HashMap<String,String> seedReplace) throws MergeException {
+		Template newTemplate = null;
+		try {
+			newTemplate = (Template) super.clone();
+			newTemplate.replaceValues 	= new HashMap<String,String>();
+			newTemplate.content 		= new StringBuilder(this.content);
 	
+			// Deep Copy Collections
+			newTemplate.bookmarks		= new ArrayList<Bookmark>();
+			for(Bookmark fromBkm : this.bookmarks) 	{ newTemplate.bookmarks.add(fromBkm.clone()); }
+			newTemplate.directives = new ArrayList<Directive>();
+			for(Directive fromDirective : this.directives) { newTemplate.directives.add(fromDirective.clone(this)); }
+			
+			// Seed Replace Values
+			newTemplate.replaceValues.putAll(seedReplace);
+			
+			// Make sure we have an output file name guid
+			if (!newTemplate.replaceValues.containsKey(TAG_OUTPUTFILE)) {
+				newTemplate.replaceValues.put(TAG_OUTPUTFILE, UUID.randomUUID().toString() 
+						+ (getOutputType() == ZipFactory.TYPE_ZIP ? ".zip" : ".tar.gz")); 
+			}
+			
+			// Add our name to the Template Stack
+			if (!newTemplate.replaceValues.containsKey(TAG_STACK)) {
+				newTemplate.replaceValues.put(TAG_STACK, this.getFullName()); 
+			} else {
+				newTemplate.replaceValues.put(TAG_STACK, newTemplate.replaceValues.get(TAG_STACK) + "/" + newTemplate.getFullName());
+			}
+		} catch (CloneNotSupportedException e) {
+			throw new MergeException(e, "System Error", "Clone Not Supported");
+		}
+		
+		return newTemplate;
+	}
+
+	/**
+	 * Persist Template and Directives to TemplateDB
+	 */
+	public void saveToDb() {
+		// TODO Delete from template where name=this.name and collection = this.collection and column = this.column
+		// 
+		// this.id = this.insert()
+		// for (Directive directive : this.directives) {
+		//		directive.save();
+		// }
+	}
+
 	/********************************************************************************
 	 * <p>Merge Template. This method drives the merge process, processing directives to select data, 
 	 * insert sub-templates, and perform search replace activities.</p>
 	 *
 	 * @return The merged template contents, or an empty string if an output file is specified
-	 * @throws DragonFlySqlException Data Source Errors
-	 * @throws DragonFlyException Directive Processing Errors
+	 * @throws MergeException Data Source Errors
+	 * @throws MergeException Directive Processing Errors
 	 * @throws IOException Save Output File errors
 	 */
-	public String merge() throws DragonFlyException, DragonFlySqlException, IOException {
+	public String merge() throws MergeException {
 		log.info("Begin Template Merge for:" + this.getFullName() );
 
 		// Process Directives
-		for(ReplaceValue directive : this.replaceVal) {
-			directive.getValues(this);
-		}		
-		for(ReplaceColumn directive : this.replaceCol) {
-			directive.getValues(this);
-		}		
-		for(ReplaceRow directive : this.replaceRow) {
-			directive.getValues(this);
-		}		
-		for(InsertRows directive : this.insert) {
-			directive.getValues(this);
+		for(Directive directive : this.directives ) {
+			directive.executeDirective();
 		}		
 		
 		// Clear out template all-values replace tag
-		if ( this.replaceValues.get(TAG_ALL_VALUES) != null ) {
-			this.replaceValues.put(TAG_ALL_VALUES, "");			
-		}
+		this.replaceValues.remove(TAG_ALL_VALUES);			
 		
-		// Process Replace Stack  
+		// Process Replace Stack and build "All Values" replace value  
+		String allValues = "";
 		for (Map.Entry<String, String> entry : this.replaceValues.entrySet()) {
 			this.replaceThis(entry.getKey(), entry.getValue());
+			String from = "{-" + entry.getKey().substring(1);
+			allValues += from + "->" + entry.getValue() + "\n";
 		}
 
 		// Process Replace Stack again (to support Nested Tags)
@@ -253,15 +287,6 @@ public class Template {
 			this.replaceThis(entry.getKey(), entry.getValue());
 		}
 		
-		// Build "all values" replace string
-		String allValues = "";
-		for (Map.Entry<String, String> entry : this.replaceValues.entrySet()) {
-			if ( !entry.getKey().isEmpty()) {
-				String from = "{-" + entry.getKey().substring(1);
-				allValues += from + "->" + entry.getValue() + "\n";
-			}
-		}
-
 		// Replace the all values tag
 		this.replaceThis(TAG_ALL_VALUES, allValues);
 		
@@ -272,7 +297,7 @@ public class Template {
 		
 		// save the output file or return the content
 		if ( !this.outputFile.isEmpty() ) {
-			this.saveAs();
+			this.saveOutputAs();
 			return "";			
 		} else {
 			return this.content.toString();
@@ -282,9 +307,9 @@ public class Template {
 	/********************************************************************************
 	 * <p>Save As. Write the contents to the Zip file</p> 
 	 * @throws IOException Zip File writing errors
-	 * @throws DragonFlyException TAG_OUTPUTFILE not in replace stack
+	 * @throws MergeException TAG_OUTPUTFILE not in replace stack
 	 */
-	public void saveAs() throws IOException, DragonFlyException  {
+	public void saveOutputAs() throws MergeException  {
 		// don't save /dev/null or empty file names
 		if (this.isEmpty()) {return;}
 		if (this.outputFile == "/dev/null") {return;}
@@ -295,28 +320,36 @@ public class Template {
 			fileName = fileName.replace(entry.getKey(), entry.getValue());
 		}
 
-	    // Create an file entry in the output zip.
+	    // Create a file entry in the output zip.
 		if (!this.replaceValues.containsKey(TAG_OUTPUTFILE)) {
-			throw new DragonFlyException("System Tag Not Found", TAG_OUTPUTFILE);
+			throw new MergeException("System Tag Not Found", TAG_OUTPUTFILE);
 		}
-		ZipOutputStream out = ZipFactory.getZipStream(this.replaceValues.get(TAG_OUTPUTFILE));
-		ZipEntry entry = new ZipEntry(fileName);
-		out.putNextEntry(entry);
+		
+		try {
+			ZipOutputStream out = ZipFactory.getZipStream(this.getOutputFile(), this.getOutputType());
+			ZipEntry entry = new ZipEntry(fileName);
+			out.putNextEntry(entry);
+		    log.info("Writing Output File " + fileName);
+		    out.write(this.content.toString().getBytes()); 
+		    out.closeEntry();
+		} catch (FileNotFoundException e) {
+			throw new MergeException("FileNotFound", fileName);
+		} catch (IOException e) {
+			throw new MergeException("File IO Error", fileName);
+		}
 		
 	    // write the content to the file 
-	    log.info("Writing Output File " + fileName);
-	    out.write(this.content.toString().getBytes()); 
-	    out.closeEntry();
 		return;
 	 }
 
 	/********************************************************************************
 	 * Finalize Creation of ZIP file, should always be called after merge is complete. 
 	 * @throws IOException File Save errors 
+	 * @throws MergeException 
 	 */
-	public void packageOutput() throws IOException  {
-		ZipFactory.closeStream(this.replaceValues.get(TAG_OUTPUTFILE));
-		ConnectionFactory.close(this.replaceValues.get(TAG_OUTPUTFILE));
+	public void packageOutput() throws MergeException  {
+		ZipFactory.closeStream(this.getOutputFile());
+		ConnectionFactory.close(this.getOutputFile());
 	}
 	
 	/********************************************************************************
@@ -346,9 +379,9 @@ public class Template {
 	 * 
 	 * @param from The string to replace
 	 * @param to The value to replace with
-	 * @throws DragonFlyException Replace To contains From value
+	 * @throws MergeException Replace To contains From value
 	 */
-	public void replaceThis(String from, String to) throws DragonFlyException {
+	public void replaceThis(String from, String to) throws MergeException {
 		// don't waste time
 		if (from.isEmpty()) {return;}	
 
@@ -356,12 +389,11 @@ public class Template {
 		to = to.replace(TAG_ALL_VALUES, "{ALL VALUES TAG}"); // all values tag safety
 		if ( to.lastIndexOf(from) > 0 ) {
 			String message = "Replace Attempted with Replace Value containg Replace Key:" + from + "\n Value:" + to + " in " + this.getFullName(); 
-			log.fatal(message);
-			if ( replaceValues.containsKey(TAG_SOFTFAIL) ) {
+			if ( this.softFail() ) {
 				log.warn("SOFT FAIL -" + message);
 				to = "SOFT FAIL - VALUE NOT REPLACED, TO CONTAINS FROM";
 			} else {
-				throw new DragonFlyException("Replace Error!", message);
+				throw new MergeException(message, this.getStack());
 			}
 		}
 		
@@ -384,50 +416,30 @@ public class Template {
 	}
 
 	/********************************************************************************
-	 * <p>addRowReplace Adds the {colum} to value replaces for a result set row</p> 
-	 *
-	 * @param rs The resulset to add
-	 * @throws SQLException on Data Source Errors
-	 */
-	public void addRowReplace(ResultSet rs) throws SQLException  {
-		ResultSetMetaData meta = rs.getMetaData();
-		final int columnCount = meta.getColumnCount();
-	    for (int column = 1; column <= columnCount; column++) 
-	    {
-	    	String value = rs.getString(column);
-	    	String colName = meta.getColumnLabel(column); 
-	        if (value != null) {
-	            this.replaceValues.put(wrap(colName), value);
-	        } else {
-	        	this.replaceValues.put(wrap(colName), "");
-	        }
-	    }
-	}
-
-	/********************************************************************************
-	 * addColReplace Add a from-to pair with a wrapped from value
+	 * addReplace Add a from-to pair with a wrapped from value
 	 * 
 	 *  @param from The from value
 	 *  @param to The replace value
 	 */
-	public void addColReplace(String from, String to) {
+	public void addReplace(String from, String to) {
 		this.replaceValues.put( wrap(from), to);
 	}
 
 	/********************************************************************************
-	 * set a replace value to the empty string ""
+	 * Process the replace hash on the provided string
 	 * 
-	 *  @param keys The list of keys to empty
+	 *  @param value The string to process
+	 *  @return The string after processing the replace string
 	 */
-	public void addEmptyReplace(List<String> keys) {
-		for(String from : keys) {
-			this.replaceValues.put(wrap(from), "");
-		}		
+	public String replaceProcess(String value) {
+		for (Map.Entry<String, String> entry : this.replaceValues.entrySet()) {
+			value = value.replace(entry.getKey(), entry.getValue());
+		}
+		return value;
 	}
 
 	/********************************************************************************
 	 * Content is empty (whitespace)
-	 * 
 	 *  @return boolean empty
 	 */
 	public boolean isEmpty() {
@@ -440,76 +452,165 @@ public class Template {
 	}
 
 	/********************************************************************************
-	 * Build a select statement for a Template, omit column if empty.
-	 *
-	 * @param collection Template Collection 
-	 * @param column Template Column Value
-	 * @param name Template Name
-	 * @return SQL Select Statement
+	 * set a replace value to the empty string ""
+	 *  @param keys The list of keys to empty
 	 */
-	private String getQueryString(String collection, String column, String name) {
-		return "select * from templatefull where collectionName = '" + collection + "'" + 
-				" and columnValue = '" + ((column == null || column.isEmpty()) ? "" : column) + "'" + 
-				" and name = '" + name + "'";		
+	public void addEmptyReplace(List<String> keys) {
+		for(String from : keys) {
+			this.replaceValues.put(wrap(from), "");
+		}		
 	}
 
 	/********************************************************************************
-	 * Get the TAG_OUTPUTFILE Guid from the replace stack
-	 * @throws DragonFlyException  if Outputfile is not in the stack (should be impossible)
-	 * @return The output file GUID
+	 * does the replace hash contain a specific key
+	 *  @param key The key of the entry to get
+	 *  @return boolean True if the key exists 
 	 */
-	public String getOutputFile() throws DragonFlyException  {
-		if (this.replaceValues.containsKey(TAG_OUTPUTFILE)) {
-			return this.replaceValues.get(TAG_OUTPUTFILE);
-		} else {
-			String msg = "TAG_OUTPUTFILE " + TAG_OUTPUTFILE + " Was not found!";
-			log.error(msg);
-			throw new DragonFlyException(msg, "Cat N");
+	public boolean hasReplaceKey(String key) {
+		return this.replaceValues.containsKey(key);
+	}
+
+	/********************************************************************************
+	 * does the replace hash contain a specific key, with a non-blank value.
+	 *  @param key The key of the entry to get
+	 *  @return boolean True if the key exists with a non-empty value.
+	 */
+	public boolean hasReplaceValue(String key) {
+		if (this.replaceValues.containsKey(key)) {
+			return ! this.replaceValues.get(key).isEmpty();
 		}
+		return false;
 	}
 	
-	// - SIMPLE GETTER'S BELOW HERE -
-	/**
-	 * @return the full name
+
+	/********************************************************************************
+	 * get a value from the replace hash
+	 *  @param key The key of the entry to get
+	 *  @return value, the value of that entry.
+	 *  @throws MergeException when value not found.
+	 *  @see hasReplaceKey and hasReplaceValue()
 	 */
-	public String getFullName() {
-		return collection + ":" + columnValue + ":" + name;
+	public String getReplaceValue(String key) throws MergeException {
+		if (this.replaceValues.containsKey(key)) {
+			return this.replaceValues.get(key);
+		} else {
+			String msg = "Replace Value for key " + key + " Was not found!";
+			throw new MergeException(msg, this.getFullName());
+		}		
+	}
+	
+	/**
+	 * @return soft fail indicator (from replace hash)
+	 */
+	public boolean softFail() {
+		return this.replaceValues.containsKey(TAG_SOFTFAIL);
 	}
 
 	/**
+	 * @return the Template Stack (from replace hash)
+	 */
+	public String getStack() throws MergeException {
+		return this.getReplaceValue(TAG_STACK);
+	}
+	
+	/**
+	 * @return the Output File name (from replace hash)
+	 */
+	public String getOutputFile() throws MergeException  {
+		return this.getReplaceValue(TAG_OUTPUTFILE);
+	}
+
+	/**
+	 * @return output type indicator (Default to GZIP, allow "zip" over-ride
+	 */
+	private int getOutputType() {
+		if (this.replaceValues.containsKey(TAG_OUTPUT_TYPE) && 
+				this.replaceValues.get(TAG_OUTPUT_TYPE) == "zip") {
+				return ZipFactory.TYPE_ZIP; 
+		} 
+		return ZipFactory.TYPE_GZIP;
+	}
+
+	/**
+	 * @return the full name 
+	 * TODO - Consider full names as collection, name, columnValue
+	 */
+	public String getFullName() {
+		return this.collection + ":" + this.columnValue + ":" + this.name;
+	}
+	
+	/**
+	 * @return the Bookmark List
+	 */
+	public List<Bookmark> getBookmarks() {
+		return this.bookmarks;
+	}
+
+	/**
+	 * @return the Replace Hash
+	 */
+	public HashMap<String, String> getReplaceValues() {
+		return this.replaceValues;
+	}
+
+
+	/**
+	 * @return the template ID
+	 * @Id
+	 * @GeneratedValue(generator="increment")
+	 * @GenericGenerator(name="increment", strategy = "increment")
+	 * @Column(name = "idtemplate");
+	 */
+	public int getId() {
+	    return this.idtemplate;
+	}	
+	
+	/**
 	 * @return the collection
+	 * @Column(name = "collectionName");
 	 */
 	public String getCollection() {
-		return collection;
+		return this.collection;
 	}
 
 	/**
 	 * @return the columnValue
+	 * @Column(name = "columnValue)";
 	 */
 	public String getColumnValue() {
-		return columnValue;
+		return this.columnValue;
 	}
 
 	/**
 	 * @return the name
+	 * @Column(name = "name)";
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	/**
-	 * @return the replaceValues
+	 * @return
+	 * @Column(name = "description)";
 	 */
-	public HashMap<String, String> getReplaceValues() {
-		return replaceValues;
+	public String getDescription() {
+		return this.description;
 	}
 
 	/**
-	 * @return the bookmarks
+	 * @return
+	 * @Column(name = "content)";
 	 */
-	public List<Bookmark> getBookmarks() {
-		return bookmarks;
+	public String getContent() {
+		return this.content.toString();
 	}
 	
-	
+	/**
+	 * @return the output file spec
+	 * @Column(name = "output)";
+	 */
+	public String getOutput() {
+		return this.outputFile;
+	}
+
 }

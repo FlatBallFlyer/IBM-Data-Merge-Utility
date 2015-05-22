@@ -19,15 +19,12 @@ package com.ibm.util.merge;
 
 import java.util.regex.*;
 
-import org.apache.log4j.Logger;
-
 /**
  * A location within a template where sub-templates will be inserted. 
  *
  * @author  Mike Storey
  */
-class Bookmark {
-	private static final Logger log = Logger.getLogger( Bookmark.class.getName() );
+public class Bookmark implements Cloneable {
 	private String element;
 	private String name;
 	private int start;
@@ -38,9 +35,9 @@ class Bookmark {
 	 *
 	 * @param  contents Bookmark String in the form &lt;tkBookmark name="THENAME"/&gt;
 	 * @param  initialStart The location within the template of this bookmark
-	 * @throws DragonFlyException Invalid Bookmark
+	 * @throws MergeException Invalid Bookmark
 	 */
-	public Bookmark (String contents, int initialStart) throws DragonFlyException {
+	public Bookmark (String contents, int initialStart) throws MergeException {
 		Pattern p = Pattern.compile("=\"(.*)\"");
 		Matcher m = p.matcher(contents);
 		if (m.find()) {
@@ -49,8 +46,7 @@ class Bookmark {
 			start = initialStart;
 			size = element.length();
 		} else {
-			log.fatal("Malformed Bookmark " + contents);
-			throw new DragonFlyException("Invalid Bookmark found: " + contents, "Invalid Bookmark");
+			throw new MergeException("Invalid Bookmark", "Bookmark: " + contents);
 		}
 	}
 	
@@ -58,12 +54,10 @@ class Bookmark {
 	 * <p>Bookmark Clone constructor</p>
 	 *
 	 * @param  from Bookmark to clone
+	 * @throws CloneNotSupportedException 
 	 */
-	public Bookmark (Bookmark from) {
-		this.element = from.element;
-		this.name = from.name;
-		this.start = from.start;
-		this.size = from.size;
+	public Bookmark clone () throws CloneNotSupportedException {
+		return (Bookmark) super.clone();
 	}
 	
 	/**********************************************************************************
@@ -72,7 +66,7 @@ class Bookmark {
 	 * @param  amount The number of bytes (positive or negative) to offset
 	 */
 	public void offest (int amount) {
-		start += amount;
+		this.start += amount;
 	}
 
 	// - SIMPLE GETTERS BELOW HERE -
@@ -80,21 +74,21 @@ class Bookmark {
 	 * @return the name
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	/**
 	 * @return the start
 	 */
 	public int getStart() {
-		return start;
+		return this.start;
 	}
 
 	/**
 	 * @return the size
 	 */
 	public int getSize() {
-		return size;
+		return this.size;
 	}
 
 }

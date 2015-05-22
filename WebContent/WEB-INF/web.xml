@@ -21,6 +21,10 @@
 		<param-name>merge-output-root</param-name>
 		<param-value>/tmp/merge/</param-value>
     </init-param>
+    <init-param>
+		<param-name>merge-templates-folder</param-name>
+		<param-value>/tmp/templates/</param-value>
+    </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
