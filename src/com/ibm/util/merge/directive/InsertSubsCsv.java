@@ -15,30 +15,25 @@
  *
  */
 package com.ibm.util.merge.directive;
-
-import java.sql.ResultSet;
-
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
 
 public class InsertSubsCsv extends InsertSubs implements Cloneable {
 
 	/**
-	 * @param dbRow
-	 * @param owner
-	 * @throws MergeException
+	 * Simple Constructor
 	 */
-	public InsertSubsCsv(ResultSet dbRow, Template owner) throws MergeException {
-		super(dbRow, owner);
-		this.provider = new ProviderCsv(this, dbRow);
+	public InsertSubsCsv() {
+		super();
+		this.setType(TYPE_CSV_INSERT);
+		this.setProvider(new ProviderCsv());
 	}
 
 	/** 
 	 * Simple Clone constructor
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
-	public InsertSubsCsv clone(Template owner) throws CloneNotSupportedException {
-		return (InsertSubsCsv) super.clone(owner);
+	public InsertSubsCsv clone() throws CloneNotSupportedException {
+		return (InsertSubsCsv) super.clone();
 	}
 }

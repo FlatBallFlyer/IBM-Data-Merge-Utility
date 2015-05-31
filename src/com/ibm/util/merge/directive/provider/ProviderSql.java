@@ -33,34 +33,23 @@ import com.ibm.util.merge.directive.Directive;
  */
 public class ProviderSql extends Provider implements Cloneable {
 	private static final Logger log = Logger.getLogger( ProviderSql.class.getName() );
-	private String source;
-	private String columns;
-	private String tables;
-	private String where;
+	private String source	= "";
+	private String columns	= "";
+	private String from		= "";
+	private String where	= "";
 
 	/**
-	 * Database constructor
-	 * @param newOwner - the Template that owns this directive
-	 * @param dbRow - The Sql ResultSet row containing Directive data
-	 * @throws MergeException - Wrapped SQL exceptions.
+	 * Simple constructor
 	 */
-	public ProviderSql(Directive newOwner, ResultSet dbRow) throws MergeException {
-		super(newOwner);
-		try {
-			this.source 	= dbRow.getString(Directive.COL_JDBC_SOURCE);
-			this.columns 	= dbRow.getString(Directive.COL_JDBC_COLUMNS);
-			this.tables 	= dbRow.getString(Directive.COL_JDBC_TABLES);
-			this.where 		= dbRow.getString(Directive.COL_JDBC_WHERE);
-		} catch (SQLException e) {
-			throw new MergeException(e, "ProviderSql Construction SQL Error", this.getQueryString());
-		}
+	public ProviderSql() {
+		super();
 	}
 	
 	/**
 	 * Simple clone method
 	 * @see com.ibm.util.merge.directive.provider.Provider#clone(com.ibm.util.merge.directive.Directive)
 	 */
-	public ProviderSql clone(Directive newOwner) throws CloneNotSupportedException {
+	public ProviderSql clone() throws CloneNotSupportedException {
 		return (ProviderSql) super.clone();
 	}
 
@@ -77,7 +66,7 @@ public class ProviderSql extends Provider implements Cloneable {
 		try {
 			// Prepare and Execute the SQL Statement
 			String queryString = this.getQueryString();
-			con = ConnectionFactory.getDataConnection(this.source, this.directive.getTemplate().getOutputFile());
+			con = ConnectionFactory.getDataConnection(this.source, this.getDirective().getTemplate().getOutputFile());
 			PreparedStatement st = con.prepareStatement(queryString, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = st.executeQuery();
 			
@@ -112,13 +101,46 @@ public class ProviderSql extends Provider implements Cloneable {
 	 * @return the Select Statement
 	 */
 	public String getQueryString() {
-		String query = "SELECT " + this.directive.getTemplate().replaceProcess(this.columns);
-		if ( !this.tables.isEmpty()) {
-			query += " FROM " + this.directive.getTemplate().replaceProcess(this.tables);
+		String query = "SELECT " + this.getDirective().getTemplate().replaceProcess(this.columns);
+		if ( !this.from.isEmpty()) {
+			query += " FROM " + this.getDirective().getTemplate().replaceProcess(this.from);
 		}
 		if ( !this.where.isEmpty() ) {
-			query += " WHERE " + this.directive.getTemplate().replaceProcess(this.where);
+			query += " WHERE " + this.getDirective().getTemplate().replaceProcess(this.where);
 		}
 		return query;
 	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getColumns() {
+		return columns;
+	}
+
+	public void setColumns(String columns) {
+		this.columns = columns;
+	}
+
+	public String getFrom() {
+		return from;
+	}
+
+	public void setFrom(String from) {
+		this.from = from;
+	}
+
+	public String getWhere() {
+		return where;
+	}
+
+	public void setWhere(String where) {
+		this.where = where;
+	}
+	
 }

@@ -15,11 +15,8 @@
  *
  */
 package com.ibm.util.merge.directive;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
 
 /**
@@ -33,32 +30,26 @@ public class ReplaceValue extends Directive implements Cloneable {
 	private String to = "";
 
 	/**
-	 * Database Constructor
-	 * @param dbRow the Result Set row containt the Directive data
-	 * @param owner the Template that "owns" this directive.
+	 * Simple Constructor
 	 */
-	public ReplaceValue(ResultSet dbRow, Template owner) throws MergeException {
-		super(dbRow, owner);
-		try {
-			this.from = dbRow.getString(Directive.COL_REPLACE_FROM_VALUE);
-			this.to = dbRow.getString(Directive.COL_REPLACE_TO_VALUE);
-		} catch (SQLException e) {
-			throw new MergeException(e, "Insert Subs Constructor Error", this.getFullName());
-		}
+	public ReplaceValue() {
+		super();
+		this.setType(TYPE_REPLACE_VALUE);
+		this.setProvider(null);
 	}
 
 	/**
 	 * Simple clone
 	 */
-	public Directive clone(Template owner) throws CloneNotSupportedException {
-		return super.clone(owner);
+	public ReplaceValue clone(Template owner) throws CloneNotSupportedException {
+		return (ReplaceValue) super.clone();
 	}
 
 	/**
 	 * Add the replace value
 	 */
 	public void executeDirective() {
-		this.template.addReplace(this.from, this.to);
+		this.getTemplate().addReplace(this.from, this.to);
 		log.info("Replaced " + this.from + " with " + this.to);
 	}
 

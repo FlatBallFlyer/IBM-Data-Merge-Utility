@@ -15,22 +15,18 @@
  *
  */
 package com.ibm.util.merge.directive;
-
-import java.sql.ResultSet;
-
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
 
 public class ReplaceColHtml extends ReplaceCol implements Cloneable {
+	
 	/**
-	 * @param dbRow
-	 * @param owner
-	 * @throws MergeException
+	 * Simple Constructor
 	 */
-	public ReplaceColHtml(ResultSet dbRow, Template owner) throws MergeException {
-		super(dbRow, owner);
-		this.provider = new ProviderHtml(this, dbRow);
+	public ReplaceColHtml() {
+		super();
+		this.setType(TYPE_HTML_REPLACE_COL);
+		this.setProvider(new ProviderHtml());
 	}
 
 	/** 
@@ -38,6 +34,6 @@ public class ReplaceColHtml extends ReplaceCol implements Cloneable {
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
 	public ReplaceColHtml clone(Template owner) throws CloneNotSupportedException {
-		return (ReplaceColHtml) super.clone(owner);
+		return (ReplaceColHtml) super.clone();
 	}
 }

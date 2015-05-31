@@ -1,55 +1,103 @@
 <hibernate-mapping package="com.ibm.util.merge.directive">
-
     <class name="Directive" table="DIRECTIVE">
         <id name="idDirective" column="ID_DIRECTIVE">
             <generator class="native"/>
         </id>
-        <property name="softFail"	 		column="SOFT_FAIL"			/>
+        <property name="idTemplate"			column="ID_TEMPLATE"		/>
+        <property name="sequence"			column="SEQUENCE"			/>
         <property name="type"	 			column="TYPE"				/>
         <property name="description"	 	column="DESCRIPTION"		/>
+        <property name="softFail"	 		column="SOFT_FAIL"			/>
         <discriminator column="TYPE" type="int">
-	        <subclass name="ReplaceValue" extends="Directive" discriminator-value="1">
-		        <property name="from"	 			column="DIRECTIVE_FROM"		/>
-		        <property name="to"	 				column="DIRECTIVE_TO"		/>
+	        <subclass name="Require" extends="Directive" discriminator-value="0">
+		        <property name="tags"	 			column="DIR_1"		/>
     		</subclass>
-	        <subclass name="Require" extends="Directive" discriminator-value="2">
-        		<property name="tags"	 			column="DIRECTIVE_FROM"		/>
-        	</subclass>
-	        <subclass name="ReplaceMarkupHtml" extends="Directive" discriminator-value="24">
-		        <property name="pattern"	 		column="DIRECTIVE_FIRST"	/>
-		        <property name="fromKey"	 		column="DIRECTIVE_FROM"		/>
-		        <property name="toKey"	 			column="DIRECTIVE_TO"		/>
+	        <subclass name="ReplaceValue" extends="Directive" discriminator-value="1">
+		        <property name="from"	 			column="DIR_1"		/>
+		        <property name="to"	 				column="DIR_2"		/>
+    		</subclass>
+	        <subclass name="InsertIf" extends="Directive" discriminator-value="2">
+		        <property name="collectionName"	 	column="DIR_1"	/>
+		        <property name="collectionColumn"	column="DIR_2"	/>
+		        <property name="notLast"	 		column="DIR_3"	/>
+		        <property name="onlyLast"	 		column="DIR_4"	/>
+		        <property name="tags"	 			column="PRO_1"		/>
+		        <property name="matchall"	 		column="PRO_2"		/>
 	        </subclass>
-	        <subclass name="InsertSubs" extends="Directive" discriminator-value="?">
-		        <property name="collectionName"	 	column="DIRECTIVE_FROM"		/>
-		        <property name="collectionColumn"	column="DIRECTIVE_TO"		/>
-		        <property name="notLast"	 		column="DIRECTIVE_FIRST"	/>
-		        <property name="onlyLast"	 		column="DIRECTIVE_LAST"		/>
-	        </subclass>
-	        <subclass name="ReplaceCol" extends="Directive" discriminator-value="?">
-		        <property name="fromColumn"	 		column="DIRECTIVE_FROM"		/>
-		        <property name="toColumn"	 		column="DIRECTIVE_TO"		/>
-	        </subclass>
-    	</discriminator>
-
-	<subclass name="ProviderSql" extends="Provider">
-        <property name="source"	 			column="PROVIDER_SOURCE"	/>
-        <property name="columns"	 		column="PROVIDER_DATA"		/>
-        <property name="tables"	 			column="PROVIDER_LOCATION"	/>
-        <property name="where"	 			column="PROVIDER_FILTER"	/>
-	</subclass>
-
-	<subclass name="ProviderHttp" extends="Provider">
-        <property name="url"	 			column="PROVIDER_SOURCE"	/>
-        <property name="tag"	 			column="PROVIDER_FILTER"	/>
-        <property name="staticData"	 		column="PROVIDER_DATA"		/>
-    </subclass>
-        
-	<subclass name="ProviderIf" extends="Provider">
-        <property name="matchAll"	 		column="PROVIDER_FILTER"	/>
-        <property name="tags"	 			column="PROVIDER_DATA"		/>
-	</subclass>
-
+	        <subclass name="InsertSubsSql" extends="Directive" discriminator-value="10">
+		        <property name="collectionName"	 	column="DIR_1"	/>
+		        <property name="collectionColumn"	column="DIR_2"	/>
+		        <property name="notLast"	 		column="DIR_3"	/>
+		        <property name="onlyLast"	 		column="DIR_4"	/>
+		        <property name="source"	 			column="PRO_1"	/>
+		        <property name="columns"	 		column="PRO_2"	/>
+		        <property name="tables"	 			column="PRO_3"	/>
+		        <property name="where"	 			column="PRO_4"	/>
+    		</subclass>
+	        <subclass name="ReplaceRowSql" extends="Directive" discriminator-value="11">
+		        <property name="source"	 			column="PRO_1"	/>
+		        <property name="columns"	 		column="PRO_2"	/>
+		        <property name="tables"	 			column="PRO_3"	/>
+		        <property name="where"	 			column="PRO_4"	/>
+    		</subclass>
+	        <subclass name="ReplaceColSql" extends="Directive" discriminator-value="12">
+		        <property name="fromColumn"	 		column="DIR_1"	/>
+		        <property name="toColumn"	 		column="DIR_2"	/>
+		        <property name="source"	 			column="PRO_1"	/>
+		        <property name="columns"	 		column="PRO_2"	/>
+		        <property name="tables"	 			column="PRO_3"	/>
+		        <property name="where"	 			column="PRO_4"	/>
+    		</subclass>
+	        <subclass name="InsertSubsCsv" extends="Directive" discriminator-value="21">
+		        <property name="collectionName"	 	column="DIR_1"	/>
+		        <property name="collectionColumn"	column="DIR_2"	/>
+		        <property name="notLast"	 		column="DIR_3"	/>
+		        <property name="onlyLast"	 		column="DIR_4"	/>
+		        <property name="url"	 			column="PRO_1"	/>
+		        <property name="tag"	 			column="PRO_2"	/>
+		        <property name="staticData"	 		column="PRO_4" 	/>
+    		</subclass>
+	        <subclass name="ReplaceRowCsv" extends="Directive" discriminator-value="22">
+		        <property name="url"	 			column="PRO_1"	/>
+		        <property name="tag"	 			column="PRO_2"	/>
+		        <property name="staticData"	 		column="PRO_4" 	/>
+    		</subclass>
+	        <subclass name="ReplaceColCsv" extends="Directive" discriminator-value="23">
+		        <property name="fromColumn"	 		column="DIR_1"	/>
+		        <property name="toColumn"	 		column="DIR_2"	/>
+		        <property name="url"	 			column="PRO_1"	/>
+		        <property name="tag"	 			column="PRO_2"	/>
+		        <property name="staticData"	 		column="PRO_4" 	/>
+    		</subclass>
+	        <subclass name="InsertSubsHtml" extends="Directive" discriminator-value="31">
+		        <property name="collectionName"	 	column="DIR_1"	/>
+		        <property name="collectionColumn"	column="DIR_2"	/>
+		        <property name="notLast"	 		column="DIR_3"	/>
+		        <property name="onlyLast"	 		column="DIR_4"	/>
+		        <property name="url"	 			column="PRO_1"	/>
+		        <property name="tag"	 			column="PRO_2"	/>
+		        <property name="staticData"	 		column="PRO_4" 	/>
+    		</subclass>
+	        <subclass name="ReplaceRowHtml" extends="Directive" discriminator-value="32">
+		        <property name="url"	 			column="PRO_1"	/>
+		        <property name="tag"	 			column="PRO_2"	/>
+		        <property name="staticData"	 		column="PRO_4" 	/>
+    		</subclass>
+	        <subclass name="ReplaceColHtml" extends="Directive" discriminator-value="33">
+		        <property name="fromColumn"	 		column="DIR_1"	/>
+		        <property name="toColumn"	 		column="DIR_2"	/>
+		        <property name="url"	 			column="PRO_1"	/>
+		        <property name="tag"	 			column="PRO_2"	/>
+		        <property name="staticData"	 		column="PRO_4" 	/>
+    		</subclass>
+	        <subclass name="ReplaceMarkupHtml" extends="Directive" discriminator-value="34">
+		        <property name="dataSelector"		column="DIR_1"	/>
+		        <property name="fromAttribute"		column="DIR_2"	/>
+		        <property name="toAttribute"		column="DIR_3"	/>
+		        <property name="url"	 			column="PRO_1"	/>
+		        <property name="tag"	 			column="PRO_2"	/>
+		        <property name="staticData"	 		column="PRO_4" 	/>
+    		</subclass>
+   		</discriminator>
     </class>
-
 </hibernate-mapping>

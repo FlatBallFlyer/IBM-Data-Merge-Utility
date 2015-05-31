@@ -15,12 +15,9 @@
  *
  */
 package com.ibm.util.merge.directive;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
+import com.ibm.util.merge.directive.provider.ProviderHtml;
 
 public class ReplaceMarkupHtml extends Directive implements Cloneable {
 	protected String pattern;
@@ -28,26 +25,19 @@ public class ReplaceMarkupHtml extends Directive implements Cloneable {
 	protected String toKey;
 
 	/**
-	 * Database Constructor
-	 * @param dbRow the Result Set row containt the Directive data
-	 * @param owner the Template that "owns" this directive.
+	 * Simple Constructor
 	 */
-	public ReplaceMarkupHtml(ResultSet dbRow, Template owner) throws MergeException {
-		super(dbRow, owner);
-		try {
-			this.pattern = dbRow.getString(Directive.COL_HTTP_URL);
-			this.fromKey = dbRow.getString(Directive.COL_HTTP_URL);
-			this.toKey = dbRow.getString(Directive.COL_HTTP_URL);
-		} catch (SQLException e) {
-			throw new MergeException(e, "Replace Markup Constructor Error", this.getFullName());
-		}
+	public ReplaceMarkupHtml() {
+		super();
+		this.setType(TYPE_HTML_REPLACE_MARKUP);
+		this.setProvider(new ProviderHtml());
 	}
 
 	/**
 	 * Simple clone
 	 */
 	public ReplaceMarkupHtml clone(Template owner) throws CloneNotSupportedException {
-		return (ReplaceMarkupHtml) super.clone(owner);
+		return (ReplaceMarkupHtml) super.clone();
 	}
 
 	/**
@@ -55,8 +45,8 @@ public class ReplaceMarkupHtml extends Directive implements Cloneable {
 	 * @throws MergeException 
 	 */
 	public void executeDirective() throws MergeException {
-		this.provider.getData();
-		// parse this.provider.retrievedData
+		this.getProvider().getData();
+		// TODO parse this.provider.retrievedData
 		// for each match, get from/to and call this.owner.addReplace()
 	}
 }

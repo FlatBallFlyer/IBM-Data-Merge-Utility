@@ -7,7 +7,6 @@ public class DataTable {
 	private ArrayList<ArrayList<String>> theData = new ArrayList<ArrayList<String>>();
 	
 	public DataTable() {
-		
 	}
 	
 	public int size() {
@@ -26,8 +25,9 @@ public class DataTable {
 		return columnNames.indexOf(name);
 	}
 	
-	public String getName(int col) {
-		return columnNames.get(col);
+	public String getCol(int index) {
+		if (index < 0 || index >= columnNames.size()) {return "";}
+		return columnNames.get(index);
 	}
 
 	public String getValue(int row, String name) {
@@ -35,8 +35,8 @@ public class DataTable {
 	}
 
 	public String getValue(int row, int col) {
-		if (row < 0 | row > theData.size()) {return "";}
-		if (col < 0 | col > theData.get(row).size()) {return "";}
+		if (row < 0 || row >= theData.size()) {return "";}
+		if (col < 0 || col >= theData.get(row).size()) {return "";}
 		return theData.get(row).get(col);
 	}
 	
@@ -44,6 +44,14 @@ public class DataTable {
 		ArrayList<String> newRow = new ArrayList<String>();
 		this.theData.add(newRow);
 		return newRow;
+	}
+
+	public void addRow(ArrayList<String> newRow) {
+		this.theData.add(newRow);
+	}
+
+	public void setCols(ArrayList<String> strings) {
+		this.columnNames = strings;
 	}
 
 }

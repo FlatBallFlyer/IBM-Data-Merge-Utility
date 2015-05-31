@@ -15,27 +15,18 @@
  *
  */
 package com.ibm.util.merge.directive;
-
-import java.sql.ResultSet;
-
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
 
-/**
- * @author flatballflyer
- *
- */
 public class ReplaceRowCsv extends ReplaceRow implements Cloneable {
 	
 	/**
-	 * @param dbRow
-	 * @param owner
-	 * @throws MergeException
+	 * Simple Constructor
 	 */
-	public ReplaceRowCsv(ResultSet dbRow, Template owner) throws MergeException {
-		super(dbRow, owner);
-		this.provider = new ProviderCsv(this, dbRow);
+	public ReplaceRowCsv() {
+		super();
+		this.setType(TYPE_CSV_REPLACE_ROW);
+		this.setProvider(new ProviderCsv());
 	}
 
 	/** 
@@ -43,6 +34,6 @@ public class ReplaceRowCsv extends ReplaceRow implements Cloneable {
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
 	public ReplaceRowCsv clone(Template owner) throws CloneNotSupportedException {
-		return (ReplaceRowCsv) super.clone(owner);
+		return (ReplaceRowCsv) super.clone();
 	}
 }

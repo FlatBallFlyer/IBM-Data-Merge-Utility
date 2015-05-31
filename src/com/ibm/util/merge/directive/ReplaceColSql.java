@@ -15,33 +15,18 @@
  *
  */
 package com.ibm.util.merge.directive;
-import java.sql.ResultSet;
-
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Merge;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.ProviderSql;
 
-/**
- * <p>This class represents a replaceColumn directive which loads the Replace hashmap
- * with the values of a "from" and "to" column in a sql result set.</p>
- *
- * @author  Mike Storey
- * @version 3.0
- * @since   1.0
- * @see     Template
- * @see     Merge
- */
 public class ReplaceColSql extends ReplaceCol implements Cloneable {
 	
 	/**
-	 * @param dbRow
-	 * @param owner
-	 * @throws MergeException
+	 * Simple Constructor
 	 */
-	public ReplaceColSql(ResultSet dbRow, Template owner) throws MergeException {
-		super(dbRow, owner);
-		this.provider = new ProviderSql(this, dbRow);
+	public ReplaceColSql() {
+		super();
+		this.setType(TYPE_SQL_REPLACE_COL);
+		this.setProvider(new ProviderSql());
 	}
 
 	/** 
@@ -49,6 +34,6 @@ public class ReplaceColSql extends ReplaceCol implements Cloneable {
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
 	public ReplaceColSql clone(Template owner) throws CloneNotSupportedException {
-		return (ReplaceColSql) super.clone(owner);
+		return (ReplaceColSql) super.clone();
 	}
 }

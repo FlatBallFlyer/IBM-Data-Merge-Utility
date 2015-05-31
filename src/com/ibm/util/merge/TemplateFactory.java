@@ -17,17 +17,17 @@
 
 package com.ibm.util.merge;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
-import com.cedarsoftware.util.io.JsonReader;
+import com.google.gson.Gson;
 import com.ibm.util.merge.Template;
 
 /**
@@ -60,8 +60,7 @@ final public class TemplateFactory {
 	 * reset the Template Cache.</p>
 	 *
 	 * @param  request HttpServletRequest
-	 * @throws MergeException Invalid Directive Type
-	 * @throws DragonFlySqlException Template Datasource errors
+	 * @throws MergeException 
 	 * @return Template The new Template object
 	 * @see Template
 	 */
@@ -87,7 +86,7 @@ final public class TemplateFactory {
 		
 		// Handle cache load request
 		if ( replace.containsKey(KEY_CACHE_LOAD) ) {
-			TemplateFactory.load();
+			TemplateFactory.loadAll();
 		} 
 		
 		// Get the template, add the http parameter replace values to it's hash
@@ -108,20 +107,42 @@ final public class TemplateFactory {
 	 * @param  name Template Name
 	 * @param  seedReplace Initial replace hash
 	 * @throws MergeException Invalid Directive Type from Constructor
-	 * @throws DragonFlySqlException Template Constructor Errors
 	 * @return Template The new Template object
 	 * @see Template
 	 */
     public static Template getTemplate(String collection, String column, String name, HashMap<String,String> seedReplace) throws MergeException {
-    	// TODO - Consider full name change collection + name + column
-    	String fullName = collection + ":" + column + ":" + name;
-    	if ( !templateCache.containsKey(fullName) ) { 
-    		// TODO - Shift "Default" template logic from constructor to here
-    		Template newTemplate = new Template(collection, column, name);
-    		templateCache.putIfAbsent(fullName, newTemplate);
-    		log.info("Constructed Template: " + fullName);
+    	String fullName = collection + ":" + name + ":" + column;
+    	String shortName = collection + ":" + name + ":";
+		Template newTemplate = null;
+
+    	// Cache hit --
+    	if ( templateCache.containsKey(fullName) ) { 
+        	return templateCache.get(fullName).clone(seedReplace);
     	}
-    	return templateCache.get(fullName).clone(seedReplace);
+    	
+    	// See if FullName template is in the database
+		newTemplate = new Template(collection, name, column);
+		if (newTemplate.getFullName().equals(fullName)) { 
+			templateCache.putIfAbsent(fullName, newTemplate);
+			log.info("Constructed Template: " + fullName);
+			return templateCache.get(fullName).clone(seedReplace);
+		}
+
+		// Check for shortName in the cache, since fullName doesn't exist
+    	if (templateCache.containsKey(shortName)) {
+			templateCache.putIfAbsent(fullName, templateCache.get(shortName));
+			log.info("Linked Template: " + shortName + " to " + fullName);
+			return templateCache.get(fullName).clone(seedReplace);
+    	}
+    		
+    	// See if the shortName is in the database
+    	newTemplate = new Template(collection, name, "");
+    	if (newTemplate.getFullName().equals(shortName)) {
+			templateCache.putIfAbsent(fullName, newTemplate);
+			log.info("Linked Template: " + shortName + " to " + fullName);
+			return templateCache.get(fullName).clone(seedReplace);
+    	}
+		throw new MergeException("Tempalte and Default Not Found", fullName);
     }
     
     /**********************************************************************************
@@ -137,9 +158,9 @@ final public class TemplateFactory {
 	 * Set the template folder, and load the cache
 	 * @param folder that contains template files
 	 */
-    public static void load(String folderName) {
+    public static void loadFolder(String folderName) {
     	TemplateFactory.templateFolder = folderName;
-    	TemplateFactory.load();
+    	TemplateFactory.loadAll();
     }
     
     /**********************************************************************************
@@ -148,42 +169,54 @@ final public class TemplateFactory {
 	 * merge-templates-folder, if it is not initilized the default value is /tmp/templates
 	 * @param folder that contains template files
 	 */
-    public static void load() {
+    public static void loadAll() {
     	if (TemplateFactory.templateFolder.isEmpty()) { return; }
-    	JsonReader reader = null;
-    	Template template = null;
     	int count = 0;
     	
     	File folder = new File(TemplateFactory.templateFolder);
     	for (File file : folder.listFiles()) {
     		if (!file.isDirectory()) {
     			try {
-					reader = new JsonReader(new FileInputStream(file));
-					template = (Template) reader.readObject();
-	    			templateCache.put(template.getFullName(), template);
-				} catch (FileNotFoundException e) {
-					log.info("Moving on after file read error on " + file.getName());
-				}
+    				cacheFromJson(new Scanner(file).useDelimiter("\\Z").next());
+    			} catch (FileNotFoundException e) {
+    				log.info("Moving on after file read error on " + file.getName());
+    			}
     		}
-    		log.info(template.getFullName() + " has been cached");
     		count++;
     	}
     	log.info("Loaded " + Integer.toString(count) + " templates from " + TemplateFactory.templateFolder);
     }
-
     
-	/**
+    /**
+	 * Construct a template from a json formated http request and add it to the cache 
+	 * @param request
+	 * @return the Template created
+	 * @throws MergeException - JSON Parsing Errors
+	 */
+    public static Template cacheFromJson(String jsonString)  {
+    	Template template;
+		Gson gson = new Gson();
+		template = gson.fromJson(jsonString, Template.class);   
+		templateCache.remove(template.getFullName());
+		templateCache.putIfAbsent(template.getFullName(), template);
+		log.info(template.getFullName() + " has been cached");
+		return template;
+    }
+    
+    /**
 	 * Construct a template from a json formated http request, add it to the cache and 
 	 * save template to the Template database
 	 * @param request
 	 * @return
 	 */
-	public static Template addTemplate(HttpServletRequest request) throws MergeException {
-		Template template = (Template) JsonReader.jsonToJava(request.toString());
-		template.saveToDb();
-		templateCache.remove(template.getFullName());
-		templateCache.putIfAbsent(template.getFullName(), template);
+	public static Template saveTemplate(String jsonString) throws MergeException {
+		Template template = cacheFromJson(jsonString);
+		// TODO template.hibernate();
 		return template;
+	}
+	
+	public static int size() {
+		return templateCache.size();
 	}
 
 }

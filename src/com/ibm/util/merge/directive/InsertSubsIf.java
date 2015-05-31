@@ -16,23 +16,18 @@
  */
 package com.ibm.util.merge.directive;
 
-import java.sql.ResultSet;
-
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.provider.ProviderCsv;
 import com.ibm.util.merge.directive.provider.ProviderIf;
 
 public class InsertSubsIf extends InsertSubs implements Cloneable {
 
 	/**
-	 * @param dbRow
-	 * @param owner
-	 * @throws MergeException
+	 * Simple Constructor
 	 */
-	public InsertSubsIf(ResultSet dbRow, Template owner) throws MergeException {
-		super(dbRow, owner);
-		this.provider = new ProviderIf(this, dbRow);
+	public InsertSubsIf() {
+		super();
+		this.setType(TYPE_IF_INSERT);
+		this.setProvider(new ProviderIf());
 	}
 
 	/** 
@@ -40,6 +35,6 @@ public class InsertSubsIf extends InsertSubs implements Cloneable {
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
 	public InsertSubsIf clone(Template owner) throws CloneNotSupportedException {
-		return (InsertSubsIf) super.clone(owner);
+		return (InsertSubsIf) super.clone();
 	}
 }

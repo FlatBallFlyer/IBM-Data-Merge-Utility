@@ -16,9 +16,6 @@
  */
 package com.ibm.util.merge.directive;
 
-import java.sql.ResultSet;
-
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
 
@@ -29,13 +26,12 @@ import com.ibm.util.merge.directive.provider.ProviderHtml;
 public class InsertSubsHtml extends InsertSubs implements Cloneable {
 	
 	/**
-	 * @param dbRow
-	 * @param owner
-	 * @throws MergeException
+	 * Simple Constructor
 	 */
-	public InsertSubsHtml(ResultSet dbRow, Template owner) throws MergeException {
-		super(dbRow, owner);
-		this.provider = new ProviderHtml(this, dbRow);
+	public InsertSubsHtml() {
+		super();
+		this.setType(TYPE_HTML_INSERT);
+		this.setProvider(new ProviderHtml());
 	}
 
 	/** 
@@ -43,6 +39,6 @@ public class InsertSubsHtml extends InsertSubs implements Cloneable {
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
 	public InsertSubsHtml clone(Template owner) throws CloneNotSupportedException {
-		return (InsertSubsHtml) super.clone(owner);
+		return (InsertSubsHtml) super.clone();
 	}
 }

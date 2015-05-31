@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JDK 1.8">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
@@ -17,5 +18,7 @@
 	<classpathentry kind="lib" path="/DragonFlyEar/EarContent/lib/jsoup-1.8.2.jar"/>
 	<classpathentry kind="lib" path="/DragonFlyEar/EarContent/lib/json-io-3.0.2.jar"/>
 	<classpathentry kind="lib" path="/DragonFlyEar/EarContent/lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/DragonFlyEar/EarContent/lib/gson-2.3.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

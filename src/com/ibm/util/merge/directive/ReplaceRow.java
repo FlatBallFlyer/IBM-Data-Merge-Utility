@@ -15,13 +15,10 @@
  *
  */
 package com.ibm.util.merge.directive;
-
-import java.sql.ResultSet;
-
 import org.apache.log4j.Logger;
-
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
+import com.ibm.util.merge.directive.provider.Provider;
 import com.ibm.util.merge.directive.provider.DataTable;
 
 /**
@@ -32,13 +29,10 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 	private static final Logger log = Logger.getLogger( ReplaceRow.class.getName() );
 	
 	/**
-	 * Database constructor
-	 * @param dbRow
-	 * @param owner
-	 * @throws MergeException - Wrapped SQL Exceptions reading data
+	 * Simple constructor
 	 */
-	public ReplaceRow(ResultSet dbRow, Template owner) throws MergeException {
-		super(dbRow, owner);
+	public ReplaceRow() {
+		super();
 	}
 
 	/**
@@ -46,39 +40,40 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 	 * @see com.ibm.util.merge.directive.Directive#clone(com.ibm.util.merge.Template)
 	 */
 	public ReplaceRow clone(Template owner) throws CloneNotSupportedException {
-		return (ReplaceRow) super.clone(owner);
+		return (ReplaceRow) super.clone();
 	}
 
 	/**
 	 * @throws MergeException
 	 */
 	public void executeDirective() throws MergeException {
-		this.provider.getData();
+		Provider provider = this.getProvider();
+		provider.getData();
 
 		// Make sure we got some data
-		if ( this.provider.size() < 1 ) {
-			throw new MergeException("No Data Found",this.provider.getQueryString()); 
+		if ( this.getProvider().size() < 1 ) {
+			throw new MergeException("No Data Found",provider.getQueryString()); 
 		}
 
 		// Make sure we don't have a multi-table result.
-		if ( this.provider.size() > 1 ) {
-			throw new MergeException("Multi-Talbe Empty Result set returned by Directive",this.provider.getQueryString()); 
+		if ( provider.size() > 1 ) {
+			throw new MergeException("Multi-Talbe Empty Result set returned by Directive",provider.getQueryString()); 
 		}
-		DataTable table = this.provider.getTable(1);
+		DataTable table = provider.getTable(0);
 
 		// Make sure we don't have an empty result set
 		if ( table.size() == 0 ) {
-			throw new MergeException("Empty Result set returned by Directive",this.provider.getQueryString()); 
+			throw new MergeException("Empty Result set returned by Directive",provider.getQueryString()); 
 		}
 
 		// Make sure we don't have a multi-row result set
 		if ( table.size() > 1 ) {
-			throw new MergeException("Multiple rows returned when single row expected", this.provider.getQueryString());
+			throw new MergeException("Multiple rows returned when single row expected", provider.getQueryString());
 		}
 		
 		// Add the replace values
-		for (int col=1; col < table.cols(); col++) {
-			this.template.addReplace(table.getName(col),table.getValue(1, col));
+		for (int col=0; col < table.cols(); col++) {
+			this.getTemplate().addReplace(table.getCol(col),table.getValue(0, col));
 		}
 		
 		log.info("Values added by Replace Row:" + String.valueOf(table.cols()));

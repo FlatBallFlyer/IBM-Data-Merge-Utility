@@ -19,43 +19,34 @@ package com.ibm.util.merge.directive.provider;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.Directive;
 
 /**
- * @author flatballflyer
+ * @author Mike Storey
  *
  */
 public abstract class ProviderHttp extends Provider implements Cloneable {
-	protected String fetchedData;
-	protected String staticData;
-	protected String url;
-	protected String tag;
+	private transient String fetchedData	= "";
+	private String staticData	= "";
+	private String url			= "";
+	private String tag			= "";
 	
 	/**
-	 * @param newOwner
-	 * @param dbRow
-	 * @throws MergeException
+	 * Simple Constructor
 	 */
-	public ProviderHttp(Directive newOwner, ResultSet dbRow) throws MergeException {
-		super(newOwner);
-		try {
-			this.staticData = dbRow.getString(Directive.COL_HTTP_STATIC_DATA);
-			this.url 		= dbRow.getString(Directive.COL_HTTP_URL);
-		} catch (SQLException e) {
-			throw new MergeException(e, "ProviderHttp Construction SQL Error", this.getQueryString());
-		}
+	public ProviderHttp() {
+		super();
 	}
 	
 	/**
 	 * Simple clone method
 	 * @see com.ibm.util.merge.directive.provider.Provider#clone(com.ibm.util.merge.directive.Directive)
 	 */
-	public ProviderHttp clone(Directive newOwner) throws CloneNotSupportedException {
-		return (ProviderHttp) super.clone(newOwner);
+	public ProviderHttp clone() throws CloneNotSupportedException {
+		return (ProviderHttp) super.clone();
 	}
 
 	/**
@@ -65,9 +56,7 @@ public abstract class ProviderHttp extends Provider implements Cloneable {
 	 */
 	@Override
 	public void getData() throws MergeException {
-		if (this.url.isEmpty()) {
-			this.fetchedData = this.staticData;
-		} else {
+		if (!this.url.isEmpty()) {
 			try {
 				this.fetchedData = new URL(this.url).getContent().toString();
 			} catch (MalformedURLException e) {
@@ -75,6 +64,10 @@ public abstract class ProviderHttp extends Provider implements Cloneable {
 			} catch (IOException e) {
 				throw new MergeException(e, "I-O Exception", this.url);
 			}
+		} else if (!this.tag.isEmpty()) {
+			this.fetchedData = this.getDirective().getTemplate().getReplaceValue(this.tag);
+		} else {
+			this.fetchedData = this.staticData;
 		}
 	}
 	
@@ -84,4 +77,41 @@ public abstract class ProviderHttp extends Provider implements Cloneable {
 	public String getQueryString() {
 		return this.url;
 	}
+
+	public String getFetchedData() {
+		return fetchedData;
+	}
+
+	public void setFetchedData(String fetchedData) {
+		this.fetchedData = fetchedData;
+	}
+
+	public String getStaticData() {
+		return staticData;
+	}
+
+	public void setStaticData(String staticData) {
+		this.staticData = staticData;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		if (tag.isEmpty()) {
+			this.tag = "";
+		} else {
+			this.tag = Template.wrap(tag);
+		}
+	}
+
 }

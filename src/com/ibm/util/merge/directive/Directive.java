@@ -17,9 +17,6 @@
 
 package com.ibm.util.merge.directive;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.Provider;
@@ -28,41 +25,8 @@ import com.ibm.util.merge.directive.provider.Provider;
  * A merge directive which drive the merge process for a template 
  *
  * @author  Mike Storey
- * @Entity
- * @Table( name = "DIRECTIVE" )
  */
 public abstract class Directive implements Cloneable{
-	// Directive Table Column Names
-	public static final String COL_DIRECTIVE_TYPE 			= "type";
-	public static final String COL_DIRECTIVE_DESCRIPTION	= "description";
-	public static final String COL_DIRECTIVE_SOFT_FAIL		= "softFail";
-	// Unique to Reqiore Directive
-	public static final String COL_REQUIRE_TAGS		 		= "from";
-	// Unique to Replace Value Directives
-	public static final String COL_REPLACE_FROM_VALUE 		= "from";
-	public static final String COL_REPLACE_TO_VALUE 		= "to";
-	// Unique to Replace Column Directives
-	public static final String COL_REPLACE_COLUMN_FROM 		= "from";
-	public static final String COL_REPLACE_COLUMN_TO 		= "to";
-	
-	// Unique to Insert Directives
-	public static final String COL_INSERT_FROM_COLLECTION	= "from";
-	public static final String COL_INSERT_FROM_COLUMN		= "to";
-	public static final String COL_INSERT_NOT_LAST	 		= "not_last";
-	public static final String COL_INSERT_ONLY_LAST 		= "only_last";
-
-	// ProfiderIf
-	public static final String COL_IF_TAG			 		= "values";
-	
-	// Unique to HTTP Providers (CSV, HTML)
-	public static final String COL_HTTP_URL 				= "source";
-	public static final String COL_HTTP_STATIC_DATA 		= "values";
-	// Unique to JDBC Providers
-	public static final String COL_JDBC_SOURCE 				= "source";
-	public static final String COL_JDBC_COLUMNS 			= "values";
-	public static final String COL_JDBC_TABLES 				= "location";
-	public static final String COL_JDBC_WHERE 				= "condition";
-	
 	// Directive Types
 	public static final int TYPE_REQUIRE 				= 0;
 	public static final int TYPE_REPLACE_VALUE 			= 1;
@@ -77,6 +41,7 @@ public abstract class Directive implements Cloneable{
 	public static final int TYPE_HTML_REPLACE_ROW 		= 32;
 	public static final int TYPE_HTML_REPLACE_COL 		= 33;
 	public static final int TYPE_HTML_REPLACE_MARKUP 	= 34;
+	// Planned directive Types (Not Implemented)
 	public static final int	TYPE_JSON_INSERT			= 41;
 	public static final int TYPE_JSON_REPLACE_ROW 		= 42;
 	public static final int TYPE_JSON_REPLACE_COL 		= 43;
@@ -88,55 +53,41 @@ public abstract class Directive implements Cloneable{
 	public static final int TYPE_MONGO_REPLACE_COL 		= 63;
 	
 	// Attributes
-	protected Template template;
-	protected Provider provider;
-	protected long idDirective;
-	protected boolean softFail;
-	protected int type;
-	protected String description;
+	private transient Template 	template;
+	private long 		idTemplate 	= 0;
+	private long 		idDirective	= 0;
+	private int			sequence	= 0;
+	private int 		type		= 0;
+	private boolean 	softFail	= false;
+	private String 		description	= this.getClass().getName();
+	private Provider 	provider;
+	
+	/********************************************************************************
+	 * Simple Constructor
+	 */
+	public Directive() {
+	}
 	
 	/********************************************************************************
 	 * Abstract method to "Execute" the directive in the context of a template.
 	 *
-	 * @param  tempalte - the Target Template for the merge process
 	 * @throws MergeException execution errors
 	 */
 	public abstract void executeDirective() throws MergeException;
 
 	/********************************************************************************
-	 * Constructor from Database Row
-	 *
-	 * @param  dbRow - SQL Resultset Row
-	 * @throws MergeException SQL Errors
-	 */
-	public Directive(ResultSet dbRow, Template newOwner) throws MergeException {
-		try {
-			this.provider 		= null;
-			this.template		= newOwner;
-			this.softFail		= dbRow.getBoolean(	Directive.COL_DIRECTIVE_SOFT_FAIL);
-			this.type			= dbRow.getInt(		Directive.COL_DIRECTIVE_TYPE);
-			this.description 	= dbRow.getString(	Directive.COL_DIRECTIVE_DESCRIPTION);
-		} catch (SQLException e) {
-			throw new MergeException(e, "Directive Constructor Sql Exception", "");
-		}
-	}
-	
-	/********************************************************************************
 	 * Cone constructor
 	 * @throws CloneNotSupportedException
 	 */
-	public Directive clone(Template newOwner) throws CloneNotSupportedException {
+	public Directive clone() throws CloneNotSupportedException {
 		Directive newDirective = (Directive) super.clone();
-		newDirective.template = newOwner;
-		newDirective.provider = (Provider) this.provider.clone(this);
+		newDirective.setProvider( (Provider) this.provider.clone() );
+		newDirective.template = null;
 		return newDirective;
 	}
 	
 	/********************************************************************************
-	 * Constructor from Database Row
-	 *
-	 * @param  template Target Template
-	 * @return Soft Fail indicator (From Directive or Template)
+	 * SoftFail indicator (on this Directive, or the Template)
 	 */
 	public boolean softFail() {
 		return (this.softFail | this.template.softFail()) ? true : false;
@@ -149,35 +100,69 @@ public abstract class Directive implements Cloneable{
 		return template.getFullName() + ":Directive-" + this.description;
 	}
 	
-	/**
-	 * @return the Template which this directive is attached to.
-	 */
 	public Template getTemplate() {
 		return this.template;
 	}
 	
-	/**
-	 * @return
-	 * @Column(name = "softFail)";
-	 */
+	public Provider getProvider() {
+		return provider;
+	}
+
 	public boolean isSoftFail() {
 		return softFail;
 	}
 
-	/**
-	 * @return the type
-	 * @Column(name = "type)";
-	 */
 	public int getType() {
 		return type;
 	}
 
-	/**
-	 * @return the description
-	 * @Column(name = "description)";
-	 */
+	public long getIdDirective() {
+		return idDirective;
+	}
+
 	public String getDescription() {
 		return description;
 	}
-	
+	public long getIdTemplate() {
+		return idTemplate;
+	}
+
+	public void setIdTemplate(long idTemplate) {
+		this.idTemplate = idTemplate;
+	}
+
+	public void setIdDirective(long idDirective) {
+		this.idDirective = idDirective;
+	}
+
+	public void setProvider(Provider provider) {
+		this.provider = provider;
+		if (provider != null) {
+			provider.setDirective(this);
+		}
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public void setSoftFail(boolean softFail) {
+		this.softFail = softFail;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+
+	public int getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(int sequence) {
+		this.sequence = sequence;
+	}	
 }

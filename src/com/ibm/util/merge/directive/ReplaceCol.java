@@ -16,9 +16,6 @@
  */
 package com.ibm.util.merge.directive;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.DataTable;
@@ -30,30 +27,20 @@ import com.ibm.util.merge.directive.provider.DataTable;
  * @author Mike Storey
  */
 public abstract class ReplaceCol extends Directive implements Cloneable {
-	private String fromColumn;
-	private String toColumn;
+	private String fromColumn	= "";
+	private String toColumn		= "";
 	
 	/**
-	 * Database Constructor
-	 * 
-	 * @param dbRow the Sql ResultSet row with Directive values
-	 * @param owner the Template that owns this Directive
-	 * @throws MergeException on Database access errors
+	 * Simple Constructor
 	 */
-	public ReplaceCol(ResultSet dbRow, Template owner) throws MergeException {
-		super(dbRow, owner);
-		try {
-			this.fromColumn = dbRow.getString(Directive.COL_REPLACE_COLUMN_FROM);
-			this.toColumn = dbRow.getString(Directive.COL_REPLACE_COLUMN_TO);
-		} catch (SQLException e) {
-			throw new MergeException(e, "Replace Col Constructor Error", this.getFullName());
-		}
+	public ReplaceCol() {
+		super();
 	}
 	
 	/**
 	 * Clone constructor
 	 */
-	public ReplaceCol clone() throws CloneNotSupportedException {
+	public ReplaceCol clone(Template owner) throws CloneNotSupportedException {
 		return (ReplaceCol) super.clone();
 	}
 	
@@ -62,15 +49,32 @@ public abstract class ReplaceCol extends Directive implements Cloneable {
 	 * @throws MergeException on getData errors.
 	 */
 	public void executeDirective() throws MergeException {
-		this.provider.getData();
-		for (DataTable table : this.provider.getTables() ) {
+		this.getProvider().getData();
+		for (DataTable table : this.getProvider().getTables() ) {
 	 		int from = table.getCol(this.fromColumn);
 			int to = table.getCol(this.toColumn);
-			if (from > 0 && to > 0) {
-				for (int row=1; row < table.size(); row++) {
-					this.template.addReplace(table.getValue(row, from),table.getValue(row, to));
+			if (from > -1 && to > -1) {
+				for (int row=0; row < table.size(); row++) {
+					this.getTemplate().addReplace(table.getValue(row, from),table.getValue(row, to));
 				}
 			}
 		}
 	}
+
+	public String getFromColumn() {
+		return fromColumn;
+	}
+
+	public void setFromColumn(String fromColumn) {
+		this.fromColumn = fromColumn;
+	}
+
+	public String getToColumn() {
+		return toColumn;
+	}
+
+	public void setToColumn(String toColumn) {
+		this.toColumn = toColumn;
+	}
+
 }

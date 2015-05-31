@@ -15,30 +15,18 @@
  *
  */
 package com.ibm.util.merge.directive;
-import java.sql.ResultSet;
-
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.ProviderSql;
 
-
-/**
- * This class represents an insertRows from SQL directive.
- * SQL I/O is handled by the ProviderSql provider
- * Directive Execution is handeled by the InsertSubs superclass
- *
- * @author  Mike Storey
- */
 public class InsertSubsSql extends InsertSubs implements Cloneable {
 	
-	
 	/**
-	 * @param dbRow
-	 * @throws MergeException
+	 * Simple Constructor
 	 */
-	public InsertSubsSql(ResultSet dbRow, Template owner) throws MergeException {
-		super(dbRow, owner);
-		this.provider = new ProviderSql(this, dbRow);
+	public InsertSubsSql() {
+		super();
+		this.setType(TYPE_SQL_INSERT);
+		this.setProvider(new ProviderSql());
 	}
 	
 	/** 
@@ -46,7 +34,7 @@ public class InsertSubsSql extends InsertSubs implements Cloneable {
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
 	public InsertSubsSql clone(Template owner) throws CloneNotSupportedException {
-		return (InsertSubsSql) super.clone(owner);
+		return (InsertSubsSql) super.clone();
 	}
 	
 }

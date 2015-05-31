@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>IBM Data Merge Utility</title>
+    <style>
+        @CHARSET "UTF-8";
+        .section		{ width: 640px; margin: 10px 0px 0px 10px; border: 2px solid; background-color: DarkGrey;}
+        .section p		{ width: 625px; margin: 4px 2px 2px 10px; }
+        .sub-section	{ width: 620px; margin: 10px 0px 0px 15px; background-color: DarkGrey;}
+        .hidden         { display: none;}
+        .video			{ width: 320px; float: right; }
+        .json			{ border: 1px solid; margin: 5px 5px 5px 5px;  padding: 2px 2px 6px 2px; background-color: Cornsilk ; tab-size: 2 }
+        .description	{ color: blue;  font-style: italic; font-size: 0.85em;}
+        .keyword		{ color: blue;  font-weight: bold; font-size: 1.1em;}
+        .meta-data		{}
+        .option			{}
+        .footerLink		{ text-align: right; font-size: 0.85em;}
+        h2				{ margin: 4px 0px 10px 2px; }
+        h3				{ margin: 4px 0px 10px 4px; }
+        h4				{ margin: 4px 0px 0px 6px; }
+        li				{ margin: 0px 0px 0px 0px; }
+        pre				{ margin: 5px 0px 0px 5px; }
+	</style>
+</head>
+<body>
+
+<h1><a id="top">Table of Contents</a></h1>
+<ul>
+	<li><a href="#Licensing">Licensing</a></li>
+	<li><a href="#Overview">Overview</a>
+	<ul>
+		<li><a href="#Replace">The Replace Hash</a></li>
+		<li><a href="#Inserting">Inserting Sub-Templates</a></li>
+		<li><a href="#Reserved">Reserved Words</a></li>
+		<li><a href="#Editor">The Template Editor</a></li>
+		<li><a href="#Output">Output Files</a></li>
+	</ul></li>
+	<li><a href="#Directives">Directives</a>
+	<ul>
+		<li><a href="#Require">Require</a></li>
+		<li><a href="#ReplaceVal">Replace Value</a></li>
+		<li><a href="#InsertIf">Insert Sub-Templates from Tag</a></li>
+		<li><a href="#InsertSql">Insert Sub-Templates from Sql</a></li>
+		<li><a href="#ReplaceRowSql">Replace From Sql Row</a></li>
+		<li><a href="#ReplaceColSql">Replace From Sql Column</a></li>
+		<li><a href="#InsertCsv">Insert Sub-Templates from Csv</a></li>
+		<li><a href="#ReplaceRowCsv">Replace From Csv Row</a></li>
+		<li><a href="#ReplaceColCsv">Replace From Csv Column</a></li>
+		<li><a href="#InsertHtml">Insert Sub-Templates from Html</a></li>
+		<li><a href="#ReplaceRowHtml">Replace From Html Row</a></li>
+		<li><a href="#ReplaceColHtml">Replace From Html Column</a></li>
+		<li><a href="#ReplaceMarkupHtml">Replace From Html Markup</a></li>
+	</ul></li>
+	<li>Providers
+	<ul>
+		<li><a href="#ProviderJdbc">JDBC Data</a></li>
+		<li><a href="#ProviderCsv">CSV Data</a></li>
+		<li><a href="#ProviderHtml">HTML Data</a></li>
+		<li><a href="#ProviderIf">Tag Data</a></li>
+	</ul></li>
+	<li><a href="#Installing">Installing</a>
+	<ul>
+		<li><a href="#DeployBluemix">Deploying in Bluemix</a></li>
+		<li><a href="#DeployDocker">Deploying in Docker</a></li>
+		<li><a href="#DeployLiberty">Deploying Natively on Liberty with IBM Database Server</a></li>
+		<li><a href="#DeployTomcat">Deploying Natively on Tomcat with MySql</a></li>
+		<li><a href="#DeployOracle">Deploying Natively on Tomcat with Oracle</a></li>
+	</ul></li>
+	<li><a href="#Persistence">Template Persistence Options</a></li>
+	<li><a href="#jSon">The Template jSon Format</a></li>
+</ul>
+	
+	<div class="section">
+	<h2><a id="Licensing">Licensing</a></h2>
+	<div class="copyright"><pre>Copyright 2015, 2015 IBM
+		
+Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+	</pre></div>	 
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+
+	<div class="section">
+	<h2><a id="Overview">Overview</a></h2>
+	<video class="video" controls><source src="video/cut1.mp4" type="video/mp4"></video>
+	<p>The IBM Data Merge Utility is an open source general purpose Java utility, 
+	exposed as an HTTP service, that uses Templates with your data source to create 
+	one or more merge output files. The merge process is driven by a set of directives 
+	associated with a template. The two types of directives are Replace and Insert and 
+	they drive the replacement of key values in a template, and the insertion of sub-templates. 
+	You can download source from GitHub here: 
+	<a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility">https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility</a>
+	</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<video class="video" controls><source src="video/cut2.mp4" type="video/mp4"></video>
+	<h2><a id="Replace">The Replace Hash</a></h2>
+	<p>The most fundamental function of the merge process is the replacement of merge tags with data values. 
+	The replace "From" values are wrapped in {brackets} and processed globally during the merge process. 
+	These replace values are processed as a hash, which implies that adding a duplicate "From" value will
+	replace the "To" value of the existing hash entry with the new value. 
+
+	<div class="sub-section">
+	<video class="video" controls><source src="video/cut3.mp4" type="video/mp4"></video>
+	<br/><h3 class="directive"><a id="ReplaceRow">The Replace Row Directives</a></h3>
+	<p>This directive will add replace values from a single-row result set returned by the data provider. 
+	Column names are {wrapped} and used as the "from" value, the column value is the "to" value.</p>
+	<p class="metadata">The Replace Row directives have no Directive Options</p> 
+	</div>
+	
+	<div class="sub-section">
+	<video class="video" controls><source src="video/cut4.mp4" type="video/mp4"></video>
+	<h3 class="directive"><a id="ReplaceCol">The Replace Column Directives</a></h3>
+	<p>The replace column directive will load the replace hash with the values from 
+	the "From Column" and "To Column" columns. The FromValue is {wrapped} in brackets. </p>
+	<p class="metadata">The Replace Column directives have the following Options</p>
+	<ul>
+		<li class="option">From Column - The name of the column that "From" values will be taken from</li>
+		<li class="option">To Column - The name of the column that "From" values will be taken from</li>
+	</ul> 
+	</div>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<video class="video" controls><source src="video/cut5.mp4" type="video/mp4"></video>
+	<h2><a id="Inserting">Inserting Sub-Templates</a></h2>
+	<p>The insertion of sub-templates into a target template is the second core feature of the Merge Utility. 
+	The Insert Rows directives work with a potentially multi-row data set, and sub-templates are inserted 
+	into the target template, at &lt;tkBookmark id="SomeSubTemplate"/&gt; locations, 
+	for each row of the result set. The name attribute of the bookmark identifyies the sub-template to insert.
+	A template can have multiple bookmarks to insert multiple sub-templates for each row of the result set.</p>
+	
+	<video class="video" controls><source src="video/cut6.mp4" type="video/mp4"></video>
+	<p>When inserting sub-templates, you can vary the sub-template being inserted based on data in the result set. 
+	This is often based on a "Type" field in the result set, and relies on a "Collection" of templates with the same name 
+	and a specified column value. If a template for the current column value is not found, the "empty" value is used. 
+	If no "empty" value exists for the collection the merge will fail with a "Template Not Found" exception. </p>
+	<p class="metadata">The Insert Subtemplate directives have the following Options</p>
+	<ul>
+		<li class="option">From Collection - The name of the collection that has the sub-template(s) to insert</li>
+		<li class="option">Based on Column - If specified directs sub-templates to be selected based on the specified column value</li>
+		<li class="option">Not Last Tags - Tags that should be empty on the last insertion row</li>
+		<li class="option">Only Last Tags - Tags that should be empty on all except the last insertion row</li>
+	</ul> 
+	<p>When inserting sub-templates various syntax rules often require that the list separator be different 
+	than the list terminator. For example a comma separated list terminated with a period. This can be supported 
+	in templates by using static replace tags for the separator/terminator, and then identifying those tags in 
+	the "Not Last" and "Only Last" fields of the Insert Directive. Tags identified as "Not Last" are replaced
+	with an empty value on the Last Row of the insert. Tags identified as "Only Last" are replaced with an empty 
+	value on all except the last row of the insert.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h2><a id="Editor">The Template Editor</a></h2>
+	<p></p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h2><a id="Reserved">Reserved Words</a></h2>
+	<p>The following are reserved Replace Tags, that have various effects / meanings:</p> 	
+	<ul>
+		<li><span class="keyword">DragonFlyCacheReset</span> - The Data Merge Tool will cache all templates, allowing for very fast response 
+			times and high throughput rates. Adding the parameter DragonFlyCacheReset with or without a value will
+			clear the template cache before executing the merge. This value is not placed on the Replace Hash</li>
+		<li><span class="keyword">DragonFlySoftFail</span> - If the value {DragonFlySoftFail} is in the replace stack, merge errors are written 
+			as output into the template, rather than throwing exceptions back to a full merge failure. 
+			This can be helpful in debugging problems with nested replace values or invalid sql result sets.</li> 
+		<li><span class="keyword">DragonFlyReplaceValues</span> - The replace tag {DragonFlyReplaceValues} will be replaced with a full 
+			dump of the replace hash, with the From values mangled as {-from} in place of {from}. 
+			This tag can be useful when designing and debugging templates.</li>
+		<li><span class="keyword">DragonFlyOutputFile</span> - The replace tag {DragonFlyOutputFile} will contain a generated GUID.zip or GUID.tar.gz string. 
+			This is the file name of any additional generated output, and can frequently be used in a javascript 
+			tag to initiate a download. NOTE: This value can be provided as an input parameter, however database 
+			connection caching is associated with the guid during merge execution, so multiple concurrent merges 
+			with the same {DragonFlyOutputFile} value will have unpredictable results. If provided on the replace 
+			stack, you should ensure that this value is unique for the duration of the merge execution.</li>
+		<li><span class="keyword">DragonFlyTemplateStack</span> - This will print out a / separated list of the current template full-names. 
+			This can be useful when developing and debugging templates.</li>
+	</ul>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h2><a id="Output">Generating Extra Output Files</a></h2>
+	<p>Any sub-template can be saved as an output file instead of being inserted into the target template, 
+	by providing an output file name for the Template. All output files generated in this manner during a merge 
+	are added to an archive, and placed in the merge output directory which is specified in the web.xml 
+	configuration file.</p> 
+	<p>The archive name is provided in the replace tag {DragonFlyeOutputFile} and a GUID is generated for the 
+	file name if needed. If you pass DragonFlyOutputFile as a parameter to the merge you should ensure that the 
+	file name provided is unique for the duration of the merge operation. Database connections are cached 
+	based on this value, and multiple concurrent merges with the same DragonFlyOutputFile name will have 
+	unpredictable results.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h2><a id="Persistence">Template Persistence Options</a></h2>
+	<p>Templates can be persisted to a Tempalte Database, or stored as JSON files in a specific directory
+		on the IDMU server, or both. Templates are loaded into cache from the TemplateJSON folder on server startup, 
+		or whenever a {DragonflyReload} option is specified on a Merge request. 
+		When a Merge request needs a template that is not found in the cache, it looks to the Tempalte Database.
+		It is possible to deploy IDMU without a Template Database. If this is done, any request for a tempalte 
+		that is not cached from the TemplateJSON directory will throw a Merge Exception.  
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+
+	<div class="section">
+	<h2><a id="Require">The Require Directive</a></h2>
+	<p>The require directive specifies a comma separated list of tags that should exist in the replace hash.
+		If a required tag is missing the merge process will fail with an exception. If the soft fail indicator
+		is present, the missing values message will be inserted into the template.</p>
+	<p class="metadata">The Require directive has the following Options</p>
+	<ul>
+		<li class="option">Tags - The comma separated list of requried Tags</li>
+	</ul> 
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+		
+	<div class="section">
+	<h2><a id="ReplaceVal">The Replace Value Directive</a></h2>
+	<p>The Replace Value directive provides for a simple static from/to value pair. The from value is added 
+		as-is to the replace stack. This is the only method of adding to the replace stack that does not wrap 
+		the from value in {brackets} and should be used with caution. This directive is frequently used in conjunction
+		with the Not-Last and Only-Last options of the Insert Rows directive.</p>
+	<p>For a more flexable way to place static values on the Replace Hash see the Replace from Csv Directives</p>
+	<p class="metadata">The Replace Value directive has the following Options</p>
+	<ul>
+		<li class="option">From - The value to replace</li>
+		<li class="option">To - The value to replace it with</li>
+	</ul> 
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+
+	<div class="section">
+	<h2><a id="InsertTag">The Insert Sub-Templates from Tag Data Directive</a></h2>
+	<p>The Insert Sub-Templates If directive combines the functionality of the
+		<a href="#InsertSubs">Insert Sub-Templates</a> with the 
+		<a href="#ProfiderIf">Tag</a> data provider.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+		
+	<div class="section">
+	<h2><a id="InsertSql">Insert Sub-Templates from Sql Rows Directive</a></h2>
+	<p>The Insert Sub-Templates from SQL directive combines the functionality of the
+		<a href="#InsertSubs">Insert Sub-Templates</a> with the 
+		<a href="#ProviderSql">SQL</a> data provider.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+		
+	<div class="section">
+	<h2><a id="ReplaceRowSql">The Get Replace Values From Sql Row Directive</a></h2>
+	<p>The Replace Row from SQL directive combines the functionality of
+		<a href="#ReplaceRow">Replace Row</a> with the 
+		<a href="#ProviderSql">SQL</a> data provider.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+		
+	<div class="section">
+	<h2><a id="ReplaceColSql">The Get Replace Values From Sql Column Directive</a></h2>
+	<p>The Replace Column from SQL directive combines the functionality of
+		<a href="#ReplaceCol">Replace Col</a> with the 
+		<a href="#ProviderSql">SQL</a> data provider.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+		
+	<div class="section">
+	<h2><a id="InsertCsv">Insert Sub-Templates from Csv Directive</a></h2>
+	<p>The Insert Sub-Templates from CSV directive combines the functionality of the
+		<a href="#InsertSubs">Insert Sub-Templates</a> with the 
+		<a href="#ProviderCsv">CSV</a> data provider.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+
+	<div class="section">
+	<h2><a id="ReplaceRowCsv">The Get Replace Values From Csv Row Directive</a></h2>
+	<p>The Replace Row from CSV directive combines the functionality of
+		<a href="#ReplaceRow">Replace Row</a> with the 
+		<a href="#ProviderCsv">CSV</a> data provider.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+		
+	<div class="section">
+	<h2><a id="ReplaceColCsv">The Get Replace Values From Csv Column Directive</a></h2>
+	<p>The Replace Column from CSV directive combines the functionality of
+		<a href="#ReplaceCol">Replace Col</a> with the 
+		<a href="#ProviderCsv">CSV</a> data provider.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+
+	<div class="section">
+	<h2><a id="InsertHtml">The Insert Sub-Templates from Html Table Rows Directive</a></h2>
+	<p>The Insert Sub-Templates from HTML directive combines the functionality of the
+		<a href="#InsertSubs">Insert Sub-Templates</a> with the 
+		<a href="#ProviderHtml">HTML</a> data provider.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+
+	<div class="section">
+	<h2><a id="ReplaceRowHtml">The Get Replace Values From Html Table Row Directive</a></h2>
+	<p>The Replace Row from HTML directive combines the functionality of
+		<a href="#ReplaceRow">Replace Row</a> with the 
+		<a href="#ProviderHtml">HTML</a> data provider.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+		
+	<div class="section">
+	<h2><a id="ReplaceColHtml">The Get Replace Values From Html Table Column Directive</a></h2>
+	<p>The Replace Column from HTML directive combines the functionality of
+		<a href="#ReplaceCol">Replace Col</a> with the 
+		<a href="#ProviderHtml">HTML</a> data provider.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+
+	<div class="section">
+	<h2><a id="ReplaceMarkupHtml">The Get Replace Values From Html Markup Directive</a></h2>
+	<p>The Replace Column from HTML directive uses the <a href="#ProviderHtml">HTML</a> data provider.
+		to fetch an HTML document, and then find Replace From/To values based on the following options:</p>
+	<p class="metadata">The Replace Value directive has the following Options</p>
+	<ul>
+		<li class="option">Element Selector - CSS Selector to find HTML elements to use</li>
+		<li class="option">From Attribute - Name of the attribute to use as a "From" value</li>
+		<li class="option">To Attribute - Name of the attribute to use as a "To" value</li>
+	</ul> 
+	<p>By way of example, the following options will produce the following replace hash</p>
+	<ul>
+		<li class="option">Element Selector - Input</li>
+		<li class="option">From Attribute - ID</li>
+		<li class="option">To Attribute - Empty (content of the selected element)</li>
+	</ul> 
+	<textarea></textarea>
+	<table><tr><th>From</th><th>To</th></tr></table>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h2><a id="ProviderJdbc">JDBC Data</a></h2>
+	<p class="metadata">Directives that use the JDBC Data Provider have the following options:</p>
+	<ul>
+		<li class="option">Source - The JDBC Data Source name (from the web.xml descriptor)</li>
+		<li class="option">Select Columns - The columns to select, * is supported by most JDBC drivers</li>
+		<li class="option">From Table - The Tables to select from (Optional)</li>
+		<li class="option">Where Condition - The Where condition for the SQL Select Statement (Optional)</li>
+	</ul> 
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h2><a id="ProviderCsv">CSV Data</a></h2>
+	<p class="metadata">Directives that use the CSV Data Provider have the following options:</p>
+	<ul>
+		<li class="option">URL - The URL used to retrieve data for the merge</li>
+		<li class="option">Tag - That Tag that contains data if the URL is not provided or does not return data</li>
+		<li class="option">Static Value - The Static value to be used if the Tag is not in the Replace Hash</li>
+	</ul> 
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+
+	<div class="section">
+	<h2><a id="ProviderHtml">HTML Data</a></h2>
+	<p class="metadata">Directives that use the HTML Data Provider have the following options:</p>
+	<ul>
+		<li class="option">URL - The URL used to retrieve data for the merge</li>
+		<li class="option">Tag - That Tag that contains data if the URL is not provided or does not return data</li>
+		<li class="option">Static Value - The Static value to be used if the Tag is not in the Replace Hash</li>
+	</ul> 
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h2><a id="ProviderTag">Tag Data</a></h2>
+	<p>The Tag Data provider is used to select data that exists in the Replace Hash to use for Directive Processing</p>
+	<p class="metadata">Directives that use the Tag Data Provider have the following options:</p>
+	<ul>
+		<li class="option">Tag - The tag that is evaluated build a table of input values</li>
+		<li class="option">Condition - Exists, NonBlank, Equals - The condition to evaluate</li>
+		<li class="option">Equals - The comparison value to use for "Equals" comparisons</li>
+		<li class="option">Is List - Specifies that the value contains a comma separated list of values, and 
+			a data row should be created for each value, with the Tag as the column name</li>
+	</ul> 
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h2><a id="Installing">Installing</a></h2>
+	<h3><a id="DeployDocker">Deploying in Docker</a></h3>
+	<p>We are currently working on a Docker Container deployment, check back here for instructions.   
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lac</p>
+	<p>To deploy IDMU Stand-alone: <a href="Tbd">Link To Container</a>
+	<p>To deploy IDMU With Template Database and Editor: <a href="Tbd">Link To Container</a>
+	<h4>Connecting your data source to the IDMU Container</h4>
+	<p>To connect your JDBC data source to the IDMU containter..... 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lac</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h3><a id="DeployBluemix">Deploying in Bluemix</a></h3>
+	<p>We are currently working on a BlueMix Service deployment, check back here for instructions.   
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lac</p>
+	<p>To deploy IDMU Stand-alone: <a href="Tbd">Link to Project</a>
+	<p>To deploy IDMU With Template Database and Editor: <a href="Tbd">Link to Project</a>
+	<h4>Connecting your BlueMix IDMU to your Bluemix Database</h4>
+	<p>To connect your Bluemix Database to your Bluemix IDMU Service..... 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lac</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h3><a id="DeployLiberty">Deploying Native on Liberty with IBM Database Server</a></h3>
+	<h4>Setting up a Linux Server</h4>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<h4>Deploying WebSphere Liberty</h4>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<h4>Deploying IBM Database Server</h4>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<h4>Deploying IDMU</h4>
+	<h5>Creating and Loading the Template Database</h5>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<h5>Installing IDMU into WebSphere Liberty</h5>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h3><a id="DeployTomcat">Deploying Native on Tomcat with MySql</a></h3>
+	<h4>Setting up a Linux Server</h4>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<h4>Deploying Tomcat</h4>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<h4>Deploying MySql</h4>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<h4>Deploying IDMU</h4>
+	<h5>Creating and Loading the Template Database</h5>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<h5>Installing IDMU into Tomcat</h5>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h3><a id="DeployOracle">Deploying Native on Tomcat with Oracle</a></h3>
+	<h4>Setting up a Linux Server</h4>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<h4>Deploying Tomcat</h4>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<h4>Deploying Oracle</h4>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<h4>Deploying IDMU</h4>
+	<h5>Creating and Loading the Template Database</h5>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<h5>Installing IDMU into Tomcat</h5>
+	<p>Lorem ipsum fames mollis luctus fames ultricies curabitur varius donec curae, vivamus conubia 
+		velit sed quam aliquet hac tempor ac rhoncus, interdum augue enim suscipit curae eget turpis 
+		ullamcorper consequat conubia ac curabitur molestie quam quis accumsan placerat rhoncus, lacus 
+		consectetur vivamus risus nisi elit.</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	</div>
+	
+	<div class="section">
+	<h2><a id="jSon">The Template jSon Format</a></h2>
+	<p>IDMU Supports a Template Get/Post service that is used by the Template Editor, anc can be used to 
+		eaisly export/import Templates between systems. The http://IDMU/persist.html servlet can be used with
+		an http get request to get a jSon formated copy of a template, and with an http post to store a template
+		in the Template Database.</p>
+	<p>Template JSON Data takes the following format<p>
+	<div class="json"><pre><code>{	"collection":<span class="description">The Collection Name</span>,
+	"columnValue":<span class="description">The Column Value - For Column Associated Sub-Templates</span>,
+	"name":<span class="description">The Template Name</span>,
+	"description":<span class="description">The Template Description (Optional)</span>,
+	"outputFile":<span class="description">The Output File Name (Optional)</span>,
+	"content":<span class="description">The Template Content</span>,
+	"directives":[<span class="description">A list of Directive Objects.</span>]
+}</code></pre></div>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+<p>Valid Directive Objects are:</p>
+	<ul>
+		<li>The Require Directive
+<div class="json"><pre><code>{	"type":0,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"tags":[<span class="description">List of Tag Strings</span>],
+}</code></pre></div></li>
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+		<li>The Replace Value Directive
+<div class="json"><pre><code>{	"type":1,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"from":<span class="description">The value to replace (will be wrapped in {brackets})</span>,
+	"to":<span class="description">The value to replace with</span>
+}</code></pre></div></li>
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+		<li>The Insert Sub-Templates from Tag Directive
+<div class="json"><pre><code>{	"type":2,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"collectionName":<span class="description">The Collection to insert sub-templates from</span>,
+	"collectionColumn":<span class="description">The Column to use when selecting sub-templates (Optional)</span>,
+	"notLast":[<span class="description">List of Tags to replace with blank values on all but the last row</span>],
+	"onlyLast":[<span class="description">List of Tags to replace with blank values on the last row</span>],
+	"provider":{<span class="description">An Tag Data Provider</span>}
+}</code></pre></div></li>
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+		<li>The Insert Sub-Templates from Sql Rows Directive
+<div class="json"><pre><code>{	"type":10,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"collectionName":<span class="description">The Collection to insert sub-templates from</span>,
+	"collectionColumn":<span class="description">The Column to use when selecting sub-templates (Optional)</span>,
+	"notLast":[<span class="description">List of Tags to replace with blank values on all but the last row</span>],
+	"onlyLast":[<span class="description">List of Tags to replace with blank values on the last row</span>],
+	"provider":{<span class="description">A SQL Data Provider</span>}
+}</code></pre></div></li>
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+		<li>The Get Replace Values from SQL Row Directive
+<div class="json"><pre><code>{	"type":11,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"provider":{<span class="description">A SQL Data Provider</span>}
+}</code></pre></div></li>
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+		<li>The Get Replace Values from SQL Column Directive
+<div class="json"><pre><code>{	"type":12,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"fromColumn":<span class="description">The Column name that is used for From values</span>,
+	"toColumn":<span class="description">The Column name that is used for To values</span>,
+	"provider":{<span class="description">A SQL Data Provider</span>}
+}</code></pre></div></li>
+		<li>The Insert Sub-Templates from CSV Rows Directive
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+<div class="json"><pre><code>{	"type":21,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"collectionName":<span class="description">The Collection to insert sub-templates from</span>,
+	"collectionColumn":<span class="description">The Column to use when selecting sub-templates (Optional)</span>,
+	"notLast":[<span class="description">List of Tags to replace with blank values on all but the last row</span>],
+	"onlyLast":[<span class="description">List of Tags to replace with blank values on the last row</span>],
+	"provider":{<span class="description">An HTTP Data Provider</span>}
+}</code></pre></div></li>
+		<li>The Get Replace Values from CSV Row Directive
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+<div class="json"><pre><code>{	"type":22,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"provider":{<span class="description">An HTTP Data Provider</span>}
+}</code></pre></div></li>
+		<li>The Get Replace Values from CSV Column Directive
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+<div class="json"><pre><code>{	"type":23,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"fromColumn":<span class="description">The Column name that is used for From values</span>,
+	"toColumn":<span class="description">The Column name that is used for To values</span>,
+	"provider":{<span class="description">An HTTP Data Provider</span>}
+}</code></pre></div></li>
+		<li>The Insert Sub-Templates from HTML Tables Directive
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+<div class="json"><pre><code>{	"type":31,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"collectionName":<span class="description">The Collection to insert sub-templates from</span>,
+	"collectionColumn":<span class="description">The Column to use when selecting sub-templates (Optional)</span>,
+	"notLast":[<span class="description">List of Tags to replace with blank values on all but the last row</span>],
+	"onlyLast":[<span class="description">List of Tags to replace with blank values on the last row</span>],
+	"provider":{<span class="description">An HTTP Data Provider</span>}
+}</code></pre></div></li>
+		<li>The Get Replace Values from HTML Table row Directive
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+<div class="json"><pre><code>{	"type":32,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"provider":{<span class="description">An HTTP Data Provider</span>}
+}</code></pre></div></li>
+		<li>The Get Replace Values from HTML Table Columns Directive
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+<div class="json"><pre><code>{	"type":33,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"fromColumn":<span class="description">The Column name that is used for From values</span>,
+	"toColumn":<span class="description">The Column name that is used for To values</span>,
+	"provider":{<span class="description">An HTTP Data Provider</span>}
+}</code></pre></div></li>
+		<li>The Get Replace Values from HTML Markup Directive
+<div class="json"><pre><code>{	"type":34,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"provider":{<span class="description">An HTTP Data Provider</span>}
+}</code></pre></div></li>
+	</ul>
+<p>Data Provider JSON Formats</p>
+	<ul>
+		<li>The SQL (JDBC) Data Provider
+<div class="json"><pre><code>{	"source":<span class="description">The JDBC Data Source Name (From context.xml)</span>,
+	"columns":<span class="description">The Columns to Select - * is supported</span>,
+	"from":<span class="description">The Tables to select from (Optional)</span>,
+	"where":<span class="description">The Where Clause (Optional)</span>
+}</code></pre></div></li>
+		<li>An HTTP Data Provider
+<div class="json"><pre><code>{	"url":<span class="description">The URL used to fetched from</span>,
+	"tag":<span class="description">The Replace Tag that data is fetched from if the URL does not return data</span>
+	"staticData":<span class="description">The Default Data used if the Tag does not exist</span>,
+}</code></pre></div></li>
+	</ul>
+	</div>
+</body>
+</html>

@@ -16,9 +16,9 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.directive.Directive;
@@ -28,25 +28,19 @@ import com.ibm.util.merge.directive.Directive;
  * Data provider to drive InsertSubsIf directive - Insert sub templates if a non-blank replace value exists in the hash.
  */
 public class ProviderIf extends Provider implements Cloneable {
-	protected String tags;
-	protected Boolean matchAll;
+	private ArrayList<String> tags = new ArrayList<String>();
+	private Boolean matchAll	= false;
 	
-	public ProviderIf(Directive newOwner, ResultSet dbRow) throws MergeException {
-		super(newOwner);
-		try {
-			this.tag = dbRow.getString(Directive.COL_IF_TAG);
-		} catch (SQLException e) {
-			throw new MergeException(e, "ProviderIf Construction SQL Error", this.getQueryString());
-		}
-		
+	public ProviderIf() {
+		super();
 	}
 	
 	/**
 	 * Simple clone method
 	 * @see com.ibm.util.merge.directive.provider.Provider#clone(com.ibm.util.merge.directive.Directive)
 	 */
-	public ProviderIf clone(Directive newOwner) throws CloneNotSupportedException {
-		return (ProviderIf) super.clone(newOwner);
+	public ProviderIf clone() throws CloneNotSupportedException {
+		return (ProviderIf) super.clone();
 	}
 
 	/**
@@ -54,16 +48,36 @@ public class ProviderIf extends Provider implements Cloneable {
 	 */
 	public void getData() throws MergeException {
 		DataTable table = this.reset();
-		if ( this.directive.getTemplate().hasReplaceValue(this.tag) ) {
-			table.addCol(this.tag);
-			ArrayList<String> row = table.getNewRow();
-			row.add(this.directive.getTemplate().getReplaceValue(this.tag));
+		// TODO - This is "Match Any" - need to add "MatchAll"
+		for (String tag : this.tags) {
+			if ( this.getDirective().getTemplate().hasReplaceValue(tag) ) {
+				table.addCol(tag);
+				ArrayList<String> row = table.getNewRow();
+				row.add(this.getDirective().getTemplate().getReplaceValue(tag));
+			}
 		}
 	}
 
 	@Override
 	public String getQueryString() {
-		return this.tag;
+		return this.getTags();
 	}
+	
+	public String getTags() {
+		return String.join(",", this.tags);
+	}
+
+	public void setTags(String tags) {
+		this.tags = new ArrayList<String>(Arrays.asList(tags.split(",")));
+	}
+
+	public String getMatchAll() {
+		return (matchAll ? "Y" : "N");
+	}
+
+	public void setMatchAll(String matchAll) {
+		this.matchAll = matchAll.equals("Y");
+	}
+
 
 }

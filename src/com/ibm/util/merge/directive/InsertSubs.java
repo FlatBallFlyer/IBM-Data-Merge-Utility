@@ -16,8 +16,6 @@
  */
 package com.ibm.util.merge.directive;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,35 +37,25 @@ import com.ibm.util.merge.directive.provider.DataTable;
 public abstract class InsertSubs extends Directive implements Cloneable{
 	private static final Logger log = Logger.getLogger( InsertSubs.class.getName() );
 	private static final int DEPTH_MAX = 100;
-	private String collectionName 	= "";
-	private String collectionColumn = "";
-	private List<String> notLast	= new ArrayList<String>();	// Not-Last Tags for Insert Directives
-	private List<String> onlyLast	= new ArrayList<String>();	// Only-Last Tags for Insert Directives
+	
+	private String 		collectionName 	 = "";
+	private String 		collectionColumn = "";
+	private List<String> notLast  = new ArrayList<String>();	
+	private List<String> onlyLast = new ArrayList<String>();	
 
 	/**
-	 * Database constructor
-	 * @param dbRow
-	 * @param owner
-	 * @throws MergeException - Wrapped SQL Exceptions reading data
+	 * Simple constructor
 	 */
-	public InsertSubs(ResultSet dbRow, Template owner) throws MergeException {
-		super(dbRow, owner);
-		try {
-			this.collectionName = dbRow.getString(Directive.COL_INSERT_FROM_COLLECTION);
-			this.collectionColumn = dbRow.getString(Directive.COL_INSERT_FROM_COLUMN);
-			this.notLast = new ArrayList<String>(Arrays.asList(dbRow.getString(Directive.COL_INSERT_NOT_LAST).split(",")));
-			this.onlyLast = new ArrayList<String>(Arrays.asList(dbRow.getString(Directive.COL_INSERT_ONLY_LAST).split(",")));
-		} catch (SQLException e) {
-			throw new MergeException(e, "Insert Subs Constructor Error", this.getFullName());
-		}
+	public InsertSubs() {
+		super();
 	}
 
 	/**
 	 * clone constructor, deep-clone of notLast and onlyLast collections
 	 * @see com.ibm.util.merge.directive.Directive#clone(com.ibm.util.merge.Template)
 	 */
-	public InsertSubs clone(Template owner) throws CloneNotSupportedException {
-		InsertSubs newDirective = (InsertSubs) super.clone(owner);
+	public InsertSubs clone() throws CloneNotSupportedException {
+		InsertSubs newDirective = (InsertSubs) super.clone();
 		newDirective.notLast	= new ArrayList<String>(this.notLast);
 		newDirective.onlyLast	= new ArrayList<String>(this.onlyLast);
 		return newDirective;
@@ -81,31 +69,35 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 	 * @throws DragonFlySqlException SQL Error thrown in Template.new
 	 */
 	public void executeDirective() throws MergeException {
-		log.info("Inserting Subtemplates into: " + this.template.getFullName());
+		log.info("Inserting Subtemplates into: " + this.getTemplate().getFullName());
 		
 		// Depth counter - infinite loop safety mechanism
-		if (this.template.getStack().split("/").length >= DEPTH_MAX) {
+		if (this.getTemplate().getStack().split("/").length >= DEPTH_MAX) {
 			throw new MergeException("Insert Subs Infinite Loop suspected", this.getFullName()); 
 		}
 
 		// Get the table data and iterate the rows
-		this.provider.getData();
-		for (DataTable table : this.provider.getTables() ) {
+		this.getProvider().getData();
+		for (DataTable table : this.getProvider().getTables() ) {
 				
-			for( int row = 1; row < table.size(); row++ ) {
-				log.info("Inserting Record #" + row + " into: " + this.template.getFullName());
+			for( int row = 0; row < table.size(); row++ ) {
+				log.info("Inserting Record #" + row + " into: " + this.getTemplate().getFullName());
 	
 				// Iterate over target bookmarks
-		 		for(Bookmark bookmark : this.template.getBookmarks()) {
+		 		for(Bookmark bookmark : this.getTemplate().getBookmarks()) {
 	
 	 				// Create the new sub-template
 		 			String colValue = table.getValue(row, this.collectionColumn);
-					Template subTemplate = TemplateFactory.getTemplate(this.collectionName, colValue, bookmark.getName(), this.template.getReplaceValues());
-					log.info("Inserting Template " + subTemplate.getFullName() + " into " + this.template.getFullName());
+					Template subTemplate = TemplateFactory.getTemplate(
+							this.collectionName, 
+							colValue, 
+							bookmark.getName(), 
+							this.getTemplate().getReplaceValues());
+					log.info("Inserting Template " + subTemplate.getFullName() + " into " + this.getTemplate().getFullName());
 						
 					// Add the Row replace values
-					for (int col=1; col < table.cols(); col++) {
-						this.template.addReplace(table.getName(col), table.getValue(1, col));
+					for (int col=0; col < table.cols(); col++) {
+						this.getTemplate().addReplace(table.getCol(col), table.getValue(row, col));
 					}
 						
 					// Take care of "Not Last" and "Only Last"
@@ -113,11 +105,11 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 						
 					// Merge the SubTemplate and insert the text into the Target Template
 					try {
-						this.template.insertText(subTemplate.merge(), bookmark);
+						this.getTemplate().insertText(subTemplate.merge(), bookmark);
 					} catch (MergeException e) {
 						if ( this.softFail()) {
 							log.warn("Soft Fail on Insert");
-							this.template.insertText("Soft Fail Exception" + e.getMessage(), bookmark);
+							this.getTemplate().insertText("Soft Fail Exception" + e.getMessage(), bookmark);
 						} else {
 							throw e;
 						}
@@ -125,5 +117,37 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 				}
 			}
 		}
+	}
+
+	public String getCollectionName() {
+		return collectionName;
+	}
+
+	public void setCollectionName(String collectionName) {
+		this.collectionName = collectionName;
+	}
+
+	public String getCollectionColumn() {
+		return collectionColumn;
+	}
+
+	public void setCollectionColumn(String collectionColumn) {
+		this.collectionColumn = collectionColumn;
+	}
+
+	public String getNotLast() {
+		return String.join(",", this.notLast);
+	}
+
+	public void setNotLast(String notLast) {
+		this.notLast = new ArrayList<String>(Arrays.asList(notLast.split(",")));
+	}
+
+	public String getOnlyLast() {
+		return String.join(",", this.onlyLast);
+	}
+
+	public void setOnlyLast(String onlyLast) {
+		this.onlyLast = new ArrayList<String>(Arrays.asList(onlyLast.split(",")));
 	}
 }

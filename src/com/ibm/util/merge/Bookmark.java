@@ -38,7 +38,7 @@ public class Bookmark implements Cloneable {
 	 * @throws MergeException Invalid Bookmark
 	 */
 	public Bookmark (String contents, int initialStart) throws MergeException {
-		Pattern p = Pattern.compile("=\"(.*)\"");
+		Pattern p = Pattern.compile("name.*=.*\"(.*)\"");
 		Matcher m = p.matcher(contents);
 		if (m.find()) {
 			element = contents;

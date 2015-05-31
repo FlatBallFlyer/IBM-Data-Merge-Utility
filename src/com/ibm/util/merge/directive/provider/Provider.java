@@ -27,29 +27,39 @@ import com.ibm.util.merge.directive.Directive;
  * @author Mike Storey
  */
 public abstract class Provider implements Cloneable {
-	protected ArrayList<DataTable> dataTables;
-	protected Directive directive = null;
+	private transient ArrayList<DataTable> dataTables	= new ArrayList<DataTable>();
+	private transient Directive directive 				= null;
 
 	/**
 	 * Simple constructor
 	 * @param newOwner - the Directive that owns this provider.
 	 */
-	public Provider(Directive newOwner) {
-		this.directive = newOwner;
-		this.reset();
+	public Provider() {
+		super();
 	}
 	
 	/**
+	 * Simple clone constructor
 	 * @param newOwner - The new Directive this is being cloned for
 	 * @return the cloned Provider
 	 * @throws CloneNotSupportedException
 	 */
-	public Provider clone(Directive newOwner) throws CloneNotSupportedException {
+	public Provider clone() throws CloneNotSupportedException {
 		Provider newProvider = (Provider) super.clone();
-		this.directive = newOwner;
+		newProvider.directive = null;
+		newProvider.dataTables = new ArrayList<DataTable>();
 		return newProvider;
 	}
 	
+	/**
+	 * @return a new DataTable object that has been added to the Provider Tables collection
+	 */
+	public DataTable getNewTable() {
+		DataTable newTable = new DataTable();
+		this.dataTables.add(newTable);
+		return newTable;
+	}
+
 	/**
 	 * @return A new DataTable that has been added to an EMPTY collection.
 	 */
@@ -63,28 +73,8 @@ public abstract class Provider implements Cloneable {
 	 * @return The specified DataTable
 	 */
 	public DataTable getTable(int i) {
+		if (i < 0 || i >= dataTables.size()) {return null;}
 		return dataTables.get(i);
-	}
-	/**
-	 * @return The DataTables ArrayList
-	 */
-	public ArrayList<DataTable> getTables() {
-		return this.dataTables;
-	}
-	
-	/**
-	 * @return The number of Data Tables 
-	 */
-	public int size() {
-		return this.dataTables.size();
-	}
-	/**
-	 * @return a new DataTable object that has been added to the Provider Tables collection
-	 */
-	public DataTable getNewTable() {
-		DataTable newTable = new DataTable();
-		this.dataTables.add(newTable);
-		return newTable;
 	}
 
 	/**
@@ -102,4 +92,25 @@ public abstract class Provider implements Cloneable {
 	 */
 	public abstract String getQueryString();
 	
+	/**
+	 * @return The DataTables ArrayList
+	 */
+	public ArrayList<DataTable> getTables() {
+		return this.dataTables;
+	}
+	
+	/**
+	 * @return The number of Data Tables 
+	 */
+	public int size() {
+		return this.dataTables.size();
+	}
+
+	public Directive getDirective() {
+		return directive;
+	}
+
+	public void setDirective(Directive directive) {
+		this.directive = directive;
+	}
 }

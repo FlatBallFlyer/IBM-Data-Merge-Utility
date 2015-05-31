@@ -16,13 +16,10 @@
  */
 package com.ibm.util.merge.directive;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
 
 /**
  * A validation directive 
@@ -34,30 +31,23 @@ import com.ibm.util.merge.Template;
  * @author  Mike Storey
  */
 public class Require extends Directive implements Cloneable {
-	private ArrayList<String> tags;
+	private ArrayList<String> tags = new ArrayList<String>();
 	
 	/**
-	 * @param dbRow
-	 * @param newOwner
-	 * @throws MergeException
+	 * Simple Constructor
 	 */
-	public Require(ResultSet dbRow, Template newOwner) throws MergeException {
-		super(dbRow, newOwner);
-		try {
-			this.tags = new ArrayList<String>(Arrays.asList(dbRow.getString(Directive.COL_REQUIRE_TAGS).split(",")));
-		} catch (SQLException e) {
-			throw new MergeException(e, "Require Tags Constructor Error", this.getFullName());
-		}
+	public Require() {
+		super();
+		this.setType(TYPE_REQUIRE);
+		this.setProvider(null);
 	}
 
 	/** 
 	 * Simple clone constructor, deep copy the tags list
 	 * @see com.ibm.util.merge.directive.Directive#clone(com.ibm.util.merge.Template)
 	 */
-	public Require clone(Template owner) throws CloneNotSupportedException {
-		Require newDirective = (Require) super.clone(owner);
-		newDirective.tags	= new ArrayList<String>(this.tags);
-		return newDirective;
+	public Require clone() throws CloneNotSupportedException {
+		return (Require) super.clone();
 	}
 	
 	/**
@@ -66,9 +56,19 @@ public class Require extends Directive implements Cloneable {
 	 */
 	public void executeDirective() throws MergeException {
 		for (String tag : this.tags) {
-			if (! this.template.hasReplaceValue(tag) ) {
+			if (! this.getTemplate().hasReplaceValue(tag) ) {
 				throw new MergeException("Required Tag Not Found!", tag);
 			}
 		}
 	}
+
+	public String getTags() {
+		return String.join(",", this.tags);
+	}
+
+	public void setTags(String tags) {
+		this.tags = new ArrayList<String>(Arrays.asList(tags.split(",")));
+	}
+
+
 }
