@@ -25,7 +25,6 @@ import org.apache.log4j.Logger;
 
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.directive.Directive;
 
 /**
  * @author flatballflyer

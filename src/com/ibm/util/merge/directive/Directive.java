@@ -81,7 +81,9 @@ public abstract class Directive implements Cloneable{
 	 */
 	public Directive clone() throws CloneNotSupportedException {
 		Directive newDirective = (Directive) super.clone();
-		newDirective.setProvider( (Provider) this.provider.clone() );
+		if (this.provider != null) {
+			newDirective.setProvider( (Provider) this.provider.clone() );
+		}
 		newDirective.template = null;
 		return newDirective;
 	}

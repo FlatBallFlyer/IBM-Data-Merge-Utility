@@ -90,8 +90,8 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 		 			String colValue = table.getValue(row, this.collectionColumn);
 					Template subTemplate = TemplateFactory.getTemplate(
 							this.collectionName, 
-							colValue, 
 							bookmark.getName(), 
+							colValue, 
 							this.getTemplate().getReplaceValues());
 					log.info("Inserting Template " + subTemplate.getFullName() + " into " + this.getTemplate().getFullName());
 						

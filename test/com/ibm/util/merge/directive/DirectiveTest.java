@@ -15,7 +15,11 @@ public abstract class DirectiveTest {
 		Directive newDirective = (Directive) directive.clone();
 		assertNotEquals(directive, newDirective);
 		assertNull(newDirective.getTemplate());
-		assertNotEquals(directive.getProvider(), newDirective.getProvider());
+		if (directive.getProvider() == null) {
+			assertNull(newDirective.getProvider()); 
+		} else {
+			assertNotEquals(directive.getProvider(), newDirective.getProvider());
+		}
 		assertEquals(directive.getDescription(), newDirective.getDescription());
 		assertEquals(directive.getIdDirective(), newDirective.getIdDirective());
 		assertEquals(directive.getIdTemplate(),  newDirective.getIdTemplate());

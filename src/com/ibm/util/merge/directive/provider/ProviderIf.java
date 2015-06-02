@@ -18,10 +18,7 @@ package com.ibm.util.merge.directive.provider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.directive.Directive;
 
 /**
  * @author flatballflyer

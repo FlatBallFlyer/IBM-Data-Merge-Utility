@@ -53,5 +53,21 @@ public class ReplaceValue extends Directive implements Cloneable {
 		log.info("Replaced " + this.from + " with " + this.to);
 	}
 
+	public String getFrom() {
+		return from;
+	}
+
+	public void setFrom(String from) {
+		this.from = from;
+	}
+
+	public String getTo() {
+		return to;
+	}
+
+	public void setTo(String to) {
+		this.to = to;
+	}
+
 
 }

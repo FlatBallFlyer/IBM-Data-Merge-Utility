@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
  * @see #packageOutput()
  * @author  Mike Storey
  */
-public class Template {
+public class Template implements Cloneable {
 	// Global Constants (Reserved Tags)
 	public static final String 	LFT 				= "{";
 	public static final String	RGT 				= "}";
@@ -53,20 +53,20 @@ public class Template {
 	public static final String 	TAG_SOFTFAIL		= wrap("DragonFlySoftFail");
 	public static final String 	TAG_OUTPUT_TYPE		= wrap("DragonOutputType");
 	public static final String 	TAG_SEQUENCE		= wrap("DragonSequence");
+	public static final Pattern BOOKMARK_PATTERN 	= Pattern.compile("(<tkBookmark.*?/>)");
 	
 	// Template Constants
 	private static final Logger 	log = Logger.getLogger( Template.class.getName() );
-	private static final Pattern 	BOOKMARK_PATTERN 	= Pattern.compile("(<tkBookmark.*/>)");
 
 	// Attributes
-	private long   					idtemplate		= 0;
-	private String 					collection		= "";
-	private String 					columnValue		= "";
-	private String 					name			= "";
-	private String 					description		= "";
-	private String 					outputFile		= "";
-	private StringBuilder 			content			= new StringBuilder();
-	private List<Directive> 		directives		= new ArrayList<Directive>();
+	private transient long 						idtemplate		= 0;
+	private String 								collection		= "";
+	private String 								columnValue		= "";
+	private String 								name			= "";
+	private String 								description		= "";
+	private String 								outputFile		= "";
+	private StringBuilder 						content			= new StringBuilder();
+	private List<Directive> 					directives		= new ArrayList<Directive>();
 	private transient List<Bookmark> 			bookmarks		= new ArrayList<Bookmark>();
 	private transient HashMap<String,String> 	replaceValues	= new HashMap<String,String>();
 
@@ -85,13 +85,6 @@ public class Template {
 	 * Simple No-Parms Constructor 
 	 */
 	public Template() {
-	}
-
-	/**********************************************************************************
-	 * Simple Full Name Constructor (from persistance)
-	 */
-	public Template(String collection, String name, String column) {
-		// TODO - instantiate from Hibernate (collection, name, column)
 	}
 
 	/**********************************************************************************
@@ -450,6 +443,7 @@ public class Template {
 
 	public void addDirective(Directive newDirective) {
 		newDirective.setTemplate(this);
+		newDirective.setIdTemplate(this.idtemplate);
 		this.directives.add(newDirective);
 	}
 

@@ -45,7 +45,9 @@ public class Merge extends HttpServlet {
 	public void init() {
 		// Merge Output will be created at this location, in GUID.zip files.
 		ZipFactory.setOutputroot(getInitParameter("merge-output-root"));
-		TemplateFactory.load(getInitParameter("merge-templates-folder"));
+		TemplateFactory.reset();
+		TemplateFactory.initilizeHibernate();
+		TemplateFactory.loadFolder(getInitParameter("merge-templates-folder"));
 
 		// Log4j Initilization
 		String file = getInitParameter("log4j-init-file");

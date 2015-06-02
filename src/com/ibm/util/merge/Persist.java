@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package com.ibm.util.merge;
 
 import java.io.IOException;
@@ -25,11 +24,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-
-import com.cedarsoftware.util.io.JsonWriter;
-
 /**
  * JSON Get/Put Template Servlet 
  * @see TemplateFactory
@@ -39,7 +33,6 @@ import com.cedarsoftware.util.io.JsonWriter;
 @WebServlet("/Template")
 public class Persist extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger log = Logger.getLogger(HttpServlet.class.getName());
 
 	/**
      * Default constructor. 
@@ -56,17 +49,24 @@ public class Persist extends HttpServlet {
 	 * @param res the Http Response Object
 	 */ 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    	JsonWriter out = null;
+		PrintWriter out = null;
     	Template template;
+
+		try {
+			// Create the response writer
+			response.setContentType("text/json");
+			out = response.getWriter();
+		} catch (IOException e) {
+			@SuppressWarnings("unused")
+			MergeException me = new MergeException(e, "IO Error Getting Servlet Printwriter", "Persist Servlet");
+		}
+    	
     	try {
 			template = TemplateFactory.getTemplate(request);
-    		response.setContentType("text/json");
-    		out = new JsonWriter(response.getOutputStream());
-    		out.write(template);
+    		out.write(template.asJson());
     		out.close();    		
 		} catch (MergeException e) {
-			PrintWriter errOut = response.getWriter();
-			errOut.write(e.getJsonErrorMessage());
+			out.write(e.getJsonErrorMessage());
 		}
     }
 
@@ -78,18 +78,25 @@ public class Persist extends HttpServlet {
 	 * @param req the Http Request object
 	 * @param res the Http Response Object
 	 */
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    	JsonWriter out = null;
+	public void doPost(HttpServletRequest request, HttpServletResponse response) {
+		PrintWriter out = null;
     	Template template;
+
+		try {
+			// Create the response writer
+			response.setContentType("text/html");
+			out = response.getWriter();
+		} catch (IOException e) {
+			@SuppressWarnings("unused")
+			MergeException me = new MergeException(e, "IO Error Getting Servlet Printwriter", "Persist Servlet");
+		}
+    	
     	try {
-			template = TemplateFactory.addTemplate(request);
-    		response.setContentType("text/json");
-    		out = new JsonWriter(response.getOutputStream());
-    		out.write(template);
+			template = TemplateFactory.saveTemplate(request.toString());
+    		out.write(template.asJson());
     		out.close();    		
 		} catch (MergeException e) {
-			PrintWriter errOut = response.getWriter();
-			errOut.write(e.getJsonErrorMessage());
+			out.write(e.getJsonErrorMessage());
 		}
 	}
 

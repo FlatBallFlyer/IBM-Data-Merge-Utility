@@ -22,7 +22,6 @@ import java.net.URL;
 
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.Directive;
 
 /**
  * @author Mike Storey

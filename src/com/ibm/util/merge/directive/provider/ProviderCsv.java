@@ -24,7 +24,6 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.directive.Directive;
 
 /**
  * @author flatballflyer

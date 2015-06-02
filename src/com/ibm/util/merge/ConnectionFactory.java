@@ -18,8 +18,6 @@
 package com.ibm.util.merge;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,65 +29,27 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
-
-
 /**
- * A connection factory for JNDI Data Sources Supports TemplateDB and DataDB connections.
+ * A connection factory for JNDI Data Sources that cache's Database Connections for 
+ * the ProviderSql data provider throughout the course of a Merge. The same database
+ * connection is shared by all sub-template processing that takes place under the
+ * primary merge process. Database connections are cached based on the Merge GUID.
  *
  * @author  Mike Storey
  */
 public final class ConnectionFactory {
 	private static final Logger log = Logger.getLogger( ConnectionFactory.class.getName() );
 	private static final String DBROOT = "java:/comp/env/jdbc/";
-	private static final String DBNAME = "dragonflyDB";
-	private static DataSource templateDB;
 	private static final ConcurrentHashMap<String,Connection> dataDbHash = new ConcurrentHashMap<String,Connection>();
 	
     /**********************************************************************************
-	 * <p>Template Connection Factory</p>
-	 *
-	 * @throws MergeException JNDI Connection Error
-	 * @throws DragonFlySqlException Tempalte Table validation error
-	 * @return The new template database connection 
-	 */
-    public static Connection getTemplateConnection() throws MergeException {
-    	if (templateDB == null) {
-        	try { // Get the naming context
-            	Context initContext = new InitialContext();
-            	templateDB = (DataSource) initContext.lookup(DBROOT + DBNAME);
-        	} catch (NamingException e) {
-        		throw new MergeException(e.getMessage(), "JNDI Connection Error connection to " + DBNAME );
-        	}
-        	
-        	try { // Validate Template DB
-    			Connection con = templateDB.getConnection();
-    			DatabaseMetaData dbmeta = con.getMetaData();
-    			ResultSet rs = dbmeta.getTables(null, null, "%", null);
-    			while (rs.next()) {
-    				log.info("Table Found: " + rs.getString(1) + "." + rs.getString(3) );
-    			}			
-    			    			
-        	} catch (SQLException e) {
-        		throw new MergeException("Error getting table metadata", "Template Datasource Error");
-			}
-    	}
-    	
-		try {
-			Connection con = templateDB.getConnection();
-			return con;
-		} catch (SQLException e) {
-			throw new MergeException("Error Connecting to Template Database", "Database Connection Error");
-		}
-    }
-
-    /**********************************************************************************
-	 * <p>Data Source connection factory, creates and cache's connections that are valid
-	 * throughout the life of a merge. Connections are released by calling close</p>
+	 * Data Source connection factory, creates and cache's connections that are valid
+	 * throughout the life of a merge. Connections are released by calling close
 	 *
 	 * @param  jndiSource JNDI Data Source name
-	 * @param guid - a Guid associed with a template
+	 * @param guid - a Guid associed with a template merge process
 	 * @throws MergeException JNDI Naming Errors
-	 * @throws DragonFlySqlException Database Connection Errors
+	 * @throws MergeException Database Connection Errors
 	 * @return Connection The new Data Source connection 
 	 */
     public static Connection getDataConnection(String jndiSource, String guid) throws MergeException {
@@ -113,7 +73,7 @@ public final class ConnectionFactory {
     }
     
     /**********************************************************************************
-	 * <p>Release a set of connections for a guid</p>
+	 * <p>Release a connection for a guid</p>
 	 *
 	 * @param  guid Guid of template to release files for.
 	 */
@@ -124,8 +84,9 @@ public final class ConnectionFactory {
 					entry.getValue().close();
 				} catch (SQLException e) {
 					log.error("Error Colsing Connection: ", e);
+				} finally {
+					dataDbHash.remove(entry);
 				}
-    			dataDbHash.remove(entry);
     		}
 		}    	
     }
