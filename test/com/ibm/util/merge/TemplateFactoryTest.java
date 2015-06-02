@@ -14,8 +14,7 @@ public class TemplateFactoryTest {
 	@Before
 	public void setUp() throws Exception {
 		TemplateFactory.reset();
-		// TODO - Requires Hibernate
-		// TemplateFactory.initilizeHibernate();
+		TemplateFactory.initilizeHibernate();
 		TemplateFactory.cacheFromJson(template1);
 		TemplateFactory.cacheFromJson(template2);
 	}
@@ -70,16 +69,62 @@ public class TemplateFactoryTest {
 	}
 
 	@Test
-	public void testLoadFolder() {
-		// TODO - Requires json files in "SomeTestFolder" 
-//		TemplateFactory.loadFolder("SomeTestFolder");
-//		assertEquals(5, TemplateFactory.size()); 
+	public void testGetTemplatesCollections() throws MergeException {
+		// TODO - Requires database connection and Template Data
+		Template request = new Template();
+		String collections = TemplateFactory.getTemplates(request.asJson());
+		assertNotNull(collections);
+		// TODO - Assert Collections contains expected values
 	}
 
 	@Test
-	public void testSaveTemplate() throws MergeException {
+	public void testGetTemplatesForCollection() throws MergeException {
+		// TODO - Requires database connection and Template Data
+		Template request = new Template();
+		request.setCollection("default");
+		String collections = TemplateFactory.getTemplates(request.asJson());
+		assertNotNull(collections);
+		// TODO - Assert Collections contains expected values
+	}
+
+	@Test
+	public void testGetTemplatesForName() throws MergeException {
+		// TODO - Requires database connection and Template Data
+		Template request = new Template();
+		request.setCollection("someCollection");
+		request.setName("SomeName");
+		String collections = TemplateFactory.getTemplates(request.asJson());
+		assertNotNull(collections);
+		// TODO - Assert Collections contains expected values
+	}
+
+	@Test
+	public void testGetTemplatesForFullName() throws MergeException {
+		// TODO - Requires database connection and Template Data
+		Template request = new Template();
+		request.setCollection("someCollection");
+		request.setName("SomeName");
+		request.setColumnValue("SomeColumnValue");
+		String collections = TemplateFactory.getTemplates(request.asJson());
+		assertNotNull(collections);
+		// TODO - Assert Collections contains expected values
+	}
+
+	@Test
+	public void testLoadFolder() {
+		// TODO - Requires json files in "SomeTestFolder" 
+		TemplateFactory.loadFolder("SomeTestFolder");
+		assertEquals(5, TemplateFactory.size()); 
+	}
+
+	@Test
+	public void testPutTemplates() throws MergeException {
 		// TODO - Requires persistence
-		// TODO - assertNotNull(TemplateFactory.saveTemplate("JSON"));
+		String templates = "JSON Array Of Templates";
+		TemplateFactory.putTemplates(templates);
+		Template test = TemplateFactory.getTemplate("collection", "name", "column", new HashMap<String,String>());
+		assertNotNull(test);
+		// TODO - Assert template has expected values
 	}
 
 }

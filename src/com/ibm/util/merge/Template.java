@@ -510,4 +510,15 @@ public class Template implements Cloneable {
 		this.outputFile = outputFile;
 	}
 
+	public String HashCode() {
+		return this.getFullName();
+	}
+	
+	public boolean equals(Template that) {
+		if (this.getFullName().equals(that.getFullName())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

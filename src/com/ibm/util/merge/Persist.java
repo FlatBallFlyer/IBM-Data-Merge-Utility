@@ -35,13 +35,10 @@ public class Persist extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-     * Default constructor. 
-     */
-    public Persist() {
-    }
-
-	/**
-	 * Get a JSON formatted template. The template full name is specified as a request parameter.
+	 * Servlet called as HTTP Get  
+	 * - Request contains JSON Template Object with optional Collection, Name and Column values
+	 * - An Empty request (No Collection, Name or Column) returns a list of all Collection Names
+	 * - A non-empty request returns a JSON List of Template Objects that match the provided values
 	 * 
 	 * @throws IOException getWriter failed  
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -50,7 +47,6 @@ public class Persist extends HttpServlet {
 	 */ 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		PrintWriter out = null;
-    	Template template;
 
 		try {
 			// Create the response writer
@@ -62,8 +58,7 @@ public class Persist extends HttpServlet {
 		}
     	
     	try {
-			template = TemplateFactory.getTemplate(request);
-    		out.write(template.asJson());
+    		out.write(TemplateFactory.getTemplates(request.toString()));
     		out.close();    		
 		} catch (MergeException e) {
 			out.write(e.getJsonErrorMessage());
@@ -92,8 +87,7 @@ public class Persist extends HttpServlet {
 		}
     	
     	try {
-			template = TemplateFactory.saveTemplate(request.toString());
-    		out.write(template.asJson());
+    		out.write(TemplateFactory.putTemplates(request.toString()));
     		out.close();    		
 		} catch (MergeException e) {
 			out.write(e.getJsonErrorMessage());

@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 /**
  * Servlet implementation - instantiates a template, merges the output and finalizes the output archive.
@@ -38,30 +37,6 @@ import org.apache.log4j.PropertyConfigurator;
 public class Merge extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = Logger.getLogger(HttpServlet.class.getName());
-
-	/**
-     * Initialize Logging and Output 
-     */
-	public void init() {
-		// Merge Output will be created at this location, in GUID.zip files.
-		ZipFactory.setOutputroot(getInitParameter("merge-output-root"));
-		TemplateFactory.reset();
-		TemplateFactory.initilizeHibernate();
-		TemplateFactory.loadFolder(getInitParameter("merge-templates-folder"));
-
-		// Log4j Initilization
-		String file = getInitParameter("log4j-init-file");
-	    String prefix =  getServletContext().getRealPath("/");
-	    if(file != null) {
-	      PropertyConfigurator.configure(prefix+file);
-	    }
-	}
-
-	/**
-     * Default constructor. 
-     */
-    public Merge() {
-    }
 
 	/**
 	 * @throws IOException getWriter failed  

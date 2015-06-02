@@ -25,16 +25,19 @@
         <id name="idtemplate" column="ID_TEMPLATE">
             <generator class="native"/>
         </id>
-		<property name="collection" 	column="COLLECTION"		/>
-		<property name="name" 			column="NAME"			/>
-		<property name="columnValue" 	column="COLUMN_VALUE"	/>
+        <natural-id mutable="false">
+			<property name="collection" 	column="COLLECTION"		/>
+			<property name="name" 			column="NAME"			/>
+			<property name="columnValue" 	column="COLUMN_VALUE"	/>
+		</natural-id>
 		<property name="description" 	column="DESCRIPTION"	/>
 		<property name="outputFile" 	column="OUTPUT_FILE"	/>
 		<property name="content" 		column="CONTENT"		/>
-		<set name="directives" table="DIRECTIVE" inverse="true" lazy="true" >
+		<list name="directives" table="DIRECTIVE" >
 	        <key column="ID_TEMPLATE" />
+	        <index column="SEQUENCE"/>
 	        <one-to-many class="com.ibm.util.merge.directive.Directive"/>
-	    </set>
+	    </list>
     </class>
 
 </hibernate-mapping>

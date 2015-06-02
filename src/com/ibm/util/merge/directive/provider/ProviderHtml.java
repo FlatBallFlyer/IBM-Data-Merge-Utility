@@ -16,6 +16,12 @@
  */
 package com.ibm.util.merge.directive.provider;
 
+import java.util.ArrayList;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.*;
+import org.jsoup.select.Elements;
+
 import com.ibm.util.merge.MergeException;
 
 public class ProviderHtml extends ProviderHttp {
@@ -37,23 +43,32 @@ public class ProviderHtml extends ProviderHttp {
 	public void getData() throws MergeException {
 		super.getData();
 		
-		// TODO Parse the Data
-		// HtmlParser parser = new HtmlParser(parms);
-		// parser.parse(this.textData);
-		
-		// Find <table> elements
-		// for each (find) {
-		// 	
-		// for (int r = 1; r<rows(); r++) {
-		//	ArrayList<String> row = new ArrayList<String>();
-		//	theData.add(row);
-		// 	for (int c = 1; c<cols(); c++) {
-		//		row.add(data(r,c));
-		//	}
+		// Parse the Data
+		Document doc = Jsoup.parse(this.getFetchedData());
 
-		// Parse HTML
-		// Find <table> element(s)
-		// Add data to this.theData and this.columnNames
+		// Find <table> elements
+		Elements tables = doc.select("table");
+
+		// for each (find) {
+		for (Element table : tables) {
+			DataTable newTable = this.getNewTable();
+			
+			// Find and Process Table Header elements
+			Elements headers = table.select("th");
+			for (Element header : headers) {
+				newTable.addCol(header.ownText());
+			}
+			
+			// Find and Process Table Row elements
+			Elements rows = table.select("tr");
+			for (Element row : rows ) {
+				ArrayList<String> newRow = newTable.getNewRow();
+				Elements cols = row.select("td");
+				for (Element col : cols ) {
+					newRow.add(col.ownText());
+				}
+			}
+		}
 	}
 
 }
