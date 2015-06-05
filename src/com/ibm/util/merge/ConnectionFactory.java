@@ -91,4 +91,10 @@ public final class ConnectionFactory {
 		}    	
     }
     
+    /**********************************************************************************
+	 * Get the size of the DB Connection Hash
+	 */
+    public static int size() {
+    	return dataDbHash.size();
+    }
 }

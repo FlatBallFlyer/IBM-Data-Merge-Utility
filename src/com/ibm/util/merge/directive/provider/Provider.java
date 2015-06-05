@@ -27,12 +27,17 @@ import com.ibm.util.merge.directive.Directive;
  * @author Mike Storey
  */
 public abstract class Provider implements Cloneable {
+	public static final int	TYPE_SQL	= 1;
+	public static final int TYPE_TAG	= 2;
+	public static final int TYPE_CSV 	= 3;
+	public static final int TYPE_HTML 	= 4;
 	private transient ArrayList<DataTable> dataTables	= new ArrayList<DataTable>();
 	private transient Directive directive 				= null;
+	private int type;
 
 	/**
 	 * Simple constructor
-	 * @param newOwner - the Directive that owns this provider.
+	 * @param 
 	 */
 	public Provider() {
 		super();
@@ -63,9 +68,8 @@ public abstract class Provider implements Cloneable {
 	/**
 	 * @return A new DataTable that has been added to an EMPTY collection.
 	 */
-	public DataTable reset() {
+	public void reset() {
 		this.dataTables = new ArrayList<DataTable>();
-		return this.getNewTable();
 	}
 	
 	/**
@@ -112,5 +116,13 @@ public abstract class Provider implements Cloneable {
 
 	public void setDirective(Directive directive) {
 		this.directive = directive;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 }

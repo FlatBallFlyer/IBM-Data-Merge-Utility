@@ -101,4 +101,11 @@ final class ZipFactory {
     	outputroot = newRoot;
     }
     
+    /**********************************************************************************
+	 * Get the size of the cache
+	 */
+    public static int size() {
+    	return archiveList.size();
+    }
+    
 }

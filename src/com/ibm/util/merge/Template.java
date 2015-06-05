@@ -17,6 +17,7 @@
 
 package com.ibm.util.merge;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.*;
@@ -100,11 +101,9 @@ public class Template implements Cloneable {
 		try {
 			newTemplate = (Template) super.clone();
 			newTemplate.replaceValues 	= new HashMap<String,String>();
-			newTemplate.content 		= new StringBuilder(this.content);
+			newTemplate.setContent(this.getContent());
 	
-			// Deep Copy Collections
-			newTemplate.bookmarks		= new ArrayList<Bookmark>();
-			for(Bookmark fromBkm : this.bookmarks) 	{ newTemplate.bookmarks.add(fromBkm.clone()); }
+			// Deep Copy Directives
 			newTemplate.directives = new ArrayList<Directive>();
 			for(Directive fromDirective : this.directives) { newTemplate.addDirective(fromDirective.clone()); }
 			
@@ -386,7 +385,7 @@ public class Template implements Cloneable {
 	/**
 	 * @return output type indicator (Default to GZIP, allow "zip" over-ride
 	 */
-	private int getOutputType() {
+	public int getOutputType() {
 		if (this.replaceValues.containsKey(TAG_OUTPUT_TYPE) && 
 				this.replaceValues.get(TAG_OUTPUT_TYPE) == "zip") {
 				return ZipFactory.TYPE_ZIP; 
@@ -411,19 +410,19 @@ public class Template implements Cloneable {
 	 * @return the full name (i.e. collection + Name + Column) 
 	 */
 	public String getFullName() {
-		return this.collection + ":" + this.name + ":" + this.columnValue;
+		return this.collection + "." + this.name + "." + this.columnValue;
 	}
 	
     /**
 	 * as json - Serialize a Template from the cache 
 	 * @return a jSon serialized Template
 	 */
-    public String asJson() {
-    	Gson gson = new Gson();
+    public String asJson(boolean bePretty) {
+    	GsonBuilder builder = new GsonBuilder();
+    	if (bePretty) builder.setPrettyPrinting();
+     	Gson gson = builder.create();
     	return gson.toJson(this);
     }
-    
-	
 	
 	public List<Bookmark> getBookmarks() {
 		return this.bookmarks;
@@ -444,6 +443,7 @@ public class Template implements Cloneable {
 	public void addDirective(Directive newDirective) {
 		newDirective.setTemplate(this);
 		newDirective.setIdTemplate(this.idtemplate);
+		newDirective.setSequence(this.directives.size());
 		this.directives.add(newDirective);
 	}
 
@@ -466,6 +466,11 @@ public class Template implements Cloneable {
 	public String getOutput() {
 		return this.outputFile;
 	}
+
+	public List<Directive> getDirectives() {
+		return directives;
+	}
+
 
 	public void setContent(String content) throws MergeException {
 		setContent(new StringBuilder(content));
@@ -514,7 +519,8 @@ public class Template implements Cloneable {
 		return this.getFullName();
 	}
 	
-	public boolean equals(Template that) {
+	public boolean equals(Object obj) {
+		Template that = (Template) obj;
 		if (this.getFullName().equals(that.getFullName())) {
 			return true;
 		} else {

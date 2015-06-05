@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.Template;
 
 /**
  * A validation directive 
@@ -56,7 +57,7 @@ public class Require extends Directive implements Cloneable {
 	 */
 	public void executeDirective() throws MergeException {
 		for (String tag : this.tags) {
-			if (! this.getTemplate().hasReplaceValue(tag) ) {
+			if (! this.getTemplate().hasReplaceValue(Template.wrap(tag)) ) {
 				throw new MergeException("Required Tag Not Found!", tag);
 			}
 		}

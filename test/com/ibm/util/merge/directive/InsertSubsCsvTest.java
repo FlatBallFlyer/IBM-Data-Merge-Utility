@@ -1,31 +1,51 @@
+/*
+ * Copyright 2015, 2015 IBM
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package com.ibm.util.merge.directive;
 
 import static org.junit.Assert.*;
 
-import org.junit.After;
+import java.util.HashMap;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
 
 public class InsertSubsCsvTest extends InsertSubsTest {
+	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Row: {A}, Val: {B}\\n\"}";
+	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\"/\\u003e\"}";
+	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\"/>";
 
 	@Before
 	public void setUp() throws Exception {
-		template = new Template();
 		directive = new InsertSubsCsv();
-
 		InsertSubsCsv myDirective = (InsertSubsCsv) directive;
-		template.addDirective(myDirective);
-		template.setContent(new StringBuilder("Some Template Content <tkBookmark name=\"foo\"/> and more content"));
+		myDirective.setCollectionName("root");
 		ProviderCsv myProvider = (ProviderCsv) myDirective.getProvider();
 		myProvider.setStaticData("A,B,C\n1,2,3\n4,5,6");
-	}
-
-	@After
-	public void tearDown() throws Exception {
+		
+		TemplateFactory.reset();
+		TemplateFactory.setDbPersistance(false);
+		TemplateFactory.cacheFromJson(subTemplate); 
+		TemplateFactory.cacheFromJson(masterTemplate);
+		template = TemplateFactory.getTemplate("root.master.", "", new HashMap<String,String>());
+		template.addDirective(myDirective);
 	}
 
 	@Test
@@ -41,7 +61,7 @@ public class InsertSubsCsvTest extends InsertSubsTest {
 	@Test
 	public void testExecuteDirective() throws MergeException {
 		directive.executeDirective();
-		assertTrue(template.getContent().contains("na"));
+		assertEquals(masterOutput, template.getContent());
 	}
 
 }

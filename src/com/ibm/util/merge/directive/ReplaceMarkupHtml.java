@@ -49,4 +49,29 @@ public class ReplaceMarkupHtml extends Directive implements Cloneable {
 		// TODO parse this.provider.retrievedData
 		// for each match, get from/to and call this.owner.addReplace()
 	}
+
+	public String getToKey() {
+		return toKey;
+	}
+
+	public String getFromKey() {
+		return fromKey;
+	}
+
+	public String getPattern() {
+		return pattern;
+	}
+
+	public void setToKey(String toKey) {
+		this.toKey = toKey;
+	}
+
+	public void setFromKey(String fromKey) {
+		this.fromKey = fromKey;
+	}
+
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
+	}
+
 }

@@ -16,13 +16,17 @@
  */
 
 package com.ibm.util.merge;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +39,12 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.ibm.util.merge.Template;
+import com.ibm.util.merge.directive.*;
+import com.ibm.util.merge.directive.provider.Provider;
+import com.ibm.util.merge.directive.provider.ProviderDeserializer;
 
 /**
  * This class implements a Caching Template Factory as well as all aspects of Template Persistence 
@@ -67,6 +76,7 @@ final public class TemplateFactory {
 	private static ServiceRegistry serviceRegistry;
 	private static final ConcurrentHashMap<String,Template> templateCache = new ConcurrentHashMap<String,Template>();
 	private static String templateFolder = "/tmp/templates";
+	private static boolean dbPersistance = false;
 	
 	/**********************************************************************************
 	 * <p>Template from Servlet request Constructor. Initiates a template based on http Servlet Request
@@ -106,16 +116,16 @@ final public class TemplateFactory {
 		} 
 		
 		// Get the template, add the http parameter replace values to it's hash
-		Template rootTempalte = TemplateFactory.getTemplate(replace.get(KEY_COLLECTION), 
-													replace.get(KEY_COLUMN), 
-													replace.get(KEY_NAME),
-													replace);
+		String fullName = 	replace.get(KEY_COLLECTION) + "." +  
+							replace.get(KEY_COLUMN) + "." +  
+							replace.get(KEY_NAME);
+		Template rootTempalte = TemplateFactory.getTemplate(fullName, "", replace);
 		return rootTempalte;
 	}
 
     /**********************************************************************************
 	 * Get a copy of a cached Template based on a Template Fullname, which is comprised of
-	 * collection, name and columnValue (a unique key to the table dragonfly.template) The 
+	 * collection, name and columnValue (a unique key to the TEMPLATE table) The 
 	 * provided Replace hash is copied to the new Template before it is returned
 	 *
 	 * @param  collection Collection Name
@@ -124,11 +134,8 @@ final public class TemplateFactory {
 	 * @param  seedReplace Initial replace hash
 	 * @throws MergeException Invalid Directive Type from Constructor
 	 * @return Template The new Template object
-	 * @see Template
 	 */
-    public static Template getTemplate(String collection, String name, String column, HashMap<String,String> seedReplace) throws MergeException {
-    	String fullName = collection + ":" + name + ":" + column;
-    	String shortName = collection + ":" + name + ":";
+    public static Template getTemplate(String fullName, String shortName, HashMap<String,String> seedReplace) throws MergeException {
 		Template newTemplate = null;
 				
     	// Cache hit -- Return a clone of the Template in Cache
@@ -137,18 +144,20 @@ final public class TemplateFactory {
     	}
     	
     	// See if FullName template is in the database
-        Session session = sessionFactory.openSession();
-        @SuppressWarnings({ "rawtypes" })
-		List list = session.createQuery(FULLNAME_QUERY).list();
-        session.getTransaction().commit();
-        session.close();
+    	if (TemplateFactory.dbPersistance) {
+	        Session session = sessionFactory.openSession();
+	        @SuppressWarnings({ "rawtypes" })
+			List list = session.createQuery(FULLNAME_QUERY).list();
+	        session.getTransaction().commit();
+	        session.close();
 
-        if (list.size() == 1) {
-            newTemplate = (Template) list.get(0);
-    		templateCache.putIfAbsent(fullName, newTemplate);
-    		log.info("Constructed Template: " + fullName);
-    		return templateCache.get(fullName).clone(seedReplace);
-        }
+	        if (list.size() == 1) {
+	            newTemplate = (Template) list.get(0);
+	    		templateCache.putIfAbsent(fullName, newTemplate);
+	    		log.info("Constructed Template: " + fullName);
+	    		return templateCache.get(fullName).clone(seedReplace);
+	        }
+    	}
 
 		// Check for shortName in the cache, since fullName doesn't exist
     	if (templateCache.containsKey(shortName)) {
@@ -158,92 +167,155 @@ final public class TemplateFactory {
     	}
     		
     	// See if the shortName (Default Template) is in the database
-        session = sessionFactory.openSession();
-        list = session.createQuery(DEFAULT_QUERY).list();
-        session.getTransaction().commit();
-        session.close();
-
-    	if (list.size() == 1) {
-			templateCache.putIfAbsent(fullName, newTemplate);
-			log.info("Linked Template: " + shortName + " to " + fullName);
-			return templateCache.get(fullName).clone(seedReplace);
+	    	if (TemplateFactory.dbPersistance) {
+	        Session session = sessionFactory.openSession();
+	        @SuppressWarnings({ "rawtypes" })
+	        List list = session.createQuery(DEFAULT_QUERY).list();
+	        session.getTransaction().commit();
+	        session.close();
+	
+	    	if (list.size() == 1) {
+				templateCache.putIfAbsent(fullName, newTemplate);
+				log.info("Linked Template: " + shortName + " to " + fullName);
+				return templateCache.get(fullName).clone(seedReplace);
+	    	}
     	}
-    	
-    	// Template Not Found Exception
+
+	    // Template Not Found Exception
 		throw new MergeException("Tempalte and Default Not Found", fullName);
     }
     
 	/**********************************************************************************
-	 * <p>Get a JSON List of Templates matching the Request JSON.</p>
+	 * <p>Get a JSON List of Collections.</p>
 	 *
 	 * @param  request HttpServletRequest
 	 * @throws MergeException 
-	 * @return Template The new Template object
+	 * @return JSON List of Collection Names
 	 * @see Template
 	 */
-	public static String getTemplates(String request) throws MergeException {
+	public static String getCollections() throws MergeException {
+		ArrayList<String> theList = new ArrayList<String>();
+		
+		if (dbPersistance) {
+			theList = getCollectionsFromDb();
+		} else {
+			theList = getCollectionsFromCache();
+		}
 		Gson gson = new Gson();
-		String query = "";
-		Template requestTemplate = gson.fromJson(request, Template.class);;
-		ArrayList<String> returnCollections = new ArrayList<String>();
-		ArrayList<Template> returnTemplates = new ArrayList<Template>(); 
-		
-		// If this is an empty request, return a list of Collections
-		if ( 	requestTemplate.getCollection().isEmpty() && 
-				requestTemplate.getName().isEmpty() && 
-				requestTemplate.getColumnValue().isEmpty() ) {
-			query = "SELECT DISTINCT COLLECTION FROM TEMPLATES";
-			
-			// Execute Query and populate returnCollections
-			
-			// Return the JSON string
-			return gson.toJson(returnCollections);  
-		}
+		return gson.toJson(theList);
+	}
+	
+	/**
+	 * @return
+	 */
+	private static ArrayList<String> getCollectionsFromCache() {
+		ArrayList<String> theCollections = new ArrayList<String>();
 
-		// Return List of Templates
-		
-		// Build the Query String based on the requestTemplate attributes (?Move to Template?)
-		if (!requestTemplate.getCollection().isEmpty()) {
-			query += " COLLECTION = :collection";
+		// Iterate the Hash
+		for (Template template : templateCache.values()) {
+			if (!theCollections.contains(template.getCollection())) {
+				theCollections.add(template.getCollection());
+			}
 		}
-		if (!requestTemplate.getName().isEmpty()) {
-			if (!query.isEmpty()) {query += " AND ";}
-			query += "NAME = :name";
-		}
-		if (!requestTemplate.getColumnValue().isEmpty()) {
-			if (!query.isEmpty()) {query += " AND ";}
-			query += "COLUMN_VALUE = :column";
-		}
-		query = "FROM TEMPLATES WHERE " + query;
-
-		// Execute Query and populate returnTemplates list
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		@SuppressWarnings("unchecked")
-		List<Template> result = (List<Template>) session.createQuery(query).list();
-		session.getTransaction().commit();
-		session.close();
 		
 		// Return the JSON String
-		return gson.toJson(result);  
+		return theCollections;  
+	}
+
+	/**
+	 * @return
+	 */
+	private static ArrayList<String> getCollectionsFromDb() {
+		//String query = "DISTINCT COLLECTION";
+		ArrayList<String> theTemplates = new ArrayList<String>();
+		// Execute Query and populate returnTemplates list
+		
+		// Return the JSON String
+		return theTemplates;  
 	}
 
 	/**********************************************************************************
-	 * Set the template folder, and load the cache
-	 * @param folder that contains template files
+	 * <p>Get a JSON List of Templates in a collection.</p>
+	 *
+	 * @param  request HttpServletRequest
+	 * @throws MergeException 
+	 * @return JSON List of Collection Names
+	 * @see Template
 	 */
-    public static void loadFolder(String folderName) {
-    	TemplateFactory.templateFolder = folderName;
-    	TemplateFactory.loadAll();
-    }
-    
+	public static String getTemplates(String collection) throws MergeException {
+		ArrayList<String> theList = new ArrayList<String>();
+		
+		if (dbPersistance) {
+			theList = getTemplatesFromDb(collection);
+		} else {
+			theList = getTemplatesFromCache(collection);
+		}
+		Gson gson = new Gson();
+		return gson.toJson(theList);
+	}
+
+	/**
+	 * @param collection
+	 * @return
+	 */
+	public static ArrayList<String> getTemplatesFromCache(String collection) {
+		ArrayList<String> theTemplates = new ArrayList<String>();
+
+		// Iterate the Hash
+		for (Template template : templateCache.values()) {
+			if (template.getCollection().equals(collection)) {
+				theTemplates.add(template.getFullName());
+			}
+		}
+		
+		// Return the JSON String
+		return theTemplates;  
+	}
+
+	/**
+	 * @param collection
+	 * @return
+	 */
+	public static ArrayList<String> getTemplatesFromDb(String collection) {
+		//String query = "WHERE COLLECTION = :collection";
+		ArrayList<String> theTemplates = new ArrayList<String>();
+		// Execute Query and populate returnTemplates list
+		
+		// Return the JSON String
+		return theTemplates;  
+	}
+
+    /**********************************************************************************
+	 * Get a template as jSon, from cache or persistance (if enabled) 
+	 * @param String fullName - the Template Full Name
+	 */
+	public static String getTemplateAsJson(String fullName) throws MergeException {
+		Template template = getTemplate(fullName, "", new HashMap<String,String>());
+		return template.asJson(true);
+	}
+	
+    /**********************************************************************************
+	 * Persist a template as jSon, to Disk system if persistance is not enabled.  
+	 * @param String json the template json
+	 */
+	public static String saveTemplateFromJson(String json) throws MergeException {
+		Template template = cacheFromJson(json);
+		if (dbPersistance) {
+			saveTemplateToDatabase(template);
+		} else {
+			saveTemplateToJsonFolder(template);
+		}
+		return template.asJson(true);
+	}
+	
     /**********************************************************************************
 	 * Cache JSON templates found in the template folder. 
 	 * Note: The template folder is initialized from Merge.java from the web.xml value  for 
 	 * merge-templates-folder, if it is not initilized the default value is /tmp/templates
 	 * @param folder that contains template files
+     * @throws MergeException - Template Clone errors
 	 */
-    public static void loadAll() {
+    public static void loadAll() throws MergeException {
     	if (TemplateFactory.templateFolder.isEmpty()) { return; }
     	int count = 0;
     	
@@ -251,10 +323,15 @@ final public class TemplateFactory {
     	for (File file : folder.listFiles()) {
     		if (!file.isDirectory()) {
     			try {
-    				cacheFromJson(new Scanner(file).useDelimiter("\\Z").next());
+    				String json = String.join("\n", Files.readAllLines(Paths.get(file.getPath())));
+    				cacheFromJson(json);
+    			} catch (JsonSyntaxException e) {
+    				log.warn("Malformed JSON Template:" + file.getName());
     			} catch (FileNotFoundException e) {
     				log.info("Moving on after file read error on " + file.getName());
-    			}
+    			} catch (IOException e) {
+    				log.warn("IOException Reading:" + file.getName());
+				}
     		}
     		count++;
     	}
@@ -265,44 +342,29 @@ final public class TemplateFactory {
 	 * Construct a template from a json formated string ad add it to the Cache 
 	 * @param request
 	 * @return the Template created
+	 * @throws MergeException - clone errors
 	 */
-    public static Template cacheFromJson(String jsonString)  {
+    public static Template cacheFromJson(String jsonString) throws MergeException  {
     	Template template;
-		Gson gson = new Gson();
+    	GsonBuilder builder = new GsonBuilder();
+    	builder.registerTypeAdapter(Directive.class, new DirectiveDeserializer());
+    	builder.registerTypeAdapter(Provider.class, new ProviderDeserializer());
+    	Gson gson = builder.create();
+		
 		template = gson.fromJson(jsonString, Template.class);   
 		templateCache.remove(template.getFullName());
 		templateCache.putIfAbsent(template.getFullName(), template);
 		log.info(template.getFullName() + " has been cached");
-		return templateCache.get(template.getFullName());
+		return templateCache.get(template.getFullName()).clone(new HashMap<String,String>());
     }
-    
-	
-	/**********************************************************************************
-	 * <p>Persist the list of JSON templates in the Request object</p>
-	 *
-	 * @param  request HttpServletRequest
-	 * @throws MergeException 
-	 * @return Template The new Template object
-	 * @see Template
-	 */
-	public static String putTemplates(String request) throws MergeException {
-		Gson gson = new Gson();
-		@SuppressWarnings("unchecked")
-		ArrayList<Template> templates = gson.fromJson(request, ArrayList.class); 
-
-		for (Template template : templates) {
-			saveTemplate(template);
-		}
-		return "";
-	}
 
 	/**********************************************************************************
-	 * save provided template to the Template database, and add it to the Cache
+	 * save provided template to the Template database
 	 * @param Template template the Template to save
 	 * @return a cloned copy of the Template ready for Merge Processing 
 	 * @throws MergeException on Template Clone Errors
 	 */
-	public static Template saveTemplate(Template template) throws MergeException {
+	public static Template saveTemplateToDatabase(Template template) throws MergeException {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		session.delete( template ); // (Where FullName=FullName)
@@ -310,37 +372,73 @@ final public class TemplateFactory {
 		session.getTransaction().commit();
 		session.close();		
 		log.info("Template Saved: " + template.getFullName());
-		
-		templateCache.remove(template.getFullName());
-		templateCache.putIfAbsent(template.getFullName(), template);
-		log.info("Template Cached: " + template.getFullName() );
-		
-		return templateCache.get(template.getFullName()).clone(new HashMap<String,String>());
+		return template;
+	}
+	/**********************************************************************************
+	 * save provided template to the Template Folder as JSON, and add it to the Cache
+	 * @param Template template the Template to save
+	 * @return a cloned copy of the Template ready for Merge Processing 
+	 * @throws MergeException on Template Clone Errors
+	 */
+	public static Template saveTemplateToJsonFolder(Template template) throws MergeException {
+		String fileName = templateFolder + template.getFullName();
+	    try {
+	    	File file = new File( fileName );
+			file.createNewFile( );
+		    FileWriter fw = new FileWriter( file.getAbsoluteFile( ) );
+		    BufferedWriter bw = new BufferedWriter( fw );
+		    bw.write( template.asJson(true) );
+		    bw.close( );			
+		} catch (IOException e) {
+			throw new MergeException(e, "Template Save to Disk error", fileName);
+		}
+		return template;
 	}
 	
     /**********************************************************************************
 	 * Reset the cache and Hibernate Connection
 	 */
     public static void reset() {
-    	log.warn("Template Cache Reset");
+    	log.warn("Template Cache / Hibernate Reset");
     	templateCache.clear();
-		log.info("Cache Reset");
+		initilizeHibernate();
+		log.info("Reset Complete");
     }
 
     /**********************************************************************************
 	 * Initialize the Hibernate Connection
 	 */
 	public static void initilizeHibernate() {
-	    Configuration configuration = new Configuration();
-	    configuration.configure();
-		serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
-	            configuration.getProperties()).build();
-	    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+		if (dbPersistance) {
+		    Configuration configuration = new Configuration();
+		    configuration.configure();
+			serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
+		            configuration.getProperties()).build();
+		    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+			log.info("Hibernate Initilized");
+		}
 	}
 
+    /**********************************************************************************
+	 * Get the size of the template cache collection
+	 */
 	public static int size() {
 		return templateCache.size();
 	}
 
+	public static boolean isDbPersistance() {
+		return dbPersistance;
+	}
 
+	public static void setDbPersistance(boolean dbPersistance) {
+		TemplateFactory.dbPersistance = dbPersistance;
+	}
+
+	public static String getTemplateFolder() {
+		return templateFolder;
+	}
+
+	public static void setTemplateFolder(String templateFolder) {
+		TemplateFactory.templateFolder = templateFolder;
+	}
 }

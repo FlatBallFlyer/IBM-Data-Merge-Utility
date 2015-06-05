@@ -1,0 +1,17 @@
+{
+	"sequence": 1,
+	"type": 2,
+	"softFail": false,
+	"description": "TestInsertSubsTag",
+	"collectionName": "",
+	"collectionColumn": "",
+	"notLast": ["empty"],
+	"onlyLast": [],
+	"provider": {
+		"type": 2,
+		"condition": 0,
+		"tag": "Foo",
+		"value": "",
+		"list": false
+	 }
+}

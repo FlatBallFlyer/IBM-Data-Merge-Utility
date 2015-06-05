@@ -58,7 +58,7 @@ public class Persist extends HttpServlet {
 		}
     	
     	try {
-    		out.write(TemplateFactory.getTemplates(request.toString()));
+    		out.write(TemplateFactory.getTemplateAsJson(request.getParameter("fullname")));
     		out.close();    		
 		} catch (MergeException e) {
 			out.write(e.getJsonErrorMessage());
@@ -75,7 +75,6 @@ public class Persist extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) {
 		PrintWriter out = null;
-    	Template template;
 
 		try {
 			// Create the response writer
@@ -87,7 +86,7 @@ public class Persist extends HttpServlet {
 		}
     	
     	try {
-    		out.write(TemplateFactory.putTemplates(request.toString()));
+    		out.write(TemplateFactory.saveTemplateFromJson(request.getParameter("template")));
     		out.close();    		
 		} catch (MergeException e) {
 			out.write(e.getJsonErrorMessage());

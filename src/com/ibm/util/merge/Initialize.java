@@ -23,11 +23,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 @WebServlet("/Initialize")
 public class Initialize extends HttpServlet {
-
+	private static final Logger log = Logger.getLogger( Initialize.class.getName() );
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -46,7 +47,13 @@ public class Initialize extends HttpServlet {
 
 		// Initialize cache (Load JSON Persisted Templates)
 		TemplateFactory.reset();
-		TemplateFactory.loadFolder(getInitParameter("merge-templates-folder"));
+		TemplateFactory.setTemplateFolder(getInitParameter("merge-templates-folder"));
+		TemplateFactory.setDbPersistance(getInitParameter("templates-persist").equals("Database"));
+		try {
+			TemplateFactory.loadAll();
+		} catch (MergeException e) {
+			log.warn("Factory Load All I/O Error, check web.xml for merge-templates-folder and templates-persist values");
+		}
 
 		// Initialize Template-Factory Hibernate objects
 		TemplateFactory.initilizeHibernate();

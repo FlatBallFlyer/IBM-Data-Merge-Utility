@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
 
 import com.ibm.util.merge.ConnectionFactory;
@@ -42,6 +43,7 @@ public class ProviderSql extends Provider implements Cloneable {
 	 */
 	public ProviderSql() {
 		super();
+		this.setType(Provider.TYPE_SQL);
 	}
 	
 	/**
@@ -49,7 +51,8 @@ public class ProviderSql extends Provider implements Cloneable {
 	 * @see com.ibm.util.merge.directive.provider.Provider#clone(com.ibm.util.merge.directive.Directive)
 	 */
 	public ProviderSql clone() throws CloneNotSupportedException {
-		return (ProviderSql) super.clone();
+		ProviderSql provider = (ProviderSql) super.clone();
+		return provider;
 	}
 
 	/**
@@ -59,7 +62,8 @@ public class ProviderSql extends Provider implements Cloneable {
 	 */
 	@Override
 	public void getData() throws MergeException {
-		DataTable table = this.reset();
+		this.reset();
+		DataTable table = this.getNewTable();
 		Connection con = null;
 		
 		try {

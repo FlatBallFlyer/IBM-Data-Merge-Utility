@@ -14,27 +14,19 @@
  * limitations under the License.
  *
  */
-package com.ibm.util.merge.directive;
+package com.ibm.util.merge.directive.provider;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.provider.ProviderIf;
+@RunWith(Suite.class)
+@SuiteClasses({ 
+	DataTableTest.class, 
+	ProviderCsvTest.class,
+	ProviderHtmlTest.class, 
+	ProviderSqlTest.class, 
+	ProviderTagTest.class 
+})
 
-public class InsertSubsIf extends InsertSubs implements Cloneable {
-
-	/**
-	 * Simple Constructor
-	 */
-	public InsertSubsIf() {
-		super();
-		this.setType(TYPE_IF_INSERT);
-		this.setProvider(new ProviderIf());
-	}
-
-	/** 
-	 * Simple Clone constructor
-	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
-	 */
-	public InsertSubsIf clone(Template owner) throws CloneNotSupportedException {
-		return (InsertSubsIf) super.clone();
-	}
+public class AllTests {
 }

@@ -23,7 +23,11 @@
     </init-param>
     <init-param>
 		<param-name>merge-templates-folder</param-name>
-		<param-value>/tmp/templates/</param-value>
+		<param-value>/WEB-INF/templates/</param-value>
+    </init-param>
+    <init-param>
+		<param-name>templates-persist</param-name>
+		<param-value>Database-NOT-</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -39,6 +43,10 @@
   <servlet-mapping>
     <servlet-name>Persist</servlet-name>
     <url-pattern>/Template/</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Query</servlet-name>
+    <url-pattern>/Query/</url-pattern>
   </servlet-mapping>
   <resource-ref>
     <description>Test Data DB Connection</description>

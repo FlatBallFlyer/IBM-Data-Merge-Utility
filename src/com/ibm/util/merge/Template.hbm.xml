@@ -25,11 +25,11 @@
         <id name="idtemplate" column="ID_TEMPLATE">
             <generator class="native"/>
         </id>
-        <natural-id mutable="false">
+<!--    <natural-id mutable="false">  -->
 			<property name="collection" 	column="COLLECTION"		/>
 			<property name="name" 			column="NAME"			/>
 			<property name="columnValue" 	column="COLUMN_VALUE"	/>
-		</natural-id>
+<!-- 	</natural-id> -->
 		<property name="description" 	column="DESCRIPTION"	/>
 		<property name="outputFile" 	column="OUTPUT_FILE"	/>
 		<property name="content" 		column="CONTENT"		/>

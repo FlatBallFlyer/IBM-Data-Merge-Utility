@@ -1,0 +1,28 @@
+{
+	"collection":"root",
+	"name":"csvDefault",
+	"columnValue":"",
+	"description":"",
+	"outputFile":"",
+	"content":
+"CsvDefaultData Test 
+\u003ctkBookmark name\u003d\"sub\"/\u003e",
+	"directives":[
+		{
+			"sequence":1,
+			"type":21,
+			"collectionName":"subs",
+			"notLast":["coma","semi"],
+			"onlyLast":["period","colon"],
+			"softFail":false,
+			"description":"Insert Sub Templates",
+			"provider":
+			{
+				"type":3,
+				"staticData":"A,B,C\n1,2,3\n4,5,6",
+				"url":"",
+				"tag":""
+			}
+		}	
+	]
+}

@@ -19,6 +19,7 @@
         .replaced		{ color: red; font-style: italic; font-weight: bold; }
         .footerLink		{ text-align: right; font-size: 0.85em;}
         .footnote		{ font-size: 0.8em; }
+        .replaceHash	{ border: 1px solid; }
         ul				{ margin: 4px 0px 10px 2px; }
         h2				{ margin: 4px 0px 10px 2px; }
         h3				{ margin: 10px 0px 2px 4px; }
@@ -44,6 +45,8 @@
 		<li><a href="#Editor">The Template Editor</a></li>
 		<li><a href="#Output">Output Files</a></li>
 	</ul></li>
+	<li><a href="#Persistence">Template Persistence Options</a></li>
+	<li><a href="#jSon">Template jSon Format</a></li>
 	<li><a href="#Directives">Directives</a>
 	<ul>
 		<li><a href="#Require">Require</a></li>
@@ -75,8 +78,7 @@
 		<li><a href="#DeployTomcat">Deploying on Linux with Tomcat and MySql</a></li>
 		<li><a href="#DeployOracle">Deploying on Linux with Tomcat and Oracle Express</a></li>
 	</ul></li>
-	<li><a href="#Persistence">Template Persistence Options</a></li>
-	<li><a href="#jSon">The Template jSon Format</a></li>
+	<li><a href="#jSonFull">Sample Template with all Directives in jSon Format</a></li>
 </ul>
 	
 	<div class="section">
@@ -312,10 +314,26 @@ limitations under the License.
 		on the IDMU server, or both. Templates are loaded into cache from the TemplateJSON folder on server startup, 
 		or whenever a <span class="keyword">DragonflyReload</span> option is specified on a Merge request. 
 		When a Merge request needs a template that is not found in the cache, it looks to the Tempalte Database.
-		It is possible to deploy IDMU without a Template Database. If this is done, any request for a tempalte 
-		that is not cached from the TemplateJSON directory will throw a Merge Exception.  
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-	</div>
+		It is possible to deploy IDMU without a Template Database, set the templates-persist value in the config.xml
+		to "Database" to prevent the template cache from attempting to load from at Template Database.  
+	<div class="footerLink"><a href="#Top">Back To Top</a></div></div>	
+
+	<div class="section">
+	<h3><a id="jSon">Template Object JSON Format</a></h3>
+	<p>IDMU Supports a Template Get/Post service that is used by the Template Editor, anc can be used to 
+		eaisly export/import Templates between systems. The http://IDMU/persist.html servlet can be used with
+		an http get request to get a jSon formated copy of a template, and with an http post to store a template
+		in the Template Database.</p>
+	<p>Template JSON Data takes the following format<p>
+	<div class="json"><pre><code>{	"collection":<span class="description">The Collection Name</span>,
+	"columnValue":<span class="description">The Column Value - For Column Associated Sub-Templates</span>,
+	"name":<span class="description">The Template Name</span>,
+	"description":<span class="description">The Template Description (Optional)</span>,
+	"outputFile":<span class="description">The Output File Name (Optional)</span>,
+	"content":<span class="description">The Template Content</span>,
+	"directives":[<span class="description">A list of Directive Objects.</span>]
+}	</code></pre></div>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div></div>
 
 	<div class="section">
 	<h3><a id="Require">Require Directive</a></h3>
@@ -325,9 +343,16 @@ limitations under the License.
 	<div class="metadata"><h4>The Require directive has the following Options</h4>
 	<ul>
 		<li><span class="option">Tags</span> - The comma separated list of requried Tags</li>
-	</ul></div>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-	</div>
+	</ul>
+
+		<h4>The Require Directive JSON</h4>
+<div class="json"><pre><code>{	"type":0,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"tags":[<span class="description">List of Tag Strings</span>],
+}</code></pre></div>
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+</div></div>
 		
 	<div class="section">
 	<h3><a id="ReplaceVal">Replace Value Directive</a></h3>
@@ -340,14 +365,42 @@ limitations under the License.
 		<li><span class="option">From</span> - The value to replace</li>
 		<li><span class="option">To</span> - The value to replace it with</li>
 	</ul></div>
+		<h4>The Replace Directive JSON</h4>
+<div class="json"><pre><code>{	"type":1,
+	"description":<span class="description">Directive Description (Optional)</span>,
+	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
+	"from":<span class="description">The value to replace (will be wrapped in {brackets})</span>,
+	"to":<span class="description">The value to replace with</span>
+}</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-	</div>
+</div>
+
 
 	<div class="section">
 	<h3><a id="InsertTag">Insert Sub-Templates from Tag Data Directive</a></h3>
 	<p>The Insert Sub-Templates If directive combines the functionality of the
 		<a href="#Inserting">Insert Sub-Templates</a> with the 
 		<a href="#ProviderTag">Tag</a> data provider.</p>
+
+	<h4>The Insert Sub-Template from Tag Data JSON</h4>
+	<div class="json"><pre><code>{
+	"sequence": 1,
+	"type": 2,
+	"softFail": false,
+	"description": "TestInsertSubsTag",
+	"collectionName": "",
+	"collectionColumn": "",
+	"notLast": ["empty"],
+	"onlyLast": [],
+	"provider": {
+		"type": 2,
+		"condition": 0,
+		"tag": "Foo",
+		"value": "",
+		"list": false
+	 }
+}</code></pre></div>
+
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 	</div>
 		
@@ -356,6 +409,26 @@ limitations under the License.
 	<p>The Insert Sub-Templates from SQL directive combines the functionality of the
 		<a href="#InsertSubs">Insert Sub-Templates</a> with the 
 		<a href="#ProviderJdbc">SQL</a> data provider.</p>
+
+	<h4>The Insert Sub-Template from Sql Data JSON</h4>
+	<div class="json"><pre><code>{
+	"sequence": 1,
+	"type": 10,
+	"softFail": false,
+	"description": "TestInsertSubsSql",
+	"collectionName": "",
+	"collectionColumn": "",
+	"notLast": ["empty"],
+	"onlyLast": [],
+	"provider": {
+		"type": 1,
+		"source": "",
+		"columns": "A,B,C,1,2,3,4,5,6",
+		"from": "",
+		"where": ""
+	 }
+}</code></pre></div>
+
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 	</div>
 		
@@ -364,6 +437,20 @@ limitations under the License.
 	<p>The Replace Row from SQL directive combines the functionality of
 		<a href="#ReplaceRow">Replace Row</a> with the 
 		<a href="#ProviderJdbc">SQL</a> data provider.</p>
+	<h4>The Replace Values From Sql Row JSON</h4>
+	<div class="json"><pre><code>{
+	"sequence": 1,
+	"type": 11,
+	"softFail": false,
+	"description": "TestReplaceRowSql",
+	"provider": {
+		"type": 1,
+		"source": "",
+		"columns": "A,B,C,1,2,3,4,5,6",
+		"from": "",
+		"where": ""
+	 }
+}</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 	</div>
 		
@@ -372,6 +459,22 @@ limitations under the License.
 	<p>The Replace Column from SQL directive combines the functionality of
 		<a href="#ReplaceCol">Replace Col</a> with the 
 		<a href="#ProviderJdbc">SQL</a> data provider.</p>
+	<h4>The Get Replace Values From Sql Column JSON</h4>
+	<div class="json"><pre><code>{
+	"sequence": 1,
+	"type": 12,
+	"softFail": false,
+	"description": "TestReplaceColSql",
+	"fromColumn": "Foo",
+	"toColumn": "",
+	"provider": {
+		"type": 1,
+		"source": "",
+		"columns": "A,B,C,1,2,3,4,5,6",
+		"from": "",
+		"where": ""
+	}
+}</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 	</div>
 		
@@ -380,6 +483,23 @@ limitations under the License.
 	<p>The Insert Sub-Templates from CSV directive combines the functionality of the
 		<a href="#InsertSubs">Insert Sub-Templates</a> with the 
 		<a href="#ProviderCsv">CSV</a> data provider.</p>
+	<h4>The Insert Sub-Templates from Csv JSON</h4>
+	<div class="json"><pre><code>{
+	"sequence": 1,
+	"type": 21,
+	"softFail": false,
+	"description": "TestInsertSubsCsv",
+	"collectionName": "",
+	"collectionColumn": "",
+	"notLast": ["empty"],
+	"onlyLast": [],
+	"provider": {
+		"type": 3,
+		"staticData": "A,B,C\n1,2,3\n4,5,6",
+		"url": "",
+		"tag": ""
+	}
+}</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 	</div>
 
@@ -388,6 +508,19 @@ limitations under the License.
 	<p>The Replace Row from CSV directive combines the functionality of
 		<a href="#ReplaceRow">Replace Row</a> with the 
 		<a href="#ProviderCsv">CSV</a> data provider.</p>
+	<h4>The Get Replace Values From Csv Row JSON</h4>
+	<div class="json"><pre><code>{
+	"sequence": 1,
+	"type": 22,
+	"softFail": false,
+	"description": "TestReplaceRowCsv",
+	"provider": {
+		"type": 3,
+		"staticData": "A,B,C\n1,2,3\n4,5,6",
+		"url": "",
+		"tag": ""
+	}
+}</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 	</div>
 		
@@ -396,6 +529,21 @@ limitations under the License.
 	<p>The Replace Column from CSV directive combines the functionality of
 		<a href="#ReplaceCol">Replace Col</a> with the 
 		<a href="#ProviderCsv">CSV</a> data provider.</p>
+	<h4>The Get Replace Values From Csv Column JSON</h4>
+	<div class="json"><pre><code>{
+	"sequence": 1,
+	"type": 23,
+	"softFail": false,
+	"description": "TestReplaceColCsv",
+	"fromColumn": "Foo",
+	"toColumn": "",
+	"provider": {
+		"type": 3,
+		"staticData": "A,B,C\n1,2,3\n4,5,6",
+		"url": "",
+		"tag": ""
+	}
+}</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 	</div>
 
@@ -404,6 +552,23 @@ limitations under the License.
 	<p>The Insert Sub-Templates from HTML directive combines the functionality of the
 		<a href="#InsertSubs">Insert Sub-Templates</a> with the 
 		<a href="#ProviderHtml">HTML</a> data provider.</p>
+	<h4>The Insert Sub-Templates from Html Table Rows JSON</h4>
+	<div class="json"><pre><code>{
+	"sequence": 1,
+	"type": 31,
+	"softFail": false,
+	"collectionName": "",
+	"collectionColumn": "",
+	"notLast": ["empty"],
+	"onlyLast": [],
+	"description": "TestInsertSubsHtml",
+	"provider": {
+		"type": 4,
+		"staticData": "A,B,C\n1,2,3\n4,5,6",
+		"url": "",
+		"tag": ""
+	}
+}</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 	</div>
 
@@ -412,6 +577,19 @@ limitations under the License.
 	<p>The Replace Row from HTML directive combines the functionality of
 		<a href="#ReplaceRow">Replace Row</a> with the 
 		<a href="#ProviderHtml">HTML</a> data provider.</p>
+	<h4>The Get Replace Values From Html Table Row JSON</h4>
+	<div class="json"><pre><code>{
+	"sequence": 1,
+	"type": 32,
+	"softFail": false,
+	"description": "TestReplaceRowHtml",
+	"provider": {
+		"type": 4,
+		"staticData": "A,B,C\n1,2,3\n4,5,6",
+		"url": "",
+		"tag": ""
+	}
+}</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 	</div>
 		
@@ -420,6 +598,21 @@ limitations under the License.
 	<p>The Replace Column from HTML directive combines the functionality of
 		<a href="#ReplaceCol">Replace Col</a> with the 
 		<a href="#ProviderHtml">HTML</a> data provider.</p>
+	<h4>The Get Replace Values From Html Table Column JSON</h4>
+	<div class="json"><pre><code>{
+	"sequence": 1,
+	"type": 33,
+	"softFail": false,
+	"description": "TestReplaceColHtml",
+	"fromColumn": "Foo",
+	"toColumn": "",
+	"provider": {
+		"type": 4,
+		"staticData": "A,B,C\n1,2,3\n4,5,6",
+		"url": "",
+		"tag": ""
+	}
+}</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 	</div>
 
@@ -433,14 +626,33 @@ limitations under the License.
 		<li><span class="option">From Attribute</span> - Name of the attribute to use as a "From" value</li>
 		<li><span class="option">To Attribute</span> - Name of the attribute to use as a "To" value</li>
 	</ul></div>
-	<p>By way of example, the following options will produce the following replace hash</p>
+	<p>By way of example, the following options:</p>
 	<ul>
 		<li><span class="option">Element Selector</span> - Input</li>
 		<li><span class="option">From Attribute</span> - ID</li>
 		<li><span class="option">To Attribute</span> - Empty (content of the selected element)</li>
 	</ul> 
-	<textarea></textarea>
-	<table><tr><th>From</th><th>To</th></tr></table>
+	<p>With this HTML Data</p>
+	<textarea>HTML Data</textarea>
+	<p>will produce the following replace hash</p>
+	<table class="replaceHash">
+		<tr><th>From</th><th>To</th></tr>
+		<tr><td>From</td><td>To</td></tr>
+	</table>
+	<h4>The Get Replace Values From Html Markup JSON</h4>
+	<div class="json"><pre><code>{
+	"sequence": 1,
+	"type": 34,
+	"softFail": false,
+	"description": "TestMarkupSubsHtml",
+	"pattern": "TestPattern",
+	"provider": {
+		"type": 4,
+		"staticData": "A,B,C\n1,2,3\n4,5,6",
+		"url": "",
+		"tag": ""
+	}
+}</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 	</div>
 	
@@ -697,158 +909,170 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 	</div>
 	
-	<div class="section">
-	<h3><a id="jSon">Template Object JSON Format</a></h3>
-	<p>IDMU Supports a Template Get/Post service that is used by the Template Editor, anc can be used to 
-		eaisly export/import Templates between systems. The http://IDMU/persist.html servlet can be used with
-		an http get request to get a jSon formated copy of a template, and with an http post to store a template
-		in the Template Database.</p>
-	<p>Template JSON Data takes the following format<p>
-	<div class="json"><pre><code>{	"collection":<span class="description">The Collection Name</span>,
-	"columnValue":<span class="description">The Column Value - For Column Associated Sub-Templates</span>,
-	"name":<span class="description">The Template Name</span>,
-	"description":<span class="description">The Template Description (Optional)</span>,
-	"outputFile":<span class="description">The Output File Name (Optional)</span>,
-	"content":<span class="description">The Template Content</span>,
-	"directives":[<span class="description">A list of Directive Objects.</span>]
-}</code></pre></div>
-<div class="footerLink"><a href="#Top">Back To Top</a></div></div>
 
-<div class="section"><h3>Directive Objects JSON Formats</h3>
-	<ul>
-		<li>The Require Directive
-<div class="json"><pre><code>{	"type":0,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"tags":[<span class="description">List of Tag Strings</span>],
-}</code></pre></div>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div></li>	
-		<li>The Replace Value Directive
-<div class="json"><pre><code>{	"type":1,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"from":<span class="description">The value to replace (will be wrapped in {brackets})</span>,
-	"to":<span class="description">The value to replace with</span>
-}</code></pre></div>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div></li>	
-		<li>The Insert Sub-Templates from Tag Directive
-<div class="json"><pre><code>{	"type":2,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"collectionName":<span class="description">The Collection to insert sub-templates from</span>,
-	"collectionColumn":<span class="description">The Column to use when selecting sub-templates (Optional)</span>,
-	"notLast":[<span class="description">List of Tags to replace with blank values on all but the last row</span>],
-	"onlyLast":[<span class="description">List of Tags to replace with blank values on the last row</span>],
-	"provider":{<span class="description">An Tag Data Provider</span>}
-}</code></pre></div>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div></li>	
-		<li>The Insert Sub-Templates from Sql Rows Directive
-<div class="json"><pre><code>{	"type":10,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"collectionName":<span class="description">The Collection to insert sub-templates from</span>,
-	"collectionColumn":<span class="description">The Column to use when selecting sub-templates (Optional)</span>,
-	"notLast":[<span class="description">List of Tags to replace with blank values on all but the last row</span>],
-	"onlyLast":[<span class="description">List of Tags to replace with blank values on the last row</span>],
-	"provider":{<span class="description">A SQL Data Provider</span>}
-}</code></pre></div>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div></li>	
-		<li>The Get Replace Values from SQL Row Directive
-<div class="json"><pre><code>{	"type":11,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"provider":{<span class="description">A SQL Data Provider</span>}
-}</code></pre></div>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div></li>	
-		<li>The Get Replace Values from SQL Column Directive
-<div class="json"><pre><code>{	"type":12,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"fromColumn":<span class="description">The Column name that is used for From values</span>,
-	"toColumn":<span class="description">The Column name that is used for To values</span>,
-	"provider":{<span class="description">A SQL Data Provider</span>}
-}</code></pre></div>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div></li>	
-		<li>The Insert Sub-Templates from CSV Rows Directive
-<div class="json"><pre><code>{	"type":21,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"collectionName":<span class="description">The Collection to insert sub-templates from</span>,
-	"collectionColumn":<span class="description">The Column to use when selecting sub-templates (Optional)</span>,
-	"notLast":[<span class="description">List of Tags to replace with blank values on all but the last row</span>],
-	"onlyLast":[<span class="description">List of Tags to replace with blank values on the last row</span>],
-	"provider":{<span class="description">An HTTP Data Provider</span>}
-}</code></pre></div>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div></li>	 
-		<li>The Get Replace Values from CSV Row Directive
-<div class="json"><pre><code>{	"type":22,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"provider":{<span class="description">An HTTP Data Provider</span>}
-}</code></pre></div>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div></li>	 
-		<li>The Get Replace Values from CSV Column Directive
-<div class="json"><pre><code>{	"type":23,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"fromColumn":<span class="description">The Column name that is used for From values</span>,
-	"toColumn":<span class="description">The Column name that is used for To values</span>,
-	"provider":{<span class="description">An HTTP Data Provider</span>}
-}</code></pre></div>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div></li>	 
-		<li>The Insert Sub-Templates from HTML Tables Directive
-<div class="json"><pre><code>{	"type":31,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"collectionName":<span class="description">The Collection to insert sub-templates from</span>,
-	"collectionColumn":<span class="description">The Column to use when selecting sub-templates (Optional)</span>,
-	"notLast":[<span class="description">List of Tags to replace with blank values on all but the last row</span>],
-	"onlyLast":[<span class="description">List of Tags to replace with blank values on the last row</span>],
-	"provider":{<span class="description">An HTTP Data Provider</span>}
-}</code></pre></div>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div></li>	
-		<li>The Get Replace Values from HTML Table row Directive
-<div class="json"><pre><code>{	"type":32,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"provider":{<span class="description">An HTTP Data Provider</span>}
-}</code></pre></div>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div></li>	 
-		<li>The Get Replace Values from HTML Table Columns Directive
-<div class="json"><pre><code>{	"type":33,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"fromColumn":<span class="description">The Column name that is used for From values</span>,
-	"toColumn":<span class="description">The Column name that is used for To values</span>,
-	"provider":{<span class="description">An HTTP Data Provider</span>}
-}</code></pre></div>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div></li>	 
-		<li>The Get Replace Values from HTML Markup Directive
-<div class="json"><pre><code>{	"type":34,
-	"description":<span class="description">Directive Description (Optional)</span>,
-	"softFail":true|false<span class="description">Directive level Soft Fail Indicator</span>,
-	"provider":{<span class="description">An HTTP Data Provider</span>}
-}</code></pre></div></li>
-	</ul>
+<div class="section"><h3><a id="jSonFull">Sample Template with ALL directives</a></h3>
+	<div class="json"><pre><code>
+{
+	"collection":"root",
+	"columnValue":"none",
+	"name":"default",
+	"description":"",
+	"outputFile":"",
+	"content":"Default",
+	"directives":[
+		{
+		  	"type": 0,
+		  	"softFail": false,
+		  	"description": "TestRequire",
+		  	"tags": ["Foo","empty"]
+		},{
+			"type": 1,
+			"softFail": false,
+			"description": "Test Replace1",
+			"from": "Foo",
+			"to": "Test Foo Value"
+		},{
+			"type": 2,
+			"softFail": false,
+			"description": "TestInsertSubsTag",
+			"collectionName": "",
+			"collectionColumn": "",
+			"notLast": ["empty"],
+			"onlyLast": [],
+			"provider": {
+				"type": 2,
+				"condition": 0,
+				"tag": "Foo",
+				"value": "",
+				"list": false
+			 }
+		},{
+			"type": 10,
+			"softFail": false,
+			"description": "TestInsertSubsSql",
+			"collectionName": "",
+			"collectionColumn": "",
+			"notLast": ["empty"],
+			"onlyLast": [],
+			"provider": {
+				"type": 1,
+				"source": "",
+				"columns": "A,B,C,1,2,3,4,5,6",
+				"from": "",
+				"where": ""
+			 }
+		},{
+			"type": 11,
+			"softFail": false,
+			"description": "TestReplaceRowSql",
+			"provider": {
+				"type": 1,
+				"source": "",
+				"columns": "A,B,C,1,2,3,4,5,6",
+				"from": "",
+				"where": ""
+			 }
+		},{
+			"type": 12,
+			"softFail": false,
+			"description": "TestReplaceColSql",
+			"fromColumn": "Foo",
+			"toColumn": "",
+			"provider": {
+				"type": 1,
+				"source": "",
+				"columns": "A,B,C,1,2,3,4,5,6",
+				"from": "",
+				"where": ""
+			}
+		},{
+			"type": 21,
+			"softFail": false,
+			"description": "TestInsertSubsCsv",
+			"collectionName": "",
+			"collectionColumn": "",
+			"notLast": ["empty"],
+			"onlyLast": [],
+			"provider": {
+				"type": 3,
+				"staticData": "A,B,C\n1,2,3\n4,5,6",
+				"url": "",
+				"tag": ""
+			}
+		},{
+			"type": 22,
+			"softFail": false,
+			"description": "TestReplaceRowCsv",
+			"provider": {
+				"type": 3,
+				"staticData": "A,B,C\n1,2,3\n4,5,6",
+				"url": "",
+				"tag": ""
+			}
+		},{
+			"type": 23,
+			"softFail": false,
+			"description": "TestReplaceColCsv",
+			"fromColumn": "Foo",
+			"toColumn": "",
+			"provider": {
+				"type": 3,
+				"staticData": "A,B,C\n1,2,3\n4,5,6",
+				"url": "",
+				"tag": ""
+			}
+		},{
+			"type": 31,
+			"softFail": false,
+			"collectionName": "",
+			"collectionColumn": "",
+			"notLast": ["empty"],
+			"onlyLast": [],
+			"description": "TestInsertSubsHtml",
+			"provider": {
+				"type": 4,
+				"staticData": "A,B,C\n1,2,3\n4,5,6",
+				"url": "",
+				"tag": ""
+			}
+		},{
+			"type": 33,
+			"softFail": false,
+			"description": "TestReplaceColHtml",
+			"fromColumn": "Foo",
+			"toColumn": "",
+			"provider": {
+				"type": 4,
+				"staticData": "A,B,C\n1,2,3\n4,5,6",
+				"url": "",
+				"tag": ""
+			}
+		},{
+			"type": 32,
+			"softFail": false,
+			"description": "TestReplaceRowHtml",
+			"provider": {
+				"type": 4,
+				"staticData": "A,B,C\n1,2,3\n4,5,6",
+				"url": "",
+				"tag": ""
+			}
+		},{
+			"type": 34,
+			"softFail": false,
+			"description": "TestMarkupSubsHtml",
+			"pattern": "TestPattern",
+			"provider": {
+				"type": 4,
+				"staticData": "A,B,C\n1,2,3\n4,5,6",
+				"url": "",
+				"tag": ""
+			}
+		}
+	]
+ }
+	</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-	</div>
-
-<div class="section"><h3>Data Provider Objects JSON Formats</h3>
-	<ul>
-		<li>The SQL (JDBC) Data Provider
-<div class="json"><pre><code>{	"source":<span class="description">The JDBC Data Source Name (From context.xml)</span>,
-	"columns":<span class="description">The Columns to Select - * is supported</span>,
-	"from":<span class="description">The Tables to select from (Optional)</span>,
-	"where":<span class="description">The Where Clause (Optional)</span>
-}</code></pre></div></li>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-		<li>An HTTP Data Provider
-<div class="json"><pre><code>{	"url":<span class="description">The URL used to fetched from</span>,
-	"tag":<span class="description">The Replace Tag that data is fetched from if the URL does not return data</span>
-	"staticData":<span class="description">The Default Data used if the Tag does not exist</span>,
-}</code></pre></div></li>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-	</ul>
-	</div>
+</div>
 </body>
 </html>

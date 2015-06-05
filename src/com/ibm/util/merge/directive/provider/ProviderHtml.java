@@ -27,6 +27,7 @@ import com.ibm.util.merge.MergeException;
 public class ProviderHtml extends ProviderHttp {
 	public ProviderHtml() {
 		super();
+		this.setType(Provider.TYPE_HTML);
 	}
 	
 	/**
@@ -34,13 +35,15 @@ public class ProviderHtml extends ProviderHttp {
 	 * @see com.ibm.util.merge.directive.provider.Provider#clone(com.ibm.util.merge.directive.Directive)
 	 */
 	public ProviderHtml clone() throws CloneNotSupportedException {
-		return (ProviderHtml) super.clone();
+		ProviderHtml provider = (ProviderHtml) super.clone();
+		return provider;
 	}
 
 	/**
 	 * Retrieve the data (superclass HTTP Provider) and parse the CSV data
 	 */
 	public void getData() throws MergeException {
+		
 		super.getData();
 		
 		// Parse the Data
@@ -61,8 +64,9 @@ public class ProviderHtml extends ProviderHttp {
 			
 			// Find and Process Table Row elements
 			Elements rows = table.select("tr");
+			ArrayList<String> newRow = newTable.getNewRow();;
 			for (Element row : rows ) {
-				ArrayList<String> newRow = newTable.getNewRow();
+				if (newRow.size() > 0) {newRow = newTable.getNewRow();}
 				Elements cols = row.select("td");
 				for (Element col : cols ) {
 					newRow.add(col.ownText());

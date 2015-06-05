@@ -30,7 +30,7 @@ public abstract class Directive implements Cloneable{
 	// Directive Types
 	public static final int TYPE_REQUIRE 				= 0;
 	public static final int TYPE_REPLACE_VALUE 			= 1;
-	public static final int TYPE_IF_INSERT	 			= 2;
+	public static final int TYPE_TAG_INSERT	 			= 2;
 	public static final int	TYPE_SQL_INSERT				= 10;
 	public static final int TYPE_SQL_REPLACE_ROW 		= 11;
 	public static final int TYPE_SQL_REPLACE_COL 		= 12;
@@ -54,8 +54,7 @@ public abstract class Directive implements Cloneable{
 	
 	// Attributes
 	private transient Template 	template;
-	private long 		idTemplate 	= 0;
-	private long 		idDirective	= 0;
+	private transient long 		idTemplate 	= 0;
 	private int			sequence	= 0;
 	private int 		type		= 0;
 	private boolean 	softFail	= false;
@@ -118,10 +117,6 @@ public abstract class Directive implements Cloneable{
 		return type;
 	}
 
-	public long getIdDirective() {
-		return idDirective;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -131,10 +126,6 @@ public abstract class Directive implements Cloneable{
 
 	public void setIdTemplate(long idTemplate) {
 		this.idTemplate = idTemplate;
-	}
-
-	public void setIdDirective(long idDirective) {
-		this.idDirective = idDirective;
 	}
 
 	public void setProvider(Provider provider) {
