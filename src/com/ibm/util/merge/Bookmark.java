@@ -25,10 +25,15 @@ import java.util.regex.*;
  * @author  Mike Storey
  */
 public class Bookmark implements Cloneable {
-	private String element;
-	private String name;
-	private int start;
-	private int size;
+	private static final Pattern NAME_PATTERN 		= Pattern.compile("name.*?=.*?\"(.*?)\"");
+	private static final Pattern COLLECTION_PATTERN = Pattern.compile("collection.*?=.*?\"(.*?)\"");
+	private static final Pattern COLUMN_PATTERN 	= Pattern.compile("column.*?=.*?\"(.*?)\"");
+	private String element		= "";
+	private String name			= "";
+	private String collection	= "";
+	private String column		= "";
+	private int start			= 0;
+	private int size			= 0;
 
 	/********************************************************************************
 	 * <p>Bookmark constructor</p>
@@ -38,16 +43,28 @@ public class Bookmark implements Cloneable {
 	 * @throws MergeException Invalid Bookmark
 	 */
 	public Bookmark (String contents, int initialStart) throws MergeException {
-		Pattern p = Pattern.compile("name.*=.*\"(.*)\"");
-		Matcher m = p.matcher(contents);
-		if (m.find()) {
-			element = contents;
-			name = m.group(1);
-			start = initialStart;
-			size = element.length();
+		element = contents;
+		start = initialStart;
+		size = element.length();
+		
+		Matcher nameMatcher = NAME_PATTERN.matcher(contents);
+		if (nameMatcher.find()) {
+			name = nameMatcher.group(1);
 		} else {
-			throw new MergeException("Invalid Bookmark", "Bookmark: " + contents);
+			throw new MergeException("Invalid Bookmark, no name", "Bookmark: " + contents);
 		}
+
+		Matcher collectionMatcher = COLLECTION_PATTERN.matcher(contents);
+		if (collectionMatcher.find()) {
+			collection = collectionMatcher.group(1);
+		} else {
+			throw new MergeException("Invalid Bookmark, no collection", "Bookmark: " + contents);
+		}
+
+		Matcher columnMatcher = COLUMN_PATTERN.matcher(contents);
+		if (columnMatcher.find()) {
+			column = columnMatcher.group(1);
+		} 
 	}
 	
 	/********************************************************************************
@@ -89,6 +106,22 @@ public class Bookmark implements Cloneable {
 	 */
 	public int getSize() {
 		return this.size;
+	}
+
+	public String getCollection() {
+		return collection;
+	}
+
+	public String getColumn() {
+		return column;
+	}
+
+	public void setCollection(String collection) {
+		this.collection = collection;
+	}
+
+	public void setColumn(String column) {
+		this.column = column;
 	}
 
 }

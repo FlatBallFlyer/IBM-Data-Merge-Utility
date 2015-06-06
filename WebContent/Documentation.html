@@ -233,8 +233,10 @@ limitations under the License.
 	</ul>
 	<p>The insertion of sub-templates into a target template is the second core feature of the Merge Utility. 
 	The Insert Rows directives work with a potentially multi-row data set, and sub-templates are inserted 
-	into the target template, at &lt;tkBookmark id="SomeSubTemplate"/&gt; locations, 
-	for each row of the result set. The name attribute of the bookmark identifyies the sub-template to insert.
+	into the target template, at bookmarks for each row of the result set. Bookmarks take the following form <br/>
+	&lt;tkBookmark name="SomeSubTemplate" collection="FromCollection" column="byColumn""/&gt;</br> 
+	The collection and name attributes of the bookmark identify the sub-template to insert. The column attribute
+	if present will insert different sub-templates based on the value in the Column specified here.
 	A template can have multiple bookmarks to insert multiple sub-templates for each row of the result set.</p>
 	
 	<video class="video" controls><source src="video/cut6.mp4" type="video/mp4"></video>
@@ -245,8 +247,6 @@ limitations under the License.
 	If no "empty" value exists for the collection the merge will fail with a "Template Not Found" exception. </p>
 	<div class="metadata"><h4>The Insert Subtemplate directives have the following Options</h4>
 	<ul>
-		<li><span class="option">From Collection</span> - The name of the collection that has the sub-template(s) to insert</li>
-		<li><span class="option">Based on Column</span> - The name of the column used to select sub-templates (Optional)</li>
 		<li><span class="option">Not Last Tags</span> - Tags that should be empty on the last insertion row</li>
 		<li><span class="option">Only Last Tags</span> - Tags that should be empty on all except the last insertion row</li>
 	</ul></div>
@@ -320,7 +320,7 @@ limitations under the License.
 
 	<div class="section">
 	<h3><a id="jSon">Template Object JSON Format</a></h3>
-	<p>IDMU Supports a Template Get/Post service that is used by the Template Editor, anc can be used to 
+	<p>IDMU Supports a Template Get/Post service that is used by the Template Editor, and can be used to 
 		eaisly export/import Templates between systems. The http://IDMU/persist.html servlet can be used with
 		an http get request to get a jSon formated copy of a template, and with an http post to store a template
 		in the Template Database.</p>
@@ -330,7 +330,9 @@ limitations under the License.
 	"name":<span class="description">The Template Name</span>,
 	"description":<span class="description">The Template Description (Optional)</span>,
 	"outputFile":<span class="description">The Output File Name (Optional)</span>,
-	"content":<span class="description">The Template Content</span>,
+	"content":<span class="description">The Template Content</span>
+			<span class="description">NOTE: If you are manualling eding templates, a bookmark &lt;tkBookmark name="SubTemplate"/&gt; 
+			is GSON encoded as \u003ctkBookmark name\u003d\"SubTemplate\"/\u003e</span> 
 	"directives":[<span class="description">A list of Directive Objects.</span>]
 }	</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div></div>
@@ -407,7 +409,7 @@ limitations under the License.
 	<div class="section">
 	<h3><a id="InsertSql">Insert Sub-Templates from Sql Rows Directive</a></h3>
 	<p>The Insert Sub-Templates from SQL directive combines the functionality of the
-		<a href="#InsertSubs">Insert Sub-Templates</a> with the 
+		<a href="#Inserting">Insert Sub-Templates</a> with the 
 		<a href="#ProviderJdbc">SQL</a> data provider.</p>
 
 	<h4>The Insert Sub-Template from Sql Data JSON</h4>
@@ -481,7 +483,7 @@ limitations under the License.
 	<div class="section">
 	<h3><a id="InsertCsv">Insert Sub-Templates from Csv Directive</a></h3>
 	<p>The Insert Sub-Templates from CSV directive combines the functionality of the
-		<a href="#InsertSubs">Insert Sub-Templates</a> with the 
+		<a href="#Inserting">Insert Sub-Templates</a> with the 
 		<a href="#ProviderCsv">CSV</a> data provider.</p>
 	<h4>The Insert Sub-Templates from Csv JSON</h4>
 	<div class="json"><pre><code>{
@@ -550,7 +552,7 @@ limitations under the License.
 	<div class="section">
 	<h3><a id="InsertHtml">Insert Sub-Templates from Html Table Rows Directive</a></h3>
 	<p>The Insert Sub-Templates from HTML directive combines the functionality of the
-		<a href="#InsertSubs">Insert Sub-Templates</a> with the 
+		<a href="#Inserting">Insert Sub-Templates</a> with the 
 		<a href="#ProviderHtml">HTML</a> data provider.</p>
 	<h4>The Insert Sub-Templates from Html Table Rows JSON</h4>
 	<div class="json"><pre><code>{
@@ -918,25 +920,26 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 	"name":"default",
 	"description":"",
 	"outputFile":"",
-	"content":"Default",
+	"content":"This is a test of the encodeing <tkBookmark name=\"test\" collection=\"root\" />",
 	"directives":[
 		{
+			"sequence": 1,
 		  	"type": 0,
 		  	"softFail": false,
 		  	"description": "TestRequire",
 		  	"tags": ["Foo","empty"]
 		},{
+			"sequence": 0,
 			"type": 1,
 			"softFail": false,
 			"description": "Test Replace1",
 			"from": "Foo",
 			"to": "Test Foo Value"
 		},{
+			"sequence": 1,
 			"type": 2,
 			"softFail": false,
 			"description": "TestInsertSubsTag",
-			"collectionName": "",
-			"collectionColumn": "",
 			"notLast": ["empty"],
 			"onlyLast": [],
 			"provider": {
@@ -947,11 +950,10 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 				"list": false
 			 }
 		},{
+			"sequence": 1,
 			"type": 10,
 			"softFail": false,
 			"description": "TestInsertSubsSql",
-			"collectionName": "",
-			"collectionColumn": "",
 			"notLast": ["empty"],
 			"onlyLast": [],
 			"provider": {
@@ -962,6 +964,7 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 				"where": ""
 			 }
 		},{
+			"sequence": 1,
 			"type": 11,
 			"softFail": false,
 			"description": "TestReplaceRowSql",
@@ -973,6 +976,7 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 				"where": ""
 			 }
 		},{
+			"sequence": 1,
 			"type": 12,
 			"softFail": false,
 			"description": "TestReplaceColSql",
@@ -986,11 +990,10 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 				"where": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 21,
 			"softFail": false,
 			"description": "TestInsertSubsCsv",
-			"collectionName": "",
-			"collectionColumn": "",
 			"notLast": ["empty"],
 			"onlyLast": [],
 			"provider": {
@@ -1000,6 +1003,7 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 				"tag": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 22,
 			"softFail": false,
 			"description": "TestReplaceRowCsv",
@@ -1010,6 +1014,7 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 				"tag": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 23,
 			"softFail": false,
 			"description": "TestReplaceColCsv",
@@ -1022,10 +1027,9 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 				"tag": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 31,
 			"softFail": false,
-			"collectionName": "",
-			"collectionColumn": "",
 			"notLast": ["empty"],
 			"onlyLast": [],
 			"description": "TestInsertSubsHtml",
@@ -1036,6 +1040,7 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 				"tag": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 33,
 			"softFail": false,
 			"description": "TestReplaceColHtml",
@@ -1048,6 +1053,7 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 				"tag": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 32,
 			"softFail": false,
 			"description": "TestReplaceRowHtml",
@@ -1058,6 +1064,7 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 				"tag": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 34,
 			"softFail": false,
 			"description": "TestMarkupSubsHtml",
@@ -1070,8 +1077,8 @@ wget https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/IDMU.wa
 			}
 		}
 	]
- }
-	</code></pre></div>
+
+ }	</code></pre></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 </div>
 </body>

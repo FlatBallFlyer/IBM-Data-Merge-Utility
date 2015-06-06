@@ -3,8 +3,6 @@
 	"type": 2,
 	"softFail": false,
 	"description": "TestInsertSubsTag",
-	"collectionName": "",
-	"collectionColumn": "",
 	"notLast": ["empty"],
 	"onlyLast": [],
 	"provider": {

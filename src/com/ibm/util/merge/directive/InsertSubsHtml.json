@@ -2,11 +2,9 @@
 	"sequence": 1,
 	"type": 31,
 	"softFail": false,
-	"collectionName": "",
-	"collectionColumn": "",
+	"description": "TestInsertSubsHtml",
 	"notLast": ["empty"],
 	"onlyLast": [],
-	"description": "TestInsertSubsHtml",
 	"provider": {
 		"type": 4,
 		"staticData": "A,B,C\n1,2,3\n4,5,6",

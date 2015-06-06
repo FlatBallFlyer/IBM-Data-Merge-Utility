@@ -89,7 +89,6 @@ public class Merge extends HttpServlet {
 		try {
 			// Get a template using the httpServletRequest constructor
 			root = TemplateFactory.getTemplate(request);
-			
 			// Perform the merge and write output
 			out.write(root.merge());
 

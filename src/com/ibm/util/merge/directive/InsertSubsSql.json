@@ -3,8 +3,6 @@
 	"type": 10,
 	"softFail": false,
 	"description": "TestInsertSubsSql",
-	"collectionName": "",
-	"collectionColumn": "",
 	"notLast": ["empty"],
 	"onlyLast": [],
 	"provider": {

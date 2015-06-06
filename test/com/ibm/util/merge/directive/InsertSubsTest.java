@@ -27,8 +27,6 @@ public abstract class InsertSubsTest extends DirectiveTest {
 		InsertSubs myDirective = (InsertSubs) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());
-		assertEquals(myDirective.getCollectionColumn(), 	newDirective.getCollectionColumn());
-		assertEquals(myDirective.getCollectionName(), 		newDirective.getCollectionName());
 		assertEquals(myDirective.getNotLast(), 				newDirective.getNotLast());
 		assertEquals(myDirective.getOnlyLast(),				newDirective.getOnlyLast());
 	}

@@ -38,8 +38,6 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 	private static final Logger log = Logger.getLogger( InsertSubs.class.getName() );
 	private static final int DEPTH_MAX = 100;
 	
-	private String 		collectionName 	 = "";
-	private String 		collectionColumn = "";
 	private List<String> notLast  = new ArrayList<String>();	
 	private List<String> onlyLast = new ArrayList<String>();	
 
@@ -87,10 +85,12 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 		 		for(Bookmark bookmark : this.getTemplate().getBookmarks()) {
 	
 	 				// Create the new sub-template
-		 			String colValue = table.getValue(row, this.collectionColumn);
+		 			String collection = bookmark.getCollection();
+		 			String name = bookmark.getName();
+		 			String column = table.getValue(row, bookmark.getColumn());
 					Template subTemplate = TemplateFactory.getTemplate(
-							this.collectionName + "." +  bookmark.getName() + "." +  colValue,
-							this.collectionName + "." +  bookmark.getName() + ".",
+							collection + "." +  name + "." +  column,
+							collection + "." +  name + ".",
 							this.getTemplate().getReplaceValues());
 					log.info("Inserting Template " + subTemplate.getFullName() + " into " + this.getTemplate().getFullName());
 						
@@ -116,22 +116,6 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 				}
 			}
 		}
-	}
-
-	public String getCollectionName() {
-		return collectionName;
-	}
-
-	public void setCollectionName(String collectionName) {
-		this.collectionName = collectionName;
-	}
-
-	public String getCollectionColumn() {
-		return collectionColumn;
-	}
-
-	public void setCollectionColumn(String collectionColumn) {
-		this.collectionColumn = collectionColumn;
 	}
 
 	public String getNotLast() {

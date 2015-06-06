@@ -29,14 +29,13 @@ import com.ibm.util.merge.directive.provider.ProviderCsv;
 
 public class InsertSubsCsvTest extends InsertSubsTest {
 	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Row: {A}, Val: {B}\\n\"}";
-	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\"/\\u003e\"}";
-	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\"/>";
+	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\" collection\\u003d\\\"root\\\"/\\u003e\"}";
+	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\" collection=\"root\"/>";
 
 	@Before
 	public void setUp() throws Exception {
 		directive = new InsertSubsCsv();
 		InsertSubsCsv myDirective = (InsertSubsCsv) directive;
-		myDirective.setCollectionName("root");
 		ProviderCsv myProvider = (ProviderCsv) myDirective.getProvider();
 		myProvider.setStaticData("A,B,C\n1,2,3\n4,5,6");
 		

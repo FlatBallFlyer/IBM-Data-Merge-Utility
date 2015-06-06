@@ -28,19 +28,19 @@ import com.ibm.util.merge.directive.provider.*;
 
 public class TemplateTest {
 	private Template template;
-	private String templateString = "Testing {Foo} Template <tkBookmark name=\"BKM1\"/> and {empty} <tkBookmark name=\"BKM2\"/> save to {folder}";
+	private String templateString = "Testing {Foo} Template <tkBookmark name=\"BKM1\" collection=\"foo\"/> and {empty} <tkBookmark name=\"BKM2\" collection=\"foo\"/> save to {folder}";
 	private String mergeOutput = "Testing Test Foo Value Template  and NOT  save to /tmp/output/";
-	private String testInsert1 = "Testing {Foo} Template Test<tkBookmark name=\"BKM1\"/> and {empty} <tkBookmark name=\"BKM2\"/> save to {folder}";
-	private String testInsert2 = "Testing {Foo} Template Test<tkBookmark name=\"BKM1\"/> and {empty} Test<tkBookmark name=\"BKM2\"/> save to {folder}";
-	private String replaceTest = "Testing Fixed Template <tkBookmark name=\"BKM1\"/> and {empty} <tkBookmark name=\"BKM2\"/> save to {folder}";
+	private String testInsert1 = "Testing {Foo} Template Test<tkBookmark name=\"BKM1\" collection=\"foo\"/> and {empty} <tkBookmark name=\"BKM2\" collection=\"foo\"/> save to {folder}";
+	private String testInsert2 = "Testing {Foo} Template Test<tkBookmark name=\"BKM1\" collection=\"foo\"/> and {empty} Test<tkBookmark name=\"BKM2\" collection=\"foo\"/> save to {folder}";
+	private String replaceTest = "Testing Fixed Template <tkBookmark name=\"BKM1\" collection=\"foo\"/> and {empty} <tkBookmark name=\"BKM2\" collection=\"foo\"/> save to {folder}";
 	private String replacePattern = "Testing {Foo} Template Gone and {empty} Gone save to {folder}";
-	private String testJsonBase = 			"\"collection\":\"root\",\"columnValue\":\"none\",\"name\":\"default\",\"description\":\"\",\"outputFile\":\"\",\"content\":\"Testing {Foo} Template \\u003ctkBookmark name\\u003d\\\"BKM1\\\"/\\u003e and {empty} \\u003ctkBookmark name\\u003d\\\"BKM2\\\"/\\u003e save to {folder}\",\"directives\":[{\"from\":\"Foo\",\"to\":\"Test Foo Value\",\"sequence\":0,\"type\":1,\"softFail\":false,\"description\":\"Test Replace1\"}"; 
+	private String testJsonBase = 			"\"collection\":\"root\",\"columnValue\":\"none\",\"name\":\"default\",\"description\":\"\",\"outputFile\":\"\",\"content\":\"Testing {Foo} Template \\u003ctkBookmark name\\u003d\\\"BKM1\\\" collection\\u003d\\\"foo\\\"/\\u003e and {empty} \\u003ctkBookmark name\\u003d\\\"BKM2\\\" collection\\u003d\\\"foo\\\"/\\u003e save to {folder}\",\"directives\":[{\"from\":\"Foo\",\"to\":\"Test Foo Value\",\"sequence\":0,\"type\":1,\"softFail\":false,\"description\":\"Test Replace1\"}"; 
 	private String testReplaceJson = 		"{" + testJsonBase + "]}";
 	private String testRequireJson = 		"{" + testJsonBase + ",{\"tags\":[\"Foo\",\"empty\"],\"sequence\":1,\"type\":0,\"softFail\":false,\"description\":\"TestRequire\"}]}"; 
-	private String testInsertSubsTagJson = 	"{" + testJsonBase + ",{\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"sequence\":1,\"type\":2,\"softFail\":false,\"description\":\"TestInsertSubsTag\",\"provider\":{\"tag\":\"Foo\",\"condition\":0,\"list\":false,\"value\":\"\",\"type\":2}}]}"; 
-	private String testInsertSubsCsvJson = 	"{" + testJsonBase + ",{\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"sequence\":1,\"type\":21,\"softFail\":false,\"description\":\"TestInsertSubsCsv\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":3}}]}";
-	private String testInsertSubsSqlJson = 	"{" + testJsonBase + ",{\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"sequence\":1,\"type\":10,\"softFail\":false,\"description\":\"TestInsertSubsSql\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\",\"type\":1}}]}"; 
-	private String testInsertSubsHtmlJson = "{" + testJsonBase + ",{\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"sequence\":1,\"type\":31,\"softFail\":false,\"description\":\"TestInsertSubsHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}"; 
+	private String testInsertSubsTagJson = 	"{" + testJsonBase + ",{\"notLast\":[\"empty\"],\"onlyLast\":[],\"sequence\":1,\"type\":2,\"softFail\":false,\"description\":\"TestInsertSubsTag\",\"provider\":{\"tag\":\"Foo\",\"condition\":0,\"list\":false,\"value\":\"\",\"type\":2}}]}"; 
+	private String testInsertSubsCsvJson = 	"{" + testJsonBase + ",{\"notLast\":[\"empty\"],\"onlyLast\":[],\"sequence\":1,\"type\":21,\"softFail\":false,\"description\":\"TestInsertSubsCsv\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":3}}]}";
+	private String testInsertSubsSqlJson = 	"{" + testJsonBase + ",{\"notLast\":[\"empty\"],\"onlyLast\":[],\"sequence\":1,\"type\":10,\"softFail\":false,\"description\":\"TestInsertSubsSql\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\",\"type\":1}}]}"; 
+	private String testInsertSubsHtmlJson = "{" + testJsonBase + ",{\"notLast\":[\"empty\"],\"onlyLast\":[],\"sequence\":1,\"type\":31,\"softFail\":false,\"description\":\"TestInsertSubsHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}"; 
 	private String testReplaceRowCsvJson = 	"{" + testJsonBase + ",{\"sequence\":1,\"type\":22,\"softFail\":false,\"description\":\"TestReplaceRowCsv\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":3}}]}"; 
 	private String testReplaceRowSqlJson = 	"{" + testJsonBase + ",{\"sequence\":1,\"type\":11,\"softFail\":false,\"description\":\"TestReplaceRowSql\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\",\"type\":1}}]}"; 
 	private String testReplaceRowHtmlJson = "{" + testJsonBase + ",{\"sequence\":1,\"type\":32,\"softFail\":false,\"description\":\"TestReplaceRowHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}"; 
@@ -107,17 +107,17 @@ public class TemplateTest {
 		assertEquals(templateString, template.getContent());
 		assertEquals(2, template.getBookmarks().size());
 		assertEquals(23, template.getBookmarks().get(0).getStart());
-		assertEquals(61, template.getBookmarks().get(1).getStart());
+		assertEquals(78, template.getBookmarks().get(1).getStart());
 		
 		template.insertText("Test", template.getBookmarks().get(0));
 		assertEquals(testInsert1, template.getContent());
 		assertEquals(27, template.getBookmarks().get(0).getStart());
-		assertEquals(65, template.getBookmarks().get(1).getStart());
+		assertEquals(82, template.getBookmarks().get(1).getStart());
 		
 		template.insertText("Test", template.getBookmarks().get(1));
 		assertEquals(testInsert2, template.getContent());
 		assertEquals(27, template.getBookmarks().get(0).getStart());
-		assertEquals(69, template.getBookmarks().get(1).getStart());
+		assertEquals(86, template.getBookmarks().get(1).getStart());
 	}
 
 	@Test

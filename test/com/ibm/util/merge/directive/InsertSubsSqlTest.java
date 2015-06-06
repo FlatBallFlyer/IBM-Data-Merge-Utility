@@ -27,8 +27,8 @@ import com.ibm.util.merge.directive.provider.*;
 
 public class InsertSubsSqlTest extends InsertSubsTest {
 	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Row: {A}, Val: {B}\\n\"}";
-	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\"/\\u003e\"}";
-	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\"/>";
+	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\" collection\\u003d\\\"root\\\"/\\u003e\"}";
+	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\" collection=\"root\"/>";
 
 	@Before
 	public void setUp() throws Exception {
@@ -36,7 +36,6 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 		directive = new InsertSubsSql();
 		InsertSubsSql myDirective = (InsertSubsSql) directive;
 		myDirective.setProvider(provider);
-		myDirective.setCollectionName("root");
 
 		TemplateFactory.reset();
 		TemplateFactory.setDbPersistance(false);

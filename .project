@@ -4,6 +4,8 @@
 	<comment></comment>
 	<projects>
 		<project>DragonFlyEar</project>
+		<project>Servers</project>
+		<project>WebSphere Application Server Liberty Profile</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

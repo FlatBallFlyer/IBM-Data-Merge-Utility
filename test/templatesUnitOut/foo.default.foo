@@ -1,10 +1,10 @@
 {
-  "collection": "root",
+  "collection": "foo",
   "columnValue": "foo",
   "name": "default",
   "description": "",
   "outputFile": "",
-  "content": "Testing {Foo} Template \u003ctkBookmark name\u003d\"BKM1\"/\u003e and {empty} \u003ctkBookmark name\u003d\"BKM2\"/\u003e save to {folder}",
+  "content": "Testing {Foo} Template \u003ctkBookmark name\u003d\"BKM1\"/ collection\u003d\"COL1\"/\u003e and {empty} \u003ctkBookmark name\u003d\"BKM2\" collection\u003d\"COL2\"//\u003e save to {folder}",
   "directives": [
     {
       "from": "Foo",
@@ -25,8 +25,6 @@
       "description": "TestRequire        "
     },
     {
-      "collectionName": "",
-      "collectionColumn": "",
       "notLast": [
         "empty"
       ],
@@ -37,8 +35,6 @@
       "description": "TestInsertSubsTag  "
     },
     {
-      "collectionName": "",
-      "collectionColumn": "",
       "notLast": [
         "empty"
       ],
@@ -49,8 +45,6 @@
       "description": "TestInsertSubsCsv "
     },
     {
-      "collectionName": "",
-      "collectionColumn": "",
       "notLast": [
         "empty"
       ],
@@ -61,8 +55,6 @@
       "description": "TestInsertSubsSql "
     },
     {
-      "collectionName": "",
-      "collectionColumn": "",
       "notLast": [
         "empty"
       ],

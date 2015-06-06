@@ -29,8 +29,8 @@ import com.ibm.util.merge.directive.provider.ProviderTag;
 
 public class InsertSubsTagTest extends InsertSubsTest {
 	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Foo Is: {Foo}, \"}";
-	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\"/\\u003e\"}";
-	private String masterOutput= "Test Foo Is: SomeValue1, Foo Is: SomeValue2, Foo Is: SomeValue3, <tkBookmark name=\"sub\"/>";
+	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\" collection\\u003d\\\"root\\\"/\\u003e\"}";
+	private String masterOutput= "Test Foo Is: SomeValue1, Foo Is: SomeValue2, Foo Is: SomeValue3, <tkBookmark name=\"sub\" collection=\"root\"/>";
 	private ProviderTag myProvider;
 	private InsertSubsTag myDirective;
 	
@@ -38,7 +38,6 @@ public class InsertSubsTagTest extends InsertSubsTest {
 	public void setUp() throws Exception {
 		directive = new InsertSubsTag();
 		myDirective = (InsertSubsTag) directive;
-		myDirective.setCollectionName("root");
 		myProvider = (ProviderTag) myDirective.getProvider();
 
 		TemplateFactory.reset();

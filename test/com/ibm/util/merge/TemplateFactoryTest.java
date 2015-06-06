@@ -28,7 +28,7 @@ public class TemplateFactoryTest {
 	private String theTemplates = "[\"root.test.foo\",\"root.test.\"]";
 	private String template1 = "{\"collection\":\"root\",\"name\":\"test\",\"columnValue\":\"\"}";
 	private String template2 = "{\"collection\":\"root\",\"name\":\"test\",\"columnValue\":\"foo\"}";
-	private String template4 = "{\"collection\":\"foo\",\"columnValue\":\"foo\",\"name\":\"default\",\"description\":\"\",\"outputFile\":\"\",\"content\":\"Testing {Foo} Template \\u003ctkBookmark name\\u003d\\\"BKM1\\\"/\\u003e and {empty} \\u003ctkBookmark name\\u003d\\\"BKM2\\\"/\\u003e save to {folder}\",\"directives\":[" +
+	private String template4 = "{\"collection\":\"foo\",\"columnValue\":\"foo\",\"name\":\"default\",\"description\":\"\",\"outputFile\":\"\",\"content\":\"Testing {Foo} Template \\u003ctkBookmark name\\u003d\\\"BKM1\\\"/ collection\\u003d\\\"COL1\\\"/\\u003e and {empty} \\u003ctkBookmark name\\u003d\\\"BKM2\\\" collection\\u003d\\\"COL2\\\"//\\u003e save to {folder}\",\"directives\":[" +
 			 "{\"idTemplate\":22,\"sequence\":0,\"type\":1,\"softFail\":false,\"description\":\"Test Replace1      \",\"from\":\"Foo\",\"to\":\"Test Foo Value\"}" + 
  			",{\"idTemplate\":22,\"sequence\":1,\"type\":0,\"softFail\":false,\"description\":\"TestRequire        \",\"tags\":[\"Foo\",\"empty\"]}" + 
  			",{\"idTemplate\":22,\"sequence\":1,\"type\":2,\"softFail\":false,\"description\":\"TestInsertSubsTag  \",\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"provider\":{\"tag\":\"Foo\",\"condition\":0,\"list\":false,\"value\":\"\"}}" + 
@@ -141,7 +141,7 @@ public class TemplateFactoryTest {
 	@Test
 	public void testSaveTemplateFromJson() throws MergeException {
 		TemplateFactory.reset();
-		TemplateFactory.setTemplateFolder("test/templatesFunctional/");
+		TemplateFactory.setTemplateFolder("test/templatesUnitOut/");
 		String template1 = TemplateFactory.saveTemplateFromJson(template4);
 		Template template2 = TemplateFactory.cacheFromJson(template4);
 		assertEquals(template1, template2.asJson(true));

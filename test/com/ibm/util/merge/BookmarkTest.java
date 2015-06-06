@@ -29,9 +29,9 @@ public class BookmarkTest {
 
 	@Before
 	public void setUp() throws Exception {
-		bookmark1 = new Bookmark("<tkBookmark name=\"Test1\"/>", 20);
-		bookmark2 = new Bookmark("<tkBookmark name=\"Test2\">", 30);
-		bookmark3 = new Bookmark("<tkBookmark name = \"Test3\" />", 40);
+		bookmark1 = new Bookmark("<tkBookmark name=\"Test1\" collection=\"full\" column=\"type\"/>", 20);
+		bookmark2 = new Bookmark("<tkBookmark name=\"Test2\" collection=\"short\" />", 30);
+		bookmark3 = new Bookmark("<tkBookmark name=\"Test3\" collection=\"long\" column=\"special\"/>", 40);
 	}
 
 	@After
@@ -45,6 +45,8 @@ public class BookmarkTest {
 		assertEquals(bookmark1.getName(), newBookmark.getName());
 		assertEquals(bookmark1.getSize(), newBookmark.getSize());
 		assertEquals(bookmark1.getStart(), newBookmark.getStart());
+		assertEquals(bookmark1.getCollection(), newBookmark.getCollection());
+		assertEquals(bookmark1.getColumn(), newBookmark.getColumn());
 	}
 
 	@Test
@@ -62,6 +64,20 @@ public class BookmarkTest {
 	}
 
 	@Test
+	public void testConstructedCollection() {
+		assertEquals("full",  bookmark1.getCollection());
+		assertEquals("short", bookmark2.getCollection());
+		assertEquals("long",  bookmark3.getCollection());
+	}
+
+	@Test
+	public void testConstructedColumn() {
+		assertEquals("type", 	bookmark1.getColumn());
+		assertEquals("", 		bookmark2.getColumn());
+		assertEquals("special", bookmark3.getColumn());
+	}
+
+	@Test
 	public void testConstructedStart() {
 		assertEquals(20, bookmark1.getStart());
 		assertEquals(30, bookmark2.getStart());
@@ -70,9 +86,9 @@ public class BookmarkTest {
 
 	@Test
 	public void testConstructedSize() {
-		assertEquals(26, bookmark1.getSize());
-		assertEquals(25, bookmark2.getSize());
-		assertEquals(29, bookmark3.getSize());
+		assertEquals(58, bookmark1.getSize());
+		assertEquals(46, bookmark2.getSize());
+		assertEquals(61, bookmark3.getSize());
 	}
 
 }

@@ -29,14 +29,13 @@ import com.ibm.util.merge.directive.provider.ProviderHtml;
 
 public class InsertSubsHtmlTest extends InsertSubsTest {
 	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Row: {A}, Val: {B}\\n\"}";
-	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\"/\\u003e\"}";
-	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\"/>";
+	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\" collection\\u003d\\\"root\\\"/\\u003e\"}";
+	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\" collection=\"root\"/>";
 
 	@Before
 	public void setUp() throws Exception {
 		directive = new InsertSubsHtml();
 		InsertSubsHtml myDirective = (InsertSubsHtml) directive;
-		myDirective.setCollectionName("root");
 		ProviderHtml myProvider = (ProviderHtml) myDirective.getProvider();
 		myProvider.setStaticData("<table><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>");
 
