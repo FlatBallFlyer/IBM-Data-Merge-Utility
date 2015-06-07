@@ -52,7 +52,7 @@ public class ReplaceColHtmlTest extends ReplaceColTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		// TODO - Requires HTML Parsing Code to be finished
+		// TODO - Testing of HTML Parsed Data
 //		directive.executeDirective();
 //		assertTrue(template.hasReplaceKey("{1}"));
 //		assertEquals("2",template.getReplaceValue("{1}"));

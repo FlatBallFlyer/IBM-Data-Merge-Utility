@@ -24,12 +24,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -90,7 +88,7 @@ final public class TemplateFactory {
 	 * @return Template The new Template object
 	 * @see Template
 	 */
-	public static Template getTemplate(HttpServletRequest request) throws MergeException {
+	public static Template getTemplate(Map<String,String[]> request) throws MergeException {
 		HashMap<String,String> replace = new HashMap<String,String>();
 		// Open the "Default" template if if not specified. 
 		replace.put(KEY_COLLECTION, DEFAULT_COLLECETION);
@@ -98,11 +96,9 @@ final public class TemplateFactory {
 		replace.put(KEY_NAME, 		DEFAULT_NAME);
 
 		// Iterate parameters, setting replace values 
-		Enumeration<String> parameterNames = request.getParameterNames();
-		while (parameterNames.hasMoreElements()) {
-			String paramName = parameterNames.nextElement();
-			String paramValue = request.getParameterValues(paramName)[0];
-			replace.put(Template.wrap(paramName), paramValue);
+		for( String key: request.keySet() ) {
+			String value = request.get(key)[0];
+			replace.put(key, value);
 		}
 		
 		// Handle cache reset request
@@ -117,8 +113,8 @@ final public class TemplateFactory {
 		
 		// Get the template, add the http parameter replace values to it's hash
 		String fullName = 	replace.get(KEY_COLLECTION) + "." +  
-							replace.get(KEY_COLUMN) + "." +  
-							replace.get(KEY_NAME);
+							replace.get(KEY_NAME) + "." +
+							replace.get(KEY_COLUMN);
 		Template rootTempalte = TemplateFactory.getTemplate(fullName, "", replace);
 		return rootTempalte;
 	}

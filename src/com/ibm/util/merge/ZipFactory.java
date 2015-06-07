@@ -34,7 +34,7 @@ import com.ibm.util.merge.Template;
  * @see Template#saveOutputAs()
  * @author  Mike Storey
  */
-final class ZipFactory {
+final public class ZipFactory {
 	// Factory Constants
 	public static final int TYPE_ZIP = 1;
 	public static final int TYPE_GZIP = 2;

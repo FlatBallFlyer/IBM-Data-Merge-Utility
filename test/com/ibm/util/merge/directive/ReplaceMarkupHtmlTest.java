@@ -55,7 +55,7 @@ public class ReplaceMarkupHtmlTest extends DirectiveTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		// TODO - Requires HTML Parshing to be finished
+		// TODO - Test when HTML Markup implemented
 //		directive.executeDirective();
 //		assertTrue(template.hasReplaceKey("{SomeValue}"));
 //		assertEquals("SomeDataValue",template.getReplaceValue("{SomeValue}"));

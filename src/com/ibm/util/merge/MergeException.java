@@ -15,7 +15,6 @@
  *
  */
 package com.ibm.util.merge;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -70,7 +69,7 @@ public class MergeException extends Exception {
 	}
 
 	public String getJsonErrorMessage() {
-		// TODO Auto-generated method stub
+		// TODO Determine JSON Error Message Format
 		return "";
 	}
 

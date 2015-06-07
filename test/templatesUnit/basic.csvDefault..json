@@ -4,9 +4,7 @@
 	"columnValue":"",
 	"description":"",
 	"outputFile":"",
-	"content":
-"CsvDefaultData Test 
-\u003ctkBookmark name\u003d\"sub\" collection\u003d\"subs\" /\u003e",
+	"content": "CsvDefaultData Test <tkBookmark name=\"sub\" collection=\"subs\" />",
 	"directives":[
 		{
 			"sequence":1,

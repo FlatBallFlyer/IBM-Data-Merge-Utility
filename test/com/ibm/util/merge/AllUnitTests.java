@@ -15,6 +15,6 @@ import org.junit.runners.Suite.SuiteClasses;
 	com.ibm.util.merge.directive.provider.AllTests.class,
 //	ConnectionFactoryTest.class
 	})
-public class AllTests {
+public class AllUnitTests {
 
 }

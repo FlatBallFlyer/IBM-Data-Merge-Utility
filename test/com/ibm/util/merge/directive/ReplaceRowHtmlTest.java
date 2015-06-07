@@ -55,7 +55,7 @@ public class ReplaceRowHtmlTest extends ReplaceRowTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		// TODO - Requires HTML Parshing to be finished
+		// TODO - Testing of HTML Parsed Data
 //		directive.executeDirective();
 //		assertTrue(template.hasReplaceKey("{A}"));
 //		assertEquals("1",template.getReplaceValue("{A}"));

@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package com.ibm.util.merge;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

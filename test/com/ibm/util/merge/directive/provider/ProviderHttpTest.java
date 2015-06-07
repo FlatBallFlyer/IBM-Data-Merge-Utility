@@ -24,12 +24,6 @@ import com.ibm.util.merge.MergeException;
 public abstract class ProviderHttpTest extends ProviderTest {
 	
 	@Test
-	public void testGetDataFromUrl() {
-		// TODO - How to Unit Test HTTP code?
-		// provider.getData();
-	}
-
-	@Test
 	public void testGetDataFromTag() throws MergeException {
 		ProviderHttp myProvider = (ProviderHttp) provider; 
 		myProvider.setUrl("");
