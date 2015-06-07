@@ -1,0 +1,6 @@
+{
+	"collection":"provider",
+	"name":"ContactCsv",
+	"description":"Contact as CSV Sub Template",
+	"content":"{NAME},{PREFERENCE},{EMAIL},{PHONE}\n/>"
+}

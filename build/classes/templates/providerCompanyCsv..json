@@ -1,0 +1,6 @@
+{
+	"collection":"provider",
+	"name":"CompanyCsv",
+	"description":"Corporate Replace values Sub Template",
+	"content":"{FROM_VALUE},{TO_VALUE}\n"
+}

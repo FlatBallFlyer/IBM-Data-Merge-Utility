@@ -1,0 +1,6 @@
+{
+	"collection":"provider",
+	"name":"CustomerCsv",
+	"description":"Customer Sub-Template",
+	"content":"{PRIMARY},{NAME},{REVENUE},{PROFIT},{STREET},{CITY},{STATE},{ZIP},{PHONE}\n"
+}

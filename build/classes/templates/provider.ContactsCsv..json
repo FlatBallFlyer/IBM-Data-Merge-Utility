@@ -1,0 +1,20 @@
+{
+	"collection":"provider",
+	"name":"ContactsCsv",
+	"description":"Contacts as CSV Provider",
+	"content":"NAME,PREFERENCE,EMAIL,PHONE\n<tkBookmark name=\"ContactCsv\" collection=\"provider\"/>",
+	"directives":[
+		{
+			"sequence": 1,
+			"type": 10,
+			"description": "Insert Contacts",
+			"provider": {
+				"type": 1,
+				"source": "testgenDB",
+				"columns": "*",
+				"from": "CONTACT",
+				"where": "{condition}"
+			 }
+		}
+	]
+ }
