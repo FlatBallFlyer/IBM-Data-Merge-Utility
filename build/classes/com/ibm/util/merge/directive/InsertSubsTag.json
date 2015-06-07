@@ -1,0 +1,15 @@
+{
+	"sequence": 1,
+	"type": 2,
+	"softFail": false,
+	"description": "TestInsertSubsTag",
+	"notLast": ["empty"],
+	"onlyLast": [],
+	"provider": {
+		"type": 2,
+		"condition": 0,
+		"tag": "Foo",
+		"value": "",
+		"list": false
+	 }
+}

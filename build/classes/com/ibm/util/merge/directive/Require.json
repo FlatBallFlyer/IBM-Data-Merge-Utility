@@ -1,0 +1,7 @@
+{
+  "sequence": 1,
+  "type": 0,
+  "softFail": false,
+  "description": "TestRequire",
+  "tags": ["Foo","empty"]
+}

@@ -1,0 +1,14 @@
+{
+	"sequence": 1,
+	"type": 33,
+	"softFail": false,
+	"description": "TestReplaceColHtml",
+	"fromColumn": "Foo",
+	"toColumn": "",
+	"provider": {
+		"type": 4,
+		"staticData": "A,B,C\n1,2,3\n4,5,6",
+		"url": "",
+		"tag": ""
+	}
+}

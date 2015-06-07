@@ -1,0 +1,15 @@
+{
+	"sequence": 1,
+	"type": 10,
+	"softFail": false,
+	"description": "TestInsertSubsSql",
+	"notLast": ["empty"],
+	"onlyLast": [],
+	"provider": {
+		"type": 1,
+		"source": "",
+		"columns": "A,B,C,1,2,3,4,5,6",
+		"from": "",
+		"where": ""
+	 }
+}
