@@ -1,6 +1,7 @@
 {
 	"collection":"csvUrl",
 	"name":"functional",
+	"columnValue":"",
 	"description":"CSV Url Root Functional Test",
 	"content":
 	"<tkBookmark collection=\"csvUrl\" name=\"Report\"/>\n<tkBookmark collection=\"csvUrl\" name=\"SMTP\"/>\n<tkBookmark collection=\"csvUrl\" name=\"SMS\"/>",

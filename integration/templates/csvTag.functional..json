@@ -1,6 +1,7 @@
 {
 	"collection":"csvTag",
 	"name":"functional",
+	"columnValue":"",
 	"description":"CSV Tag Root Functional Test",
 	"content":
 	"<tkBookmark collection=\"csvTag\" name=\"Report\"/>\n<tkBookmark collection=\"csvTag\" name=\"SMTP\"/>\n<tkBookmark collection=\"csvTag\" name=\"SMS\"/>",

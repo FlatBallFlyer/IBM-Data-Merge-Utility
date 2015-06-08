@@ -59,7 +59,7 @@ public class FunctionalCsvTest {
 
 	@Test
 	public void testCsvDefaultDataTarGz() throws MergeException, IOException {
-		String fullName = "root.csvDefault";
+		String fullName = "csvDef.functional.";
 		parameterMap.put(TemplateFactory.KEY_FULLNAME, 	new String[]{fullName + "."});
 		parameterMap.put(Template.TAG_OUTPUTFILE, 		new String[]{fullName});
 		root = TemplateFactory.getTemplate(parameterMap);
@@ -71,7 +71,7 @@ public class FunctionalCsvTest {
 
 	@Test
 	public void testCsvDefaultDataZip() throws MergeException, IOException {
-		String fullName = "root.csvDefault";
+		String fullName = "csvDef.functional.";
 		parameterMap.put(TemplateFactory.KEY_FULLNAME, 	new String[]{fullName + "."});
 		parameterMap.put(Template.TAG_OUTPUT_TYPE, 		new String[]{"zip"});
 		parameterMap.put(Template.TAG_OUTPUTFILE, 		new String[]{fullName});
@@ -84,7 +84,7 @@ public class FunctionalCsvTest {
 
 	@Test
 	public void testCsvTagDataTarGz() throws MergeException, IOException {
-		String fullName = "root.csvTag";
+		String fullName = "csvTag.functional.";
 		parameterMap.put(TemplateFactory.KEY_FULLNAME, 	new String[]{fullName + "."});
 		parameterMap.put(Template.TAG_OUTPUTFILE, 		new String[]{fullName});
 		root = TemplateFactory.getTemplate(parameterMap);
@@ -96,7 +96,7 @@ public class FunctionalCsvTest {
 
 	@Test
 	public void testCsvTagDataZip() throws MergeException, IOException {
-		String fullName = "root.csvTag";
+		String fullName = "csvTag.functional.";
 		parameterMap.put(TemplateFactory.KEY_FULLNAME, 	new String[]{fullName + "."});
 		parameterMap.put(Template.TAG_OUTPUT_TYPE, 		new String[]{"zip"});
 		parameterMap.put(Template.TAG_OUTPUTFILE, 		new String[]{fullName});
@@ -109,7 +109,7 @@ public class FunctionalCsvTest {
 
 	@Test
 	public void testCsvUrlDataTarGz() throws MergeException, IOException {
-		String fullName = "root.csvUrl";
+		String fullName = "csvUrl.functional.";
 		parameterMap.put(TemplateFactory.KEY_FULLNAME, 	new String[]{fullName + "."});
 		parameterMap.put(Template.TAG_OUTPUTFILE, 		new String[]{fullName});
 		root = TemplateFactory.getTemplate(parameterMap);
@@ -121,7 +121,7 @@ public class FunctionalCsvTest {
 
 	@Test
 	public void testCsvUrlDataZip() throws MergeException, IOException {
-		String fullName = "root.csvUrl";
+		String fullName = "csvUrl.functional.";
 		parameterMap.put(TemplateFactory.KEY_FULLNAME, 	new String[]{fullName + "."});
 		parameterMap.put(Template.TAG_OUTPUT_TYPE, 		new String[]{"zip"});
 		parameterMap.put(Template.TAG_OUTPUTFILE, 		new String[]{fullName});

@@ -1,7 +1,6 @@
 {
-	"collection":"root",
-	"columnValue":"none",
-	"name":"default",
+	"collection":"safety",
+	"name":"insert",
 	"description":"",
 	"outputFile":"",
 	"content":"This is a test of the encodeing <tkBookmark name=\"test\" collection=\"root\" />",
