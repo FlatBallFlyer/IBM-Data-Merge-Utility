@@ -1,0 +1,7 @@
+{
+	"collection":"contact",
+	"name":"cmd",
+	"columnValue":"SMTP",
+	"description":"Send SMTP Command",
+	"content":"cat theFileName | sendmail -i -t"
+}

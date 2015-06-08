@@ -82,9 +82,34 @@ public class ProviderTagTest extends ProviderTest {
 	}
 
 	@Test
-	public void testGetDataIsBlank() throws MergeException {
+	public void testGetDataNonBlankMiss() throws MergeException {
 		template.addReplace("Foo", "");
 		myProvider.setCondition(ProviderTag.CONDITION_NONBLANK);
+		myProvider.setTag("Foo");
+		myProvider.getData();
+
+		assertEquals(1, provider.size());
+		table = provider.getTable(0);
+		assertEquals(0, table.size());
+	}
+
+	@Test
+	public void testGetDataIsBlank() throws MergeException {
+		template.addReplace("Foo", "");
+		myProvider.setCondition(ProviderTag.CONDITION_BLANK);
+		myProvider.setTag("Foo");
+		myProvider.getData();
+
+		assertEquals(1, myProvider.size());
+		table = myProvider.getTable(0);
+		assertEquals(1, table.size());
+		assertEquals("", table.getValue(0, 0));
+	}
+
+	@Test
+	public void testGetDataIsBlankMiss() throws MergeException {
+		template.addReplace("Foo", "Bar");
+		myProvider.setCondition(ProviderTag.CONDITION_BLANK);
 		myProvider.setTag("Foo");
 		myProvider.getData();
 

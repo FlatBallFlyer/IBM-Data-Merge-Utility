@@ -1,0 +1,19 @@
+{
+	"collection":"jdbcTag",
+	"name":"functional",
+	"description":"JDBC Root Functional Test",
+	"content":
+	"<tkBookmark collection=\"jdbcTag\" name=\"Report\"/>\n<tkBookmark collection=\"jdbcTag\" name=\"SMTP\"/>\n<tkBookmark collection=\"jdbcTag\" name=\"SMS\"/>",
+	"directives":[
+		{
+			"sequence": 1,
+			"type": 2,
+			"description": "InsertSubsIfTagExists",
+			"provider": {
+				"type": 2,
+				"condition": 0,
+				"tag": "DragonFlyFullName"
+			 }
+		}
+	]
+ }

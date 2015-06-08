@@ -28,8 +28,9 @@ import com.ibm.util.merge.Template;
  */
 public class ProviderTag extends Provider implements Cloneable {
 	public static final int CONDITION_EXISTS = 0;
-	public static final int CONDITION_NONBLANK = 1;
-	public static final int CONDITION_EQUALS = 2;
+	public static final int CONDITION_BLANK = 1;
+	public static final int CONDITION_NONBLANK = 2;
+	public static final int CONDITION_EQUALS = 3;
 	private String tag = "";
 	private int condition = 0;
 	private boolean list = false;
@@ -63,9 +64,15 @@ public class ProviderTag extends Provider implements Cloneable {
 				return;
 			}
 			break;
-		case ProviderTag.CONDITION_NONBLANK: 
-			if (! (template.hasReplaceKey(theTag) 
+		case ProviderTag.CONDITION_BLANK: 
+			if ( (template.hasReplaceKey(theTag) 
 				&& template.hasReplaceValue(theTag))) {
+				return;
+			}   
+			break;
+		case ProviderTag.CONDITION_NONBLANK: 
+			if ( (template.hasReplaceKey(theTag) 
+				&& !template.hasReplaceValue(theTag))) {
 				return;
 			}   
 			break;

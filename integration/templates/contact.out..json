@@ -1,0 +1,20 @@
+{
+	"collection":"contact",
+	"name":"out",
+	"description":"Default Contact Output",
+	"outputFile":"",
+	"content":"<tkBookmark collection=\"contact\", name=\"postal\"/>",
+	"directives":[
+		{
+			"sequence": 1,
+			"type": 2,
+			"description": "Create Postal Message File",
+			"provider": {
+				"type": 2,
+				"condition": 3,
+				"tag": "TYPE",
+				"value": "SMTP"
+			 }
+		}
+	]
+}

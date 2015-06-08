@@ -1,0 +1,7 @@
+{
+	"collection":"contact",
+	"name":"postal",
+	"description":"Postal Mail Textfile",
+	"outputFile":"{name}.mail",
+	"content":"postal mail content"
+ }

@@ -1,0 +1,7 @@
+{
+	"collection":"contact",
+	"name":"type",
+	"columnValue":"SMTP",
+	"description":"Contact Line for SMTP Contacts",
+	"content":"Email Address {EMAIL}"
+}

@@ -1,0 +1,7 @@
+{
+	"collection":"contact",
+	"name":"type",
+	"columnValue":"SMS",
+	"description":"Contact Line for SMS Contacts",
+	"content":"SMS Phone {SMS}"
+}

@@ -52,14 +52,10 @@ import com.ibm.util.merge.directive.provider.ProviderDeserializer;
 final public class TemplateFactory {
 	// Factory Constants
 	private static final Logger 	log = Logger.getLogger( TemplateFactory.class.getName() );
-	private static final String		KEY_CACHE_RESET		= Template.wrap("DragonFlyCacheReset");
-	private static final String		KEY_CACHE_LOAD		= Template.wrap("DragonFlyCacheLoad");
-	private static final String		KEY_COLLECTION		= Template.wrap("collection");
-	private static final String		KEY_NAME			= Template.wrap("name");
-	private static final String		KEY_COLUMN			= Template.wrap("column");
-	private static final String		DEFAULT_COLLECETION	= "root";
-	private static final String 	DEFAULT_NAME		= "default";
-	private static final String		DEFAULT_COLUMN		= "";
+	public static final String		KEY_CACHE_RESET		= Template.wrap("DragonFlyCacheReset");
+	public static final String		KEY_CACHE_LOAD		= Template.wrap("DragonFlyCacheLoad");
+	public static final String		KEY_FULLNAME		= Template.wrap("DragonFlyFullName");
+	private static final String		DEFAULT_FULLNAME	= "root.default.";
 	private static final String		FULLNAME_QUERY		= "SELECT ID_TEMPLATE " +
 											            "FROM TEMPLATE " +
 											            "WHERE TEMPLATE.COLLECTION = :collection " + 
@@ -91,9 +87,7 @@ final public class TemplateFactory {
 	public static Template getTemplate(Map<String,String[]> request) throws MergeException {
 		HashMap<String,String> replace = new HashMap<String,String>();
 		// Open the "Default" template if if not specified. 
-		replace.put(KEY_COLLECTION, DEFAULT_COLLECETION);
-		replace.put(KEY_COLUMN,		DEFAULT_COLUMN);
-		replace.put(KEY_NAME, 		DEFAULT_NAME);
+		replace.put(KEY_FULLNAME, DEFAULT_FULLNAME);
 
 		// Iterate parameters, setting replace values 
 		for( String key: request.keySet() ) {
@@ -112,9 +106,7 @@ final public class TemplateFactory {
 		} 
 		
 		// Get the template, add the http parameter replace values to it's hash
-		String fullName = 	replace.get(KEY_COLLECTION) + "." +  
-							replace.get(KEY_NAME) + "." +
-							replace.get(KEY_COLUMN);
+		String fullName = 	replace.get(KEY_FULLNAME);
 		Template rootTempalte = TemplateFactory.getTemplate(fullName, "", replace);
 		return rootTempalte;
 	}

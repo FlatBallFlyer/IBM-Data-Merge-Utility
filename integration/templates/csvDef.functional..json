@@ -1,0 +1,19 @@
+{
+	"collection":"csvDef",
+	"name":"functional",
+	"description":"CSV Default Root Functional Test",
+	"content":
+	"<tkBookmark collection=\"csvDef\" name=\"Report\"/>\n<tkBookmark collection=\"csvDef\" name=\"SMTP\"/>\n<tkBookmark collection=\"csvDef\" name=\"SMS\"/>",
+	"directives":[
+		{
+			"sequence": 1,
+			"type": 2,
+			"description": "InsertSubsIfTagExists",
+			"provider": {
+				"type": 2,
+				"condition": 0,
+				"tag": "DragonFlyFullName"
+			 }
+		}
+	]
+ }

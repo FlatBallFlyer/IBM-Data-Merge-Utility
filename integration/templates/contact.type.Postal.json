@@ -1,0 +1,7 @@
+{
+	"collection":"contact",
+	"name":"type",
+	"columnValue":"postal",
+	"description":"Contact Line for Postal Contacts",
+	"content":"Postal Mail Address {ADDRESS}"
+}
