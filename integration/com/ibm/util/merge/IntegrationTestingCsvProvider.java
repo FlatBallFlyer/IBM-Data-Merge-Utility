@@ -57,7 +57,8 @@ public class IntegrationTestingCsvProvider {
 
 	@Test
 	public void testCsvDefaultDataTarGz() throws MergeException, IOException {
-		testIt("csvDef.functional.", "tar.gz");
+//		testIt("csvDef.report.", "tar.gz");
+		testIt("csvDef.SMTP.", ".tar.gz");
 	}
 
 	@Test
@@ -85,15 +86,18 @@ public class IntegrationTestingCsvProvider {
 		testIt("csvUrl.functional.","zip");
 	}
 
-	private String testIt(String fullName, String type) throws MergeException, IOException {
-		parameterMap.put(TemplateFactory.KEY_FULLNAME, 	new String[]{fullName + "."});
+	private void testIt(String fullName, String type) throws MergeException, IOException {
 		parameterMap.put(Template.TAG_OUTPUT_TYPE, 		new String[]{type});
-		parameterMap.put(Template.TAG_OUTPUTFILE, 		new String[]{fullName});
+		parameterMap.put(Template.TAG_OUTPUTFILE, 		new String[]{fullName+type});
+		testMerge(fullName);
+		FileAssert.assertBinaryEquals(new File(validateDir + fullName + "." + type),new File(outputDir + fullName + "." + type));
+	}
+
+	private void testMerge(String fullName) throws MergeException, IOException {
+		parameterMap.put(TemplateFactory.KEY_FULLNAME, 	new String[]{fullName});
 		Template root = TemplateFactory.getTemplate(parameterMap);
 		String mergeOutput = root.merge();
 		root.packageOutput();
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + fullName + ".output"))), mergeOutput);
-		FileAssert.assertBinaryEquals(new File(validateDir + fullName + "." + type),new File(outputDir + fullName + "." + type));
-		return mergeOutput;
 	}
 }

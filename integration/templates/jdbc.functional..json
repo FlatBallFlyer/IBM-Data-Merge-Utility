@@ -1,5 +1,5 @@
 {
-	"collection":"jdbcTag",
+	"collection":"jdbc",
 	"name":"functional",
 	"description":"JDBC Root Functional Test",
 	"content":

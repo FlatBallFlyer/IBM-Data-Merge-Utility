@@ -1,164 +1,18 @@
 {
 	"collection":"csvDef",
 	"name":"report",
-	"description":"",
+	"description":"Report to Test InsertSubs from Collection for Column",
 	"outputFile":"",
-	"content":"This is a test of the encodeing <tkBookmark name=\"test\" collection=\"root\" />",
+	"content":"Begin Customers\n<tkBookmark collection=\"csvDef\" name=\"customer\"/>\nEnd Customers",
 	"directives":[
 		{
 			"sequence": 1,
-		  	"type": 0,
-		  	"softFail": false,
-		  	"description": "TestRequire",
-		  	"tags": ["Foo","empty"]
-		},{
-			"sequence": 0,
-			"type": 1,
-			"softFail": false,
-			"description": "Test Replace1",
-			"from": "Foo",
-			"to": "Test Foo Value"
-		},{
-			"sequence": 1,
-			"type": 2,
-			"softFail": false,
-			"description": "TestInsertSubsTag",
-			"notLast": ["empty"],
-			"onlyLast": [],
-			"provider": {
-				"type": 2,
-				"condition": 0,
-				"tag": "Foo",
-				"value": "",
-				"list": false
-			 }
-		},{
-			"sequence": 1,
-			"type": 10,
-			"softFail": false,
-			"description": "TestInsertSubsSql",
-			"notLast": ["empty"],
-			"onlyLast": [],
-			"provider": {
-				"type": 1,
-				"source": "",
-				"columns": "A,B,C,1,2,3,4,5,6",
-				"from": "",
-				"where": ""
-			 }
-		},{
-			"sequence": 1,
-			"type": 11,
-			"softFail": false,
-			"description": "TestReplaceRowSql",
-			"provider": {
-				"type": 1,
-				"source": "",
-				"columns": "A,B,C,1,2,3,4,5,6",
-				"from": "",
-				"where": ""
-			 }
-		},{
-			"sequence": 1,
-			"type": 12,
-			"softFail": false,
-			"description": "TestReplaceColSql",
-			"fromColumn": "Foo",
-			"toColumn": "",
-			"provider": {
-				"type": 1,
-				"source": "",
-				"columns": "A,B,C,1,2,3,4,5,6",
-				"from": "",
-				"where": ""
-			}
-		},{
-			"sequence": 1,
 			"type": 21,
-			"softFail": false,
-			"description": "TestInsertSubsCsv",
-			"notLast": ["empty"],
-			"onlyLast": [],
+			"description": "Insert Customers",
 			"provider": {
 				"type": 3,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
-			}
-		},{
-			"sequence": 1,
-			"type": 22,
-			"softFail": false,
-			"description": "TestReplaceRowCsv",
-			"provider": {
-				"type": 3,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
-			}
-		},{
-			"sequence": 1,
-			"type": 23,
-			"softFail": false,
-			"description": "TestReplaceColCsv",
-			"fromColumn": "Foo",
-			"toColumn": "",
-			"provider": {
-				"type": 3,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
-			}
-		},{
-			"sequence": 1,
-			"type": 31,
-			"softFail": false,
-			"notLast": ["empty"],
-			"onlyLast": [],
-			"description": "TestInsertSubsHtml",
-			"provider": {
-				"type": 4,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
-			}
-		},{
-			"sequence": 1,
-			"type": 33,
-			"softFail": false,
-			"description": "TestReplaceColHtml",
-			"fromColumn": "Foo",
-			"toColumn": "",
-			"provider": {
-				"type": 4,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
-			}
-		},{
-			"sequence": 1,
-			"type": 32,
-			"softFail": false,
-			"description": "TestReplaceRowHtml",
-			"provider": {
-				"type": 4,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
-			}
-		},{
-			"sequence": 1,
-			"type": 34,
-			"softFail": false,
-			"description": "TestMarkupSubsHtml",
-			"pattern": "TestPattern",
-			"provider": {
-				"type": 4,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
+				"staticData": "IDCUSTOMER,PRIMARY,NAME,REVENUE,PROFIT,STREET,CITY,STATE,ZIP,PHONE\n1,James,General Motors,9824,806,5791 Pleasant Prairie End,Dysart,PA,16188-0761,(878) 179-6603\n2,Robert,Exxon Mobil,5661,585,1309 Burning Trail,Yazoo City,NE,68970-0108,(531) 984-8463"
 			}
 		}
 	]
-
- }
+}

@@ -1,8 +1,0 @@
-{
-	"sequence": 0,
-	"type": 1,
-	"softFail": false,
-	"description": "Test Replace1",
-	"from": "Foo",
-	"to": "Test Foo Value"
-}

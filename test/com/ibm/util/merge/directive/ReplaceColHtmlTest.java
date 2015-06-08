@@ -37,7 +37,7 @@ public class ReplaceColHtmlTest extends ReplaceColTest {
 		myDirective.setFromColumn("A");
 		myDirective.setToColumn("B");
 		ProviderHtml myProvider = (ProviderHtml) myDirective.getProvider();
-		myProvider.setStaticData("<table><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>");
+		myProvider.setStaticData("<table><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>");
 	}
 
 	@Test
@@ -52,10 +52,11 @@ public class ReplaceColHtmlTest extends ReplaceColTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		// TODO - Testing of HTML Parsed Data
-//		directive.executeDirective();
-//		assertTrue(template.hasReplaceKey("{1}"));
-//		assertEquals("2",template.getReplaceValue("{1}"));
+		directive.executeDirective();
+		assertTrue(template.hasReplaceKey("{1}"));
+		assertEquals("2",template.getReplaceValue("{1}"));
+		assert(template.hasReplaceKey("{4}"));
+		assertEquals("5",template.getReplaceValue("{4}"));
 	}
 
 }

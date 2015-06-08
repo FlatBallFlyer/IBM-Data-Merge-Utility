@@ -125,7 +125,7 @@ public class TemplateFactoryTest {
 
 	@Test
 	public void testLoadFolder() throws MergeException {
-		TemplateFactory.setTemplateFolder("test/templatesUnit/");
+		TemplateFactory.setTemplateFolder("test/templates/");
 		TemplateFactory.loadAll();
 		assertEquals(3, TemplateFactory.size()); 
 	}
@@ -141,7 +141,7 @@ public class TemplateFactoryTest {
 	@Test
 	public void testSaveTemplateFromJson() throws MergeException {
 		TemplateFactory.reset();
-		TemplateFactory.setTemplateFolder("test/templatesUnitOut/");
+		TemplateFactory.setTemplateFolder("test/output/");
 		String template1 = TemplateFactory.saveTemplateFromJson(template4);
 		Template template2 = TemplateFactory.cacheFromJson(template4);
 		assertEquals(template1, template2.asJson(true));

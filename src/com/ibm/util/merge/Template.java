@@ -29,6 +29,7 @@ import java.util.UUID;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.regex.*;
+import java.util.zip.DeflaterOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -191,25 +192,14 @@ public class Template implements Cloneable {
 		// Build the file name and process the replace stack
 		String fileName = this.replaceProcess(this.outputFile);
 
-	    // Create a file entry in the output archive.
+	    // Make sure we have an output file defined
 		if (!this.replaceValues.containsKey(TAG_OUTPUTFILE)) {
 			throw new MergeException("System Tag Not Found", TAG_OUTPUTFILE);
 		}
 		
-		try {
-			ZipOutputStream out = ZipFactory.getZipStream(this.getOutputFile(), this.getOutputType());
-			ZipEntry entry = new ZipEntry(fileName);
-			out.putNextEntry(entry);
-		    log.info("Writing Output File " + fileName);
-		    out.write(this.content.toString().getBytes()); 
-		    out.closeEntry();
-		} catch (FileNotFoundException e) {
-			throw new MergeException("FileNotFound", fileName);
-		} catch (IOException e) {
-			throw new MergeException("File IO Error", fileName);
-		}
-		
-	    // write the content to the file 
+		// Write the output file
+		ZipFactory.writeFile(this.getOutputFile(), this.getOutput(), this.content, this.getOutputType());
+
 		return;
 	 }
 
@@ -218,7 +208,7 @@ public class Template implements Cloneable {
 	 * @throws MergeException File Save errors 
 	 */
 	public void packageOutput() throws MergeException  {
-		ZipFactory.closeStream(this.getOutputFile());
+		ZipFactory.closeStream(this.getOutputFile(), this.getOutputType());
 		ConnectionFactory.close(this.getOutputFile());
 	}
 	

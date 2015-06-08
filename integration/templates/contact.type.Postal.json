@@ -1,7 +1,7 @@
 {
 	"collection":"contact",
 	"name":"type",
-	"columnValue":"postal",
+	"columnValue":"paper",
 	"description":"Contact Line for Postal Contacts",
-	"content":"Postal Mail Address {ADDRESS}"
+	"content":"\tPostal Mail Address for {NAME}: {STREET}, {CITY}, {STATE} {ZIP}\n"
 }

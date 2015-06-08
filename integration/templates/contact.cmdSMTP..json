@@ -1,0 +1,6 @@
+{
+	"collection":"contact",
+	"name":"cmdSMTP",
+	"description":"Command Default Template",
+	"content":"/ncat smtp/{name}.send | sendmail -i -t"
+}

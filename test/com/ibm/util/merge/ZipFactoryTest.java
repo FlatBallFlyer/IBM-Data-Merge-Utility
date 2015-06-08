@@ -18,29 +18,48 @@ package com.ibm.util.merge;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.zip.ZipOutputStream;
+import junitx.framework.FileAssert;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class ZipFactoryTest {
 
+	@Before
+	public void setup() throws IOException {
+		FileUtils.cleanDirectory(new File("test/output/")); 
+	}
+	
+	@After
+	public void teardown() throws IOException {
+		FileUtils.cleanDirectory(new File("test/output/")); 
+	}
+	
 	@Test
-	public void testGetZipStreamZip() throws MergeException, IOException {
-		ZipOutputStream out = ZipFactory.getZipStream("Foo.zip", ZipFactory.TYPE_ZIP);
-		assertNotNull(out);
-		assertEquals(1, ZipFactory.size());
-		ZipFactory.closeStream("Foo.zip");
+	public void testWriteFileZip() throws MergeException, IOException {
 		assertEquals(0, ZipFactory.size());
+		makeArchive("test/output/", "test1.zip", ZipFactory.TYPE_ZIP);
+		assertEquals(0, ZipFactory.size());
+		FileAssert.assertBinaryEquals(new File("test/valid/test1.zip"),new File("test/output/test1.zip"));
 	}
 
 	@Test
-	public void testGetZipStreamTar() throws MergeException {
-		ZipOutputStream stream1 = ZipFactory.getZipStream("Foo.tar.gz", ZipFactory.TYPE_ZIP);
-		assertNotNull(stream1);
-		assertEquals(1, ZipFactory.size());
-		ZipFactory.closeStream("Foo.tar.gz");
+	public void testWriteFileTar() throws MergeException {
 		assertEquals(0, ZipFactory.size());
+		makeArchive("test/output/", "test1.tar.gz", ZipFactory.TYPE_GZIP);
+		assertEquals(0, ZipFactory.size());
+		FileAssert.assertBinaryEquals(new File("test/valid/test1.tar.gz"),new File("test/output/test1.tar.gz"));
+	}
+
+	private void makeArchive(String outputRoot, String outputFile, int type) throws MergeException {
+		ZipFactory.setOutputroot(outputRoot);
+		ZipFactory.writeFile(outputFile, "path/file1.txt", new StringBuilder("Test Output File One"), type);
+		ZipFactory.writeFile(outputFile, "path/file2.txt", new StringBuilder("Test Output File Two"), type);
+		ZipFactory.closeStream(outputFile, type);
 	}
 
 }
