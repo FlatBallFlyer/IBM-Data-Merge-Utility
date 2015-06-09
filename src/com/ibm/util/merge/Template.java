@@ -26,13 +26,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.regex.*;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
 import org.apache.log4j.Logger;
 
 /**********************************************************************************
@@ -189,17 +183,16 @@ public class Template implements Cloneable {
 		if (this.isEmpty()) {return;}
 		if (this.outputFile == "/dev/null") {return;}
 
-		// Build the file name and process the replace stack
-		String fileName = this.replaceProcess(this.outputFile);
-
 	    // Make sure we have an output file defined
 		if (!this.replaceValues.containsKey(TAG_OUTPUTFILE)) {
 			throw new MergeException("System Tag Not Found", TAG_OUTPUTFILE);
 		}
 		
-		// Write the output file
-		ZipFactory.writeFile(this.getOutputFile(), this.getOutput(), this.content, this.getOutputType());
+		// Build the file name and replace process it
+		String fileName = this.replaceProcess(this.outputFile);
 
+		// Write the output file
+		ZipFactory.writeFile(fileName, this.getOutput(), this.content, this.getOutputType());
 		return;
 	 }
 
@@ -379,7 +372,7 @@ public class Template implements Cloneable {
 				this.replaceValues.get(TAG_OUTPUT_TYPE) == "zip") {
 				return ZipFactory.TYPE_ZIP; 
 		} 
-		return ZipFactory.TYPE_GZIP;
+		return ZipFactory.TYPE_TAR;
 	}
 
 	/********************************************************************************

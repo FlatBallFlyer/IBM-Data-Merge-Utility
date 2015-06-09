@@ -1,0 +1,7 @@
+{
+	"collection":"html",
+	"name":"contactRow",
+	"description":"CONTACT_XX.html Row",
+	"content":"<tr><td>{FROM_VALUE}</td><td>{TO_VALUE}</td></tr>"
+}
+

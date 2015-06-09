@@ -206,7 +206,7 @@ public class TemplateTest {
 
 	@Test
 	public void testGetOutputTypeTar() {
-		assertEquals(ZipFactory.TYPE_GZIP, template.getOutputType());
+		assertEquals(ZipFactory.TYPE_TAR, template.getOutputType());
 	}
 
 	@Test

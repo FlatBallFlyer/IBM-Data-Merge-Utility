@@ -15,12 +15,13 @@
  *
  */
 package com.ibm.util.merge;
+import com.ibm.util.merge.CompareArchives;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
-import junitx.framework.FileAssert;
+import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -40,19 +41,19 @@ public class ZipFactoryTest {
 	}
 	
 	@Test
-	public void testWriteFileZip() throws MergeException, IOException {
+	public void testWriteFileZip() throws MergeException, IOException, NoSuchAlgorithmException {
 		assertEquals(0, ZipFactory.size());
 		makeArchive("test/output/", "test1.zip", ZipFactory.TYPE_ZIP);
 		assertEquals(0, ZipFactory.size());
-		FileAssert.assertBinaryEquals(new File("test/valid/test1.zip"),new File("test/output/test1.zip"));
+		CompareArchives.assertZipEquals("test/valid/test1.zip", "test/output/test1.zip");
 	}
 
 	@Test
-	public void testWriteFileTar() throws MergeException {
+	public void testWriteFileTar() throws MergeException, IOException, NoSuchAlgorithmException {
 		assertEquals(0, ZipFactory.size());
-		makeArchive("test/output/", "test1.tar.gz", ZipFactory.TYPE_GZIP);
+		makeArchive("test/output/", "test1.tar", ZipFactory.TYPE_TAR);
 		assertEquals(0, ZipFactory.size());
-		FileAssert.assertBinaryEquals(new File("test/valid/test1.tar.gz"),new File("test/output/test1.tar.gz"));
+		CompareArchives.assertTarEquals("test/valid/test1.tar", "test/output/test1.tar");
 	}
 
 	private void makeArchive(String outputRoot, String outputFile, int type) throws MergeException {

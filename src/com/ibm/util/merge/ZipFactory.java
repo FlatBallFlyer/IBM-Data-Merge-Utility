@@ -20,10 +20,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -42,9 +39,10 @@ import com.ibm.util.merge.Template;
 final public class ZipFactory {
 	// Factory Constants
 	public static final int TYPE_ZIP = 1;
-	public static final int TYPE_GZIP = 2;
+	public static final int TYPE_TAR = 2;
 	private static final Logger log = Logger.getLogger( ZipFactory.class.getName() );
-	private static final ConcurrentHashMap<String,Object> archiveList = new ConcurrentHashMap<String,Object>();
+	private static final ConcurrentHashMap<String,TarArchiveOutputStream> tarList = new ConcurrentHashMap<String,TarArchiveOutputStream>();
+	private static final ConcurrentHashMap<String,ZipOutputStream> zipList = new ConcurrentHashMap<String,ZipOutputStream>();
 	private static String outputroot = System.getProperty("java.io.tmpdir");
     /**********************************************************************************
 	 * <p>Close the Zip File and remove from cache</p>
@@ -71,30 +69,31 @@ final public class ZipFactory {
      * @throws FileNotFoundException Unabel to create output zip
 	 */
     public static void saveFileToZip(String guid, String fileName, StringBuilder content) throws MergeException  {
-    	if ( !archiveList.containsKey(guid) ) { 
-    		DeflaterOutputStream stream;
-    		BufferedOutputStream streamOutput;
+    	ZipOutputStream outputStream = getZipOutputStream(guid);
+		ZipEntry entry = new ZipEntry(fileName);
+		try {
+		    log.info("Writing Output File " + fileName);
+			outputStream.putNextEntry(entry);
+		    outputStream.write(content.toString().getBytes()); 
+		    outputStream.closeEntry();
+		} catch (IOException e) {
+			throw new MergeException(e, "Error Writing to Zip File", fileName);
+		}
+    }
+
+    private static ZipOutputStream getZipOutputStream(String guid) throws MergeException {
+    	if ( !zipList.containsKey(guid) ) { 
     		String outputFile = outputroot + "/" + guid;
 			try {
-				streamOutput = new BufferedOutputStream(new FileOutputStream(outputFile));
-				stream = new ZipOutputStream(streamOutput);	
-	    		archiveList.putIfAbsent(guid, stream);
-	    		log.info("Created ZipOutput " + guid);
+				BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile));
+				ZipOutputStream outputStream = new ZipOutputStream(output);				
+				zipList.putIfAbsent(guid, outputStream);
+	    		log.info("Created Zip Output " + guid);
 			} catch (FileNotFoundException e) {
 				throw new MergeException(e, "FileNotFound creating Output Archive, check merge-output-root parameter in WEB-INF", outputFile);
 			}
     	}
-    	
-    	ZipOutputStream out = (ZipOutputStream) archiveList.get(guid);
-		ZipEntry entry = new ZipEntry(fileName);
-		try {
-			out.putNextEntry(entry);
-		    log.info("Writing Output File " + fileName);
-		    out.write(content.toString().getBytes()); 
-			out.closeEntry();
-		} catch (IOException e) {
-			throw new MergeException(e, "Error Writing to Zip File", fileName);
-		}
+    	return zipList.get(guid);
     }
     
     /**********************************************************************************
@@ -107,69 +106,63 @@ final public class ZipFactory {
      * @throws FileNotFoundException Unabel to create output zip
 	 */
     public static void saveFileToTar(String guid, String fileName, StringBuilder content) throws MergeException  {
-    	if ( !archiveList.containsKey(guid) ) { 
-    		BufferedOutputStream bufferedOutput;
-    		GZIPOutputStream gzipStream;
-    		TarArchiveOutputStream outputStream;
-    		String outputFile = outputroot + "/" + guid;
-			try {
-				bufferedOutput = new BufferedOutputStream(new FileOutputStream(outputFile));
-				gzipStream = new GZIPOutputStream(bufferedOutput);	
-				outputStream = new TarArchiveOutputStream(gzipStream);
-	    		archiveList.putIfAbsent(guid, outputStream);
-	    		log.info("Created TarOutput " + guid);
-			} catch (FileNotFoundException e) {
-				throw new MergeException(e, "FileNotFound creating Output Archive, check merge-output-root parameter in WEB-INF", outputFile);
-			} catch (IOException e) {
-				throw new MergeException(e, "Error Creating tar.gz output file, check merge-output-root parameter in WEB-INF", outputFile);
-			}
-    	}
-    	
-    	TarArchiveOutputStream out = (TarArchiveOutputStream) archiveList.get(guid);
+    	TarArchiveOutputStream outputStream = getTarOutputStream(guid);
     	TarArchiveEntry entry = new TarArchiveEntry(fileName, true); 
     	entry.setSize(content.length());
     	entry.setNames("root","root");
 		try {
-			out.putArchiveEntry(entry);
 		    log.info("Writing Output File " + fileName);
-		    out.write(content.toString().getBytes()); 
-		    out.flush();
-			out.closeArchiveEntry();
+			outputStream.putArchiveEntry(entry);
+		    outputStream.write(content.toString().getBytes()); 
+		    outputStream.flush();
+		    outputStream.closeArchiveEntry();
 		} catch (IOException e) {
 			throw new MergeException(e, "Error Writing to Zip File", fileName);
 		}
     }
     
+    private static TarArchiveOutputStream getTarOutputStream(String guid) throws MergeException {
+    	if ( !tarList.containsKey(guid) ) { 
+    		String outputFile = outputroot + "/" + guid;
+			try {
+				BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile));
+				TarArchiveOutputStream outputStream = new TarArchiveOutputStream(output);				
+	    		tarList.putIfAbsent(guid, outputStream);
+	    		log.info("Created Tar Output " + guid);
+			} catch (FileNotFoundException e) {
+				throw new MergeException(e, "FileNotFound creating Output Archive, check merge-output-root parameter in WEB-INF", outputFile);
+			}
+    	}
+    	return tarList.get(guid);
+    }
+
     /**********************************************************************************
-	 * <p>Close the Zip File and remove from cache</p>
+	 * <p>Close the Archive File and remove from cache</p>
 	 *
 	 * @param  guid GUID of Zip output
      * @throws MergeException wrapped IOException
      * @throws IOException Zip File Close Error
 	 */
     public static void closeStream(String guid, int type) throws MergeException {
-    	if ( archiveList.containsKey(guid) ) { 
-    		if (type == ZipFactory.TYPE_ZIP) {
-    			try {
-    		    	ZipOutputStream out = (ZipOutputStream) archiveList.get(guid);
-    		    	out.close();
+    	if ( type == ZipFactory.TYPE_ZIP) {
+        	if ( zipList.containsKey(guid) ) {
+        		try {
+        			zipList.get(guid).close();
+        			zipList.remove(guid);
     			} catch (IOException e) {
-    				throw new MergeException(e, "Error Closing ZIP archive stream", guid);
-    			} finally {
-    		    	archiveList.remove(guid);
-    	    		log.info("Closed Output " + guid);
+    				throw new MergeException(e, "IO Exception Closing Output Stream", guid);
     			}
-    		} else {
-		    	try {
-		        	TarArchiveOutputStream out = (TarArchiveOutputStream) archiveList.get(guid);
-					out.close();
+        	} 
+    		
+    	} else {
+	    	if ( tarList.containsKey(guid) ) {
+	    		try {
+	    			tarList.get(guid).close();
+	    			tarList.remove(guid);
 				} catch (IOException e) {
-					throw new MergeException(e, "Error Closing Tar archive stream", guid);
-				} finally {
-			    	archiveList.remove(guid);
-		    		log.info("Closed Output " + guid);
+					throw new MergeException(e, "IO Exception Closing Output Stream", guid);
 				}
-    		}
+	    	}
     	}
     }
     
@@ -185,7 +178,7 @@ final public class ZipFactory {
 	 * Get the size of the cache
 	 */
     public static int size() {
-    	return archiveList.size();
+    	return tarList.size() + zipList.size();
     }
     
 }

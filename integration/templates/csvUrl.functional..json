@@ -3,8 +3,7 @@
 	"name":"functional",
 	"columnValue":"",
 	"description":"CSV Url Root Functional Test",
-	"content":
-	"<tkBookmark collection=\"csvUrl\" name=\"Report\"/>\n<tkBookmark collection=\"csvUrl\" name=\"SMTP\"/>\n<tkBookmark collection=\"csvUrl\" name=\"SMS\"/>",
+	"content":"<tkBookmark collection=\"csvUrl\" name=\"report\"/>\n<tkBookmark collection=\"csvUrl\" name=\"SMTP\"/>\n<tkBookmark collection=\"csvUrl\" name=\"SMS\"/>",
 	"directives":[
 		{
 			"sequence": 1,

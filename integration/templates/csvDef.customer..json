@@ -11,13 +11,11 @@
 		  	"tags": ["IDCUSTOMER"]
 		},{
 			"type": 1,
-			"softFail": false,
 			"description": "Replace for Coma",
 			"from": "coma",
 			"to": ","
 		},{
 			"type": 1,
-			"softFail": false,
 			"description": "Replace for Period",
 			"from": "period",
 			"to": ","

@@ -1,0 +1,6 @@
+{
+	"collection":"html",
+	"name":"customerRow",
+	"description":"CUSTOMER.html Row",
+	"content":"<tr><td>{IDCUSTOMER}<td><td>{PRIMARY}<td><td>{NAME}<td><td>{REVENUE}<td><td>{PROFIT}<td><td>{STREET}<td><td>{CITY}<td><td>{STATE}<td><td>{ZIP}<td><td>{PHONE}<td></tr>\n<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" /></table>"
+}

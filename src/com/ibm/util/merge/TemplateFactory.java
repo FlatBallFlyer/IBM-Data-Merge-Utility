@@ -22,8 +22,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -311,7 +311,7 @@ final public class TemplateFactory {
     	for (File file : folder.listFiles()) {
     		if (!file.isDirectory()) {
     			try {
-    				String json = String.join("\n", Files.readAllLines(Paths.get(file.getPath())));
+    				String json = Arrays.toString(Files.readAllBytes(file.toPath()));
     				cacheFromJson(json);
     			} catch (JsonSyntaxException e) {
     				log.warn("Malformed JSON Template:" + file.getName());

@@ -1,0 +1,20 @@
+{
+	"collection":"html",
+	"name":"customer",
+	"description":"Create CUSTOMER.html and Contacts html docs",
+	"outputFile":"CUSTOMER.HTML",
+	"content":"<tkBookmark collection=\"html\" name=\"contact\"/><table><tr><th>IDCUSTOMER</th><th>PRIMARY</th><th>NAME</th><th>REVENUE</th><th>PROFIT</th><th>STREET</th><th>CITY</th><th>STATE</th><th>ZIP</th><th>PHONE</th></tr>\n<tkBookmark collection=\"html\" name=\"customerRow\"/></table>",
+	"directives":[
+		{
+			"type": 10,
+			"description": "TestInsertSubsSql",
+			"provider": {
+				"type": 1,
+				"source": "testgenDb",
+				"columns": "*",
+				"from": "CUSTOMER"
+			 }
+		}
+	]
+
+ }

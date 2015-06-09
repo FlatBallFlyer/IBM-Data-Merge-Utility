@@ -1,0 +1,18 @@
+{
+	"collection":"csvTag",
+	"name":"report",
+	"description":"Report to Test InsertSubs from Collection for Column",
+	"outputFile":"",
+	"content":"Begin Customers\n<tkBookmark collection=\"csvTag\" name=\"customer\"/>\nEnd Customers",
+	"directives":[
+		{
+			"sequence": 1,
+			"type": 21,
+			"description": "Insert Customers",
+			"provider": {
+				"type": 3,
+				"tag": "csvCustomers"
+			}
+		}
+	]
+}
