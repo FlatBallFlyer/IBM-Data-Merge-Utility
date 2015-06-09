@@ -17,14 +17,10 @@
 package com.ibm.util.merge;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
@@ -32,8 +28,6 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-
 import static org.junit.Assert.*;
 
 public final class CompareArchives {

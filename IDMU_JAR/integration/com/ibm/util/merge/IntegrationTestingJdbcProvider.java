@@ -45,8 +45,8 @@ public class IntegrationTestingJdbcProvider {
 		ZipFactory.setOutputroot(outputDir);
 		
 		// Initialize context (usually from request.getParameterMap())
-		ApplicationContext context = 
-	    		new ClassPathXmlApplicationContext("Spring-Module.xml");
+//		ApplicationContext context = 
+//	    		new ClassPathXmlApplicationContext("Spring-Module.xml");
 		
 	}
 
