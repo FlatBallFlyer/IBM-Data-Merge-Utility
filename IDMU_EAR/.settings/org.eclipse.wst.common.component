@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="IDMU_EAR">
+        <wb-resource deploy-path="/" source-path="/" tag="defaultRootSource"/>
+        <dependent-module archiveName="IDMU.war" deploy-path="/" handle="module:/resource/IDMU/IDMU">
+            <dependent-object>Module_1433704420739</dependent-object>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="IDMU_WAR.war" deploy-path="/" handle="module:/resource/IDMU_WAR/IDMU_WAR">
+            <dependent-object>Module_1433714771185</dependent-object>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="IDMU_JAR.jar" deploy-path="/lib" handle="module:/resource/IDMU_JAR/IDMU_JAR">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>
