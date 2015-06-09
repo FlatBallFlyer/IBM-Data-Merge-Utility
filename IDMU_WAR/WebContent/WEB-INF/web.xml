@@ -16,7 +16,7 @@
 		<servlet-class>com.ibm.util.merge.web.Initialize</servlet-class>
 		<init-param>
 			<param-name>log4j-init-file</param-name>
-			<param-value>/WEB-INF/classes/log4j.properties</param-value>
+			<param-value>/WEB-INF/properties/log4j.properties</param-value>
 		</init-param>
 		<init-param>
 			<param-name>merge-output-root</param-name>
