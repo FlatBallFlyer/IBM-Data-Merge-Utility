@@ -26,6 +26,8 @@ import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,8 +59,16 @@ public class IntegrationTestingCsvProvider {
 		parameterMap.put("csvContact1", new String[]{csvContacts1});
 		parameterMap.put("csvContact2", new String[]{csvContacts2});
 		parameterMap.put("csvContact3", new String[]{csvContacts2});
+		
+		// Reset the output directory
+		FileUtils.cleanDirectory(new File(outputDir)); 
 	}
 
+	@After
+	public void teardown() throws IOException {
+		FileUtils.cleanDirectory(new File(outputDir)); 
+	}
+	
 	@Test
 	public void testDefaultTemplate() throws MergeException, IOException {
 		Template root = TemplateFactory.getTemplate(parameterMap);
