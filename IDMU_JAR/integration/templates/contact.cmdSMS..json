@@ -1,7 +1,0 @@
-{
-	"collection":"contact",
-	"name":"cmd",
-	"columnValue":"SMS",
-	"description":"Send SMS Command",
-	"content":"\ncurl http://textbelt.com/text -d number{phone} -d \"message={msg}\""
- }

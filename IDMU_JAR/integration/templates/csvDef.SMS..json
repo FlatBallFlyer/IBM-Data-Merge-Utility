@@ -1,162 +1,16 @@
 {
 	"collection":"csvDef",
 	"name":"SMS",
-	"description":"",
-	"outputFile":"",
-	"content":"This is a test of the encodeing <tkBookmark name=\"test\" collection=\"root\" />",
+	"outputFile":"sendSmSSmtp.sh",
+	"description":"Insert Subs with Output Test with CSV Default Data",
+	"content":"# Commands to invoke SendMail and SMS <tkBookmark collection=\"contact\" name=\"cmd\" column=\"PREFERENCE\"/><tkBookmark collection=\"contact\" name=\"out\" column=\"PREFERENCE\"/>",
 	"directives":[
 		{
-			"sequence": 1,
-		  	"type": 0,
-		  	"softFail": false,
-		  	"description": "TestRequire",
-		  	"tags": ["Foo","empty"]
-		},{
-			"sequence": 0,
-			"type": 1,
-			"softFail": false,
-			"description": "Test Replace1",
-			"from": "Foo",
-			"to": "Test Foo Value"
-		},{
-			"sequence": 1,
-			"type": 2,
-			"softFail": false,
-			"description": "TestInsertSubsTag",
-			"notLast": ["empty"],
-			"onlyLast": [],
-			"provider": {
-				"type": 2,
-				"condition": 0,
-				"tag": "Foo",
-				"value": "",
-				"list": false
-			 }
-		},{
-			"sequence": 1,
-			"type": 10,
-			"softFail": false,
-			"description": "TestInsertSubsSql",
-			"notLast": ["empty"],
-			"onlyLast": [],
-			"provider": {
-				"type": 1,
-				"source": "",
-				"columns": "A,B,C,1,2,3,4,5,6",
-				"from": "",
-				"where": ""
-			 }
-		},{
-			"sequence": 1,
-			"type": 11,
-			"softFail": false,
-			"description": "TestReplaceRowSql",
-			"provider": {
-				"type": 1,
-				"source": "",
-				"columns": "A,B,C,1,2,3,4,5,6",
-				"from": "",
-				"where": ""
-			 }
-		},{
-			"sequence": 1,
-			"type": 12,
-			"softFail": false,
-			"description": "TestReplaceColSql",
-			"fromColumn": "Foo",
-			"toColumn": "",
-			"provider": {
-				"type": 1,
-				"source": "",
-				"columns": "A,B,C,1,2,3,4,5,6",
-				"from": "",
-				"where": ""
-			}
-		},{
-			"sequence": 1,
 			"type": 21,
-			"softFail": false,
 			"description": "TestInsertSubsCsv",
-			"notLast": ["empty"],
-			"onlyLast": [],
 			"provider": {
 				"type": 3,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
-			}
-		},{
-			"sequence": 1,
-			"type": 22,
-			"softFail": false,
-			"description": "TestReplaceRowCsv",
-			"provider": {
-				"type": 3,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
-			}
-		},{
-			"sequence": 1,
-			"type": 23,
-			"softFail": false,
-			"description": "TestReplaceColCsv",
-			"fromColumn": "Foo",
-			"toColumn": "",
-			"provider": {
-				"type": 3,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
-			}
-		},{
-			"sequence": 1,
-			"type": 31,
-			"softFail": false,
-			"notLast": ["empty"],
-			"onlyLast": [],
-			"description": "TestInsertSubsHtml",
-			"provider": {
-				"type": 4,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
-			}
-		},{
-			"sequence": 1,
-			"type": 33,
-			"softFail": false,
-			"description": "TestReplaceColHtml",
-			"fromColumn": "Foo",
-			"toColumn": "",
-			"provider": {
-				"type": 4,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
-			}
-		},{
-			"sequence": 1,
-			"type": 32,
-			"softFail": false,
-			"description": "TestReplaceRowHtml",
-			"provider": {
-				"type": 4,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
-			}
-		},{
-			"sequence": 1,
-			"type": 34,
-			"softFail": false,
-			"description": "TestMarkupSubsHtml",
-			"pattern": "TestPattern",
-			"provider": {
-				"type": 4,
-				"staticData": "A,B,C\n1,2,3\n4,5,6",
-				"url": "",
-				"tag": ""
+				"staticData": "IDCONTACT,IDCUSTOMER,NAME,PREFERENCE,EMAIL,PHONE\n1,1,James,paper,James@General.com,(878) 555-0211\n21,1,Daniel,SMS,Daniel@General.com,(878) 555-2221\n41,1,Alan,email,Alan@General.com,(878) 555-4241\n61,1,Harry,paper,Harry@General.com,(878) 555-6261\n81,1,Ernest,SMS,Ernest@General.com,(878) 555-8281\n101,1,Linda,email,Linda@General.com,(878) 555-0211\n121,1,Judith,paper,Judith@General.com,(878) 555-2211\n141,1,Peggy,SMS,Peggy@General.com,(878) 555-4211\n161,1,Vicki,email,Vicki@General.com,(878) 555-6211\n181,1,Teresa,paper,Teresa@General.com,(878) 555-8211"
 			}
 		}
 	]

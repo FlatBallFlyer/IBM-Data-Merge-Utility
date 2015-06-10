@@ -2,5 +2,5 @@
 	"collection":"special",
 	"name":"SMTP",
 	"description":"Ask for eMail Address",
-	"content":"Pleace visit SOME URL HERE to make sure we have your eMail address"
+	"content":"Pleace visit www.mypage.net to make sure we have your eMail address"
 }

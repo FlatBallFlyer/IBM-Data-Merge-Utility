@@ -1,7 +1,7 @@
 {
 	"collection":"contact",
 	"name":"outSMTP",
-	"outputFile":"smtp/{NAME}.send",
+	"outputFile":"smtp/{NAME}.send.txt",
 	"description":"SMTP File",
-	"content":"From: \"You\" <You@yourDoman.com>\nTo: \"Customer\" <Customer@someDomain.com>/nSubject: Your Subject Here/nMIME-Version: 1.0/nContent-Type: text/html; charset=iso-8859-1/nContent-Disposition: inline<html><body>YOUR CONTENT HERE</body></html>"
+	"content":"From: \"You\" <You@yourDoman.com>\nTo: \"{NAME}\" <{EMAIL}>/nSubject: Your Subject Here/nMIME-Version: 1.0/nContent-Type: text/html; charset=iso-8859-1/nContent-Disposition: inline<html><body>YOUR CONTENT HERE</body></html>"
 }

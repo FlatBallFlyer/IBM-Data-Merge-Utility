@@ -17,6 +17,7 @@
 
 package com.ibm.util.merge;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -75,6 +76,7 @@ final public class ZipFactory {
 		    log.info("Writing Output File " + fileName);
 			outputStream.putNextEntry(entry);
 		    outputStream.write(content.toString().getBytes()); 
+		    outputStream.flush();
 		    outputStream.closeEntry();
 		} catch (IOException e) {
 			throw new MergeException(e, "Error Writing to Zip File", fileName);
@@ -107,7 +109,7 @@ final public class ZipFactory {
 	 */
     public static void saveFileToTar(String guid, String fileName, StringBuilder content) throws MergeException  {
     	TarArchiveOutputStream outputStream = getTarOutputStream(guid);
-    	TarArchiveEntry entry = new TarArchiveEntry(fileName, true); 
+    	TarArchiveEntry entry = new TarArchiveEntry(fileName); 
     	entry.setSize(content.length());
     	entry.setNames("root","root");
 		try {

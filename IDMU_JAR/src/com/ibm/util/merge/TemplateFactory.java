@@ -311,7 +311,7 @@ final public class TemplateFactory {
     	for (File file : folder.listFiles()) {
     		if (!file.isDirectory()) {
     			try {
-    				String json = Arrays.toString(Files.readAllBytes(file.toPath()));
+    				String json =  String.join("\n", Files.readAllLines(file.toPath())); 
     				cacheFromJson(json);
     			} catch (JsonSyntaxException e) {
     				log.warn("Malformed JSON Template:" + file.getName());

@@ -73,6 +73,9 @@ public class MergeException extends Exception {
 		return "";
 	}
 
+	public String getMessage() {
+		return super.getMessage() + "For: " + this.context;
+	}
 	public String getContext() {
 		return context;
 	}

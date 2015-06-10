@@ -3,7 +3,7 @@
 	"name":"functional",
 	"description":"CSV Default Root Functional Test",
 	"content":
-	"<tkBookmark collection=\"csvDef\" name=\"Report\"/>\n<tkBookmark collection=\"csvDef\" name=\"SMTP\"/>\n<tkBookmark collection=\"csvDef\" name=\"SMS\"/>",
+	"<tkBookmark collection=\"csvDef\" name=\"report\"/>\n<tkBookmark collection=\"csvDef\" name=\"SMTP\"/>\n<tkBookmark collection=\"csvDef\" name=\"SMS\"/>",
 	"directives":[
 		{
 			"sequence": 1,

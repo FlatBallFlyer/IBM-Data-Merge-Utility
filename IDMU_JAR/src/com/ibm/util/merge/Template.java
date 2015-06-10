@@ -192,7 +192,7 @@ public class Template implements Cloneable {
 		String fileName = this.replaceProcess(this.outputFile);
 
 		// Write the output file
-		ZipFactory.writeFile(fileName, this.getOutput(), this.content, this.getOutputType());
+		ZipFactory.writeFile(this.getOutputFile(), fileName, this.content, this.getOutputType());
 		return;
 	 }
 
@@ -369,7 +369,7 @@ public class Template implements Cloneable {
 	 */
 	public int getOutputType() {
 		if (this.replaceValues.containsKey(TAG_OUTPUT_TYPE) && 
-				this.replaceValues.get(TAG_OUTPUT_TYPE) == "zip") {
+				this.replaceValues.get(TAG_OUTPUT_TYPE).endsWith("zip") ) {
 				return ZipFactory.TYPE_ZIP; 
 		} 
 		return ZipFactory.TYPE_TAR;

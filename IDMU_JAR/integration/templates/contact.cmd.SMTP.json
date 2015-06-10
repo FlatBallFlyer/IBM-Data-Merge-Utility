@@ -3,5 +3,5 @@
 	"name":"cmd",
 	"columnValue":"SMTP",
 	"description":"Send SMTP Command",
-	"content":"cat smtp/{name}.send | sendmail -i -t"
+	"content":"/ncat smtp/{NAME}.send | sendmail -i -t"
 }

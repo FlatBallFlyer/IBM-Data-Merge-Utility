@@ -3,7 +3,7 @@
 	"name":"SMTP",
 	"outputFile":"sendSmtp.sh",
 	"description":"Insert Subs with Output Test with CSV Default Data",
-	"content":"# Commands to invoke SendMail for postal customers/n<tkBookmark collection=\"contact\" name=\"outSMTP\"/><tkBookmark collection=\"contact\" name=\"cmdSMTP\"/>",
+	"content":"# Commands to invoke SendMail for postal customers<tkBookmark collection=\"contact\" name=\"outSMTP\"/><tkBookmark collection=\"contact\" name=\"cmdSMTP\"/>",
 	"directives":[
 		{
 			"type": 21,
