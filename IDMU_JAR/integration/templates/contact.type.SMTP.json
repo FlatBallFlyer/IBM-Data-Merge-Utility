@@ -3,5 +3,5 @@
 	"name":"type",
 	"columnValue":"email",
 	"description":"Contact Line for SMTP Contacts",
-	"content":"\tName: {NAME} \tEmail Address {EMAIL}\n"
+	"content":"\n\tName: {NAME} \tEmail Address {EMAIL}"
 }

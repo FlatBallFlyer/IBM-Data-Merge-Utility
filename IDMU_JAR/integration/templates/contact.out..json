@@ -2,7 +2,6 @@
 	"collection":"contact",
 	"name":"out",
 	"description":"Insert If Equals test - Create Postal Mail Message",
-	"outputFile":"postal/{NAME}.postal",
 	"content":"<tkBookmark collection=\"contact\", name=\"postal\"/>",
 	"directives":[
 		{
@@ -13,7 +12,7 @@
 				"type": 2,
 				"condition": 3,
 				"tag": "PREFERENCE",
-				"value": "postal"
+				"value": "paper"
 			 }
 		}
 	]

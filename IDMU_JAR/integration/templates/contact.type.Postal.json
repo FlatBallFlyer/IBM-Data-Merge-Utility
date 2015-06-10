@@ -3,5 +3,5 @@
 	"name":"type",
 	"columnValue":"paper",
 	"description":"Contact Line for Postal Contacts",
-	"content":"\tPostal Mail Address for {NAME}: {STREET}, {CITY}, {STATE} {ZIP}\n"
+	"content":"\n\tPostal Mail Address for {NAME}: {STREET}, {CITY}, {STATE} {ZIP}"
 }

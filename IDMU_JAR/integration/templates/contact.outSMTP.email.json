@@ -1,4 +1,4 @@
 {
 	"collection":"contact",
-	"name":"cmdSMTP"
+	"name":"outSMTP"
 }

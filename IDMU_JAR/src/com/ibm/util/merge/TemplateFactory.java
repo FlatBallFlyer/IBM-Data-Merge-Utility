@@ -92,7 +92,7 @@ final public class TemplateFactory {
 		// Iterate parameters, setting replace values 
 		for( String key: request.keySet() ) {
 			String value = request.get(key)[0];
-			replace.put(key, value);
+			replace.put(Template.wrap(key), value);
 		}
 		
 		// Handle cache reset request

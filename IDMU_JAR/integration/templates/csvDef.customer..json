@@ -3,7 +3,7 @@
 	"name":"customer",
 	"description":"",
 	"outputFile":"",
-	"content":"Contacts for: {NAME}/n<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" />",
+	"content":"\nContacts for: {NAME}<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" />",
 	"directives":[
 		{
 		  	"type": 0,

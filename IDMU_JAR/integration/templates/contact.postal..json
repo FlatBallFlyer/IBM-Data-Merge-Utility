@@ -3,6 +3,6 @@
 	"name":"postal",
 	"columnValue":"",
 	"description":"Postal Mail Textfile",
-	"outputFile":"postal/{name}.mail.txt",
-	"content":"Drear {NAME} from {ADDRESS} {CITY}, {STATE} {ZIP} - Please renew your subscriptions"
+	"outputFile":"postal/{NAME}.mail.txt",
+	"content":"Drear {PREFERENCE} {NAME} from {STREET} {CITY}, {STATE} {ZIP} - Please renew your subscriptions"
  }

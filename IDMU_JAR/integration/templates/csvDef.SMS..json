@@ -6,11 +6,18 @@
 	"content":"# Commands to invoke SendMail and SMS <tkBookmark collection=\"contact\" name=\"cmd\" column=\"PREFERENCE\"/><tkBookmark collection=\"contact\" name=\"out\" column=\"PREFERENCE\"/>",
 	"directives":[
 		{
+			"type": 22,
+			"description": "TestReplaceRowCsv",
+			"provider": {
+				"type": 3,
+				"staticData": "IDCUSTOMER,PRIMARY,NAME,REVENUE,PROFIT,STREET,CITY,STATE,ZIP,PHONE\n1,James,General Motors,9824,806,5791 Pleasant Prairie End,Dysart,PA,16188-0761,(878) 179-6603"
+			}
+		},{
 			"type": 21,
 			"description": "TestInsertSubsCsv",
 			"provider": {
 				"type": 3,
-				"staticData": "IDCONTACT,IDCUSTOMER,NAME,PREFERENCE,EMAIL,PHONE\n1,1,James,paper,James@General.com,(878) 555-0211\n21,1,Daniel,SMS,Daniel@General.com,(878) 555-2221\n41,1,Alan,email,Alan@General.com,(878) 555-4241\n61,1,Harry,paper,Harry@General.com,(878) 555-6261\n81,1,Ernest,SMS,Ernest@General.com,(878) 555-8281\n101,1,Linda,email,Linda@General.com,(878) 555-0211\n121,1,Judith,paper,Judith@General.com,(878) 555-2211\n141,1,Peggy,SMS,Peggy@General.com,(878) 555-4211\n161,1,Vicki,email,Vicki@General.com,(878) 555-6211\n181,1,Teresa,paper,Teresa@General.com,(878) 555-8211"
+				"staticData": "IDCONTACT,IDCUSTOMER,NAME,PREFERENCE,EMAIL,PHONE\n1,1,James,paper,James@General.com,(878) 555-0211\n21,1,Daniel,SMS,,(878) 555-2221\n41,1,Alan,email,Alan@General.com,\n61,1,Harry,paper,Harry@General.com,(878) 555-6261\n81,1,Ernest,SMS,Ernest@General.com,(878) 555-8281\n101,1,Linda,email,Linda@General.com,(878) 555-0211\n121,1,Judith,paper,Judith@General.com,(878) 555-2211\n141,1,Peggy,SMS,Peggy@General.com,(878) 555-4211\n161,1,Vicki,email,Vicki@General.com,(878) 555-6211\n181,1,Teresa,paper,Teresa@General.com,(878) 555-8211"
 			}
 		}
 	]

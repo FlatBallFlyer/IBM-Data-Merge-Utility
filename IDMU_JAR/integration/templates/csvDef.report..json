@@ -2,8 +2,8 @@
 	"collection":"csvDef",
 	"name":"report",
 	"description":"Report to Test InsertSubs from Collection for Column",
-	"outputFile":"",
-	"content":"Begin Customers\n<tkBookmark collection=\"csvDef\" name=\"customer\"/>\nEnd Customers",
+	"outputFile":"FullReport.txt",
+	"content":"Begin Customers for {corpUrl}<tkBookmark collection=\"csvDef\" name=\"customer\"/>\nEnd Customers",
 	"directives":[
 		{
 			"sequence": 1,

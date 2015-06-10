@@ -3,7 +3,7 @@
 	"name":"cmd",
 	"columnValue":"SMS",
 	"description":"Send SMS Command",
-	"content":"\ncurl http://textbelt.com/text -d number{phone} -d message=Time to Renew!<tkBookmark collection=\"special\" name=\"SMTP\">",
+	"content":"\ncurl http://textbelt.com/text -d number{phone} -d message=Time to Renew!<tkBookmark collection=\"special\" name=\"SMTP\"/>",
  	"directives":[
 		{
 			"type": 2,

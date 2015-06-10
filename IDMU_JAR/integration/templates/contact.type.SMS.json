@@ -3,5 +3,5 @@
 	"name":"type",
 	"columnValue":"SMS",
 	"description":"Contact Line for SMS Contacts",
-	"content":"\tName: {NAME} \tSMS-Phone# {PHONE}\n"
+	"content":"\n\tName: {NAME} \tSMS-Phone# {PHONE}"
 }

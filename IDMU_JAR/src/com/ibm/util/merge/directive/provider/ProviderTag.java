@@ -65,21 +65,21 @@ public class ProviderTag extends Provider implements Cloneable {
 			}
 			break;
 		case ProviderTag.CONDITION_BLANK: 
-			if ( (template.hasReplaceKey(theTag) 
-				&& template.hasReplaceValue(theTag))) {
+			if (!template.hasReplaceKey(theTag) 
+				|| template.hasReplaceValue(theTag)) {
 				return;
 			}   
 			break;
 		case ProviderTag.CONDITION_NONBLANK: 
-			if ( (template.hasReplaceKey(theTag) 
-				&& !template.hasReplaceValue(theTag))) {
+			if (!template.hasReplaceKey(theTag) 
+				|| !template.hasReplaceValue(theTag)) {
 				return;
 			}   
 			break;
 		case ProviderTag.CONDITION_EQUALS: 
-			if (! (template.hasReplaceKey(theTag) 
-					&& template.hasReplaceValue(theTag)
-					&& template.getReplaceValue(theTag).equals(this.value))) {
+			if (!template.hasReplaceKey(theTag) 
+				|| !template.hasReplaceValue(theTag)
+				|| !template.getReplaceValue(theTag).equals(this.value)) {
 				return;
 			}   
 			break;
