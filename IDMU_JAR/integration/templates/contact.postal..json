@@ -4,5 +4,5 @@
 	"columnValue":"",
 	"description":"Postal Mail Textfile",
 	"outputFile":"postal/{NAME}.mail.txt",
-	"content":"Drear {PREFERENCE} {NAME} from {STREET} {CITY}, {STATE} {ZIP} - Please renew your subscriptions"
+	"content":"Dear: {PREFERENCE} {NAME} from {STREET} {CITY}, {STATE} {ZIP} - Please renew your subscriptions"
  }

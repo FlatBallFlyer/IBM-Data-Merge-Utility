@@ -1,0 +1,11 @@
+IDCONTACT,IDCUSTOMER,NAME,PREFERENCE,EMAIL,PHONE
+4,4,Michael,paper,Michael@General.com,(650) 555-0844
+24,4,Jerry,SMS,Jerry@General.com,(650) 555-2824
+44,4,Carl,email,Carl@General.com,(650) 555-4844
+64,4,Phillip,paper,Phillip@General.com,(650) 555-6864
+84,4,Steve,SMS,Steve@General.com,(650) 555-8884
+104,4,Barbara,email,Barbara@General.com,(650) 555-0814
+124,4,Elizabeth,paper,Elizabeth@General.com,(650) 555-2814
+144,4,Connie,SMS,Connie@General.com,(650) 555-4814
+164,4,Jo,email,Jo@General.com,(650) 555-6814
+184,4,Anne,paper,Anne@General.com,(650) 555-8814

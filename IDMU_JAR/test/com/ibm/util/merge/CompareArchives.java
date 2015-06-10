@@ -20,16 +20,15 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.IOUtils;
 
 import static org.junit.Assert.*;
 
@@ -95,54 +94,9 @@ public final class CompareArchives {
 			if (!files2.containsKey(key)) {
 				fail("Expected file not in target " + key);
 			}
-			assertStreamsEquals(zip1.getInputStream(files1.get(key)), zip2.getInputStream(files2.get(key)));
-		}
-	}
-
-	/**
-	 * @param stream1
-	 * @param stream2
-	 * @return
-	 * @throws IOException
-	 */
-	private static boolean assertStreamsEquals(InputStream stream1, InputStream stream2) throws IOException {
-		byte[] buf1 = new byte[1024];
-		byte[] buf2 = new byte[1024];
-		boolean endOfStream1 = false;
-		boolean endOfStream2 = false;
-
-		try {
-			while (!endOfStream1) {
-				int offset1 = 0;
-				int offset2 = 0;
-
-				while (offset1 < buf1.length) {
-					int count = stream1.read(buf1, offset1, buf1.length - offset1);
-					if (count < 0) {
-						endOfStream1 = true;
-						break;
-					}
-					offset1 += count;
-				}
-				while (offset2 < buf2.length) {
-					int count = stream2.read(buf2, offset2, buf2.length - offset2);
-					if (count < 0) {
-						endOfStream2 = true;
-						break;
-					}
-					offset2 += count;
-				}
-				if (offset1 != offset2 || endOfStream1 != endOfStream2)
-					return false;
-				for (int i = 0; i < offset1; i++) {
-					if (buf1[i] != buf2[i])
-						return false;
-				}
-			}
-			return true;
-		} finally {
-			stream1.close();
-			stream2.close();
+			String file1 = IOUtils.toString(zip1.getInputStream(files1.get(key)));
+			String file2 = IOUtils.toString(zip2.getInputStream(files2.get(key)));
+			assertEquals(file1, file2);
 		}
 	}
 

@@ -66,7 +66,7 @@ public abstract class ProviderHttpTest extends ProviderTest {
 	public void testSetTag() {
 		ProviderHttp myProvider = (ProviderHttp) provider; 
 		myProvider.setTag("Test");
-		assertEquals("{Test}", myProvider.getTag());
+		assertEquals("Test", myProvider.getTag());
 	}
 
 

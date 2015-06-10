@@ -16,9 +16,13 @@
  */
 package com.ibm.util.merge.directive.provider;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.apache.commons.io.IOUtils;
 
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
@@ -28,7 +32,7 @@ import com.ibm.util.merge.Template;
  *
  */
 public abstract class ProviderHttp extends Provider implements Cloneable {
-	private transient String fetchedData	= "";
+	private String fetchedData	= "";
 	private String staticData	= "";
 	private String url			= "";
 	private String tag			= "";
@@ -55,16 +59,22 @@ public abstract class ProviderHttp extends Provider implements Cloneable {
 	 */
 	@Override
 	public void getData() throws MergeException {
+		Template template = this.getDirective().getTemplate();
 		if (!this.url.isEmpty()) {
 			try {
-				this.fetchedData = new URL(this.url).getContent().toString();
+				String theUrl = template.replaceProcess(this.url);
+				this.fetchedData = IOUtils.toString(
+						new BufferedReader(
+						new InputStreamReader(
+						new URL(theUrl).openStream())));
 			} catch (MalformedURLException e) {
 				throw new MergeException(e, "Malformed URL", this.url);
 			} catch (IOException e) {
 				throw new MergeException(e, "I-O Exception", this.url);
 			}
 		} else if (!this.tag.isEmpty()) {
-			this.fetchedData = this.getDirective().getTemplate().getReplaceValue(this.tag);
+			String key = Template.wrap(template.replaceProcess(this.tag));
+			this.fetchedData = template.getReplaceValue(key);
 		} else {
 			this.fetchedData = this.staticData;
 		}
@@ -106,11 +116,7 @@ public abstract class ProviderHttp extends Provider implements Cloneable {
 	}
 
 	public void setTag(String tag) {
-		if (tag.isEmpty()) {
-			this.tag = "";
-		} else {
-			this.tag = Template.wrap(tag);
-		}
+		this.tag = tag;
 	}
 
 }

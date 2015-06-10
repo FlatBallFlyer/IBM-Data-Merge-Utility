@@ -4,9 +4,18 @@
 	"columnValue":"",
 	"description":"CSV Tag Root Functional Test",
 	"content":
-	"<tkBookmark collection=\"csvTag\" name=\"Report\"/>\n<tkBookmark collection=\"csvTag\" name=\"SMTP\"/>\n<tkBookmark collection=\"csvTag\" name=\"SMS\"/>",
+	"<tkBookmark collection=\"csvTag\" name=\"report\"/>\n<tkBookmark collection=\"csvTag\" name=\"SMTP\"/>\n<tkBookmark collection=\"csvTag\" name=\"SMS\"/>",
 	"directives":[
 		{
+			"type": 23,
+			"description": "Get Corporate Data (Replace Col)",
+			"fromColumn": "FROM_VALUE",
+			"toColumn": "TO_VALUE",
+			"provider": {
+				"type": 3,
+				"tag": "csvCorporate"
+			}
+		},{
 			"sequence": 1,
 			"type": 2,
 			"description": "InsertSubsIfTagExists",

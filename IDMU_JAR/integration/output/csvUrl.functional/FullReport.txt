@@ -1,0 +1,223 @@
+Begin Customers
+
+Contacts for: General Motors/n
+	Postal Mail Address for James: 5791 Pleasant Prairie End, Dysart, PA 16188-0761
+	Name: Daniel 	SMS-Phone# (878) 555-2221
+	Name: Alan 	Email Address Alan@General.com
+	Postal Mail Address for Harry: 5791 Pleasant Prairie End, Dysart, PA 16188-0761
+	Name: Ernest 	SMS-Phone# (878) 555-8281
+	Name: Linda 	Email Address Linda@General.com
+	Postal Mail Address for Judith: 5791 Pleasant Prairie End, Dysart, PA 16188-0761
+	Name: Peggy 	SMS-Phone# (878) 555-4211
+	Name: Vicki 	Email Address Vicki@General.com
+	Postal Mail Address for Teresa: 5791 Pleasant Prairie End, Dysart, PA 16188-0761
+Contacts for: Exxon Mobil/n
+	Name: Robert 	Email Address Robert@Exxon.com
+	Postal Mail Address for Edward: 1309 Burning Trail, Yazoo City, NE 68970-0108
+	Name: Willie 	SMS-Phone# (531) 555-4442
+	Name: Samuel 	Email Address Samuel@Exxon.com
+	Postal Mail Address for Scott: 1309 Burning Trail, Yazoo City, NE 68970-0108
+	Name: Mary 	SMS-Phone# (531) 555-0412
+	Name: Janice 	Email Address Janice@Exxon.com
+	Postal Mail Address for Gail: 1309 Burning Trail, Yazoo City, NE 68970-0108
+	Name: Sherry 	SMS-Phone# (531) 555-6412
+	Name: Denise 	Email Address Denise@Exxon.com
+Contacts for: U.S. Steel/n
+	Name: John 	SMS-Phone# (417) 555-0633
+	Name: Mark 	Email Address Mark@USSteal.com
+	Postal Mail Address for Jeffrey: 3930 Iron Walk, Wild Horse, MO 65453-3393
+	Name: Howard 	SMS-Phone# (417) 555-6663
+	Name: Fred 	Email Address Fred@USSteal.com
+	Postal Mail Address for Patricia: 3930 Iron Walk, Wild Horse, MO 65453-3393
+	Name: Cynthia 	SMS-Phone# (417) 555-2613
+	Name: Virginia 	Email Address Virginia@USSteal.com
+	Postal Mail Address for Laura: 3930 Iron Walk, Wild Horse, MO 65453-3393
+	Name: Lois 	SMS-Phone# (417) 555-8613
+Contacts for: General Electric/n
+	Postal Mail Address for Michael: 4363 Stony Crescent, Ste. Rose du Lac, CA 92186-9180
+	Name: Jerry 	SMS-Phone# (650) 555-2824
+	Name: Carl 	Email Address Carl@General.com
+	Postal Mail Address for Phillip: 4363 Stony Crescent, Ste. Rose du Lac, CA 92186-9180
+	Name: Steve 	SMS-Phone# (650) 555-8884
+	Name: Barbara 	Email Address Barbara@General.com
+	Postal Mail Address for Elizabeth: 4363 Stony Crescent, Ste. Rose du Lac, CA 92186-9180
+	Name: Connie 	SMS-Phone# (650) 555-4814
+	Name: Jo 	Email Address Jo@General.com
+	Postal Mail Address for Anne: 4363 Stony Crescent, Ste. Rose du Lac, CA 92186-9180
+Contacts for: Esmark/n
+	Name: David 	Email Address David@Esmark.com
+	Postal Mail Address for Gregory: 9443 Colonial Berry Canyon, Fleming, DE 19753-5942
+	Name: Harold 	SMS-Phone# (302) 555-5045
+	Name: Bobby 	Email Address Bobby@Esmark.com
+	Postal Mail Address for Martin: 9443 Colonial Berry Canyon, Fleming, DE 19753-5942
+	Name: Susan 	SMS-Phone# (302) 555-1015
+	Name: Judy 	Email Address Judy@Esmark.com
+	Postal Mail Address for Ann: 9443 Colonial Berry Canyon, Fleming, DE 19753-5942
+	Name: Theresa 	SMS-Phone# (302) 555-7015
+	Name: Constance 	Email Address Constance@Esmark.com
+Contacts for: Chrysler/n
+	Name: William 	SMS-Phone# (660) 555-1266
+	Name: Bruce 	Email Address Bruce@Chrysler.com
+	Postal Mail Address for Arthur: 9386 Easy Vista, Wall City, MO 65266-8602
+	Name: Christopher 	SMS-Phone# (660) 555-7266
+	Name: Francis 	Email Address Francis@Chrysler.com
+	Postal Mail Address for Nancy: 9386 Easy Vista, Wall City, MO 65266-8602
+	Name: Betty 	SMS-Phone# (660) 555-3216
+	Name: Kathryn 	Email Address Kathryn@Chrysler.com
+	Postal Mail Address for Ellen: 9386 Easy Vista, Wall City, MO 65266-8602
+	Name: Evelyn 	SMS-Phone# (660) 555-9216
+Contacts for: Armour/n
+	Postal Mail Address for Richard: 532 Umber Lake Highlands, Englefeld, RI 02956-5619
+	Name: Roger 	SMS-Phone# (401) 555-3427
+	Name: Henry 	Email Address Henry@Armour.com
+	Postal Mail Address for Louis: 532 Umber Lake Highlands, Englefeld, RI 02956-5619
+	Name: Melvin 	SMS-Phone# (401) 555-9487
+	Name: Deborah 	Email Address Deborah@Armour.com
+	Postal Mail Address for Joyce: 532 Umber Lake Highlands, Englefeld, RI 02956-5619
+	Name: Diana 	SMS-Phone# (401) 555-5417
+	Name: Joanne 	Email Address Joanne@Armour.com
+	Postal Mail Address for Glenda: 532 Umber Lake Highlands, Englefeld, RI 02956-5619
+Contacts for: Gulf Oil/n
+	Name: Thomas 	Email Address Thomas@Gulf.com
+	Postal Mail Address for Douglas: 4220 Rocky Wynd, Bolivia, MN 56253-0991
+	Name: Jack 	SMS-Phone# (952) 555-5648
+	Name: Andrew 	Email Address Andrew@Gulf.com
+	Postal Mail Address for Rodney: 4220 Rocky Wynd, Bolivia, MN 56253-0991
+	Name: Sandra 	SMS-Phone# (952) 555-1618
+	Name: Christine 	Email Address Christine@Gulf.com
+	Postal Mail Address for Jean: 4220 Rocky Wynd, Bolivia, MN 56253-0991
+	Name: Marsha 	SMS-Phone# (952) 555-7618
+	Name: Sarah 	Email Address Sarah@Gulf.com
+Contacts for: Mobil/n
+	Name: Charles 	SMS-Phone# (539) 555-1899
+	Name: Frank 	Email Address Frank@Mobil.com
+	Postal Mail Address for Dale: 5016 High Fawn Path, Boissevain, OK 73763-3294
+	Name: Russell 	SMS-Phone# (539) 555-7869
+	Name: Eddie 	Email Address Eddie@Mobil.com
+	Postal Mail Address for Carol: 5016 High Fawn Path, Boissevain, OK 73763-3294
+	Name: Cheryl 	SMS-Phone# (539) 555-3819
+	Name: Ruth 	Email Address Ruth@Mobil.com
+	Postal Mail Address for Rose: 5016 High Fawn Path, Boissevain, OK 73763-3294
+	Name: Maureen 	SMS-Phone# (539) 555-9819
+Contacts for: DuPont/n
+	Postal Mail Address for Gary: 7151 Indian Limits, Mock City, NE 69497-1440
+	Name: Terry 	SMS-Phone# (308) 555-4030
+	Name: Johnny 	Email Address Johnny@DuPont.com
+	Postal Mail Address for Craig: 7151 Indian Limits, Mock City, NE 69497-1440
+	Name: Norman 	SMS-Phone# (308) 555-0090
+	Name: Kathleen 	Email Address Kathleen@DuPont.com
+	Postal Mail Address for Gloria: 7151 Indian Limits, Mock City, NE 69497-1440
+	Name: Helen 	SMS-Phone# (308) 555-6010
+	Name: Sheila 	Email Address Sheila@DuPont.com
+	Postal Mail Address for Dianne: 7151 Indian Limits, Mock City, NE 69497-1440
+Contacts for: Amoco/n
+	Name: Larry 	Email Address Larry@Amoco.com
+	Postal Mail Address for Raymond: 8109 Quaking Extension, Freeze Fork, RI 02823-7971
+	Name: Roy 	SMS-Phone# (401) 555-6251
+	Name: Randall 	Email Address Randall@Amoco.com
+	Postal Mail Address for Lee: 8109 Quaking Extension, Freeze Fork, RI 02823-7971
+	Name: Sharon 	SMS-Phone# (401) 555-2211
+	Name: Beverly 	Email Address Beverly@Amoco.com
+	Postal Mail Address for Frances: 8109 Quaking Extension, Freeze Fork, RI 02823-7971
+	Name: Suzanne 	SMS-Phone# (401) 555-8211
+	Name: Eileen 	Email Address Eileen@Amoco.com
+Contacts for: Bethlehem Steel/n
+	Name: Ronald 	SMS-Phone# (918) 555-2412
+	Name: Timothy 	Email Address Timothy@Bethlehem.com
+	Postal Mail Address for Ralph: 9717 Round Drive, Hardshell, OK 73108-1789
+	Name: Allen 	SMS-Phone# (918) 555-8472
+	Name: Earl 	Email Address Earl@Bethlehem.com
+	Postal Mail Address for Karen: 9717 Round Drive, Hardshell, OK 73108-1789
+	Name: Martha 	SMS-Phone# (918) 555-4412
+	Name: Wanda 	Email Address Wanda@Bethlehem.com
+	Postal Mail Address for Marie: 9717 Round Drive, Hardshell, OK 73108-1789
+	Name: Irene 	SMS-Phone# (918) 555-0412
+Contacts for: CBS/n
+	Postal Mail Address for Joseph: 8245 Lazy Cloud Crest, Treetops, MO 65194-7190
+	Name: Lawrence 	SMS-Phone# (636) 555-4633
+	Name: Phillipe 	Email Address Phillip@CBS.com
+	Postal Mail Address for Kevin: 8245 Lazy Cloud Crest, Treetops, MO 65194-7190
+	Name: Marvin 	SMS-Phone# (636) 555-0693
+	Name: Donna 	Email Address Donna@CBS.com
+	Postal Mail Address for Bonnie: 8245 Lazy Cloud Crest, Treetops, MO 65194-7190
+	Name: Phyllis 	SMS-Phone# (636) 555-6613
+	Name: Maria 	Email Address Maria@CBS.com
+	Postal Mail Address for Anna: 8245 Lazy Cloud Crest, Treetops, MO 65194-7190
+Contacts for: Texaco/n
+	Name: Donald 	Email Address Donald@Texaco.com
+	Postal Mail Address for Gerald: 2820 Amber Acres, Maple Creek, WI 54112-5496
+	Name: Joe 	SMS-Phone# (534) 555-6854
+	Name: Barry 	Email Address Barry@Texaco.com
+	Postal Mail Address for Tommy: 2820 Amber Acres, Maple Creek, WI 54112-5496
+	Name: Brenda 	SMS-Phone# (534) 555-2814
+	Name: Catherine 	Email Address Catherine@Texaco.com
+	Postal Mail Address for Paula: 2820 Amber Acres, Maple Creek, WI 54112-5496
+	Name: Doris 	SMS-Phone# (534) 555-8814
+	Name: Victoria 	Email Address Victoria@Texaco.com
+Contacts for: AT&T Technologies/n
+	Name: Kenneth 	SMS-Phone# (808) 555-3015
+	Name: Wayne 	Email Address Wayne@ATT.com
+	Postal Mail Address for Albert: 5414 Hidden Byway, Beersville, HI 96732-5653
+	Name: Frederick 	SMS-Phone# (808) 555-9075
+	Name: Clarence 	Email Address Clarence@ATT.com
+	Postal Mail Address for Margaret: 5414 Hidden Byway, Beersville, HI 96732-5653
+	Name: Dorothy 	SMS-Phone# (808) 555-5015
+	Name: Jacqueline 	Email Address Jacqueline@ATT.com
+	Postal Mail Address for Cathy: 5414 Hidden Byway, Beersville, HI 96732-5653
+	Name: Jeanne 	SMS-Phone# (808) 555-1015
+Contacts for: Shell Oil/n
+	Postal Mail Address for Steven: 2638 Lost Robin Alley, Warroad, MO 64001-0474
+	Name: Anthony 	SMS-Phone# (417) 555-5236
+	Name: Jimmy 	Email Address Jimmy@Shell.com
+	Postal Mail Address for Ronnie: 2638 Lost Robin Alley, Warroad, MO 64001-0474
+	Name: Alfred 	SMS-Phone# (417) 555-1296
+	Name: Diane 	Email Address Diane@Shell.com
+	Postal Mail Address for Rebecca: 2638 Lost Robin Alley, Warroad, MO 64001-0474
+	Name: Rita 	SMS-Phone# (417) 555-7216
+	Name: Lynn 	Email Address Lynn@Shell.com
+	Postal Mail Address for Roberta: 2638 Lost Robin Alley, Warroad, MO 64001-0474
+Contacts for: Kraft/n
+	Name: Dennis 	Email Address Dennis@Kraft.com
+	Postal Mail Address for Peter: 2789 Silent Vale, Charcoal Landing, MO 64075-9452
+	Name: Billy 	SMS-Phone# (636) 555-7457
+	Name: Leonard 	Email Address Leonard@Kraft.com
+	Postal Mail Address for Curtis: 2789 Silent Vale, Charcoal Landing, MO 64075-9452
+	Name: Pamela 	SMS-Phone# (636) 555-3417
+	Name: Marilyn 	Email Address Marilyn@Kraft.com
+	Postal Mail Address for Alice: 2789 Silent Vale, Charcoal Landing, MO 64075-9452
+	Name: Marcia 	SMS-Phone# (636) 555-9417
+	Name: Sylvia 	Email Address Sylvia@Kraft.com
+Contacts for: ChevronTexaco/n
+	Name: Paul 	SMS-Phone# (952) 555-3618
+	Name: Patrick 	Email Address Patrick@Chevron.com
+	Postal Mail Address for Eugene: 342 Blue Key, Zealandia, MN 56268-4891
+	Name: Keith 	SMS-Phone# (952) 555-9678
+	Name: Eric 	Email Address Eric@Chevron.com
+	Postal Mail Address for Janet: 342 Blue Key, Zealandia, MN 56268-4891
+	Name: Kathy 	SMS-Phone# (952) 555-5618
+	Name: Katherine 	Email Address Katherine@Chevron.com
+	Postal Mail Address for Sally: 342 Blue Key, Zealandia, MN 56268-4891
+	Name: Joann 	SMS-Phone# (952) 555-1618
+Contacts for: Goodyear Tire & Rubber/n
+	Postal Mail Address for Stephen: 5479 Silver Villas, Effort, MN 56108-2359
+	Name: Danny 	SMS-Phone# (763) 555-5839
+	Name: Glenn 	Email Address Glenn@Goodyear.com
+	Postal Mail Address for Brian: 5479 Silver Villas, Effort, MN 56108-2359
+	Name: Theodore 	SMS-Phone# (763) 555-1899
+	Name: Shirley 	Email Address Shirley@Goodyear.com
+	Postal Mail Address for Jane: 5479 Silver Villas, Effort, MN 56108-2359
+	Name: Debra 	SMS-Phone# (763) 555-7819
+	Name: Darlene 	Email Address Darlene@Goodyear.com
+	Postal Mail Address for Anita: 5479 Silver Villas, Effort, MN 56108-2359
+Contacts for: Boeing/n
+	Name: George 	Email Address George@Boeing.com
+	Postal Mail Address for Walter: 8680 Velvet Avenue, Sceptre, WI 54252-7174
+	Name: Stanley 	SMS-Phone# (608) 555-8060
+	Name: Randy 	Email Address Randy@Boeing.com
+	Postal Mail Address for Clifford: 8680 Velvet Avenue, Sceptre, WI 54252-7174
+	Name: Carolyn 	SMS-Phone# (608) 555-4010
+	Name: Joan 	Email Address Joan@Boeing.com
+	Postal Mail Address for Elaine: 8680 Velvet Avenue, Sceptre, WI 54252-7174
+	Name: Charlotte 	SMS-Phone# (608) 555-0010
+	Name: Sue 	Email Address Sue@Boeing.com
+End Customers

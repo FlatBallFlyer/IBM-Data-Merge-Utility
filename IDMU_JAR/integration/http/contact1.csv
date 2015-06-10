@@ -1,0 +1,11 @@
+IDCONTACT,IDCUSTOMER,NAME,PREFERENCE,EMAIL,PHONE
+1,1,James,paper,James@General.com,(878) 555-0211
+21,1,Daniel,SMS,,(878) 555-2221
+41,1,Alan,email,Alan@General.com,(878) 555-4241
+61,1,Harry,paper,Harry@General.com,(878) 555-6261
+81,1,Ernest,SMS,Ernest@General.com,(878) 555-8281
+101,1,Linda,email,Linda@General.com,(878) 555-0211
+121,1,Judith,paper,Judith@General.com,(878) 555-2211
+141,1,Peggy,SMS,Peggy@General.com,(878) 555-4211
+161,1,Vicki,email,Vicki@General.com,(878) 555-6211
+181,1,Teresa,paper,Teresa@General.com,(878) 555-8211

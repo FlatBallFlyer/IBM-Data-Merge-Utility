@@ -1,0 +1,11 @@
+IDCONTACT,IDCUSTOMER,NAME,PREFERENCE,EMAIL,PHONE
+6,6,William,SMS,William@Chrysler.com,(660) 555-1266
+26,6,Bruce,email,Bruce@Chrysler.com,(660) 555-3226
+46,6,Arthur,paper,Arthur@Chrysler.com,(660) 555-5246
+66,6,Christopher,SMS,Christopher@Chrysler.com,(660) 555-7266
+86,6,Francis,email,Francis@Chrysler.com,(660) 555-9286
+106,6,Nancy,paper,Nancy@Chrysler.com,(660) 555-1216
+126,6,Betty,SMS,Betty@Chrysler.com,(660) 555-3216
+146,6,Kathryn,email,Kathryn@Chrysler.com,(660) 555-5216
+166,6,Ellen,paper,Ellen@Chrysler.com,(660) 555-7216
+186,6,Evelyn,SMS,Evelyn@Chrysler.com,(660) 555-9216
