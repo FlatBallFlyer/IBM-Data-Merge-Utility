@@ -32,7 +32,7 @@ import com.ibm.util.merge.Template;
  *
  */
 public abstract class ProviderHttp extends Provider implements Cloneable {
-	private String fetchedData	= "";
+	private transient String fetchedData	= "";
 	private String staticData	= "";
 	private String url			= "";
 	private String tag			= "";

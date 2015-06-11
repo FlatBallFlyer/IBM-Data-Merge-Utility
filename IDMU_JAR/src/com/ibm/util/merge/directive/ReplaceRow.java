@@ -52,7 +52,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 
 		// Make sure we got some data
 		if ( this.getProvider().size() < 1 ) {
-			throw new MergeException("No Data Found",provider.getQueryString()); 
+			throw new MergeException("No Data Found in " + this.getTemplate().getFullName(), provider.getQueryString()); 
 		}
 
 		// Make sure we don't have a multi-table result.

@@ -6,7 +6,6 @@
 	"content":"Begin Customers for {corpUrl}<tkBookmark collection=\"csvDef\" name=\"customer\"/>\nEnd Customers",
 	"directives":[
 		{
-			"sequence": 1,
 			"type": 21,
 			"description": "Insert Customers",
 			"provider": {

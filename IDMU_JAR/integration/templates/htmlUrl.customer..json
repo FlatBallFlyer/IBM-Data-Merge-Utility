@@ -1,0 +1,33 @@
+{
+	"collection":"htmlUrl",
+	"name":"customer",
+	"description":"html Tag Customer (Inserted into Report, Inserts Contact)",
+	"content":"\nContacts for: {NAME}/n<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" />",
+	"directives":[
+		{
+		  	"type": 0,
+		  	"description": "Require Customer",
+		  	"tags": ["IDCUSTOMER"]
+		},{
+			"type": 1,
+			"description": "Replace for Coma",
+			"from": "coma",
+			"to": ","
+		},{
+			"type": 1,
+			"description": "Replace for Period",
+			"from": "period",
+			"to": ","
+		},{
+			"type": 21,
+			"description": "TestInsertSubshtml from Default Data",
+			"notLast": ["coma"],
+			"onlyLast": ["period"],
+			"provider": {
+				"type": 3,
+				"url": "http://localhost/idmuTest/contact{IDCUSTOMER}.html"
+			}
+		}
+	]
+
+ }

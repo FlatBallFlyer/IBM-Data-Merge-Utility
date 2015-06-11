@@ -18,12 +18,14 @@ package com.ibm.util.merge;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,12 +62,12 @@ public class IntegrationTestingCsvProvider {
 		parameterMap.put("csvContact3", new String[]{csvContacts2});
 		
 		// Reset the output directory
-//		FileUtils.cleanDirectory(new File(outputDir)); 
+		FileUtils.cleanDirectory(new File(outputDir)); 
 	}
 
 	@After
 	public void teardown() throws IOException {
-//		FileUtils.cleanDirectory(new File(outputDir)); 
+		FileUtils.cleanDirectory(new File(outputDir)); 
 	}
 	
 	@Test
@@ -128,7 +130,7 @@ public class IntegrationTestingCsvProvider {
 	private void testMerge(String fullName, String type) throws MergeException, IOException, NoSuchAlgorithmException {
 		parameterMap.put("DragonFlyFullName", 	new String[]{fullName});
 		Template root = TemplateFactory.getTemplate(parameterMap);
-		String mergeOutput = root.merge();
+		root.merge();
 		root.packageOutput();
 		CompareArchives.assertArchiveEquals(type, validateDir + fullName + type, outputDir + fullName + type);
 	}

@@ -1,2 +1,0 @@
-From: "You" <Replies@www.spacely.com>
-To: "Leonard" <Leonard@Kraft.com>/nSubject: Your Subject Here/nMIME-Version: 1.0/nContent-Type: text/html; charset=iso-8859-1/nContent-Disposition: inline<html><body>YOUR CONTENT HERE</body></html>

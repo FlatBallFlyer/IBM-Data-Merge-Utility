@@ -1,2 +1,0 @@
-From: "You" <You@yourDoman.com>
-To: "Kathryn" <Kathryn@Chrysler.com>/nSubject: Your Subject Here/nMIME-Version: 1.0/nContent-Type: text/html; charset=iso-8859-1/nContent-Disposition: inline<html><body>I see we have your phone number (660) 555-5216, do you want to chance your preferred contact to SMS?</body></html>

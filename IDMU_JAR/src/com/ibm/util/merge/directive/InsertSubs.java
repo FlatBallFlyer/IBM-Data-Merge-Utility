@@ -100,7 +100,7 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 					}
 						
 					// Take care of "Not Last" and "Only Last"
-					subTemplate.addEmptyReplace(row == table.size() ? this.notLast : this.onlyLast);
+					subTemplate.addEmptyReplace(row == table.size()-1 ? this.notLast : this.onlyLast);
 						
 					// Merge the SubTemplate and insert the text into the Target Template
 					try {
