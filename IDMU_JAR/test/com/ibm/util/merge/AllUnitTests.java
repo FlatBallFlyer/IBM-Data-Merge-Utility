@@ -6,14 +6,10 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
-	BookmarkTest.class, 
-	MergeExceptionTest.class, 
-	TemplateFactoryTest.class,
-	TemplateTest.class, 
-	ZipFactoryTest.class,
-	com.ibm.util.merge.directive.AllTests.class,
-	com.ibm.util.merge.directive.provider.AllTests.class,
-//	ConnectionFactoryTest.class
+	IntegrationSafety.class, 
+	IntegrationTestingCsvProvider.class, 
+	IntegrationTestingHtmlProvider.class,
+//	IntegrationTestingCsvProvider.class, 
 	})
 public class AllUnitTests {
 

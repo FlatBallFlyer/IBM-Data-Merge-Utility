@@ -6,10 +6,10 @@
 	"content":"# Commands to invoke SendMail for postal customers<tkBookmark collection=\"contact\" name=\"outSMTP\" column=\"PREFERENCE\"/><tkBookmark collection=\"contact\" name=\"cmdSMTP\" column=\"PREFERENCE\"/>",
 	"directives":[
 		{
-			"type": 21,
+			"type": 31,
 			"description": "TestInsertSubshtml",
 			"provider": {
-				"type": 3,
+				"type": 4,
 				"url": "http://localhost/idmuTest/contacts.html"
 			}
 		}

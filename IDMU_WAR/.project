@@ -3,6 +3,7 @@
 	<name>IDMU_WAR</name>
 	<comment></comment>
 	<projects>
+		<project>IDMU_EAR</project>
 		<project>IDMU_JAR</project>
 	</projects>
 	<buildSpec>

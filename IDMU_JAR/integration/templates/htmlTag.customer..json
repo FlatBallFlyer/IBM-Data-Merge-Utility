@@ -24,7 +24,7 @@
 			"notLast": ["coma"],
 			"onlyLast": ["period"],
 			"provider": {
-				"type": 3,
+				"type": 4,
 				"tag": "htmlContact{IDCUSTOMER}"
 			}
 		}

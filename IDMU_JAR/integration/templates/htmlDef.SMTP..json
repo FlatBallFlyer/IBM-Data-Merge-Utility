@@ -9,7 +9,7 @@
 			"type": 31,
 			"description": "TestInsertSubshtml",
 			"provider": {
-				"type": 3,
+				"type": 4,
 				"staticData": "<html><head></head><body><table><tr><th>IDCONTACT</th><th>IDCUSTOMER</th><th>NAME</th><th>PREFERENCE</th><th>EMAIL</th><th>PHONE</th></tr><tr><td>1</td><td>1</td><td>James</td><td>paper</td><td>James@General.com</td><td>(878) 555-0211</td></tr><tr><td>21</td><td>1</td><td>Daniel</td><td>SMS</td><td></td><td>(878) 555-2221</td></tr><tr><td>41</td><td>1</td><td>Alan</td><td>email</td><td>Alan@General.com</td><td></td></tr><tr><td>61</td><td>1</td><td>Harry</td><td>paper</td><td>Harry@General.com</td><td>(878) 555-6261</td></tr><tr><td>81</td><td>1</td><td>Ernest</td><td>SMS</td><td>Ernest@General.com</td><td>(878) 555-8281</td></tr><tr><td>101</td><td>1</td><td>Linda</td><td>email</td><td>Linda@General.com</td><td>(878) 555-0211</td></tr><tr><td>121</td><td>1</td><td>Judith</td><td>paper</td><td>Judith@General.com</td><td>(878) 555-2211</td></tr><tr><td>141</td><td>1</td><td>Peggy</td><td>SMS</td><td>Peggy@General.com</td><td>(878) 555-4211</td></tr><tr><td>161</td><td>1</td><td>Vicki</td><td>email</td><td>Vicki@General.com</td><td>(878) 555-6211</td></tr><tr><td>181</td><td>1</td><td>Teresa</td><td>paper</td><td>Teresa@General.com</td><td>(878) 555-8211</td></tr></table></body></html>"
 			}
 		}

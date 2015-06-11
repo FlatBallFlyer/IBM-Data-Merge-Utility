@@ -19,12 +19,12 @@
 			"from": "period",
 			"to": ","
 		},{
-			"type": 21,
+			"type": 31,
 			"description": "TestInsertSubshtml from Default Data",
 			"notLast": ["coma"],
 			"onlyLast": ["period"],
 			"provider": {
-				"type": 3,
+				"type": 4,
 				"url": "http://localhost/idmuTest/contact{IDCUSTOMER}.html"
 			}
 		}

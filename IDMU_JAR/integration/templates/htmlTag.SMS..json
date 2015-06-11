@@ -9,14 +9,14 @@
 			"type": 32,
 			"description": "TestReplaceRowhtml",
 			"provider": {
-				"type": 3,
+				"type": 4,
 				"tag": "htmlCustomer"
 			}
 		},{
 			"type": 31,
 			"description": "TestInsertSubshtml",
 			"provider": {
-				"type": 3,
+				"type": 4,
 				"tag": "htmlContact1"
 			}
 		}

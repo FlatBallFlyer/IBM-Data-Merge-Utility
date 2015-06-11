@@ -58,7 +58,7 @@ public class Require extends Directive implements Cloneable {
 	public void executeDirective() throws MergeException {
 		for (String tag : this.tags) {
 			if (! this.getTemplate().hasReplaceValue(Template.wrap(tag)) ) {
-				throw new MergeException("Required Tag Not Found!", tag);
+				throw new MergeException("Required Tag Not Found in " + this.getTemplate().getFullName(), tag);
 			}
 		}
 	}

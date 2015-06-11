@@ -7,10 +7,10 @@
 	"directives":[
 		{
 			"sequence": 1,
-			"type": 21,
+			"type": 31,
 			"description": "Insert Customers",
 			"provider": {
-				"type": 3,
+				"type": 4,
 				"url": "http://localhost/idmuTest/customers.html"
 			}
 		}

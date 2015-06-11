@@ -19,8 +19,6 @@ package com.ibm.util.merge.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -93,8 +91,6 @@ public class Merge extends HttpServlet {
 		
 		try {
 			// Get a template using the httpServletRequest constructor
-			Map<String, String[]> parameters = request.getParameterMap();
-			parameters.put("DragonFlyFullName", new String[]{"html.corporate"});
 			root = TemplateFactory.getTemplate(request.getParameterMap());
 			// Perform the merge and write output
 			out.write(root.merge());
