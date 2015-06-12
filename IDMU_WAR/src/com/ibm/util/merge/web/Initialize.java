@@ -51,7 +51,8 @@ public class Initialize extends HttpServlet {
 
 		// Initialize cache (Load JSON Persisted Templates)
 		TemplateFactory.reset();
-		TemplateFactory.setTemplateFolder(getInitParameter("merge-templates-folder"));
+		String tempalteFolder = getInitParameter("merge-templates-folder");
+		TemplateFactory.setTemplateFolder(prefix + tempalteFolder);
 		TemplateFactory.setDbPersistance(getInitParameter("templates-persist").equals("Database"));
 		try {
 			TemplateFactory.loadAll();

@@ -303,7 +303,7 @@ final public class TemplateFactory {
      * @throws MergeException - Template Clone errors
 	 */
     public static void loadAll() throws MergeException {
-    	if (TemplateFactory.templateFolder.isEmpty()) { return; }
+    	if (TemplateFactory.templateFolder == null || TemplateFactory.templateFolder.isEmpty()) { return; }
     	int count = 0;
     	
     	File folder = new File(TemplateFactory.templateFolder);

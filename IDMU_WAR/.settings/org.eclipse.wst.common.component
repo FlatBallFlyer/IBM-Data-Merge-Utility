@@ -2,6 +2,9 @@
     <wb-module deploy-name="IDMU_WAR">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/properties" source-path="/WebContent/WEB-INF/properties"/>
+        <wb-resource deploy-path="/WEB-INF/templates" source-path="/WebContent/WEB-INF/templates"/>
+        <wb-resource deploy-path="/output/" source-path="/WebContent/output"/>
         <dependent-module archiveName="IDMU_JAR.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDMU_JAR/IDMU_JAR">
             <dependency-type>uses</dependency-type>
         </dependent-module>

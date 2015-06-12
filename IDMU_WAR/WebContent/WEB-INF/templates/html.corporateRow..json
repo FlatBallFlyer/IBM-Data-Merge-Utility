@@ -1,6 +1,0 @@
-{
-	"collection":"html",
-	"name":"contactRow",
-	"description":"CONTACT_XX.html Row",
-	"content":"<tr><td>{IDCONTACT}</td><td>{IDCUSTOMER}</td><td>{NAME}</td><td>{PREFERENCE}</td><td>{EMAIL}</td><td>{PHONE}</td></tr>"
-}

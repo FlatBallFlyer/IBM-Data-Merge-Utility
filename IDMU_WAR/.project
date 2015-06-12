@@ -5,6 +5,7 @@
 	<projects>
 		<project>IDMU_EAR</project>
 		<project>IDMU_JAR</project>
+		<project>Servers</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -107,7 +107,7 @@ public class Template implements Cloneable {
 			// Make sure we have an output file name guid
 			if (!newTemplate.replaceValues.containsKey(TAG_OUTPUTFILE)) {
 				newTemplate.replaceValues.put(TAG_OUTPUTFILE, UUID.randomUUID().toString() 
-						+ (getOutputType() == ZipFactory.TYPE_ZIP ? ".zip" : ".tar.gz")); 
+						+ (getOutputType() == ZipFactory.TYPE_ZIP ? ".zip" : ".tar")); 
 			}
 			
 			// Add our name to the Template Stack
