@@ -1,0 +1,117 @@
+{
+  "collection": "foo",
+  "columnValue": "foo",
+  "name": "default",
+  "description": "",
+  "outputFile": "",
+  "content": "Testing {Foo} Template \u003ctkBookmark name\u003d\"BKM1\"/ collection\u003d\"COL1\"/\u003e and {empty} \u003ctkBookmark name\u003d\"BKM2\" collection\u003d\"COL2\"//\u003e save to {folder}",
+  "directives": [
+    {
+      "from": "Foo",
+      "to": "Test Foo Value",
+      "sequence": 0,
+      "type": 1,
+      "softFail": false,
+      "description": "Test Replace1      "
+    },
+    {
+      "tags": [
+        "Foo",
+        "empty"
+      ],
+      "sequence": 1,
+      "type": 0,
+      "softFail": false,
+      "description": "TestRequire        "
+    },
+    {
+      "notLast": [
+        "empty"
+      ],
+      "onlyLast": [],
+      "sequence": 2,
+      "type": 2,
+      "softFail": false,
+      "description": "TestInsertSubsTag  "
+    },
+    {
+      "notLast": [
+        "empty"
+      ],
+      "onlyLast": [],
+      "sequence": 3,
+      "type": 21,
+      "softFail": false,
+      "description": "TestInsertSubsCsv "
+    },
+    {
+      "notLast": [
+        "empty"
+      ],
+      "onlyLast": [],
+      "sequence": 4,
+      "type": 10,
+      "softFail": false,
+      "description": "TestInsertSubsSql "
+    },
+    {
+      "notLast": [
+        "empty"
+      ],
+      "onlyLast": [],
+      "sequence": 5,
+      "type": 31,
+      "softFail": false,
+      "description": "TestInsertSubsHtml"
+    },
+    {
+      "sequence": 6,
+      "type": 22,
+      "softFail": false,
+      "description": "TestReplaceRowCsv "
+    },
+    {
+      "sequence": 7,
+      "type": 11,
+      "softFail": false,
+      "description": "TestReplaceRowSql "
+    },
+    {
+      "sequence": 8,
+      "type": 32,
+      "softFail": false,
+      "description": "TestReplaceRowHtml"
+    },
+    {
+      "fromColumn": "Foo",
+      "toColumn": "",
+      "sequence": 9,
+      "type": 23,
+      "softFail": false,
+      "description": "TestReplaceColCsv "
+    },
+    {
+      "fromColumn": "Foo",
+      "toColumn": "",
+      "sequence": 10,
+      "type": 12,
+      "softFail": false,
+      "description": "TestReplaceColSql "
+    },
+    {
+      "fromColumn": "Foo",
+      "toColumn": "",
+      "sequence": 11,
+      "type": 33,
+      "softFail": false,
+      "description": "TestReplaceColHtml"
+    },
+    {
+      "pattern": "TestPattern",
+      "sequence": 12,
+      "type": 34,
+      "softFail": false,
+      "description": "TestMarkupSubsHtml"
+    }
+  ]
+}

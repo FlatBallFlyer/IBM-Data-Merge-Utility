@@ -24,8 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TemplateFactoryTest {
-	private String theCollections = "[\"foo\",\"root\"]";
-	private String theTemplates = "[\"root.test.foo\",\"root.test.\"]";
 	private String template1 = "{\"collection\":\"root\",\"name\":\"test\",\"columnValue\":\"\"}";
 	private String template2 = "{\"collection\":\"root\",\"name\":\"test\",\"columnValue\":\"foo\"}";
 	private String template4 = "{\"collection\":\"foo\",\"columnValue\":\"foo\",\"name\":\"default\",\"description\":\"\",\"outputFile\":\"\",\"content\":\"Testing {Foo} Template \\u003ctkBookmark name\\u003d\\\"BKM1\\\"/ collection\\u003d\\\"COL1\\\"/\\u003e and {empty} \\u003ctkBookmark name\\u003d\\\"BKM2\\\" collection\\u003d\\\"COL2\\\"//\\u003e save to {folder}\",\"directives\":[" +
@@ -56,6 +54,13 @@ public class TemplateFactoryTest {
 	}
 
 	@Test
+	public void testGetTemplateFullNameFoundInDb() throws MergeException {
+		// TODO Template Hibernate Testing
+		TemplateFactory.setDbPersistance(false);
+//		assertNotNull(TemplateFactory.getTemplate("root.test.found", "", new HashMap<String,String>()));
+	}
+
+	@Test
 	public void testGetTemplateShortNameFoundInCache() throws MergeException {
 		TemplateFactory.setDbPersistance(false);
 		TemplateFactory.cacheFromJson(template1);
@@ -66,6 +71,13 @@ public class TemplateFactoryTest {
 		assertEquals("", template.getColumnValue());
 	}
 	
+	@Test
+	public void testGetTemplateShortNameFoundInDb() throws MergeException {
+		// TODO Template Hibernate Testing
+		TemplateFactory.setDbPersistance(false);
+//		assertNotNull(TemplateFactory.getTemplate("root.test.foo", "", new HashMap<String,String>()));
+	}
+
 	@Test
 	public void testGetTemplateNotFoundInCache() throws MergeException {
 		TemplateFactory.setDbPersistance(false);
@@ -139,8 +151,20 @@ public class TemplateFactoryTest {
 	}
 	
 	@Test
-	public void testSaveTemplateFromJson() throws MergeException {
+	public void testSaveTemplateFromJsonToFile() throws MergeException {
 		TemplateFactory.reset();
+		TemplateFactory.setDbPersistance(false);
+		TemplateFactory.setTemplateFolder("src/test/resources/testout/");
+		String template1 = TemplateFactory.saveTemplateFromJson(template4);
+		Template template2 = TemplateFactory.cacheFromJson(template4);
+		assertEquals(template1, template2.asJson(true));
+	}
+
+	@Test
+	public void testSaveTemplateFromJsonToDb() throws MergeException {
+		// TODO Template Hibernate Testing
+		TemplateFactory.reset();
+		TemplateFactory.setDbPersistance(false);
 		TemplateFactory.setTemplateFolder("src/test/resources/testout/");
 		String template1 = TemplateFactory.saveTemplateFromJson(template4);
 		Template template2 = TemplateFactory.cacheFromJson(template4);
