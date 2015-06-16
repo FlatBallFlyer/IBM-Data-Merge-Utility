@@ -1,9 +1,0 @@
-{
-  "collection": "root",
-  "name": "default",
-  "columnValue": "none",
-  "description": "The Default Template",
-  "outputFile": "",
-  "content": "This is the Default Template which is returned when no specific template is requested",
-  "directives": []
- }
