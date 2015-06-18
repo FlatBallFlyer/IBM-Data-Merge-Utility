@@ -215,12 +215,14 @@ public class Template implements Cloneable {
 		// don't insert only white-space
 		if ( txt.matches("^\\s*$") ) {return;} 
 
+
 		// Insert the text
-		this.content.insert(bkm.getStart(), txt);
+		int start = bkm.getStart();
+		this.content.insert(start, txt);
 
 		// Shift bookmark starting points.
 		for(Bookmark theBookmark : this.bookmarks) {
-			if ( theBookmark.getStart() >= bkm.getStart() ) {
+			if ( theBookmark.getStart() >= start ) {
 				theBookmark.offest(txt.length());
 			}
 		}

@@ -164,7 +164,8 @@ public class TemplateFactoryTest {
 	public void testSaveTemplateFromJsonToDb() throws MergeException {
 		// TODO Template Hibernate Testing
 		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
+		TemplateFactory.setDbPersistance(true);
+		TemplateFactory.initilizeHibernate();
 		TemplateFactory.setTemplateFolder("src/test/resources/testout/");
 		String template1 = TemplateFactory.saveTemplateFromJson(template4);
 		Template template2 = TemplateFactory.cacheFromJson(template4);

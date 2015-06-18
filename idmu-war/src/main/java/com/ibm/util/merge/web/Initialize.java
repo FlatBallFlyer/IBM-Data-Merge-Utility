@@ -50,11 +50,10 @@ public class Initialize extends HttpServlet {
 		ZipFactory.setOutputroot(getInitParameter("merge-output-root"));
 
 		// Initialize cache (Load JSON Persisted Templates)
-		TemplateFactory.reset();
-		String tempalteFolder = getInitParameter("merge-templates-folder");
-		TemplateFactory.setTemplateFolder(prefix + tempalteFolder);
-		TemplateFactory.setDbPersistance(getInitParameter("templates-persist").equals("Database"));
 		try {
+			String tempalteFolder = getInitParameter("merge-templates-folder");
+			TemplateFactory.setTemplateFolder(prefix + tempalteFolder);
+			TemplateFactory.setDbPersistance(getInitParameter("templates-persist").equals("Database"));
 			TemplateFactory.loadAll();
 		} catch (MergeException e) {
 			log.warn("Factory Load All I/O Error, check web.xml for merge-templates-folder and templates-persist values");

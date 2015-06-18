@@ -1,0 +1,1 @@
+{"collection":"sitXml","name":"situation","columnValue":"","description":"A single Situation","outputFile":"","content":"<PRIVATESIT>\n{DragonFlyReplaceValues}\r<!-- Added by profile : \"{PROFILE}\" -->\r<SITUATION NAME=\"{SITNAME}\" INTERVAL=\"{INTERVAL}\" />\r<CRITERIA> <![CDATA[ {CRITERIA}]]> </CRITERIA>\r<SITINFO> <![CDATA[ {SITINFO}]]> </SITINFO>\r</PRIVATESIT>\""}

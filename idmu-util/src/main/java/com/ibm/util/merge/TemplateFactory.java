@@ -307,6 +307,11 @@ final public class TemplateFactory {
     	int count = 0;
     	
     	File folder = new File(TemplateFactory.templateFolder);
+    	if (folder.listFiles() == null) {
+    		log.warn("Tempalte Folder data was not found! " + templateFolder);
+    		return;
+    	}
+    	
     	for (File file : folder.listFiles()) {
     		if (!file.isDirectory()) {
     			try {
@@ -384,11 +389,13 @@ final public class TemplateFactory {
 	
     /**********************************************************************************
 	 * Reset the cache and Hibernate Connection
+     * @throws MergeException 
 	 */
-    public static void reset() {
+    public static void reset() throws MergeException {
     	log.warn("Template Cache / Hibernate Reset");
     	templateCache.clear();
 		initilizeHibernate();
+		loadAll();
 		log.info("Reset Complete");
     }
 
