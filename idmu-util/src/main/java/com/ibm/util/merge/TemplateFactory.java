@@ -327,7 +327,7 @@ final public class TemplateFactory {
     		}
     		count++;
     	}
-    	log.info("Loaded " + Integer.toString(count) + " templates from " + TemplateFactory.templateFolder);
+    	log.warn("Loaded " + Integer.toString(count) + " templates from " + TemplateFactory.templateFolder);
     }
     
 	/**********************************************************************************
@@ -395,7 +395,6 @@ final public class TemplateFactory {
     	log.warn("Template Cache / Hibernate Reset");
     	templateCache.clear();
 		initilizeHibernate();
-		loadAll();
 		log.info("Reset Complete");
     }
 
