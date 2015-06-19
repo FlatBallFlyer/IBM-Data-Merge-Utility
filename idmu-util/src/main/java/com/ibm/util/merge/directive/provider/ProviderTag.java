@@ -90,8 +90,10 @@ public class ProviderTag extends Provider implements Cloneable {
 		table.addCol(tag);
 		if (this.isList()) {
 			for (String datum : new ArrayList<String>(Arrays.asList(data.split(",")))) {
-				ArrayList<String> row = table.getNewRow();
-				row.add(datum);
+				if (!datum.isEmpty()) {
+					ArrayList<String> row = table.getNewRow();
+					row.add(datum);
+				}
 			}			
 		} else {
 			ArrayList<String> row = table.getNewRow();
