@@ -1,0 +1,1 @@
+{"collection":"event","name":"ux","columnValue":"","description":"Split UX Template by Platform","outputFile":"","content":"<tkBookmark collection=\"event\" name=\"ux\" column=\"PLATFORM\" />","directives":[{"type":2,"softFail":false,"description":"TestInsertSubsTag","notLast":["empty"],"onlyLast":[],"provider":{"type":2,"condition":0,"tag":"PLATFORM","value":"","list":false}}]}

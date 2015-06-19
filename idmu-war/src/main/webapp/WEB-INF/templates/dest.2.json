@@ -1,0 +1,1 @@
+{"collection":"dest","name":"2","columnValue":"","description":"Event Destination 2 (Insert Tag as List hbeifs)","outputFile":"","content":"  <Destination id=\"2\" default=\"N\" stat=\"Y\" type=\"M\" clear_cache=\"Y\" master_reset=\"N\" connection_type=\"cl\">\r<tkBookmark collection=\"dest\" name=\"hbief\"/>\r  </Destination>"}

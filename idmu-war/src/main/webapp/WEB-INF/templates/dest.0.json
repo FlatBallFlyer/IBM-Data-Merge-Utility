@@ -1,0 +1,1 @@
+{"collection":"dest","name":"0","columnValue":"","description":"Event Destination 0 (Insert Tag as List EIFs)","outputFile":"","content":"<Destination id=\"0\" default=\"Y\" stat=\"N\" type=\"M\" clear_cache=\"N\" master_reset=\"N\" connection_type=\"cl\">\n<tkBookmark collection=\"dest\" name=\"eif\"/>\r  </Destination>"}

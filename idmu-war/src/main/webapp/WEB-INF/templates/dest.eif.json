@@ -1,0 +1,1 @@
+{"collection":"dest","name":"eif","columnValue":"","description":"Event Destination 0 (Insert Tag as List EIFs)","outputFile":"","content":"<Server location=\"{EIFs}\" port=\"5529\" />"}
