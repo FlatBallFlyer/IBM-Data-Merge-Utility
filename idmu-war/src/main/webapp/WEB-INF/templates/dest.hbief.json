@@ -1,1 +1,1 @@
-{"collection":"dest","name":"hbief","columnValue":"","description":"Event Destination 2 hbief entry","outputFile":"","content":"<Server location=\"{HBEIFs}\" port=\"5529\" />"}
+{"collection":"dest","name":"hbief","columnValue":"","description":"Event Destination 2 hbief entry","outputFile":"","content":"<Server location=\"{HBEIFS}\" port=\"5529\" />","directives":[]}
