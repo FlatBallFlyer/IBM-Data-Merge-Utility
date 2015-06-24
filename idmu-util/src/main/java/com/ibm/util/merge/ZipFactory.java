@@ -20,6 +20,8 @@ import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -43,6 +45,7 @@ final public class ZipFactory {
 	private static final Logger log = Logger.getLogger( ZipFactory.class.getName() );
 	private static final ConcurrentHashMap<String,TarArchiveOutputStream> tarList = new ConcurrentHashMap<String,TarArchiveOutputStream>();
 	private static final ConcurrentHashMap<String,ZipOutputStream> zipList = new ConcurrentHashMap<String,ZipOutputStream>();
+	private static final ConcurrentHashMap<String,String> hashList = new ConcurrentHashMap<String,String>();
 	private static String outputroot = System.getProperty("java.io.tmpdir");
     /**********************************************************************************
 	 * <p>Close the Zip File and remove from cache</p>
@@ -52,11 +55,35 @@ final public class ZipFactory {
      * @throws IOException Zip File Close Error
 	 */
     public static void writeFile(String guid, String fileName, StringBuilder content, int type) throws MergeException {
+    	// Write the file to the archive
     	if (type == ZipFactory.TYPE_ZIP) {
     		saveFileToZip(guid, fileName, content);
     	} else {
     		saveFileToTar(guid, fileName, content);
 		}
+    	
+    	// Calculate the MD5 checksum of the file
+    	MessageDigest message;
+		try {
+			message = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			throw new MergeException(e, "MD5 Algorithm Exception!", fileName);
+		}
+		message.update(content.toString().getBytes());
+		byte[] digest = message.digest();
+		StringBuffer checkSum = new StringBuffer();
+		for (byte b : digest) {
+			checkSum.append(String.format("%02x", b & 0xff));
+		}
+
+		// Make sure we have an output hash defined and add the new file to the hash report
+		String oldHash = "";
+		if (!hashList.containsKey(guid)) {
+			hashList.put(guid, "");
+		} else {
+			oldHash = hashList.get(guid);
+		}
+		hashList.put(guid, oldHash + "\n" + fileName + "=" + checkSum.toString());
     }
 	
     /**********************************************************************************
@@ -165,6 +192,7 @@ final public class ZipFactory {
 				}
 	    	}
     	}
+    	hashList.remove(guid);
     }
     
     /**********************************************************************************
@@ -180,6 +208,13 @@ final public class ZipFactory {
 	 */
     public static int size() {
     	return tarList.size() + zipList.size();
+    }
+    
+    public static String getHash(String guid) {
+    	if (hashList.get(guid) == null) {
+    		return "";
+    	} 
+    	return hashList.get(guid);
     }
     
 }

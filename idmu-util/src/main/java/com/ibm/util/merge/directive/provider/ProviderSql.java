@@ -69,6 +69,8 @@ public class ProviderSql extends Provider implements Cloneable {
 		try {
 			// Prepare and Execute the SQL Statement
 			String queryString = this.getQueryString();
+			log.info(this.getDirective().getTemplate().getFullName() + " Selecting SQL Data " + queryString );
+			
 			con = ConnectionFactory.getDataConnection(this.source, this.getDirective().getTemplate().getOutputFile());
 			PreparedStatement st = con.prepareStatement(queryString, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = st.executeQuery();

@@ -45,6 +45,7 @@ public class Template implements Cloneable {
 	public static final String 	TAG_STACK			= wrap("DragonFlyTemplateStack");
 	public static final String 	TAG_ALL_VALUES		= wrap("DragonFlyReplaceValues");
 	public static final String 	TAG_OUTPUTFILE		= wrap("DragonFlyOutputFile");
+	public static final String 	TAG_OUTPUTHASH		= wrap("DragonFlyOutputHash");
 	public static final String 	TAG_SOFTFAIL		= wrap("DragonFlySoftFail");
 	public static final String 	TAG_OUTPUT_TYPE		= wrap("DragonOutputType");
 	public static final String 	TAG_SEQUENCE		= wrap("DragonSequence");
@@ -158,6 +159,9 @@ public class Template implements Cloneable {
 		
 		// Replace the all values tag
 		this.replaceThis(TAG_ALL_VALUES, allValues);
+		
+		// Replace the Output Hash tag
+		this.replaceThis(TAG_OUTPUTHASH, ZipFactory.getHash(this.getOutputFile()));
 		
 		// Remove all the bookmarks
 		this.replaceAllThis(BOOKMARK_PATTERN, "");
@@ -364,6 +368,13 @@ public class Template implements Cloneable {
 	 */
 	public String getOutputFile() throws MergeException  {
 		return this.getReplaceValue(TAG_OUTPUTFILE);
+	}
+
+	/**
+	 * @return the Output Hash String (from replace hash)
+	 */
+	public String getOutputHash() throws MergeException  {
+		return this.getReplaceValue(TAG_OUTPUTHASH);
 	}
 
 	/**
