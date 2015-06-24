@@ -1,0 +1,7 @@
+{
+	"collection":"contact",
+	"name":"cmd",
+	"columnValue":"email",
+	"description":"Send SMTP Command",
+	"content":"\ncat smtp/{NAME}.send | sendmail -i -t"
+}

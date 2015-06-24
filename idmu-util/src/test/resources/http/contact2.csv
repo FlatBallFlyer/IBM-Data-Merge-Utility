@@ -1,0 +1,11 @@
+IDCONTACT,IDCUSTOMER,NAME,PREFERENCE,EMAIL,PHONE
+2,2,Robert,email,Robert@Exxon.com,(531) 555-0422
+22,2,Edward,paper,Edward@Exxon.com,(531) 555-2422
+42,2,Willie,SMS,,(531) 555-4442
+62,2,Samuel,email,Samuel@Exxon.com,(531) 555-6462
+82,2,Scott,paper,Scott@Exxon.com,(531) 555-8482
+102,2,Mary,SMS,Mary@Exxon.com,(531) 555-0412
+122,2,Janice,email,Janice@Exxon.com,(531) 555-2412
+142,2,Gail,paper,Gail@Exxon.com,(531) 555-4412
+162,2,Sherry,SMS,Sherry@Exxon.com,(531) 555-6412
+182,2,Denise,email,Denise@Exxon.com,(531) 555-8412

@@ -1,0 +1,18 @@
+{
+	"collection":"csvUrl",
+	"name":"SMTP",
+	"outputFile":"sendSmtp.sh",
+	"description":"Insert Subs with Output Test with CSV Default Data",
+	"content":"# Commands to invoke SendMail for postal customers<tkBookmark collection=\"contact\" name=\"outSMTP\" column=\"PREFERENCE\"/><tkBookmark collection=\"contact\" name=\"cmdSMTP\" column=\"PREFERENCE\"/>",
+	"directives":[
+		{
+			"type": 21,
+			"description": "TestInsertSubsCsv",
+			"provider": {
+				"type": 3,
+				"url": "http://localhost/idmuTest/contacts.csv"
+			}
+		}
+	]
+
+ }

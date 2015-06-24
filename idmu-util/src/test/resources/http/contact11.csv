@@ -1,0 +1,11 @@
+IDCONTACT,IDCUSTOMER,NAME,PREFERENCE,EMAIL,PHONE
+11,11,Larry,email,Larry@Amoco.com,(401) 555-2211
+31,11,Raymond,paper,Raymond@Amoco.com,(401) 555-4231
+51,11,Roy,SMS,Roy@Amoco.com,(401) 555-6251
+71,11,Randall,email,Randall@Amoco.com,(401) 555-8271
+91,11,Lee,paper,Lee@Amoco.com,(401) 555-0291
+111,11,Sharon,SMS,Sharon@Amoco.com,(401) 555-2211
+131,11,Beverly,email,Beverly@Amoco.com,(401) 555-4211
+151,11,Frances,paper,Frances@Amoco.com,(401) 555-6211
+171,11,Suzanne,SMS,Suzanne@Amoco.com,(401) 555-8211
+191,11,Eileen,email,Eileen@Amoco.com,(401) 555-0211

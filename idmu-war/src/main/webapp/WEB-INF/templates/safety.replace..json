@@ -1,0 +1,6 @@
+{
+	"collection":"safety",
+	"name":"replace",
+	"description":"Infinite Replace Saftey Test",
+	"content":"Test Replace To contains From {FROM}"
+ }

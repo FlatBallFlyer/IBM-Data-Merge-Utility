@@ -1,0 +1,12 @@
+/*
+-- Query: SELECT * FROM dragonfly.template where idcollection in (1,2,3)
+LIMIT 0, 1000
+
+-- Date: 2015-02-27 16:36
+*/
+INSERT INTO `template` (`idtemplate`,`idcollection`,`columnValue`,`name`,`type`,`output`,`description`,`content`) VALUES (18,1,'','default',1,'','The default template ','DEFAULT TEMPLATE - \nThis template was used because the requested template was not found!\n{tkReplaceValues}');
+INSERT INTO `template` (`idtemplate`,`idcollection`,`columnValue`,`name`,`type`,`output`,`description`,`content`) VALUES (19,2,'','testRoot',1,'','Root Testing Template','<!DOCTYPE html>\n<html>\n	<head>\n		<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />	\n		<title>Situation Generator</title>\n	</head>\n	<body>\n	<p>This is the Test report of Template Definitions</p>\n	<table border=\"1\" width=\"1000px\">\n		<tr>\n			<th>Collection</th>\n			<th>Name</th>\n			<th>Column Value</th>\n			<th>Type</th>\n		</tr>\n<tkBookmark name=\"template\"/>\n	</table>\n	</body>\n</html>');
+INSERT INTO `template` (`idtemplate`,`idcollection`,`columnValue`,`name`,`type`,`output`,`description`,`content`) VALUES (20,2,'','template',1,'','Single Template Report','<tr>\n	<td>{collectionName}</td>\n	<td>{name}</td>\n	<td>{columnValue}</td>\n	<td>{typeName}</td>\n</tr>\n<tr>\n	<td></td>\n	<td colspan=\"3\">\n	<textarea cols=\"132\" rows=\"10\">{content}</textarea>\n	</td>\n</tr>\n<tr>\n	<td></td>\n	<td colspan=\"3\"><table border=\"1\">\n		<tr>\n			<th>Type</th>\n			<th colspan=\"3\">Info</th>\n		</tr>\n<tkBookmark name=\"directive\"/>\n	</table></td>\n</tr>');
+INSERT INTO `template` (`idtemplate`,`idcollection`,`columnValue`,`name`,`type`,`output`,`description`,`content`) VALUES (21,3,'','directive',1,'','Default Directive Report Template','<tr>\n	<td>{directiveType}</td>\n	<td colspan=\"3\">SELECT {selectColumns} FROM {fromTables} WHERE {whereCondition}</td>\n</tr>');
+INSERT INTO `template` (`idtemplate`,`idcollection`,`columnValue`,`name`,`type`,`output`,`description`,`content`) VALUES (22,3,'Insert','directive',1,'','Insert Directive Report','<tr>\n	<td>{directiveType}</td>\n	<td>FROM {selectColumns} FROM {fromTables} WHERE {whereCondition}</td>\n	<td>Not Last Tags: {notLast}</td>\n	<td>Only Last Tags: {onlyLast}</td>\n</tr>');
+INSERT INTO `template` (`idtemplate`,`idcollection`,`columnValue`,`name`,`type`,`output`,`description`,`content`) VALUES (23,3,'ReplaceVal','directive',1,'','ReplaceVal Directive Report','<tr>\n	<td>{directiveType}</td>\n	<td colspan=\"3\">Replace {fromValue} with {toValue}</td>\n</tr>');

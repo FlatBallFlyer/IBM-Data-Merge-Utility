@@ -1,0 +1,29 @@
+{
+	"collection":"htmlUrl",
+	"name":"functional",
+	"columnValue":"",
+	"description":"html from URL Root Functional Test",
+	"content":
+	"<tkBookmark collection=\"htmlUrl\" name=\"report\"/>\n<tkBookmark collection=\"htmlUrl\" name=\"SMTP\"/>\n<tkBookmark collection=\"htmlUrl\" name=\"SMS\"/>",
+	"directives":[
+		{
+			"type": 33,
+			"description": "Get Corporate Data (Replace Col)",
+			"fromColumn": "FROM_VALUE",
+			"toColumn": "TO_VALUE",
+			"provider": {
+				"type": 4,
+				"staticData": "<html><head></head><body><table><tr><th>IDCORPORATE</th><th>FROM_VALUE</th><th>TO_VALUE</th></tr><tr><td>1</td><td>corpUrl</td><td>www.spacely.com</td></tr><tr><td>2</td><td>corpStreet</td><td>101 Future Ave.</td></tr><tr><td>3</td><td>corpCity</td><td>Space City</td></tr><tr><td>4</td><td>corpState</td><td>IS</td></tr><tr><td>5</td><td>corpZip</td><td>99353</table></body></html>"
+			}
+		},{
+			"sequence": 1,
+			"type": 2,
+			"description": "InsertSubsIfTagExists",
+			"provider": {
+				"type": 2,
+				"condition": 0,
+				"tag": "DragonFlyFullName"
+			 }
+		}
+	]
+ }
