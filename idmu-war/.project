@@ -4,8 +4,8 @@
 	<comment></comment>
 	<projects>
 		<project>idmu-ear</project>
-		<project>idmu-util</project>
 		<project>Servers</project>
+		<project>idmu-util</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

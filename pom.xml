@@ -4,7 +4,7 @@
   <groupId>com.ibm</groupId>
   <artifactId>idmu</artifactId>
   <packaging>pom</packaging>
-  <version>3.0-beta2</version>
+  <version>3.0</version>
   <name>IBM Data Merge Utilityies POM</name>
   <url>http://maven.apache.org</url>
   

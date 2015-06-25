@@ -1,0 +1,6 @@
+{
+	"collection":"special",
+	"name":"SMS",
+	"description":"Offer to switch Contact to SMS",
+	"content":"I see we have your phone number {PHONE}, do you want to chance your preferred contact to SMS?"
+}

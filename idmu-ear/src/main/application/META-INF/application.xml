@@ -4,7 +4,7 @@
   <display-name>idmu-ear</display-name>
   <module>
     <web>
-      <web-uri>idmu-war-3.0-beta2.war</web-uri>
+      <web-uri>idmu-war-3.0.war</web-uri>
       <context-root>/idmu-war</context-root>
     </web>
   </module>

@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.ibm</groupId>
     <artifactId>idmu</artifactId>
-    <version>3.0-beta2</version>
+    <version>3.0</version>
   </parent>
   <artifactId>idmu-war</artifactId>
   <packaging>war</packaging>
@@ -14,7 +14,7 @@
 		<dependency>
             <groupId>com.ibm</groupId>
             <artifactId>idmu-util</artifactId>
-            <version>3.0-beta2</version>
+            <version>3.0</version>
         </dependency>    
         <dependency>
             <groupId>javax</groupId>

@@ -1,0 +1,25 @@
+{
+	"collection":"htmlUrl",
+	"name":"SMS",
+	"outputFile":"sendSmSSmtp.sh",
+	"description":"Insert Subs with Output Test with html Tag Data",
+	"content":"# Commands to invoke SendMail and SMS <tkBookmark collection=\"contact\" name=\"cmd\" column=\"PREFERENCE\"/><tkBookmark collection=\"contact\" name=\"out\" column=\"PREFERENCE\"/>",
+	"directives":[
+		{
+			"type": 32,
+			"description": "TestReplaceRowhtml",
+			"provider": {
+				"type": 4,
+				"url": "http://localhost/idmuTest/customer.html"
+			}
+		},{
+			"type": 31,
+			"description": "TestInsertSubshtml",
+			"provider": {
+				"type": 4,
+				"url": "http://localhost/idmuTest/contacts.html"
+			}
+		}
+	]
+
+ }

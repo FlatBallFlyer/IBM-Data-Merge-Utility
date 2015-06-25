@@ -1,0 +1,7 @@
+{
+	"collection":"contact",
+	"name":"cmdSMTP",
+	"columnValue":"email",
+	"description":"Command Default Template",
+	"content":"\ncat smtp/{NAME}.send.txt | sendmail -i -t"
+}

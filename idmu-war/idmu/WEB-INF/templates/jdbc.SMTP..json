@@ -1,0 +1,17 @@
+{
+	"collection":"jdbc",
+	"name":"SMTP",
+	"outputFile":"sendSmtp.sh",
+	"description":"Insert Subs with Output Test with html Default Data",
+	"content":"# Commands to invoke SendMail for postal customers<tkBookmark collection=\"contact\" name=\"outSMTP\" column=\"PREFERENCE\"/><tkBookmark collection=\"contact\" name=\"cmdSMTP\" column=\"PREFERENCE\"/>",
+	"directives":[
+		{
+			"type": 1,
+			"source": "testgenDB",
+			"columns": "*",
+			"from": "CONTACT",
+			"where": "PREFERENCE = 'email'"
+		}
+	]
+
+ }

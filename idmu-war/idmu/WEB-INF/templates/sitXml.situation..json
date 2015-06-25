@@ -1,0 +1,1 @@
+{"collection":"sitXml","name":"situation","columnValue":"","description":"A single Situation","outputFile":"","content":"\n\t<PRIVATESIT>\n\t\t<SITUATION NAME=\"{SITNAME}\" INTERVAL=\"{INTERVAL}\" />\r\t\t<CRITERIA> <![CDATA[ {CRITERIA}]]> </CRITERIA>\r\t\t<SITINFO> <![CDATA[ {SITINFO}]]> </SITINFO>\r\t</PRIVATESIT>\""}

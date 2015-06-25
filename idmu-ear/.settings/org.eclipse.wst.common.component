@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="idmu-ear-3.0-beta2">
         <wb-resource deploy-path="/" source-path="/src/main/application" tag="defaultRootSource"/>
-        <dependent-module archiveName="idmu-util-3.0-beta2.jar" deploy-path="/lib" handle="module:/resource/idmu-util/idmu-util">
+        <dependent-module archiveName="idmu-util-3.0.jar" deploy-path="/lib" handle="module:/resource/idmu-util/idmu-util">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="log4j-1.2.17.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/log4j/log4j/1.2.17/log4j-1.2.17.jar">
@@ -73,7 +73,7 @@
         <dependent-module archiveName="xmlParserAPIs-2.6.2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="idmu-war-3.0-beta2.war" deploy-path="/" handle="module:/resource/idmu-war/idmu-war">
+        <dependent-module archiveName="idmu-war-3.0.war" deploy-path="/" handle="module:/resource/idmu-war/idmu-war">
             <dependency-type>uses</dependency-type>
         </dependent-module>
     </wb-module>

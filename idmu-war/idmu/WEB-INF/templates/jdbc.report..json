@@ -1,0 +1,19 @@
+{
+	"collection":"jdbc",
+	"name":"report",
+	"description":"Report to Test InsertSubs from Collection for Column",
+	"outputFile":"FullReport.txt",
+	"content":"Begin Customers for {corpUrl}<tkBookmark collection=\"jdbc\" name=\"customer\"/>\nEnd Customers",
+	"directives":[
+		{
+			"type": 10,
+			"description": "TestInsertSubsSql",
+			"provider": {
+				"type": 1,
+				"source": "testgenDB",
+				"columns": "*",
+				"from": "CUSTOMER"
+			 }
+		}
+	]
+}

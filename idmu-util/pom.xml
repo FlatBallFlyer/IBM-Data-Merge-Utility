@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.ibm</groupId>
 		<artifactId>idmu</artifactId>
-		<version>3.0-beta2</version>
+		<version>3.0</version>
 	</parent>
 	<artifactId>idmu-util</artifactId>
 	<packaging>jar</packaging>

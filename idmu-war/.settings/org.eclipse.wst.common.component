@@ -2,7 +2,7 @@
     <wb-module deploy-name="idmu-war">
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <dependent-module archiveName="idmu-util-3.0-beta2.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/idmu-util/idmu-util">
+        <dependent-module archiveName="idmu-util-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/idmu-util/idmu-util">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="idmu-war"/>

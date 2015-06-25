@@ -1,0 +1,25 @@
+{
+	"collection":"csvTag",
+	"name":"SMS",
+	"outputFile":"sendSmSSmtp.sh",
+	"description":"Insert Subs with Output Test with CSV Tag Data",
+	"content":"# Commands to invoke SendMail and SMS <tkBookmark collection=\"contact\" name=\"cmd\" column=\"PREFERENCE\"/><tkBookmark collection=\"contact\" name=\"out\" column=\"PREFERENCE\"/>",
+	"directives":[
+		{
+			"type": 22,
+			"description": "TestReplaceRowCsv",
+			"provider": {
+				"type": 3,
+				"tag": "csvCustomer"
+			}
+		},{
+			"type": 21,
+			"description": "TestInsertSubsCsv",
+			"provider": {
+				"type": 3,
+				"tag": "csvContact1"
+			}
+		}
+	]
+
+ }
