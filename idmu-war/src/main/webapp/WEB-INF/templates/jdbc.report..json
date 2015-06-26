@@ -2,7 +2,6 @@
 	"collection":"jdbc",
 	"name":"report",
 	"description":"Report to Test InsertSubs from Collection for Column",
-	"outputFile":"FullReport.txt",
 	"content":"Begin Customers for {corpUrl}<tkBookmark collection=\"jdbc\" name=\"customer\"/>\nEnd Customers",
 	"directives":[
 		{
