@@ -102,7 +102,7 @@
 							<goal>copy</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${endorsed.dir}</outputDirectory>
+							<outputDirectory>${endorsed.dir}/WEB-INF/classes</outputDirectory>
 							<silent>true</silent>
 							<artifactItems>
 								<artifactItem>
