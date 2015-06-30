@@ -1,7 +1,0 @@
-{
-	"collection":"contact",
-	"name":"type",
-	"columnValue":"SMS",
-	"description":"Contact Line for SMS Contacts",
-	"content":"\n\tName: {NAME} \tSMS-Phone# {PHONE}"
-}

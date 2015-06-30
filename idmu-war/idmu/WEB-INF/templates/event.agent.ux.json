@@ -1,1 +1,0 @@
-{"collection":"event","name":"agent","columnValue":"ux","description":"UX Event Map","outputFile":"","content":"<tkBookmark collection=\"event\" name=\"ux\" column=\"PLATFORM\"/>","directives":[{"type":2,"softFail":false,"description":"Insert mapping for Platform","notLast":[],"onlyLast":[],"provider":{"type":2,"condition":0,"tag":"PLATFORM","value":"","list":false}}]}

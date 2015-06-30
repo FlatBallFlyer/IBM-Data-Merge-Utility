@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="idmu-ear-3.0-beta2">
+    <wb-module deploy-name="idmu-ear-3.0">
         <wb-resource deploy-path="/" source-path="/src/main/application" tag="defaultRootSource"/>
         <dependent-module archiveName="idmu-util-3.0.jar" deploy-path="/lib" handle="module:/resource/idmu-util/idmu-util">
             <dependency-type>uses</dependency-type>
@@ -74,6 +74,7 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="idmu-war-3.0.war" deploy-path="/" handle="module:/resource/idmu-war/idmu-war">
+            <dependent-object>Module_1435601394165</dependent-object>
             <dependency-type>uses</dependency-type>
         </dependent-module>
     </wb-module>

@@ -6,6 +6,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="idmu-war"/>
-        <property name="java-output-path" value="/idmu-war/target/classes"/>
+        <property name="java-output-path" value="/WEB-INF/classes"/>
     </wb-module>
 </project-modules>

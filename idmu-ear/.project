@@ -4,6 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>Servers</project>
+		<project>idmu-war</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

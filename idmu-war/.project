@@ -3,7 +3,6 @@
 	<name>idmu-war</name>
 	<comment></comment>
 	<projects>
-		<project>idmu-ear</project>
 		<project>Servers</project>
 		<project>idmu-util</project>
 	</projects>
