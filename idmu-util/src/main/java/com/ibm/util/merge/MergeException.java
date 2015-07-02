@@ -15,18 +15,27 @@
  *
  */
 package com.ibm.util.merge;
+import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 
+import com.ibm.util.merge.directive.Directive;
+import com.ibm.util.merge.directive.provider.Provider;
+
 /**
- * Simple custom Exception Class
+ * Merge Processing Exception Class - This is the only exception thrown by the Merge Utility
  *
  * @author Mike Storey
  */
 public class MergeException extends Exception {
 	private static final long serialVersionUID = 1L;
-	private static final Logger log = Logger.getLogger( MergeException.class.getName() );
+	private static final Logger log = Logger.getLogger(MergeException.class.getName() );
 	private String error;
 	private String context;
+	private Template template;
+	private Directive directive;
+	private Provider provider;
+	private String errorFromClass;
 	
 	/**
 	 * Constructor
@@ -38,10 +47,8 @@ public class MergeException extends Exception {
 		super(e);
 		this.error = errorMessage;
 		this.context = theContext;
-		log.fatal("Merge Wrapped Exception: " + e.getClass().getName() + "\n" +
-			"Message: " + this.error + "\n" +
-			"Context: " + this.context + "\n" + 
-			"StackTrace: ", this);
+		this.errorFromClass = "Wrapped: " + e.getClass().getName();
+		this.logError();
 	}
 	
 	/**
@@ -52,30 +59,154 @@ public class MergeException extends Exception {
 		super(errorMessage);
 		this.error = errorMessage;
 		this.context = theContext;
+		this.logError();
+    }
+
+	/**
+	 * @param errorMessage
+	 * @param theContext
+	 */
+	public MergeException(Template errTemplate, Exception wrapped, String errorMessage, String theContext){
+		super(wrapped);
+		this.error = errorMessage;
+		this.context = theContext;
+		this.template = errTemplate;
+		this.errorFromClass = errTemplate.getClass().getName();
+		
+		this.logError();
+		this.logTemplate();
+    }
+
+	/**
+	 * @param errorMessage
+	 * @param theContext
+	 */
+	public MergeException(Directive errDirective, Exception wrapped, String errorMessage, String theContext){
+		super(wrapped);
+		this.error = errorMessage;
+		this.context = theContext;
+		this.directive = errDirective;
+		this.template = this.directive.getTemplate();
+		this.errorFromClass = errDirective.getClass().getName();
+		
+		this.logError();
+		this.logTemplate();
+		this.logDirective();
+    }
+
+	/**
+	 * @param errorMessage
+	 * @param theContext
+	 */
+	public MergeException(Provider errProvider, Exception wrapped, String errorMessage, String theContext){
+		super(wrapped);
+		this.error = errorMessage;
+		this.context = theContext;
+		this.provider = errProvider;
+		this.directive = this.provider.getDirective();
+		this.template = this.directive.getTemplate();
+		this.errorFromClass = errProvider.getClass().getName();
+		
+		this.logError();
+		this.logTemplate();
+		this.logDirective();
+		this.logProvider();
+    }
+
+	/**
+	 * 
+	 */
+	private void logError() {
 		log.fatal("Merge Exception: \n" +
 			"Message: " + this.error + "\n" +
 			"Context: " + this.context + "\n" + 
 			"StackTrace: ", this);
-    }
+	}
+	
+	/**
+	 * 
+	 */
+	private void logTemplate() {
+		if (this.template != null) {
+			log.fatal("Merge Exception: Template JSON \n" + this.template.asJson(true));
+			log.fatal(this.template.getReplaceValues());
+			log.fatal(this.template.getBookmarks());
+		}
+	}
+	
 
+	/**
+	 * 
+	 */
+	private void logDirective() {
+		if (this.directive != null ) {
+			log.fatal("Merge Exception: Exception from Directive: " + Integer.toString(this.directive.getSequence()) );
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private void logProvider() {
+		if ( this.provider != null ) {
+			int size = this.provider.getTables().size();
+			log.fatal("Merge Exception: Exception from Provider: " + Integer.toString(this.provider.getType()) + "\n" + 
+					"Query String: " + this.provider.getQueryString() + "\n" + 
+					"Data Tables: " + Integer.toString(size));
+			if (size > 0) {
+				log.fatal(this.provider.getTables());
+			}
+		}
+	}
+	
 	/**
 	 * @return
 	 */
 	public String getHtmlErrorMessage() {
-		return "<html><head></head><body>" +
-		"<p>Message: " + this.error + "</p>" +
-		"<p>Context: " + this.context + "</p>" + 
-		"</body></html>";
+		String message = "";
+		Template errorTemplate;
+		HashMap<String,String> parameters = new HashMap<String,String>();
+		parameters.put(Template.wrap("MESSAGE"),  this.error);
+		parameters.put(Template.wrap("CONTEXT"),  this.context);
+		parameters.put(Template.wrap("TRACE"), this.getStackTrace().toString());
+		try {
+			errorTemplate = TemplateFactory.getTemplate("system.errHtml." + this.errorFromClass, "system.errHtml.", parameters);
+			message = errorTemplate.merge();
+			errorTemplate.packageOutput();
+		} catch (MergeException e) {
+			message = "INVALID ERROR TEMPLATE! \n" +
+					"Message: " + this.error + "\n" + 
+					"Context: " + this.context + "\n";
+		}
+		return message;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getJsonErrorMessage() {
-		// TODO Determine JSON Error Message Format
-		return "";
+		String message = "";
+		Template errorTemplate;
+		HashMap<String,String> parameters = new HashMap<String,String>();
+		parameters.put(Template.wrap("MESSAGE"),  this.error);
+		parameters.put(Template.wrap("CONTEXT"),  this.context);
+		parameters.put(Template.wrap("TRACE"), this.getStackTrace().toString());
+		try {
+			errorTemplate = TemplateFactory.getTemplate("system.errJson." + this.errorFromClass, "system.errJson.", parameters);
+			message = errorTemplate.merge();
+			errorTemplate.packageOutput();
+		} catch (MergeException e) {
+			message = "INVALID ERROR TEMPLATE! \n" +
+					"Message: " + this.error + "\n" + 
+					"Context: " + this.context + "\n";
+		}
+		return message;
 	}
 
 	public String getMessage() {
-		return super.getMessage() + "For: " + this.context;
+		return super.getMessage() + " For: " + this.context;
 	}
+	
 	public String getContext() {
 		return context;
 	}
@@ -91,5 +222,4 @@ public class MergeException extends Exception {
 	public void setError(String error) {
 		this.error = error;
 	}
-
 }
