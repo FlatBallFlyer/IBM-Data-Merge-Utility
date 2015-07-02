@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -70,11 +70,11 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>5.0.0.CR1</version>
 		</dependency>
-		<dependency>
-			<groupId>junit-addons</groupId>
-			<artifactId>junit-addons</artifactId>
-			<version>1.4</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>junit-addons</groupId>-->
+			<!--<artifactId>junit-addons</artifactId>-->
+			<!--<version>1.4</version>-->
+		<!--</dependency>-->
     </dependencies>
 
     <build>
