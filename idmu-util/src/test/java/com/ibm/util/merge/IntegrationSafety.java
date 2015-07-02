@@ -45,7 +45,6 @@ public class IntegrationSafety {
 		cf = new ConnectionFactory();
 		// Initialize Factories
 		tf.reset();
-		tf.setDbPersistance(false);
 		tf.loadTemplatesFromFilesystem();
 		zf.setOutputroot(outputDir);
 		

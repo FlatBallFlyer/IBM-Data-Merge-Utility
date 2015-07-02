@@ -45,7 +45,7 @@ public class InsertSubsTagTest extends InsertSubsTest {
 		myProvider = (ProviderTag) myDirective.getProvider();
 
 		tf.reset();
-		tf.setDbPersistance(false);
+
 		tf.cacheFromJson(subTemplate); 
 		tf.cacheFromJson(masterTemplate);
 		template = tf.getTemplate("root.master.", "", new HashMap<String,String>());

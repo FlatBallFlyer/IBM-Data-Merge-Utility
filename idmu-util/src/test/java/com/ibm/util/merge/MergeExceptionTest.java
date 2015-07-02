@@ -38,7 +38,7 @@ public class MergeExceptionTest {
 		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
-		tf.setDbPersistance(false);
+
 		tf.reset();
 		tf.loadTemplatesFromFilesystem();
 		template = tf.getTemplate("system.test.", "", new HashMap<String,String>());

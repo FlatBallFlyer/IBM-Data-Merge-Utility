@@ -53,7 +53,7 @@ public class IntegrationTestingCsvProvider {
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
 		tf.reset();
-		tf.setDbPersistance(false);
+
 		tf.loadTemplatesFromFilesystem();
 		zf.setOutputroot(outputDir);
 		

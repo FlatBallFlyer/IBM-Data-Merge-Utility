@@ -44,7 +44,7 @@ public class InsertSubsHtmlTest extends InsertSubsTest {
 		myProvider.setStaticData("<table><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>");
 
 		tf.reset();
-		tf.setDbPersistance(false);
+
 		tf.cacheFromJson(subTemplate); 
 		tf.cacheFromJson(masterTemplate);
 		template = tf.getTemplate("root.master.", "", new HashMap<String,String>());

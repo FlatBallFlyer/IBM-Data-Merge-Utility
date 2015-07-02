@@ -51,7 +51,7 @@ public class IntegrationTestingHtmlProvider {
 		cf = new ConnectionFactory();
 		// Initialize Factories
 		tf.reset();
-		tf.setDbPersistance(false);
+
 		tf.loadTemplatesFromFilesystem();
 		zf.setOutputroot(outputDir);
 		

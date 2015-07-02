@@ -18,11 +18,6 @@ package com.ibm.util.merge;
 
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,21 +37,10 @@ final public class TemplateFactory {
     public final String KEY_CACHE_LOAD = Template.wrap("DragonFlyCacheLoad");
     public final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
     private final String DEFAULT_FULLNAME = "root.default.";
-    private final String FULLNAME_QUERY = "SELECT ID_TEMPLATE " +
-            "FROM TEMPLATE " +
-            "WHERE TEMPLATE.COLLECTION = :collection " +
-            "AND TEMPLATE.NAME = :name" +
-            "AND TEMPLATE.COLUMN = :column";
-    private final String DEFAULT_QUERY = "SELECT ID_TEMPLATE" +
-            "FROM TEMPLATE " +
-            "WHERE TEMPLATE.COLLECTION = :collection " +
-            "AND TEMPLATE.NAME = :name" +
-            "AND TEMPLATE.COLUMN = ''";
     private final FilesystemPersistence fs;
-    private SessionFactory sessionFactory;
-    private ServiceRegistry serviceRegistry;
+    private HibernatePersistence hp;
     private final ConcurrentHashMap<String, Template> templateCache = new ConcurrentHashMap<String, Template>();
-    private boolean dbPersistance = false;
+    
 
     public TemplateFactory(FilesystemPersistence fs) {
         this.fs = fs;
@@ -102,7 +86,6 @@ final public class TemplateFactory {
         List<Template> templates = fs.loadAll();
         for (Template t : templates) {
             cache(t);
-
         }
     }
 
@@ -124,17 +107,12 @@ final public class TemplateFactory {
             return templateCache.get(fullName).clone(seedReplace);
         }
         // See if FullName template is in the database
-        if (dbPersistance) {
-            Session session = sessionFactory.openSession();
-            @SuppressWarnings({"rawtypes"}) List list = session.createQuery(FULLNAME_QUERY).list();
-            session.getTransaction().commit();
-            session.close();
-            if (list.size() == 1) {
-                newTemplate = (Template) list.get(0);
-                templateCache.putIfAbsent(fullName, newTemplate);
-                log.info("Constructed Template: " + fullName);
-                return templateCache.get(fullName).clone(seedReplace);
-            }
+        if (this.hp != null) {
+            newTemplate = hp.getTemplateFullname(fullName);
+            templateCache.putIfAbsent(fullName, newTemplate);
+            log.info("Constructed Template: " + fullName);
+            return templateCache.get(fullName).clone(seedReplace);
+//            }
         }
         // Check for shortName in the cache, since fullName doesn't exist
         if (templateCache.containsKey(shortName)) {
@@ -143,16 +121,12 @@ final public class TemplateFactory {
             return templateCache.get(fullName).clone(seedReplace);
         }
         // See if the shortName (Default Template) is in the database
-        if (dbPersistance) {
-            Session session = sessionFactory.openSession();
-            @SuppressWarnings({"rawtypes"}) List list = session.createQuery(DEFAULT_QUERY).list();
-            session.getTransaction().commit();
-            session.close();
-            if (list.size() == 1) {
-                templateCache.putIfAbsent(fullName, newTemplate);
-                log.info("Linked Template: " + shortName + " to " + fullName);
-                return templateCache.get(fullName).clone(seedReplace);
-            }
+        if (this.hp != null) {
+            newTemplate = hp.getTemplateDefault(fullName);
+            templateCache.putIfAbsent(fullName, newTemplate);
+            log.info("Linked Template: " + shortName + " to " + fullName);
+            return templateCache.get(fullName).clone(seedReplace);
+
         }
         // Template Not Found Exception
         throw new TemplateNotFoundException(fullName);
@@ -168,7 +142,7 @@ final public class TemplateFactory {
      */
     public String getCollections() {
         ArrayList<String> theList = new ArrayList<String>();
-        if (dbPersistance) {
+        if (this.hp != null) {
             theList = getCollectionsFromDb();
         } else {
             theList = getCollectionsFromCache();
@@ -213,7 +187,7 @@ final public class TemplateFactory {
      */
     public String getTemplates(String collection) {
         ArrayList<String> theList = new ArrayList<String>();
-        if (dbPersistance) {
+        if (this.hp != null) {
             theList = getTemplatesFromDb(collection);
         } else {
             theList = getTemplatesFromCache(collection);
@@ -267,8 +241,8 @@ final public class TemplateFactory {
      */
     public String saveTemplateFromJson(String json) {
         Template template = cacheFromJson(json);
-        if (dbPersistance) {
-            saveTemplateToDatabase(template);
+        if (this.hp != null) {
+            hp.saveTemplateToDatabase(template);
         } else {
             fs.saveTemplateToJsonFolder(template);
         }
@@ -295,24 +269,6 @@ final public class TemplateFactory {
     }
 
     /**********************************************************************************
-     * save provided template to the Template database
-     *
-     * @param Template template the Template to save
-     * @return a cloned copy of the Template ready for Merge Processing
-     * @throws MergeException on Template Clone Errors
-     */
-    public Template saveTemplateToDatabase(Template template) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.delete(template); // (Where FullName=FullName)
-        session.save(template);
-        session.getTransaction().commit();
-        session.close();
-        log.info("Template Saved: " + template.getFullName());
-        return template;
-    }
-
-    /**********************************************************************************
      * Reset the cache and Hibernate Connection
      *
      * @throws MergeException
@@ -320,21 +276,11 @@ final public class TemplateFactory {
     public void reset() {
         log.warn("Template Cache / Hibernate Reset");
         templateCache.clear();
-        initilizeHibernate();
-        log.info("Reset Complete");
-    }
-
-    /**********************************************************************************
-     * Initialize the Hibernate Connection
-     */
-    public void initilizeHibernate() {
-        if (dbPersistance) {
-            Configuration configuration = new Configuration();
-            configuration.configure();
-            serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-            log.info("Hibernate Initilized");
+        if(this.hp != null){
+            hp.initilizeHibernate();
         }
+
+        log.info("Reset Complete");
     }
 
     /**********************************************************************************
@@ -344,15 +290,13 @@ final public class TemplateFactory {
         return templateCache.size();
     }
 
-    public boolean isDbPersistance() {
-        return dbPersistance;
+
+
+    public void setHp(HibernatePersistence hp) {
+        this.hp = hp;
     }
 
-    public void setDbPersistance(boolean dbPersistance) {
-        this.dbPersistance = dbPersistance;
-    }
-
-    private class TemplateNotFoundException extends RuntimeException {
+    public static class TemplateNotFoundException extends RuntimeException {
         private String templateName;
 
         public TemplateNotFoundException(String templateName) {

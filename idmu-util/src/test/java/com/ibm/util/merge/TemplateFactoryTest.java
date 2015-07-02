@@ -46,16 +46,16 @@ public class TemplateFactoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tf = new TemplateFactory(new FilesystemPersistence(""));
+		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-util/src/test/resources/templates"));
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
-		tf.setDbPersistance(false);
+
 		tf.reset();
 	}
 
 	@Test
 	public void testGetTemplateFullNameFoundInCache() throws MergeException {
-		tf.setDbPersistance(false);
+
 		tf.cacheFromJson(template1);
 		tf.cacheFromJson(template2);
 		assertNotNull(tf.getTemplate("root.test.foo", "", new HashMap<String,String>()));
@@ -64,13 +64,13 @@ public class TemplateFactoryTest {
 	@Test
 	public void testGetTemplateFullNameFoundInDb() throws MergeException {
 		// TODO Template Hibernate Testing
-		tf.setDbPersistance(false);
+
 //		assertNotNull(tf.getTemplate("root.test.found", "", new HashMap<String,String>()));
 	}
 
 	@Test
 	public void testGetTemplateShortNameFoundInCache() throws MergeException {
-		tf.setDbPersistance(false);
+
 		tf.cacheFromJson(template1);
 		Template template = tf.getTemplate("root.test.nodata", "root.test.", new HashMap<String,String>());
 		assertNotNull(template);
@@ -82,13 +82,13 @@ public class TemplateFactoryTest {
 	@Test
 	public void testGetTemplateShortNameFoundInDb() throws MergeException {
 		// TODO Template Hibernate Testing
-		tf.setDbPersistance(false);
+
 //		assertNotNull(tf.getTemplate("root.test.foo", "", new HashMap<String,String>()));
 	}
 
-	@Test
+	@Test(expected = TemplateFactory.TemplateNotFoundException.class)
 	public void testGetTemplateNotFoundInCache() throws MergeException {
-		tf.setDbPersistance(false);
+
 		Template template = tf.cacheFromJson(template1);
 		assertNotNull(template);
 		template = null;
@@ -151,11 +151,11 @@ public class TemplateFactoryTest {
 		String template2 = tf.getTemplateAsJson("foo.default.foo");
 		assertEquals(template1, template2);
 	}
-	
+
 	@Test
 	public void testSaveTemplateFromJsonToFile() throws MergeException {
 		tf.reset();
-		tf.setDbPersistance(false);
+
 		String template1 = tf.saveTemplateFromJson(template4);
 		Template template2 = tf.cacheFromJson(template4);
 		assertEquals(template1, template2.asJson(true));

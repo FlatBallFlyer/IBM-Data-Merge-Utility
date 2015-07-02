@@ -24,11 +24,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ibm.util.merge.ConnectionFactory;
-import com.ibm.util.merge.FilesystemPersistence;
+import com.ibm.util.merge.*;
 import org.apache.log4j.Logger;
-import com.ibm.util.merge.TemplateFactory;
-import com.ibm.util.merge.ZipFactory;
 
 @WebServlet("/Initialize")
 public class Initialize extends HttpServlet {
@@ -76,14 +73,13 @@ public class Initialize extends HttpServlet {
 //			TemplateFactory.setTemplateFolder(prefix + tempalteFolder);
 		String paramTemplatesPersist = getConfig("templates-persist", cfg);
 //			boolean databasePersistenceEnabled = paramTemplatesPersist.equals("Database");
-		boolean databasePersistenceEnabled = false;
-		tf.setDbPersistance(databasePersistenceEnabled);
+
 		tf.loadTemplatesFromFilesystem();
 		//		} catch (MergeException e) {
 //			throw new RuntimeException("Factory Load All I/O Error, check web.xml for merge-templates-folder and templates-persist values", e);
 //		}
 		// Initialize Template-Factory Hibernate objects
-		tf.initilizeHibernate();
+//		tf.initilizeHibernate();
 	}
 
 	/**

@@ -44,7 +44,7 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 		myDirective.setProvider(provider);
 
 		tf.reset();
-		tf.setDbPersistance(false);
+
 		tf.cacheFromJson(subTemplate); 
 		tf.cacheFromJson(masterTemplate);
 		template = tf.getTemplate("root.master.", "", new HashMap<String,String>());

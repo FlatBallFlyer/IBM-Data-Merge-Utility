@@ -45,14 +45,10 @@ public class IntegrationTestingJdbcProvider {
 		cf = new ConnectionFactory();
 		// Initialize Factories
 		tf.reset();
-		tf.setDbPersistance(false);
+
 		tf.loadTemplatesFromFilesystem();
 		zf.setOutputroot(outputDir);
 		parameterMap = new HashMap<>();
-		// Initialize context (usually from request.getParameterMap())
-//		ApplicationContext context = 
-//	    		new ClassPathXmlApplicationContext("Spring-Module.xml");
-		
 	}
 
 	@Test
