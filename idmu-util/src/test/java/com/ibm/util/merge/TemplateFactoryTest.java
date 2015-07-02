@@ -140,7 +140,6 @@ public class TemplateFactoryTest {
 
 	@Test
 	public void testLoadFolder() throws MergeException {
-		tf.setTemplateFolder("src/test/resources/templates/");
 		tf.loadTemplatesFromFilesystem();
 		assertEquals(60, tf.size());
 	}
@@ -157,7 +156,6 @@ public class TemplateFactoryTest {
 	public void testSaveTemplateFromJsonToFile() throws MergeException {
 		tf.reset();
 		tf.setDbPersistance(false);
-		tf.setTemplateFolder("src/test/resources/testout/");
 		String template1 = tf.saveTemplateFromJson(template4);
 		Template template2 = tf.cacheFromJson(template4);
 		assertEquals(template1, template2.asJson(true));

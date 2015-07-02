@@ -74,7 +74,6 @@ public class Initialize extends HttpServlet {
 //		try {
 		String tempalteFolder = getConfig("merge-templates-folder", cfg);
 //			TemplateFactory.setTemplateFolder(prefix + tempalteFolder);
-		tf.setTemplateFolder("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates");
 		String paramTemplatesPersist = getConfig("templates-persist", cfg);
 //			boolean databasePersistenceEnabled = paramTemplatesPersist.equals("Database");
 		boolean databasePersistenceEnabled = false;

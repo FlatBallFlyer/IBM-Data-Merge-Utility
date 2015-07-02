@@ -86,8 +86,4 @@ public class FilesystemPersistence {
         }
         return template;
     }
-
-    public void setTemplateFolder(String templateFolder) {
-        this.templateFolder = templateFolder;
-    }
 }

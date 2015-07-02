@@ -46,7 +46,6 @@ public class IntegrationTestingJdbcProvider {
 		// Initialize Factories
 		tf.reset();
 		tf.setDbPersistance(false);
-		tf.setTemplateFolder(templateDir);
 		tf.loadTemplatesFromFilesystem();
 		zf.setOutputroot(outputDir);
 		parameterMap = new HashMap<>();

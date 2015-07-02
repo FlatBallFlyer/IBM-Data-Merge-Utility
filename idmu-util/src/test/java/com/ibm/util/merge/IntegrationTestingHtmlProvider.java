@@ -52,7 +52,6 @@ public class IntegrationTestingHtmlProvider {
 		// Initialize Factories
 		tf.reset();
 		tf.setDbPersistance(false);
-		tf.setTemplateFolder(templateDir);
 		tf.loadTemplatesFromFilesystem();
 		zf.setOutputroot(outputDir);
 		

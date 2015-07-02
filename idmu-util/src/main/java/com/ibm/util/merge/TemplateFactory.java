@@ -56,7 +56,6 @@ final public class TemplateFactory {
     private SessionFactory sessionFactory;
     private ServiceRegistry serviceRegistry;
     private final ConcurrentHashMap<String, Template> templateCache = new ConcurrentHashMap<String, Template>();
-    private String templateFolder = "/tmp/templates";
     private boolean dbPersistance = false;
 
     public TemplateFactory(FilesystemPersistence fs) {
@@ -276,42 +275,6 @@ final public class TemplateFactory {
         return template.asJson(true);
     }
 
-//    /**********************************************************************************
-//     * Cache JSON templates found in the template folder.
-//     * Note: The template folder is initialized from Merge.java from the web.xml value  for
-//     * merge-templates-folder, if it is not initilized the default value is /tmp/templates
-//     *
-//     * @param folder that contains template files
-//     * @throws MergeException - Template Clone errors
-//     */
-//    public void loadAll() {
-//        if (templateFolder == null || templateFolder.isEmpty()) {
-//            return;
-//        }
-//        int count = 0;
-//        File folder = new File(templateFolder);
-//        if (folder.listFiles() == null) {
-//            log.warn("Tempalte Folder data was not found! " + templateFolder);
-//            return;
-//        }
-//        for (File file : folder.listFiles()) {
-//            if (!file.isDirectory()) {
-//                try {
-//                    String json = String.join("\n", Files.readAllLines(file.toPath()));
-//                    cacheFromJson(json);
-//                } catch (JsonSyntaxException e) {
-//                    log.warn("Malformed JSON Template:" + file.getName());
-//                } catch (FileNotFoundException e) {
-//                    log.info("Moving on after file read error on " + file.getName());
-//                } catch (IOException e) {
-//                    log.warn("IOException Reading:" + file.getName());
-//                }
-//            }
-//            count++;
-//        }
-//        log.warn("Loaded " + Integer.toString(count) + " templates from " + templateFolder);
-//    }
-
     /**********************************************************************************
      * Construct a template from a json formated string ad add it to the Cache
      *
@@ -348,31 +311,6 @@ final public class TemplateFactory {
         log.info("Template Saved: " + template.getFullName());
         return template;
     }
-
-//    /**********************************************************************************
-//     * save provided template to the Template Folder as JSON, and add it to the Cache
-//     *
-//     * @param Template template the Template to save
-//     * @return a cloned copy of the Template ready for Merge Processing
-//     * @throws MergeException on Template Clone Errors
-//     */
-//    public Template saveTemplateToJsonFolder(Template template) {
-//        String fileName = templateFolder + template.getFullName();
-//        File file = new File(fileName);
-//        BufferedWriter bw = null;
-//        try {
-//            file.createNewFile();
-//            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-//            bw = new BufferedWriter(fw);
-//            bw.write(template.asJson(true));
-//            bw.close();
-//        } catch (IOException e) {
-//            throw new RuntimeException("Could not write template " +template.getFullName()+" to JSON folder : " + file.getPath(), e);
-//        } finally {
-//            IOUtils.closeQuietly(bw);
-//        }
-//        return template;
-//    }
 
     /**********************************************************************************
      * Reset the cache and Hibernate Connection
@@ -412,15 +350,6 @@ final public class TemplateFactory {
 
     public void setDbPersistance(boolean dbPersistance) {
         this.dbPersistance = dbPersistance;
-    }
-
-    public String getTemplateFolder() {
-        return templateFolder;
-    }
-
-    public void setTemplateFolder(String templateFolder) {
-        this.fs.setTemplateFolder(templateFolder);
-        this.templateFolder = templateFolder;
     }
 
     private class TemplateNotFoundException extends RuntimeException {
