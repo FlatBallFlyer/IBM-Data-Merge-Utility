@@ -18,13 +18,17 @@ package com.ibm.util.merge.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.TemplateFactory;
+import com.ibm.util.merge.ZipFactory;
 
 /**
  * JSON Get/Put Template Servlet
@@ -35,6 +39,19 @@ import com.ibm.util.merge.TemplateFactory;
  */
 @WebServlet("/Template")
 public class Persist extends HttpServlet {
+    private TemplateFactory tf;
+    private ZipFactory zf;
+    private ConnectionFactory cf;
+
+    @Override
+    public void init(ServletConfig servletConfig) throws ServletException {
+        super.init(servletConfig);
+        tf = new TemplateFactory();
+        zf = new ZipFactory();
+        cf = new ConnectionFactory();
+        Initialize.performInit(servletConfig, tf, zf);
+    }
+
     /**
      * Servlet called as HTTP Get
      * - Request contains JSON Template Object with optional Collection, Name and Column values
@@ -51,7 +68,7 @@ public class Persist extends HttpServlet {
         // Create the response writer
         response.setContentType("text/json");
         out = response.getWriter();
-        out.write(TemplateFactory.getTemplateAsJson(request.getParameter("DragonFlyFullName")));
+        out.write(tf.getTemplateAsJson(request.getParameter("DragonFlyFullName")));
         out.close();
     }
 
@@ -69,7 +86,7 @@ public class Persist extends HttpServlet {
         response.setContentType("text/html");
         out = response.getWriter();
         String template = request.getParameter("template");
-        out.write(TemplateFactory.saveTemplateFromJson(template));
+        out.write(tf.saveTemplateFromJson(template));
         out.close();
     }
 }

@@ -34,15 +34,21 @@ public class IntegrationSafety {
 	String templateDir 	= "src/test/resources/templates/";
 	String outputDir 	= "src/test/resources/testout/"; 
 	String validateDir 	= "src/test/resources/valid/";
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
 
 	@Before
 	public void setup() throws MergeException, IOException {
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		// Initialize Factories
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.setTemplateFolder(templateDir);
-		TemplateFactory.loadAll();
-		ZipFactory.setOutputroot(outputDir);
+		tf.reset();
+		tf.setDbPersistance(false);
+		tf.setTemplateFolder(templateDir);
+		tf.loadAll();
+		zf.setOutputroot(outputDir);
 		
 		// Reset the output directory
 		FileUtils.cleanDirectory(new File(outputDir)); 
@@ -90,9 +96,9 @@ public class IntegrationSafety {
 		parameterMap.put("DragonOutputType", 	new String[]{type});
 		parameterMap.put("DragonFlyOutputFile", new String[]{fullName+type});
 		parameterMap.put("DragonFlyFullName", 	new String[]{fullName});
-		Template root = TemplateFactory.getTemplate(parameterMap);
-		String output = root.merge();
-		root.packageOutput();
+		Template root = tf.getTemplate(parameterMap);
+		String output = root.merge(zf, tf, cf);
+		root.packageOutput(zf, cf);
 		return output;
 	}
 }

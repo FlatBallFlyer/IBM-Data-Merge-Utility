@@ -15,23 +15,24 @@
  *
  */
 package com.ibm.util.merge;
-import com.ibm.util.merge.CompareArchives;
-
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+
+import static org.junit.Assert.assertEquals;
+
 public class ZipFactoryTest {
+	private ZipFactory zf;
 
 	@Before
 	public void setup() throws IOException {
+		zf = new ZipFactory();
 		FileUtils.cleanDirectory(new File("src/test/resources/testout")); 
 	}
 	
@@ -42,25 +43,25 @@ public class ZipFactoryTest {
 	
 	@Test
 	public void testWriteFileZip() throws MergeException, IOException, NoSuchAlgorithmException {
-		assertEquals(0, ZipFactory.size());
+		assertEquals(0, zf.size());
 		makeArchive("src/test/resources/testout/", "test1.zip", ZipFactory.TYPE_ZIP);
-		assertEquals(0, ZipFactory.size());
+		assertEquals(0, zf.size());
 		CompareArchives.assertZipEquals("src/test/resources/valid/test1.zip", "src/test/resources/testout/test1.zip");
 	}
 
 	@Test
 	public void testWriteFileTar() throws MergeException, IOException, NoSuchAlgorithmException {
-		assertEquals(0, ZipFactory.size());
+		assertEquals(0, zf.size());
 		makeArchive("src/test/resources/testout/", "test1.tar", ZipFactory.TYPE_TAR);
-		assertEquals(0, ZipFactory.size());
+		assertEquals(0, zf.size());
 		CompareArchives.assertTarEquals("src/test/resources/valid/test1.tar", "src/test/resources/testout/test1.tar");
 	}
 
 	private void makeArchive(String outputRoot, String outputFile, int type) throws IOException {
-		ZipFactory.setOutputroot(outputRoot);
-		ZipFactory.writeFile(outputFile, "path/file1.txt", new StringBuilder("Test Output File One"), type);
-		ZipFactory.writeFile(outputFile, "path/file2.txt", new StringBuilder("Test Output File Two"), type);
-		ZipFactory.closeStream(outputFile, type);
+		zf.setOutputroot(outputRoot);
+		zf.writeFile(outputFile, "path/file1.txt", new StringBuilder("Test Output File One"), type);
+		zf.writeFile(outputFile, "path/file2.txt", new StringBuilder("Test Output File Two"), type);
+		zf.closeStream(outputFile, type);
 	}
 
 }

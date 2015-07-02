@@ -18,15 +18,15 @@ package com.ibm.util.merge.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ibm.util.merge.*;
 import org.apache.log4j.Logger;
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.TemplateFactory;
 
 /**
  * Servlet implementation - instantiates a template, merges the output and finalizes the output archive.
@@ -38,6 +38,18 @@ import com.ibm.util.merge.TemplateFactory;
 @WebServlet("/Merge")
 public class Merge extends HttpServlet {
     private static final Logger log = Logger.getLogger(HttpServlet.class.getName());
+    private TemplateFactory tf;
+    private ZipFactory zf;
+    private ConnectionFactory cf;
+
+    @Override
+    public void init(ServletConfig servletConfig) throws ServletException {
+        super.init(servletConfig);
+        tf = new TemplateFactory();
+        zf = new ZipFactory();
+        cf = new ConnectionFactory();
+        Initialize.performInit(servletConfig, tf, zf);
+    }
 
     /**
      * @param req the Http Request object
@@ -82,17 +94,18 @@ public class Merge extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     public void merge(HttpServletRequest request, HttpServletResponse response) throws IOException, MergeException {
-        Template root = TemplateFactory.getTemplate(request.getParameterMap());
+
+        Template root = tf.getTemplate(request.getParameterMap());
         long start = System.currentTimeMillis();
         // Create the response writer
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         // Get a template using the httpServletRequest constructor
         // Perform the merge and write output
-        String merged = root.merge();
+        String merged = root.merge(zf, tf, cf);
         out.write(merged);
         // Close Connections and Finalize Output
-        root.packageOutput();
+        root.packageOutput(zf, cf);
         long elapsed = System.currentTimeMillis() - start;
         log.warn(String.format("Merge completed in %d milliseconds", elapsed));
     }

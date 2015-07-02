@@ -20,6 +20,8 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.ZipFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,19 +33,25 @@ public class InsertSubsHtmlTest extends InsertSubsTest {
 	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Row: {A}, Val: {B}\\n\"}";
 	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\" collection\\u003d\\\"root\\\"/\\u003e\"}";
 	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\" collection=\"root\"/>";
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
 
 	@Before
 	public void setUp() throws Exception {
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		directive = new InsertSubsHtml();
 		InsertSubsHtml myDirective = (InsertSubsHtml) directive;
 		ProviderHtml myProvider = (ProviderHtml) myDirective.getProvider();
 		myProvider.setStaticData("<table><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>");
 
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.cacheFromJson(subTemplate); 
-		TemplateFactory.cacheFromJson(masterTemplate);
-		template = TemplateFactory.getTemplate("root.master.", "", new HashMap<String,String>());
+		tf.reset();
+		tf.setDbPersistance(false);
+		tf.cacheFromJson(subTemplate); 
+		tf.cacheFromJson(masterTemplate);
+		template = tf.getTemplate("root.master.", "", new HashMap<String,String>());
 		template.addDirective(myDirective);
 	}
 
@@ -59,7 +67,7 @@ public class InsertSubsHtmlTest extends InsertSubsTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(tf, cf, zf);
 		assertEquals(masterOutput, template.getContent());
 	}
 

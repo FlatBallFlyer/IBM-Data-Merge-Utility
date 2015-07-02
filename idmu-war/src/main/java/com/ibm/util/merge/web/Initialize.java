@@ -24,19 +24,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.BasicConfigurator;
+import com.ibm.util.merge.ConnectionFactory;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.ZipFactory;
 
 @WebServlet("/Initialize")
 public class Initialize extends HttpServlet {
 	private static final Logger log = Logger.getLogger( Initialize.class.getName() );
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
 
-	private String getConfig(String paramName, ServletConfig servletConfig){
+	public static String getConfig(String paramName, ServletConfig servletConfig){
 		return servletConfig.getInitParameter(paramName);
 	}
 
@@ -44,41 +44,44 @@ public class Initialize extends HttpServlet {
      * Initialize Logging, Template and Zip Factory objects 
      */
 	public void init(ServletConfig cfg) {
+
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		// Initialize Log4j
+		performInit(cfg, tf, zf);
+	}
+
+	public static void performInit(ServletConfig cfg, TemplateFactory tf, ZipFactory zf) {
 		Enumeration<String> initParameterNames = cfg.getInitParameterNames();
 		while (initParameterNames.hasMoreElements()){
 			String paramName = initParameterNames.nextElement();
 			log.info("init param " + paramName + "=" + cfg.getInitParameter(paramName));
 		}
-
 //		String file = getConfig("log4j-init-file", cfg);
-
 //	    String prefix =  getServletContext().getRealPath("/");
 //	    if(file != null) {
 //			BasicConfigurator.configure();
 //	      PropertyConfigurator.configure(prefix+file);
 //	    }
-
-	    // Initialize Zip-Factory (set output root folder)
+		// Initialize Zip-Factory (set output root folder)
 //		ZipFactory.setOutputroot(getConfig("merge-output-root", cfg));
-		ZipFactory.setOutputroot("/tmp/merge");
-
+		zf.setOutputroot("/tmp/merge");
 		// Initialize cache (Load JSON Persisted Templates)
 //		try {
-			String tempalteFolder = getConfig("merge-templates-folder", cfg);
+		String tempalteFolder = getConfig("merge-templates-folder", cfg);
 //			TemplateFactory.setTemplateFolder(prefix + tempalteFolder);
-			TemplateFactory.setTemplateFolder("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates");
-			String paramTemplatesPersist = getConfig("templates-persist", cfg);
+		tf.setTemplateFolder("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates");
+		String paramTemplatesPersist = getConfig("templates-persist", cfg);
 //			boolean databasePersistenceEnabled = paramTemplatesPersist.equals("Database");
-			boolean databasePersistenceEnabled = false;
-			TemplateFactory.setDbPersistance(databasePersistenceEnabled);
-			TemplateFactory.loadAll();
+		boolean databasePersistenceEnabled = false;
+		tf.setDbPersistance(databasePersistenceEnabled);
+		tf.loadAll();
 //		} catch (MergeException e) {
 //			throw new RuntimeException("Factory Load All I/O Error, check web.xml for merge-templates-folder and templates-persist values", e);
 //		}
-
 		// Initialize Template-Factory Hibernate objects
-		TemplateFactory.initilizeHibernate();
+		tf.initilizeHibernate();
 	}
 
 	/**

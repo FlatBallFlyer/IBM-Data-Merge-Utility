@@ -16,18 +16,13 @@
  */
 package com.ibm.util.merge;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.ibm.util.merge.directive.Directive;
+import com.ibm.util.merge.directive.DirectiveDeserializer;
+import com.ibm.util.merge.directive.provider.Provider;
+import com.ibm.util.merge.directive.provider.ProviderDeserializer;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -35,13 +30,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.*;
-import com.ibm.util.merge.directive.provider.Provider;
-import com.ibm.util.merge.directive.provider.ProviderDeserializer;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class implements a Caching Template Factory as well as all aspects of Template Persistence
@@ -51,25 +47,28 @@ import com.ibm.util.merge.directive.provider.ProviderDeserializer;
 final public class TemplateFactory {
     // Factory Constants
     private static final Logger log = Logger.getLogger(TemplateFactory.class.getName());
-    public static final String KEY_CACHE_RESET = Template.wrap("DragonFlyCacheReset");
-    public static final String KEY_CACHE_LOAD = Template.wrap("DragonFlyCacheLoad");
-    public static final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
-    private static final String DEFAULT_FULLNAME = "root.default.";
-    private static final String FULLNAME_QUERY = "SELECT ID_TEMPLATE " +
+    public final String KEY_CACHE_RESET = Template.wrap("DragonFlyCacheReset");
+    public final String KEY_CACHE_LOAD = Template.wrap("DragonFlyCacheLoad");
+    public final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
+    private final String DEFAULT_FULLNAME = "root.default.";
+    private final String FULLNAME_QUERY = "SELECT ID_TEMPLATE " +
             "FROM TEMPLATE " +
             "WHERE TEMPLATE.COLLECTION = :collection " +
             "AND TEMPLATE.NAME = :name" +
             "AND TEMPLATE.COLUMN = :column";
-    private static final String DEFAULT_QUERY = "SELECT ID_TEMPLATE" +
+    private final String DEFAULT_QUERY = "SELECT ID_TEMPLATE" +
             "FROM TEMPLATE " +
             "WHERE TEMPLATE.COLLECTION = :collection " +
             "AND TEMPLATE.NAME = :name" +
             "AND TEMPLATE.COLUMN = ''";
-    private static SessionFactory sessionFactory;
-    private static ServiceRegistry serviceRegistry;
-    private static final ConcurrentHashMap<String, Template> templateCache = new ConcurrentHashMap<String, Template>();
-    private static String templateFolder = "/tmp/templates";
-    private static boolean dbPersistance = false;
+    private SessionFactory sessionFactory;
+    private ServiceRegistry serviceRegistry;
+    private final ConcurrentHashMap<String, Template> templateCache = new ConcurrentHashMap<String, Template>();
+    private String templateFolder = "/tmp/templates";
+    private boolean dbPersistance = false;
+
+    public TemplateFactory() {
+    }
 
     /**********************************************************************************
      * <p>Template from Servlet request Constructor. Initiates a template based on http Servlet Request
@@ -84,7 +83,7 @@ final public class TemplateFactory {
      * @throws MergeException
      * @see Template
      */
-    public static Template getTemplate(Map<String, String[]> request) {
+    public Template getTemplate(Map<String, String[]> request) {
         HashMap<String, String> replace = new HashMap<String, String>();
         // Open the "Default" template if if not specified.
         replace.put(KEY_FULLNAME, DEFAULT_FULLNAME);
@@ -95,15 +94,15 @@ final public class TemplateFactory {
         }
         // Handle cache reset request
         if (replace.containsKey(KEY_CACHE_RESET)) {
-            TemplateFactory.reset();
+            reset();
         }
         // Handle cache load request
         if (replace.containsKey(KEY_CACHE_LOAD)) {
-            TemplateFactory.loadAll();
+            loadAll();
         }
         // Get the template, add the http parameter replace values to it's hash
         String fullName = replace.get(KEY_FULLNAME);
-        Template rootTempalte = TemplateFactory.getTemplate(fullName, "", replace);
+        Template rootTempalte = getTemplate(fullName, "", replace);
         return rootTempalte;
     }
 
@@ -118,14 +117,14 @@ final public class TemplateFactory {
      * @return Template The new Template object
      * @throws MergeException Invalid Directive Type from Constructor
      */
-    public static Template getTemplate(String fullName, String shortName, HashMap<String, String> seedReplace) {
+    public Template getTemplate(String fullName, String shortName, HashMap<String, String> seedReplace) {
         Template newTemplate = null;
         // Cache hit -- Return a clone of the Template in Cache
         if (templateCache.containsKey(fullName)) {
             return templateCache.get(fullName).clone(seedReplace);
         }
         // See if FullName template is in the database
-        if (TemplateFactory.dbPersistance) {
+        if (dbPersistance) {
             Session session = sessionFactory.openSession();
             @SuppressWarnings({"rawtypes"}) List list = session.createQuery(FULLNAME_QUERY).list();
             session.getTransaction().commit();
@@ -144,7 +143,7 @@ final public class TemplateFactory {
             return templateCache.get(fullName).clone(seedReplace);
         }
         // See if the shortName (Default Template) is in the database
-        if (TemplateFactory.dbPersistance) {
+        if (dbPersistance) {
             Session session = sessionFactory.openSession();
             @SuppressWarnings({"rawtypes"}) List list = session.createQuery(DEFAULT_QUERY).list();
             session.getTransaction().commit();
@@ -167,7 +166,7 @@ final public class TemplateFactory {
      * @throws MergeException
      * @see Template
      */
-    public static String getCollections() {
+    public String getCollections() {
         ArrayList<String> theList = new ArrayList<String>();
         if (dbPersistance) {
             theList = getCollectionsFromDb();
@@ -181,7 +180,7 @@ final public class TemplateFactory {
     /**
      * @return
      */
-    private static ArrayList<String> getCollectionsFromCache() {
+    private ArrayList<String> getCollectionsFromCache() {
         ArrayList<String> theCollections = new ArrayList<String>();
         // Iterate the Hash
         for (Template template : templateCache.values()) {
@@ -196,7 +195,7 @@ final public class TemplateFactory {
     /**
      * @return
      */
-    private static ArrayList<String> getCollectionsFromDb() {
+    private ArrayList<String> getCollectionsFromDb() {
         //String query = "DISTINCT COLLECTION";
         ArrayList<String> theTemplates = new ArrayList<String>();
         // Execute Query and populate returnTemplates list
@@ -212,7 +211,7 @@ final public class TemplateFactory {
      * @throws MergeException
      * @see Template
      */
-    public static String getTemplates(String collection) {
+    public String getTemplates(String collection) {
         ArrayList<String> theList = new ArrayList<String>();
         if (dbPersistance) {
             theList = getTemplatesFromDb(collection);
@@ -227,7 +226,7 @@ final public class TemplateFactory {
      * @param collection
      * @return
      */
-    public static ArrayList<String> getTemplatesFromCache(String collection) {
+    public ArrayList<String> getTemplatesFromCache(String collection) {
         ArrayList<String> theTemplates = new ArrayList<String>();
         // Iterate the Hash
         for (Template template : templateCache.values()) {
@@ -243,7 +242,7 @@ final public class TemplateFactory {
      * @param collection
      * @return
      */
-    public static ArrayList<String> getTemplatesFromDb(String collection) {
+    public ArrayList<String> getTemplatesFromDb(String collection) {
         //String query = "WHERE COLLECTION = :collection";
         ArrayList<String> theTemplates = new ArrayList<String>();
         // Execute Query and populate returnTemplates list
@@ -256,7 +255,7 @@ final public class TemplateFactory {
      *
      * @param String fullName - the Template Full Name
      */
-    public static String getTemplateAsJson(String fullName) {
+    public String getTemplateAsJson(String fullName) {
         Template template = getTemplate(fullName, "", new HashMap<String, String>());
         return template.asJson(true);
     }
@@ -266,7 +265,7 @@ final public class TemplateFactory {
      *
      * @param String json the template json
      */
-    public static String saveTemplateFromJson(String json) {
+    public String saveTemplateFromJson(String json) {
         Template template = cacheFromJson(json);
         if (dbPersistance) {
             saveTemplateToDatabase(template);
@@ -284,12 +283,12 @@ final public class TemplateFactory {
      * @param folder that contains template files
      * @throws MergeException - Template Clone errors
      */
-    public static void loadAll() {
-        if (TemplateFactory.templateFolder == null || TemplateFactory.templateFolder.isEmpty()) {
+    public void loadAll() {
+        if (templateFolder == null || templateFolder.isEmpty()) {
             return;
         }
         int count = 0;
-        File folder = new File(TemplateFactory.templateFolder);
+        File folder = new File(templateFolder);
         if (folder.listFiles() == null) {
             log.warn("Tempalte Folder data was not found! " + templateFolder);
             return;
@@ -309,7 +308,7 @@ final public class TemplateFactory {
             }
             count++;
         }
-        log.warn("Loaded " + Integer.toString(count) + " templates from " + TemplateFactory.templateFolder);
+        log.warn("Loaded " + Integer.toString(count) + " templates from " + templateFolder);
     }
 
     /**********************************************************************************
@@ -319,7 +318,7 @@ final public class TemplateFactory {
      * @return the Template created
      * @throws MergeException - clone errors
      */
-    public static Template cacheFromJson(String jsonString) {
+    public Template cacheFromJson(String jsonString) {
         Template template;
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Directive.class, new DirectiveDeserializer());
@@ -339,7 +338,7 @@ final public class TemplateFactory {
      * @return a cloned copy of the Template ready for Merge Processing
      * @throws MergeException on Template Clone Errors
      */
-    public static Template saveTemplateToDatabase(Template template) {
+    public Template saveTemplateToDatabase(Template template) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         session.delete(template); // (Where FullName=FullName)
@@ -357,7 +356,7 @@ final public class TemplateFactory {
      * @return a cloned copy of the Template ready for Merge Processing
      * @throws MergeException on Template Clone Errors
      */
-    public static Template saveTemplateToJsonFolder(Template template) {
+    public Template saveTemplateToJsonFolder(Template template) {
         String fileName = templateFolder + template.getFullName();
         File file = new File(fileName);
         BufferedWriter bw = null;
@@ -380,7 +379,7 @@ final public class TemplateFactory {
      *
      * @throws MergeException
      */
-    public static void reset() {
+    public void reset() {
         log.warn("Template Cache / Hibernate Reset");
         templateCache.clear();
         initilizeHibernate();
@@ -390,7 +389,7 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Initialize the Hibernate Connection
      */
-    public static void initilizeHibernate() {
+    public void initilizeHibernate() {
         if (dbPersistance) {
             Configuration configuration = new Configuration();
             configuration.configure();
@@ -403,27 +402,27 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Get the size of the template cache collection
      */
-    public static int size() {
+    public int size() {
         return templateCache.size();
     }
 
-    public static boolean isDbPersistance() {
+    public boolean isDbPersistance() {
         return dbPersistance;
     }
 
-    public static void setDbPersistance(boolean dbPersistance) {
-        TemplateFactory.dbPersistance = dbPersistance;
+    public void setDbPersistance(boolean dbPersistance) {
+        this.dbPersistance = dbPersistance;
     }
 
-    public static String getTemplateFolder() {
+    public String getTemplateFolder() {
         return templateFolder;
     }
 
-    public static void setTemplateFolder(String templateFolder) {
-        TemplateFactory.templateFolder = templateFolder;
+    public void setTemplateFolder(String templateFolder) {
+        this.templateFolder = templateFolder;
     }
 
-    private static class TemplateNotFoundException extends RuntimeException {
+    private class TemplateNotFoundException extends RuntimeException {
         private String templateName;
 
         public TemplateNotFoundException(String templateName) {

@@ -20,6 +20,8 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.ZipFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,18 +35,24 @@ public class InsertSubsTagTest extends InsertSubsTest {
 	private String masterOutput= "Test Foo Is: SomeValue1, Foo Is: SomeValue2, Foo Is: SomeValue3, <tkBookmark name=\"sub\" collection=\"root\"/>";
 	private ProviderTag myProvider;
 	private InsertSubsTag myDirective;
-	
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
+
 	@Before
 	public void setUp() throws Exception {
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		directive = new InsertSubsTag();
 		myDirective = (InsertSubsTag) directive;
 		myProvider = (ProviderTag) myDirective.getProvider();
 
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.cacheFromJson(subTemplate); 
-		TemplateFactory.cacheFromJson(masterTemplate);
-		template = TemplateFactory.getTemplate("root.master.", "", new HashMap<String,String>());
+		tf.reset();
+		tf.setDbPersistance(false);
+		tf.cacheFromJson(subTemplate); 
+		tf.cacheFromJson(masterTemplate);
+		template = tf.getTemplate("root.master.", "", new HashMap<String,String>());
 		template.addDirective(myDirective);
 
 		myProvider.setTag("Foo");
@@ -65,7 +73,7 @@ public class InsertSubsTagTest extends InsertSubsTest {
 
 	@Test
 	public void testExecuteDirectiveExistsList() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(tf, cf, zf);
 		assertEquals(masterOutput, template.getContent());
 	}
 }

@@ -18,8 +18,6 @@ package com.ibm.util.merge;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.ibm.util.merge.ConnectionFactory;
-import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.*;
 
 import java.io.IOException;
@@ -145,11 +143,11 @@ public class Template implements Cloneable {
      * @throws MergeException Directive Processing Errors
      * @throws MergeException Save Output File errors
      */
-    public String merge() throws MergeException {
+    public String merge(ZipFactory zf, TemplateFactory tf, ConnectionFactory cf) throws MergeException {
         log.info("Begin Template Merge for:" + this.getFullName());
         // Process Directives
         for (Directive directive : this.directives) {
-            directive.executeDirective();
+            directive.executeDirective(tf, cf, zf);
         }
         // Clear out the all-values replace tag
         this.replaceValues.remove(TAG_ALL_VALUES);
@@ -167,14 +165,14 @@ public class Template implements Cloneable {
         // Replace the all values tag
         this.replaceThis(TAG_ALL_VALUES, allValues);
         // Replace the Output Hash tag
-        this.replaceThis(TAG_OUTPUTHASH, ZipFactory.getHash(this.getOutputFile()));
+        this.replaceThis(TAG_OUTPUTHASH, zf.getHash(this.getOutputFile()));
         // Remove all the bookmarks
         this.replaceAllThis(BOOKMARK_PATTERN, "");
         log.info("Merge Complete: " + this.getFullName());
         // save the output file or return the content
         if (!this.outputFile.isEmpty()) {
             try {
-                this.saveOutputAs();
+                this.saveOutputAs(zf);
             } catch (IOException e) {
                 throw new MergeException(e, "Could not save output", this.getFullName());
             }
@@ -190,7 +188,7 @@ public class Template implements Cloneable {
      * @throws MergeException on File write errors
      * @throws MergeException on TAG_OUTPUTFILE not in replace stack
      */
-    public void saveOutputAs() throws IOException {
+    public void saveOutputAs(ZipFactory zf) throws IOException {
         // don't save /dev/null or empty file names
         if (this.isEmpty()) {
             return;
@@ -205,7 +203,7 @@ public class Template implements Cloneable {
         // Build the file name and replace process it
         String fileName = this.replaceProcess(this.outputFile);
         // Write the output file
-        ZipFactory.writeFile(this.getOutputFile(), fileName, this.content, this.getOutputType());
+        zf.writeFile(this.getOutputFile(), fileName, this.content, this.getOutputType());
         return;
     }
 
@@ -214,9 +212,9 @@ public class Template implements Cloneable {
      *
      * @throws MergeException File Save errors
      */
-    public void packageOutput()  {
-        ZipFactory.closeStream(this.getOutputFile(), this.getOutputType());
-        ConnectionFactory.close(this.getOutputFile());
+    public void packageOutput(ZipFactory zf, ConnectionFactory cf)  {
+        zf.closeStream(this.getOutputFile(), this.getOutputType());
+        cf.close(this.getOutputFile());
     }
 
     /********************************************************************************

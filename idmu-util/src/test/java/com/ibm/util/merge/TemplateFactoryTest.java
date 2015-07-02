@@ -39,36 +39,40 @@ public class TemplateFactoryTest {
 			",{\"idTemplate\":22,\"sequence\":1,\"type\":23,\"softFail\":false,\"description\":\"TestReplaceColCsv \",\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" + 
 			",{\"idTemplate\":22,\"sequence\":1,\"type\":12,\"softFail\":false,\"description\":\"TestReplaceColSql \",\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\"}}" + 
 			",{\"idTemplate\":22,\"sequence\":1,\"type\":33,\"softFail\":false,\"description\":\"TestReplaceColHtml\",\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" + 
-			",{\"idTemplate\":22,\"sequence\":1,\"type\":34,\"softFail\":false,\"description\":\"TestMarkupSubsHtml\",\"pattern\":\"TestPattern\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}]}"; 
-
+			",{\"idTemplate\":22,\"sequence\":1,\"type\":34,\"softFail\":false,\"description\":\"TestMarkupSubsHtml\",\"pattern\":\"TestPattern\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}]}";
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
 
 	@Before
 	public void setUp() throws Exception {
-
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.reset();
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
+		tf.setDbPersistance(false);
+		tf.reset();
 	}
 
 	@Test
 	public void testGetTemplateFullNameFoundInCache() throws MergeException {
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.cacheFromJson(template1);
-		TemplateFactory.cacheFromJson(template2);
-		assertNotNull(TemplateFactory.getTemplate("root.test.foo", "", new HashMap<String,String>()));
+		tf.setDbPersistance(false);
+		tf.cacheFromJson(template1);
+		tf.cacheFromJson(template2);
+		assertNotNull(tf.getTemplate("root.test.foo", "", new HashMap<String,String>()));
 	}
 
 	@Test
 	public void testGetTemplateFullNameFoundInDb() throws MergeException {
 		// TODO Template Hibernate Testing
-		TemplateFactory.setDbPersistance(false);
-//		assertNotNull(TemplateFactory.getTemplate("root.test.found", "", new HashMap<String,String>()));
+		tf.setDbPersistance(false);
+//		assertNotNull(tf.getTemplate("root.test.found", "", new HashMap<String,String>()));
 	}
 
 	@Test
 	public void testGetTemplateShortNameFoundInCache() throws MergeException {
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.cacheFromJson(template1);
-		Template template = TemplateFactory.getTemplate("root.test.nodata", "root.test.", new HashMap<String,String>());
+		tf.setDbPersistance(false);
+		tf.cacheFromJson(template1);
+		Template template = tf.getTemplate("root.test.nodata", "root.test.", new HashMap<String,String>());
 		assertNotNull(template);
 		assertEquals("root", template.getCollection());
 		assertEquals("test", template.getName());
@@ -78,24 +82,24 @@ public class TemplateFactoryTest {
 	@Test
 	public void testGetTemplateShortNameFoundInDb() throws MergeException {
 		// TODO Template Hibernate Testing
-		TemplateFactory.setDbPersistance(false);
-//		assertNotNull(TemplateFactory.getTemplate("root.test.foo", "", new HashMap<String,String>()));
+		tf.setDbPersistance(false);
+//		assertNotNull(tf.getTemplate("root.test.foo", "", new HashMap<String,String>()));
 	}
 
 	@Test
 	public void testGetTemplateNotFoundInCache() throws MergeException {
-		TemplateFactory.setDbPersistance(false);
-		Template template = TemplateFactory.cacheFromJson(template1);
+		tf.setDbPersistance(false);
+		Template template = tf.cacheFromJson(template1);
 		assertNotNull(template);
 		template = null;
-			template = TemplateFactory.getTemplate("bad.template.test", "", new HashMap<String,String>());
+			template = tf.getTemplate("bad.template.test", "", new HashMap<String,String>());
 		fail("Template Not Found did not throw exception");
 	}
 	
 	@Test
 	public void testCacheFromJsonBasicParsing() throws MergeException {
-		Template template = TemplateFactory.cacheFromJson(template1);
-		assertEquals(1, TemplateFactory.size());
+		Template template = tf.cacheFromJson(template1);
+		assertEquals(1, tf.size());
 		assertEquals("root", template.getCollection());
 		assertEquals("test", template.getName());
 		assertEquals("", template.getColumnValue());
@@ -103,8 +107,8 @@ public class TemplateFactoryTest {
 	
 	@Test
 	public void testCacheFromJsonAllDirectiveParsing() throws MergeException {
-		Template template = TemplateFactory.cacheFromJson(template4);
-		assertEquals(1, TemplateFactory.size());
+		Template template = tf.cacheFromJson(template4);
+		assertEquals(1, tf.size());
 		assertEquals("foo", template.getCollection());
 		assertEquals("default", template.getName());
 		assertEquals(13, template.getDirectives().size());
@@ -125,70 +129,70 @@ public class TemplateFactoryTest {
 
 	@Test
 	public void testReset() throws MergeException {
-		TemplateFactory.reset();
-		TemplateFactory.cacheFromJson(template1);
-		TemplateFactory.cacheFromJson(template2);
-		assertEquals(2, TemplateFactory.size());
-		TemplateFactory.reset();
-		assertEquals(0, TemplateFactory.size());
+		tf.reset();
+		tf.cacheFromJson(template1);
+		tf.cacheFromJson(template2);
+		assertEquals(2, tf.size());
+		tf.reset();
+		assertEquals(0, tf.size());
 	}
 
 
 	@Test
 	public void testLoadFolder() throws MergeException {
-		TemplateFactory.setTemplateFolder("src/test/resources/templates/");
-		TemplateFactory.loadAll();
-		assertEquals(60, TemplateFactory.size()); 
+		tf.setTemplateFolder("src/test/resources/templates/");
+		tf.loadAll();
+		assertEquals(60, tf.size()); 
 	}
 
 	@Test
 	public void testGetTemplateAsJson() throws MergeException {
-		TemplateFactory.reset();
-		String template1 = TemplateFactory.cacheFromJson(template4).asJson(true);
-		String template2 = TemplateFactory.getTemplateAsJson("foo.default.foo");
+		tf.reset();
+		String template1 = tf.cacheFromJson(template4).asJson(true);
+		String template2 = tf.getTemplateAsJson("foo.default.foo");
 		assertEquals(template1, template2);
 	}
 	
 	@Test
 	public void testSaveTemplateFromJsonToFile() throws MergeException {
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.setTemplateFolder("src/test/resources/testout/");
-		String template1 = TemplateFactory.saveTemplateFromJson(template4);
-		Template template2 = TemplateFactory.cacheFromJson(template4);
+		tf.reset();
+		tf.setDbPersistance(false);
+		tf.setTemplateFolder("src/test/resources/testout/");
+		String template1 = tf.saveTemplateFromJson(template4);
+		Template template2 = tf.cacheFromJson(template4);
 		assertEquals(template1, template2.asJson(true));
 	}
 
 	@Test
 	public void testSaveTemplateFromJsonToDb() throws MergeException {
 		// TODO Template Hibernate Testing
-/*		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(true);
-		TemplateFactory.initilizeHibernate();
-		TemplateFactory.setTemplateFolder("src/test/resources/testout/");
-		String template1 = TemplateFactory.saveTemplateFromJson(template4);
-		Template template2 = TemplateFactory.cacheFromJson(template4);
+/*		tf.reset();
+		tf.setDbPersistance(true);
+		tf.initilizeHibernate();
+		tf.setTemplateFolder("src/test/resources/testout/");
+		String template1 = tf.saveTemplateFromJson(template4);
+		Template template2 = tf.cacheFromJson(template4);
 		assertEquals(template1, template2.asJson(true));
 */	}
 
 	@Test
 	public void testGetCollections() throws MergeException {
-		TemplateFactory.reset();
-		TemplateFactory.cacheFromJson(template1);
-		TemplateFactory.cacheFromJson(template2);
-		TemplateFactory.cacheFromJson(template4);
-		String collections = TemplateFactory.getCollections();
+		tf.reset();
+		tf.cacheFromJson(template1);
+		tf.cacheFromJson(template2);
+		tf.cacheFromJson(template4);
+		String collections = tf.getCollections();
 		assertTrue(collections.contains("root"));
 		assertTrue(collections.contains("foo"));
 	}
 
 	@Test
 	public void testGetTemplates() throws MergeException {
-		TemplateFactory.reset();
-		TemplateFactory.cacheFromJson(template1);
-		TemplateFactory.cacheFromJson(template2);
-		TemplateFactory.cacheFromJson(template4);
-		String templates = TemplateFactory.getTemplates("root");
+		tf.reset();
+		tf.cacheFromJson(template1);
+		tf.cacheFromJson(template2);
+		tf.cacheFromJson(template4);
+		String templates = tf.getTemplates("root");
 		assertTrue(templates.contains("root.test."));
 		assertTrue(templates.contains("root.test.foo"));
 	}

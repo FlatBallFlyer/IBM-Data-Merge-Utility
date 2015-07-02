@@ -20,12 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.ibm.util.merge.*;
 import org.apache.log4j.Logger;
-
-import com.ibm.util.merge.Bookmark;
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.directive.provider.DataTable;
 
 /**
@@ -63,10 +59,13 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 	 * Execute Directive - will get the data and insert the sub-templates
 	 *
 	 * @param  target Template to insert sub-templates into
-	 * @throws MergeException  Infinite Loop Safety, or subTemplate Create/Merge 
+	 * @param tf
+	 * @param cf
+	 * @param zf
+	 * @throws MergeException  Infinite Loop Safety, or subTemplate Create/Merge
 	 * @throws DragonFlySqlException SQL Error thrown in Template.new
 	 */
-	public void executeDirective() throws MergeException {
+	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
 		log.info("Inserting Subtemplates into: " + this.getTemplate().getFullName());
 		
 		// Depth counter - infinite loop safety mechanism
@@ -75,7 +74,7 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 		}
 
 		// Get the table data and iterate the rows
-		this.getProvider().getData();
+		this.getProvider().getData(cf);
 		for (DataTable table : this.getProvider().getTables() ) {
 				
 			for( int row = 0; row < table.size(); row++ ) {
@@ -88,10 +87,7 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 		 			String collection = bookmark.getCollection();
 		 			String name = bookmark.getName();
 		 			String column = table.getValue(row, bookmark.getColumn());
-					Template subTemplate = TemplateFactory.getTemplate(
-							collection + "." +  name + "." +  column,
-							collection + "." +  name + ".",
-							this.getTemplate().getReplaceValues());
+					Template subTemplate = tf.getTemplate(collection + "." + name + "." + column, collection + "." + name + ".", this.getTemplate().getReplaceValues());
 					log.info("Inserting Template " + subTemplate.getFullName() + " into " + this.getTemplate().getFullName());
 						
 					// Add the Row replace values
@@ -104,7 +100,7 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 						
 					// Merge the SubTemplate and insert the text into the Target Template
 					try {
-						this.getTemplate().insertText(subTemplate.merge(), bookmark);
+						this.getTemplate().insertText(subTemplate.merge(zf, tf, cf), bookmark);
 					} catch (MergeException e) {
 						if ( this.softFail()) {
 							log.warn("Soft Fail on Insert");

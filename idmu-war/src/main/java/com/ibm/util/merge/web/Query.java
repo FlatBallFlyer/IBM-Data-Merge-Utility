@@ -18,13 +18,17 @@ package com.ibm.util.merge.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.TemplateFactory;
+import com.ibm.util.merge.ZipFactory;
 
 /**
  * Ajax Get List service
@@ -35,6 +39,19 @@ import com.ibm.util.merge.TemplateFactory;
  */
 @WebServlet("/Query")
 public class Query extends HttpServlet {
+    private TemplateFactory tf;
+    private ZipFactory zf;
+    private ConnectionFactory cf;
+
+    @Override
+    public void init(ServletConfig servletConfig) throws ServletException {
+        super.init(servletConfig);
+        tf = new TemplateFactory();
+        zf = new ZipFactory();
+        cf = new ConnectionFactory();
+        Initialize.performInit(servletConfig, tf, zf);
+    }
+
     /**
      * Servlet called as HTTP Get
      * - Parameter: list=Collections|Tempaltes
@@ -57,11 +74,11 @@ public class Query extends HttpServlet {
         String parm = request.getParameter("list");
         if (parm != null) {
             if (parm.equals("Collections")) {
-                out.write(TemplateFactory.getCollections());
+                out.write(tf.getCollections());
                 out.close();
             }
             if (parm.equals("Templates")) {
-                out.write(TemplateFactory.getTemplates(request.getParameter("collection")));
+                out.write(tf.getTemplates(request.getParameter("collection")));
                 out.close();
             }
         }

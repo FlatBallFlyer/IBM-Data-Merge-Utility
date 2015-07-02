@@ -40,15 +40,21 @@ public class IntegrationTestingHtmlProvider {
 	String htmlContacts1 = "<html><head></head><body><table><tr><th>IDCONTACT</th><th>IDCUSTOMER</th><th>NAME</th><th>PREFERENCE</th><th>EMAIL</th><th>PHONE</th></tr><tr><td>1</td><td>1</td><td>James</td><td>paper</td><td>James@General.com</td><td>(878) 555-0211</td></tr><tr><td>21</td><td>1</td><td>Daniel</td><td>SMS</td><td></td><td>(878) 555-2221</td></tr><tr><td>41</td><td>1</td><td>Alan</td><td>email</td><td>Alan@General.com</td><td></td></tr><tr><td>61</td><td>1</td><td>Harry</td><td>paper</td><td>Harry@General.com</td><td>(878) 555-6261</td></tr><tr><td>81</td><td>1</td><td>Ernest</td><td>SMS</td><td>Ernest@General.com</td><td>(878) 555-8281</td></tr><tr><td>101</td><td>1</td><td>Linda</td><td>email</td><td>Linda@General.com</td><td>(878) 555-0211</td></tr><tr><td>121</td><td>1</td><td>Judith</td><td>paper</td><td>Judith@General.com</td><td>(878) 555-2211</td></tr><tr><td>141</td><td>1</td><td>Peggy</td><td>SMS</td><td>Peggy@General.com</td><td>(878) 555-4211</td></tr><tr><td>161</td><td>1</td><td>Vicki</td><td>email</td><td>Vicki@General.com</td><td>(878) 555-6211</td></tr><tr><td>181</td><td>1</td><td>Teresa</td><td>paper</td><td>Teresa@General.com</td><td>(878) 555-8211</td></tr></table></body></html>";
 	String htmlContacts2 = "<html><head></head><body><table><tr><th>IDCONTACT</th><th>IDCUSTOMER</th><th>NAME</th><th>PREFERENCE</th><th>EMAIL</th><th>PHONE</th></tr><tr><td>2</td><td>2</td><td>Robert</td><td>email</td><td>Robert@Exxon.com</td><td>(531) 555-0422</td></tr><tr><td>22</td><td>2</td><td>Edward</td><td>paper</td><td>Edward@Exxon.com</td><td>(531) 555-2422</td></tr><tr><td>42</td><td>2</td><td>Willie</td><td>SMS</td><td></td><td>(531) 555-4442</td></tr><tr><td>62</td><td>2</td><td>Samuel</td><td>email</td><td>Samuel@Exxon.com</td><td>(531) 555-6462</td></tr><tr><td>82</td><td>2</td><td>Scott</td><td>paper</td><td>Scott@Exxon.com</td><td>(531) 555-8482</td></tr><tr><td>102</td><td>2</td><td>Mary</td><td>SMS</td><td>Mary@Exxon.com</td><td>(531) 555-0412</td></tr><tr><td>122</td><td>2</td><td>Janice</td><td>email</td><td>Janice@Exxon.com</td><td>(531) 555-2412</td></tr><tr><td>142</td><td>2</td><td>Gail</td><td>paper</td><td>Gail@Exxon.com</td><td>(531) 555-4412</td></tr><tr><td>162</td><td>2</td><td>Sherry</td><td>SMS</td><td>Sherry@Exxon.com</td><td>(531) 555-6412</td></tr><tr><td>182</td><td>2</td><td>Denise</td><td>email</td><td>Denise@Exxon.com</td><td>(531) 555-8412</td></tr></table></body></html>";
 	String htmlContacts3 = "<html><head></head><body><table><tr><th>IDCONTACT</th><th>IDCUSTOMER</th><th>NAME</th><th>PREFERENCE</th><th>EMAIL</th><th>PHONE</th></tr><tr><td>3</td><td>3</td><td>John</td><td>SMS</td><td></td><td>(417) 555-0633</td></tr><tr><td>23</td><td>3</td><td>Mark</td><td>email</td><td>Mark@USSteal.com</td><td>(417) 555-2623</td></tr><tr><td>43</td><td>3</td><td>Jeffrey</td><td>paper</td><td>Jeffrey@USSteal.com</td><td>(417) 555-4643</td></tr><tr><td>63</td><td>3</td><td>Howard</td><td>SMS</td><td>Howard@USSteal.com</td><td>(417) 555-6663</td></tr><tr><td>83</td><td>3</td><td>Fred</td><td>email</td><td>Fred@USSteal.com</td><td>(417) 555-8683</td></tr><tr><td>103</td><td>3</td><td>Patricia</td><td>paper</td><td>Patricia@USSteal.com</td><td>(417) 555-0613</td></tr><tr><td>123</td><td>3</td><td>Cynthia</td><td>SMS</td><td>Cynthia@USSteal.com</td><td>(417) 555-2613</td></tr><tr><td>143</td><td>3</td><td>Virginia</td><td>email</td><td>Virginia@USSteal.com</td><td>(417) 555-4613</td></tr><tr><td>163</td><td>3</td><td>Laura</td><td>paper</td><td>Laura@USSteal.com</td><td>(417) 555-6613</td></tr><tr><td>183</td><td>3</td><td>Lois</td><td>SMS</td><td>Lois@USSteal.com</td><td>(417) 555-8613</td></tr></table></body></html>";
-	
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
+
 	@Before
 	public void setup() throws MergeException, IOException {
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		// Initialize Factories
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.setTemplateFolder(templateDir);
-		TemplateFactory.loadAll();
-		ZipFactory.setOutputroot(outputDir);
+		tf.reset();
+		tf.setDbPersistance(false);
+		tf.setTemplateFolder(templateDir);
+		tf.loadAll();
+		zf.setOutputroot(outputDir);
 		
 		// Initialize requestMap (usually from request.getParameterMap())
 		parameterMap = new HashMap<String,String[]>();
@@ -70,9 +76,9 @@ public class IntegrationTestingHtmlProvider {
 	
 	@Test
 	public void testDefaultTemplate() throws MergeException, IOException {
-		Template root = TemplateFactory.getTemplate(parameterMap);
-		String output = root.merge();
-		root.packageOutput();
+		Template root = tf.getTemplate(parameterMap);
+		String output = root.merge(zf, tf, cf);
+		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + "merge1.output"))), output);
 	}
 
@@ -117,9 +123,9 @@ public class IntegrationTestingHtmlProvider {
 		parameterMap.put("DragonOutputType", 	new String[]{type});
 		parameterMap.put("DragonFlyOutputFile", new String[]{fullName+type});
 		parameterMap.put("DragonFlyFullName", 	new String[]{fullName});
-		Template root = TemplateFactory.getTemplate(parameterMap);
-		String output = root.merge();
-		root.packageOutput();
+		Template root = tf.getTemplate(parameterMap);
+		String output = root.merge(zf, tf, cf);
+		root.packageOutput(zf, cf);
 		CompareArchives.assertArchiveEquals(type, validateDir + fullName + type, outputDir + fullName + type);
 		return output;
 	}

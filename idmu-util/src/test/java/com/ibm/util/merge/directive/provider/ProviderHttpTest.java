@@ -17,17 +17,25 @@
 package com.ibm.util.merge.directive.provider;
 
 import static org.junit.Assert.*;
+
+import com.ibm.util.merge.ConnectionFactory;
 import org.junit.*;
 
 import com.ibm.util.merge.MergeException;
 
 public abstract class ProviderHttpTest extends ProviderTest {
-	
+	private ConnectionFactory cf;
+
+	@Before
+	public void setup(){
+		cf = new ConnectionFactory();
+	}
+
 	@Test
 	public void testGetDataFromTag() throws MergeException {
 		ProviderHttp myProvider = (ProviderHttp) provider; 
 		myProvider.setUrl("");
-		myProvider.getData();
+		myProvider.getData(cf);
 		assertFalse(myProvider.getFetchedData().isEmpty());
 	}
 
@@ -36,7 +44,7 @@ public abstract class ProviderHttpTest extends ProviderTest {
 		ProviderHttp myProvider = (ProviderHttp) provider; 
 		myProvider.setUrl("");
 		myProvider.setTag("");
-		myProvider.getData();
+		myProvider.getData(cf);
 		assertEquals(myProvider.getStaticData(), myProvider.getFetchedData());
 	}
 
@@ -46,7 +54,7 @@ public abstract class ProviderHttpTest extends ProviderTest {
 		myProvider.setUrl("");
 		myProvider.setTag("");
 		myProvider.setStaticData("");
-		myProvider.getData();
+		myProvider.getData(cf);
 		assertEquals(0,myProvider.size());
 	}
 

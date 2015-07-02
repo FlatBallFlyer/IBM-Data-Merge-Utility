@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
 public final class ConnectionFactory {
 	private static final Logger log = Logger.getLogger( ConnectionFactory.class.getName() );
 	private static final String DBROOT = "java:/comp/env/jdbc/";
-	private static final ConcurrentHashMap<String,Connection> dataDbHash = new ConcurrentHashMap<String,Connection>();
+	private final ConcurrentHashMap<String,Connection> dataDbHash = new ConcurrentHashMap<String,Connection>();
 	
     /**********************************************************************************
 	 * Data Source connection factory, creates and cache's connections that are valid
@@ -52,7 +52,7 @@ public final class ConnectionFactory {
 	 * @throws MergeException Database Connection Errors
 	 * @return Connection The new Data Source connection 
 	 */
-    public static Connection getDataConnection(String jndiSource, String guid) throws MergeException {
+    public Connection getDataConnection(String jndiSource, String guid) throws MergeException {
     	String key = jndiSource + ":" + guid;
     	// If the data source is not in the cache, create it and add it to the cache
     	if ( !dataDbHash.containsKey(key) ) { 
@@ -77,7 +77,7 @@ public final class ConnectionFactory {
 	 *
 	 * @param  guid Guid of template to release files for.
 	 */
-    public static void close(String guid) {
+    public void close(String guid) {
     	for (Map.Entry<String, Connection> entry : dataDbHash.entrySet()) {
     		if (entry.getKey().endsWith(guid)) {
 				try {
@@ -94,7 +94,7 @@ public final class ConnectionFactory {
     /**********************************************************************************
 	 * Get the size of the DB Connection Hash
 	 */
-    public static int size() {
+    public int size() {
     	return dataDbHash.size();
     }
 }

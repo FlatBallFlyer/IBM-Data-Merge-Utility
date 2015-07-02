@@ -18,10 +18,8 @@ package com.ibm.util.merge.directive.provider;
 
 import static org.junit.Assert.*;
 
+import com.ibm.util.merge.*;
 import org.junit.*;
-
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.Directive;
 
 public class ProviderCsvTest extends ProviderHttpTest {
@@ -79,6 +77,6 @@ public class ProviderCsvTest extends ProviderHttpTest {
 
 	private class DirectiveStub extends Directive {
 		public DirectiveStub() {}
-		public void executeDirective() throws MergeException {}
+		public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {}
 	}
 }

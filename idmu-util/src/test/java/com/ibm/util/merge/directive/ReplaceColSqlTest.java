@@ -20,17 +20,21 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import com.ibm.util.merge.*;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.*;
 
 public class ReplaceColSqlTest extends ReplaceColTest {
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
 
 	@Before
 	public void setUp() throws Exception {
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		provider = new ProviderStub();
 		directive = new ReplaceColSql();
 		ReplaceColSql myDirective = (ReplaceColSql) directive;
@@ -54,7 +58,7 @@ public class ReplaceColSqlTest extends ReplaceColTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(tf, cf, zf);
 		assertTrue(template.hasReplaceKey("{A}"));
 		assertEquals("1",template.getReplaceValue("{A}"));
 		assert(template.hasReplaceKey("{B}"));
@@ -73,7 +77,7 @@ public class ReplaceColSqlTest extends ReplaceColTest {
 			return provider;
 		}
 		
-		public void getData() throws MergeException {
+		public void getData(ConnectionFactory cf) throws MergeException {
 			DataTable table = this.getNewTable();
 			ArrayList<String> row = table.getNewRow();
 			table.addCol("FromCol");table.addCol("ToCol");

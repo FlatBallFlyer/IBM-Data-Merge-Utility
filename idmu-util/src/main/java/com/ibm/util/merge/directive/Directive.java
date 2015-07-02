@@ -17,8 +17,7 @@
 
 package com.ibm.util.merge.directive;
 
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.*;
 import com.ibm.util.merge.directive.provider.Provider;
 
 /**
@@ -71,8 +70,11 @@ public abstract class Directive implements Cloneable{
 	 * Abstract method to "Execute" the directive in the context of a template.
 	 *
 	 * @throws MergeException execution errors
+	 * @param tf
+	 * @param cf
+	 * @param zf
 	 */
-	public abstract void executeDirective() throws MergeException;
+	public abstract void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException;
 
 	/********************************************************************************
 	 * Cone constructor

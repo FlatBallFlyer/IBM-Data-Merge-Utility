@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.ibm.util.merge.ConnectionFactory;
 import org.apache.commons.io.IOUtils;
 
 import com.ibm.util.merge.MergeException;
@@ -56,9 +57,10 @@ public abstract class ProviderHttp extends Provider implements Cloneable {
 	 * Fetch the data
 	 * 
 	 * @throws MergeException Wrapped SQL and Process execptions
+	 * @param cf
 	 */
 	@Override
-	public void getData() throws MergeException {
+	public void getData(ConnectionFactory cf) throws MergeException {
 		Template template = this.getDirective().getTemplate();
 		if (!this.url.isEmpty()) {
 			try {

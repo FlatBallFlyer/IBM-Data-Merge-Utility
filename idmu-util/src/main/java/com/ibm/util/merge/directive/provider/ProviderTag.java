@@ -19,6 +19,7 @@ package com.ibm.util.merge.directive.provider;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
 
@@ -51,8 +52,9 @@ public class ProviderTag extends Provider implements Cloneable {
 
 	/**
 	 * Reset the table, and if the Tag exists, add a row with the tag name/value
+	 * @param cf
 	 */
-	public void getData() throws MergeException {
+	public void getData(ConnectionFactory cf) throws MergeException {
 		this.reset();
 		DataTable table = this.getNewTable();
 		Template template = this.getDirective().getTemplate();

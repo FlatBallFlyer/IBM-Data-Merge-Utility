@@ -29,14 +29,20 @@ import com.ibm.util.merge.directive.Require;
 public class MergeExceptionTest {
 	Template template;
 	Directive directive;
-	
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
+
 	@Before
 	public void setUp() throws Exception {
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.setTemplateFolder("src/test/resources/templates/");
-		TemplateFactory.reset();
-		TemplateFactory.loadAll();
-		template = TemplateFactory.getTemplate("system.test.", "", new HashMap<String,String>());
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
+		tf.setDbPersistance(false);
+		tf.setTemplateFolder("src/test/resources/templates/");
+		tf.reset();
+		tf.loadAll();
+		template = tf.getTemplate("system.test.", "", new HashMap<String,String>());
 		directive = template.getDirectives().get(0);
 	}
 
@@ -109,7 +115,7 @@ public class MergeExceptionTest {
 		template.addDirective(req);
 		MergeException e = new MergeException(req, null, "Error", "Context");
 		assertNotNull(e);
-		String output = e.getHtmlErrorMessage();
+		String output = e.getHtmlErrorMessage(tf, zf, cf);
 		assertEquals("<html><head></head><body><p>A Merge Execption has occured: Error <br/> Context</p></body></html>", output);
 	}
 
@@ -117,7 +123,7 @@ public class MergeExceptionTest {
 	public void testGetJsonErrorMessage() {
 		MergeException e = new MergeException(directive, null, "Error", "Context");
 		assertNotNull(e);
-		String output = e.getJsonErrorMessage();
+		String output = e.getJsonErrorMessage(tf, zf, cf);
 		assertEquals("{\"message\":\"Error\",\"context\":\"Context\"}", output);
 	}
 

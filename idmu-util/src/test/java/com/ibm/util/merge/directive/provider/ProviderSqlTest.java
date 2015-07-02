@@ -18,12 +18,10 @@ package com.ibm.util.merge.directive.provider;
 
 import static org.junit.Assert.*;
 
+import com.ibm.util.merge.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.Directive;
 
 public class ProviderSqlTest extends ProviderTest {
@@ -94,6 +92,6 @@ public class ProviderSqlTest extends ProviderTest {
 
 	private class DirectiveStub extends Directive {
 		public DirectiveStub() {}
-		public void executeDirective() throws MergeException {}
+		public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {}
 	}
 }

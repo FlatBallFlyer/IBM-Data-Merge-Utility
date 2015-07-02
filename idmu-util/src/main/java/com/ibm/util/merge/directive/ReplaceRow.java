@@ -15,9 +15,8 @@
  *
  */
 package com.ibm.util.merge.directive;
+import com.ibm.util.merge.*;
 import org.apache.log4j.Logger;
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.Provider;
 import com.ibm.util.merge.directive.provider.DataTable;
 
@@ -45,10 +44,13 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 
 	/**
 	 * @throws MergeException
+	 * @param tf
+	 * @param cf
+	 * @param zf
 	 */
-	public void executeDirective() throws MergeException {
+	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
 		Provider provider = this.getProvider();
-		provider.getData();
+		provider.getData(cf);
 
 		// Make sure we got some data
 		if ( this.getProvider().size() < 1 ) {

@@ -18,17 +18,21 @@ package com.ibm.util.merge.directive;
 
 import static org.junit.Assert.*;
 
+import com.ibm.util.merge.*;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
 
 public class ReplaceColHtmlTest extends ReplaceColTest {
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
 
 	@Before
 	public void setUp() throws Exception {
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		template = new Template();
 		directive = new ReplaceColHtml();
 
@@ -52,7 +56,7 @@ public class ReplaceColHtmlTest extends ReplaceColTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(tf, cf, zf);
 		assertTrue(template.hasReplaceKey("{1}"));
 		assertEquals("2",template.getReplaceValue("{1}"));
 		assert(template.hasReplaceKey("{4}"));

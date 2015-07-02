@@ -39,10 +39,10 @@ final public class ZipFactory {
     public static final int TYPE_ZIP = 1;
     public static final int TYPE_TAR = 2;
     private static final Logger log = Logger.getLogger(ZipFactory.class.getName());
-    private static final ConcurrentHashMap<String, TarArchiveOutputStream> tarList = new ConcurrentHashMap<String, TarArchiveOutputStream>();
-    private static final ConcurrentHashMap<String, ZipOutputStream> zipList = new ConcurrentHashMap<String, ZipOutputStream>();
-    private static final ConcurrentHashMap<String, String> hashList = new ConcurrentHashMap<String, String>();
-    private static String outputroot = System.getProperty("java.io.tmpdir");
+    private final ConcurrentHashMap<String, TarArchiveOutputStream> tarList = new ConcurrentHashMap<String, TarArchiveOutputStream>();
+    private final ConcurrentHashMap<String, ZipOutputStream> zipList = new ConcurrentHashMap<String, ZipOutputStream>();
+    private final ConcurrentHashMap<String, String> hashList = new ConcurrentHashMap<String, String>();
+    private String outputroot = System.getProperty("java.io.tmpdir");
 
     /**********************************************************************************
      * <p>Close the Zip File and remove from cache</p>
@@ -51,7 +51,7 @@ final public class ZipFactory {
      * @throws MergeException wrapped IOException
      * @throws IOException    Zip File Close Error
      */
-    public static void writeFile(String guid, String fileName, StringBuilder content, int type) throws IOException {
+    public void writeFile(String guid, String fileName, StringBuilder content, int type) throws IOException {
         // Write the file to the archive
         if (type == ZipFactory.TYPE_ZIP) {
             saveFileToZip(guid, fileName, content);
@@ -90,7 +90,7 @@ final public class ZipFactory {
      * @throws MergeException        - File Not Found
      * @throws FileNotFoundException Unabel to create output zip
      */
-    public static void saveFileToZip(String guid, String fileName, StringBuilder content) throws IOException {
+    public void saveFileToZip(String guid, String fileName, StringBuilder content) throws IOException {
         ZipOutputStream outputStream = getZipOutputStream(guid);
         ZipEntry entry = new ZipEntry(fileName);
         log.info("Writing Output File " + fileName);
@@ -100,7 +100,7 @@ final public class ZipFactory {
         outputStream.closeEntry();
     }
 
-    private static ZipOutputStream getZipOutputStream(String guid) throws FileNotFoundException {
+    private ZipOutputStream getZipOutputStream(String guid) throws FileNotFoundException {
         if (!zipList.containsKey(guid)) {
             String outputFile = outputroot + "/" + guid;
             FileOutputStream fos = new FileOutputStream(outputFile);
@@ -121,7 +121,7 @@ final public class ZipFactory {
      * @throws MergeException        - File Not Found
      * @throws FileNotFoundException Unabel to create output zip
      */
-    public static void saveFileToTar(String guid, String fileName, StringBuilder content) throws IOException {
+    public void saveFileToTar(String guid, String fileName, StringBuilder content) throws IOException {
         TarArchiveOutputStream outputStream = getTarOutputStream(guid);
         TarArchiveEntry entry = new TarArchiveEntry(fileName);
         entry.setSize(content.length());
@@ -133,7 +133,7 @@ final public class ZipFactory {
         outputStream.closeArchiveEntry();
     }
 
-    private static TarArchiveOutputStream getTarOutputStream(String guid) throws FileNotFoundException {
+    private TarArchiveOutputStream getTarOutputStream(String guid) throws FileNotFoundException {
         if (!tarList.containsKey(guid)) {
             String outputFile = outputroot + "/" + guid;
             FileOutputStream fos = new FileOutputStream(outputFile);
@@ -152,7 +152,7 @@ final public class ZipFactory {
      * @throws MergeException wrapped IOException
      * @throws IOException    Zip File Close Error
      */
-    public static void closeStream(String guid, int type) {
+    public void closeStream(String guid, int type) {
         if (type == ZipFactory.TYPE_ZIP) {
             if (zipList.containsKey(guid)) {
                 ZipOutputStream zos = zipList.get(guid);
@@ -169,7 +169,7 @@ final public class ZipFactory {
         hashList.remove(guid);
     }
 
-    private static void close(Closeable zos) {
+    private void close(Closeable zos) {
         try {
             zos.close();
         } catch (IOException e) {
@@ -183,18 +183,18 @@ final public class ZipFactory {
      *
      * @param String the new Root Folder for output files.
      */
-    public static void setOutputroot(String newRoot) {
+    public void setOutputroot(String newRoot) {
         outputroot = newRoot;
     }
 
     /**********************************************************************************
      * Get the size of the cache
      */
-    public static int size() {
+    public int size() {
         return tarList.size() + zipList.size();
     }
 
-    public static String getHash(String guid) {
+    public String getHash(String guid) {
         if (hashList.get(guid) == null) {
             return "";
         }

@@ -100,7 +100,10 @@ public class TemplateTest {
 	@Test
 	public void testMerge() throws MergeException {
 		template.addReplace("empty", "NOT");
-		String output = template.merge();
+		ZipFactory zf = new ZipFactory();
+		TemplateFactory tf = new TemplateFactory();
+		ConnectionFactory cf = new ConnectionFactory();
+		String output = template.merge(zf, tf, cf);
 		assertEquals(mergeOutput, output);
 	}
 

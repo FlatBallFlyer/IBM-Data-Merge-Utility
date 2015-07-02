@@ -19,8 +19,7 @@ package com.ibm.util.merge.directive;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.*;
 
 /**
  * A validation directive 
@@ -53,9 +52,12 @@ public class Require extends Directive implements Cloneable {
 	
 	/**
 	 * Check to see if the tags are in the replace stack, throw an exception if not found
-	 * @see com.ibm.util.merge.directive.Directive#executeDirective()
+	 * @see Directive#executeDirective(TemplateFactory, ConnectionFactory, ZipFactory)
+	 * @param tf
+	 * @param cf
+	 * @param zf
 	 */
-	public void executeDirective() throws MergeException {
+	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
 		for (String tag : this.tags) {
 			if (! this.getTemplate().hasReplaceValue(Template.wrap(tag)) ) {
 				throw new MergeException("Required Tag Not Found in " + this.getTemplate().getFullName(), tag);

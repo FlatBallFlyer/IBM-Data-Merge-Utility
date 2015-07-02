@@ -34,15 +34,21 @@ public class IntegrationTestingJdbcProvider {
 	String templateDir 	= "integration/templates/";
 	String outputDir 	= "integration/output/"; 
 	String validateDir 	= "integration/valid/";
-	
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
+
 	@Before
 	public void setup() throws Exception {
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		// Initialize Factories
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.setTemplateFolder(templateDir);
-		TemplateFactory.loadAll();
-		ZipFactory.setOutputroot(outputDir);
+		tf.reset();
+		tf.setDbPersistance(false);
+		tf.setTemplateFolder(templateDir);
+		tf.loadAll();
+		zf.setOutputroot(outputDir);
 		parameterMap = new HashMap<>();
 		// Initialize context (usually from request.getParameterMap())
 //		ApplicationContext context = 
@@ -52,9 +58,9 @@ public class IntegrationTestingJdbcProvider {
 
 	@Test
 	public void testDefaultTemplate() throws Exception {
-		Template root = TemplateFactory.getTemplate(parameterMap);
-		String output = root.merge();
-		root.packageOutput();
+		Template root = tf.getTemplate(parameterMap);
+		String output = root.merge(zf, tf, cf);
+		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + "merge1.output"))), output);
 	}
 
@@ -108,10 +114,10 @@ public class IntegrationTestingJdbcProvider {
 	 * @throws IOException
 	 */
 	private void testMerge(String fullName) throws Exception {
-		parameterMap.put(TemplateFactory.KEY_FULLNAME, 	new String[]{fullName});
-		Template root = TemplateFactory.getTemplate(parameterMap);
-		String mergeOutput = root.merge();
-		root.packageOutput();
+		parameterMap.put(tf.KEY_FULLNAME, 	new String[]{fullName});
+		Template root = tf.getTemplate(parameterMap);
+		String mergeOutput = root.merge(zf, tf, cf);
+		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + fullName + ".output"))), mergeOutput);
 	}
 }

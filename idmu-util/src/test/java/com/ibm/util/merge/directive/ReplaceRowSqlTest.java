@@ -20,18 +20,22 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import com.ibm.util.merge.*;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.DataTable;
 import com.ibm.util.merge.directive.provider.Provider;
 
 public class ReplaceRowSqlTest extends ReplaceRowTest {
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
 
 	@Before
 	public void setUp() throws Exception {
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		provider = new ProviderStub();
 		directive = new ReplaceRowSql();
 		ReplaceRowSql myDirective = (ReplaceRowSql) directive;
@@ -53,7 +57,7 @@ public class ReplaceRowSqlTest extends ReplaceRowTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(tf, cf, zf);
 		assertTrue(template.hasReplaceKey("{A}"));
 		assertEquals("1",template.getReplaceValue("{A}"));
 		assert(template.hasReplaceKey("{B}"));
@@ -72,7 +76,7 @@ public class ReplaceRowSqlTest extends ReplaceRowTest {
 			return provider;
 		}
 		
-		public void getData() throws MergeException {
+		public void getData(ConnectionFactory cf) throws MergeException {
 			DataTable table = this.getNewTable();
 			ArrayList<String> row = table.getNewRow();
 			table.addCol("A");table.addCol("B");table.addCol("C");

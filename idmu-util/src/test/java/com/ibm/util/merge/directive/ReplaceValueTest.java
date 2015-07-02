@@ -18,16 +18,20 @@ package com.ibm.util.merge.directive;
 
 import static org.junit.Assert.*;
 
+import com.ibm.util.merge.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
-
 public class ReplaceValueTest extends DirectiveTest {
-	
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
+
 	@Before
 	public void setUp() throws Exception {
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		directive = new ReplaceValue();
 		ReplaceValue myDirective = (ReplaceValue) directive;
 		myDirective.setFrom("TestTag");
@@ -48,7 +52,7 @@ public class ReplaceValueTest extends DirectiveTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(tf, cf, zf);
 		assertTrue(template.hasReplaceKey("{TestTag}"));
 		assertEquals("TestValue", template.getReplaceValue("{TestTag}"));
 	}

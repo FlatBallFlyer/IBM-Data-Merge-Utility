@@ -19,6 +19,8 @@ package com.ibm.util.merge.directive.provider;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+
+import com.ibm.util.merge.ConnectionFactory;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -46,9 +48,10 @@ public class ProviderCsv extends ProviderHttp implements Cloneable {
 
 	/**
 	 * Retrieve the data (superclass HTTP Provider) and parse the CSV data
+	 * @param cf
 	 */
-	public void getData() throws MergeException {
-		super.getData();
+	public void getData(ConnectionFactory cf) throws MergeException {
+		super.getData(cf);
 		this.reset();
 		DataTable table = new DataTable();
 		CSVParser parser = null;

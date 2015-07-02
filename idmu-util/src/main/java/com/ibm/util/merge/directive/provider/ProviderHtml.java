@@ -18,6 +18,7 @@ package com.ibm.util.merge.directive.provider;
 
 import java.util.ArrayList;
 
+import com.ibm.util.merge.ConnectionFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
@@ -41,10 +42,11 @@ public class ProviderHtml extends ProviderHttp {
 
 	/**
 	 * Retrieve the data (superclass HTTP Provider) and parse the CSV data
+	 * @param cf
 	 */
-	public void getData() throws MergeException {
+	public void getData(ConnectionFactory cf) throws MergeException {
 		
-		super.getData();
+		super.getData(cf);
 		
 		// Parse the Data
 		Document doc = Jsoup.parse(this.getFetchedData());

@@ -19,6 +19,9 @@ package com.ibm.util.merge.directive;
 import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.ZipFactory;
 import org.junit.Before;
 import org.junit.Test;
 import com.ibm.util.merge.MergeException;
@@ -29,19 +32,25 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Row: {A}, Val: {B}\\n\"}";
 	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\" collection\\u003d\\\"root\\\"/\\u003e\"}";
 	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\" collection=\"root\"/>";
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
 
 	@Before
 	public void setUp() throws Exception {
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		provider = new ProviderStub();
 		directive = new InsertSubsSql();
 		InsertSubsSql myDirective = (InsertSubsSql) directive;
 		myDirective.setProvider(provider);
 
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.cacheFromJson(subTemplate); 
-		TemplateFactory.cacheFromJson(masterTemplate);
-		template = TemplateFactory.getTemplate("root.master.", "", new HashMap<String,String>());
+		tf.reset();
+		tf.setDbPersistance(false);
+		tf.cacheFromJson(subTemplate); 
+		tf.cacheFromJson(masterTemplate);
+		template = tf.getTemplate("root.master.", "", new HashMap<String,String>());
 		template.addDirective(myDirective);
 	}
 
@@ -57,7 +66,7 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(tf, cf, zf);
 		assertEquals(masterOutput, template.getContent());
 	}
 
@@ -71,7 +80,7 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 			return provider;
 		}
 		
-		public void getData() throws MergeException {
+		public void getData(ConnectionFactory cf) throws MergeException {
 			DataTable table = this.getNewTable();
 			ArrayList<String> row;
 			table.addCol("A");table.addCol("B");table.addCol("C");

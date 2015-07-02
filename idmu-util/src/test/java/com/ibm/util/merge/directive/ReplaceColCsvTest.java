@@ -18,16 +18,20 @@ package com.ibm.util.merge.directive;
 
 import static org.junit.Assert.*;
 
+import com.ibm.util.merge.*;
 import org.junit.*;
-
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
 
 public class ReplaceColCsvTest extends ReplaceColTest {
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
 
 	@Before
 	public void setUp() throws Exception {
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		directive = new ReplaceColCsv();
 		ReplaceColCsv myDirective = (ReplaceColCsv) directive;
 		myDirective.setTemplate(template);
@@ -51,7 +55,7 @@ public class ReplaceColCsvTest extends ReplaceColTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(tf, cf, zf);
 		assertTrue(template.hasReplaceKey("{1}"));
 		assertEquals("2",template.getReplaceValue("{1}"));
 		assert(template.hasReplaceKey("{4}"));

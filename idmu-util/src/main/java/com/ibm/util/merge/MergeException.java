@@ -162,7 +162,7 @@ public class MergeException extends Exception {
 	/**
 	 * @return
 	 */
-	public String getHtmlErrorMessage() {
+	public String getHtmlErrorMessage(TemplateFactory tf, ZipFactory zf, ConnectionFactory cf) {
 		String message = "";
 		Template errorTemplate;
 		HashMap<String,String> parameters = new HashMap<String,String>();
@@ -170,9 +170,9 @@ public class MergeException extends Exception {
 		parameters.put(Template.wrap("CONTEXT"),  this.context);
 		parameters.put(Template.wrap("TRACE"), this.getStackTrace().toString());
 		try {
-			errorTemplate = TemplateFactory.getTemplate("system.errHtml." + this.errorFromClass, "system.errHtml.", parameters);
-			message = errorTemplate.merge();
-			errorTemplate.packageOutput();
+			errorTemplate = tf.getTemplate("system.errHtml." + this.errorFromClass, "system.errHtml.", parameters);
+			message = errorTemplate.merge(zf, tf, cf);
+			errorTemplate.packageOutput(zf, cf);
 		} catch (MergeException e) {
 			message = "INVALID ERROR TEMPLATE! \n" +
 					"Message: " + this.error + "\n" + 
@@ -184,7 +184,7 @@ public class MergeException extends Exception {
 	/**
 	 * @return
 	 */
-	public String getJsonErrorMessage() {
+	public String getJsonErrorMessage(TemplateFactory tf, ZipFactory zf, ConnectionFactory cf) {
 		String message = "";
 		Template errorTemplate;
 		HashMap<String,String> parameters = new HashMap<String,String>();
@@ -192,9 +192,9 @@ public class MergeException extends Exception {
 		parameters.put(Template.wrap("CONTEXT"),  this.context);
 		parameters.put(Template.wrap("TRACE"), this.getStackTrace().toString());
 		try {
-			errorTemplate = TemplateFactory.getTemplate("system.errJson." + this.errorFromClass, "system.errJson.", parameters);
-			message = errorTemplate.merge();
-			errorTemplate.packageOutput();
+			errorTemplate = tf.getTemplate("system.errJson." + this.errorFromClass, "system.errJson.", parameters);
+			message = errorTemplate.merge(zf, tf, cf);
+			errorTemplate.packageOutput(zf, cf);
 		} catch (MergeException e) {
 			message = "INVALID ERROR TEMPLATE! \n" +
 					"Message: " + this.error + "\n" + 

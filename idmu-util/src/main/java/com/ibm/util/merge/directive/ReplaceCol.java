@@ -16,8 +16,7 @@
  */
 package com.ibm.util.merge.directive;
 
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.*;
 import com.ibm.util.merge.directive.provider.DataTable;
 
 /**
@@ -47,9 +46,12 @@ public abstract class ReplaceCol extends Directive implements Cloneable {
 	/**
 	 * Add replace values to the Template replace stack
 	 * @throws MergeException on getData errors.
+	 * @param tf
+	 * @param cf
+	 * @param zf
 	 */
-	public void executeDirective() throws MergeException {
-		this.getProvider().getData();
+	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
+		this.getProvider().getData(cf);
 		for (DataTable table : this.getProvider().getTables() ) {
 	 		int from = table.getCol(this.fromColumn);
 			int to = table.getCol(this.toColumn);

@@ -22,21 +22,24 @@ import org.junit.Test;
 
 
 public class ConnectionFactoryTest {
+	private ConnectionFactory cf;
 
 	@Test
 	public void testGetDataConnection() throws MergeException {
-		Connection con = ConnectionFactory.getDataConnection("testgenDB", "TestGuid");
+		cf = new ConnectionFactory();
+		Connection con = cf.getDataConnection("testgenDB", "TestGuid");
 		assertNotNull(con);
-		assertEquals(1, ConnectionFactory.size());
-		con = ConnectionFactory.getDataConnection("testgenDB", "TestGuid");
+		assertEquals(1, cf.size());
+		con = cf.getDataConnection("testgenDB", "TestGuid");
 		assertNotNull(con);
-		assertEquals(1, ConnectionFactory.size());
+		assertEquals(1, cf.size());
 	}
 
 	@Test
 	public void testCloseDataConnection() {
-		ConnectionFactory.close("TestGuid");
-		assertEquals(0, ConnectionFactory.size());
+		cf = new ConnectionFactory();
+		cf.close("TestGuid");
+		assertEquals(0, cf.size());
 	}
 
 }

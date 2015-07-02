@@ -59,9 +59,10 @@ public class ProviderSql extends Provider implements Cloneable {
 	 * Prepare and execute a SQL statement, then load the result set into a single DataTable
 	 * 
 	 * @throws MergeException Wrapped SQL and Process execptions
+	 * @param cf
 	 */
 	@Override
-	public void getData() throws MergeException {
+	public void getData(ConnectionFactory cf) throws MergeException {
 		this.reset();
 		DataTable table = this.getNewTable();
 		Connection con = null;
@@ -71,7 +72,7 @@ public class ProviderSql extends Provider implements Cloneable {
 			String queryString = this.getQueryString();
 			log.info(this.getDirective().getTemplate().getFullName() + " Selecting SQL Data " + queryString );
 			
-			con = ConnectionFactory.getDataConnection(this.source, this.getDirective().getTemplate().getOutputFile());
+			con = cf.getDataConnection(this.source, this.getDirective().getTemplate().getOutputFile());
 			PreparedStatement st = con.prepareStatement(queryString, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = st.executeQuery();
 			

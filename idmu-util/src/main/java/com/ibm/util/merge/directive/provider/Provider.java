@@ -17,6 +17,8 @@
 package com.ibm.util.merge.directive.provider;
 
 import java.util.ArrayList;
+
+import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.directive.Directive;
 
@@ -86,8 +88,9 @@ public abstract class Provider implements Cloneable {
 	 * Each provider will fetch data and populate the Provider DataTables structures
 	 * 
 	 * @throws MergeException
+	 * @param cf
 	 */
-	public abstract void getData() throws MergeException;
+	public abstract void getData(ConnectionFactory cf) throws MergeException;
 	
 	/**
 	 * Each provider should implement this method to provide Context about the query

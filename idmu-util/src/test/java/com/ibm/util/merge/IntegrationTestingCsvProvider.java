@@ -42,15 +42,21 @@ public class IntegrationTestingCsvProvider {
 	String csvContacts1	= "IDCONTACT,IDCUSTOMER,NAME,PREFERENCE,EMAIL,PHONE\n1,1,James,paper,James@General.com,(878) 555-0211\n21,1,Daniel,SMS,,(878) 555-2221\n41,1,Alan,email,Alan@General.com,\n61,1,Harry,paper,Harry@General.com,(878) 555-6261\n81,1,Ernest,SMS,Ernest@General.com,(878) 555-8281\n101,1,Linda,email,Linda@General.com,(878) 555-0211\n121,1,Judith,paper,Judith@General.com,(878) 555-2211\n141,1,Peggy,SMS,Peggy@General.com,(878) 555-4211\n161,1,Vicki,email,Vicki@General.com,(878) 555-6211\n181,1,Teresa,paper,Teresa@General.com,(878) 555-8211";
 	String csvContacts2	= "IDCONTACT,IDCUSTOMER,NAME,PREFERENCE,EMAIL,PHONE\n2,2,Robert,email,Robert@Exxon.com,(531) 555-0422\n22,2,Edward,paper,Edward@Exxon.com,(531) 555-2422\n42,2,Willie,SMS,,(531) 555-4442\n62,2,Samuel,email,Samuel@Exxon.com,(531) 555-6462\n82,2,Scott,paper,Scott@Exxon.com,(531) 555-8482\n102,2,Mary,SMS,Mary@Exxon.com,(531) 555-0412\n122,2,Janice,email,Janice@Exxon.com,(531) 555-2412\n142,2,Gail,paper,Gail@Exxon.com,(531) 555-4412\n162,2,Sherry,SMS,Sherry@Exxon.com,(531) 555-6412\n182,2,Denise,email,Denise@Exxon.com,";
 	String csvContacts3	= "IDCONTACT,IDCUSTOMER,NAME,PREFERENCE,EMAIL,PHONE\n3,3,John,SMS,,(417) 555-0633\n23,3,Mark,email,Mark@USSteal.com,(417) 555-2623\n43,3,Jeffrey,paper,Jeffrey@USSteal.com,(417) 555-4643\n63,3,Howard,SMS,Howard@USSteal.com,(417) 555-6663\n83,3,Fred,email,Fred@USSteal.com,\n103,3,Patricia,paper,Patricia@USSteal.com,(417) 555-0613\n123,3,Cynthia,SMS,Cynthia@USSteal.com,(417) 555-2613\n143,3,Virginia,email,Virginia@USSteal.com,(417) 555-4613\n163,3,Laura,paper,Laura@USSteal.com,(417) 555-6613\n183,3,Lois,SMS,Lois@USSteal.com,(417) 555-8613";
-	
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
+
 	@Before
 	public void setup() throws MergeException, IOException {
 		// Initialize Factories
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.setTemplateFolder(templateDir);
-		TemplateFactory.loadAll();
-		ZipFactory.setOutputroot(outputDir);
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
+		tf.reset();
+		tf.setDbPersistance(false);
+		tf.setTemplateFolder(templateDir);
+		tf.loadAll();
+		zf.setOutputroot(outputDir);
 		
 		// Initialize requestMap (usually from request.getParameterMap())
 		parameterMap = new HashMap<String,String[]>();
@@ -72,9 +78,9 @@ public class IntegrationTestingCsvProvider {
 	
 	@Test
 	public void testDefaultTemplate() throws MergeException, IOException {
-		Template root = TemplateFactory.getTemplate(parameterMap);
-		String output = root.merge();
-		root.packageOutput();
+		Template root = tf.getTemplate(parameterMap);
+		String output = root.merge(zf, tf, cf);
+		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + "merge1.output"))), output);
 	}
 
@@ -129,9 +135,9 @@ public class IntegrationTestingCsvProvider {
 	 */
 	private void testMerge(String fullName, String type) throws Exception {
 		parameterMap.put("DragonFlyFullName", 	new String[]{fullName});
-		Template root = TemplateFactory.getTemplate(parameterMap);
-		root.merge();
-		root.packageOutput();
+		Template root = tf.getTemplate(parameterMap);
+		root.merge(zf, tf, cf);
+		root.packageOutput(zf, cf);
 		CompareArchives.assertArchiveEquals(type, validateDir + fullName + type, outputDir + fullName + type);
 	}
 }

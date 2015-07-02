@@ -18,16 +18,20 @@ package com.ibm.util.merge.directive;
 
 import static org.junit.Assert.*;
 
+import com.ibm.util.merge.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
-
 public class RequireTest extends DirectiveTest {
+	private TemplateFactory tf;
+	private ZipFactory zf;
+	private ConnectionFactory cf;
 
 	@Before
 	public void setUp() throws Exception {
+		tf = new TemplateFactory();
+		zf = new ZipFactory();
+		cf = new ConnectionFactory();
 		directive = new Require();
 		Require myDirective = (Require) directive;
 		myDirective.setTags("Tag1,Tag2");
@@ -49,7 +53,7 @@ public class RequireTest extends DirectiveTest {
 		template.addReplace("Tag2", "Test1");
 
 		try {
-			directive.executeDirective();
+			directive.executeDirective(tf, cf, zf);
 		} catch (MergeException e) {
 			fail("Pass Condition threw Exception");
 		}
@@ -61,7 +65,7 @@ public class RequireTest extends DirectiveTest {
 		template.addReplace("Tag1", "Test1");
 
 		try {
-			directive.executeDirective();
+			directive.executeDirective(tf, cf, zf);
 		} catch (MergeException e) {
 			assertNotNull(e);
 			return;

@@ -15,8 +15,7 @@
  *
  */
 package com.ibm.util.merge.directive;
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.*;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
 
 public class ReplaceMarkupHtml extends Directive implements Cloneable {
@@ -42,10 +41,13 @@ public class ReplaceMarkupHtml extends Directive implements Cloneable {
 
 	/**
 	 * Add the replace value
-	 * @throws MergeException 
+	 * @throws MergeException
+	 * @param tf
+	 * @param cf
+	 * @param zf
 	 */
-	public void executeDirective() throws MergeException {
-		this.getProvider().getData();
+	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
+		this.getProvider().getData(cf);
 		// TODO HTML Markup - Execute
 		// for each match, get from/to and call this.owner.addReplace()
 	}
