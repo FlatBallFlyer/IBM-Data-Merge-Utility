@@ -18,6 +18,40 @@ You can run by invoking:
 
 This will launch the app on http://localhost:9090
 
+### Test the REST service with SampleResource
+Rest services in place are using jersey with auto conversion of JSON through jackson (per default jersey)
+Supports JSON & XML representation at this time.
+SampleResource is a very simple resource type with only a 'name' field which is also the primary identifier.
+After launching you can test the service by:
+
+    GET /rest/resources
+
+to see the empty list
+
+    POST {"name":"jon"} to /rest/resources with headers "Accept : application/json" and "Content-Type: application/json"
+
+to create a resource with name "jon"
+
+    GET /rest/resources/jon with Accept header
+
+to see the resource
+
+    PUT {"name":"mike"} to /rest/resources/jon with Accept and Content-Type header
+
+to change the name of the resource jon to mike
+
+    GET /rest/resources/mike with Accept header
+
+to see the updated resource (renamed to mike)
+
+    GET /rest/resources
+
+to list and see the updated resource in the list
+
+    DELETE /rest/resources/mike
+
+to delete the resource and get back to an empty list
+
 
 ## License
 
