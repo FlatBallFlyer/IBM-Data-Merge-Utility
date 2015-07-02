@@ -24,34 +24,47 @@ Supports JSON & XML representation at this time.
 SampleResource is a very simple resource type with only a 'name' field which is also the primary identifier.
 After launching you can test the service by:
 
-    GET /rest/resources
+    GET /test/resources
 
 to see the empty list
 
-    POST {"name":"jon"} to /rest/resources with headers "Accept : application/json" and "Content-Type: application/json"
+    POST {"name":"jon"} to /test/resources with headers "Accept : application/json" and "Content-Type: application/json"
 
 to create a resource with name "jon"
 
-    GET /rest/resources/jon with Accept header
+    GET /test/resources/jon with Accept header
 
 to see the resource
 
-    PUT {"name":"mike"} to /rest/resources/jon with Accept and Content-Type header
+    PUT {"name":"mike"} to /test/resources/jon with Accept and Content-Type header
 
 to change the name of the resource jon to mike
 
-    GET /rest/resources/mike with Accept header
+    GET /test/resources/mike with Accept header
 
 to see the updated resource (renamed to mike)
 
-    GET /rest/resources
+    GET /test/resources
 
 to list and see the updated resource in the list
 
-    DELETE /rest/resources/mike
+    DELETE /test/resources/mike
 
 to delete the resource and get back to an empty list
 
+By using application/xml instead of application/json for the Accept and Content-Type headers, xml respresentation of the resource can be used as well
+
+###IDMU resource url paths
+
+The IDMU resources will be at
+
+    /rest/collections
+    /rest/collections/COLLECTION_NAME
+    /rest/templates
+    /rest/templates/TEMPLATE_NAME
+    etc
+
+They will support similar vocabulary to the Sample REST service.
 
 ## License
 

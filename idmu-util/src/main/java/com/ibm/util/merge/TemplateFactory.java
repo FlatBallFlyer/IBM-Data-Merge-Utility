@@ -126,7 +126,6 @@ final public class TemplateFactory {
             templateCache.putIfAbsent(fullName, newTemplate);
             log.info("Linked Template: " + shortName + " to " + fullName);
             return templateCache.get(fullName).clone(seedReplace);
-
         }
         // Template Not Found Exception
         throw new TemplateNotFoundException(fullName);
