@@ -65,7 +65,7 @@ public class Query extends HttpServlet {
         try {
             out = response.getWriter();
         } catch (IOException e) {
-            throw new RuntimeException("Could not get response writer", e);
+            throw new RuntimeException("Could not getForBrowser response writer", e);
         }
         response.setContentType("text/json");
         String parm = request.getParameter("list");
