@@ -1,4 +1,4 @@
-package com.ibm.util.merge.web;
+package com.ibm.util.merge.web.rest.sample;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

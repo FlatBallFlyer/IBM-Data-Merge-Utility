@@ -1,4 +1,4 @@
-package com.ibm.util.merge.web;
+package com.ibm.util.merge.web.rest.sample;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -51,10 +51,34 @@ public class ResourceServlet {
         return res;
     }
 
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateJSON(SampleResource todo) {
+        SampleResource c = todo;
+        Response res;
+        if (repo.get(id) == null) {
+            res = Response.noContent().build();
+        } else {
+            repo.merge(c);
+            res = Response.ok(uriInfo.getAbsolutePath()).build();
+        }
+        return res;
+    }
+
     @DELETE
-    public void delete() {
+    public Response delete() {
         SampleResource c = repo.remove(id);
-        if (c == null) throw new RuntimeException("Delete: Todo with " + id + " not found");
+        if (c == null) {
+            throw new RuntimeException("Delete: Todo with " + id + " not found");
+        }
+        Response res;
+        if (c == null) {
+            res = Response.noContent().build();
+        } else {
+            repo.merge(c);
+            res = Response.ok().build();
+        }
+        return res;
     }
 }
 

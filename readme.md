@@ -9,7 +9,16 @@ associated with a template.
 
 IDMU is looking for a html home, until that time you can access the documentation
 in the WebContent folder of the project in Documentation.html
- 
+
+## Developing
+You can run by invoking:
+
+    mvn clean install
+    mvn tomcat7:run
+
+This will launch the app on http://localhost:9090
+
+
 ## License
 
 Licensed as Open Source under the Apache License, Version 2.0

@@ -1,15 +1,18 @@
-package com.ibm.util.merge.web;
+package com.ibm.util.merge.web.rest.sample;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Singleton
 public class SampleResourcesRepository {
-    private final ArrayList<SampleResource> resources;
+    private final List<SampleResource> resources;
+
+    private static final List<SampleResource> RESOURCES = Collections.synchronizedList(new ArrayList<SampleResource>());
 
     public SampleResourcesRepository() {
-        resources = new ArrayList<>();
+        resources = RESOURCES;
     }
 
     public void persist(SampleResource todo) {
