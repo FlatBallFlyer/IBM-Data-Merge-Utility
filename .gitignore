@@ -4,4 +4,6 @@
 .project
 .settings
 .classpath
+/build
 /*/target
+/idmu-util/src/test/resources/testout

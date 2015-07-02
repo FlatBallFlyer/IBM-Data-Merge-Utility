@@ -42,7 +42,7 @@ public class Bookmark implements Cloneable {
 	 * @param  initialStart The location within the template of this bookmark
 	 * @throws MergeException Invalid Bookmark
 	 */
-	public Bookmark (String contents, int initialStart) throws MergeException {
+	public Bookmark (String contents, int initialStart) {
 		element = contents;
 		start = initialStart;
 		size = element.length();
@@ -51,14 +51,14 @@ public class Bookmark implements Cloneable {
 		if (nameMatcher.find()) {
 			name = nameMatcher.group(1);
 		} else {
-			throw new MergeException("Invalid Bookmark, no name", "Bookmark: " + contents);
+			throw new IllegalArgumentException("Invalid Bookmark contents, could not find name: " + contents);
 		}
 
 		Matcher collectionMatcher = COLLECTION_PATTERN.matcher(contents);
 		if (collectionMatcher.find()) {
 			collection = collectionMatcher.group(1);
 		} else {
-			throw new MergeException("Invalid Bookmark, no collection", "Bookmark: " + contents);
+			throw new IllegalArgumentException("Invalid Bookmark contents, could not find collection: " + contents);
 		}
 
 		Matcher columnMatcher = COLUMN_PATTERN.matcher(contents);

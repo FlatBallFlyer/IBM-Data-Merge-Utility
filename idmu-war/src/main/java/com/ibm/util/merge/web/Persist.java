@@ -18,7 +18,6 @@ package com.ibm.util.merge.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,72 +27,49 @@ import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.TemplateFactory;
 
 /**
- * JSON Get/Put Template Servlet 
+ * JSON Get/Put Template Servlet
+ *
+ * @author Mike Storey
  * @see TemplateFactory
  * @see Template
- * @author  Mike Storey
  */
 @WebServlet("/Template")
 public class Persist extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Servlet called as HTTP Get  
-	 * - Request contains JSON Template Object with optional Collection, Name and Column values
-	 * - An Empty request (No Collection, Name or Column) returns a list of all Collection Names
-	 * - A non-empty request returns a JSON List of Template Objects that match the provided values
-	 * 
-	 * @throws IOException getWriter failed  
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 * @param req the Http Request object
-	 * @param res the Http Response Object
-	 */ 
+    /**
+     * Servlet called as HTTP Get
+     * - Request contains JSON Template Object with optional Collection, Name and Column values
+     * - An Empty request (No Collection, Name or Column) returns a list of all Collection Names
+     * - A non-empty request returns a JSON List of Template Objects that match the provided values
+     *
+     * @param req the Http Request object
+     * @param res the Http Response Object
+     * @throws IOException getWriter failed
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		PrintWriter out = null;
-
-		try {
-			// Create the response writer
-			response.setContentType("text/json");
-			out = response.getWriter();
-		} catch (IOException e) {
-			@SuppressWarnings("unused")
-			MergeException me = new MergeException(e, "IO Error Getting Servlet Printwriter", "Persist Servlet");
-		}
-    	
-    	try {
-    		out.write(TemplateFactory.getTemplateAsJson(request.getParameter("DragonFlyFullName")));
-    		out.close();    		
-		} catch (MergeException e) {
-			out.write(e.getJsonErrorMessage());
-		}
+        PrintWriter out = null;
+        // Create the response writer
+        response.setContentType("text/json");
+        out = response.getWriter();
+        out.write(TemplateFactory.getTemplateAsJson(request.getParameter("DragonFlyFullName")));
+        out.close();
     }
 
-	/**
-	 * Save a new Template, provided as a JSON object. The JSON template is returned on success.
-	 * 
-	 * @throws IOException getWriter failed
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 * @param req the Http Request object
-	 * @param res the Http Response Object
-	 */
-	public void doPost(HttpServletRequest request, HttpServletResponse response) {
-		PrintWriter out = null;
-
-		try {
-			// Create the response writer
-			response.setContentType("text/html");
-			out = response.getWriter();
-		} catch (IOException e) {
-			@SuppressWarnings("unused")
-			MergeException me = new MergeException(e, "IO Error Getting Servlet Printwriter", "Persist Servlet");
-		}
-    	
-    	try {
-    		out.write(TemplateFactory.saveTemplateFromJson(request.getParameter("template")));
-    		out.close();    		
-		} catch (MergeException e) {
-			out.write(e.getJsonErrorMessage());
-		}
-	}
-
+    /**
+     * Save a new Template, provided as a JSON object. The JSON template is returned on success.
+     *
+     * @param req the Http Request object
+     * @param res the Http Response Object
+     * @throws IOException getWriter failed
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        PrintWriter out = null;
+        // Create the response writer
+        response.setContentType("text/html");
+        out = response.getWriter();
+        String template = request.getParameter("template");
+        out.write(TemplateFactory.saveTemplateFromJson(template));
+        out.close();
+    }
 }

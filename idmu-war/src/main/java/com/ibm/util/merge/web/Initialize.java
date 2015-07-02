@@ -17,12 +17,14 @@
 package com.ibm.util.merge.web;
 
 import java.io.IOException;
-
+import java.util.Enumeration;
+import javax.servlet.ServletConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -33,31 +35,47 @@ import com.ibm.util.merge.ZipFactory;
 @WebServlet("/Initialize")
 public class Initialize extends HttpServlet {
 	private static final Logger log = Logger.getLogger( Initialize.class.getName() );
-	private static final long serialVersionUID = 1L;
+
+	private String getConfig(String paramName, ServletConfig servletConfig){
+		return servletConfig.getInitParameter(paramName);
+	}
 
 	/**
      * Initialize Logging, Template and Zip Factory objects 
      */
-	public void init() {
+	public void init(ServletConfig cfg) {
 		// Initialize Log4j
-		String file = getInitParameter("log4j-init-file");
-	    String prefix =  getServletContext().getRealPath("/");
-	    if(file != null) {
-	      PropertyConfigurator.configure(prefix+file);
-	    }
+		Enumeration<String> initParameterNames = cfg.getInitParameterNames();
+		while (initParameterNames.hasMoreElements()){
+			String paramName = initParameterNames.nextElement();
+			log.info("init param " + paramName + "=" + cfg.getInitParameter(paramName));
+		}
+
+//		String file = getConfig("log4j-init-file", cfg);
+
+//	    String prefix =  getServletContext().getRealPath("/");
+//	    if(file != null) {
+//			BasicConfigurator.configure();
+//	      PropertyConfigurator.configure(prefix+file);
+//	    }
 
 	    // Initialize Zip-Factory (set output root folder)
-		ZipFactory.setOutputroot(getInitParameter("merge-output-root"));
+//		ZipFactory.setOutputroot(getConfig("merge-output-root", cfg));
+		ZipFactory.setOutputroot("/tmp/merge");
 
 		// Initialize cache (Load JSON Persisted Templates)
-		try {
-			String tempalteFolder = getInitParameter("merge-templates-folder");
-			TemplateFactory.setTemplateFolder(prefix + tempalteFolder);
-			TemplateFactory.setDbPersistance(getInitParameter("templates-persist").equals("Database"));
+//		try {
+			String tempalteFolder = getConfig("merge-templates-folder", cfg);
+//			TemplateFactory.setTemplateFolder(prefix + tempalteFolder);
+			TemplateFactory.setTemplateFolder("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates");
+			String paramTemplatesPersist = getConfig("templates-persist", cfg);
+//			boolean databasePersistenceEnabled = paramTemplatesPersist.equals("Database");
+			boolean databasePersistenceEnabled = false;
+			TemplateFactory.setDbPersistance(databasePersistenceEnabled);
 			TemplateFactory.loadAll();
-		} catch (MergeException e) {
-			log.warn("Factory Load All I/O Error, check web.xml for merge-templates-folder and templates-persist values");
-		}
+//		} catch (MergeException e) {
+//			throw new RuntimeException("Factory Load All I/O Error, check web.xml for merge-templates-folder and templates-persist values", e);
+//		}
 
 		// Initialize Template-Factory Hibernate objects
 		TemplateFactory.initilizeHibernate();
@@ -70,6 +88,7 @@ public class Initialize extends HttpServlet {
 	 * @param res the Http Response Object
 	 */ 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+		res.getOutputStream().println("Initialized successfully.");
     	// Get Status (Factory Sizes, ?Processing History?) 
     	// - Create a Static SystemStatus object and return JSON serialization?
     }

@@ -79,32 +79,32 @@ public class IntegrationTestingCsvProvider {
 	}
 
 	@Test
-	public void testCsvDefaultDataTar() throws MergeException, IOException, NoSuchAlgorithmException {
+	public void testCsvDefaultDataTar() throws Exception {
 		testIt("csvDef.functional.", "tar");
 	}
 
 	@Test
-	public void testCsvDefaultDataZip() throws MergeException, IOException, NoSuchAlgorithmException {
+	public void testCsvDefaultDataZip() throws Exception {
 		testIt("csvDef.functional.","zip");
 	}
 
 	@Test
-	public void testCsvTagDataTar() throws MergeException, IOException, NoSuchAlgorithmException {
+	public void testCsvTagDataTar() throws Exception {
 		testIt("csvTag.functional.","tar");
 	}
 
 	@Test
-	public void testCsvTagDataZip() throws MergeException, IOException, NoSuchAlgorithmException {
+	public void testCsvTagDataZip() throws Exception {
 		testIt("csvTag.functional.", "zip");
 	}
 
 	@Test
-	public void testCsvUrlDataTar() throws MergeException, IOException, NoSuchAlgorithmException {
+	public void testCsvUrlDataTar() throws Exception {
 		testIt("csvUrl.functional.","tar");
 	}
 
 	@Test
-	public void testCsvUrlDataZip() throws MergeException, IOException, NoSuchAlgorithmException {
+	public void testCsvUrlDataZip() throws Exception {
 		testIt("csvUrl.functional.","zip");
 	}
 
@@ -115,7 +115,7 @@ public class IntegrationTestingCsvProvider {
 	 * @throws IOException
 	 * @throws NoSuchAlgorithmException 
 	 */
-	private void testIt(String fullName, String type) throws MergeException, IOException, NoSuchAlgorithmException {
+	private void testIt(String fullName, String type) throws Exception {
 		parameterMap.put("DragonOutputType", 	new String[]{type});
 		parameterMap.put("DragonFlyOutputFile", new String[]{fullName+type});
 		testMerge(fullName, type);
@@ -127,7 +127,7 @@ public class IntegrationTestingCsvProvider {
 	 * @throws IOException
 	 * @throws NoSuchAlgorithmException 
 	 */
-	private void testMerge(String fullName, String type) throws MergeException, IOException, NoSuchAlgorithmException {
+	private void testMerge(String fullName, String type) throws Exception {
 		parameterMap.put("DragonFlyFullName", 	new String[]{fullName});
 		Template root = TemplateFactory.getTemplate(parameterMap);
 		root.merge();

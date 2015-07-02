@@ -40,8 +40,11 @@ public class TemplateFactoryTest {
 			",{\"idTemplate\":22,\"sequence\":1,\"type\":12,\"softFail\":false,\"description\":\"TestReplaceColSql \",\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\"}}" + 
 			",{\"idTemplate\":22,\"sequence\":1,\"type\":33,\"softFail\":false,\"description\":\"TestReplaceColHtml\",\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" + 
 			",{\"idTemplate\":22,\"sequence\":1,\"type\":34,\"softFail\":false,\"description\":\"TestMarkupSubsHtml\",\"pattern\":\"TestPattern\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}]}"; 
+
+
 	@Before
 	public void setUp() throws Exception {
+
 		TemplateFactory.setDbPersistance(false);
 		TemplateFactory.reset();
 	}
@@ -85,12 +88,7 @@ public class TemplateFactoryTest {
 		Template template = TemplateFactory.cacheFromJson(template1);
 		assertNotNull(template);
 		template = null;
-		try {
 			template = TemplateFactory.getTemplate("bad.template.test", "", new HashMap<String,String>());
-		} catch (MergeException e) {
-			assertNull(template);
-			return;
-		}
 		fail("Template Not Found did not throw exception");
 	}
 	

@@ -83,8 +83,63 @@
 
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<!-- or if you want to use tomcat 6.x
+                <artifactId>tomcat6-maven-plugin</artifactId>
+                -->
+				<version>2.2</version>
+				<configuration>
+					<!-- http port -->
+					<port>9090</port>
+					<!-- application path always starts with /-->
+					<path>/</path>
+					<!-- optional path to a context file -->
+					<!--<contextFile>${tomcatContextXml}</contextFile>-->
+					<contextFile>/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/build/context.xml</contextFile>
+					<!-- optional system propoerties you want to add -->
+					<!--
+					<systemProperties>
+						<appserver.base>${project.build.directory}/appserver-base</appserver.base>
+						<appserver.home>${project.build.directory}/appserver-home</appserver.home>
+						<derby.system.home>${project.build.directory}/appserver-base/logs</derby.system.home>
+						<java.io.tmpdir>${project.build.directory}</java.io.tmpdir>
+					</systemProperties>
+					-->
+					<!-- if you want to use test dependencies rather than only runtime -->
+					<useTestClasspath>false</useTestClasspath>
+					<!-- optional if you want to add some extra directories into the classloader -->
+					<!--
+					<additionalClasspathDirs>
+						<additionalClasspathDir></additionalClasspathDir>
+					</additionalClasspathDirs>
+					-->
+				</configuration>
+				<!-- For any extra dependencies needed when running embedded Tomcat (not WAR dependencies) add them below -->
+				<!--
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.derby</groupId>
+						<artifactId>derby</artifactId>
+						<version>\${derbyVersion}</version>
+					</dependency>
+					<dependency>
+						<groupId>javax.mail</groupId>
+						<artifactId>mail</artifactId>
+						<version>1.4</version>
+					</dependency>
+				</dependencies>
+				-->
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>5.1.35</version>
+					</dependency>
+				</dependencies>
+			</plugin>
         </plugins>
     </build>
-  
-  
+
 </project>

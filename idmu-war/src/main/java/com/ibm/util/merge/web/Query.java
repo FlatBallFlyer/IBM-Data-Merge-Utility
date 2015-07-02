@@ -18,7 +18,6 @@ package com.ibm.util.merge.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,66 +28,53 @@ import com.ibm.util.merge.TemplateFactory;
 
 /**
  * Ajax Get List service
+ *
+ * @author Mike Storey
  * @see TemplateFactory
  * @see Template
- * @author  Mike Storey
  */
 @WebServlet("/Query")
 public class Query extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    /**
+     * Servlet called as HTTP Get
+     * - Parameter: list=Collections|Tempaltes
+     *
+     * @param req the Http Request object
+     * @param res the Http Response Object
+     * @throws IOException getWriter failed
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
+    public void doGet(HttpServletRequest request, HttpServletResponse response)  {
 
-	/**
-	 * Servlet called as HTTP Get  
-	 * - Parameter: list=Collections|Tempaltes
-	 * 
-	 * @throws IOException getWriter failed  
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 * @param req the Http Request object
-	 * @param res the Http Response Object
-	 */ 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		PrintWriter out = null;
-
-		try {
-			// Create the response writer
-			response.setContentType("text/json");
-			out = response.getWriter();
-		} catch (IOException e) {
-			@SuppressWarnings("unused")
-			MergeException me = new MergeException(e, "IO Error Getting Servlet Printwriter", "Persist Servlet");
-		}
-
-		String parm = request.getParameter("list");
-		if (parm != null ) {
-			if (parm.equals("Collections")) {
-		    	try {
-		    		out.write(TemplateFactory.getCollections());
-		    		out.close();    		
-				} catch (MergeException e) {
-					out.write(e.getJsonErrorMessage());
-				}		
-			} 
-			
-			if (parm.equals("Templates")) {
-		    	try {
-		    		out.write(TemplateFactory.getTemplates(request.getParameter("collection")));
-		    		out.close();    		
-				} catch (MergeException e) {
-					out.write(e.getJsonErrorMessage());
-				}		
-			} 
-		}
+        // Create the response writer
+        PrintWriter out;
+        try {
+            out = response.getWriter();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not get response writer", e);
+        }
+        response.setContentType("text/json");
+        String parm = request.getParameter("list");
+        if (parm != null) {
+            if (parm.equals("Collections")) {
+                out.write(TemplateFactory.getCollections());
+                out.close();
+            }
+            if (parm.equals("Templates")) {
+                out.write(TemplateFactory.getTemplates(request.getParameter("collection")));
+                out.close();
+            }
+        }
     }
 
-	/**
-	 * Save a new Template, provided as a JSON object. The JSON template is returned on success.
-	 * 
-	 * @throws IOException getWriter failed
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 * @param req the Http Request object
-	 * @param res the Http Response Object
-	 */
-	public void doPost(HttpServletRequest request, HttpServletResponse response) {
-	}
-
+    /**
+     * Save a new Template, provided as a JSON object. The JSON template is returned on success.
+     *
+     * @param req the Http Request object
+     * @param res the Http Response Object
+     * @throws IOException getWriter failed
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
+    public void doPost(HttpServletRequest request, HttpServletResponse response) {
+    }
 }

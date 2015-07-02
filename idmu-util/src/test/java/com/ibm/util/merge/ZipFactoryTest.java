@@ -56,7 +56,7 @@ public class ZipFactoryTest {
 		CompareArchives.assertTarEquals("src/test/resources/valid/test1.tar", "src/test/resources/testout/test1.tar");
 	}
 
-	private void makeArchive(String outputRoot, String outputFile, int type) throws MergeException {
+	private void makeArchive(String outputRoot, String outputFile, int type) throws IOException {
 		ZipFactory.setOutputroot(outputRoot);
 		ZipFactory.writeFile(outputFile, "path/file1.txt", new StringBuilder("Test Output File One"), type);
 		ZipFactory.writeFile(outputFile, "path/file2.txt", new StringBuilder("Test Output File Two"), type);

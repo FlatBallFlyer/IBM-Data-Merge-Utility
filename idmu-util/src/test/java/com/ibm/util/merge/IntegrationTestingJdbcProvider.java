@@ -36,14 +36,14 @@ public class IntegrationTestingJdbcProvider {
 	String validateDir 	= "integration/valid/";
 	
 	@Before
-	public void setup() throws MergeException, IOException {
+	public void setup() throws Exception {
 		// Initialize Factories
 		TemplateFactory.reset();
 		TemplateFactory.setDbPersistance(false);
 		TemplateFactory.setTemplateFolder(templateDir);
 		TemplateFactory.loadAll();
 		ZipFactory.setOutputroot(outputDir);
-		
+		parameterMap = new HashMap<>();
 		// Initialize context (usually from request.getParameterMap())
 //		ApplicationContext context = 
 //	    		new ClassPathXmlApplicationContext("Spring-Module.xml");
@@ -51,7 +51,7 @@ public class IntegrationTestingJdbcProvider {
 	}
 
 	@Test
-	public void testDefaultTemplate() throws MergeException, IOException {
+	public void testDefaultTemplate() throws Exception {
 		Template root = TemplateFactory.getTemplate(parameterMap);
 		String output = root.merge();
 		root.packageOutput();
@@ -59,33 +59,33 @@ public class IntegrationTestingJdbcProvider {
 	}
 
 	@Test
-	public void testCsvDefaultDataTar() throws MergeException, IOException {
+	public void testCsvDefaultDataTar() throws Exception {
 //		testIt("csvDef.functional.", "tar");
 		testIt("csvDef.SMTP.", ".tar");
 	}
 
 	@Test
-	public void testCsvDefaultDataZip() throws MergeException, IOException {
+	public void testCsvDefaultDataZip() throws Exception {
 		testIt("csvDef.functional.","zip");
 	}
 
 	@Test
-	public void testCsvTagDataTar() throws MergeException, IOException {
+	public void testCsvTagDataTar() throws Exception {
 		testIt("csvTag.functional.","tar");
 	}
 
 	@Test
-	public void testCsvTagDataZip() throws MergeException, IOException {
+	public void testCsvTagDataZip() throws Exception {
 		testIt("csvTag.functional.", "zip");
 	}
 
 	@Test
-	public void testCsvUrlDataTar() throws MergeException, IOException {
+	public void testCsvUrlDataTar() throws Exception {
 		testIt("csvUrl.functional.","tar.gz");
 	}
 
 	@Test
-	public void testCsvUrlDataZip() throws MergeException, IOException {
+	public void testCsvUrlDataZip() throws Exception {
 		testIt("csvUrl.functional.","zip");
 	}
 
@@ -95,7 +95,7 @@ public class IntegrationTestingJdbcProvider {
 	 * @throws MergeException
 	 * @throws IOException
 	 */
-	private void testIt(String fullName, String type) throws MergeException, IOException {
+	private void testIt(String fullName, String type) throws Exception {
 		parameterMap.put(Template.TAG_OUTPUT_TYPE, 		new String[]{type});
 		parameterMap.put(Template.TAG_OUTPUTFILE, 		new String[]{fullName+type});
 		testMerge(fullName);
@@ -107,7 +107,7 @@ public class IntegrationTestingJdbcProvider {
 	 * @throws MergeException
 	 * @throws IOException
 	 */
-	private void testMerge(String fullName) throws MergeException, IOException {
+	private void testMerge(String fullName) throws Exception {
 		parameterMap.put(TemplateFactory.KEY_FULLNAME, 	new String[]{fullName});
 		Template root = TemplateFactory.getTemplate(parameterMap);
 		String mergeOutput = root.merge();

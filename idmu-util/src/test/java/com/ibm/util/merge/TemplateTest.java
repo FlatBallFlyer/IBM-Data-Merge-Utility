@@ -124,22 +124,13 @@ public class TemplateTest {
 
 	@Test
 	public void testReplaceThisPass() {
-		try {
 			template.replaceThis("{Foo}", "Fixed");
-		} catch (MergeException e) {
-			fail("ReplaceThis Returned Exception" + e.getError());
-		}
 		assertEquals(replaceTest, template.getContent());
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testReplaceThisFail()  {
-		try {
 			template.replaceThis("{Foo}", "Not {Foo} Embeded");
-		} catch (MergeException e) {
-			assertNotNull(e);
-			return;
-		}
 		fail("Embeded Replace failed to throw exception");
 	}
 
@@ -184,27 +175,18 @@ public class TemplateTest {
 
 	@Test
 	public void testGetReplaceValuePass() {
-		try {
 			template.addReplace("foo", "bar");
 			String answer = template.getReplaceValue("{foo}");
 			assertEquals("bar", answer);
-		} catch (MergeException e) {
-			fail("GetReplace threw an exception!");
-		}
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testGetReplaceValueFail() {
-		try {
 			assertEquals("NEVER", template.getReplaceValue("{Missing}"));
-		} catch (MergeException e) {
-			assertNotNull(e);
-			return;
-		}
 		fail("GetReplace failed to throw an exception!");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testSetContent() {
 		assertEquals(templateString, template.getContent());
 		assertEquals(2, template.getBookmarks().size());

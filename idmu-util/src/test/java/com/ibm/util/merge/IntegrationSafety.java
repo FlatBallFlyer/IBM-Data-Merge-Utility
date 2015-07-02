@@ -64,14 +64,12 @@ public class IntegrationSafety {
 		fail("Safety Insert failed to throw exception");
 	}
 
-	@Test
-	public void testSafetyReplace() throws NoSuchAlgorithmException, IOException  {
-		try {
+	@Test(expected = RuntimeException.class)
+	public void testSafetyReplace() throws Exception{
+
 			parameterMap.put("FROM",	new String[]{"Safety Replace {FROM} Value"});
 			testIt("safety.replace.", "tar");
-		} catch (MergeException e) {
-			return;
-		}
+
 		fail("Safety Replace failed to throw exception");
 	}
 
