@@ -20,13 +20,9 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
-import com.ibm.util.merge.ConnectionFactory;
-import com.ibm.util.merge.ZipFactory;
+import com.ibm.util.merge.*;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.directive.provider.ProviderTag;
 
 public class InsertSubsTagTest extends InsertSubsTest {
@@ -41,7 +37,7 @@ public class InsertSubsTagTest extends InsertSubsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tf = new TemplateFactory();
+		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
 		directive = new InsertSubsTag();

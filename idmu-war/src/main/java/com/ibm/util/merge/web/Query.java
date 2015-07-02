@@ -25,10 +25,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ibm.util.merge.ConnectionFactory;
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.TemplateFactory;
-import com.ibm.util.merge.ZipFactory;
+import com.ibm.util.merge.*;
 
 /**
  * Ajax Get List service
@@ -46,7 +43,7 @@ public class Query extends HttpServlet {
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        tf = new TemplateFactory();
+        tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
         zf = new ZipFactory();
         cf = new ConnectionFactory();
         Initialize.performInit(servletConfig, tf, zf);

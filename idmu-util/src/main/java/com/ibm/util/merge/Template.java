@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.*;
 
+import com.ibm.util.merge.directive.provider.Provider;
+import com.ibm.util.merge.directive.provider.ProviderDeserializer;
 import org.apache.log4j.Logger;
 
 /**********************************************************************************
@@ -79,6 +81,14 @@ public class Template implements Cloneable {
      * Simple No-Parms Constructor
      */
     public Template() {
+    }
+
+    public static Template fromJSON(String jsonString) {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Directive.class, new DirectiveDeserializer());
+        builder.registerTypeAdapter(Provider.class, new ProviderDeserializer());
+        Gson gson = builder.create();
+        return gson.fromJson(jsonString, Template.class);
     }
 
     /**********************************************************************************

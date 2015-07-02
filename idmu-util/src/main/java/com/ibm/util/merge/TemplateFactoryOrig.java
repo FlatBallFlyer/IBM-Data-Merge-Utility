@@ -17,6 +17,13 @@
 package com.ibm.util.merge;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.ibm.util.merge.directive.Directive;
+import com.ibm.util.merge.directive.DirectiveDeserializer;
+import com.ibm.util.merge.directive.provider.Provider;
+import com.ibm.util.merge.directive.provider.ProviderDeserializer;
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -24,6 +31,8 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,9 +44,9 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author Mike Storey
  */
-final public class TemplateFactory {
+final public class TemplateFactoryOrig {
     // Factory Constants
-    private static final Logger log = Logger.getLogger(TemplateFactory.class.getName());
+    private static final Logger log = Logger.getLogger(TemplateFactoryOrig.class.getName());
     public final String KEY_CACHE_RESET = Template.wrap("DragonFlyCacheReset");
     public final String KEY_CACHE_LOAD = Template.wrap("DragonFlyCacheLoad");
     public final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
@@ -52,15 +61,13 @@ final public class TemplateFactory {
             "WHERE TEMPLATE.COLLECTION = :collection " +
             "AND TEMPLATE.NAME = :name" +
             "AND TEMPLATE.COLUMN = ''";
-    private final FilesystemPersistence fs;
     private SessionFactory sessionFactory;
     private ServiceRegistry serviceRegistry;
     private final ConcurrentHashMap<String, Template> templateCache = new ConcurrentHashMap<String, Template>();
     private String templateFolder = "/tmp/templates";
     private boolean dbPersistance = false;
 
-    public TemplateFactory(FilesystemPersistence fs) {
-        this.fs = fs;
+    public TemplateFactoryOrig() {
     }
 
     /**********************************************************************************
@@ -91,20 +98,12 @@ final public class TemplateFactory {
         }
         // Handle cache load request
         if (replace.containsKey(KEY_CACHE_LOAD)) {
-            loadTemplatesFromFilesystem();
+            loadAll();
         }
         // Get the template, add the http parameter replace values to it's hash
         String fullName = replace.get(KEY_FULLNAME);
         Template rootTempalte = getTemplate(fullName, "", replace);
         return rootTempalte;
-    }
-
-    public void loadTemplatesFromFilesystem() {
-        List<Template> templates = fs.loadAll();
-        for (Template t : templates) {
-            cache(t);
-
-        }
     }
 
     /**********************************************************************************
@@ -271,46 +270,46 @@ final public class TemplateFactory {
         if (dbPersistance) {
             saveTemplateToDatabase(template);
         } else {
-            fs.saveTemplateToJsonFolder(template);
+            saveTemplateToJsonFolder(template);
         }
         return template.asJson(true);
     }
 
-//    /**********************************************************************************
-//     * Cache JSON templates found in the template folder.
-//     * Note: The template folder is initialized from Merge.java from the web.xml value  for
-//     * merge-templates-folder, if it is not initilized the default value is /tmp/templates
-//     *
-//     * @param folder that contains template files
-//     * @throws MergeException - Template Clone errors
-//     */
-//    public void loadAll() {
-//        if (templateFolder == null || templateFolder.isEmpty()) {
-//            return;
-//        }
-//        int count = 0;
-//        File folder = new File(templateFolder);
-//        if (folder.listFiles() == null) {
-//            log.warn("Tempalte Folder data was not found! " + templateFolder);
-//            return;
-//        }
-//        for (File file : folder.listFiles()) {
-//            if (!file.isDirectory()) {
-//                try {
-//                    String json = String.join("\n", Files.readAllLines(file.toPath()));
-//                    cacheFromJson(json);
-//                } catch (JsonSyntaxException e) {
-//                    log.warn("Malformed JSON Template:" + file.getName());
-//                } catch (FileNotFoundException e) {
-//                    log.info("Moving on after file read error on " + file.getName());
-//                } catch (IOException e) {
-//                    log.warn("IOException Reading:" + file.getName());
-//                }
-//            }
-//            count++;
-//        }
-//        log.warn("Loaded " + Integer.toString(count) + " templates from " + templateFolder);
-//    }
+    /**********************************************************************************
+     * Cache JSON templates found in the template folder.
+     * Note: The template folder is initialized from Merge.java from the web.xml value  for
+     * merge-templates-folder, if it is not initilized the default value is /tmp/templates
+     *
+     * @param folder that contains template files
+     * @throws MergeException - Template Clone errors
+     */
+    public void loadAll() {
+        if (templateFolder == null || templateFolder.isEmpty()) {
+            return;
+        }
+        int count = 0;
+        File folder = new File(templateFolder);
+        if (folder.listFiles() == null) {
+            log.warn("Tempalte Folder data was not found! " + templateFolder);
+            return;
+        }
+        for (File file : folder.listFiles()) {
+            if (!file.isDirectory()) {
+                try {
+                    String json = String.join("\n", Files.readAllLines(file.toPath()));
+                    cacheFromJson(json);
+                } catch (JsonSyntaxException e) {
+                    log.warn("Malformed JSON Template:" + file.getName());
+                } catch (FileNotFoundException e) {
+                    log.info("Moving on after file read error on " + file.getName());
+                } catch (IOException e) {
+                    log.warn("IOException Reading:" + file.getName());
+                }
+            }
+            count++;
+        }
+        log.warn("Loaded " + Integer.toString(count) + " templates from " + templateFolder);
+    }
 
     /**********************************************************************************
      * Construct a template from a json formated string ad add it to the Cache
@@ -320,11 +319,12 @@ final public class TemplateFactory {
      * @throws MergeException - clone errors
      */
     public Template cacheFromJson(String jsonString) {
-        Template template = Template.fromJSON(jsonString);
-        return cache(template);
-    }
-
-    public Template cache(Template template) {
+        Template template;
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Directive.class, new DirectiveDeserializer());
+        builder.registerTypeAdapter(Provider.class, new ProviderDeserializer());
+        Gson gson = builder.create();
+        template = gson.fromJson(jsonString, Template.class);
         templateCache.remove(template.getFullName());
         templateCache.putIfAbsent(template.getFullName(), template);
         log.info(template.getFullName() + " has been cached");
@@ -349,30 +349,30 @@ final public class TemplateFactory {
         return template;
     }
 
-//    /**********************************************************************************
-//     * save provided template to the Template Folder as JSON, and add it to the Cache
-//     *
-//     * @param Template template the Template to save
-//     * @return a cloned copy of the Template ready for Merge Processing
-//     * @throws MergeException on Template Clone Errors
-//     */
-//    public Template saveTemplateToJsonFolder(Template template) {
-//        String fileName = templateFolder + template.getFullName();
-//        File file = new File(fileName);
-//        BufferedWriter bw = null;
-//        try {
-//            file.createNewFile();
-//            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-//            bw = new BufferedWriter(fw);
-//            bw.write(template.asJson(true));
-//            bw.close();
-//        } catch (IOException e) {
-//            throw new RuntimeException("Could not write template " +template.getFullName()+" to JSON folder : " + file.getPath(), e);
-//        } finally {
-//            IOUtils.closeQuietly(bw);
-//        }
-//        return template;
-//    }
+    /**********************************************************************************
+     * save provided template to the Template Folder as JSON, and add it to the Cache
+     *
+     * @param Template template the Template to save
+     * @return a cloned copy of the Template ready for Merge Processing
+     * @throws MergeException on Template Clone Errors
+     */
+    public Template saveTemplateToJsonFolder(Template template) {
+        String fileName = templateFolder + template.getFullName();
+        File file = new File(fileName);
+        BufferedWriter bw = null;
+        try {
+            file.createNewFile();
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            bw = new BufferedWriter(fw);
+            bw.write(template.asJson(true));
+            bw.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not write template " +template.getFullName()+" to JSON folder : " + file.getPath(), e);
+        } finally {
+            IOUtils.closeQuietly(bw);
+        }
+        return template;
+    }
 
     /**********************************************************************************
      * Reset the cache and Hibernate Connection
@@ -419,7 +419,6 @@ final public class TemplateFactory {
     }
 
     public void setTemplateFolder(String templateFolder) {
-        this.fs.setTemplateFolder(templateFolder);
         this.templateFolder = templateFolder;
     }
 

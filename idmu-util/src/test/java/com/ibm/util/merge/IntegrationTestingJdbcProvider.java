@@ -40,14 +40,14 @@ public class IntegrationTestingJdbcProvider {
 
 	@Before
 	public void setup() throws Exception {
-		tf = new TemplateFactory();
+		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
 		// Initialize Factories
 		tf.reset();
 		tf.setDbPersistance(false);
 		tf.setTemplateFolder(templateDir);
-		tf.loadAll();
+		tf.loadTemplatesFromFilesystem();
 		zf.setOutputroot(outputDir);
 		parameterMap = new HashMap<>();
 		// Initialize context (usually from request.getParameterMap())

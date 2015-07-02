@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.FilesystemPersistence;
 import org.apache.log4j.Logger;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.ZipFactory;
@@ -45,7 +46,8 @@ public class Initialize extends HttpServlet {
      */
 	public void init(ServletConfig cfg) {
 
-		tf = new TemplateFactory();
+		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
+
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
 		// Initialize Log4j
@@ -53,6 +55,7 @@ public class Initialize extends HttpServlet {
 	}
 
 	public static void performInit(ServletConfig cfg, TemplateFactory tf, ZipFactory zf) {
+
 		Enumeration<String> initParameterNames = cfg.getInitParameterNames();
 		while (initParameterNames.hasMoreElements()){
 			String paramName = initParameterNames.nextElement();
@@ -76,8 +79,8 @@ public class Initialize extends HttpServlet {
 //			boolean databasePersistenceEnabled = paramTemplatesPersist.equals("Database");
 		boolean databasePersistenceEnabled = false;
 		tf.setDbPersistance(databasePersistenceEnabled);
-		tf.loadAll();
-//		} catch (MergeException e) {
+		tf.loadTemplatesFromFilesystem();
+		//		} catch (MergeException e) {
 //			throw new RuntimeException("Factory Load All I/O Error, check web.xml for merge-templates-folder and templates-persist values", e);
 //		}
 		// Initialize Template-Factory Hibernate objects

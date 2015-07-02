@@ -29,7 +29,7 @@ public class RequireTest extends DirectiveTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tf = new TemplateFactory();
+		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
 		directive = new Require();

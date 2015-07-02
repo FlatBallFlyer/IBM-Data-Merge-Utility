@@ -46,7 +46,7 @@ public class TemplateFactoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tf = new TemplateFactory();
+		tf = new TemplateFactory(new FilesystemPersistence(""));
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
 		tf.setDbPersistance(false);
@@ -141,8 +141,8 @@ public class TemplateFactoryTest {
 	@Test
 	public void testLoadFolder() throws MergeException {
 		tf.setTemplateFolder("src/test/resources/templates/");
-		tf.loadAll();
-		assertEquals(60, tf.size()); 
+		tf.loadTemplatesFromFilesystem();
+		assertEquals(60, tf.size());
 	}
 
 	@Test

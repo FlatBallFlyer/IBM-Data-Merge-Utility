@@ -49,13 +49,13 @@ public class IntegrationTestingCsvProvider {
 	@Before
 	public void setup() throws MergeException, IOException {
 		// Initialize Factories
-		tf = new TemplateFactory();
+		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
 		tf.reset();
 		tf.setDbPersistance(false);
 		tf.setTemplateFolder(templateDir);
-		tf.loadAll();
+		tf.loadTemplatesFromFilesystem();
 		zf.setOutputroot(outputDir);
 		
 		// Initialize requestMap (usually from request.getParameterMap())

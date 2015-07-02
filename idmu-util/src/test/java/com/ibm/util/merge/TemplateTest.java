@@ -101,7 +101,7 @@ public class TemplateTest {
 	public void testMerge() throws MergeException {
 		template.addReplace("empty", "NOT");
 		ZipFactory zf = new ZipFactory();
-		TemplateFactory tf = new TemplateFactory();
+		TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
 		ConnectionFactory cf = new ConnectionFactory();
 		String output = template.merge(zf, tf, cf);
 		assertEquals(mergeOutput, output);
