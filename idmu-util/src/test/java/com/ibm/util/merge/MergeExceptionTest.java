@@ -18,12 +18,30 @@ package com.ibm.util.merge;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+
+import org.junit.Before;
 import org.junit.Test;
 
+import com.ibm.util.merge.directive.Directive;
+import com.ibm.util.merge.directive.Require;
+
 public class MergeExceptionTest {
+	Template template;
+	Directive directive;
+	
+	@Before
+	public void setUp() throws Exception {
+		TemplateFactory.setDbPersistance(false);
+		TemplateFactory.setTemplateFolder("src/test/resources/templates/");
+		TemplateFactory.reset();
+		TemplateFactory.loadAll();
+		template = TemplateFactory.getTemplate("system.test.", "", new HashMap<String,String>());
+		directive = template.getDirectives().get(0);
+	}
 
 	@Test
-	public void testMergeExceptionExceptionStringString() {
+	public void testMergeExceptionStringString() {
 		MergeException e = new MergeException("Error", "Context");
 		assertNotNull(e);
 		assertEquals("Error", e.getError());
@@ -31,7 +49,7 @@ public class MergeExceptionTest {
 	}
 
 	@Test
-	public void testMergeExceptionStringString() {
+	public void testMergeExceptionExceptionStringString() {
 		MergeException e = new MergeException(new Exception(), "Error", "Context");
 		assertNotNull(e);
 		assertEquals("Error", e.getError());
@@ -39,13 +57,68 @@ public class MergeExceptionTest {
 	}
 
 	@Test
+	public void testMergeExceptionTemplate() {
+		MergeException e = new MergeException(template, new Exception(), "Error", "Context");
+		assertNotNull(e);
+		assertEquals("Error", e.getError());
+		assertEquals("Context", e.getContext());
+	}
+	
+	@Test
+	public void testMergeExceptionTemplateNull() {
+		MergeException e = new MergeException(template, null, "Error", "Context");
+		assertNotNull(e);
+		assertEquals("Error", e.getError());
+		assertEquals("Context", e.getContext());
+	}
+	
+	@Test
+	public void testMergeExceptionDirective() {
+		MergeException e = new MergeException(directive, new Exception(), "Error", "Context");
+		assertNotNull(e);
+		assertEquals("Error", e.getError());
+		assertEquals("Context", e.getContext());
+	}
+	
+	public void testMergeExceptionDirectiveNull() {
+		MergeException e = new MergeException(directive, null, "Error", "Context");
+		assertNotNull(e);
+		assertEquals("Error", e.getError());
+		assertEquals("Context", e.getContext());
+	}
+	
+	@Test
+	public void testMergeExceptionProvider() {
+		MergeException e = new MergeException(directive.getProvider(), new Exception(), "Error", "Context");
+		assertNotNull(e);
+		assertEquals("Error", e.getError());
+		assertEquals("Context", e.getContext());
+	}
+	
+	public void testMergeExceptionProviderNull() {
+		MergeException e = new MergeException(directive.getProvider(), null, "Error", "Context");
+		assertNotNull(e);
+		assertEquals("Error", e.getError());
+		assertEquals("Context", e.getContext());
+	}
+	
+	@Test
 	public void testGetHtmlErrorMessage() {
-		// "Not yet implemented";
+		Require req = new Require();
+		req.setTags("ONE,TWO,THREE");
+		template.addDirective(req);
+		MergeException e = new MergeException(req, null, "Error", "Context");
+		assertNotNull(e);
+		String output = e.getHtmlErrorMessage();
+		assertEquals("<html><head></head><body><p>A Merge Execption has occured: Error <br/> Context</p></body></html>", output);
 	}
 
 	@Test
 	public void testGetJsonErrorMessage() {
-		// "Not yet implemented";
+		MergeException e = new MergeException(directive, null, "Error", "Context");
+		assertNotNull(e);
+		String output = e.getJsonErrorMessage();
+		assertEquals("{\"message\":\"Error\",\"context\":\"Context\"}", output);
 	}
 
 }

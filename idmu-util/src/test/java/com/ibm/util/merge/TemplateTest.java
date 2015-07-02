@@ -58,12 +58,13 @@ public class TemplateTest {
 		template = new Template();
 		template.setIdtemplate(22);
 		template.addDirective(directive);
-		template.addReplace("empty","NOT");
-		template.addReplace("folder","/tmp/output/");
 		template.setContent(templateString);
 		template.setCollection("root");
 		template.setName("default");
 		template.setColumnValue("none");
+		template = template.clone(new HashMap<String,String>());
+		template.addReplace("empty","NOT");
+		template.addReplace("folder","/tmp/output/");
 	}
 
 	@Test
@@ -98,6 +99,7 @@ public class TemplateTest {
 
 	@Test
 	public void testMerge() throws MergeException {
+		template.addReplace("empty", "NOT");
 		String output = template.merge();
 		assertEquals(mergeOutput, output);
 	}
@@ -149,12 +151,14 @@ public class TemplateTest {
 
 	@Test
 	public void testHasReplaceKey() {
+		template.addReplace("empty", "NOT");
 		assertTrue(template.hasReplaceKey("{empty}"));
 		assertFalse(template.hasReplaceKey("FooBar"));
 	}
 
 	@Test
 	public void testHasReplaceValue() {
+		template.addReplace("empty", "NOT");
 		assertTrue(template.hasReplaceValue("{empty}"));
 		assertFalse(template.hasReplaceValue("FooBar"));
 	}
@@ -174,14 +178,16 @@ public class TemplateTest {
 	@Test
 	public void testReplaceProcess() {
 		String test = "{Foo} - to {empty}";
+		template.addReplace("empty", "NOT");
 		assertEquals("{Foo} - to NOT", template.replaceProcess(test));
 	}
 
 	@Test
 	public void testGetReplaceValuePass() {
 		try {
-			String answer = template.getReplaceValue("{empty}");
-			assertEquals("NOT", answer);
+			template.addReplace("foo", "bar");
+			String answer = template.getReplaceValue("{foo}");
+			assertEquals("bar", answer);
 		} catch (MergeException e) {
 			fail("GetReplace threw an exception!");
 		}

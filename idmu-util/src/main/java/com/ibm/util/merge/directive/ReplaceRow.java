@@ -52,23 +52,39 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 
 		// Make sure we got some data
 		if ( this.getProvider().size() < 1 ) {
-			throw new MergeException("No Data Found in " + this.getTemplate().getFullName(), provider.getQueryString()); 
+			if (!this.softFail()) {
+				throw new MergeException("No Data Found in " + this.getTemplate().getFullName(), provider.getQueryString());
+			} else {
+				log.warn("Softfail on Empty Resultset");
+				return;
+			}
 		}
 
 		// Make sure we don't have a multi-table result.
 		if ( provider.size() > 1 ) {
-			throw new MergeException("Multi-Talbe Empty Result set returned by Directive",provider.getQueryString()); 
+			if (!this.softFail()) {
+				throw new MergeException("Multi-Talbe Empty Result set returned by Directive",provider.getQueryString());
+			}
+			log.warn("Softfail on Multi-Table Resultset");
 		}
 		DataTable table = provider.getTable(0);
 
 		// Make sure we don't have an empty result set
 		if ( table.size() == 0 ) {
-			throw new MergeException("Empty Result set returned by Directive",provider.getQueryString()); 
+			if (!this.softFail()) {
+				throw new MergeException("Empty Result set returned by Directive",provider.getQueryString());
+			} else {
+				log.warn("Softfail on Empty Resultset");
+				return;
+			}
 		}
 
 		// Make sure we don't have a multi-row result set
 		if ( table.size() > 1 ) {
-			throw new MergeException("Multiple rows returned when single row expected", provider.getQueryString());
+			if (!this.softFail()) {
+				throw new MergeException("Multiple rows returned when single row expected", provider.getQueryString());
+			}
+			log.warn("Softfail on Multi-Row Resultset");
 		}
 		
 		// Add the replace values
