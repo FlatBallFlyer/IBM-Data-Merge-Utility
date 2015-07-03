@@ -166,6 +166,7 @@ public class MergeException extends Exception {
 		String message = "";
 		Template errorTemplate;
 		HashMap<String,String> parameters = new HashMap<String,String>();
+		if (this.template != null) parameters.putAll(template.getReplaceValues());
 		parameters.put(Template.wrap("MESSAGE"),  this.error);
 		parameters.put(Template.wrap("CONTEXT"),  this.context);
 		parameters.put(Template.wrap("TRACE"), this.getStackTrace().toString());
@@ -188,6 +189,7 @@ public class MergeException extends Exception {
 		String message = "";
 		Template errorTemplate;
 		HashMap<String,String> parameters = new HashMap<String,String>();
+		if (this.template != null) parameters.putAll(template.getReplaceValues());
 		parameters.put(Template.wrap("MESSAGE"),  this.error);
 		parameters.put(Template.wrap("CONTEXT"),  this.context);
 		parameters.put(Template.wrap("TRACE"), this.getStackTrace().toString());

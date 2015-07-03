@@ -1,7 +1,7 @@
 {	"collection":"system",
-	"name":"errHtml",
-	"description":"HTML Error Message Template",
-	"content":"<html><head></head><body><p>A Merge Execption has occured: {MESSAGE} <br/> {CONTEXT}</p></body></html>",
+	"name":"errJson",
+	"description":"JSON Error Message Template",
+	"content":"{\"message\":\"{MESSAGE}\",\"context\":\"{CONTEXT}\"}",
 	"directives":[
 		{
 			"type": 23,
