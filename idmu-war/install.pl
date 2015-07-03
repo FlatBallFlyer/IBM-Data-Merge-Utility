@@ -82,19 +82,20 @@ if ($MOUNT_YUM eq "yes") {
 # Install Java 1.8 and Tomcat 7
 if ( $INSTALL_TOMCAT eq "yes" ) { 
 	(-e $IMAGES . '/' . $JAVA8_RPM) or die "Java8 RPM Image $IMAGES/$JAVA8_RPM not found!";
-	(-e $IMAGES . '/' . $TOMCAT_TAR . '.tar') or die "Tomcat tar Image $IMAGES/$TOMCAT_TAR not found!";
+	(-e $IMAGES . '/' . $TOMCAT_TAR . '.tar.gz') or die "Tomcat tar Image $IMAGES/$TOMCAT_TAR not found!";
 
 	print "\nInstalling Java 1.8 ";
 	`yum erase -y java`;
 	`rpm -ivh --force ${IMAGES}/${JAVA8_RPM}`;
 
 	print "\nInstalling Tomcat ";
-	`tar -C /tmp -xvf ${IMAGES}/${TOMCAT_TAR}.tar`;
+	`tar -C /tmp -xvf ${IMAGES}/${TOMCAT_TAR}.tar.gz`;
 	`mv /tmp/${TOMCAT_TAR} ${TOMCAT_DIR}`;
 
 	if ( $INSTALL_TESTDB eq 'yes' ) {
+		(-e $IMAGES . "/" . $MYSQL_TAR . ".tar.gz") or die "MySQL JDBC Driver Tar Image $IMAGES/$MYSQL_TAR.tar.gz not found!";
 		print "\nInstalling MySql JDBC Drivers";
-		`tar -C /tmp -xvf ${IMAGES}/${MYSQL_TAR}.tar`;
+		`tar -C /tmp -xvf ${IMAGES}/${MYSQL_TAR}.tar.gz`;
 		`cp /tmp/${MYSQL_TAR}/${MYSQL_TAR}-bin.jar ${TOMCAT_DIR}/lib/`;
 	}
 }
@@ -102,8 +103,6 @@ if ( $INSTALL_TOMCAT eq "yes" ) {
 #------------------------------------------------------------------
 # Install MySql (MariaDB)
 if ( $INSTALL_MYSQL eq "yes" ) { 
-	(-e $IMAGES . "/" . $MYSQL_TAR . ".tar") or die "MySQL JDBC Driver Tar Image $IMAGES/$MYSQL_TAR.tar not found!";
-
 	print "\nInstalling MySQL ";
 	`yum install -y mariadb-server mariadb 2> /dev/null`;
 	`systemctl start mariadb 2> /dev/null`;
@@ -200,16 +199,18 @@ sub help {
  	If you are installing tomcat 
 	- jdk-8u45-linux-x64.rpm 
 		see http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-	- apache-tomcat-7.0.62.tar 
-		see http://www.trieuvan.com/apache/tomcat/tomcat-7/v7.0.62/bin/apache-tomcat-7.0.62.tar
+	- apache-tomcat-7.0.62.tar.gz 
+		wget http://www.trieuvan.com/apache/tomcat/tomcat-7/v7.0.62/bin/apache-tomcat-7.0.62.tar.gz
 	If you are installing MySql 
- 	- mysql-connector-java-5.1.34.tar 
- 		see http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.34.tar
+ 	- mysql-connector-java-5.1.34.tar.gz 
+ 		wget http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.34.tar.gz
 	If you need to mount an ISO images for yum repository (to install MySql)
 	- RHEL-7.0-20140507.0-Server-x86_64-dvd1.iso 
 
+NOTE Different file names can be used, you are prompted for file names, do not include the .tar.gz extension in the file name
+
 Run install.pl -i for an interactive install
-Run install.pl -q for a quiet install (accept all defaults)
+Run install.pl -q for a quiet install (accept all defaults shown above, install all steps, install files are in /mnt/hgfs/iso/ )
 ';
 exit 1;
 }
