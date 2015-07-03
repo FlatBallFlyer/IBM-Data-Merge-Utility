@@ -55,7 +55,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 			if (!this.softFail()) {
 				throw new MergeException("No Data Found in " + this.getTemplate().getFullName(), provider.getQueryString());
 			} else {
-				log.warn("Softfail on Empty Resultset");
+				log.warn("Softfail on Empty Resultset - " + provider.getQueryString());
 				return;
 			}
 		}
@@ -65,7 +65,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 			if (!this.softFail()) {
 				throw new MergeException("Multi-Talbe Empty Result set returned by Directive",provider.getQueryString());
 			}
-			log.warn("Softfail on Multi-Table Resultset");
+			log.warn("Softfail on Multi-Table Resultset - " + provider.getQueryString());
 		}
 		DataTable table = provider.getTable(0);
 
@@ -74,7 +74,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 			if (!this.softFail()) {
 				throw new MergeException("Empty Result set returned by Directive",provider.getQueryString());
 			} else {
-				log.warn("Softfail on Empty Resultset");
+				log.warn("Softfail on Empty Resultset - " + provider.getQueryString());
 				return;
 			}
 		}
@@ -84,7 +84,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 			if (!this.softFail()) {
 				throw new MergeException("Multiple rows returned when single row expected", provider.getQueryString());
 			}
-			log.warn("Softfail on Multi-Row Resultset");
+			log.warn("Softfail on Multi-Row Resultset - " + provider.getQueryString());
 		}
 		
 		// Add the replace values
