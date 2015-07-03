@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IDMU</title>
+    <meta charset="utf-8" />
+
+    <!-- build:css-lib -->
+    <link href="../../bower_components/materialize/dist/css/materialize.css" media="screen,projection" rel="stylesheet" type="text/css"/>
+    <!-- endbuild -->
+
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- build:css -->
+    <link href="/src/css/app.css" media="screen,projection" rel="stylesheet" type="text/css"/>
+    <!-- endbuild -->
+
+    <!-- Mobile stuff -->
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <!-- chrome - android -->
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <!-- apple -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+  </head>
+
+  <body>
+    <!-- Header section -->
+    <header>
+      <div id="navbarFixed" class="navbar-fixed">
+        <nav>
+          <div class="nav-wrapper container">
+            <div class="no-margin">
+            <a href="#" class="brand-logo">IDMU</a>
+            <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main section -->
+    <main>
+      <!-- App view -->
+      <div id="app_view">
+      </div>
+      <!-- End App view -->
+    </main>
+
+    <!-- Footer section -->
+    <footer>
+
+    </footer>
+
+    <!-- build:js-lib -->
+    <script src="../../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
+    <script src="../../bower_components/materialize/dist/js/materialize.js" type="text/javascript"></script>
+    <script src="../../bower_components/moment/moment.js" type="text/javascript"></script>
+    <script src="../../bower_components/numeraljs/numeral.js" type="text/javascript"></script>
+    <script src="../../bower_components/director/build/director.js" type="text/javascript"></script>
+    <script src="../../bower_components/react/react-with-addons.js"></script>
+    <script src="../../bower_components/classnames/index.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js -->
+    <script src="/src/js/config/cte.js" type="text/javascript"></script>
+    <script src="/src/js/config/dev.js" type="text/javascript"></script>
+    <script src="/src/js/i18n/en.js" type="text/javascript"></script>
+    <script src="/src/js/i18n/i18n.js" type="text/javascript"></script>
+    <script src="/src/js/modules/clientapi.js" type="text/javascript"></script>
+    <script src="../../bower_components/react/JSXTransformer.js"></script>
+    
+    <script src="/src/js/components/TemplateHeader.react.js" type="text/jsx"></script>
+    <script src="/src/js/components/Template.react.js" type="text/jsx"></script>
+    <script src="/src/js/components/TemplateRibbon.react.js" type="text/jsx"></script>
+    <script src="/src/js/components/TemplateCollection.react.js" type="text/jsx"></script>
+    <script src="/src/js/components/TemplateEditor.react.js" type="text/jsx"></script>
+    <script src="/src/js/components/App.react.js" type="text/jsx"></script>
+    
+    <script src="/src/js/app.js" type="text/jsx"></script>
+    <!-- endbuild -->
+
+  </body>
+</html>

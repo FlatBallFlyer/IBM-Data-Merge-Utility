@@ -1,0 +1,48 @@
+{
+    "root": {
+        "label": "root",
+        "ribbon": [
+            {
+                "label":"Default",
+                "name": "default"
+            },
+            {
+                "label":"Directives",
+                "name": "directives"
+            },
+            {
+                "label":"Generate",
+                "name": "generate"
+            },
+            {
+                "label":"List",
+                "name": "list"
+            },
+            {
+                "label":"List Member",
+                "name": "listMember"
+            }
+        ],
+        "selected": true
+    },
+    "contact": {
+        "label": "contact",
+        "ribbon": [
+            {
+                "label": "cmd",
+                "name": "cmd"
+            },
+            {
+                "label": "cmd",
+                "name": "cmd",
+                "columnValue": "SMS"
+            },
+            {
+                "label": "cmd",
+                "name": "cmd",
+                "columnValue": "email"
+            }
+        ],
+        "selected": false
+    }
+}

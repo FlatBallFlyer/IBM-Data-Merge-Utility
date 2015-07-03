@@ -1,0 +1,16 @@
+{
+    "id": "1",
+    "collection": "root",
+    "name": "directives",
+    "label": "directives",
+    "output": "some file",
+    "content": "Long content here ...",
+    "bookmarks": [
+        {"id": "1", "name": "Whatever"}
+    ],
+    "directives": [
+        {"id": "1", "name": "CORP_BANNER", "description": "Corporate Banner", "type": "replace"},
+        {"id": "2", "name":"CORP_FOOTER", "description": "Corporate Footer", "type": "replace"},
+        {"id": "3", "name": "CORP_DISCLAIMER", "description": "Corporate Disclaimer", "type": "replace"}
+    ]
+}
