@@ -189,13 +189,14 @@ sub help {
 		- port 8080
 		- whitelist $TOMCAT_DIR/bin/startup.sh
 
+This Install supports Tomcat v7 and MariaDB 5.5 to Install copy the files below to an install images folder and run install.pl -q or -i
+
  Copy these files to your install source directory
 	- idmu.war 
-		download https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility
-		you will find this in the idmu-war folder
+		From the release page
 	If you are installing the IDMU Test Database
 	- TESTDB.sql
-		in the idmu-war/src/main/resources folder 
+		From the release page 
  	If you are installing tomcat 
 	- jdk-8u45-linux-x64.rpm 
 		see http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
