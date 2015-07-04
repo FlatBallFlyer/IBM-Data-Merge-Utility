@@ -1,40 +1,35 @@
 /**
  * @jsx React.DOM
  */
+
 var TemplateHeader = React.createClass({
-  mixins: [TextEditMixin],
   getInitialState: function() {
-    return {name: 'Blah', output: 'Output', description: ''};
+    return {panelConfig: 'show-header'};
   },
-  componentWillReceiveProps: function(nextProps) {
-    var data = nextProps.data;
-    var tpl = data['template'];
-    if(tpl){
-      this.setState({
-        name: tpl['name'],
-        output: tpl['output'],
-        description: (tpl['description'] || 'None')
-      });
-    }
+  handleChangePanel: function(evt){
+    console.log("click="+evt.target.id);
+    this.setState({panelConfig: evt.target.id});
   },
   handleClickDirectives: function(evt) {
     //set state and open dialog ..
   },
-  render: function(){
-    var data = this.props.data;
-    var tpl = data['template'];
+  showPanel: function(){
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
+    var changeCB = this.handleChangePanel;
+    if(this.state.panelConfig === 'show-directives') {
+      return(<Directives mCB={mCB} aCB={aCB} data={this.props.data} changeCB={changeCB}/>);
+    }else {
+      return(<HeaderPanel data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
+    }
+  },
+  render: function(){
+    var data = this.props.data;
+    var tpl = data.template;
     if(tpl){
-      var selectedCollection = data.selectedCollection;
       var columnValue = tpl['columnValue'] ? "."+tpl['columnValue'] : "";
       var name = tpl['name'];
       var label = tpl['collection']+"."+name+columnValue;
-
-      var directives = tpl['directives'] ? tpl['directives'] : [];
-      var options=directives.map(function(k,i){
-        return (<option key={i} value={k.name} label={k.name}>{k.name}</option>);
-      });
       return(
         <div className="row no-margin">
           <div className="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -46,45 +41,7 @@ var TemplateHeader = React.createClass({
               </div>
 
               <div id="collapseOne" className="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                <div className="panel-body">
-
-                  <div className="row">
-                    <div className="col-lg-12">
-
-                      <form>
-                        <div className="form-group col-xs-4 col-md-4">
-                          <label for="name" className="control-label">Name</label>
-
-                          <input className="form-control" id="name" type="text" value={this.state.name} onChange={this.handleTextEditChange}/>
-                        </div>
-                        
-                        <div className="form-group col-xs-4 col-md-4">
-                          <div className="input-group">
-                            <label for="name" className="control-label">Directives</label>
-                            <select id="directives" className="form-control">
-                              {options}
-                            </select>
-                            <span className="input-group-btn input-group-btn-directives">
-                              <DirectivesTrigger  mCB={mCB} aCB={aCB} data={this.props.data}/>
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="form-group col-xs-4 col-md-4">
-                          <label for="name" className="control-label">Output</label>
-                          <input className="form-control" id="output" type="text" value={this.state.output} onChange={this.handleTextEditChange}/>
-                        </div>
-
-                        <div className="form-group col-xs-12 col-md-12">
-                          <label for="name" className="control-label">Description</label>
-                          <textarea className="form-control" id="description" rows="2" onChange={this.handleTextEditChange}  value={this.state.description}/>
-                        </div>
-                        
-                      </form>
-                      
-                    </div>
-                  </div>
-                </div>
+                {this.showPanel()}
               </div>
             </div>
           </div>

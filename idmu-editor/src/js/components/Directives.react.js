@@ -1,24 +1,6 @@
 /**
  * @jsx React.DOM
  */
-var DirectivesTrigger = React.createClass({
-  handleClick: function(e) {
-    var el = this.refs.payload.getDOMNode();
-    $(el).modal();
-  },
-  render: function() {
-    var mCB = this.props.mCB;
-    var aCB = this.props.aCB;
-    return(
-      <div onClick={this.handleClick}>
-        <button type="button" className="btn btn-primary btn-xs directive-btn">Configure</button>
-        <Directives mCB={mCB} aCB={aCB} ref="payload" data={this.props.data}/>
-      </div>
-    );
-  }
-});
-
-
 var DirectivesListMixin = {
   getInitialState: function() {
     return({directives: []});
@@ -108,9 +90,7 @@ var RHSList = React.createClass({
   }
 });
 
-
 var Directives = React.createClass({
-  mixins: [ModalMixin],
   getInitialState: function() {
     return {name: 'Blah', output: 'Output', description: ''};
   },
@@ -127,29 +107,25 @@ var Directives = React.createClass({
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
     return (
-      <div onClick={this.handleClick} className="modal" role="dialog" aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>Configure Directives</h3>
-            </div>
-            <div className="modal-body">
 
-              <div className="row">
-                <div className="col-lg-12">
-                  <div className="from-directives col-xs-6 col-md-6">
-                    <LHSList sort={false} key={lhsID} id={lhsID} title={"LHS"} directives={lhs} moveItemBetweenList={mCB} moveItemWithinList={aCB}/>
-                  </div>
-                  <div className="to-directives col-xs-6 col-md-6">
-                    <RHSList sort={true} key={rhsID} id={rhsID} data={this.props.data} title={"RHS"} directives={rhs} moveItemBetweenList={mCB} moveItemWithinList={aCB}/>
-                  </div>
-                </div>
-              </div>
-              
+      <div className="panel-body">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="from-directives col-xs-6 col-md-6">
+              <LHSList sort={false} key={lhsID} id={lhsID} title={"LHS"} directives={lhs} moveItemBetweenList={mCB} moveItemWithinList={aCB}/>
             </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-              <button onClick={this.handleSave} type="button" className="btn btn-primary">Save changes</button>
+            <div className="to-directives col-xs-6 col-md-6">
+              <RHSList sort={true} key={rhsID} id={rhsID} data={this.props.data} title={"RHS"} directives={rhs} moveItemBetweenList={mCB} moveItemWithinList={aCB}/>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-xs-12 col-md-12">
+            <div className="col-xs-11 col-md-11">&nbsp;</div>
+            <div className="col-xs-1 col-md-1">
+              <span className="input-group-btn">
+                <button id="show-header" onClick={this.props.changeCB} type="button" className="btn btn-primary btn-xs">Back</button>
+              </span>
             </div>
           </div>
         </div>
