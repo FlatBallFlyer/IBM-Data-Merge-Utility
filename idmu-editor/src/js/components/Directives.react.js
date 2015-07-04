@@ -102,8 +102,8 @@ var Directives = React.createClass({
     var rhs=this.props.data['template'] ? this.props.data['template']['directives'] : [];
     var betweenCB = this.moveItemBetweenList;
     var withinCB = this.moveItemWithinList;
-    var lhsID = "left";
-    var rhsID = "right";
+    var lhsID = "lhs";
+    var rhsID = "rhs";
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
     return (
