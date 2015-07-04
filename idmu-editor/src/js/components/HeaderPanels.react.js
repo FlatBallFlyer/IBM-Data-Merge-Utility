@@ -45,7 +45,7 @@ var HeaderPanel  = React.createClass({
                     {options}
                   </select>
                   <span className="input-group-btn input-group-btn-directives">
-                    <button id="show-directives" onClick={changeCB} type="button" className="btn btn-primary btn-xs directive-btn">Configure</button>
+                    <button id="show-directives" onClick={changeCB} type="button" className="btn directive-btn">Configure</button>
                   </span>
                 </div>
               </div>

@@ -35,9 +35,23 @@ var TemplateHeader = React.createClass({
           <div className="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div className="panel panel-default">
               <div className="panel-heading" role="tab" id="headingOne">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  <span className="control-label-big">{label}</span>
-                </a>
+                <div className="row">
+                <div className="col-xs-10 col-md-10">
+                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <span className="control-label-big">{label}</span>
+                  </a>
+                </div>
+                <div className="col-xs-1 col-md-1">
+                  <a role="button" aria-expanded="true">
+                    <span className="input-group-btn input-group-btn-directives">
+                      <button id="show-directives" type="button" className="btn btn-primary">Save</button>
+                    </span>
+                  </a>
+                </div>
+                <div className="col-xs-1 col-md-1">
+                  &nbsp;
+                </div>
+                </div>
               </div>
 
               <div id="collapseOne" className="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">

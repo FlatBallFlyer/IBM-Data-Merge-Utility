@@ -55,12 +55,8 @@
 }
 
 .directive-btn {
-    margin-top: 35px;
-    /*
-    padding-right: 0px;
-    margin-left: -15px;
-   */
-    
+    margin-top: 25px;
+    margin-left: 5px;
 }
 .input-group-btn-directives {
     font-size: 1.6rem;
