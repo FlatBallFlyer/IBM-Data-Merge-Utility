@@ -5,7 +5,7 @@ var App = React.createClass({
 
   getInitialState: function() {
     return {
-      selectedCollection: "0",
+      selectedCollection: "root",
       selectedRibbonItem: null,
       selectedRibbonIndex: 0,
       data: {},
@@ -15,7 +15,6 @@ var App = React.createClass({
   },
   initRouter: function () {
     var routes = {
-      //"/app": on_home
     };
     window.router = Router(routes);
     window.router.configure({html5history: supports_history_api()});
@@ -24,10 +23,6 @@ var App = React.createClass({
   componentDidMount: function () {
     this.initRouter();
     this.loadTemplatesFromServer();
-    //this.loadDirectivesFromServer();
-  },
-  componentDidUpdate: function() {
-    //$('select').material_select();
   },
   handleCollectionSelected: function(selectedCollection) {
     var data = this.state.data;
@@ -54,6 +49,9 @@ var App = React.createClass({
                                 selectedRibbonItem['columnValue']);
   },
   loadTemplatesFromServer: function() {
+    var selectedCollection = this.state.selectedCollection;
+    var selectedRibbonItem = this.state.selectedRibbonItem;
+    var selectedRibbonIndex = this.state.selectedRibbonIndex;
     var params = {};
     $.ajax({
       url: '/idmu/templates',
@@ -61,7 +59,7 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
-        this.setState({data: data,selectedCollection: "root"});
+        this.setState({data: data,selectedCollection: selectedCollection});
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -124,9 +122,34 @@ var App = React.createClass({
     tpl.directives = newItemArr;
     this.setState({template: tpl});
   },
+  saveTemplateToServer: function(opts,collection) {
+    console.log("save template...");
+
+    var params = {template:{}};
+    params.template = $.extend({},this.state.template,opts);
+    console.debug(params);
+    $.ajax({
+      url: '/idmu/templates/'+collection,
+      dataType: 'json',
+      method: 'PUT',
+      cache: false,
+      data: params,
+      success: function(data) {
+        this.setState({template: data});
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
+  handleSave: function(opts) {
+    this.saveTemplateToServer(opts,this.state.selectedCollection);
+    this.loadTemplatesFromServer();
+  },
   render: function() {
     var mCB = this.moveItemBetweenList;
     var aCB = this.moveItemWithinList;
+    var sCB = this.handleSave;
     return (
       <div className="container app_view">
         <div id="template_collection" className="row template_collection">
@@ -134,7 +157,7 @@ var App = React.createClass({
         </div>
         <div id="template_ribbon" className="row template_ribbon">
           <div className="container">
-            <TemplateRibbon selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB}/>
+            <TemplateRibbon selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB}/>
           </div>
         </div>
       </div>

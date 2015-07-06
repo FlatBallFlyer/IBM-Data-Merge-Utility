@@ -1,48 +1,41 @@
 {
-    "root": {
-        "label": "root",
-        "ribbon": [
-            {
-                "label":"Default",
-                "name": "default"
-            },
-            {
-                "label":"Directives",
-                "name": "directives"
-            },
-            {
-                "label":"Generate",
-                "name": "generate"
-            },
-            {
-                "label":"List",
-                "name": "list"
-            },
-            {
-                "label":"List Member",
-                "name": "listMember"
-            }
-        ],
-        "selected": true
-    },
-    "contact": {
-        "label": "contact",
-        "ribbon": [
-            {
-                "label": "cmd",
-                "name": "cmd"
-            },
-            {
-                "label": "cmd",
-                "name": "cmd",
-                "columnValue": "SMS"
-            },
-            {
-                "label": "cmd",
-                "name": "cmd",
-                "columnValue": "email"
-            }
-        ],
-        "selected": false
-    }
+  "root": {
+    "label": "root",
+    "ribbon": [
+      {
+        "label": "Default",
+        "name": "default"
+      },
+      {
+        "label": "Directives",
+        "name": "directives"
+      }
+    ],
+    "selected": true
+  },
+  "contact": {
+    "label": "contact",
+    "ribbon": [
+      {
+        "label": "cmd",
+        "name": "cmd"
+      },
+      {
+        "label": "cmd",
+        "name": "cmd",
+        "columnValue": "SMS"
+      },
+      {
+        "name": "tcp",
+        "label": "Postal on the crazy",
+        "columnValue": "SMS"
+      },
+      {
+        "name": "rcp",
+        "label": "Postal on the crazy",
+        "columnValue": "SMS"
+      }
+    ],
+    "selected": false
+  }
 }

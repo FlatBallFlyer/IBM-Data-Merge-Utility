@@ -1,26 +1,29 @@
 /**
  * @jsx React.DOM
  */
-
 var TemplateHeader = React.createClass({
   getInitialState: function() {
     return {panelConfig: 'show-header'};
   },
   handleChangePanel: function(evt){
-    console.log("click="+evt.target.id);
     this.setState({panelConfig: evt.target.id});
   },
   handleClickDirectives: function(evt) {
     //set state and open dialog ..
+  },
+  handleSave: function(evt) {
+    var opts = {};
+    opts = $.extend({},opts,this.refs.header_panel.state);
+    this.props.sCB(opts);
   },
   showPanel: function(){
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
     var changeCB = this.handleChangePanel;
     if(this.state.panelConfig === 'show-directives') {
-      return(<Directives mCB={mCB} aCB={aCB} data={this.props.data} changeCB={changeCB}/>);
+      return(<Directives ref="directives_panel" mCB={mCB} aCB={aCB} data={this.props.data} changeCB={changeCB}/>);
     }else {
-      return(<HeaderPanel data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
+      return(<HeaderPanel ref="header_panel" data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
     }
   },
   render: function(){
@@ -44,7 +47,7 @@ var TemplateHeader = React.createClass({
                 <div className="col-xs-1 col-md-1">
                   <a role="button" aria-expanded="true">
                     <span className="input-group-btn input-group-btn-directives">
-                      <button id="show-directives" type="button" className="btn btn-primary">Save</button>
+                      <button onClick={this.handleSave} id="show-directives" type="button" className="btn btn-primary">Save</button>
                     </span>
                   </a>
                 </div>

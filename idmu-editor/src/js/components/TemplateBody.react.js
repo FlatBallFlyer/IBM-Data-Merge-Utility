@@ -4,16 +4,10 @@
 var TemplateBody = React.createClass({
   mixins: [TextEditMixin],
   getInitialState: function() {
-    return {content: 'Something here..'};
-  },  
+    return $.extend(true, {}, this.props.data.template);
+  },
   componentWillReceiveProps: function(nextProps) {
-    var data = nextProps.data;
-    var tpl = data['template'];
-    if(tpl){
-      this.setState({
-        content: (tpl['content'] || 'None')
-      });
-    }
+    this.setState(nextProps.data.template);
   },
   render: function(){
     return(

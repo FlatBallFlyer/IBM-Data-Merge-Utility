@@ -4,7 +4,7 @@
 var HeaderPanel  = React.createClass({
   mixins: [TextEditMixin],
   getInitialState: function() {
-    return this.props.data.template;
+    return $.extend(true, {}, this.props.data.template);
   },
   componentWillReceiveProps: function(nextProps) {
     this.setState(nextProps.data.template);

@@ -1,20 +1,27 @@
 {
-    "id": "1",
-    "collection": "root",
-    "name": "default",
-    "label": "default",
-    "output": "some file",
-    "content": "Long content here ...",
-    "bookmarks": [
-        {"id": "1", "name": "Whatever"}
-    ],
-    "directives": [
-        {
-            "type":0,
-            "name": "Require Tags",
-            "description":"Corp. Stuff",
-            "softFail":true,
-            "tags":["Tag1"]
-        }
-    ]
+  "id": "1",
+  "collection": "root",
+  "name": "default",
+  "label": "default",
+  "output": "some file",
+  "content": "Long content here ...",
+  "bookmarks": [
+    {
+      "id": "1",
+      "name": "Whatever"
+    }
+  ],
+  "directives": [
+    {
+      "type": "0",
+      "name": "Require Tags",
+      "description": "Corp. Stuff",
+      "softFail": "true",
+      "tags": [
+        "Tag1"
+      ]
+    }
+  ],
+  "columnValue": "SMS",
+  "description": "Postal on the crazy"
 }

@@ -8,9 +8,10 @@ var TemplateRibbonItem = React.createClass({
   render: function() {
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
+    var sCB = this.props.sCB;
     return(
       <div className="row ribbon-item">
-        <TemplateEditor mCB={mCB} aCB={aCB} data={this.props.collection} selection={this.props.data}/>
+        <TemplateEditor mCB={mCB} aCB={aCB} sCB={sCB} data={this.props.collection} selection={this.props.data}/>
       </div>
     );
   }
@@ -59,10 +60,11 @@ var TemplateRibbon = React.createClass({
     var navRCB = this.handleNavRightClick;
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
+    var sCB = this.props.sCB;
     
     if(item) {
       var items = [item].map(function(opt,i){
-        return(<TemplateRibbonItem key={i} cb={selectHandler} mCB={mCB} aCB={aCB} data={opt} collection={data}/>);
+        return(<TemplateRibbonItem key={i} cb={selectHandler} mCB={mCB} aCB={aCB} sCB={sCB} data={opt} collection={data}/>);
       });
       
       newRibbon = [0].map(function(opt,i){
