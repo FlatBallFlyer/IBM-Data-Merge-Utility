@@ -43,11 +43,10 @@ public class ReplaceMarkupHtml extends Directive implements Cloneable {
 	 * Add the replace value
 	 * @throws MergeException
 	 * @param tf
-	 * @param cf
-	 * @param zf
+	 * @param rtc
 	 */
-	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
-		getProvider().getData(cf);
+	public void executeDirective(RuntimeContext rtc) throws MergeException {
+		getProvider().getData(rtc.getConnectionFactory());
 		// TODO HTML Markup - Execute
 		// for each match, get from/to and call this.owner.addReplace()
 	}

@@ -24,25 +24,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
 
 @WebServlet("/Initialize")
 public class Initialize extends HttpServlet {
 	private RuntimeContext rtc;
 
-	public static String getConfig(String paramName, ServletConfig servletConfig){
-		return servletConfig.getInitParameter(paramName);
-	}
-
 	/**
      * Initialize Logging, Template and Zip Factory objects 
      */
 	public void init(ServletConfig cfg) {
 
-		TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
+		TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates", new PrettyJsonProxy()));
 
 		// Initialize Log4j
-		rtc = new RuntimeContext(tf, new ZipFactory());
+		rtc = new RuntimeContext(tf);
 		rtc.initialize("/tmp/merge");
 	}
 

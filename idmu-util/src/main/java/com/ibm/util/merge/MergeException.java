@@ -159,24 +159,25 @@ public class MergeException extends Exception {
 	
 	/**
 	 * @return
+	 * @param rtc
 	 */
-	public String getHtmlErrorMessage(TemplateFactory tf, ZipFactory zf, ConnectionFactory cf) {
-		String message = "";
+	public String getHtmlErrorMessage(RuntimeContext rtc) {
+		String message;
 		Template errorTemplate;
 		HashMap<String,String> parameters = new HashMap<>();
 		parameters.put(Template.wrap("MESSAGE"), error);
 		parameters.put(Template.wrap("CONTEXT"), context);
 		parameters.put(Template.wrap("TRACE"), getStackTrace().toString());
 		try {
-			errorTemplate = tf.getTemplate("system.errHtml." + errorFromClass, "system.errHtml.", parameters);
-			errorTemplate.merge(zf, tf, cf);
+			errorTemplate = rtc.getTemplateFactory().getTemplate("system.errHtml." + errorFromClass, "system.errHtml.", parameters);
+			errorTemplate.merge(rtc);
 			final String returnValue;
 			if (!errorTemplate.canWrite()) {
                 returnValue = "";
             } else {
                 returnValue = errorTemplate.getContent();
             }
-			errorTemplate.doWrite(zf);
+			errorTemplate.doWrite(rtc.getZipFactory());
 			message = returnValue;
 //			errorTemplate.packageOutput(zf, cf);
 		} catch (MergeException e) {
@@ -189,24 +190,25 @@ public class MergeException extends Exception {
 
 	/**
 	 * @return
+	 * @param rtc
 	 */
-	public String getJsonErrorMessage(TemplateFactory tf, ZipFactory zf, ConnectionFactory cf) {
-		String message = "";
+	public String getJsonErrorMessage(RuntimeContext rtc) {
+		String message;
 		Template errorTemplate;
 		HashMap<String,String> parameters = new HashMap<>();
 		parameters.put(Template.wrap("MESSAGE"), error);
 		parameters.put(Template.wrap("CONTEXT"), context);
 		parameters.put(Template.wrap("TRACE"), getStackTrace().toString());
 		try {
-			errorTemplate = tf.getTemplate("system.errJson." + errorFromClass, "system.errJson.", parameters);
-			errorTemplate.merge(zf, tf, cf);
+			errorTemplate = rtc.getTemplateFactory().getTemplate("system.errJson." + errorFromClass, "system.errJson.", parameters);
+			errorTemplate.merge(rtc);
 			final String returnValue;
 			if (!errorTemplate.canWrite()) {
                 returnValue = "";
             } else {
                 returnValue = errorTemplate.getContent();
             }
-			errorTemplate.doWrite(zf);
+			errorTemplate.doWrite(rtc.getZipFactory());
 			message = returnValue;
 //			errorTemplate.packageOutput(zf, cf);
 		} catch (MergeException e) {

@@ -71,10 +71,9 @@ public abstract class Directive implements Cloneable{
 	 *
 	 * @throws MergeException execution errors
 	 * @param tf
-	 * @param cf
-	 * @param zf
+	 * @param rtc
 	 */
-	public abstract void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException;
+	public abstract void executeDirective(RuntimeContext rtc) throws MergeException;
 
 	/********************************************************************************
 	 * Cone constructor

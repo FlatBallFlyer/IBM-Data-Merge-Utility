@@ -35,34 +35,33 @@ public class IntegrationTestingJdbcProvider {
 	String templateDir 	= "integration/templates/";
 	String outputDir 	= "integration/output/"; 
 	String validateDir 	= "integration/valid/";
-	private TemplateFactory tf;
-	private ZipFactory zf;
-	private ConnectionFactory cf;
+
+	private RuntimeContext rtc;
 
 	@Before
 	public void setup() throws Exception {
-		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
-		zf = new ZipFactory();
-		cf = new ConnectionFactory();
+		rtc = TestUtils.createDefaultRuntimeContext();
 		// Initialize Factories
+		TemplateFactory tf = rtc.getTemplateFactory();
 		tf.reset();
 
 		tf.loadTemplatesFromFilesystem();
-		zf.setOutputRoot(outputDir);
+		rtc.getZipFactory().setOutputRoot(outputDir);
 		parameterMap = new HashMap<>();
 	}
 
 	@Test
 	public void testDefaultTemplate() throws Exception {
+		TemplateFactory tf = rtc.getTemplateFactory();
 		Template root = tf.getTemplate(parameterMap);
-		root.merge(zf, tf, cf);
+		root.merge(rtc);
 		final String returnValue;
 		if (!root.canWrite()) {
 			returnValue = "";
 		} else {
 			returnValue = root.getContent();
 		}
-		root.doWrite(zf);
+		root.doWrite(rtc.getZipFactory());
 		String output = returnValue;
 //		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + "merge1.output"))), output);
@@ -118,16 +117,17 @@ public class IntegrationTestingJdbcProvider {
 	 * @throws IOException
 	 */
 	private void testMerge(String fullName) throws Exception {
+		TemplateFactory tf = rtc.getTemplateFactory();
 		parameterMap.put(tf.KEY_FULLNAME, 	new String[]{fullName});
 		Template root = tf.getTemplate(parameterMap);
-		root.merge(zf, tf, cf);
+		root.merge(rtc);
 		final String returnValue;
 		if (!root.canWrite()) {
 			returnValue = "";
 		} else {
 			returnValue = root.getContent();
 		}
-		root.doWrite(zf);
+		root.doWrite(rtc.getZipFactory());
 		String mergeOutput = returnValue;
 //		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + fullName + ".output"))), mergeOutput);

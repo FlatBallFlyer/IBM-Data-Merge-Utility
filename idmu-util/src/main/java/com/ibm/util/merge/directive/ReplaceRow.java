@@ -45,12 +45,11 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 	/**
 	 * @throws MergeException
 	 * @param tf
-	 * @param cf
-	 * @param zf
+	 * @param rtc
 	 */
-	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
+	public void executeDirective(RuntimeContext rtc) throws MergeException {
 		Provider provider = getProvider();
-		provider.getData(cf);
+		provider.getData(rtc.getConnectionFactory());
 
 		// Make sure we got some data
 		if (getProvider().size() < 1 ) {

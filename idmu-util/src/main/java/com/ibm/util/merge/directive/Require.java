@@ -52,12 +52,11 @@ public class Require extends Directive implements Cloneable {
 	
 	/**
 	 * Check to see if the tags are in the replace stack, throw an exception if not found
-	 * @see Directive#executeDirective(TemplateFactory, ConnectionFactory, ZipFactory)
+	 * @see Directive#executeDirective(RuntimeContext)
 	 * @param tf
-	 * @param cf
-	 * @param zf
+	 * @param rtc
 	 */
-	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
+	public void executeDirective(RuntimeContext rtc) throws MergeException {
 		for (String tag : tags) {
 			if (!getTemplate().hasReplaceValue(Template.wrap(tag)) ) {
 				throw new MergeException("Required Tag Not Found in " + getTemplate().getFullName(), tag);

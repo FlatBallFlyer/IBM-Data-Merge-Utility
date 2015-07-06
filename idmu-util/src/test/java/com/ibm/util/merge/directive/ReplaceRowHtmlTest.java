@@ -26,15 +26,12 @@ import org.junit.Test;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
 
 public class ReplaceRowHtmlTest extends ReplaceRowTest {
-	private TemplateFactory tf;
-	private ZipFactory zf;
-	private ConnectionFactory cf;
+
+	private RuntimeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
-		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
-		zf = new ZipFactory();
-		cf = new ConnectionFactory();
+		rtc = TestUtils.createDefaultRuntimeContext();
 		template = new Template();
 		directive = new ReplaceRowHtml();
 
@@ -60,7 +57,7 @@ public class ReplaceRowHtmlTest extends ReplaceRowTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective(tf, cf, zf);
+		directive.executeDirective(rtc);
 		assertTrue(template.hasReplaceKey("{A}"));
 		assertEquals("1",template.getReplaceValue("{A}"));
 		assert(template.hasReplaceKey("{B}"));

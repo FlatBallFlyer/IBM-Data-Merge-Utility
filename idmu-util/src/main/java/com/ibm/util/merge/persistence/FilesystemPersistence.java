@@ -23,9 +23,9 @@ public class FilesystemPersistence {
     private String templateFolder;
     private JsonProxy jsonProxy;
 
-    public FilesystemPersistence(String templateFolder) {
+    public FilesystemPersistence(String templateFolder, JsonProxy jsonProxy) {
         this.templateFolder = templateFolder;
-        jsonProxy = new PrettyJsonProxy();
+        this.jsonProxy = jsonProxy;
     }
 
     /**********************************************************************************
@@ -53,7 +53,9 @@ public class FilesystemPersistence {
                     String json = String.join("\n", Files.readAllLines(file.toPath()));
                     Template template = jsonProxy.fromJSON(json, Template.class);
                     templates.add(template);
+                    log.info("Loaded template " + template.getFullName());
 //                    cacheFromJson(json);
+                    count++;
                 } catch (JsonSyntaxException e) {
                     log.warn("Malformed JSON Template:" + file.getName(), e);
                 } catch (FileNotFoundException e) {
@@ -62,7 +64,8 @@ public class FilesystemPersistence {
                     log.warn("IOException Reading:" + file.getName(), e);
                 }
             }
-            count++;
+
+
         }
         log.info("Loaded " + Integer.toString(count) + " templates from " + templateFolder);
         return templates;

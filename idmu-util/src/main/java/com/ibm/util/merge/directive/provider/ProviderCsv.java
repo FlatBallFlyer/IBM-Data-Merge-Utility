@@ -54,7 +54,7 @@ public class ProviderCsv extends ProviderHttp implements Cloneable {
 		super.getData(cf);
 		reset();
 		DataTable table = new DataTable();
-		CSVParser parser = null;
+		CSVParser parser;
 		try {
 			parser = new CSVParser(new StringReader(getFetchedData()), CSVFormat.EXCEL.withHeader());
 			for (String colName : parser.getHeaderMap().keySet() ) {

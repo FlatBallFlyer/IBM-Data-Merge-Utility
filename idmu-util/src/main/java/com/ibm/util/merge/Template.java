@@ -113,7 +113,7 @@ public class Template implements Cloneable {
     }
 
     private Template cloneThisTemplate() {
-        Template newTemplate = null;
+        Template newTemplate;
         try {
             newTemplate = (Template) super.clone();
         } catch (CloneNotSupportedException e) {
@@ -144,6 +144,9 @@ public class Template implements Cloneable {
 
     public void writeTarFile(ZipFactory zf) {
         File outputFilePath = constructArchivePath(zf);
+        if(!outputFilePath.getParentFile().exists()){
+            throw new IllegalArgumentException("The parent directory does not exist for file " + outputFilePath.getAbsolutePath());
+        }
         String archiveEntryName = constructArchiveEntryName();
         try {
             new TarFileWriter(outputFilePath, archiveEntryName, getContent(), "root", "root").write();
@@ -178,12 +181,13 @@ public class Template implements Cloneable {
      * @throws MergeException Data Source Errors
      * @throws MergeException Directive Processing Errors
      * @throws MergeException Save Output File errors
+     * @param rtc
      */
-    public void merge(ZipFactory zf, TemplateFactory tf, ConnectionFactory cf) throws MergeException {
+    public void merge(RuntimeContext rtc) throws MergeException {
         log.info("Begin Template Merge for:" + getFullName());
         // Process Directives
         for (Directive directive : directives) {
-            directive.executeDirective(tf, cf, zf);
+            directive.executeDirective(rtc);
         }
         // Clear out the all-values replace tag
         replaceValues.remove(TAG_ALL_VALUES);
@@ -205,7 +209,7 @@ public class Template implements Cloneable {
         // Remove all the bookmarks
         replaceAllThis(BOOKMARK_PATTERN, "");
         log.info("Merge Complete: " + getFullName());
-        cf.releaseConnection(getOutputFile());
+        rtc.getConnectionFactory().releaseConnection(getOutputFile());
         log.info("ReleasedConnection for " + getOutputFile());
     }
 
@@ -267,7 +271,7 @@ public class Template implements Cloneable {
                 }
             }
             // do the replace
-            int index = -1;
+            int index;
             while ((index = content.lastIndexOf(from)) != -1) {
                 content.replace(index, index + from.length(), to);
             }
@@ -542,5 +546,17 @@ public class Template implements Cloneable {
         public String getArchiveEntryName() {
             return archiveEntryName;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Template{" +
+                "idtemplate=" + idtemplate +
+                ", collection='" + collection + '\'' +
+                ", columnValue='" + columnValue + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", outputFile='" + outputFile + '\'' +
+                '}';
     }
 }

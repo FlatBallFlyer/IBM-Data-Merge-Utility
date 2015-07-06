@@ -35,16 +35,15 @@ public class IntegrationSafety {
 	String templateDir 	= "src/test/resources/templates/";
 	String outputDir 	= "src/test/resources/testout/"; 
 	String validateDir 	= "src/test/resources/valid/";
-	private TemplateFactory tf;
-	private ZipFactory zf;
-	private ConnectionFactory cf;
+
+	private RuntimeContext rtc;
 
 	@Before
 	public void setup() throws MergeException, IOException {
-		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
-		zf = new ZipFactory();
-		cf = new ConnectionFactory();
+		rtc = TestUtils.createDefaultRuntimeContext();
 		// Initialize Factories
+		TemplateFactory tf = rtc.getTemplateFactory();
+		ZipFactory zf = rtc.getZipFactory();
 		tf.reset();
 		tf.loadTemplatesFromFilesystem();
 		zf.setOutputRoot(outputDir);
@@ -95,8 +94,10 @@ public class IntegrationSafety {
 		parameterMap.put("DragonOutputType", 	new String[]{type});
 		parameterMap.put("DragonFlyOutputFile", new String[]{fullName+type});
 		parameterMap.put("DragonFlyFullName", 	new String[]{fullName});
+		TemplateFactory tf = rtc.getTemplateFactory();
+		ZipFactory zf = rtc.getZipFactory();
 		Template root = tf.getTemplate(parameterMap);
-		root.merge(zf, tf, cf);
+		root.merge(rtc);
 		final String returnValue;
 		if (!root.canWrite()) {
 			returnValue = "";

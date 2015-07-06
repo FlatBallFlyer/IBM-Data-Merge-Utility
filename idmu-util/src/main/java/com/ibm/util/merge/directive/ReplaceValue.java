@@ -15,12 +15,8 @@
  *
  */
 package com.ibm.util.merge.directive;
-import com.ibm.util.merge.ConnectionFactory;
-import com.ibm.util.merge.TemplateFactory;
-import com.ibm.util.merge.ZipFactory;
+import com.ibm.util.merge.*;
 import org.apache.log4j.Logger;
-
-import com.ibm.util.merge.Template;
 
 /**
  * A simple replace From with To directive 
@@ -51,10 +47,9 @@ public class ReplaceValue extends Directive implements Cloneable {
 	/**
 	 * Add the replace value
 	 * @param tf
-	 * @param cf
-	 * @param zf
+	 * @param rtc
 	 */
-	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) {
+	public void executeDirective(RuntimeContext rtc) {
 		getTemplate().addReplace(from, to);
 		log.info("Replaced " + from + " with " + to);
 	}

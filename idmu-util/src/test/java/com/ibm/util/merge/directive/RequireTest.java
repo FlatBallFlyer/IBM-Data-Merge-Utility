@@ -24,15 +24,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class RequireTest extends DirectiveTest {
-	private TemplateFactory tf;
-	private ZipFactory zf;
-	private ConnectionFactory cf;
+
+	private RuntimeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
-		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
-		zf = new ZipFactory();
-		cf = new ConnectionFactory();
+		rtc = TestUtils.createDefaultRuntimeContext();
 		directive = new Require();
 		Require myDirective = (Require) directive;
 		myDirective.setTags("Tag1,Tag2");
@@ -54,7 +51,7 @@ public class RequireTest extends DirectiveTest {
 		template.addReplace("Tag2", "Test1");
 
 		try {
-			directive.executeDirective(tf, cf, zf);
+			directive.executeDirective(rtc);
 		} catch (MergeException e) {
 			fail("Pass Condition threw Exception");
 		}
@@ -66,7 +63,7 @@ public class RequireTest extends DirectiveTest {
 		template.addReplace("Tag1", "Test1");
 
 		try {
-			directive.executeDirective(tf, cf, zf);
+			directive.executeDirective(rtc);
 		} catch (MergeException e) {
 			assertNotNull(e);
 			return;

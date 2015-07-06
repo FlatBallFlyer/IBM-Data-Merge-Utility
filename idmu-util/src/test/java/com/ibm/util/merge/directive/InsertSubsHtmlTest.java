@@ -32,22 +32,22 @@ public class InsertSubsHtmlTest extends InsertSubsTest {
 	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Row: {A}, Val: {B}\\n\"}";
 	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\" collection\\u003d\\\"root\\\"/\\u003e\"}";
 	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\" collection=\"root\"/>";
-	private TemplateFactory tf;
-	private ZipFactory zf;
-	private ConnectionFactory cf;
+
+
 	private JsonProxy jsonProxy;
+	private RuntimeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
-		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
-		zf = new ZipFactory();
-		cf = new ConnectionFactory();
+
+		rtc = TestUtils.createDefaultRuntimeContext();
+
 		directive = new InsertSubsHtml();
 		jsonProxy = new DefaultJsonProxy();
 		InsertSubsHtml myDirective = (InsertSubsHtml) directive;
 		ProviderHtml myProvider = (ProviderHtml) myDirective.getProvider();
 		myProvider.setStaticData("<table><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>");
-
+		TemplateFactory tf = rtc.getTemplateFactory();
 		tf.reset();
 		Template template2 = jsonProxy.fromJSON(subTemplate, Template.class);
 		tf.cache(template2);
@@ -69,7 +69,7 @@ public class InsertSubsHtmlTest extends InsertSubsTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective(tf, cf, zf);
+		directive.executeDirective(rtc);
 		assertEquals(masterOutput, template.getContent());
 	}
 

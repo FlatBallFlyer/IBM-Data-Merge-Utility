@@ -92,6 +92,6 @@ public class ProviderSqlTest extends ProviderTest {
 
 	private class DirectiveStub extends Directive {
 		public DirectiveStub() {}
-		public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {}
+		public void executeDirective(RuntimeContext rtc) throws MergeException {}
 	}
 }

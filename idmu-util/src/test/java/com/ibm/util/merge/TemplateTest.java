@@ -52,10 +52,14 @@ public class TemplateTest {
 	private String testReplaceColHtmlJson = "{" + testJsonBase + ",{\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"sequence\":1,\"type\":33,\"softFail\":false,\"description\":\"TestReplaceColHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}"; 
 	private String testMarkupHtmlJson = 	"{" + testJsonBase + ",{\"pattern\":\"TestPattern\",\"sequence\":1,\"type\":34,\"softFail\":false,\"description\":\"TestMarkupSubsHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}";
 	private JsonProxy jsonProxy;
+	private RuntimeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
+
 		jsonProxy = new DefaultJsonProxy();
+		rtc = TestUtils.createDefaultRuntimeContext();
+		rtc.initialize("/tmp/merge");
 		ReplaceValue directive = new ReplaceValue();
 		directive.setFrom("Foo");
 		directive.setTo("Test Foo Value");
@@ -105,16 +109,15 @@ public class TemplateTest {
 	@Test
 	public void testMerge() throws MergeException {
 		template.addReplace("empty", "NOT");
-		ZipFactory zf = new ZipFactory();
-		TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
-		ConnectionFactory cf = new ConnectionFactory();
-		template.merge(zf, tf, cf);
+
+
+		template.merge(rtc);
 		final String returnValue;
 		if (!template.canWrite()) {
 			returnValue = "";
 		} else {
 			returnValue = template.getContent();
-		}		template.doWrite(zf);
+		}		template.doWrite(rtc.getZipFactory());
 		String output = returnValue;
 		assertEquals(mergeOutput, output);
 	}

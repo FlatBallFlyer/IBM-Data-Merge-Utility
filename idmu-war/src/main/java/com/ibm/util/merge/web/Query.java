@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
 
 /**
@@ -43,9 +44,9 @@ public class Query extends HttpServlet {
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
-        ZipFactory zf = new ZipFactory();
-        rtc = new RuntimeContext(tf, zf);
+        TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates", new PrettyJsonProxy()));
+
+        rtc = new RuntimeContext(tf);
         rtc.initialize("/tmp/merge");
     }
 
@@ -71,11 +72,11 @@ public class Query extends HttpServlet {
         String parm = request.getParameter("list");
         if (parm != null) {
             if (parm.equals("Collections")) {
-                out.write(rtc.getTemplateFactory().getCollections());
+                out.write(rtc.getTemplateFactory().getCollectionNamesJSON());
                 out.close();
             }
             if (parm.equals("Templates")) {
-                out.write(rtc.getTemplateFactory().getTemplates(request.getParameter("collection")));
+                out.write(rtc.getTemplateFactory().getTemplateNamesJSON(request.getParameter("collection")));
                 out.close();
             }
         }

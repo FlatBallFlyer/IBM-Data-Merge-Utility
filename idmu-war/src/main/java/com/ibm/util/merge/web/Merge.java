@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.apache.log4j.Logger;
 
@@ -46,9 +47,8 @@ public class Merge extends HttpServlet {
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
-        ZipFactory zf = new ZipFactory();
-        rtc = new RuntimeContext(tf, zf);
+        TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates", new PrettyJsonProxy()));
+        rtc = new RuntimeContext(tf);
         rtc.initialize("/tmp/merge");
     }
 
@@ -104,7 +104,7 @@ public class Merge extends HttpServlet {
         // Get a template using the httpServletRequest constructor
         // Perform the merge and write output
         ZipFactory zf = rtc.getZipFactory();
-        root.merge(zf, rtc.getTemplateFactory(), rtc.getConnectionFactory());
+        root.merge(rtc);
         final String returnValue;
         if (!root.canWrite()) {
             returnValue = "";
@@ -112,8 +112,7 @@ public class Merge extends HttpServlet {
             returnValue = root.getContent();
         }
         root.doWrite(zf);
-        String merged = returnValue;
-        out.write(merged);
+        out.write(returnValue);
         // Close Connections and Finalize Output
 //        root.packageOutput(rtc.getZipFactory(), rtc.getConnectionFactory());
         long elapsed = System.currentTimeMillis() - start;

@@ -16,8 +16,7 @@
  */
 package com.ibm.util.merge;
 
-import com.ibm.util.merge.cache.Cache;
-import com.ibm.util.merge.cache.MemoryCache;
+import com.ibm.util.merge.cache.TemplateCache;
 import com.ibm.util.merge.json.JsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
@@ -40,12 +39,12 @@ final public class TemplateFactory {
     private final String DEFAULT_FULLNAME = "root.default.";
     private final FilesystemPersistence fs;
     private HibernatePersistence hp;
-    private final Cache<String, Template> templateCache;
+    private final TemplateCache templateCache;
     private final JsonProxy jsonProxy;
 
     public TemplateFactory(FilesystemPersistence fs) {
-        templateCache = new MemoryCache<>();
         this.fs = fs;
+        templateCache = new TemplateCache();
         jsonProxy = new PrettyJsonProxy();
     }
 
@@ -59,7 +58,6 @@ final public class TemplateFactory {
      *
      * @param request HttpServletRequest
      * @return Template The new Template object
-     * @throws MergeException
      * @see Template
      */
     public Template getTemplate(Map<String, String[]> request) {
@@ -73,15 +71,21 @@ final public class TemplateFactory {
         }
         // Handle cache reset request
         if (replace.containsKey(KEY_CACHE_RESET)) {
+            log.info("requested RESET");
             reset();
         }
         // Handle cache load request
         if (replace.containsKey(KEY_CACHE_LOAD)) {
+            log.info("requested LOAD TEMPLATES");
             loadTemplatesFromFilesystem();
         }
         // Get the template, add the http parameter replace values to it's hash
         String fullName = replace.get(KEY_FULLNAME);
+        log.info("GET TEMPLATE = " + fullName);
         Template rootTemplate = getTemplate(fullName, "", replace);
+        if(rootTemplate == null){
+            throw new IllegalArgumentException("Could not find template for request " + new HashMap<>(request).toString());
+        }
         return rootTemplate;
     }
 
@@ -101,37 +105,39 @@ final public class TemplateFactory {
      * @param shortName   - "Default" template name
      * @param seedReplace Initial replace hash
      * @return Template The new Template object
-     * @throws MergeException Invalid Directive Type from Constructor
      */
     public Template getTemplate(String fullName, String shortName, Map<String, String> seedReplace) {
         Template newTemplate = null;
         // Cache hit -- Return a clone of the Template in Cache
         if (templateCache.isCached(fullName)) {
-            return templateCache.get(fullName).clone(seedReplace);
+            newTemplate =templateCache.get(fullName).clone(seedReplace);
         }
         // See if FullName template is in the database
-        if (hp != null) {
+        if (newTemplate == null && hp != null) {
             newTemplate = hp.getTemplateFullname(fullName);
             templateCache.cache(fullName, newTemplate);
             log.info("Constructed Template: " + fullName);
-            return templateCache.get(fullName).clone(seedReplace);
+            newTemplate =templateCache.get(fullName).clone(seedReplace);
 //            }
         }
         // Check for shortName in the cache, since fullName doesn't exist
-        if (templateCache.isCached(shortName)) {
+        if (newTemplate == null && templateCache.isCached(shortName)) {
             templateCache.cache(fullName, templateCache.get(shortName));
             log.info("Linked Template: " + shortName + " to " + fullName);
-            return templateCache.get(fullName).clone(seedReplace);
+            newTemplate =templateCache.get(fullName).clone(seedReplace);
         }
         // See if the shortName (Default Template) is in the database
-        if (hp != null) {
+        if (newTemplate == null && hp != null) {
             newTemplate = hp.getTemplateDefault(fullName);
             templateCache.cache(fullName, newTemplate);
             log.info("Linked Template: " + shortName + " to " + fullName);
-            return templateCache.get(fullName).clone(seedReplace);
+            newTemplate = templateCache.get(fullName).clone(seedReplace);
         }
-        // Template Not Found Exception
-        throw new TemplateNotFoundException(fullName);
+        if(newTemplate == null){
+            throw new TemplateNotFoundException(fullName);
+        }
+        return newTemplate;
+
     }
 
     /**********************************************************************************
@@ -142,29 +148,19 @@ final public class TemplateFactory {
      * @throws MergeException
      * @see Template
      */
-    public String getCollections() {
+    public String getCollectionNamesJSON() {
+        Set<String> theList = getCollectionNames();
+        return jsonProxy.toJson(theList);
+    }
+
+    private Set<String> getCollectionNames() {
         Set<String> theList;// = new ArrayList<String>();
         if (hp != null) {
             theList = getCollectionsFromDb();
         } else {
-            theList = getCollectionsFromCache();
+            theList = templateCache.getCollectionsFromCache();
         }
-        return jsonProxy.toJson(theList);
-    }
-
-    /**
-     * @return
-     */
-    private Set<String> getCollectionsFromCache() {
-        Set<String> theCollections = new HashSet<>();
-        // Iterate the Hash
-        for (Template template : templateCache.asMap().values()) {
-//            if (!theCollections.contains(template.getCollection())) {
-            theCollections.add(template.getCollection());
-//            }
-        }
-        // Return the JSON String
-        return theCollections;
+        return theList;
     }
 
     /**
@@ -182,33 +178,21 @@ final public class TemplateFactory {
      *
      * @param request HttpServletRequest
      * @return JSON List of Collection Names
-     * @throws MergeException
      * @see Template
      */
-    public String getTemplates(String collection) {
+    public String getTemplateNamesJSON(String collection) {
+        Set<String> theList = getTemplateNames(collection);
+        return jsonProxy.toJson(theList);
+    }
+
+    private Set<String> getTemplateNames(String collection) {
         Set<String> theList;// = new ArrayList<String>();
         if (hp != null) {
             theList = getTemplatesFromDb(collection);
         } else {
-            theList = getTemplatesFromCache(collection);
+            theList = templateCache.getTemplateFullnamesFromCache(collection);
         }
-        return jsonProxy.toJson(theList);
-    }
-
-    /**
-     * @param collection
-     * @return
-     */
-    public Set<String> getTemplatesFromCache(String collection) {
-        Set<String> theTemplates = new HashSet<>();
-        // Iterate the Hash
-        for (Template template : templateCache.asMap().values()) {
-//            if (template.getCollection().equals(collection)) {
-            theTemplates.add(template.getFullName());
-//            }
-        }
-        // Return the JSON String
-        return theTemplates;
+        return theList;
     }
 
     /**
@@ -256,7 +240,8 @@ final public class TemplateFactory {
 //        templateCache.remove(template.getFullName());
         templateCache.cache(template.getFullName(), template);
         log.info(template.getFullName() + " has been cached");
-        return templateCache.get(template.getFullName()).clone(new HashMap<>());
+        Template clone = templateCache.get(template.getFullName()).clone(new HashMap<>());
+        return clone;
     }
 
     /**********************************************************************************

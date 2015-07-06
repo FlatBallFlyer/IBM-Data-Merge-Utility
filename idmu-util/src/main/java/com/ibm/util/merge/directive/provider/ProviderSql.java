@@ -65,7 +65,7 @@ public class ProviderSql extends Provider implements Cloneable {
 	public void getData(ConnectionFactory cf) throws MergeException {
 		reset();
 		DataTable table = getNewTable();
-		Connection con = null;
+		Connection con;
 		
 		try {
 			// Prepare and Execute the SQL Statement

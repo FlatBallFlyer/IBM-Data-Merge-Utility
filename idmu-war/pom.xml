@@ -9,7 +9,7 @@
   </parent>
   <artifactId>idmu-war</artifactId>
   <packaging>war</packaging>
-  <name>idmu.war</name>
+  <name>idmu-war</name>
   <description>IBM Data Merge Utility</description>
     <dependencies>
 		<dependency>

@@ -32,22 +32,19 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Row: {A}, Val: {B}\\n\"}";
 	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\" collection\\u003d\\\"root\\\"/\\u003e\"}";
 	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\" collection=\"root\"/>";
-	private TemplateFactory tf;
-	private ZipFactory zf;
-	private ConnectionFactory cf;
+
 	private JsonProxy jsonProxy;
+	private RuntimeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
 		jsonProxy = new DefaultJsonProxy();
-		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
-		zf = new ZipFactory();
-		cf = new ConnectionFactory();
+		rtc = TestUtils.createDefaultRuntimeContext();
 		provider = new ProviderStub();
 		directive = new InsertSubsSql();
 		InsertSubsSql myDirective = (InsertSubsSql) directive;
 		myDirective.setProvider(provider);
-
+		TemplateFactory tf = rtc.getTemplateFactory();
 		tf.reset();
 		Template template2 = jsonProxy.fromJSON(subTemplate, Template.class);
 		tf.cache(template2);
@@ -69,7 +66,7 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective(tf, cf, zf);
+		directive.executeDirective(rtc);
 		assertEquals(masterOutput, template.getContent());
 	}
 

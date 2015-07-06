@@ -47,11 +47,10 @@ public abstract class ReplaceCol extends Directive implements Cloneable {
 	 * Add replace values to the Template replace stack
 	 * @throws MergeException on getData errors.
 	 * @param tf
-	 * @param cf
-	 * @param zf
+	 * @param rtc
 	 */
-	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
-		getProvider().getData(cf);
+	public void executeDirective(RuntimeContext rtc) throws MergeException {
+		getProvider().getData(rtc.getConnectionFactory());
 		for (DataTable table : getProvider().getTables() ) {
 	 		int from = table.getCol(fromColumn);
 			int to = table.getCol(toColumn);

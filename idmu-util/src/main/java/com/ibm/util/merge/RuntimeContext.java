@@ -1,11 +1,5 @@
 package com.ibm.util.merge;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.ibm.util.merge.directive.Directive;
-import com.ibm.util.merge.directive.DirectiveDeserializer;
-import com.ibm.util.merge.directive.provider.Provider;
-import com.ibm.util.merge.directive.provider.ProviderDeserializer;
 import org.apache.log4j.Logger;
 
 import java.nio.file.Files;
@@ -19,11 +13,11 @@ public class RuntimeContext {
     private static final Logger log = Logger.getLogger(RuntimeContext.class);
     private final TemplateFactory templateFactory;
     private final ZipFactory zipFactory;
-    private ConnectionFactory connectionFactory;
+    private final ConnectionFactory connectionFactory;
 
-    public RuntimeContext(TemplateFactory templateFactory, ZipFactory zipFactory) {
+    public RuntimeContext(TemplateFactory templateFactory) {
         this.templateFactory = templateFactory;
-        this.zipFactory = zipFactory;
+        this.zipFactory = new ZipFactory();
         connectionFactory = new ConnectionFactory();
         log.info("Instantiated");
     }
