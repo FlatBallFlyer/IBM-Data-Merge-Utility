@@ -91,7 +91,7 @@ public class ProviderTag extends Provider implements Cloneable {
 		String data = template.getReplaceValue(Template.wrap(tag));
 		table.addCol(tag);
 		if (this.isList()) {
-			for (String datum : new ArrayList<String>(Arrays.asList(data.split(",")))) {
+			for (String datum : new ArrayList<>(Arrays.asList(data.split(",")))) {
 				if (!datum.isEmpty()) {
 					ArrayList<String> row = table.getNewRow();
 					row.add(datum);

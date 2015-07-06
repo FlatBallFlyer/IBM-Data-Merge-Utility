@@ -41,7 +41,7 @@ public class MergeExceptionTest {
 
 		tf.reset();
 		tf.loadTemplatesFromFilesystem();
-		template = tf.getTemplate("system.test.", "", new HashMap<String,String>());
+		template = tf.getTemplate("system.test.", "", new HashMap<>());
 		directive = template.getDirectives().get(0);
 	}
 

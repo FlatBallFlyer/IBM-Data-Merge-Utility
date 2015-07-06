@@ -58,7 +58,7 @@ public class IntegrationTestingCsvProvider {
 		zf.setOutputroot(outputDir);
 		
 		// Initialize requestMap (usually from request.getParameterMap())
-		parameterMap = new HashMap<String,String[]>();
+		parameterMap = new HashMap<>();
 		parameterMap.put("csvCorporate", new String[]{csvCorporate});
 		parameterMap.put("csvCustomer", new String[]{csvCustomer});
 		parameterMap.put("csvCustomers",new String[]{csvCustomers});

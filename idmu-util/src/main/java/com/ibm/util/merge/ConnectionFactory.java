@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
 public final class ConnectionFactory {
 	private static final Logger log = Logger.getLogger( ConnectionFactory.class.getName() );
 	private static final String DBROOT = "java:/comp/env/jdbc/";
-	private final ConcurrentHashMap<String,Connection> dataDbHash = new ConcurrentHashMap<String,Connection>();
+	private final ConcurrentHashMap<String,Connection> dataDbHash = new ConcurrentHashMap<>();
 	
     /**********************************************************************************
 	 * Data Source connection factory, creates and cache's connections that are valid

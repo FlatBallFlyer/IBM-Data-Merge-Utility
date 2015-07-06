@@ -31,7 +31,7 @@ import com.ibm.util.merge.*;
  * @author  Mike Storey
  */
 public class Require extends Directive implements Cloneable {
-	private ArrayList<String> tags = new ArrayList<String>();
+	private ArrayList<String> tags = new ArrayList<>();
 	
 	/**
 	 * Simple Constructor
@@ -70,7 +70,7 @@ public class Require extends Directive implements Cloneable {
 	}
 
 	public void setTags(String tags) {
-		this.tags = new ArrayList<String>(Arrays.asList(tags.split(",")));
+		this.tags = new ArrayList<>(Arrays.asList(tags.split(",")));
 	}
 
 

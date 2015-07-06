@@ -58,7 +58,7 @@ public class TemplateFactoryTest {
 
 		tf.cacheFromJson(template1);
 		tf.cacheFromJson(template2);
-		assertNotNull(tf.getTemplate("root.test.foo", "", new HashMap<String,String>()));
+		assertNotNull(tf.getTemplate("root.test.foo", "", new HashMap<>()));
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public class TemplateFactoryTest {
 	public void testGetTemplateShortNameFoundInCache() throws MergeException {
 
 		tf.cacheFromJson(template1);
-		Template template = tf.getTemplate("root.test.nodata", "root.test.", new HashMap<String,String>());
+		Template template = tf.getTemplate("root.test.nodata", "root.test.", new HashMap<>());
 		assertNotNull(template);
 		assertEquals("root", template.getCollection());
 		assertEquals("test", template.getName());
@@ -92,7 +92,7 @@ public class TemplateFactoryTest {
 		Template template = tf.cacheFromJson(template1);
 		assertNotNull(template);
 		template = null;
-			template = tf.getTemplate("bad.template.test", "", new HashMap<String,String>());
+			template = tf.getTemplate("bad.template.test", "", new HashMap<>());
 		fail("Template Not Found did not throw exception");
 	}
 	

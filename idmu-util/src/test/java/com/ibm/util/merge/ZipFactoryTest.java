@@ -59,8 +59,10 @@ public class ZipFactoryTest {
 
 	private void makeArchive(String outputRoot, String outputFile, int type) throws IOException {
 		zf.setOutputroot(outputRoot);
-		zf.writeFile(outputFile, "path/file1.txt", new StringBuilder("Test Output File One"), type);
-		zf.writeFile(outputFile, "path/file2.txt", new StringBuilder("Test Output File Two"), type);
+		final StringBuilder content = new StringBuilder("Test Output File One");
+		zf.writeFile(outputFile, "path/file1.txt", type, content.toString());
+		final StringBuilder content1 = new StringBuilder("Test Output File Two");
+		zf.writeFile(outputFile, "path/file2.txt", type, content1.toString());
 		zf.closeStream(outputFile, type);
 	}
 

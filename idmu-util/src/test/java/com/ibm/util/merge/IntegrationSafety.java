@@ -50,7 +50,7 @@ public class IntegrationSafety {
 		
 		// Reset the output directory
 		FileUtils.cleanDirectory(new File(outputDir)); 
-		parameterMap = new HashMap<String, String[]>();
+		parameterMap = new HashMap<>();
 	}
 
 	@After

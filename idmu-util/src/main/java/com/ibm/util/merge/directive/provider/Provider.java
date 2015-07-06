@@ -33,7 +33,7 @@ public abstract class Provider implements Cloneable {
 	public static final int TYPE_TAG	= 2;
 	public static final int TYPE_CSV 	= 3;
 	public static final int TYPE_HTML 	= 4;
-	private transient ArrayList<DataTable> dataTables	= new ArrayList<DataTable>();
+	private transient ArrayList<DataTable> dataTables	= new ArrayList<>();
 	private transient Directive directive 				= null;
 	private int type;
 
@@ -54,7 +54,7 @@ public abstract class Provider implements Cloneable {
 	public Provider clone() throws CloneNotSupportedException {
 		Provider newProvider = (Provider) super.clone();
 		newProvider.directive = null;
-		newProvider.dataTables = new ArrayList<DataTable>();
+		newProvider.dataTables = new ArrayList<>();
 		return newProvider;
 	}
 	
@@ -71,7 +71,7 @@ public abstract class Provider implements Cloneable {
 	 * @return A new DataTable that has been added to an EMPTY collection.
 	 */
 	public void reset() {
-		this.dataTables = new ArrayList<DataTable>();
+		this.dataTables = new ArrayList<>();
 	}
 	
 	/**

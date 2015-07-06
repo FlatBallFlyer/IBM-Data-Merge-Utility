@@ -63,9 +63,9 @@ public class Template implements Cloneable {
     private String description = "";
     private String outputFile = "";
     private StringBuilder content = new StringBuilder();
-    private List<Directive> directives = new ArrayList<Directive>();
-    private transient List<Bookmark> bookmarks = new ArrayList<Bookmark>();
-    private transient HashMap<String, String> replaceValues = new HashMap<String, String>();
+    private List<Directive> directives = new ArrayList<>();
+    private transient List<Bookmark> bookmarks = new ArrayList<>();
+    private transient HashMap<String, String> replaceValues = new HashMap<>();
 
     /********************************************************************************
      * Static Helper to wrap a value in the Tag brackets
@@ -101,10 +101,10 @@ public class Template implements Cloneable {
      */
     public Template clone(Map<String, String> seedReplace) {
         Template newTemplate = cloneThisTemplate();
-        newTemplate.replaceValues = new HashMap<String, String>();
+        newTemplate.replaceValues = new HashMap<>();
         newTemplate.setContent(this.getContent());
         // Deep Copy Directives
-        newTemplate.directives = new ArrayList<Directive>();
+        newTemplate.directives = new ArrayList<>();
         for (Directive fromDirective : this.directives) {
             Directive clone = cloneDirective(fromDirective);
             newTemplate.addDirective(clone);
@@ -112,7 +112,7 @@ public class Template implements Cloneable {
         // Seed Replace Values
         newTemplate.replaceValues.putAll(seedReplace);
         // Make sure we have an output file name guid
-        if (!newTemplate.replaceValues.containsKey(TAG_OUTPUTFILE)) {
+        if (!isOutputFileSpecified()) {
             newTemplate.replaceValues.put(TAG_OUTPUTFILE, UUID.randomUUID().toString() + (getOutputType() == ZipFactory.TYPE_ZIP ? ".zip" : ".tar"));
         }
         // Add our name to the Template Stack
@@ -182,7 +182,7 @@ public class Template implements Cloneable {
         // save the output file or return the content
         if (!this.outputFile.isEmpty()) {
             try {
-                this.saveOutputAs(zf);
+                zf.writeZipFile(this);
             } catch (IOException e) {
                 throw new MergeException(e, "Could not save output", this.getFullName());
             }
@@ -192,29 +192,16 @@ public class Template implements Cloneable {
         }
     }
 
-    /********************************************************************************
-     * Write the contents of the template as an entry in the Merge Archive file
-     *
-     * @throws MergeException on File write errors
-     * @throws MergeException on TAG_OUTPUTFILE not in replace stack
-     */
-    public void saveOutputAs(ZipFactory zf) throws IOException {
-        // don't save /dev/null or empty file names
-        if (this.isEmpty()) {
-            return;
+    public boolean isOutputFileSpecified() {
+        boolean specified = replaceValues.containsKey(TAG_OUTPUTFILE);
+        if(!specified){
+            log.warn("Template "+getFullName()+" is missing System Tag : " + Template.TAG_OUTPUTFILE);
         }
-        if (this.outputFile == "/dev/null") {
-            return;
-        }
-        // Make sure we have an output file defined
-        if (!this.replaceValues.containsKey(TAG_OUTPUTFILE)) {
-            throw new IllegalStateException("System Tag Not Found: " + TAG_OUTPUTFILE);
-        }
-        // Build the file name and replace process it
-        String fileName = this.replaceProcess(this.outputFile);
-        // Write the output file
-        zf.writeFile(this.getOutputFile(), fileName, this.content, this.getOutputType());
-        return;
+        return specified;
+    }
+
+    public boolean isNullOutputFile(Template template) {
+        return template.outputFile.equals("/dev/null");
     }
 
     /********************************************************************************
@@ -502,7 +489,7 @@ public class Template implements Cloneable {
         this.content = content;
         // Parse bookmarks array from text
         Matcher m = BOOKMARK_PATTERN.matcher(this.content);
-        this.bookmarks = new ArrayList<Bookmark>();
+        this.bookmarks = new ArrayList<>();
         while (m.find()) {
             this.bookmarks.add(new Bookmark(m.group(), m.start()));
         }
@@ -543,5 +530,9 @@ public class Template implements Cloneable {
         } else {
             return false;
         }
+    }
+
+    public boolean canWrite() {
+        return !(isEmpty() || isNullOutputFile(this) || !isOutputFileSpecified());
     }
 }

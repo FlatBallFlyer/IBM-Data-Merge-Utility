@@ -34,8 +34,8 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 	private static final Logger log = Logger.getLogger( InsertSubs.class.getName() );
 	private static final int DEPTH_MAX = 100;
 	
-	private List<String> notLast  = new ArrayList<String>();	
-	private List<String> onlyLast = new ArrayList<String>();	
+	private List<String> notLast  = new ArrayList<>();
+	private List<String> onlyLast = new ArrayList<>();
 
 	/**
 	 * Simple constructor
@@ -50,8 +50,8 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 	 */
 	public InsertSubs clone() throws CloneNotSupportedException {
 		InsertSubs newDirective = (InsertSubs) super.clone();
-		newDirective.notLast	= new ArrayList<String>(this.notLast);
-		newDirective.onlyLast	= new ArrayList<String>(this.onlyLast);
+		newDirective.notLast	= new ArrayList<>(this.notLast);
+		newDirective.onlyLast	= new ArrayList<>(this.onlyLast);
 		return newDirective;
 	}
 	
@@ -119,7 +119,7 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 	}
 
 	public void setNotLast(String notLast) {
-		this.notLast = new ArrayList<String>(Arrays.asList(notLast.split(",")));
+		this.notLast = new ArrayList<>(Arrays.asList(notLast.split(",")));
 	}
 
 	public String getOnlyLast() {
@@ -127,6 +127,6 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 	}
 
 	public void setOnlyLast(String onlyLast) {
-		this.onlyLast = new ArrayList<String>(Arrays.asList(onlyLast.split(",")));
+		this.onlyLast = new ArrayList<>(Arrays.asList(onlyLast.split(",")));
 	}
 }

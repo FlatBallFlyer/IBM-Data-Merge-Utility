@@ -56,7 +56,7 @@ public class IntegrationTestingHtmlProvider {
 		zf.setOutputroot(outputDir);
 		
 		// Initialize requestMap (usually from request.getParameterMap())
-		parameterMap = new HashMap<String,String[]>();
+		parameterMap = new HashMap<>();
 		parameterMap.put("htmlCorporate", new String[]{htmlCorporate});
 		parameterMap.put("htmlCustomer",  new String[]{htmlCustomer});
 		parameterMap.put("htmlCustomers", new String[]{htmlCustomers});

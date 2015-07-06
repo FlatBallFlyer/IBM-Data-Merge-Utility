@@ -9,7 +9,7 @@ import java.util.List;
 public class SampleResourcesRepository {
     private final List<SampleResource> resources;
 
-    private static final List<SampleResource> RESOURCES = Collections.synchronizedList(new ArrayList<SampleResource>());
+    private static final List<SampleResource> RESOURCES = Collections.synchronizedList(new ArrayList<>());
 
     public SampleResourcesRepository() {
         resources = RESOURCES;

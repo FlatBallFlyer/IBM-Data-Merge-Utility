@@ -12,6 +12,6 @@ import javax.ws.rs.core.Application;
 @ApplicationPath("/test")
 public class TestApp extends Application {
     public Set<Class<?>> getClasses() {
-        return new HashSet<Class<?>>(Arrays.asList(ResourcesServlet.class, ResourceServlet.class));
+        return new HashSet<>(Arrays.asList(ResourcesServlet.class, ResourceServlet.class));
     }
 }

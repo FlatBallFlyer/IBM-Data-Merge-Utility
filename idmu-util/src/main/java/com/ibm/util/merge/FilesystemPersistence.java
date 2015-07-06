@@ -58,7 +58,7 @@ public class FilesystemPersistence {
             }
             count++;
         }
-        log.warn("Loaded " + Integer.toString(count) + " templates from " + templateFolder);
+        log.info("Loaded " + Integer.toString(count) + " templates from " + templateFolder);
         return templates;
     }
 

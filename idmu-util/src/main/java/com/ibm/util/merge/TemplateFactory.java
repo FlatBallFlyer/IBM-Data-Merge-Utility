@@ -19,10 +19,7 @@ package com.ibm.util.merge;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class implements a Caching Template Factory as well as all aspects of Template Persistence
@@ -38,7 +35,7 @@ final public class TemplateFactory {
     private final String DEFAULT_FULLNAME = "root.default.";
     private final FilesystemPersistence fs;
     private HibernatePersistence hp;
-    private final MemoryCache<String, Template> templateCache;
+    private final Cache<String, Template> templateCache;
 
     public TemplateFactory(FilesystemPersistence fs) {
         this.templateCache = new MemoryCache<>();
@@ -59,7 +56,7 @@ final public class TemplateFactory {
      * @see Template
      */
     public Template getTemplate(Map<String, String[]> request) {
-        HashMap<String, String> replace = new HashMap<String, String>();
+        HashMap<String, String> replace = new HashMap<>();
         // Open the "Default" template if if not specified.
         replace.put(KEY_FULLNAME, DEFAULT_FULLNAME);
         // Iterate parameters, setting replace values
@@ -77,8 +74,8 @@ final public class TemplateFactory {
         }
         // Get the template, add the http parameter replace values to it's hash
         String fullName = replace.get(KEY_FULLNAME);
-        Template rootTempalte = getTemplate(fullName, "", replace);
-        return rootTempalte;
+        Template rootTemplate = getTemplate(fullName, "", replace);
+        return rootTemplate;
     }
 
     public void loadTemplatesFromFilesystem() {
@@ -139,7 +136,7 @@ final public class TemplateFactory {
      * @see Template
      */
     public String getCollections() {
-        ArrayList<String> theList = new ArrayList<String>();
+        Set<String> theList;// = new ArrayList<String>();
         if (this.hp != null) {
             theList = getCollectionsFromDb();
         } else {
@@ -152,13 +149,13 @@ final public class TemplateFactory {
     /**
      * @return
      */
-    private ArrayList<String> getCollectionsFromCache() {
-        ArrayList<String> theCollections = new ArrayList<String>();
+    private Set<String> getCollectionsFromCache() {
+        Set<String> theCollections = new HashSet<>();
         // Iterate the Hash
         for (Template template : templateCache.asMap().values()) {
-            if (!theCollections.contains(template.getCollection())) {
-                theCollections.add(template.getCollection());
-            }
+//            if (!theCollections.contains(template.getCollection())) {
+            theCollections.add(template.getCollection());
+//            }
         }
         // Return the JSON String
         return theCollections;
@@ -167,11 +164,10 @@ final public class TemplateFactory {
     /**
      * @return
      */
-    private ArrayList<String> getCollectionsFromDb() {
+    private Set<String> getCollectionsFromDb() {
         //String query = "DISTINCT COLLECTION";
-        ArrayList<String> theTemplates = new ArrayList<String>();
-        // Execute Query and populate returnTemplates list
-        // Return the JSON String
+        Set<String> theTemplates = new HashSet<>();
+        // TODO:Execute Query and populate returnTemplates list
         return theTemplates;
     }
 
@@ -184,7 +180,7 @@ final public class TemplateFactory {
      * @see Template
      */
     public String getTemplates(String collection) {
-        ArrayList<String> theList = new ArrayList<String>();
+        Set<String> theList;// = new ArrayList<String>();
         if (this.hp != null) {
             theList = getTemplatesFromDb(collection);
         } else {
@@ -198,13 +194,13 @@ final public class TemplateFactory {
      * @param collection
      * @return
      */
-    public ArrayList<String> getTemplatesFromCache(String collection) {
-        ArrayList<String> theTemplates = new ArrayList<String>();
+    public Set<String> getTemplatesFromCache(String collection) {
+        Set<String> theTemplates = new HashSet<>();
         // Iterate the Hash
         for (Template template : templateCache.asMap().values()) {
-            if (template.getCollection().equals(collection)) {
-                theTemplates.add(template.getFullName());
-            }
+//            if (template.getCollection().equals(collection)) {
+            theTemplates.add(template.getFullName());
+//            }
         }
         // Return the JSON String
         return theTemplates;
@@ -214,11 +210,10 @@ final public class TemplateFactory {
      * @param collection
      * @return
      */
-    public ArrayList<String> getTemplatesFromDb(String collection) {
+    public Set<String> getTemplatesFromDb(String collection) {
         //String query = "WHERE COLLECTION = :collection";
-        ArrayList<String> theTemplates = new ArrayList<String>();
-        // Execute Query and populate returnTemplates list
-        // Return the JSON String
+        Set<String> theTemplates = new HashSet<>();
+        // TODO: Execute Query and populate returnTemplates list
         return theTemplates;
     }
 
@@ -228,7 +223,7 @@ final public class TemplateFactory {
      * @param String fullName - the Template Full Name
      */
     public String getTemplateAsJson(String fullName) {
-        Template template = getTemplate(fullName, "", new HashMap<String, String>());
+        Template template = getTemplate(fullName, "", new HashMap<>());
         return template.asJson(true);
     }
 
@@ -263,7 +258,7 @@ final public class TemplateFactory {
 //        templateCache.remove(template.getFullName());
         templateCache.cache(template.getFullName(), template);
         log.info(template.getFullName() + " has been cached");
-        return templateCache.get(template.getFullName()).clone(new HashMap<String, String>());
+        return templateCache.get(template.getFullName()).clone(new HashMap<>());
     }
 
     /**********************************************************************************
@@ -274,10 +269,9 @@ final public class TemplateFactory {
     public void reset() {
         log.warn("Template Cache / Hibernate Reset");
         templateCache.clear();
-        if(this.hp != null){
+        if (this.hp != null) {
             hp.initilizeHibernate();
         }
-
         log.info("Reset Complete");
     }
 
@@ -287,8 +281,6 @@ final public class TemplateFactory {
     public int size() {
         return templateCache.size();
     }
-
-
 
     public void setHp(HibernatePersistence hp) {
         this.hp = hp;

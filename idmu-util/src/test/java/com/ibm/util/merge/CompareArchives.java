@@ -67,7 +67,7 @@ public final class CompareArchives {
 	 * @throws IOException
 	 */
 	private static final HashMap<String, ZipEntry> getMembers(ZipFile archive) throws IOException {
-		HashMap<String, ZipEntry> map = new HashMap<String, ZipEntry>();
+		HashMap<String, ZipEntry> map = new HashMap<>();
 		@SuppressWarnings("unchecked")
 		Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) archive.entries();
 		while (entries.hasMoreElements()) {
@@ -126,7 +126,7 @@ public final class CompareArchives {
 				new FileInputStream(archive)));
 
 		TarArchiveEntry entry;
-		HashMap<String, TarArchiveEntry> map = new HashMap<String, TarArchiveEntry>();
+		HashMap<String, TarArchiveEntry> map = new HashMap<>();
 	    while ((entry = input.getNextTarEntry()) != null) {
 			map.put(entry.getName(), entry);
 		}

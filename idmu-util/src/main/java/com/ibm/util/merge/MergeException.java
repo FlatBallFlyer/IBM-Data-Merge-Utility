@@ -165,7 +165,7 @@ public class MergeException extends Exception {
 	public String getHtmlErrorMessage(TemplateFactory tf, ZipFactory zf, ConnectionFactory cf) {
 		String message = "";
 		Template errorTemplate;
-		HashMap<String,String> parameters = new HashMap<String,String>();
+		HashMap<String,String> parameters = new HashMap<>();
 		parameters.put(Template.wrap("MESSAGE"),  this.error);
 		parameters.put(Template.wrap("CONTEXT"),  this.context);
 		parameters.put(Template.wrap("TRACE"), this.getStackTrace().toString());
@@ -187,7 +187,7 @@ public class MergeException extends Exception {
 	public String getJsonErrorMessage(TemplateFactory tf, ZipFactory zf, ConnectionFactory cf) {
 		String message = "";
 		Template errorTemplate;
-		HashMap<String,String> parameters = new HashMap<String,String>();
+		HashMap<String,String> parameters = new HashMap<>();
 		parameters.put(Template.wrap("MESSAGE"),  this.error);
 		parameters.put(Template.wrap("CONTEXT"),  this.context);
 		parameters.put(Template.wrap("TRACE"), this.getStackTrace().toString());
