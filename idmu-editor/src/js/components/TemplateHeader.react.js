@@ -13,8 +13,10 @@ var TemplateHeader = React.createClass({
   },
   handleSave: function(evt) {
     var opts = {};
-    opts = $.extend({},opts,this.refs.header_panel.state);
-    this.props.sCB(opts);
+    if(this.refs.header_panel) {
+      opts = $.extend({},opts,this.refs.header_panel.state);
+      this.props.sCB(opts);
+    }
   },
   showPanel: function(){
     var mCB = this.props.mCB;
