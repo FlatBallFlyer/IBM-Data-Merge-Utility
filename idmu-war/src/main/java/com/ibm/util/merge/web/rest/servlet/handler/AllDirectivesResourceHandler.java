@@ -4,13 +4,12 @@ import com.ibm.util.merge.RuntimeContext;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.directive.Directive;
-import com.ibm.util.merge.web.rest.servlet.JsonQueryResult;
+import com.ibm.util.merge.web.rest.servlet.result.JsonQueryResult;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class AllDirectivesResourceHandler implements RequestHandler {
     }
 
     @Override
-    public Result handle(RequestData rd, HttpServletRequest request) {
+    public Result handle(RequestData rd) {
         TemplateFactory tf = runtimeContext.getTemplateFactory();
         List<Template> allTemplates = tf.listAllTemplates();
         List<Directive> allDirectives = new ArrayList<>();

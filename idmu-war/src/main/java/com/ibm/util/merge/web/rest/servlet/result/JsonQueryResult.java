@@ -1,6 +1,8 @@
-package com.ibm.util.merge.web.rest.servlet;
+package com.ibm.util.merge.web.rest.servlet.result;
 
 import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.util.merge.web.rest.servlet.RequestData;
+import com.ibm.util.merge.web.rest.servlet.Result;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletOutputStream;

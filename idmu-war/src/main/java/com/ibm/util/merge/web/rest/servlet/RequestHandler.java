@@ -3,7 +3,6 @@ package com.ibm.util.merge.web.rest.servlet;
 import com.ibm.util.merge.RuntimeContext;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -14,5 +13,5 @@ public interface RequestHandler {
 
     boolean canHandle(RequestData rd);
 
-    Result handle(RequestData rd, HttpServletRequest request);
+    Result handle(RequestData rd);
 }

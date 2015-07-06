@@ -20,17 +20,27 @@ import com.ibm.util.merge.RuntimeContext;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
+import com.ibm.util.merge.web.rest.servlet.RequestHandler;
+import com.ibm.util.merge.web.rest.servlet.RestServlet;
+import com.ibm.util.merge.web.rest.servlet.handler.*;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Initialize extends HttpServlet {
+
+    private Logger log = Logger.getLogger(Initialize.class);
+
     private String warTemplatesPath = "/WEB-INF/templates";
     private String outputDirPath = "/tmp/merge";
+    private List<RequestHandler> handlerChain = new ArrayList<>(Arrays.asList(new AllTemplatesResourceHandler(), new AllDirectivesResourceHandler(), new CollectionTemplatesResourceHandler(), new CollectionTemplatesForTypeResourceHandler(), new CollectionForCollectionTypeColumnValueResourceHandler(), new TemplateForFullnameResourceHandler()));
 
     /**
      * Initialize Logging, Template and Zip Factory objects
@@ -44,6 +54,12 @@ public class Initialize extends HttpServlet {
         RuntimeContext rtc = new RuntimeContext(tf);
         rtc.initialize(outputDirPath);
         cfg.getServletContext().setAttribute("rtc", rtc);
+        for (RequestHandler handler : handlerChain) {
+            log.info("Initializing handler " + handler.getClass().getName());
+            handler.initialize(cfg, rtc);
+        }
+        cfg.getServletContext().setAttribute("handlerChain", handlerChain);
+
     }
 
     private void applyInitParameters(ServletConfig cfg) {
@@ -58,7 +74,7 @@ public class Initialize extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        String textResult = "Last initialized successfully at " + findRuntimeContext(req).getInitialized() + "\n" +
+        String textResult = "Last initialized successfully at " + RestServlet.findRuntimeContext(req.getServletContext()).getInitialized() + "\n" +
                 "Make a POST request to " + req.getRequestURL() + " to reinitialize and reload templates";
         writeTextResult(res, textResult);
         // TODO: Get System Status (Factory Sizes, ?Processing History?)
@@ -74,13 +90,9 @@ public class Initialize extends HttpServlet {
      * Reinitializes IDMU upon POST to this servlet
      */
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        RuntimeContext rtc = findRuntimeContext(req);
+        RuntimeContext rtc = RestServlet.findRuntimeContext(req.getServletContext());
         rtc.initialize(outputDirPath);
         writeTextResult(res, "Successfully reinitialized IDMU.");
         // TODO Execute System Actions :  Populate TemplateType table?, Reset and Reload Template Cache?
-    }
-
-    private RuntimeContext findRuntimeContext(HttpServletRequest req) {
-        return (RuntimeContext) req.getServletContext().getAttribute("rtc");
     }
 }
