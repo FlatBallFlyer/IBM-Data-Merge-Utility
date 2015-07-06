@@ -26,7 +26,8 @@ var DirectivesEditor = React.createClass({
   changeDirective: function(dx,index){
     this.props.data.template.directive[index] = dx;
   },
-  editor: function(type){
+  editor: function(type_in){
+   var type = parseInt(type_in);
    if(type === 0){
      return(<RequireTags ref={this.props.directive.name} data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 1){

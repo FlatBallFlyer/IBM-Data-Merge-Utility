@@ -7,7 +7,7 @@ var DirectiveEditorsMixin = {
     return $.extend(true, {}, this.props.directive);
   },
   componentWillReceiveProps: function(nextProps) {
-    return this.setState(nextProps.directive);
+    this.setState(nextProps.directive);
   },
   soft_fail: function() {
     var defaultChecked = this.state.softFail === true;

@@ -34,6 +34,11 @@
         "name": "rcp",
         "label": "Postal on the crazy",
         "columnValue": "SMS"
+      },
+      {
+        "name": "scp",
+        "label": "Postal on the crazy",
+        "columnValue": "SMS"
       }
     ],
     "selected": false

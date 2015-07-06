@@ -9,8 +9,14 @@
         {"id": "1", "name": "Whatever"}
     ],
     "directives": [
-        {"id": "1", "name": "CORP_BANNER", "description": "Corporate Banner", "type": "replace"},
-        {"id": "2", "name":"CORP_FOOTER", "description": "Corporate Footer", "type": "replace"},
-        {"id": "3", "name": "CORP_DISCLAIMER", "description": "Corporate Disclaimer", "type": "replace"}
+    {
+      "type": "0",
+      "name": "Require Tags",
+      "description": "Corp. Stuff",
+      "softFail": "true",
+      "tags": [
+        "Tag1"
+      ]
+    }
     ]
 }
