@@ -36,17 +36,16 @@ import com.ibm.util.merge.*;
  */
 @WebServlet("/Template")
 public class Persist extends HttpServlet {
-    private TemplateFactory tf;
-    private ZipFactory zf;
-    private ConnectionFactory cf;
+
+    private RuntimeContext rtc;
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
-        zf = new ZipFactory();
-        cf = new ConnectionFactory();
-        Initialize.performInit(servletConfig, tf, zf);
+        TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
+        ZipFactory zf = new ZipFactory();
+        rtc = new RuntimeContext(tf, zf);
+        rtc.initialize("/tmp/merge");
     }
 
     /**
@@ -65,7 +64,7 @@ public class Persist extends HttpServlet {
         // Create the response writer
         response.setContentType("text/json");
         out = response.getWriter();
-        out.write(tf.getTemplateAsJson(request.getParameter("DragonFlyFullName")));
+        out.write(rtc.getTemplateFactory().getTemplateAsJson(request.getParameter("DragonFlyFullName")));
         out.close();
     }
 
@@ -83,7 +82,7 @@ public class Persist extends HttpServlet {
         response.setContentType("text/html");
         out = response.getWriter();
         String template = request.getParameter("template");
-        out.write(tf.saveTemplateFromJson(template));
+        out.write(rtc.getTemplateFactory().saveTemplateFromJson(template));
         out.close();
     }
 }

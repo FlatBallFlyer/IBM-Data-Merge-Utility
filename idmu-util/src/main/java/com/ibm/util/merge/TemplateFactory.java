@@ -48,7 +48,7 @@ final public class TemplateFactory {
 
     /**********************************************************************************
      * <p>Template from Servlet request Constructor. Initiates a template based on http Servlet Request
-     * parameters. Servlet request parameters are used to initilize the Replace hash. The
+     * parameters. Servlet request parameters are used to initialize the Replace hash. The
      * template to be used is specified on the KEY_FULLNAME parameter.
      * If no template is provided the DEFAULT_FULLNAME value is used.
      * The KEY_CACHE_RESET parameter will reset the Template Cache.
@@ -100,7 +100,7 @@ final public class TemplateFactory {
      * @return Template The new Template object
      * @throws MergeException Invalid Directive Type from Constructor
      */
-    public Template getTemplate(String fullName, String shortName, HashMap<String, String> seedReplace) {
+    public Template getTemplate(String fullName, String shortName, Map<String, String> seedReplace) {
         Template newTemplate = null;
         // Cache hit -- Return a clone of the Template in Cache
         if (templateCache.containsKey(fullName)) {

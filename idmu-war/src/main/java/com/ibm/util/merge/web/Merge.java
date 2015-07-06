@@ -38,17 +38,17 @@ import org.apache.log4j.Logger;
 @WebServlet("/Merge")
 public class Merge extends HttpServlet {
     private static final Logger log = Logger.getLogger(HttpServlet.class.getName());
-    private TemplateFactory tf;
-    private ZipFactory zf;
-    private ConnectionFactory cf;
+
+
+    private RuntimeContext rtc;
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
-        zf = new ZipFactory();
-        cf = new ConnectionFactory();
-        Initialize.performInit(servletConfig, tf, zf);
+        TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
+        ZipFactory zf = new ZipFactory();
+        rtc = new RuntimeContext(tf, zf);
+        rtc.initialize("/tmp/merge");
     }
 
     /**
@@ -95,17 +95,17 @@ public class Merge extends HttpServlet {
      */
     public void merge(HttpServletRequest request, HttpServletResponse response) throws IOException, MergeException {
 
-        Template root = tf.getTemplate(request.getParameterMap());
+        Template root = rtc.getTemplateFactory().getTemplate(request.getParameterMap());
         long start = System.currentTimeMillis();
         // Create the response writer
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         // Get a template using the httpServletRequest constructor
         // Perform the merge and write output
-        String merged = root.merge(zf, tf, cf);
+        String merged = root.merge(rtc.getZipFactory(), rtc.getTemplateFactory(), rtc.getConnectionFactory());
         out.write(merged);
         // Close Connections and Finalize Output
-        root.packageOutput(zf, cf);
+        root.packageOutput(rtc.getZipFactory(), rtc.getConnectionFactory());
         long elapsed = System.currentTimeMillis() - start;
         log.warn(String.format("Merge completed in %d milliseconds", elapsed));
     }

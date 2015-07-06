@@ -36,17 +36,16 @@ import com.ibm.util.merge.*;
  */
 @WebServlet("/Query")
 public class Query extends HttpServlet {
-    private TemplateFactory tf;
-    private ZipFactory zf;
-    private ConnectionFactory cf;
+
+    private RuntimeContext rtc;
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
-        zf = new ZipFactory();
-        cf = new ConnectionFactory();
-        Initialize.performInit(servletConfig, tf, zf);
+        TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
+        ZipFactory zf = new ZipFactory();
+        rtc = new RuntimeContext(tf, zf);
+        rtc.initialize("/tmp/merge");
     }
 
     /**
@@ -71,11 +70,11 @@ public class Query extends HttpServlet {
         String parm = request.getParameter("list");
         if (parm != null) {
             if (parm.equals("Collections")) {
-                out.write(tf.getCollections());
+                out.write(rtc.getTemplateFactory().getCollections());
                 out.close();
             }
             if (parm.equals("Templates")) {
-                out.write(tf.getTemplates(request.getParameter("collection")));
+                out.write(rtc.getTemplateFactory().getTemplates(request.getParameter("collection")));
                 out.close();
             }
         }

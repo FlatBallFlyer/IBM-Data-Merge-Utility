@@ -99,7 +99,7 @@ public class Template implements Cloneable {
      * @param seedReplace Initial replace hash
      * @throws MergeException - Wrapper of clone not supported exceptions
      */
-    public Template clone(HashMap<String, String> seedReplace) {
+    public Template clone(Map<String, String> seedReplace) {
         Template newTemplate = cloneThisTemplate();
         newTemplate.replaceValues = new HashMap<String, String>();
         newTemplate.setContent(this.getContent());
