@@ -28,47 +28,59 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/Initialize")
 public class Initialize extends HttpServlet {
-//	private RuntimeContext rtc;
+    private String warTemplatesPath = "/WEB-INF/templates";
+    private String outputDirPath = "/tmp/merge";
 
-	/**
-     * Initialize Logging, Template and Zip Factory objects 
+    /**
+     * Initialize Logging, Template and Zip Factory objects
      */
-	public void init(ServletConfig cfg) {
-		String fullPath = cfg.getServletContext().getRealPath("/WEB-INF/templates");
-//		TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates", new PrettyJsonProxy()));
-		PrettyJsonProxy jsonProxy = new PrettyJsonProxy();
-		FilesystemPersistence fs = new FilesystemPersistence(fullPath, jsonProxy);
-		TemplateFactory tf = new TemplateFactory(fs);
-
-
-		RuntimeContext rtc = new RuntimeContext(tf);
-		rtc.initialize("/tmp/merge");
-		cfg.getServletContext().setAttribute("rtc", rtc);
-	}
-
-	/**
-	 * @throws IOException getWriter failed  
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 * @param req the Http Request object
-	 * @param res the Http Response Object
-	 */ 
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		res.getOutputStream().println("Initialized successfully.");
-    	// Get Status (Factory Sizes, ?Processing History?) 
-    	// - Create a Static SystemStatus object and return JSON serialization?
+    public void init(ServletConfig cfg) {
+        applyInitParameters(cfg);
+        String fullPath = cfg.getServletContext().getRealPath(warTemplatesPath);
+        PrettyJsonProxy jsonProxy = new PrettyJsonProxy();
+        FilesystemPersistence fs = new FilesystemPersistence(fullPath, jsonProxy);
+        TemplateFactory tf = new TemplateFactory(fs);
+        RuntimeContext rtc = new RuntimeContext(tf);
+        rtc.initialize(outputDirPath);
+        cfg.getServletContext().setAttribute("rtc", rtc);
     }
 
-	/**
-	 * @throws IOException getWriter failed
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 * @param req the Http Request object
-	 * @param res the Http Response Object
-	 */
-	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-	    // Execute System Actions??? 
-		// - Populate TemplateType table?
-		// - Reset and Reload Template Cache?
-	}
+    private void applyInitParameters(ServletConfig cfg) {
+        String mergeTemplatesFolder = cfg.getInitParameter("merge-templates-folder");
+        if(mergeTemplatesFolder != null){
+            warTemplatesPath = mergeTemplatesFolder;
+        }
+        String outputRootDir = cfg.getInitParameter("merge-output-root");
+        if(outputRootDir != null){
+            outputDirPath = outputRootDir;
+        }
+    }
+
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        String textResult = "Last initialized successfully at " + findRuntimeContext(req).getInitialized() + "\n" +
+                "Make a POST request to " + req.getRequestURL() + " to reinitialize and reload templates";
+        writeTextResult(res, textResult);
+        // TODO: Get System Status (Factory Sizes, ?Processing History?)
+    }
+
+    private void writeTextResult(HttpServletResponse res, String textResult) throws IOException {
+        res.setContentType("text/plain");
+        res.setCharacterEncoding("UTF-8");
+        res.getOutputStream().println(textResult);
+    }
+
+    /**
+     * Reinitializes IDMU upon POST to this servlet
+     */
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        RuntimeContext rtc = findRuntimeContext(req);
+        rtc.initialize(outputDirPath);
+        writeTextResult(res, "Successfully reinitialized IDMU.");
+        // TODO Execute System Actions :  Populate TemplateType table?, Reset and Reload Template Cache?
+    }
+
+    private RuntimeContext findRuntimeContext(HttpServletRequest req) {
+        return (RuntimeContext) req.getServletContext().getAttribute("rtc");
+    }
 }

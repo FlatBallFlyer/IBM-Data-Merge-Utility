@@ -36,7 +36,7 @@ import java.io.PrintWriter;
  * @see TemplateFactory
  * @see Template
  */
-@WebServlet("/Query")
+//@WebServlet("/Query")
 public class Query extends HttpServlet {
 
     private RuntimeContext rtc;

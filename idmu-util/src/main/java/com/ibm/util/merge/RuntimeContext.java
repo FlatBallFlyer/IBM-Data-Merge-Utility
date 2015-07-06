@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 
 /**
  *
@@ -14,6 +15,7 @@ public class RuntimeContext {
     private final TemplateFactory templateFactory;
     private final ZipFactory zipFactory;
     private final ConnectionFactory connectionFactory;
+    private Date initialized = null;
 
     public RuntimeContext(TemplateFactory templateFactory) {
         this.templateFactory = templateFactory;
@@ -25,16 +27,21 @@ public class RuntimeContext {
     public void initialize(String outputDirPath) {
         log.info("Initializing..");
         Path path = Paths.get(outputDirPath);
-        if(!Files.exists(path)){
+        if (!Files.exists(path)) {
             throw new OutputDirectoryPathDoesNotExistException(outputDirPath);
         }
-        if(!Files.isDirectory(path)){
+        if (!Files.isDirectory(path)) {
             throw new NonDirectoryAtOutputDirectoryPathException(outputDirPath);
         }
-
         zipFactory.setOutputRoot(outputDirPath);
+        templateFactory.reset();
         templateFactory.loadTemplatesFromFilesystem();
+        initialized = new Date();
         log.info("Initialized");
+    }
+
+    public Date getInitialized() {
+        return initialized;
     }
 
     public TemplateFactory getTemplateFactory() {
@@ -49,7 +56,7 @@ public class RuntimeContext {
         return zipFactory;
     }
 
-    public static class OutputDirectoryPathDoesNotExistException extends RuntimeException{
+    public static class OutputDirectoryPathDoesNotExistException extends RuntimeException {
         private String outputDirPath;
 
         public OutputDirectoryPathDoesNotExistException(String outputDirPath) {
@@ -62,7 +69,7 @@ public class RuntimeContext {
         }
     }
 
-    public static class NonDirectoryAtOutputDirectoryPathException extends RuntimeException{
+    public static class NonDirectoryAtOutputDirectoryPathException extends RuntimeException {
         private String outputDirPath;
 
         public NonDirectoryAtOutputDirectoryPathException(String outputDirPath) {

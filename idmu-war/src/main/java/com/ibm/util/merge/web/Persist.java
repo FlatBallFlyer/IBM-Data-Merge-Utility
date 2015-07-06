@@ -36,7 +36,7 @@ import java.io.PrintWriter;
  * @see TemplateFactory
  * @see Template
  */
-@WebServlet("/Template")
+//@WebServlet("/Template")
 public class Persist extends HttpServlet {
 
     private RuntimeContext rtc;
@@ -45,9 +45,6 @@ public class Persist extends HttpServlet {
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
         rtc = (RuntimeContext) servletConfig.getServletContext().getAttribute("rtc");
-//        TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates", new PrettyJsonProxy()));
-//        rtc = new RuntimeContext(tf);
-//        rtc.initialize("/tmp/merge");
     }
 
     /**

@@ -35,7 +35,7 @@ import java.io.PrintWriter;
  * @see TemplateFactory
  * @see Template
  */
-@WebServlet("/Merge")
+//@WebServlet("/Merge")
 public class Merge extends HttpServlet {
     private static final Logger log = Logger.getLogger(HttpServlet.class.getName());
 
