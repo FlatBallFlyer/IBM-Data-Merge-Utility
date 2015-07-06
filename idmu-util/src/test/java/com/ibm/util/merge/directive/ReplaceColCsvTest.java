@@ -16,12 +16,15 @@
  */
 package com.ibm.util.merge.directive;
 
-import static org.junit.Assert.*;
-
-import com.ibm.util.merge.*;
-import com.ibm.util.merge.persistence.FilesystemPersistence;
-import org.junit.*;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.Template;
+import com.ibm.util.merge.TestUtils;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class ReplaceColCsvTest extends ReplaceColTest {
 

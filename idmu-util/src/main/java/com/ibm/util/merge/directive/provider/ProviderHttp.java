@@ -16,17 +16,16 @@
  */
 package com.ibm.util.merge.directive.provider;
 
+import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.Template;
+import org.apache.commons.io.IOUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import com.ibm.util.merge.ConnectionFactory;
-import org.apache.commons.io.IOUtils;
-
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
 
 /**
  * @author Mike Storey

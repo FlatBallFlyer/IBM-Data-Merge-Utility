@@ -16,9 +16,12 @@
  */
 package com.ibm.util.merge;
 
-import static org.junit.Assert.*;
-import java.sql.Connection;
 import org.junit.Test;
+
+import java.sql.Connection;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 public class ConnectionFactoryTest {

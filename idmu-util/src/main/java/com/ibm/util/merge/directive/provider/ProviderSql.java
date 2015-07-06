@@ -15,17 +15,13 @@
  *
  */
 package com.ibm.util.merge.directive.provider;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
-import org.apache.log4j.Logger;
 
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
+import org.apache.log4j.Logger;
+
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * @author flatballflyer

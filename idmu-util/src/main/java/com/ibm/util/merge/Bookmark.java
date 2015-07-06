@@ -17,7 +17,8 @@
 
 package com.ibm.util.merge;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A location within a template where sub-templates will be inserted. 

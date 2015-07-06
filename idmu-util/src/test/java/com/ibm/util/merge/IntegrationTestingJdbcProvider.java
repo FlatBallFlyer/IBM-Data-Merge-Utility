@@ -16,9 +16,9 @@
  */
 package com.ibm.util.merge;
 
-import com.ibm.util.merge.persistence.FilesystemPersistence;
 import junitx.framework.FileAssert;
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,8 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 
 public class IntegrationTestingJdbcProvider {

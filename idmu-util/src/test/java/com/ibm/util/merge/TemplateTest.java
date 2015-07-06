@@ -16,18 +16,20 @@
  */
 package com.ibm.util.merge;
 
-import static org.junit.Assert.*;
+import com.ibm.util.merge.directive.*;
+import com.ibm.util.merge.directive.provider.ProviderCsv;
+import com.ibm.util.merge.directive.provider.ProviderHtml;
+import com.ibm.util.merge.directive.provider.ProviderSql;
+import com.ibm.util.merge.directive.provider.ProviderTag;
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.util.merge.json.JsonProxy;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.ibm.util.merge.json.DefaultJsonProxy;
-import com.ibm.util.merge.json.JsonProxy;
-import com.ibm.util.merge.persistence.FilesystemPersistence;
-import org.junit.*;
-
-import com.ibm.util.merge.directive.*;
-import com.ibm.util.merge.directive.provider.*;
+import static org.junit.Assert.*;
 
 public class TemplateTest {
 	private Template template;

@@ -153,7 +153,7 @@ final public class TemplateFactory {
         return jsonProxy.toJson(theList);
     }
 
-    private Set<String> getCollectionNames() {
+    public Set<String> getCollectionNames() {
         Set<String> theList;// = new ArrayList<String>();
         if (hp != null) {
             theList = getCollectionsFromDb();
@@ -185,7 +185,7 @@ final public class TemplateFactory {
         return jsonProxy.toJson(theList);
     }
 
-    private Set<String> getTemplateNames(String collection) {
+    public Set<String> getTemplateNames(String collection) {
         Set<String> theList;// = new ArrayList<String>();
         if (hp != null) {
             theList = getTemplatesFromDb(collection);
@@ -212,8 +212,13 @@ final public class TemplateFactory {
      * @param String fullName - the Template Full Name
      */
     public String getTemplateAsJson(String fullName) {
-        Template template = getTemplate(fullName, "", new HashMap<>());
+
+        Template template = getTemplateByFullname(fullName);
         return jsonProxy.toJson(template);
+    }
+
+    private Template getTemplateByFullname(String fullName) {
+        return getTemplate(fullName, "", new HashMap<>());
     }
 
     /**********************************************************************************
@@ -269,6 +274,34 @@ final public class TemplateFactory {
         this.hp = hp;
     }
 
+    public Map<String, List<Template>> mapTemplatesPerCollection() {
+        ArrayList<String> collectionNames = new ArrayList<>(getCollectionNames());
+        Collections.sort(collectionNames);
+        Map<String, List<Template>> collectionTemplatesMap = new TreeMap<>();
+        for (String name : collectionNames) {
+            Set<String> templateNames = new TreeSet<>(getTemplateCache().getTemplateFullnamesFromCache(name));
+            List<Template> templates = new ArrayList<>();
+            for (String templateName : templateNames) {
+                Template template = getTemplateCache().get(templateName);
+                templates.add(template);
+            }
+            collectionTemplatesMap.put(name, templates);
+
+        }
+        return collectionTemplatesMap;
+    }
+
+    public List<Template> listAllTemplates() {
+        Map<String, List<Template>> collectionTemplatesMap = mapTemplatesPerCollection();
+        List<Template> allTemplates = new ArrayList<>();
+        for (Map.Entry<String, List<Template>> e : collectionTemplatesMap.entrySet()) {
+//                String colname = e.getKey();
+            List<Template> templates = e.getValue();
+            allTemplates.addAll(templates);
+        }
+        return allTemplates;
+    }
+
     public static class TemplateNotFoundException extends RuntimeException {
         private String templateName;
 
@@ -280,5 +313,9 @@ final public class TemplateFactory {
         public String getTemplateName() {
             return templateName;
         }
+    }
+
+    public TemplateCache getTemplateCache() {
+        return templateCache;
     }
 }

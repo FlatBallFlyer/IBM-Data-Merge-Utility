@@ -16,17 +16,16 @@
  */
 package com.ibm.util.merge.directive;
 
-import static org.junit.Assert.*;
+import com.ibm.util.merge.*;
+import com.ibm.util.merge.directive.provider.ProviderHtml;
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.util.merge.json.JsonProxy;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.HashMap;
 
-import com.ibm.util.merge.*;
-import com.ibm.util.merge.json.DefaultJsonProxy;
-import com.ibm.util.merge.json.JsonProxy;
-import com.ibm.util.merge.persistence.FilesystemPersistence;
-import org.junit.Before;
-import org.junit.Test;
-import com.ibm.util.merge.directive.provider.ProviderHtml;
+import static org.junit.Assert.*;
 
 public class InsertSubsHtmlTest extends InsertSubsTest {
 	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Row: {A}, Val: {B}\\n\"}";

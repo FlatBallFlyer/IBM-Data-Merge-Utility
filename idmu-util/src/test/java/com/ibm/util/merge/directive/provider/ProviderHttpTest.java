@@ -16,12 +16,12 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import static org.junit.Assert.*;
-
 import com.ibm.util.merge.ConnectionFactory;
-import org.junit.*;
-
 import com.ibm.util.merge.MergeException;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public abstract class ProviderHttpTest extends ProviderTest {
 	private ConnectionFactory cf;

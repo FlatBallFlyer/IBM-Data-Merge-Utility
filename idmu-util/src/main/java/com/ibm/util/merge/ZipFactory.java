@@ -16,11 +16,7 @@
  */
 package com.ibm.util.merge;
 
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.log4j.Logger;
-
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.zip.ZipOutputStream;
 
 /**
  * Manages an output archive for generated files

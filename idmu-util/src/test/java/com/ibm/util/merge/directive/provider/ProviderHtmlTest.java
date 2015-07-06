@@ -16,13 +16,15 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import static org.junit.Assert.*;
-
-import com.ibm.util.merge.*;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.Template;
+import com.ibm.util.merge.directive.Directive;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import com.ibm.util.merge.directive.Directive;
+
+import static org.junit.Assert.*;
 
 public class ProviderHtmlTest extends ProviderHttpTest {
 	

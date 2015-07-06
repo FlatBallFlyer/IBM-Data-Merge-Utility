@@ -4,7 +4,6 @@ import com.google.gson.JsonSyntaxException;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.json.JsonProxy;
-import com.ibm.util.merge.json.PrettyJsonProxy;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.log4j.Logger;
 

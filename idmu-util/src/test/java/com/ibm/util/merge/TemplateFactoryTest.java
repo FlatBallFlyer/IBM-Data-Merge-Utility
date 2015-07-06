@@ -16,16 +16,16 @@
  */
 package com.ibm.util.merge;
 
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
-
 import com.ibm.util.merge.json.DefaultJsonProxy;
 import com.ibm.util.merge.json.JsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.HashMap;
+
+import static org.junit.Assert.*;
 
 public class TemplateFactoryTest {
     private String template1 = "{\"collection\":\"root\",\"name\":\"test\",\"columnValue\":\"\"}";

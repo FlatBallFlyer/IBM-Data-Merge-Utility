@@ -16,16 +16,15 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-
 import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.MergeException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import com.ibm.util.merge.MergeException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 
 /**
  * @author flatballflyer

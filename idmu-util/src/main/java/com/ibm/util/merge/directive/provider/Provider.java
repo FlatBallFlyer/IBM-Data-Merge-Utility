@@ -16,11 +16,11 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import java.util.ArrayList;
-
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.directive.Directive;
+
+import java.util.ArrayList;
 
 /**
  * A data provider for standard merge processes. The data provider normalized the view of 

@@ -16,14 +16,14 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import java.util.ArrayList;
-
 import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.MergeException;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.*;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.ibm.util.merge.MergeException;
+import java.util.ArrayList;
 
 public class ProviderHtml extends ProviderHttp {
 	public ProviderHtml() {

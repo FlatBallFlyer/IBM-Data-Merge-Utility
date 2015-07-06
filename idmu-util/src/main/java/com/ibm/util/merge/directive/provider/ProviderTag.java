@@ -16,12 +16,12 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author flatballflyer

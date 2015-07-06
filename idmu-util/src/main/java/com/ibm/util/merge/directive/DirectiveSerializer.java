@@ -15,11 +15,12 @@
  *
  */
 package com.ibm.util.merge.directive;
-import java.lang.reflect.Type;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+
+import java.lang.reflect.Type;
 
 public class DirectiveSerializer implements JsonSerializer<Directive> {
 

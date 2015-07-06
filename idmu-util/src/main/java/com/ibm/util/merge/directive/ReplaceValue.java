@@ -15,7 +15,9 @@
  *
  */
 package com.ibm.util.merge.directive;
-import com.ibm.util.merge.*;
+
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.Template;
 import org.apache.log4j.Logger;
 
 /**

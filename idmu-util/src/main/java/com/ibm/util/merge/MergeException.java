@@ -15,13 +15,13 @@
  *
  */
 package com.ibm.util.merge;
-import java.util.HashMap;
-
-import com.ibm.util.merge.json.PrettyJsonProxy;
-import org.apache.log4j.Logger;
 
 import com.ibm.util.merge.directive.Directive;
 import com.ibm.util.merge.directive.provider.Provider;
+import com.ibm.util.merge.json.PrettyJsonProxy;
+import org.apache.log4j.Logger;
+
+import java.util.HashMap;
 
 /**
  * Merge Processing Exception Class - This is the only exception thrown by the Merge Utility

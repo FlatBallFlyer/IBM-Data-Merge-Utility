@@ -16,17 +16,18 @@
  */
 package com.ibm.util.merge.directive;
 
-import static org.junit.Assert.*;
+import com.ibm.util.merge.*;
+import com.ibm.util.merge.directive.provider.DataTable;
+import com.ibm.util.merge.directive.provider.Provider;
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.util.merge.json.JsonProxy;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.ibm.util.merge.*;
-import com.ibm.util.merge.json.DefaultJsonProxy;
-import com.ibm.util.merge.json.JsonProxy;
-import com.ibm.util.merge.persistence.FilesystemPersistence;
-import org.junit.Before;
-import org.junit.Test;
-import com.ibm.util.merge.directive.provider.*;
+import static org.junit.Assert.*;
 
 public class InsertSubsSqlTest extends InsertSubsTest {
 	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Row: {A}, Val: {B}\\n\"}";

@@ -16,7 +16,9 @@
  */
 package com.ibm.util.merge;
 
-import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,10 +26,7 @@ import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
-import com.ibm.util.merge.persistence.FilesystemPersistence;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 
 public class IntegrationTestingHtmlProvider {

@@ -17,7 +17,9 @@
 
 package com.ibm.util.merge.directive;
 
-import com.ibm.util.merge.*;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.Provider;
 
 /**

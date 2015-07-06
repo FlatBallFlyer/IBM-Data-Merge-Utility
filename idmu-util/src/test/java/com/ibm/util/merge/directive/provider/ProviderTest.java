@@ -16,10 +16,11 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import static org.junit.Assert.*;
-import org.junit.*;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.Directive;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public abstract class ProviderTest {
 	protected Provider provider;

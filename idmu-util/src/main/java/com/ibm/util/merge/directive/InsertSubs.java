@@ -16,13 +16,16 @@
  */
 package com.ibm.util.merge.directive;
 
+import com.ibm.util.merge.Bookmark;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.Template;
+import com.ibm.util.merge.directive.provider.DataTable;
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.ibm.util.merge.*;
-import org.apache.log4j.Logger;
-import com.ibm.util.merge.directive.provider.DataTable;
 
 /**
  * The Insert Subs directive drives the insertion of sub-templates at bookmarks

@@ -15,10 +15,13 @@
  *
  */
 package com.ibm.util.merge.directive;
-import com.ibm.util.merge.*;
-import org.apache.log4j.Logger;
-import com.ibm.util.merge.directive.provider.Provider;
+
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.Template;
 import com.ibm.util.merge.directive.provider.DataTable;
+import com.ibm.util.merge.directive.provider.Provider;
+import org.apache.log4j.Logger;
 
 /**
  * @author Mike Storey

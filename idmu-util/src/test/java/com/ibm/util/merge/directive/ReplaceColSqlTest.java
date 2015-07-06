@@ -16,15 +16,15 @@
  */
 package com.ibm.util.merge.directive;
 
-import static org.junit.Assert.*;
+import com.ibm.util.merge.*;
+import com.ibm.util.merge.directive.provider.DataTable;
+import com.ibm.util.merge.directive.provider.Provider;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
-import com.ibm.util.merge.*;
-import com.ibm.util.merge.persistence.FilesystemPersistence;
-import org.junit.Before;
-import org.junit.Test;
-import com.ibm.util.merge.directive.provider.*;
+import static org.junit.Assert.*;
 
 public class ReplaceColSqlTest extends ReplaceColTest {
 
