@@ -16,18 +16,18 @@
  */
 package com.ibm.util.merge.web;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.Template;
+import com.ibm.util.merge.TemplateFactory;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.ibm.util.merge.*;
-import com.ibm.util.merge.json.PrettyJsonProxy;
-import com.ibm.util.merge.persistence.FilesystemPersistence;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * JSON Get/Put Template Servlet
@@ -44,9 +44,10 @@ public class Persist extends HttpServlet {
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates", new PrettyJsonProxy()));
-        rtc = new RuntimeContext(tf);
-        rtc.initialize("/tmp/merge");
+        rtc = (RuntimeContext) servletConfig.getServletContext().getAttribute("rtc");
+//        TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates", new PrettyJsonProxy()));
+//        rtc = new RuntimeContext(tf);
+//        rtc.initialize("/tmp/merge");
     }
 
     /**

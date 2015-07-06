@@ -16,31 +16,36 @@
  */
 package com.ibm.util.merge.web;
 
-import java.io.IOException;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.TemplateFactory;
+import com.ibm.util.merge.json.PrettyJsonProxy;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.ibm.util.merge.*;
-import com.ibm.util.merge.json.PrettyJsonProxy;
-import com.ibm.util.merge.persistence.FilesystemPersistence;
+import java.io.IOException;
 
 @WebServlet("/Initialize")
 public class Initialize extends HttpServlet {
-	private RuntimeContext rtc;
+//	private RuntimeContext rtc;
 
 	/**
      * Initialize Logging, Template and Zip Factory objects 
      */
 	public void init(ServletConfig cfg) {
+		String fullPath = cfg.getServletContext().getRealPath("/WEB-INF/templates");
+//		TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates", new PrettyJsonProxy()));
+		PrettyJsonProxy jsonProxy = new PrettyJsonProxy();
+		FilesystemPersistence fs = new FilesystemPersistence(fullPath, jsonProxy);
+		TemplateFactory tf = new TemplateFactory(fs);
 
-		TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates", new PrettyJsonProxy()));
 
-		// Initialize Log4j
-		rtc = new RuntimeContext(tf);
+		RuntimeContext rtc = new RuntimeContext(tf);
 		rtc.initialize("/tmp/merge");
+		cfg.getServletContext().setAttribute("rtc", rtc);
 	}
 
 	/**

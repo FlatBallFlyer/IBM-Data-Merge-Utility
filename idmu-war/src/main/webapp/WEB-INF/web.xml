@@ -49,6 +49,14 @@
 	</servlet-mapping>
 
 	<servlet>
+		<servlet-name>RestServlet</servlet-name>
+		<servlet-class>com.ibm.util.merge.web.rest.servlet.RestServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RestServlet</servlet-name>
+		<url-pattern>/idmu/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>Persist</servlet-name>
 		<servlet-class>com.ibm.util.merge.web.Persist</servlet-class>
 	</servlet>
