@@ -28,7 +28,7 @@ import com.ibm.util.merge.MergeException;
 public class ProviderHtml extends ProviderHttp {
 	public ProviderHtml() {
 		super();
-		this.setType(Provider.TYPE_HTML);
+		setType(Provider.TYPE_HTML);
 	}
 	
 	/**
@@ -49,14 +49,14 @@ public class ProviderHtml extends ProviderHttp {
 		super.getData(cf);
 		
 		// Parse the Data
-		Document doc = Jsoup.parse(this.getFetchedData());
+		Document doc = Jsoup.parse(getFetchedData());
 
 		// Find <table> elements
 		Elements tables = doc.select("table");
 
 		// for each (find) {
 		for (Element table : tables) {
-			DataTable newTable = this.getNewTable();
+			DataTable newTable = getNewTable();
 			
 			// Find and Process Table Header elements
 			Elements headers = table.select("th");

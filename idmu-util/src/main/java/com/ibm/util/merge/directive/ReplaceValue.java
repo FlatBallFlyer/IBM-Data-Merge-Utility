@@ -37,8 +37,8 @@ public class ReplaceValue extends Directive implements Cloneable {
 	 */
 	public ReplaceValue() {
 		super();
-		this.setType(TYPE_REPLACE_VALUE);
-		this.setProvider(null);
+		setType(TYPE_REPLACE_VALUE);
+		setProvider(null);
 	}
 
 	/**
@@ -55,8 +55,8 @@ public class ReplaceValue extends Directive implements Cloneable {
 	 * @param zf
 	 */
 	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) {
-		this.getTemplate().addReplace(this.from, this.to);
-		log.info("Replaced " + this.from + " with " + this.to);
+		getTemplate().addReplace(from, to);
+		log.info("Replaced " + from + " with " + to);
 	}
 
 	public String getFrom() {

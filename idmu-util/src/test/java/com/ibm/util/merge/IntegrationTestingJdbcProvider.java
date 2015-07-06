@@ -16,6 +16,7 @@
  */
 package com.ibm.util.merge;
 
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import junitx.framework.FileAssert;
 import static org.junit.Assert.*;
 
@@ -47,15 +48,23 @@ public class IntegrationTestingJdbcProvider {
 		tf.reset();
 
 		tf.loadTemplatesFromFilesystem();
-		zf.setOutputroot(outputDir);
+		zf.setOutputRoot(outputDir);
 		parameterMap = new HashMap<>();
 	}
 
 	@Test
 	public void testDefaultTemplate() throws Exception {
 		Template root = tf.getTemplate(parameterMap);
-		String output = root.merge(zf, tf, cf);
-		root.packageOutput(zf, cf);
+		root.merge(zf, tf, cf);
+		final String returnValue;
+		if (!root.canWrite()) {
+			returnValue = "";
+		} else {
+			returnValue = root.getContent();
+		}
+		root.doWrite(zf);
+		String output = returnValue;
+//		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + "merge1.output"))), output);
 	}
 
@@ -111,8 +120,16 @@ public class IntegrationTestingJdbcProvider {
 	private void testMerge(String fullName) throws Exception {
 		parameterMap.put(tf.KEY_FULLNAME, 	new String[]{fullName});
 		Template root = tf.getTemplate(parameterMap);
-		String mergeOutput = root.merge(zf, tf, cf);
-		root.packageOutput(zf, cf);
+		root.merge(zf, tf, cf);
+		final String returnValue;
+		if (!root.canWrite()) {
+			returnValue = "";
+		} else {
+			returnValue = root.getContent();
+		}
+		root.doWrite(zf);
+		String mergeOutput = returnValue;
+//		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + fullName + ".output"))), mergeOutput);
 	}
 }

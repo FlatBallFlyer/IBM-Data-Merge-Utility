@@ -50,8 +50,8 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 	 */
 	public InsertSubs clone() throws CloneNotSupportedException {
 		InsertSubs newDirective = (InsertSubs) super.clone();
-		newDirective.notLast	= new ArrayList<>(this.notLast);
-		newDirective.onlyLast	= new ArrayList<>(this.onlyLast);
+		newDirective.notLast	= new ArrayList<>(notLast);
+		newDirective.onlyLast	= new ArrayList<>(onlyLast);
 		return newDirective;
 	}
 	
@@ -66,29 +66,29 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 	 * @throws DragonFlySqlException SQL Error thrown in Template.new
 	 */
 	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
-		log.info("Inserting Subtemplates into: " + this.getTemplate().getFullName());
+		log.info("Inserting Subtemplates into: " + getTemplate().getFullName());
 		
 		// Depth counter - infinite loop safety mechanism
-		if (this.getTemplate().getStack().split("/").length >= DEPTH_MAX) {
-			throw new MergeException("Insert Subs Infinite Loop suspected", this.getFullName()); 
+		if (getTemplate().getStack().split("/").length >= DEPTH_MAX) {
+			throw new MergeException("Insert Subs Infinite Loop suspected", getFullName());
 		}
 
 		// Get the table data and iterate the rows
-		this.getProvider().getData(cf);
-		for (DataTable table : this.getProvider().getTables() ) {
+		getProvider().getData(cf);
+		for (DataTable table : getProvider().getTables() ) {
 				
 			for( int row = 0; row < table.size(); row++ ) {
-				log.info("Inserting Record #" + row + " into: " + this.getTemplate().getFullName());
+				log.info("Inserting Record #" + row + " into: " + getTemplate().getFullName());
 	
 				// Iterate over target bookmarks
-		 		for(Bookmark bookmark : this.getTemplate().getBookmarks()) {
+		 		for(Bookmark bookmark : getTemplate().getBookmarks()) {
 	
 	 				// Create the new sub-template
 		 			String collection = bookmark.getCollection();
 		 			String name = bookmark.getName();
 		 			String column = table.getValue(row, bookmark.getColumn());
-					Template subTemplate = tf.getTemplate(collection + "." + name + "." + column, collection + "." + name + ".", this.getTemplate().getReplaceValues());
-					log.info("Inserting Template " + subTemplate.getFullName() + " into " + this.getTemplate().getFullName());
+					Template subTemplate = tf.getTemplate(collection + "." + name + "." + column, collection + "." + name + ".", getTemplate().getReplaceValues());
+					log.info("Inserting Template " + subTemplate.getFullName() + " into " + getTemplate().getFullName());
 						
 					// Add the Row replace values
 					for (int col=0; col < table.cols(); col++) {
@@ -96,15 +96,23 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 					}
 						
 					// Take care of "Not Last" and "Only Last"
-					subTemplate.addEmptyReplace(row == table.size()-1 ? this.notLast : this.onlyLast);
+					subTemplate.addEmptyReplace(row == table.size()-1 ? notLast : onlyLast);
 						
 					// Merge the SubTemplate and insert the text into the Target Template
 					try {
-						this.getTemplate().insertText(subTemplate.merge(zf, tf, cf), bookmark);
+						subTemplate.merge(zf, tf, cf);
+						final String returnValue;
+						if (!subTemplate.canWrite()) {
+							returnValue = "";
+						} else {
+							returnValue = subTemplate.getContent();
+						}
+						subTemplate.doWrite(zf);
+						getTemplate().insertText(returnValue, bookmark);
 					} catch (MergeException e) {
-						if ( this.softFail()) {
+						if (softFail()) {
 							log.warn("Soft Fail on Insert");
-							this.getTemplate().insertText("Soft Fail Exception" + e.getMessage(), bookmark);
+							getTemplate().insertText("Soft Fail Exception" + e.getMessage(), bookmark);
 						} else {
 							throw e;
 						}
@@ -115,7 +123,7 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 	}
 
 	public String getNotLast() {
-		return String.join(",", this.notLast);
+		return String.join(",", notLast);
 	}
 
 	public void setNotLast(String notLast) {
@@ -123,7 +131,7 @@ public abstract class InsertSubs extends Directive implements Cloneable{
 	}
 
 	public String getOnlyLast() {
-		return String.join(",", this.onlyLast);
+		return String.join(",", onlyLast);
 	}
 
 	public void setOnlyLast(String onlyLast) {

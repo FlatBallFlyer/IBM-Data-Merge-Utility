@@ -57,7 +57,7 @@ public abstract class Directive implements Cloneable{
 	private int			sequence	= 0;
 	private int 		type		= 0;
 	private boolean 	softFail	= false;
-	private String 		description	= this.getClass().getName();
+	private String 		description	= getClass().getName();
 	private Provider 	provider;
 	
 	/********************************************************************************
@@ -82,8 +82,8 @@ public abstract class Directive implements Cloneable{
 	 */
 	public Directive clone() throws CloneNotSupportedException {
 		Directive newDirective = (Directive) super.clone();
-		if (this.provider != null) {
-			newDirective.setProvider( (Provider) this.provider.clone() );
+		if (provider != null) {
+			newDirective.setProvider( (Provider) provider.clone() );
 		}
 		newDirective.template = null;
 		return newDirective;
@@ -93,18 +93,18 @@ public abstract class Directive implements Cloneable{
 	 * SoftFail indicator (on this Directive, or the Template)
 	 */
 	public boolean softFail() {
-		return (this.softFail | this.template.softFail()) ? true : false;
+		return (softFail | template.isSoftFail()) ? true : false;
 	}
 	
 	/**
 	 * @return the Template Fullname + the Directive Description
 	 */
 	public String getFullName() {
-		return template.getFullName() + ":Directive-" + this.description;
+		return template.getFullName() + ":Directive-" + description;
 	}
 	
 	public Template getTemplate() {
-		return this.template;
+		return template;
 	}
 	
 	public Provider getProvider() {

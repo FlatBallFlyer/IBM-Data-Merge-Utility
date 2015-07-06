@@ -25,8 +25,8 @@ public class InsertSubsSql extends InsertSubs implements Cloneable {
 	 */
 	public InsertSubsSql() {
 		super();
-		this.setType(TYPE_SQL_INSERT);
-		this.setProvider(new ProviderSql());
+		setType(TYPE_SQL_INSERT);
+		setProvider(new ProviderSql());
 	}
 	
 	/** 

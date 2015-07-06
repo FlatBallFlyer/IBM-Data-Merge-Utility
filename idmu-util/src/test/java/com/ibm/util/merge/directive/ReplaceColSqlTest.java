@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.junit.Before;
 import org.junit.Test;
 import com.ibm.util.merge.directive.provider.*;
@@ -78,7 +79,7 @@ public class ReplaceColSqlTest extends ReplaceColTest {
 		}
 		
 		public void getData(ConnectionFactory cf) throws MergeException {
-			DataTable table = this.getNewTable();
+			DataTable table = getNewTable();
 			ArrayList<String> row = table.getNewRow();
 			table.addCol("FromCol");table.addCol("ToCol");
 			row.add("A");row.add("1");

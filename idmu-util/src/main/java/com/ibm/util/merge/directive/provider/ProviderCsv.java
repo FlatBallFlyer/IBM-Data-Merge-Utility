@@ -34,7 +34,7 @@ import com.ibm.util.merge.MergeException;
 public class ProviderCsv extends ProviderHttp implements Cloneable {
 	public ProviderCsv() {
 		super();
-		this.setType(Provider.TYPE_CSV);
+		setType(Provider.TYPE_CSV);
 	}
 	
 	/**
@@ -52,11 +52,11 @@ public class ProviderCsv extends ProviderHttp implements Cloneable {
 	 */
 	public void getData(ConnectionFactory cf) throws MergeException {
 		super.getData(cf);
-		this.reset();
+		reset();
 		DataTable table = new DataTable();
 		CSVParser parser = null;
 		try {
-			parser = new CSVParser(new StringReader(this.getFetchedData()), CSVFormat.EXCEL.withHeader());
+			parser = new CSVParser(new StringReader(getFetchedData()), CSVFormat.EXCEL.withHeader());
 			for (String colName : parser.getHeaderMap().keySet() ) {
 				table.addCol(colName);
 			}
@@ -66,8 +66,9 @@ public class ProviderCsv extends ProviderHttp implements Cloneable {
 		    }
 		    parser.close();
 		} catch (IOException e) {
-			throw new MergeException(e, "CSV Parser Stringreader IO Exception", this.getFetchedData());
+			throw new MergeException(e, "CSV Parser Stringreader IO Exception", getFetchedData());
 		}
-		if (table.size() > 0) {this.getTables().add(table);}
+		if (table.size() > 0) {
+			getTables().add(table);}
 	}
 }

@@ -51,13 +51,13 @@ public abstract class ReplaceCol extends Directive implements Cloneable {
 	 * @param zf
 	 */
 	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
-		this.getProvider().getData(cf);
-		for (DataTable table : this.getProvider().getTables() ) {
-	 		int from = table.getCol(this.fromColumn);
-			int to = table.getCol(this.toColumn);
+		getProvider().getData(cf);
+		for (DataTable table : getProvider().getTables() ) {
+	 		int from = table.getCol(fromColumn);
+			int to = table.getCol(toColumn);
 			if (from > -1 && to > -1) {
 				for (int row=0; row < table.size(); row++) {
-					this.getTemplate().addReplace(table.getValue(row, from),table.getValue(row, to));
+					getTemplate().addReplace(table.getValue(row, from),table.getValue(row, to));
 				}
 			}
 		}

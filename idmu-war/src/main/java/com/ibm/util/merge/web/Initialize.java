@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 
 @WebServlet("/Initialize")
 public class Initialize extends HttpServlet {

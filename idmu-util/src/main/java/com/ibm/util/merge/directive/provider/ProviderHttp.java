@@ -61,24 +61,24 @@ public abstract class ProviderHttp extends Provider implements Cloneable {
 	 */
 	@Override
 	public void getData(ConnectionFactory cf) throws MergeException {
-		Template template = this.getDirective().getTemplate();
-		if (!this.url.isEmpty()) {
+		Template template = getDirective().getTemplate();
+		if (!url.isEmpty()) {
 			try {
-				String theUrl = template.replaceProcess(this.url);
-				this.fetchedData = IOUtils.toString(
+				String theUrl = template.replaceProcess(url);
+				fetchedData = IOUtils.toString(
 						new BufferedReader(
 						new InputStreamReader(
 						new URL(theUrl).openStream())));
 			} catch (MalformedURLException e) {
-				throw new MergeException(e, "Malformed URL", this.url);
+				throw new MergeException(e, "Malformed URL", url);
 			} catch (IOException e) {
-				throw new MergeException(e, "I-O Exception", this.url);
+				throw new MergeException(e, "I-O Exception", url);
 			}
-		} else if (!this.tag.isEmpty()) {
-			String key = Template.wrap(template.replaceProcess(this.tag));
-			this.fetchedData = template.getReplaceValue(key);
+		} else if (!tag.isEmpty()) {
+			String key = Template.wrap(template.replaceProcess(tag));
+			fetchedData = template.getReplaceValue(key);
 		} else {
-			this.fetchedData = this.staticData;
+			fetchedData = staticData;
 		}
 	}
 	
@@ -86,7 +86,7 @@ public abstract class ProviderHttp extends Provider implements Cloneable {
 	 * The URL is the query context for this directive type.
 	 */
 	public String getQueryString() {
-		return this.url;
+		return url;
 	}
 
 	public String getFetchedData() {

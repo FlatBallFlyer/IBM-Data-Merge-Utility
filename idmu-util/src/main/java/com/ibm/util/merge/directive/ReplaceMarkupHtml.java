@@ -28,8 +28,8 @@ public class ReplaceMarkupHtml extends Directive implements Cloneable {
 	 */
 	public ReplaceMarkupHtml() {
 		super();
-		this.setType(TYPE_HTML_REPLACE_MARKUP);
-		this.setProvider(new ProviderHtml());
+		setType(TYPE_HTML_REPLACE_MARKUP);
+		setProvider(new ProviderHtml());
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class ReplaceMarkupHtml extends Directive implements Cloneable {
 	 * @param zf
 	 */
 	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
-		this.getProvider().getData(cf);
+		getProvider().getData(cf);
 		// TODO HTML Markup - Execute
 		// for each match, get from/to and call this.owner.addReplace()
 	}

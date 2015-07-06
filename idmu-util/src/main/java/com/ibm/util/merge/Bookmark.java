@@ -83,7 +83,7 @@ public class Bookmark implements Cloneable {
 	 * @param  amount The number of bytes (positive or negative) to offset
 	 */
 	public void offest (int amount) {
-		this.start += amount;
+		start += amount;
 	}
 
 	// - SIMPLE GETTERS BELOW HERE -
@@ -91,21 +91,21 @@ public class Bookmark implements Cloneable {
 	 * @return the name
 	 */
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	/**
 	 * @return the start
 	 */
 	public int getStart() {
-		return this.start;
+		return start;
 	}
 
 	/**
 	 * @return the size
 	 */
 	public int getSize() {
-		return this.size;
+		return size;
 	}
 
 	public String getCollection() {

@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.util.merge.json.JsonProxy;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.junit.Before;
 import org.junit.Test;
 import com.ibm.util.merge.directive.provider.*;
@@ -32,9 +35,11 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 	private TemplateFactory tf;
 	private ZipFactory zf;
 	private ConnectionFactory cf;
+	private JsonProxy jsonProxy;
 
 	@Before
 	public void setUp() throws Exception {
+		jsonProxy = new DefaultJsonProxy();
 		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
@@ -44,9 +49,10 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 		myDirective.setProvider(provider);
 
 		tf.reset();
-
-		tf.cacheFromJson(subTemplate); 
-		tf.cacheFromJson(masterTemplate);
+		Template template2 = jsonProxy.fromJSON(subTemplate, Template.class);
+		tf.cache(template2);
+		Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
+		tf.cache(template1);
 		template = tf.getTemplate("root.master.", "", new HashMap<>());
 		template.addDirective(myDirective);
 	}
@@ -78,7 +84,7 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 		}
 		
 		public void getData(ConnectionFactory cf) throws MergeException {
-			DataTable table = this.getNewTable();
+			DataTable table = getNewTable();
 			ArrayList<String> row;
 			table.addCol("A");table.addCol("B");table.addCol("C");
 			row = table.getNewRow();

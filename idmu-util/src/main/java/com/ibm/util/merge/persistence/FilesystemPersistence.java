@@ -1,6 +1,10 @@
-package com.ibm.util.merge;
+package com.ibm.util.merge.persistence;
 
 import com.google.gson.JsonSyntaxException;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.Template;
+import com.ibm.util.merge.json.JsonProxy;
+import com.ibm.util.merge.json.PrettyJsonProxy;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.log4j.Logger;
 
@@ -17,9 +21,11 @@ public class FilesystemPersistence {
     private Logger log = Logger.getLogger(FilesystemPersistence.class);
 
     private String templateFolder;
+    private JsonProxy jsonProxy;
 
     public FilesystemPersistence(String templateFolder) {
         this.templateFolder = templateFolder;
+        jsonProxy = new PrettyJsonProxy();
     }
 
     /**********************************************************************************
@@ -45,7 +51,7 @@ public class FilesystemPersistence {
             if (!file.isDirectory()) {
                 try {
                     String json = String.join("\n", Files.readAllLines(file.toPath()));
-                    Template template = Template.fromJSON(json);
+                    Template template = jsonProxy.fromJSON(json, Template.class);
                     templates.add(template);
 //                    cacheFromJson(json);
                 } catch (JsonSyntaxException e) {
@@ -77,7 +83,7 @@ public class FilesystemPersistence {
             file.createNewFile();
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
             bw = new BufferedWriter(fw);
-            bw.write(template.asJson(true));
+            bw.write(jsonProxy.toJson(template));
             bw.close();
         } catch (IOException e) {
             throw new RuntimeException("Could not write template " +template.getFullName()+" to JSON folder : " + file.getPath(), e);

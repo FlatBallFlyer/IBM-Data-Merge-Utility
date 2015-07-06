@@ -25,8 +25,8 @@ public class ReplaceColSql extends ReplaceCol implements Cloneable {
 	 */
 	public ReplaceColSql() {
 		super();
-		this.setType(TYPE_SQL_REPLACE_COL);
-		this.setProvider(new ProviderSql());
+		setType(TYPE_SQL_REPLACE_COL);
+		setProvider(new ProviderSql());
 	}
 
 	/** 

@@ -16,7 +16,10 @@
  */
 package com.ibm.util.merge;
 
+import com.ibm.util.merge.storage.TarFileWriter;
+import com.ibm.util.merge.storage.ZipFileWriter;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,45 +28,42 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-import static org.junit.Assert.assertEquals;
-
 public class ZipFactoryTest {
-	private ZipFactory zf;
+    private Logger log = Logger.getLogger(ZipFactoryTest.class);
+    private ZipFactory zf;
 
-	@Before
-	public void setup() throws IOException {
-		zf = new ZipFactory();
-		FileUtils.cleanDirectory(new File("src/test/resources/testout")); 
-	}
-	
-	@After
-	public void teardown() throws IOException {
-		FileUtils.cleanDirectory(new File("src/test/resources/testout")); 
-	}
-	
-	@Test
-	public void testWriteFileZip() throws MergeException, IOException, NoSuchAlgorithmException {
-		assertEquals(0, zf.size());
-		makeArchive("src/test/resources/testout/", "test1.zip", ZipFactory.TYPE_ZIP);
-		assertEquals(0, zf.size());
-		CompareArchives.assertZipEquals("src/test/resources/valid/test1.zip", "src/test/resources/testout/test1.zip");
-	}
+    @Before
+    public void setup() throws IOException {
+        zf = new ZipFactory();
+        FileUtils.cleanDirectory(new File("src/test/resources/testout"));
+    }
 
-	@Test
-	public void testWriteFileTar() throws MergeException, IOException, NoSuchAlgorithmException {
-		assertEquals(0, zf.size());
-		makeArchive("src/test/resources/testout/", "test1.tar", ZipFactory.TYPE_TAR);
-		assertEquals(0, zf.size());
-		CompareArchives.assertTarEquals("src/test/resources/valid/test1.tar", "src/test/resources/testout/test1.tar");
-	}
+    @After
+    public void teardown() throws IOException {
+        FileUtils.cleanDirectory(new File("src/test/resources/testout"));
+    }
 
-	private void makeArchive(String outputRoot, String outputFile, int type) throws IOException {
-		zf.setOutputroot(outputRoot);
-		final StringBuilder content = new StringBuilder("Test Output File One");
-		zf.writeFile(outputFile, "path/file1.txt", type, content.toString());
-		final StringBuilder content1 = new StringBuilder("Test Output File Two");
-		zf.writeFile(outputFile, "path/file2.txt", type, content1.toString());
-		zf.closeStream(outputFile, type);
-	}
+    @Test
+    public void testWriteFileZip() throws MergeException, IOException, NoSuchAlgorithmException {
+        makeArchive("src/test/resources/testout/", "test1.zip", ZipFactory.TYPE_ZIP);
+        CompareArchives.assertZipEquals("src/test/resources/valid/test1.zip", "src/test/resources/testout/test1.zip");
+    }
 
+    @Test
+    public void testWriteFileTar() throws MergeException, IOException, NoSuchAlgorithmException {
+        makeArchive("src/test/resources/testout/", "test1.tar", ZipFactory.TYPE_TAR);
+        CompareArchives.assertTarEquals("src/test/resources/valid/test1.tar", "src/test/resources/testout/test1.tar");
+    }
+
+    private void makeArchive(String outputRoot, String outputFile, int type) throws IOException {
+        zf.setOutputRoot(outputRoot);
+        final StringBuilder content = new StringBuilder("Test Output File One");
+        String entryPath = "path/file2.txt";
+        File outputFile1 = new File(zf.getOutputRoot() + "/" + outputFile);
+        if (type == ZipFactory.TYPE_ZIP) {
+            new ZipFileWriter(outputFile1, entryPath, content.toString()).write();
+        } else {
+            new TarFileWriter(outputFile1, entryPath, content.toString(), "root", "root").write();
+        }
+    }
 }

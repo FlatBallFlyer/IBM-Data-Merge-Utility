@@ -63,7 +63,7 @@ public abstract class Provider implements Cloneable {
 	 */
 	public DataTable getNewTable() {
 		DataTable newTable = new DataTable();
-		this.dataTables.add(newTable);
+		dataTables.add(newTable);
 		return newTable;
 	}
 
@@ -71,7 +71,7 @@ public abstract class Provider implements Cloneable {
 	 * @return A new DataTable that has been added to an EMPTY collection.
 	 */
 	public void reset() {
-		this.dataTables = new ArrayList<>();
+		dataTables = new ArrayList<>();
 	}
 	
 	/**
@@ -103,14 +103,14 @@ public abstract class Provider implements Cloneable {
 	 * @return The DataTables ArrayList
 	 */
 	public ArrayList<DataTable> getTables() {
-		return this.dataTables;
+		return dataTables;
 	}
 	
 	/**
 	 * @return The number of Data Tables 
 	 */
 	public int size() {
-		return this.dataTables.size();
+		return dataTables.size();
 	}
 
 	public Directive getDirective() {

@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class IntegrationTestingHtmlProvider {
 		tf.reset();
 
 		tf.loadTemplatesFromFilesystem();
-		zf.setOutputroot(outputDir);
+		zf.setOutputRoot(outputDir);
 		
 		// Initialize requestMap (usually from request.getParameterMap())
 		parameterMap = new HashMap<>();
@@ -76,8 +77,16 @@ public class IntegrationTestingHtmlProvider {
 	@Test
 	public void testDefaultTemplate() throws MergeException, IOException {
 		Template root = tf.getTemplate(parameterMap);
-		String output = root.merge(zf, tf, cf);
-		root.packageOutput(zf, cf);
+		root.merge(zf, tf, cf);
+		final String returnValue;
+		if (!root.canWrite()) {
+			returnValue = "";
+		} else {
+			returnValue = root.getContent();
+		}
+		root.doWrite(zf);
+		String output = returnValue;
+//		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + "merge1.output"))), output);
 	}
 
@@ -123,8 +132,16 @@ public class IntegrationTestingHtmlProvider {
 		parameterMap.put("DragonFlyOutputFile", new String[]{fullName+type});
 		parameterMap.put("DragonFlyFullName", 	new String[]{fullName});
 		Template root = tf.getTemplate(parameterMap);
-		String output = root.merge(zf, tf, cf);
-		root.packageOutput(zf, cf);
+		root.merge(zf, tf, cf);
+		final String returnValue;
+		if (!root.canWrite()) {
+			returnValue = "";
+		} else {
+			returnValue = root.getContent();
+		}
+		root.doWrite(zf);
+		String output = returnValue;
+//		root.packageOutput(zf, cf);
 		CompareArchives.assertArchiveEquals(type, validateDir + fullName + type, outputDir + fullName + type);
 		return output;
 	}

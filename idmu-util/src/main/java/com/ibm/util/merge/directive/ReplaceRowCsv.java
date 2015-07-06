@@ -25,8 +25,8 @@ public class ReplaceRowCsv extends ReplaceRow implements Cloneable {
 	 */
 	public ReplaceRowCsv() {
 		super();
-		this.setType(TYPE_CSV_REPLACE_ROW);
-		this.setProvider(new ProviderCsv());
+		setType(TYPE_CSV_REPLACE_ROW);
+		setProvider(new ProviderCsv());
 	}
 
 	/** 

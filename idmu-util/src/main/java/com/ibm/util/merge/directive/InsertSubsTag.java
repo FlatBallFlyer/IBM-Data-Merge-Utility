@@ -26,8 +26,8 @@ public class InsertSubsTag extends InsertSubs implements Cloneable {
 	 */
 	public InsertSubsTag() {
 		super();
-		this.setType(TYPE_TAG_INSERT);
-		this.setProvider(new ProviderTag());
+		setType(TYPE_TAG_INSERT);
+		setProvider(new ProviderTag());
 	}
 
 	/** 

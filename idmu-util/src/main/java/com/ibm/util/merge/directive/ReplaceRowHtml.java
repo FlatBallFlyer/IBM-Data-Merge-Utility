@@ -25,8 +25,8 @@ public class ReplaceRowHtml extends ReplaceRow implements Cloneable {
 	 */
 	public ReplaceRowHtml() {
 		super();
-		this.setType(TYPE_HTML_REPLACE_ROW);
-		this.setProvider(new ProviderHtml());
+		setType(TYPE_HTML_REPLACE_ROW);
+		setProvider(new ProviderHtml());
 	}
 
 	/** 

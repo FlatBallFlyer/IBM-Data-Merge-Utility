@@ -1,4 +1,4 @@
-package com.ibm.util.merge;
+package com.ibm.util.merge.cache;
 
 import java.util.HashMap;
 import java.util.Map;

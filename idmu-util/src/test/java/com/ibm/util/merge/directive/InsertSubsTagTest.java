@@ -21,6 +21,9 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.util.merge.json.JsonProxy;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.junit.Before;
 import org.junit.Test;
 import com.ibm.util.merge.directive.provider.ProviderTag;
@@ -34,20 +37,23 @@ public class InsertSubsTagTest extends InsertSubsTest {
 	private TemplateFactory tf;
 	private ZipFactory zf;
 	private ConnectionFactory cf;
+	private JsonProxy jsonProxy;
 
 	@Before
 	public void setUp() throws Exception {
 		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
+		jsonProxy = new DefaultJsonProxy();
 		directive = new InsertSubsTag();
 		myDirective = (InsertSubsTag) directive;
 		myProvider = (ProviderTag) myDirective.getProvider();
 
 		tf.reset();
-
-		tf.cacheFromJson(subTemplate); 
-		tf.cacheFromJson(masterTemplate);
+		Template template2 = jsonProxy.fromJSON(subTemplate, Template.class);
+		tf.cache(template2);
+		Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
+		tf.cache(template1);
 		template = tf.getTemplate("root.master.", "", new HashMap<>());
 		template.addDirective(myDirective);
 

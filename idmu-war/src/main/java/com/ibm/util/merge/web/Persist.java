@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 
 /**
  * JSON Get/Put Template Servlet

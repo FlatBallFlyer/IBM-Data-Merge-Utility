@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.junit.Before;
 import org.junit.Test;
 

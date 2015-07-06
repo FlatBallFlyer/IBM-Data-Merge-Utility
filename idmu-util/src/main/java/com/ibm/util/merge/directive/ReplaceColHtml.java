@@ -25,8 +25,8 @@ public class ReplaceColHtml extends ReplaceCol implements Cloneable {
 	 */
 	public ReplaceColHtml() {
 		super();
-		this.setType(TYPE_HTML_REPLACE_COL);
-		this.setProvider(new ProviderHtml());
+		setType(TYPE_HTML_REPLACE_COL);
+		setProvider(new ProviderHtml());
 	}
 
 	/** 

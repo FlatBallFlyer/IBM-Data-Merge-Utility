@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.apache.log4j.Logger;
 
 /**
@@ -102,10 +103,19 @@ public class Merge extends HttpServlet {
         PrintWriter out = response.getWriter();
         // Get a template using the httpServletRequest constructor
         // Perform the merge and write output
-        String merged = root.merge(rtc.getZipFactory(), rtc.getTemplateFactory(), rtc.getConnectionFactory());
+        ZipFactory zf = rtc.getZipFactory();
+        root.merge(zf, rtc.getTemplateFactory(), rtc.getConnectionFactory());
+        final String returnValue;
+        if (!root.canWrite()) {
+            returnValue = "";
+        } else {
+            returnValue = root.getContent();
+        }
+        root.doWrite(zf);
+        String merged = returnValue;
         out.write(merged);
         // Close Connections and Finalize Output
-        root.packageOutput(rtc.getZipFactory(), rtc.getConnectionFactory());
+//        root.packageOutput(rtc.getZipFactory(), rtc.getConnectionFactory());
         long elapsed = System.currentTimeMillis() - start;
         log.warn(String.format("Merge completed in %d milliseconds", elapsed));
     }

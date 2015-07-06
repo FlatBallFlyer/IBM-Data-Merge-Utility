@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -46,7 +47,7 @@ public class IntegrationSafety {
 		// Initialize Factories
 		tf.reset();
 		tf.loadTemplatesFromFilesystem();
-		zf.setOutputroot(outputDir);
+		zf.setOutputRoot(outputDir);
 		
 		// Reset the output directory
 		FileUtils.cleanDirectory(new File(outputDir)); 
@@ -95,8 +96,16 @@ public class IntegrationSafety {
 		parameterMap.put("DragonFlyOutputFile", new String[]{fullName+type});
 		parameterMap.put("DragonFlyFullName", 	new String[]{fullName});
 		Template root = tf.getTemplate(parameterMap);
-		String output = root.merge(zf, tf, cf);
-		root.packageOutput(zf, cf);
+		root.merge(zf, tf, cf);
+		final String returnValue;
+		if (!root.canWrite()) {
+			returnValue = "";
+		} else {
+			returnValue = root.getContent();
+		}
+		root.doWrite(zf);
+		String output = returnValue;
+//		root.packageOutput(zf, cf);
 		return output;
 	}
 }

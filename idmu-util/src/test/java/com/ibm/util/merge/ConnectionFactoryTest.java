@@ -38,7 +38,7 @@ public class ConnectionFactoryTest {
 	@Test
 	public void testCloseDataConnection() {
 		cf = new ConnectionFactory();
-		cf.close("TestGuid");
+		cf.releaseConnection("TestGuid");
 		assertEquals(0, cf.size());
 	}
 

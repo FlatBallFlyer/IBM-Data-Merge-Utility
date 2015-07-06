@@ -25,8 +25,8 @@ public class ReplaceRowSql extends ReplaceRow implements Cloneable {
 	 */
 	public ReplaceRowSql() {
 		super();
-		this.setType(TYPE_SQL_REPLACE_ROW);
-		this.setProvider(new ProviderSql());
+		setType(TYPE_SQL_REPLACE_ROW);
+		setProvider(new ProviderSql());
 	}
 
 	/** 

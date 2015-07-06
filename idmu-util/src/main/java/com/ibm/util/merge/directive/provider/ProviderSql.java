@@ -43,7 +43,7 @@ public class ProviderSql extends Provider implements Cloneable {
 	 */
 	public ProviderSql() {
 		super();
-		this.setType(Provider.TYPE_SQL);
+		setType(Provider.TYPE_SQL);
 	}
 	
 	/**
@@ -63,16 +63,16 @@ public class ProviderSql extends Provider implements Cloneable {
 	 */
 	@Override
 	public void getData(ConnectionFactory cf) throws MergeException {
-		this.reset();
-		DataTable table = this.getNewTable();
+		reset();
+		DataTable table = getNewTable();
 		Connection con = null;
 		
 		try {
 			// Prepare and Execute the SQL Statement
-			String queryString = this.getQueryString();
-			log.info(this.getDirective().getTemplate().getFullName() + " Selecting SQL Data " + queryString );
+			String queryString = getQueryString();
+			log.info(getDirective().getTemplate().getFullName() + " Selecting SQL Data " + queryString );
 			
-			con = cf.getDataConnection(this.source, this.getDirective().getTemplate().getOutputFile());
+			con = cf.getDataConnection(source, getDirective().getTemplate().getOutputFile());
 			PreparedStatement st = con.prepareStatement(queryString, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = st.executeQuery();
 			
@@ -94,7 +94,7 @@ public class ProviderSql extends Provider implements Cloneable {
 			    }
 			}
 		} catch (SQLException e) {
-			throw new MergeException(e, "Invalid Merge Data", this.getQueryString() );
+			throw new MergeException(e, "Invalid Merge Data", getQueryString() );
 		} finally {
 			log.info("Sql Dataprovider read " + Integer.toString(table.size()) + " rows");			
 		}
@@ -107,12 +107,12 @@ public class ProviderSql extends Provider implements Cloneable {
 	 * @return the Select Statement
 	 */
 	public String getQueryString() {
-		String query = "SELECT " + this.getDirective().getTemplate().replaceProcess(this.columns);
-		if ( !this.from.isEmpty()) {
-			query += " FROM " + this.getDirective().getTemplate().replaceProcess(this.from);
+		String query = "SELECT " + getDirective().getTemplate().replaceProcess(columns);
+		if ( !from.isEmpty()) {
+			query += " FROM " + getDirective().getTemplate().replaceProcess(from);
 		}
-		if ( !this.where.isEmpty() ) {
-			query += " WHERE " + this.getDirective().getTemplate().replaceProcess(this.where);
+		if ( !where.isEmpty() ) {
+			query += " WHERE " + getDirective().getTemplate().replaceProcess(where);
 		}
 		return query;
 	}

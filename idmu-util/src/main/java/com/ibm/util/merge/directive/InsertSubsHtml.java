@@ -30,8 +30,8 @@ public class InsertSubsHtml extends InsertSubs implements Cloneable {
 	 */
 	public InsertSubsHtml() {
 		super();
-		this.setType(TYPE_HTML_INSERT);
-		this.setProvider(new ProviderHtml());
+		setType(TYPE_HTML_INSERT);
+		setProvider(new ProviderHtml());
 	}
 
 	/** 

@@ -16,7 +16,12 @@
  */
 package com.ibm.util.merge;
 
-import com.google.gson.Gson;
+import com.ibm.util.merge.cache.Cache;
+import com.ibm.util.merge.cache.MemoryCache;
+import com.ibm.util.merge.json.JsonProxy;
+import com.ibm.util.merge.json.PrettyJsonProxy;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
+import com.ibm.util.merge.persistence.HibernatePersistence;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -36,10 +41,12 @@ final public class TemplateFactory {
     private final FilesystemPersistence fs;
     private HibernatePersistence hp;
     private final Cache<String, Template> templateCache;
+    private final JsonProxy jsonProxy;
 
     public TemplateFactory(FilesystemPersistence fs) {
-        this.templateCache = new MemoryCache<>();
+        templateCache = new MemoryCache<>();
         this.fs = fs;
+        jsonProxy = new PrettyJsonProxy();
     }
 
     /**********************************************************************************
@@ -103,7 +110,7 @@ final public class TemplateFactory {
             return templateCache.get(fullName).clone(seedReplace);
         }
         // See if FullName template is in the database
-        if (this.hp != null) {
+        if (hp != null) {
             newTemplate = hp.getTemplateFullname(fullName);
             templateCache.cache(fullName, newTemplate);
             log.info("Constructed Template: " + fullName);
@@ -117,7 +124,7 @@ final public class TemplateFactory {
             return templateCache.get(fullName).clone(seedReplace);
         }
         // See if the shortName (Default Template) is in the database
-        if (this.hp != null) {
+        if (hp != null) {
             newTemplate = hp.getTemplateDefault(fullName);
             templateCache.cache(fullName, newTemplate);
             log.info("Linked Template: " + shortName + " to " + fullName);
@@ -137,13 +144,12 @@ final public class TemplateFactory {
      */
     public String getCollections() {
         Set<String> theList;// = new ArrayList<String>();
-        if (this.hp != null) {
+        if (hp != null) {
             theList = getCollectionsFromDb();
         } else {
             theList = getCollectionsFromCache();
         }
-        Gson gson = new Gson();
-        return gson.toJson(theList);
+        return jsonProxy.toJson(theList);
     }
 
     /**
@@ -181,13 +187,12 @@ final public class TemplateFactory {
      */
     public String getTemplates(String collection) {
         Set<String> theList;// = new ArrayList<String>();
-        if (this.hp != null) {
+        if (hp != null) {
             theList = getTemplatesFromDb(collection);
         } else {
             theList = getTemplatesFromCache(collection);
         }
-        Gson gson = new Gson();
-        return gson.toJson(theList);
+        return jsonProxy.toJson(theList);
     }
 
     /**
@@ -224,7 +229,7 @@ final public class TemplateFactory {
      */
     public String getTemplateAsJson(String fullName) {
         Template template = getTemplate(fullName, "", new HashMap<>());
-        return template.asJson(true);
+        return jsonProxy.toJson(template);
     }
 
     /**********************************************************************************
@@ -233,25 +238,18 @@ final public class TemplateFactory {
      * @param String json the template json
      */
     public String saveTemplateFromJson(String json) {
-        Template template = cacheFromJson(json);
-        if (this.hp != null) {
+        Template template1 = jsonProxy.fromJSON(json, Template.class);
+        Template template = cache(template1);
+        persistTemplate(template);
+        return jsonProxy.toJson(template);
+    }
+
+    public void persistTemplate(Template template) {
+        if (hp != null) {
             hp.saveTemplateToDatabase(template);
         } else {
             fs.saveTemplateToJsonFolder(template);
         }
-        return template.asJson(true);
-    }
-
-    /**********************************************************************************
-     * Construct a template from a json formated string ad add it to the Cache
-     *
-     * @param request
-     * @return the Template created
-     * @throws MergeException - clone errors
-     */
-    public Template cacheFromJson(String jsonString) {
-        Template template = Template.fromJSON(jsonString);
-        return cache(template);
     }
 
     public Template cache(Template template) {
@@ -269,7 +267,7 @@ final public class TemplateFactory {
     public void reset() {
         log.warn("Template Cache / Hibernate Reset");
         templateCache.clear();
-        if (this.hp != null) {
+        if (hp != null) {
             hp.initilizeHibernate();
         }
         log.info("Reset Complete");

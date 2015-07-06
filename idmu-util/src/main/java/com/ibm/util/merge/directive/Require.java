@@ -38,8 +38,8 @@ public class Require extends Directive implements Cloneable {
 	 */
 	public Require() {
 		super();
-		this.setType(TYPE_REQUIRE);
-		this.setProvider(null);
+		setType(TYPE_REQUIRE);
+		setProvider(null);
 	}
 
 	/** 
@@ -58,15 +58,15 @@ public class Require extends Directive implements Cloneable {
 	 * @param zf
 	 */
 	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
-		for (String tag : this.tags) {
-			if (! this.getTemplate().hasReplaceValue(Template.wrap(tag)) ) {
-				throw new MergeException("Required Tag Not Found in " + this.getTemplate().getFullName(), tag);
+		for (String tag : tags) {
+			if (!getTemplate().hasReplaceValue(Template.wrap(tag)) ) {
+				throw new MergeException("Required Tag Not Found in " + getTemplate().getFullName(), tag);
 			}
 		}
 	}
 
 	public String getTags() {
-		return String.join(",", this.tags);
+		return String.join(",", tags);
 	}
 
 	public void setTags(String tags) {

@@ -17,6 +17,7 @@
 package com.ibm.util.merge;
 import java.util.HashMap;
 
+import com.ibm.util.merge.json.PrettyJsonProxy;
 import org.apache.log4j.Logger;
 
 import com.ibm.util.merge.directive.Directive;
@@ -45,10 +46,10 @@ public class MergeException extends Exception {
 	 */
 	public MergeException(Exception e, String errorMessage, String theContext){
 		super(e);
-		this.error = errorMessage;
-		this.context = theContext;
-		this.errorFromClass = "Wrapped: " + e.getClass().getName();
-		this.logError();
+		error = errorMessage;
+		context = theContext;
+		errorFromClass = "Wrapped: " + e.getClass().getName();
+		logError();
 	}
 	
 	/**
@@ -57,9 +58,9 @@ public class MergeException extends Exception {
 	 */
 	public MergeException(String errorMessage, String theContext){
 		super(errorMessage);
-		this.error = errorMessage;
-		this.context = theContext;
-		this.logError();
+		error = errorMessage;
+		context = theContext;
+		logError();
     }
 
 	/**
@@ -68,13 +69,12 @@ public class MergeException extends Exception {
 	 */
 	public MergeException(Template errTemplate, Exception wrapped, String errorMessage, String theContext){
 		super(wrapped);
-		this.error = errorMessage;
-		this.context = theContext;
-		this.template = errTemplate;
-		this.errorFromClass = errTemplate.getClass().getName();
-		
-		this.logError();
-		this.logTemplate();
+		error = errorMessage;
+		context = theContext;
+		template = errTemplate;
+		errorFromClass = errTemplate.getClass().getName();
+		logError();
+		logTemplate();
     }
 
 	/**
@@ -83,15 +83,14 @@ public class MergeException extends Exception {
 	 */
 	public MergeException(Directive errDirective, Exception wrapped, String errorMessage, String theContext){
 		super(wrapped);
-		this.error = errorMessage;
-		this.context = theContext;
-		this.directive = errDirective;
-		this.template = this.directive.getTemplate();
-		this.errorFromClass = errDirective.getClass().getName();
-		
-		this.logError();
-		this.logTemplate();
-		this.logDirective();
+		error = errorMessage;
+		context = theContext;
+		directive = errDirective;
+		template = directive.getTemplate();
+		errorFromClass = errDirective.getClass().getName();
+		logError();
+		logTemplate();
+		logDirective();
     }
 
 	/**
@@ -100,17 +99,16 @@ public class MergeException extends Exception {
 	 */
 	public MergeException(Provider errProvider, Exception wrapped, String errorMessage, String theContext){
 		super(wrapped);
-		this.error = errorMessage;
-		this.context = theContext;
-		this.provider = errProvider;
-		this.directive = this.provider.getDirective();
-		this.template = this.directive.getTemplate();
-		this.errorFromClass = errProvider.getClass().getName();
-		
-		this.logError();
-		this.logTemplate();
-		this.logDirective();
-		this.logProvider();
+		error = errorMessage;
+		context = theContext;
+		provider = errProvider;
+		directive = provider.getDirective();
+		template = directive.getTemplate();
+		errorFromClass = errProvider.getClass().getName();
+		logError();
+		logTemplate();
+		logDirective();
+		logProvider();
     }
 
 	/**
@@ -118,8 +116,8 @@ public class MergeException extends Exception {
 	 */
 	private void logError() {
 		log.fatal("Merge Exception: \n" +
-			"Message: " + this.error + "\n" +
-			"Context: " + this.context + "\n" + 
+			"Message: " + error + "\n" +
+			"Context: " + context + "\n" +
 			"StackTrace: ", this);
 	}
 	
@@ -127,10 +125,10 @@ public class MergeException extends Exception {
 	 * 
 	 */
 	private void logTemplate() {
-		if (this.template != null) {
-			log.fatal("Merge Exception: Template JSON \n" + this.template.asJson(true));
-			log.fatal(this.template.getReplaceValues());
-			log.fatal(this.template.getBookmarks());
+		if (template != null) {
+			log.fatal("Merge Exception: Template JSON \n" + new PrettyJsonProxy().toJson(template));
+			log.fatal(template.getReplaceValues());
+			log.fatal(template.getBookmarks());
 		}
 	}
 	
@@ -139,8 +137,8 @@ public class MergeException extends Exception {
 	 * 
 	 */
 	private void logDirective() {
-		if (this.directive != null ) {
-			log.fatal("Merge Exception: Exception from Directive: " + Integer.toString(this.directive.getSequence()) );
+		if (directive != null ) {
+			log.fatal("Merge Exception: Exception from Directive: " + Integer.toString(directive.getSequence()) );
 		}
 	}
 	
@@ -148,13 +146,13 @@ public class MergeException extends Exception {
 	 * 
 	 */
 	private void logProvider() {
-		if ( this.provider != null ) {
-			int size = this.provider.getTables().size();
-			log.fatal("Merge Exception: Exception from Provider: " + Integer.toString(this.provider.getType()) + "\n" + 
-					"Query String: " + this.provider.getQueryString() + "\n" + 
+		if (provider != null ) {
+			int size = provider.getTables().size();
+			log.fatal("Merge Exception: Exception from Provider: " + Integer.toString(provider.getType()) + "\n" +
+					"Query String: " + provider.getQueryString() + "\n" +
 					"Data Tables: " + Integer.toString(size));
 			if (size > 0) {
-				log.fatal(this.provider.getTables());
+				log.fatal(provider.getTables());
 			}
 		}
 	}
@@ -166,17 +164,25 @@ public class MergeException extends Exception {
 		String message = "";
 		Template errorTemplate;
 		HashMap<String,String> parameters = new HashMap<>();
-		parameters.put(Template.wrap("MESSAGE"),  this.error);
-		parameters.put(Template.wrap("CONTEXT"),  this.context);
-		parameters.put(Template.wrap("TRACE"), this.getStackTrace().toString());
+		parameters.put(Template.wrap("MESSAGE"), error);
+		parameters.put(Template.wrap("CONTEXT"), context);
+		parameters.put(Template.wrap("TRACE"), getStackTrace().toString());
 		try {
-			errorTemplate = tf.getTemplate("system.errHtml." + this.errorFromClass, "system.errHtml.", parameters);
-			message = errorTemplate.merge(zf, tf, cf);
-			errorTemplate.packageOutput(zf, cf);
+			errorTemplate = tf.getTemplate("system.errHtml." + errorFromClass, "system.errHtml.", parameters);
+			errorTemplate.merge(zf, tf, cf);
+			final String returnValue;
+			if (!errorTemplate.canWrite()) {
+                returnValue = "";
+            } else {
+                returnValue = errorTemplate.getContent();
+            }
+			errorTemplate.doWrite(zf);
+			message = returnValue;
+//			errorTemplate.packageOutput(zf, cf);
 		} catch (MergeException e) {
 			message = "INVALID ERROR TEMPLATE! \n" +
-					"Message: " + this.error + "\n" + 
-					"Context: " + this.context + "\n";
+					"Message: " + error + "\n" +
+					"Context: " + context + "\n";
 		}
 		return message;
 	}
@@ -188,23 +194,31 @@ public class MergeException extends Exception {
 		String message = "";
 		Template errorTemplate;
 		HashMap<String,String> parameters = new HashMap<>();
-		parameters.put(Template.wrap("MESSAGE"),  this.error);
-		parameters.put(Template.wrap("CONTEXT"),  this.context);
-		parameters.put(Template.wrap("TRACE"), this.getStackTrace().toString());
+		parameters.put(Template.wrap("MESSAGE"), error);
+		parameters.put(Template.wrap("CONTEXT"), context);
+		parameters.put(Template.wrap("TRACE"), getStackTrace().toString());
 		try {
-			errorTemplate = tf.getTemplate("system.errJson." + this.errorFromClass, "system.errJson.", parameters);
-			message = errorTemplate.merge(zf, tf, cf);
-			errorTemplate.packageOutput(zf, cf);
+			errorTemplate = tf.getTemplate("system.errJson." + errorFromClass, "system.errJson.", parameters);
+			errorTemplate.merge(zf, tf, cf);
+			final String returnValue;
+			if (!errorTemplate.canWrite()) {
+                returnValue = "";
+            } else {
+                returnValue = errorTemplate.getContent();
+            }
+			errorTemplate.doWrite(zf);
+			message = returnValue;
+//			errorTemplate.packageOutput(zf, cf);
 		} catch (MergeException e) {
 			message = "INVALID ERROR TEMPLATE! \n" +
-					"Message: " + this.error + "\n" + 
-					"Context: " + this.context + "\n";
+					"Message: " + error + "\n" +
+					"Context: " + context + "\n";
 		}
 		return message;
 	}
 
 	public String getMessage() {
-		return super.getMessage() + " For: " + this.context;
+		return super.getMessage() + " For: " + context;
 	}
 	
 	public String getContext() {

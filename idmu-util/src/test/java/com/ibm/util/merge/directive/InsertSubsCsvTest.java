@@ -21,6 +21,9 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.util.merge.json.JsonProxy;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.junit.Before;
 import org.junit.Test;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
@@ -32,9 +35,11 @@ public class InsertSubsCsvTest extends InsertSubsTest {
 	private TemplateFactory tf;
 	private ZipFactory zf;
 	private ConnectionFactory cf;
+	private JsonProxy jsonProxy;
 
 	@Before
 	public void setUp() throws Exception {
+		jsonProxy = new DefaultJsonProxy();
 		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
@@ -44,9 +49,10 @@ public class InsertSubsCsvTest extends InsertSubsTest {
 		myProvider.setStaticData("A,B,C\n1,2,3\n4,5,6");
 		
 		tf.reset();
-
-		tf.cacheFromJson(subTemplate); 
-		tf.cacheFromJson(masterTemplate);
+		Template template2 = jsonProxy.fromJSON(subTemplate, Template.class);
+		tf.cache(template2);
+		Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
+		tf.cache(template1);
 		template = tf.getTemplate("root.master.", "", new HashMap<>());
 		template.addDirective(myDirective);
 	}

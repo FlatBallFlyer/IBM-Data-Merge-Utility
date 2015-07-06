@@ -20,6 +20,10 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.util.merge.json.JsonProxy;
+import com.ibm.util.merge.json.PrettyJsonProxy;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,9 +47,11 @@ public class TemplateFactoryTest {
 	private TemplateFactory tf;
 	private ZipFactory zf;
 	private ConnectionFactory cf;
+	private JsonProxy jsonProxy;
 
 	@Before
 	public void setUp() throws Exception {
+		jsonProxy = new DefaultJsonProxy();
 		tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-util/src/test/resources/templates"));
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
@@ -55,9 +61,10 @@ public class TemplateFactoryTest {
 
 	@Test
 	public void testGetTemplateFullNameFoundInCache() throws MergeException {
-
-		tf.cacheFromJson(template1);
-		tf.cacheFromJson(template2);
+		Template template3 = jsonProxy.fromJSON(template1, Template.class);
+		tf.cache(template3);
+		Template template = jsonProxy.fromJSON(template2, Template.class);
+		tf.cache(template);
 		assertNotNull(tf.getTemplate("root.test.foo", "", new HashMap<>()));
 	}
 
@@ -70,8 +77,8 @@ public class TemplateFactoryTest {
 
 	@Test
 	public void testGetTemplateShortNameFoundInCache() throws MergeException {
-
-		tf.cacheFromJson(template1);
+		Template template3 = jsonProxy.fromJSON(template1, Template.class);
+		tf.cache(template3);
 		Template template = tf.getTemplate("root.test.nodata", "root.test.", new HashMap<>());
 		assertNotNull(template);
 		assertEquals("root", template.getCollection());
@@ -88,8 +95,8 @@ public class TemplateFactoryTest {
 
 	@Test(expected = TemplateFactory.TemplateNotFoundException.class)
 	public void testGetTemplateNotFoundInCache() throws MergeException {
-
-		Template template = tf.cacheFromJson(template1);
+		Template template3 = jsonProxy.fromJSON(template1, Template.class);
+		Template template = tf.cache(template3);
 		assertNotNull(template);
 		template = null;
 			template = tf.getTemplate("bad.template.test", "", new HashMap<>());
@@ -98,7 +105,8 @@ public class TemplateFactoryTest {
 	
 	@Test
 	public void testCacheFromJsonBasicParsing() throws MergeException {
-		Template template = tf.cacheFromJson(template1);
+		Template template3 = jsonProxy.fromJSON(template1, Template.class);
+		Template template = tf.cache(template3);
 		assertEquals(1, tf.size());
 		assertEquals("root", template.getCollection());
 		assertEquals("test", template.getName());
@@ -107,7 +115,8 @@ public class TemplateFactoryTest {
 	
 	@Test
 	public void testCacheFromJsonAllDirectiveParsing() throws MergeException {
-		Template template = tf.cacheFromJson(template4);
+		Template template3 = jsonProxy.fromJSON(template4, Template.class);
+		Template template = tf.cache(template3);
 		assertEquals(1, tf.size());
 		assertEquals("foo", template.getCollection());
 		assertEquals("default", template.getName());
@@ -130,8 +139,10 @@ public class TemplateFactoryTest {
 	@Test
 	public void testReset() throws MergeException {
 		tf.reset();
-		tf.cacheFromJson(template1);
-		tf.cacheFromJson(template2);
+		Template template3 = jsonProxy.fromJSON(template1, Template.class);
+		tf.cache(template3);
+		Template template = jsonProxy.fromJSON(template2, Template.class);
+		tf.cache(template);
 		assertEquals(2, tf.size());
 		tf.reset();
 		assertEquals(0, tf.size());
@@ -147,7 +158,8 @@ public class TemplateFactoryTest {
 	@Test
 	public void testGetTemplateAsJson() throws MergeException {
 		tf.reset();
-		String template1 = tf.cacheFromJson(template4).asJson(true);
+		Template template = jsonProxy.fromJSON(template4, Template.class);
+		String template1 = new PrettyJsonProxy().toJson(tf.cache(template));
 		String template2 = tf.getTemplateAsJson("foo.default.foo");
 		assertEquals(template1, template2);
 	}
@@ -157,8 +169,9 @@ public class TemplateFactoryTest {
 		tf.reset();
 
 		String template1 = tf.saveTemplateFromJson(template4);
-		Template template2 = tf.cacheFromJson(template4);
-		assertEquals(template1, template2.asJson(true));
+		Template template = jsonProxy.fromJSON(template4, Template.class);
+		Template template2 = tf.cache(template);
+		assertEquals(template1, new PrettyJsonProxy().toJson(template2));
 	}
 
 	@Test
@@ -176,9 +189,12 @@ public class TemplateFactoryTest {
 	@Test
 	public void testGetCollections() throws MergeException {
 		tf.reset();
-		tf.cacheFromJson(template1);
-		tf.cacheFromJson(template2);
-		tf.cacheFromJson(template4);
+		Template template5 = jsonProxy.fromJSON(template1, Template.class);
+		tf.cache(template5);
+		Template template3 = jsonProxy.fromJSON(template2, Template.class);
+		tf.cache(template3);
+		Template template = jsonProxy.fromJSON(template4, Template.class);
+		tf.cache(template);
 		String collections = tf.getCollections();
 		assertTrue(collections.contains("root"));
 		assertTrue(collections.contains("foo"));
@@ -187,9 +203,12 @@ public class TemplateFactoryTest {
 	@Test
 	public void testGetTemplates() throws MergeException {
 		tf.reset();
-		tf.cacheFromJson(template1);
-		tf.cacheFromJson(template2);
-		tf.cacheFromJson(template4);
+		Template template5 = jsonProxy.fromJSON(template1, Template.class);
+		tf.cache(template5);
+		Template template3 = jsonProxy.fromJSON(template2, Template.class);
+		tf.cache(template3);
+		Template template = jsonProxy.fromJSON(template4, Template.class);
+		tf.cache(template);
 		String templates = tf.getTemplates("root");
 		assertTrue(templates.contains("root.test."));
 		assertTrue(templates.contains("root.test.foo"));

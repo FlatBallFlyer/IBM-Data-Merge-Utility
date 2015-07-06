@@ -44,7 +44,7 @@ public final class ConnectionFactory {
 	
     /**********************************************************************************
 	 * Data Source connection factory, creates and cache's connections that are valid
-	 * throughout the life of a merge. Connections are released by calling close
+	 * throughout the life of a merge. Connections are released by calling releaseConnection
 	 *
 	 * @param  jndiSource JNDI Data Source name
 	 * @param guid - a Guid associed with a template merge process
@@ -77,7 +77,7 @@ public final class ConnectionFactory {
 	 *
 	 * @param  guid Guid of template to release files for.
 	 */
-    public void close(String guid) {
+    public void releaseConnection(String guid) {
     	for (Map.Entry<String, Connection> entry : dataDbHash.entrySet()) {
     		if (entry.getKey().endsWith(guid)) {
 				try {

@@ -21,6 +21,9 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.util.merge.json.JsonProxy;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.junit.*;
 
 import com.ibm.util.merge.directive.*;
@@ -47,10 +50,12 @@ public class TemplateTest {
 	private String testReplaceColCsvJson = 	"{" + testJsonBase + ",{\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"sequence\":1,\"type\":23,\"softFail\":false,\"description\":\"TestReplaceColCsv\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":3}}]}"; 
 	private String testReplaceColSqlJson = 	"{" + testJsonBase + ",{\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"sequence\":1,\"type\":12,\"softFail\":false,\"description\":\"TestReplaceColSql\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\",\"type\":1}}]}"; 
 	private String testReplaceColHtmlJson = "{" + testJsonBase + ",{\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"sequence\":1,\"type\":33,\"softFail\":false,\"description\":\"TestReplaceColHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}"; 
-	private String testMarkupHtmlJson = 	"{" + testJsonBase + ",{\"pattern\":\"TestPattern\",\"sequence\":1,\"type\":34,\"softFail\":false,\"description\":\"TestMarkupSubsHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}"; 
-	
+	private String testMarkupHtmlJson = 	"{" + testJsonBase + ",{\"pattern\":\"TestPattern\",\"sequence\":1,\"type\":34,\"softFail\":false,\"description\":\"TestMarkupSubsHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}";
+	private JsonProxy jsonProxy;
+
 	@Before
 	public void setUp() throws Exception {
+		jsonProxy = new DefaultJsonProxy();
 		ReplaceValue directive = new ReplaceValue();
 		directive.setFrom("Foo");
 		directive.setTo("Test Foo Value");
@@ -103,7 +108,14 @@ public class TemplateTest {
 		ZipFactory zf = new ZipFactory();
 		TemplateFactory tf = new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-war/src/main/webapp/WEB-INF/templates"));
 		ConnectionFactory cf = new ConnectionFactory();
-		String output = template.merge(zf, tf, cf);
+		template.merge(zf, tf, cf);
+		final String returnValue;
+		if (!template.canWrite()) {
+			returnValue = "";
+		} else {
+			returnValue = template.getContent();
+		}		template.doWrite(zf);
+		String output = returnValue;
 		assertEquals(mergeOutput, output);
 	}
 
@@ -220,18 +232,22 @@ public class TemplateTest {
 	
 	@Test
 	public void testReplceAsJson() {
-		String asJson = template.asJson(false);
+		String asJson = templateJSON();
 		assertEquals(testReplaceJson, asJson);
 	}
-	
+
+	private String templateJSON() {
+		return jsonProxy.toJson(template);
+//		return template.asJson(false);
+	}
+
 	@Test
 	public void testReqireAsJson() {
 		Require directive = new Require();
 		directive.setDescription("TestRequire");
 		directive.setTags("Foo,empty");
 		template.addDirective(directive);
-
-		String asJson = template.asJson(false);
+		String asJson = templateJSON();
 		assertEquals(testRequireJson, asJson);
 		assertNull(directive.getProvider());
 	}
@@ -244,9 +260,8 @@ public class TemplateTest {
 		ProviderTag providerTag = (ProviderTag) directive.getProvider();
 		providerTag.setTag("Foo");
 		template.addDirective(directive);
-		
-		String asJson = template.asJson(false);
-		assertEquals(this.testInsertSubsTagJson, asJson);
+		String asJson = templateJSON();
+		assertEquals(testInsertSubsTagJson, asJson);
 		assertEquals("com.ibm.util.merge.directive.provider.ProviderTag", directive.getProvider().getClass().getName());
 	}
 	
@@ -258,9 +273,8 @@ public class TemplateTest {
 		ProviderCsv providerCsv = (ProviderCsv) directive.getProvider();
 		providerCsv.setStaticData("A,B,C\n1,2,3\n4,5,6");
 		template.addDirective(directive);
-		
-		String asJson = template.asJson(false);
-		assertEquals(this.testInsertSubsCsvJson, asJson);
+		String asJson = templateJSON();
+		assertEquals(testInsertSubsCsvJson, asJson);
 		assertEquals("com.ibm.util.merge.directive.provider.ProviderCsv", directive.getProvider().getClass().getName());
 	}
 	
@@ -271,9 +285,8 @@ public class TemplateTest {
 		ProviderCsv providerCsv = (ProviderCsv) directive.getProvider();
 		providerCsv.setStaticData("A,B,C\n1,2,3\n4,5,6");
 		template.addDirective(directive);
-		
-		String asJson = template.asJson(false);
-		assertEquals(this.testReplaceRowCsvJson, asJson);
+		String asJson = templateJSON();
+		assertEquals(testReplaceRowCsvJson, asJson);
 		assertEquals("com.ibm.util.merge.directive.provider.ProviderCsv", directive.getProvider().getClass().getName());
 	}
 	
@@ -285,9 +298,8 @@ public class TemplateTest {
 		ProviderCsv providerCsv = (ProviderCsv) directive.getProvider();
 		providerCsv.setStaticData("A,B,C\n1,2,3\n4,5,6");
 		template.addDirective(directive);
-		
-		String asJson = template.asJson(false);
-		assertEquals(this.testReplaceColCsvJson, asJson);
+		String asJson = templateJSON();
+		assertEquals(testReplaceColCsvJson, asJson);
 		assertEquals("com.ibm.util.merge.directive.provider.ProviderCsv", directive.getProvider().getClass().getName());
 	}
 	
@@ -299,9 +311,8 @@ public class TemplateTest {
 		ProviderSql providerSql = (ProviderSql) directive.getProvider();
 		providerSql.setColumns("A,B,C,1,2,3,4,5,6");
 		template.addDirective(directive);
-		
-		String asJson = template.asJson(false);
-		assertEquals(this.testInsertSubsSqlJson, asJson);
+		String asJson = templateJSON();
+		assertEquals(testInsertSubsSqlJson, asJson);
 		assertEquals("com.ibm.util.merge.directive.provider.ProviderSql", directive.getProvider().getClass().getName());
 	}
 	
@@ -312,9 +323,8 @@ public class TemplateTest {
 		ProviderSql providerSql = (ProviderSql) directive.getProvider();
 		providerSql.setColumns("A,B,C,1,2,3,4,5,6");
 		template.addDirective(directive);
-		
-		String asJson = template.asJson(false);
-		assertEquals(this.testReplaceRowSqlJson, asJson);
+		String asJson = templateJSON();
+		assertEquals(testReplaceRowSqlJson, asJson);
 		assertEquals("com.ibm.util.merge.directive.provider.ProviderSql", directive.getProvider().getClass().getName());
 	}
 	
@@ -326,9 +336,8 @@ public class TemplateTest {
 		ProviderSql providerSql = (ProviderSql) directive.getProvider();
 		providerSql.setColumns("A,B,C,1,2,3,4,5,6");
 		template.addDirective(directive);
-
-		String asJson = template.asJson(false);
-		assertEquals(this.testReplaceColSqlJson, asJson);
+		String asJson = templateJSON();
+		assertEquals(testReplaceColSqlJson, asJson);
 		assertEquals("com.ibm.util.merge.directive.provider.ProviderSql", directive.getProvider().getClass().getName());
 	}
 	
@@ -340,9 +349,8 @@ public class TemplateTest {
 		ProviderHtml providerHtml = (ProviderHtml) directive.getProvider();
 		providerHtml.setStaticData("A,B,C\n1,2,3\n4,5,6");
 		template.addDirective(directive);
-
-		String asJson = template.asJson(false);
-		assertEquals(this.testInsertSubsHtmlJson, asJson);
+		String asJson = templateJSON();
+		assertEquals(testInsertSubsHtmlJson, asJson);
 		assertEquals("com.ibm.util.merge.directive.provider.ProviderHtml", directive.getProvider().getClass().getName());
 	}
 	
@@ -353,9 +361,8 @@ public class TemplateTest {
 		ProviderHtml providerHtml = (ProviderHtml) directive.getProvider();
 		providerHtml.setStaticData("A,B,C\n1,2,3\n4,5,6");
 		template.addDirective(directive);
-
-		String asJson = template.asJson(false);
-		assertEquals(this.testReplaceRowHtmlJson, asJson);
+		String asJson = templateJSON();
+		assertEquals(testReplaceRowHtmlJson, asJson);
 		assertEquals("com.ibm.util.merge.directive.provider.ProviderHtml", directive.getProvider().getClass().getName());
 	}
 	
@@ -367,9 +374,8 @@ public class TemplateTest {
 		ProviderHtml providerHtml = (ProviderHtml) directive.getProvider();
 		providerHtml.setStaticData("A,B,C\n1,2,3\n4,5,6");
 		template.addDirective(directive);
-
-		String asJson = template.asJson(false);
-		assertEquals(this.testReplaceColHtmlJson, asJson);
+		String asJson = templateJSON();
+		assertEquals(testReplaceColHtmlJson, asJson);
 		assertEquals("com.ibm.util.merge.directive.provider.ProviderHtml", directive.getProvider().getClass().getName());
 	}
 	
@@ -381,8 +387,7 @@ public class TemplateTest {
 		ProviderHtml providerHtml = (ProviderHtml) directive.getProvider();
 		providerHtml.setStaticData("A,B,C\n1,2,3\n4,5,6");
 		template.addDirective(directive);
-
-		String asJson = template.asJson(false);
+		String asJson = templateJSON();
 		assertEquals(testMarkupHtmlJson, asJson);
 		assertEquals("com.ibm.util.merge.directive.provider.ProviderHtml", directive.getProvider().getClass().getName());
 	}

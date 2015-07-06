@@ -39,7 +39,7 @@ public class ProviderTag extends Provider implements Cloneable {
 	
 	public ProviderTag() {
 		super();
-		this.setType(Provider.TYPE_TAG);
+		setType(Provider.TYPE_TAG);
 	}
 	
 	/**
@@ -55,12 +55,12 @@ public class ProviderTag extends Provider implements Cloneable {
 	 * @param cf
 	 */
 	public void getData(ConnectionFactory cf) throws MergeException {
-		this.reset();
-		DataTable table = this.getNewTable();
-		Template template = this.getDirective().getTemplate();
-		String theTag = Template.wrap(this.tag);
+		reset();
+		DataTable table = getNewTable();
+		Template template = getDirective().getTemplate();
+		String theTag = Template.wrap(tag);
 		
-		switch (this.condition) {
+		switch (condition) {
 		case ProviderTag.CONDITION_EXISTS:
 			if (!template.hasReplaceKey(theTag)) {
 				return;
@@ -81,7 +81,7 @@ public class ProviderTag extends Provider implements Cloneable {
 		case ProviderTag.CONDITION_EQUALS: 
 			if (!template.hasReplaceKey(theTag) 
 				|| !template.hasReplaceValue(theTag)
-				|| !template.getReplaceValue(theTag).equals(this.value)) {
+				|| !template.getReplaceValue(theTag).equals(value)) {
 				return;
 			}   
 			break;
@@ -90,7 +90,7 @@ public class ProviderTag extends Provider implements Cloneable {
 		// We have a match, so add data
 		String data = template.getReplaceValue(Template.wrap(tag));
 		table.addCol(tag);
-		if (this.isList()) {
+		if (isList()) {
 			for (String datum : new ArrayList<>(Arrays.asList(data.split(",")))) {
 				if (!datum.isEmpty()) {
 					ArrayList<String> row = table.getNewRow();

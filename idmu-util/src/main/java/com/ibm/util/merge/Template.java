@@ -16,21 +16,16 @@
  */
 package com.ibm.util.merge;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.ibm.util.merge.directive.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.*;
-
-import com.ibm.util.merge.directive.provider.Provider;
-import com.ibm.util.merge.directive.provider.ProviderDeserializer;
+import com.ibm.util.merge.directive.Directive;
+import com.ibm.util.merge.storage.TarFileWriter;
+import com.ibm.util.merge.storage.ZipFileWriter;
 import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**********************************************************************************
  * A template and it's collection of directives. This class represents the primary
@@ -52,7 +47,8 @@ public class Template implements Cloneable {
     public static final String TAG_SOFTFAIL = wrap("DragonFlySoftFail");
     public static final String TAG_OUTPUT_TYPE = wrap("DragonOutputType");
     public static final String TAG_SEQUENCE = wrap("DragonSequence");
-    public static final Pattern BOOKMARK_PATTERN = Pattern.compile("(<tkBookmark.*?/>)");
+    public static final String BOOKMARK_PATTERN_STRING = "(<tkBookmark.*?/>)";
+    public static final Pattern BOOKMARK_PATTERN = Pattern.compile(BOOKMARK_PATTERN_STRING);
     // Template Constants
     private static final Logger log = Logger.getLogger(Template.class.getName());
     // Attributes
@@ -65,7 +61,7 @@ public class Template implements Cloneable {
     private StringBuilder content = new StringBuilder();
     private List<Directive> directives = new ArrayList<>();
     private transient List<Bookmark> bookmarks = new ArrayList<>();
-    private transient HashMap<String, String> replaceValues = new HashMap<>();
+    private transient Map<String, String> replaceValues = new HashMap<>();
 
     /********************************************************************************
      * Static Helper to wrap a value in the Tag brackets
@@ -83,14 +79,6 @@ public class Template implements Cloneable {
     public Template() {
     }
 
-    public static Template fromJSON(String jsonString) {
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Directive.class, new DirectiveDeserializer());
-        builder.registerTypeAdapter(Provider.class, new ProviderDeserializer());
-        Gson gson = builder.create();
-        return gson.fromJson(jsonString, Template.class);
-    }
-
     /**********************************************************************************
      * Template Clone constructor, used to get a copy of a cached template and initialize it
      * for merge processing. Performs deep copy of all objects and collections and populates
@@ -102,10 +90,10 @@ public class Template implements Cloneable {
     public Template clone(Map<String, String> seedReplace) {
         Template newTemplate = cloneThisTemplate();
         newTemplate.replaceValues = new HashMap<>();
-        newTemplate.setContent(this.getContent());
+        newTemplate.setContent(getContent());
         // Deep Copy Directives
         newTemplate.directives = new ArrayList<>();
-        for (Directive fromDirective : this.directives) {
+        for (Directive fromDirective : directives) {
             Directive clone = cloneDirective(fromDirective);
             newTemplate.addDirective(clone);
         }
@@ -117,7 +105,7 @@ public class Template implements Cloneable {
         }
         // Add our name to the Template Stack
         if (!newTemplate.replaceValues.containsKey(TAG_STACK)) {
-            newTemplate.replaceValues.put(TAG_STACK, this.getFullName());
+            newTemplate.replaceValues.put(TAG_STACK, getFullName());
         } else {
             newTemplate.replaceValues.put(TAG_STACK, newTemplate.replaceValues.get(TAG_STACK) + "/" + newTemplate.getFullName());
         }
@@ -144,6 +132,44 @@ public class Template implements Cloneable {
         return clone;
     }
 
+    public void doWrite(ZipFactory zf) {
+        if (canWrite()) {
+            if (getOutputType() == ZipFactory.TYPE_ZIP) {
+                writeZipFile(zf);
+            } else {
+                writeTarFile(zf);
+            }
+        }
+    }
+
+    public void writeTarFile(ZipFactory zf) {
+        File outputFilePath = constructArchivePath(zf);
+        String archiveEntryName = constructArchiveEntryName();
+        try {
+            new TarFileWriter(outputFilePath, archiveEntryName, getContent(), "root", "root").write();
+        } catch (IOException e) {
+            throw new TemplatePersistenceException(this, outputFilePath, archiveEntryName, e);
+        }
+    }
+
+    public void writeZipFile(ZipFactory zf) {
+        File outputFilePath = constructArchivePath(zf);
+        String archiveEntryName = constructArchiveEntryName();
+        try {
+            new ZipFileWriter(outputFilePath, archiveEntryName, getContent()).write();
+        } catch (IOException e) {
+            throw new TemplatePersistenceException(this, outputFilePath, archiveEntryName, e);
+        }
+    }
+
+    public File constructArchivePath(ZipFactory zf) {
+        return new File(zf.getOutputRoot() + "/" + getOutputFile());
+    }
+
+    public String constructArchiveEntryName() {
+        return replaceProcess(getOutputFile());
+    }
+
     /********************************************************************************
      * <p>Merge Template. This method drives the merge process, processing directives to select data,
      * insert sub-templates, and perform search replace activities.</p>
@@ -153,65 +179,50 @@ public class Template implements Cloneable {
      * @throws MergeException Directive Processing Errors
      * @throws MergeException Save Output File errors
      */
-    public String merge(ZipFactory zf, TemplateFactory tf, ConnectionFactory cf) throws MergeException {
-        log.info("Begin Template Merge for:" + this.getFullName());
+    public void merge(ZipFactory zf, TemplateFactory tf, ConnectionFactory cf) throws MergeException {
+        log.info("Begin Template Merge for:" + getFullName());
         // Process Directives
-        for (Directive directive : this.directives) {
+        for (Directive directive : directives) {
             directive.executeDirective(tf, cf, zf);
         }
         // Clear out the all-values replace tag
-        this.replaceValues.remove(TAG_ALL_VALUES);
+        replaceValues.remove(TAG_ALL_VALUES);
         // Process Replace Stack and build "All Values" replace value
         String allValues = "";
-        for (Map.Entry<String, String> entry : this.replaceValues.entrySet()) {
-            this.replaceThis(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, String> entry : replaceValues.entrySet()) {
+            replaceThis(entry.getKey(), entry.getValue());
             String from = "{-" + entry.getKey().substring(1);
             allValues += from + "->" + entry.getValue() + "\n";
         }
         // Process Replace Stack again (to support Nested Tags)
-        for (Map.Entry<String, String> entry : this.replaceValues.entrySet()) {
-            this.replaceThis(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, String> entry : replaceValues.entrySet()) {
+            replaceThis(entry.getKey(), entry.getValue());
         }
         // Replace the all values tag
-        this.replaceThis(TAG_ALL_VALUES, allValues);
+        replaceThis(TAG_ALL_VALUES, allValues);
         // Replace the Output Hash tag
-        this.replaceThis(TAG_OUTPUTHASH, zf.getHash(this.getOutputFile()));
+        replaceThis(TAG_OUTPUTHASH, "");
         // Remove all the bookmarks
-        this.replaceAllThis(BOOKMARK_PATTERN, "");
-        log.info("Merge Complete: " + this.getFullName());
-        // save the output file or return the content
-        if (!this.outputFile.isEmpty()) {
-            try {
-                zf.writeZipFile(this);
-            } catch (IOException e) {
-                throw new MergeException(e, "Could not save output", this.getFullName());
-            }
-            return "";
-        } else {
-            return this.content.toString();
-        }
+        replaceAllThis(BOOKMARK_PATTERN, "");
+        log.info("Merge Complete: " + getFullName());
+        cf.releaseConnection(getOutputFile());
+        log.info("ReleasedConnection for " + getOutputFile());
     }
 
     public boolean isOutputFileSpecified() {
         boolean specified = replaceValues.containsKey(TAG_OUTPUTFILE);
-        if(!specified){
-            log.warn("Template "+getFullName()+" is missing System Tag : " + Template.TAG_OUTPUTFILE);
+        if (!specified) {
+            log.warn("Template " + getFullName() + " is missing System Tag : " + Template.TAG_OUTPUTFILE);
+        }
+        if (specified && getOutputFile().isEmpty()) {
+            log.warn("Output File is empty for template " + getFullName());
+            specified = false;
         }
         return specified;
     }
 
-    public boolean isNullOutputFile(Template template) {
-        return template.outputFile.equals("/dev/null");
-    }
-
-    /********************************************************************************
-     * Finalize Creation of ZIP file, should always be called after merge is complete.
-     *
-     * @throws MergeException File Save errors
-     */
-    public void packageOutput(ZipFactory zf, ConnectionFactory cf)  {
-        zf.closeStream(this.getOutputFile(), this.getOutputType());
-        cf.close(this.getOutputFile());
+    public boolean isNullOutputFile() {
+        return outputFile.equals("/dev/null");
     }
 
     /********************************************************************************
@@ -222,19 +233,17 @@ public class Template implements Cloneable {
      */
     public void insertText(String txt, Bookmark bkm) {
         // don't insert only white-space
-        if (txt.matches("^\\s*$")) {
-            return;
-        }
-        // Insert the text
-        int start = bkm.getStart();
-        this.content.insert(start, txt);
-        // Shift bookmark starting points.
-        for (Bookmark theBookmark : this.bookmarks) {
-            if (theBookmark.getStart() >= start) {
-                theBookmark.offest(txt.length());
+        if (!txt.trim().isEmpty()) {
+            // Insert the text
+            int start = bkm.getStart();
+            content.insert(start, txt);
+            // Shift bookmark starting points.
+            for (Bookmark theBookmark : bookmarks) {
+                if (theBookmark.getStart() >= start) {
+                    theBookmark.offest(txt.length());
+                }
             }
         }
-        return;
     }
 
     /********************************************************************************
@@ -242,28 +251,26 @@ public class Template implements Cloneable {
      *
      * @param from The string to replace
      * @param to   The value to replace with
-     * @throws MergeException Replace To contains From value
      */
     public void replaceThis(String from, String to) {
         // don't waste time
-        if (from.isEmpty()) {
-            return;
-        }
-        // Infinite loop safety
-        to = to.replace(TAG_ALL_VALUES, "{ALL VALUES TAG}"); // all values tag safety
-        if (to.lastIndexOf(from) > 0) {
-            String message = "Replace Attempted with Replace Value containg Replace Key:" + from + "\n Value:" + to + " in " + this.getFullName();
-            if (this.softFail()) {
-                log.warn("SOFT FAIL -" + message);
-                to = "SOFT FAIL - VALUE NOT REPLACED, TO CONTAINS FROM";
-            } else {
-                throw new RuntimeException(message + "\n"+ this.getStack());
+        if (!from.isEmpty()) {
+            // Infinite loop safety
+            to = to.replace(TAG_ALL_VALUES, "{ALL VALUES TAG}"); // all values tag safety
+            if (to.lastIndexOf(from) > 0) {
+                String message = "Replace Attempted with Replace Value containg Replace Key:" + from + "\n Value:" + to + " in " + getFullName();
+                if (isSoftFail()) {
+                    log.warn("SOFT FAIL -" + message);
+                    to = "SOFT FAIL - VALUE NOT REPLACED, TO CONTAINS FROM";
+                } else {
+                    throw new RuntimeException(message + "\n" + getStack());
+                }
             }
-        }
-        // do the replace
-        int index = -1;
-        while ((index = this.content.lastIndexOf(from)) != -1) {
-            this.content.replace(index, index + from.length(), to);
+            // do the replace
+            int index = -1;
+            while ((index = content.lastIndexOf(from)) != -1) {
+                content.replace(index, index + from.length(), to);
+            }
         }
     }
 
@@ -274,8 +281,8 @@ public class Template implements Cloneable {
      * @param to      The string to replace the pattern with
      */
     public void replaceAllThis(Pattern pattern, String to) {
-        Matcher m = pattern.matcher(this.content);
-        this.content.replace(0, this.content.length(), m.replaceAll(to));
+        Matcher m = pattern.matcher(content);
+        content.replace(0, content.length(), m.replaceAll(to));
     }
 
     /********************************************************************************
@@ -285,7 +292,7 @@ public class Template implements Cloneable {
      * @return boolean True if the key exists
      */
     public boolean hasReplaceKey(String key) {
-        return this.replaceValues.containsKey(key);
+        return replaceValues.containsKey(key);
     }
 
     /********************************************************************************
@@ -295,14 +302,7 @@ public class Template implements Cloneable {
      * @return boolean True if the key exists with a non-empty value.
      */
     public boolean hasReplaceValue(String key) {
-        if (this.replaceValues.containsKey(key)) {
-            if (this.replaceValues.get(key).isEmpty()) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        return false;
+        return replaceValues.containsKey(key) && !replaceValues.get(key).isEmpty();
     }
 
     /********************************************************************************
@@ -312,7 +312,7 @@ public class Template implements Cloneable {
      * @param to   The replace value
      */
     public void addReplace(String from, String to) {
-        this.replaceValues.put(wrap(from), to);
+        replaceValues.put(wrap(from), to);
     }
 
     /********************************************************************************
@@ -322,7 +322,7 @@ public class Template implements Cloneable {
      */
     public void addEmptyReplace(List<String> keys) {
         for (String from : keys) {
-            this.replaceValues.put(wrap(from), "");
+            replaceValues.put(wrap(from), "");
         }
     }
 
@@ -333,7 +333,7 @@ public class Template implements Cloneable {
      * @return The string after processing the replace string
      */
     public String replaceProcess(String value) {
-        for (Map.Entry<String, String> entry : this.replaceValues.entrySet()) {
+        for (Map.Entry<String, String> entry : replaceValues.entrySet()) {
             value = value.replace(entry.getKey(), entry.getValue());
         }
         return value;
@@ -348,51 +348,46 @@ public class Template implements Cloneable {
      * @see hasReplaceKey and hasReplaceValue()
      */
     public String getReplaceValue(String key) {
-        if (this.replaceValues.containsKey(key)) {
-            return this.replaceValues.get(key);
+        if (replaceValues.containsKey(key)) {
+            return replaceValues.get(key);
         } else {
             throw new IllegalArgumentException("Unknown key: " + key);
-//			String msg = "Replace Value for key " + key + " Was not found!";
-//			throw new MergeException(msg, this.getFullName());
         }
     }
 
     /**
      * @return soft fail indicator (from replace hash)
      */
-    public boolean softFail() {
-        return this.replaceValues.containsKey(TAG_SOFTFAIL);
+    public boolean isSoftFail() {
+        return replaceValues.containsKey(TAG_SOFTFAIL);
     }
 
     /**
      * @return the Template Stack (from replace hash)
      */
     public String getStack() {
-        return this.getReplaceValue(TAG_STACK);
+        return getReplaceValue(TAG_STACK);
     }
 
     /**
      * @return the Output File name (from replace hash)
      */
     public String getOutputFile() {
-        return this.getReplaceValue(TAG_OUTPUTFILE);
+        return getReplaceValue(TAG_OUTPUTFILE);
     }
 
     /**
      * @return the Output Hash String (from replace hash)
      */
-    public String getOutputHash() throws MergeException {
-        return this.getReplaceValue(TAG_OUTPUTHASH);
+    public String getOutputHash() {
+        return getReplaceValue(TAG_OUTPUTHASH);
     }
 
     /**
      * @return output type indicator (Default to GZIP, allow "zip" over-ride
      */
     public int getOutputType() {
-        if (this.replaceValues.containsKey(TAG_OUTPUT_TYPE) && this.replaceValues.get(TAG_OUTPUT_TYPE).endsWith("zip")) {
-            return ZipFactory.TYPE_ZIP;
-        }
-        return ZipFactory.TYPE_TAR;
+        return (replaceValues.containsKey(TAG_OUTPUT_TYPE) && replaceValues.get(TAG_OUTPUT_TYPE).endsWith("zip")) ? ZipFactory.TYPE_ZIP : ZipFactory.TYPE_TAR;
     }
 
     /********************************************************************************
@@ -401,74 +396,57 @@ public class Template implements Cloneable {
      * @return boolean empty
      */
     public boolean isEmpty() {
-        for (int i = 1; i < this.content.length(); i++) {
-            if (!Character.isWhitespace(this.content.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
+        return content.toString().trim().isEmpty();
     }
 
     /********************************************************************************
      * @return the full name (i.e. collection + Name + Column)
      */
     public String getFullName() {
-        return this.collection + "." + this.name + "." + this.columnValue;
-    }
-
-    /**
-     * as json - Serialize a Template from the cache
-     *
-     * @return a jSon serialized Template
-     */
-    public String asJson(boolean bePretty) {
-        GsonBuilder builder = new GsonBuilder();
-        if (bePretty) builder.setPrettyPrinting();
-        Gson gson = builder.create();
-        return gson.toJson(this);
+        return collection + "." + name + "." + columnValue;
     }
 
     public List<Bookmark> getBookmarks() {
-        return this.bookmarks;
+        return bookmarks;
     }
 
-    public HashMap<String, String> getReplaceValues() {
-        return this.replaceValues;
+    public Map<String, String> getReplaceValues() {
+        return replaceValues;
     }
 
     public long getIdtemplate() {
-        return this.idtemplate;
+        return idtemplate;
     }
 
     public String getCollection() {
-        return this.collection;
+        return collection;
     }
 
     public void addDirective(Directive newDirective) {
         newDirective.setTemplate(this);
-        newDirective.setIdTemplate(this.idtemplate);
-        newDirective.setSequence(this.directives.size());
-        this.directives.add(newDirective);
+        newDirective.setIdTemplate(idtemplate);
+        newDirective.setSequence(directives.size());
+        directives.add(newDirective);
     }
 
     public String getColumnValue() {
-        return this.columnValue;
+        return columnValue;
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
     public String getContent() {
-        return this.content.toString();
+        return content.toString();
     }
 
     public String getOutput() {
-        return this.outputFile;
+        return outputFile;
     }
 
     public List<Directive> getDirectives() {
@@ -488,10 +466,14 @@ public class Template implements Cloneable {
     public void setContent(StringBuilder content) {
         this.content = content;
         // Parse bookmarks array from text
+        initializeBookmarksFromContent();
+    }
+
+    private void initializeBookmarksFromContent() {
         Matcher m = BOOKMARK_PATTERN.matcher(this.content);
-        this.bookmarks = new ArrayList<>();
+        bookmarks = new ArrayList<>();
         while (m.find()) {
-            this.bookmarks.add(new Bookmark(m.group(), m.start()));
+            bookmarks.add(new Bookmark(m.group(), m.start()));
         }
     }
 
@@ -519,20 +501,46 @@ public class Template implements Cloneable {
         this.outputFile = outputFile;
     }
 
-    public String HashCode() {
-        return this.getFullName();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Template template = (Template) o;
+        return getFullName().equals(template.getFullName());
     }
 
-    public boolean equals(Object obj) {
-        Template that = (Template) obj;
-        if (this.getFullName().equals(that.getFullName())) {
-            return true;
-        } else {
-            return false;
-        }
+    @Override
+    public int hashCode() {
+        return getFullName().hashCode();
     }
 
     public boolean canWrite() {
-        return !(isEmpty() || isNullOutputFile(this) || !isOutputFileSpecified());
+        boolean missingWriteProperties = isEmpty() || isNullOutputFile() || !isOutputFileSpecified();
+        return !missingWriteProperties;
+    }
+
+    public static class TemplatePersistenceException extends RuntimeException {
+        private final Template template;
+        private final File outputFilePath;
+        private final String archiveEntryName;
+
+        public TemplatePersistenceException(Template template, File outputFilePath, String archiveEntryName, IOException e) {
+            super("Error persisting template " + template.getFullName() + " to zip file at " + outputFilePath + " with entry name " + archiveEntryName, e);
+            this.template = template;
+            this.outputFilePath = outputFilePath;
+            this.archiveEntryName = archiveEntryName;
+        }
+
+        public Template getTemplate() {
+            return template;
+        }
+
+        public File getOutputFilePath() {
+            return outputFilePath;
+        }
+
+        public String getArchiveEntryName() {
+            return archiveEntryName;
+        }
     }
 }

@@ -19,6 +19,7 @@ package com.ibm.util.merge.directive;
 import static org.junit.Assert.*;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -21,6 +21,9 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.util.merge.json.JsonProxy;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.junit.Before;
 import org.junit.Test;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
@@ -32,6 +35,7 @@ public class InsertSubsHtmlTest extends InsertSubsTest {
 	private TemplateFactory tf;
 	private ZipFactory zf;
 	private ConnectionFactory cf;
+	private JsonProxy jsonProxy;
 
 	@Before
 	public void setUp() throws Exception {
@@ -39,14 +43,16 @@ public class InsertSubsHtmlTest extends InsertSubsTest {
 		zf = new ZipFactory();
 		cf = new ConnectionFactory();
 		directive = new InsertSubsHtml();
+		jsonProxy = new DefaultJsonProxy();
 		InsertSubsHtml myDirective = (InsertSubsHtml) directive;
 		ProviderHtml myProvider = (ProviderHtml) myDirective.getProvider();
 		myProvider.setStaticData("<table><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>");
 
 		tf.reset();
-
-		tf.cacheFromJson(subTemplate); 
-		tf.cacheFromJson(masterTemplate);
+		Template template2 = jsonProxy.fromJSON(subTemplate, Template.class);
+		tf.cache(template2);
+		Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
+		tf.cache(template1);
 		template = tf.getTemplate("root.master.", "", new HashMap<>());
 		template.addDirective(myDirective);
 	}

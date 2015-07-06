@@ -49,13 +49,13 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 	 * @param zf
 	 */
 	public void executeDirective(TemplateFactory tf, ConnectionFactory cf, ZipFactory zf) throws MergeException {
-		Provider provider = this.getProvider();
+		Provider provider = getProvider();
 		provider.getData(cf);
 
 		// Make sure we got some data
-		if ( this.getProvider().size() < 1 ) {
-			if (!this.softFail()) {
-				throw new MergeException("No Data Found in " + this.getTemplate().getFullName(), provider.getQueryString());
+		if (getProvider().size() < 1 ) {
+			if (!softFail()) {
+				throw new MergeException("No Data Found in " + getTemplate().getFullName(), provider.getQueryString());
 			} else {
 				log.warn("Softfail on Empty Resultset");
 				return;
@@ -64,7 +64,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 
 		// Make sure we don't have a multi-table result.
 		if ( provider.size() > 1 ) {
-			if (!this.softFail()) {
+			if (!softFail()) {
 				throw new MergeException("Multi-Talbe Empty Result set returned by Directive",provider.getQueryString());
 			}
 			log.warn("Softfail on Multi-Table Resultset");
@@ -73,7 +73,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 
 		// Make sure we don't have an empty result set
 		if ( table.size() == 0 ) {
-			if (!this.softFail()) {
+			if (!softFail()) {
 				throw new MergeException("Empty Result set returned by Directive",provider.getQueryString());
 			} else {
 				log.warn("Softfail on Empty Resultset");
@@ -83,7 +83,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 
 		// Make sure we don't have a multi-row result set
 		if ( table.size() > 1 ) {
-			if (!this.softFail()) {
+			if (!softFail()) {
 				throw new MergeException("Multiple rows returned when single row expected", provider.getQueryString());
 			}
 			log.warn("Softfail on Multi-Row Resultset");
@@ -91,7 +91,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 		
 		// Add the replace values
 		for (int col=0; col < table.cols(); col++) {
-			this.getTemplate().addReplace(table.getCol(col),table.getValue(0, col));
+			getTemplate().addReplace(table.getCol(col),table.getValue(0, col));
 		}
 		
 		log.info("Values added by Replace Row:" + String.valueOf(table.cols()));

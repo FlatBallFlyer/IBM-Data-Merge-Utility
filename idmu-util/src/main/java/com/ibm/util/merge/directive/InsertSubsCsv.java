@@ -24,8 +24,8 @@ public class InsertSubsCsv extends InsertSubs implements Cloneable {
 	 */
 	public InsertSubsCsv() {
 		super();
-		this.setType(TYPE_CSV_INSERT);
-		this.setProvider(new ProviderCsv());
+		setType(TYPE_CSV_INSERT);
+		setProvider(new ProviderCsv());
 	}
 
 	/** 

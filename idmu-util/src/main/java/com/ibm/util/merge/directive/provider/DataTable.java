@@ -34,7 +34,7 @@ public class DataTable {
 	}
 
 	public void addCol(String name) {
-		this.columnNames.add(name);
+		columnNames.add(name);
 	}
 	
 	public int getCol(String name) {
@@ -47,7 +47,7 @@ public class DataTable {
 	}
 
 	public String getValue(int row, String name) {
-		return getValue(row,this.getCol(name)); 
+		return getValue(row, getCol(name));
 	}
 
 	public String getValue(int row, int col) {
@@ -58,16 +58,16 @@ public class DataTable {
 	
 	public ArrayList<String> getNewRow() {
 		ArrayList<String> newRow = new ArrayList<>();
-		this.theData.add(newRow);
+		theData.add(newRow);
 		return newRow;
 	}
 
 	public void addRow(ArrayList<String> newRow) {
-		this.theData.add(newRow);
+		theData.add(newRow);
 	}
 
 	public void setCols(ArrayList<String> strings) {
-		this.columnNames = strings;
+		columnNames = strings;
 	}
 
 }
