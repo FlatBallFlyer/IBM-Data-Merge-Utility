@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class implements a Caching Template Factory as well as all aspects of Template Persistence
@@ -39,10 +38,10 @@ final public class TemplateFactory {
     private final String DEFAULT_FULLNAME = "root.default.";
     private final FilesystemPersistence fs;
     private HibernatePersistence hp;
-    private final ConcurrentHashMap<String, Template> templateCache = new ConcurrentHashMap<String, Template>();
-    
+    private final MemoryCache<String, Template> templateCache;
 
     public TemplateFactory(FilesystemPersistence fs) {
+        this.templateCache = new MemoryCache<>();
         this.fs = fs;
     }
 
@@ -103,27 +102,27 @@ final public class TemplateFactory {
     public Template getTemplate(String fullName, String shortName, Map<String, String> seedReplace) {
         Template newTemplate = null;
         // Cache hit -- Return a clone of the Template in Cache
-        if (templateCache.containsKey(fullName)) {
+        if (templateCache.isCached(fullName)) {
             return templateCache.get(fullName).clone(seedReplace);
         }
         // See if FullName template is in the database
         if (this.hp != null) {
             newTemplate = hp.getTemplateFullname(fullName);
-            templateCache.putIfAbsent(fullName, newTemplate);
+            templateCache.cache(fullName, newTemplate);
             log.info("Constructed Template: " + fullName);
             return templateCache.get(fullName).clone(seedReplace);
 //            }
         }
         // Check for shortName in the cache, since fullName doesn't exist
-        if (templateCache.containsKey(shortName)) {
-            templateCache.putIfAbsent(fullName, templateCache.get(shortName));
+        if (templateCache.isCached(shortName)) {
+            templateCache.cache(fullName, templateCache.get(shortName));
             log.info("Linked Template: " + shortName + " to " + fullName);
             return templateCache.get(fullName).clone(seedReplace);
         }
         // See if the shortName (Default Template) is in the database
         if (this.hp != null) {
             newTemplate = hp.getTemplateDefault(fullName);
-            templateCache.putIfAbsent(fullName, newTemplate);
+            templateCache.cache(fullName, newTemplate);
             log.info("Linked Template: " + shortName + " to " + fullName);
             return templateCache.get(fullName).clone(seedReplace);
         }
@@ -156,7 +155,7 @@ final public class TemplateFactory {
     private ArrayList<String> getCollectionsFromCache() {
         ArrayList<String> theCollections = new ArrayList<String>();
         // Iterate the Hash
-        for (Template template : templateCache.values()) {
+        for (Template template : templateCache.asMap().values()) {
             if (!theCollections.contains(template.getCollection())) {
                 theCollections.add(template.getCollection());
             }
@@ -202,7 +201,7 @@ final public class TemplateFactory {
     public ArrayList<String> getTemplatesFromCache(String collection) {
         ArrayList<String> theTemplates = new ArrayList<String>();
         // Iterate the Hash
-        for (Template template : templateCache.values()) {
+        for (Template template : templateCache.asMap().values()) {
             if (template.getCollection().equals(collection)) {
                 theTemplates.add(template.getFullName());
             }
@@ -261,8 +260,8 @@ final public class TemplateFactory {
     }
 
     public Template cache(Template template) {
-        templateCache.remove(template.getFullName());
-        templateCache.putIfAbsent(template.getFullName(), template);
+//        templateCache.remove(template.getFullName());
+        templateCache.cache(template.getFullName(), template);
         log.info(template.getFullName() + " has been cached");
         return templateCache.get(template.getFullName()).clone(new HashMap<String, String>());
     }
