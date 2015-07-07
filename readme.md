@@ -11,6 +11,8 @@ IDMU is looking for a html home, until that time you can access the documentatio
 in the WebContent folder of the project in Documentation.html
 
 ## Developing
+First clone the project.
+Ensure build/context.xml is correctly
 You can run by invoking:
 
     mvn clean install
@@ -18,53 +20,8 @@ You can run by invoking:
 
 This will launch the app on http://localhost:9090
 
-### Test the REST service with SampleResource
-Rest services in place are using jersey with auto conversion of JSON through jackson (per default jersey)
-Supports JSON & XML representation at this time.
-SampleResource is a very simple resource type with only a 'name' field which is also the primary identifier.
-After launching you can test the service by:
+### REST service
 
-    GET /test/resources
-
-to see the empty list
-
-    POST {"name":"jon"} to /test/resources with headers "Accept : application/json" and "Content-Type: application/json"
-
-to create a resource with name "jon"
-
-    GET /test/resources/jon with Accept header
-
-to see the resource
-
-    PUT {"name":"mike"} to /test/resources/jon with Accept and Content-Type header
-
-to change the name of the resource jon to mike
-
-    GET /test/resources/mike with Accept header
-
-to see the updated resource (renamed to mike)
-
-    GET /test/resources
-
-to list and see the updated resource in the list
-
-    DELETE /test/resources/mike
-
-to delete the resource and get back to an empty list
-
-By using application/xml instead of application/json for the Accept and Content-Type headers, xml respresentation of the resource can be used as well
-
-###IDMU resource url paths
-
-The IDMU resources will be at
-
-    /rest/collections
-    /rest/collections/COLLECTION_NAME
-    /rest/templates
-    /rest/templates/TEMPLATE_NAME
-    etc
-
-They will support similar vocabulary to the Sample REST service.
 
 ## License
 
