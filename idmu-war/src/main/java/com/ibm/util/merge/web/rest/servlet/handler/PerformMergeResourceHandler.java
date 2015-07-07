@@ -7,7 +7,7 @@ import com.ibm.util.merge.web.rest.servlet.Result;
 import com.ibm.util.merge.web.rest.servlet.result.MergeResult;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletConfig;
+import java.util.Map;
 
 /**
  * Handles POST /merge
@@ -19,7 +19,7 @@ public class PerformMergeResourceHandler implements RequestHandler {
     private RuntimeContext runtimeContext;
 
     @Override
-    public void initialize(ServletConfig servletConfig, RuntimeContext runtimeContext) {
+    public void initialize(Map<String, String> initParameters, RuntimeContext runtimeContext) {
         this.runtimeContext = runtimeContext;
     }
 

@@ -126,4 +126,8 @@ public class RequestData {
     public Map<String, String[]> getParameterMap() {
         return params;
     }
+
+    public boolean isDELETE() {
+        return method.equalsIgnoreCase("delete");
+    }
 }

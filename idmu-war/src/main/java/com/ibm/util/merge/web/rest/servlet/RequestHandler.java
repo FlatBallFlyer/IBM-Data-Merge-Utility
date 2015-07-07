@@ -2,14 +2,14 @@ package com.ibm.util.merge.web.rest.servlet;
 
 import com.ibm.util.merge.RuntimeContext;
 
-import javax.servlet.ServletConfig;
+import java.util.Map;
 
 /**
  *
  */
 public interface RequestHandler {
 
-    void initialize(ServletConfig servletConfig, RuntimeContext runtimeContext);
+    void initialize(Map<String, String> initParameters, RuntimeContext runtimeContext);
 
     boolean canHandle(RequestData rd);
 

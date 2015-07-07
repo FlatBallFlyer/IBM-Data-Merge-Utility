@@ -91,4 +91,8 @@ public class HibernatePersistence {
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
         return configuration.buildSessionFactory(serviceRegistry);
     }
+
+    public void deleteTemplate(Template template) {
+        throw new UnsupportedOperationException("implement delete in hibernate");
+    }
 }

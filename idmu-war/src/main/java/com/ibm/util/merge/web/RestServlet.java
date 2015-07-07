@@ -1,6 +1,9 @@
-package com.ibm.util.merge.web.rest.servlet;
+package com.ibm.util.merge.web;
 
 import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.web.rest.servlet.RequestData;
+import com.ibm.util.merge.web.rest.servlet.RequestHandler;
+import com.ibm.util.merge.web.rest.servlet.Result;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletConfig;
@@ -9,7 +12,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -42,6 +48,11 @@ public class RestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+
+        handleRequest(request, response);
+    }
+
+    private void handleRequest(HttpServletRequest request, HttpServletResponse response) {
         logRequest(request);
         RequestData rd = new RequestData(request);
         boolean handled = false;
@@ -73,26 +84,36 @@ public class RestServlet extends HttpServlet {
 
     @Override
     protected void doHead(HttpServletRequest request, HttpServletResponse response) {
-        logRequest(request);
+        handleRequest(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-        logRequest(request);
+        handleRequest(request, response);
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) {
-        logRequest(request);
+        handleRequest(request, response);
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
-        logRequest(request);
+        handleRequest(request, response);
     }
 
     @Override
     protected void doOptions(HttpServletRequest request, HttpServletResponse response) {
-        logRequest(request);
+        handleRequest(request, response);
+    }
+
+    public static Map<String, String> initParametersToMap(ServletConfig cfg) {
+        Enumeration<String> names = cfg.getInitParameterNames();
+        HashMap<String, String> out = new HashMap<>();
+        while(names.hasMoreElements()){
+            String name = names.nextElement();
+            out.put(name, cfg.getInitParameter(name));
+        }
+        return out;
     }
 }

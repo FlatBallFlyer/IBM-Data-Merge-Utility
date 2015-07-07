@@ -9,9 +9,9 @@ import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
 
-import javax.servlet.ServletConfig;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * * Handles /directives
@@ -20,7 +20,7 @@ public class AllDirectivesResourceHandler implements RequestHandler {
     private RuntimeContext runtimeContext;
 
     @Override
-    public void initialize(ServletConfig servletConfig, RuntimeContext runtimeContext) {
+    public void initialize(Map<String, String> initParameters, RuntimeContext runtimeContext) {
         this.runtimeContext = runtimeContext;
     }
 

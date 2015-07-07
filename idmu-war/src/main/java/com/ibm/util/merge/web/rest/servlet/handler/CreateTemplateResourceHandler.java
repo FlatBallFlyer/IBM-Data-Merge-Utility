@@ -11,19 +11,19 @@ import com.ibm.util.merge.web.rest.servlet.result.ForbiddenRequestTextResult;
 import com.ibm.util.merge.web.rest.servlet.result.JsonItemCreatedResult;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletConfig;
+import java.util.Map;
 
 /**
  * Handles POST /template
  */
 public class CreateTemplateResourceHandler implements RequestHandler {
 
-    private static final Logger log = Logger.getLogger(CollectionForCollectionTypeColumnValueResourceHandler.class);
+    private static final Logger log = Logger.getLogger(CreateTemplateResourceHandler.class);
 
     private RuntimeContext runtimeContext;
 
     @Override
-    public void initialize(ServletConfig servletConfig, RuntimeContext runtimeContext) {
+    public void initialize(Map<String, String> initParameters, RuntimeContext runtimeContext) {
         this.runtimeContext = runtimeContext;
     }
 

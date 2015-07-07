@@ -85,7 +85,6 @@ public class FilesystemPersistence {
             if(!file.exists()){
                 file.createNewFile();
             }
-
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
             bw = new BufferedWriter(fw);
             bw.write(jsonProxy.toJson(template));
@@ -97,5 +96,19 @@ public class FilesystemPersistence {
             IOUtils.closeQuietly(bw);
         }
         return template;
+    }
+
+    public void deleteTemplateOnFilesystem(Template template) {
+//        String fileName = templateFolder + template.getFullName();
+        File file = new File(new File(templateFolder), template.getFullName()+".json");
+        if(file.exists()){
+            if(!file.delete()){
+                throw new RuntimeException("Could not delete template " + template.getFullName() + " at path " + file.getAbsolutePath());
+            }else{
+                log.info("Deleted template " + template.getFullName() + " at path " + file.getAbsolutePath());
+            }
+        }else{
+            log.error("File for template " + template.getFullName() + " does not exist at path " + file.getAbsolutePath());
+        }
     }
 }

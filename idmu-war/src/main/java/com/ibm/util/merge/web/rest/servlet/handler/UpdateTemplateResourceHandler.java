@@ -11,20 +11,20 @@ import com.ibm.util.merge.web.rest.servlet.result.JsonItemUpdatedResult;
 import com.ibm.util.merge.web.rest.servlet.result.NotFoundTextErrorResult;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletConfig;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Handles PUT /template/{templateFullName}
  */
 public class UpdateTemplateResourceHandler implements RequestHandler {
 
-    private static final Logger log = Logger.getLogger(CollectionForCollectionTypeColumnValueResourceHandler.class);
+    private static final Logger log = Logger.getLogger(UpdateTemplateResourceHandler.class);
 
     private RuntimeContext runtimeContext;
 
     @Override
-    public void initialize(ServletConfig servletConfig, RuntimeContext runtimeContext) {
+    public void initialize(Map<String, String> initParameters, RuntimeContext runtimeContext) {
         this.runtimeContext = runtimeContext;
     }
 

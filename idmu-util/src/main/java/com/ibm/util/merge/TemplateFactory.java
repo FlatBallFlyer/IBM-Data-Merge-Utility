@@ -241,6 +241,14 @@ final public class TemplateFactory {
         }
     }
 
+    public void deleteTemplate(Template template){
+        templateCache.evict(template.getFullName());
+        fs.deleteTemplateOnFilesystem(template);
+        if(hp != null){
+            hp.deleteTemplate(template);
+        }
+    }
+
     public Template cache(Template template) {
 //        templateCache.remove(template.getFullName());
         templateCache.cache(template.getFullName(), template);

@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ * 404 Not found with a plain text message
  */
 public class NotFoundTextErrorResult implements Result {
     private String message;

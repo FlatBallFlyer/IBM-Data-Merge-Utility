@@ -9,8 +9,8 @@ import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletConfig;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Handles /templates/{collectionName}/{templateType}/{columnValue}
@@ -22,7 +22,7 @@ public class CollectionForCollectionTypeColumnValueResourceHandler implements Re
     private RuntimeContext runtimeContext;
 
     @Override
-    public void initialize(ServletConfig servletConfig, RuntimeContext runtimeContext) {
+    public void initialize(Map<String, String> initParameters, RuntimeContext runtimeContext) {
         this.runtimeContext = runtimeContext;
     }
 
