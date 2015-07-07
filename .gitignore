@@ -4,6 +4,6 @@
 .project
 .settings
 .classpath
-/build
+/build/TIADB.sql
 /*/target
 /idmu-util/src/test/resources/testout
