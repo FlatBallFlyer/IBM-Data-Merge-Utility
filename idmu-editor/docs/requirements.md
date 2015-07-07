@@ -106,7 +106,7 @@ Insert SubTemplate button visible if Directives contains 'Insert'
 After the Insert Subs button is pressed and dialog closed
 
 ## Sub Template Notes
-- Button below content area (if insert subtamplates) in the directives for template
+- Button below content area (if insert subtemplates) in the directives for template
 - when button clicked prompt for collection, template, and column name
 - split the text area into two with the template in between
 - the in-between template will have the collection, template, column name

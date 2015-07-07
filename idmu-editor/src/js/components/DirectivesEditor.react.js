@@ -17,43 +17,37 @@ var DirectivesEditorTrigger = React.createClass({
 var DirectivesEditor = React.createClass({
   mixins: [ModalMixin],
   
-  getInitialState: function() {
-    return {name: 'Blah', output: 'Output', description: ''};
-  },
   handleSave: function(e) {
     console.debug(this.refs[this.props.directive.name].state);
-  },
-  changeDirective: function(dx,index){
-    this.props.data.template.directive[index] = dx;
   },
   editor: function(type_in){
    var type = parseInt(type_in);
    if(type === 0){
-     return(<RequireTags ref={this.props.directive.name} data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<RequireTags ref={this.props.directive.name} data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 1){
-     return(<ReplaceValue  ref={this.props.directive.name} data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<ReplaceValue  ref={this.props.directive.name} data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 2){
-     return(<InsertSubTemplatesFromTagData  ref={this.props.directive.name} data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<InsertSubTemplatesFromTagData  ref={this.props.directive.name} data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 10){
-     return(<InsertSubTemplatesFromSQLRows  ref={this.props.directive.name} data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<InsertSubTemplatesFromSQLRows  ref={this.props.directive.name} data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 11){
-     return(<ReplaceValuesFromSQLRow  ref={this.props.directive.name} data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<ReplaceValuesFromSQLRow  ref={this.props.directive.name} data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 12){
-     return(<ReplaceValuesFromSQLColumn  ref={this.props.directive.name}  data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<ReplaceValuesFromSQLColumn  ref={this.props.directive.name}  data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 21){
-     return(<InsertSubTemplatesFromCSV  ref={this.props.directive.name}  data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<InsertSubTemplatesFromCSV  ref={this.props.directive.name}  data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 22){
-     return(<ReplaceValuesFromCSVRow  ref={this.props.directive.name}  data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<ReplaceValuesFromCSVRow  ref={this.props.directive.name}  data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 23){
-     return(<ReplaceValuesFromCSVColumn  ref={this.props.directive.name} data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<ReplaceValuesFromCSVColumn  ref={this.props.directive.name} data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 31){
-     return(<InsertSubTemplatesFromHTMLTableRows  ref={this.props.directive.name} data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<InsertSubTemplatesFromHTMLTableRows  ref={this.props.directive.name} data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 32){
-     return(<ReplaceValuesFromHTMLTableRows  ref={this.props.directive.name} data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<ReplaceValuesFromHTMLTableRows  ref={this.props.directive.name} data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 33){
-     return(<ReplaceValuesFromHTMLTableColumn  ref={this.props.directive.name} data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<ReplaceValuesFromHTMLTableColumn  ref={this.props.directive.name} data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else if(type === 34){
-     return(<ReplaceValuesFromHTML  ref={this.props.directive.name} data={this.props.data} cb={this.changeDirective} directive={this.props.directive} index={this.props.index}/>);
+     return(<ReplaceValuesFromHTML  ref={this.props.directive.name} data={this.props.data} directive={this.props.directive} index={this.props.index}/>);
    }else{
      return(<div/>);
    }
