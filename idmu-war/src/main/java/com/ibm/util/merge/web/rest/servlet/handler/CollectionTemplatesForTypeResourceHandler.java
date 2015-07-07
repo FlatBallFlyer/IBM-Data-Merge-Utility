@@ -3,7 +3,7 @@ package com.ibm.util.merge.web.rest.servlet.handler;
 import com.ibm.util.merge.RuntimeContext;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.TemplateFactory;
-import com.ibm.util.merge.web.rest.servlet.result.JsonQueryResult;
+import com.ibm.util.merge.web.rest.servlet.result.JsonDataResult;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
@@ -46,6 +46,6 @@ public class CollectionTemplatesForTypeResourceHandler implements RequestHandler
                 templatesWithName.add(template);
             }
         }
-        return new JsonQueryResult(templatesWithName);
+        return new JsonDataResult(templatesWithName);
     }
 }

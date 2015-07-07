@@ -302,6 +302,24 @@ final public class TemplateFactory {
         return allTemplates;
     }
 
+    public Template findTemplateForFullname(String fullName) {
+        List<Template> collectionTemplates = listAllTemplates();
+        Template found = null;
+        for (Template template : collectionTemplates) {
+            if(template.getFullName().equals(fullName)){
+                if(found != null){
+                    throw new IllegalStateException("Duplicate template found for fullName=" + fullName);
+                }
+                found = template;
+            }
+        }
+        return found;
+    }
+
+    public boolean templateFullnameExists(String fullName) {
+        return findTemplateForFullname(fullName) != null;
+    }
+
     public static class TemplateNotFoundException extends RuntimeException {
         private String templateName;
 

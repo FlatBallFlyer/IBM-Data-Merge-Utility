@@ -82,10 +82,14 @@ public class FilesystemPersistence {
         File file = new File(fileName);
         BufferedWriter bw = null;
         try {
-            file.createNewFile();
+            if(!file.exists()){
+                file.createNewFile();
+            }
+
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
             bw = new BufferedWriter(fw);
             bw.write(jsonProxy.toJson(template));
+            bw.flush();
             bw.close();
         } catch (IOException e) {
             throw new RuntimeException("Could not write template " +template.getFullName()+" to JSON folder : " + file.getPath(), e);

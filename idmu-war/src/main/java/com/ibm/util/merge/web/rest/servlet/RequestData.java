@@ -5,6 +5,8 @@ import org.apache.commons.io.IOUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -21,6 +23,7 @@ public class RequestData {
     private final String queryString;
     private final Map<String, List<String>> headers;
     private final String contentType;
+    private final String requestUrl;
 
     public RequestData(HttpServletRequest request) {
         method = request.getMethod();
@@ -35,6 +38,7 @@ public class RequestData {
         queryString = request.getQueryString();
         Map<String, List<String>> headerValues = readHeaderValues(request);
         headers = headerValues;
+        requestUrl = request.getRequestURL().toString();
     }
 
     private Map<String, List<String>> readHeaderValues(HttpServletRequest request) {
@@ -93,5 +97,29 @@ public class RequestData {
 
     public boolean pathStartsWith(String pathPrefix) {
         return pathInfo.startsWith(pathPrefix);
+    }
+
+    public boolean isPUT() {
+        return method.equalsIgnoreCase("put");
+    }
+    public boolean isPOST() {
+        return method.equalsIgnoreCase("post");
+    }
+
+    public int requestBodyByteLength() {
+        return requestBody.length;
+    }
+
+    public String getRequestBodyString() {
+        try {
+            return new String(requestBody, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String newUrlForChildPath(String childPath) {
+
+        return requestUrl + childPath;
     }
 }

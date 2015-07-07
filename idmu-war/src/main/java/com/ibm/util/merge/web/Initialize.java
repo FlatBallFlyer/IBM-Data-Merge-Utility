@@ -40,7 +40,16 @@ public class Initialize extends HttpServlet {
 
     private String warTemplatesPath = "/WEB-INF/templates";
     private String outputDirPath = "/tmp/merge";
-    private List<RequestHandler> handlerChain = new ArrayList<>(Arrays.asList(new AllTemplatesResourceHandler(), new AllDirectivesResourceHandler(), new CollectionTemplatesResourceHandler(), new CollectionTemplatesForTypeResourceHandler(), new CollectionForCollectionTypeColumnValueResourceHandler(), new TemplateForFullnameResourceHandler()));
+    private List<RequestHandler> handlerChain = new ArrayList<>(Arrays.asList(
+            new AllTemplatesResourceHandler(),
+            new AllDirectivesResourceHandler(),
+            new CollectionTemplatesResourceHandler(),
+            new CollectionTemplatesForTypeResourceHandler(),
+            new CollectionForCollectionTypeColumnValueResourceHandler(),
+            new TemplateForFullnameResourceHandler(),
+            new CreateTemplateResourceHandler(),
+            new UpdateTemplateResourceHandler()
+    ));
 
     /**
      * Initialize Logging, Template and Zip Factory objects
