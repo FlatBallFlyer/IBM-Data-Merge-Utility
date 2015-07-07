@@ -12,7 +12,9 @@ in the WebContent folder of the project in Documentation.html
 
 ## Developing
 First clone the project.
-Ensure build/context.xml is correctly
+
+Copy /build/sample-context.xml to /build/context.xml and adapt to your preference. This is the Tomcat context file that will be used by the maven tomcat7 plugin to run. Of course you can run on an external Tomcat as well, just mold the context.xml according to the sample based on your environment.
+
 You can run by invoking:
 
     mvn clean install
@@ -20,7 +22,23 @@ You can run by invoking:
 
 This will launch the app on http://localhost:9090
 
-### REST service
+### REST services available
+There are 2 servlets:
+- InitializeServlet: /Initialize
+  GET will return a Text status, POST will reinitalize the application
+- RestServlet: /idmu
+  Leverages RequestHandlers to handle requests for the active RuntimeContext instance
+
+### Supported URLs
+    GET    /idmu/directives (full url example http://localhost:9090/idmu/directives)
+    GET    /idmu/templates
+    GET    /idmu/templates/{collectionName}
+    GET    /idmu/templates/{collectionName}/{type}
+    GET    /idmu/templates/{collectionName}/{type}/{columnValue}
+    POST   /idmu/template with template JSON
+    GET    /idmu/template/{templateFullName}
+    PUT    /idmu/template/{templateFullName} with new version template JSON
+    DELETE /idmu/template/{templateFullName} Warning: really works and deletes on filesystem
 
 
 ## License
