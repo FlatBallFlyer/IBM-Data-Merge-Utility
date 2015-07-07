@@ -39,6 +39,7 @@ There are 2 servlets:
     GET    /idmu/template/{templateFullName}
     PUT    /idmu/template/{templateFullName} with new version template JSON
     DELETE /idmu/template/{templateFullName} Warning: really works and deletes on filesystem
+    GET/POST /idmu/merge?{requestParameters} triggers a merge
 
 
 ## License
