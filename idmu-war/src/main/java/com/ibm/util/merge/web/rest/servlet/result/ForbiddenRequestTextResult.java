@@ -2,7 +2,7 @@ package com.ibm.util.merge.web.rest.servlet.result;
 
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.result.writer.TextResponseWriter;
+import com.ibm.util.merge.web.rest.servlet.writer.TextResponseWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

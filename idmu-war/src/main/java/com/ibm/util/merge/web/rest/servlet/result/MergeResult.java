@@ -2,24 +2,30 @@ package com.ibm.util.merge.web.rest.servlet.result;
 
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.writer.JsonResponseWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  *
  */
-public class JsonItemUpdatedResult implements Result {
-    private Object updatedItem;
+public class MergeResult implements Result {
+    private String content;
 
-    public JsonItemUpdatedResult(Object updatedItem) {
-        this.updatedItem = updatedItem;
+    public MergeResult(String content) {
+        this.content = content;
     }
 
     @Override
     public void write(RequestData rd, HttpServletRequest request, HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_OK);
-        new JsonResponseWriter(response, updatedItem).write();
+        response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
+        try {
+            response.getWriter().write(content);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

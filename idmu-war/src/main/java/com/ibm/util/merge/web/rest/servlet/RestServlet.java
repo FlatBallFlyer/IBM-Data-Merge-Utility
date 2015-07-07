@@ -51,6 +51,11 @@ public class RestServlet extends HttpServlet {
                 handled = true;
                 Result result = handler.handle(rd);
                 result.write(rd, request, response);
+                if(response.getStatus() >= 200 && response.getStatus() < 300){
+                    log.info("Successfully handled request with " + handler.getClass().getName() + " : " + rd);
+                }else{
+                    log.error("Failed to handle request with " + handler.getClass().getName() + " : " + rd);
+                }
             }
         }
         if(!handled){

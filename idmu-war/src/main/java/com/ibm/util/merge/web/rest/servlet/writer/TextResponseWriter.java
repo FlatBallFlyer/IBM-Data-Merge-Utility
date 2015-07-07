@@ -1,4 +1,4 @@
-package com.ibm.util.merge.web.rest.servlet.result.writer;
+package com.ibm.util.merge.web.rest.servlet.writer;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

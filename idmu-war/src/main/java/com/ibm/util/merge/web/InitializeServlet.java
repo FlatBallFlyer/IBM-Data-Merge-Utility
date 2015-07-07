@@ -20,8 +20,10 @@ import com.ibm.util.merge.RuntimeContext;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
+import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.RestServlet;
+import com.ibm.util.merge.web.rest.servlet.Result;
 import com.ibm.util.merge.web.rest.servlet.handler.*;
 import org.apache.log4j.Logger;
 
@@ -34,9 +36,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Initialize extends HttpServlet {
+public class InitializeServlet extends HttpServlet {
 
-    private Logger log = Logger.getLogger(Initialize.class);
+    private Logger log = Logger.getLogger(InitializeServlet.class);
 
     private String warTemplatesPath = "/WEB-INF/templates";
     private String outputDirPath = "/tmp/merge";
@@ -48,7 +50,8 @@ public class Initialize extends HttpServlet {
             new CollectionForCollectionTypeColumnValueResourceHandler(),
             new TemplateForFullnameResourceHandler(),
             new CreateTemplateResourceHandler(),
-            new UpdateTemplateResourceHandler()
+            new UpdateTemplateResourceHandler(),
+            new PerformMergeResourceHandler()
     ));
 
     /**

@@ -122,4 +122,8 @@ public class RequestData {
 
         return requestUrl + childPath;
     }
+
+    public Map<String, String[]> getParameterMap() {
+        return params;
+    }
 }

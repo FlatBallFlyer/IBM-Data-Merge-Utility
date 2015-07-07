@@ -14,7 +14,7 @@
 	</welcome-file-list>
 	<servlet>
 		<servlet-name>Initialize</servlet-name>
-		<servlet-class>com.ibm.util.merge.web.Initialize</servlet-class>
+		<servlet-class>com.ibm.util.merge.web.InitializeServlet</servlet-class>
 		<init-param>
 			<param-name>log4j-init-file</param-name>
 			<param-value>/WEB-INF/properties/log4j.properties</param-value>
@@ -39,14 +39,14 @@
 		<url-pattern>/Initialize</url-pattern>
 	</servlet-mapping>
 
-	<servlet>
-		<servlet-name>Merge</servlet-name>
-		<servlet-class>com.ibm.util.merge.web.Merge</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Merge</servlet-name>
-		<url-pattern>/Merge/</url-pattern>
-	</servlet-mapping>
+	<!--<servlet>-->
+		<!--<servlet-name>Merge</servlet-name>-->
+		<!--<servlet-class>com.ibm.util.merge.web.Merge</servlet-class>-->
+	<!--</servlet>-->
+	<!--<servlet-mapping>-->
+		<!--<servlet-name>Merge</servlet-name>-->
+		<!--<url-pattern>/Merge/</url-pattern>-->
+	<!--</servlet-mapping>-->
 
 	<servlet>
 		<servlet-name>RestServlet</servlet-name>
@@ -56,23 +56,23 @@
 		<servlet-name>RestServlet</servlet-name>
 		<url-pattern>/idmu/*</url-pattern>
 	</servlet-mapping>
-	<servlet>
-		<servlet-name>Persist</servlet-name>
-		<servlet-class>com.ibm.util.merge.web.Persist</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Persist</servlet-name>
-		<url-pattern>/Template/</url-pattern>
-	</servlet-mapping>
+	<!--<servlet>-->
+		<!--<servlet-name>Persist</servlet-name>-->
+		<!--<servlet-class>com.ibm.util.merge.web.Persist</servlet-class>-->
+	<!--</servlet>-->
+	<!--<servlet-mapping>-->
+		<!--<servlet-name>Persist</servlet-name>-->
+		<!--<url-pattern>/Template/</url-pattern>-->
+	<!--</servlet-mapping>-->
 
-	<servlet>
-		<servlet-name>Query</servlet-name>
-		<servlet-class>com.ibm.util.merge.web.Query</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Query</servlet-name>
-		<url-pattern>/Query/</url-pattern>
-	</servlet-mapping>
+	<!--<servlet>-->
+		<!--<servlet-name>Query</servlet-name>-->
+		<!--<servlet-class>com.ibm.util.merge.web.Query</servlet-class>-->
+	<!--</servlet>-->
+	<!--<servlet-mapping>-->
+		<!--<servlet-name>Query</servlet-name>-->
+		<!--<url-pattern>/Query/</url-pattern>-->
+	<!--</servlet-mapping>-->
 	<servlet>
 		<servlet-name>CatchAll</servlet-name>
 		<servlet-class>com.ibm.util.merge.web.CatchAllServlet</servlet-class>
