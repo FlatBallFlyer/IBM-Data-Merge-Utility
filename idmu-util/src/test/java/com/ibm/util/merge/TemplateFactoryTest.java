@@ -51,7 +51,7 @@ public class TemplateFactoryTest {
     @Before
     public void setUp() throws Exception {
         jsonProxy = new DefaultJsonProxy();
-        rtc = new RuntimeContext(new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-util/src/test/resources/templates", new PrettyJsonProxy())));
+        rtc = new RuntimeContext(new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-util/src/test/resources/templates", new PrettyJsonProxy(), System.getProperty("java.io.tmpdir"))));
         rtc.initialize("/tmp/merge");
         tf = rtc.getTemplateFactory();
         tf.reset();

@@ -1,9 +1,10 @@
 package com.ibm.util.merge.persistence;
 
 import com.google.gson.JsonSyntaxException;
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.Template;
 import com.ibm.util.merge.json.JsonProxy;
+import com.ibm.util.merge.storage.TarFileWriter;
+import com.ibm.util.merge.storage.ZipFileWriter;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.log4j.Logger;
 
@@ -20,11 +21,15 @@ public class FilesystemPersistence {
     private Logger log = Logger.getLogger(FilesystemPersistence.class);
 
     private String templateFolder;
+
+    private String outputRoot;
+
     private JsonProxy jsonProxy;
 
-    public FilesystemPersistence(String templateFolder, JsonProxy jsonProxy) {
+    public FilesystemPersistence(String templateFolder, JsonProxy jsonProxy, String outputRoot) {
         this.templateFolder = templateFolder;
         this.jsonProxy = jsonProxy;
+        this.outputRoot = outputRoot;
     }
 
     /**********************************************************************************
@@ -110,4 +115,71 @@ public class FilesystemPersistence {
             log.error("File for template " + template.getFullName() + " does not exist at path " + file.getAbsolutePath());
         }
     }
+
+    public void writeTarFile(Template template) {
+        File outputFilePath = constructArchivePath(template);
+        if(!outputFilePath.getParentFile().exists()){
+            throw new IllegalArgumentException("The parent directory does not exist for file " + outputFilePath.getAbsolutePath());
+        }
+        String archiveEntryName = constructArchiveEntryName(template);
+        try {
+            new TarFileWriter(outputFilePath, archiveEntryName, template.getContent(), "root", "root").write();
+        } catch (IOException e) {
+            throw new TemplatePersistenceException(template, outputFilePath, archiveEntryName, e);
+        }
+    }
+
+    public String constructArchiveEntryName(Template template) {
+        return template.replaceProcess(template.getOutputFile());
+    }
+
+    public void writeZipFile(Template template) {
+        File outputFilePath = constructArchivePath(template);
+        String archiveEntryName = constructArchiveEntryName(template);
+        try {
+            new ZipFileWriter(outputFilePath, archiveEntryName, template.getContent()).write();
+        } catch (IOException e) {
+            throw new TemplatePersistenceException(template, outputFilePath, archiveEntryName, e);
+        }
+    }
+
+    public File constructArchivePath(Template template) {
+        return new File(outputRoot + "/" + template.getOutputFile());
+    }
+
+    public void doWrite(Template template) {
+        if (template.canWrite()) {
+            if (template.getOutputType() == Template.TYPE_ZIP) {
+                writeZipFile(template);
+            } else {
+                writeTarFile(template);
+            }
+        }
+    }
+
+    public static class TemplatePersistenceException extends RuntimeException {
+        private final Template template;
+        private final File outputFilePath;
+        private final String archiveEntryName;
+
+        public TemplatePersistenceException(Template template, File outputFilePath, String archiveEntryName, IOException e) {
+            super("Error persisting template " + template.getFullName() + " to zip file at " + outputFilePath + " with entry name " + archiveEntryName, e);
+            this.template = template;
+            this.outputFilePath = outputFilePath;
+            this.archiveEntryName = archiveEntryName;
+        }
+
+        public Template getTemplate() {
+            return template;
+        }
+
+        public File getOutputFilePath() {
+            return outputFilePath;
+        }
+
+        public String getArchiveEntryName() {
+            return archiveEntryName;
+        }
+    }
+
 }

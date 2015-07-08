@@ -114,7 +114,8 @@ public abstract class InsertSubs extends Directive implements Cloneable {
             } else {
                 returnValue = subTemplate.getContent();
             }
-            subTemplate.doWrite(rtc.getZipFactory());
+            rtc.getTemplateFactory().getFs().doWrite(subTemplate);
+//            subTemplate.doWrite(rtc.getZipFactory());
             getTemplate().insertText(returnValue, bookmark);
         } catch (MergeException e) {
             if (softFail()) {

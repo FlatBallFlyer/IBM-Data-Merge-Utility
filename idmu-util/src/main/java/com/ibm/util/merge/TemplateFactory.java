@@ -341,6 +341,10 @@ final public class TemplateFactory {
         }
     }
 
+    public FilesystemPersistence getFs() {
+        return fs;
+    }
+
     public TemplateCache getTemplateCache() {
         return templateCache;
     }

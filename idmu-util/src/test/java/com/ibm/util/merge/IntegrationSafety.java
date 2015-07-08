@@ -40,13 +40,12 @@ public class IntegrationSafety {
 
 	@Before
 	public void setup() throws MergeException, IOException {
-		rtc = TestUtils.createDefaultRuntimeContext();
+		rtc = TestUtils.createRuntimeContext(outputDir);
 		// Initialize Factories
 		TemplateFactory tf = rtc.getTemplateFactory();
-		ZipFactory zf = rtc.getZipFactory();
 		tf.reset();
 		tf.loadTemplatesFromFilesystem();
-		zf.setOutputRoot(outputDir);
+//		zf.setOutputRoot(outputDir);
 		
 		// Reset the output directory
 		FileUtils.cleanDirectory(new File(outputDir)); 
@@ -95,7 +94,6 @@ public class IntegrationSafety {
 		parameterMap.put("DragonFlyOutputFile", new String[]{fullName+type});
 		parameterMap.put("DragonFlyFullName", 	new String[]{fullName});
 		TemplateFactory tf = rtc.getTemplateFactory();
-		ZipFactory zf = rtc.getZipFactory();
 		Template root = tf.getTemplate(parameterMap);
 		root.merge(rtc);
 		final String returnValue;
@@ -104,7 +102,8 @@ public class IntegrationSafety {
 		} else {
 			returnValue = root.getContent();
 		}
-		root.doWrite(zf);
+		tf.getFs().doWrite(root);
+//		root.doWrite(zf);
 		String output = returnValue;
 //		root.packageOutput(zf, cf);
 		return output;

@@ -13,13 +13,11 @@ import java.util.Date;
 public class RuntimeContext {
     private static final Logger log = Logger.getLogger(RuntimeContext.class);
     private final TemplateFactory templateFactory;
-    private final ZipFactory zipFactory;
     private final ConnectionFactory connectionFactory;
     private Date initialized = null;
 
     public RuntimeContext(TemplateFactory templateFactory) {
         this.templateFactory = templateFactory;
-        this.zipFactory = new ZipFactory();
         connectionFactory = new ConnectionFactory();
         log.info("Instantiated");
     }
@@ -33,7 +31,7 @@ public class RuntimeContext {
         if (!Files.isDirectory(path)) {
             throw new NonDirectoryAtOutputDirectoryPathException(outputDirPath);
         }
-        zipFactory.setOutputRoot(outputDirPath);
+//        zipFactory.setOutputRoot(outputDirPath);
         templateFactory.reset();
         templateFactory.loadTemplatesFromFilesystem();
         initialized = new Date();
@@ -52,9 +50,6 @@ public class RuntimeContext {
         return connectionFactory;
     }
 
-    public ZipFactory getZipFactory() {
-        return zipFactory;
-    }
 
     public static class OutputDirectoryPathDoesNotExistException extends RuntimeException {
         private String outputDirPath;

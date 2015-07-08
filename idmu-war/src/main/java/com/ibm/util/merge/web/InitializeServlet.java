@@ -60,7 +60,7 @@ public class InitializeServlet extends HttpServlet {
         handlerChain.addAll(createHandlerInstances());
         String fullPath = servletContext.getRealPath(warTemplatesPath);
         PrettyJsonProxy jsonProxy = new PrettyJsonProxy();
-        FilesystemPersistence fs = new FilesystemPersistence(fullPath, jsonProxy);
+        FilesystemPersistence fs = new FilesystemPersistence(fullPath, jsonProxy, System.getProperty(outputDirPath));
         TemplateFactory tf = new TemplateFactory(fs);
         RuntimeContext rtc = new RuntimeContext(tf);
         rtc.initialize(outputDirPath);

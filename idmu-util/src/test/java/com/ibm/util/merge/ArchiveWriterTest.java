@@ -28,13 +28,13 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-public class ZipFactoryTest {
-    private Logger log = Logger.getLogger(ZipFactoryTest.class);
-    private ZipFactory zf;
+public class ArchiveWriterTest {
+    private Logger log = Logger.getLogger(ArchiveWriterTest.class);
+
 
     @Before
     public void setup() throws IOException {
-        zf = new ZipFactory();
+
         FileUtils.cleanDirectory(new File("src/test/resources/testout"));
     }
 
@@ -45,25 +45,32 @@ public class ZipFactoryTest {
 
     @Test
     public void testWriteFileZip() throws MergeException, IOException, NoSuchAlgorithmException {
-        makeArchive("src/test/resources/testout/", "test1.zip", ZipFactory.TYPE_ZIP);
+        makeArchive("src/test/resources/testout/", "test1.zip", Template.TYPE_ZIP);
         CompareArchives.assertZipEquals("src/test/resources/valid/test1.zip", "src/test/resources/testout/test1.zip");
     }
 
     @Test
     public void testWriteFileTar() throws MergeException, IOException, NoSuchAlgorithmException {
-        makeArchive("src/test/resources/testout/", "test1.tar", ZipFactory.TYPE_TAR);
+        makeArchive("src/test/resources/testout/", "test1.tar", Template.TYPE_TAR);
         CompareArchives.assertTarEquals("src/test/resources/valid/test1.tar", "src/test/resources/testout/test1.tar");
     }
 
     private void makeArchive(String outputRoot, String outputFile, int type) throws IOException {
-        zf.setOutputRoot(outputRoot);
         final StringBuilder content = new StringBuilder("Test Output File One");
         String entryPath = "path/file2.txt";
-        File outputFile1 = new File(zf.getOutputRoot() + "/" + outputFile);
-        if (type == ZipFactory.TYPE_ZIP) {
-            new ZipFileWriter(outputFile1, entryPath, content.toString()).write();
+        File outputFile1 = new File(outputRoot + "/" + outputFile);
+        if (type == Template.TYPE_ZIP) {
+            writeZip(content, entryPath, outputFile1);
         } else {
-            new TarFileWriter(outputFile1, entryPath, content.toString(), "root", "root").write();
+            writeTar(content, entryPath, outputFile1);
         }
+    }
+
+    private void writeTar(StringBuilder content, String entryPath, File outputFile1) throws IOException {
+        new TarFileWriter(outputFile1, entryPath, content.toString(), "root", "root").write();
+    }
+
+    private void writeZip(StringBuilder content, String entryPath, File outputFile1) throws IOException {
+        new ZipFileWriter(outputFile1, entryPath, content.toString()).write();
     }
 }

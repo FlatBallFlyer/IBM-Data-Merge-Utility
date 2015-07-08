@@ -63,8 +63,9 @@ public class PerformMergeResourceHandler implements RequestHandler {
         if (!root.canWrite()) {
 //            returnValue = "";
         } else {
+            runtimeContext.getTemplateFactory().getFs().doWrite(root);
             //            returnValue = root.getContent();
-            root.doWrite(runtimeContext.getZipFactory());
+//            root.doWrite(runtimeContext.getZipFactory());
         }
 
 //        out.write(root.getContent());

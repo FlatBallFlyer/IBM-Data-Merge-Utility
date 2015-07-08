@@ -63,7 +63,7 @@ public class IntegrationTestingCsvProvider {
 	public void setup() throws MergeException, IOException {
 		// Initialize Factories
 		FileUtils.cleanDirectory(outputDir);
-		rtc = TestUtils.createRuntimeContext(templateDir.getAbsolutePath());
+		rtc = TestUtils.createRuntimeContext(templateDir.getAbsolutePath(), "/tmp/merge");
 		// Reset the output directory
 		rtc.initialize(outputDir.getAbsolutePath());
 
@@ -96,7 +96,8 @@ public class IntegrationTestingCsvProvider {
 		} else {
 			returnValue = root.getContent();
 		}
-		root.doWrite(rtc.getZipFactory());
+
+		tf.getFs().doWrite(root);
 		String output = returnValue;
 //		root.packageOutput(zf, cf);
 		Path path = Paths.get(new File(validateDir, "merge1.output").getPath());
@@ -148,8 +149,8 @@ public class IntegrationTestingCsvProvider {
 		TemplateFactory tf = rtc.getTemplateFactory();
 		Template root = tf.getTemplate(parameterMap);
 		root.merge(rtc);
-
-		root.doWrite(rtc.getZipFactory());
+		tf.getFs().doWrite(root);
+//		root.doWrite(rtc.getZipFactory());
 		//		root.packageOutput(zf, cf);
 		CompareArchives.assertArchiveEquals(type, new File(validateDir, fullName + type).getAbsolutePath(), new File(outputDir, fullName + type).getAbsolutePath());
 	}

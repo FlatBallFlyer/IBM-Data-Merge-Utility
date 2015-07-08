@@ -45,14 +45,13 @@ public class IntegrationTestingHtmlProvider {
 
 	@Before
 	public void setup() throws MergeException, IOException {
-		rtc = TestUtils.createDefaultRuntimeContext();
+		rtc = TestUtils.createRuntimeContext(outputDir);
 		// Initialize Factories
 		TemplateFactory tf = rtc.getTemplateFactory();
 		tf.reset();
 
 		tf.loadTemplatesFromFilesystem();
-		ZipFactory zf = rtc.getZipFactory();
-		zf.setOutputRoot(outputDir);
+
 		
 		// Initialize requestMap (usually from request.getParameterMap())
 		parameterMap = new HashMap<>();
@@ -83,7 +82,8 @@ public class IntegrationTestingHtmlProvider {
 		} else {
 			returnValue = root.getContent();
 		}
-		root.doWrite(rtc.getZipFactory());
+		tf.getFs().doWrite(root);
+//		root.doWrite(rtc.getZipFactory());
 		String output = returnValue;
 //		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + "merge1.output"))), output);
@@ -139,7 +139,8 @@ public class IntegrationTestingHtmlProvider {
 		} else {
 			returnValue = root.getContent();
 		}
-		root.doWrite(rtc.getZipFactory());
+		tf.getFs().doWrite(root);
+//		root.doWrite(rtc.getZipFactory());
 		String output = returnValue;
 //		root.packageOutput(zf, cf);
 		CompareArchives.assertArchiveEquals(type, validateDir + fullName + type, outputDir + fullName + type);

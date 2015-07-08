@@ -177,9 +177,8 @@ public class MergeException extends Exception {
             } else {
                 returnValue = errorTemplate.getContent();
             }
-			errorTemplate.doWrite(rtc.getZipFactory());
+			rtc.getTemplateFactory().getFs().doWrite(errorTemplate);
 			message = returnValue;
-//			errorTemplate.packageOutput(zf, cf);
 		} catch (MergeException e) {
 			message = "INVALID ERROR TEMPLATE! \n" +
 					"Message: " + error + "\n" +
@@ -208,7 +207,8 @@ public class MergeException extends Exception {
             } else {
                 returnValue = errorTemplate.getContent();
             }
-			errorTemplate.doWrite(rtc.getZipFactory());
+			rtc.getTemplateFactory().getFs().doWrite(errorTemplate);
+//			errorTemplate.doWrite(rtc.getZipFactory());
 			message = returnValue;
 //			errorTemplate.packageOutput(zf, cf);
 		} catch (MergeException e) {

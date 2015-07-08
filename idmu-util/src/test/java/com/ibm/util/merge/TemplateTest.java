@@ -119,7 +119,10 @@ public class TemplateTest {
 			returnValue = "";
 		} else {
 			returnValue = template.getContent();
-		}		template.doWrite(rtc.getZipFactory());
+			rtc.getTemplateFactory().getFs().doWrite(template);
+		}
+
+//		template.doWrite(rtc.getZipFactory());
 		String output = returnValue;
 		assertEquals(mergeOutput, output);
 	}
@@ -215,13 +218,13 @@ public class TemplateTest {
 
 	@Test
 	public void testGetOutputTypeTar() {
-		assertEquals(ZipFactory.TYPE_TAR, template.getOutputType());
+		assertEquals(Template.TYPE_TAR, template.getOutputType());
 	}
 
 	@Test
 	public void testGetOutputTypeZip() {
 		template.addReplace("DragonOutputType", "zip");
-		assertEquals(ZipFactory.TYPE_ZIP, template.getOutputType());		
+		assertEquals(Template.TYPE_ZIP, template.getOutputType());
 	}
 
 	@Test

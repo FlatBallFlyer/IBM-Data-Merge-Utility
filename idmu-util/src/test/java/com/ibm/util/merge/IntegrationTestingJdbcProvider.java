@@ -39,13 +39,13 @@ public class IntegrationTestingJdbcProvider {
 
 	@Before
 	public void setup() throws Exception {
-		rtc = TestUtils.createDefaultRuntimeContext();
+		rtc = TestUtils.createRuntimeContext(outputDir);
 		// Initialize Factories
 		TemplateFactory tf = rtc.getTemplateFactory();
 		tf.reset();
 
 		tf.loadTemplatesFromFilesystem();
-		rtc.getZipFactory().setOutputRoot(outputDir);
+//		rtc.getZipFactory().setOutputRoot(outputDir);
 		parameterMap = new HashMap<>();
 	}
 
@@ -60,7 +60,8 @@ public class IntegrationTestingJdbcProvider {
 		} else {
 			returnValue = root.getContent();
 		}
-		root.doWrite(rtc.getZipFactory());
+		tf.getFs().doWrite(root);
+//		root.doWrite(rtc.getZipFactory());
 		String output = returnValue;
 //		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + "merge1.output"))), output);
@@ -126,7 +127,8 @@ public class IntegrationTestingJdbcProvider {
 		} else {
 			returnValue = root.getContent();
 		}
-		root.doWrite(rtc.getZipFactory());
+		tf.getFs().doWrite(root);
+//		root.doWrite(rtc.getZipFactory());
 		String mergeOutput = returnValue;
 //		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + fullName + ".output"))), mergeOutput);

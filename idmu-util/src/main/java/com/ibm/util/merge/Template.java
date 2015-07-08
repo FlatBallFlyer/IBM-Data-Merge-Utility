@@ -17,12 +17,8 @@
 package com.ibm.util.merge;
 
 import com.ibm.util.merge.directive.Directive;
-import com.ibm.util.merge.storage.TarFileWriter;
-import com.ibm.util.merge.storage.ZipFileWriter;
 import org.apache.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,6 +45,9 @@ public class Template implements Cloneable {
     public static final String TAG_SEQUENCE = wrap("DragonSequence");
     public static final String BOOKMARK_PATTERN_STRING = "(<tkBookmark.*?/>)";
     public static final Pattern BOOKMARK_PATTERN = Pattern.compile(BOOKMARK_PATTERN_STRING);
+    // Factory Constants
+    public static final int TYPE_ZIP = 1;
+    public static final int TYPE_TAR = 2;
     // Template Constants
     private static final Logger log = Logger.getLogger(Template.class.getName());
     // Attributes
@@ -101,7 +100,7 @@ public class Template implements Cloneable {
         newTemplate.replaceValues.putAll(seedReplace);
         // Make sure we have an output file name guid
         if (!isOutputFileSpecified()) {
-            newTemplate.replaceValues.put(TAG_OUTPUTFILE, UUID.randomUUID().toString() + (getOutputType() == ZipFactory.TYPE_ZIP ? ".zip" : ".tar"));
+            newTemplate.replaceValues.put(TAG_OUTPUTFILE, UUID.randomUUID().toString() + (getOutputType() == TYPE_ZIP ? ".zip" : ".tar"));
         }
         // Add our name to the Template Stack
         if (!newTemplate.replaceValues.containsKey(TAG_STACK)) {
@@ -130,47 +129,6 @@ public class Template implements Cloneable {
             throw new RuntimeException("Template implementation does not support clone()", e);
         }
         return clone;
-    }
-
-    public void doWrite(ZipFactory zf) {
-        if (canWrite()) {
-            if (getOutputType() == ZipFactory.TYPE_ZIP) {
-                writeZipFile(zf);
-            } else {
-                writeTarFile(zf);
-            }
-        }
-    }
-
-    public void writeTarFile(ZipFactory zf) {
-        File outputFilePath = constructArchivePath(zf);
-        if(!outputFilePath.getParentFile().exists()){
-            throw new IllegalArgumentException("The parent directory does not exist for file " + outputFilePath.getAbsolutePath());
-        }
-        String archiveEntryName = constructArchiveEntryName();
-        try {
-            new TarFileWriter(outputFilePath, archiveEntryName, getContent(), "root", "root").write();
-        } catch (IOException e) {
-            throw new TemplatePersistenceException(this, outputFilePath, archiveEntryName, e);
-        }
-    }
-
-    public void writeZipFile(ZipFactory zf) {
-        File outputFilePath = constructArchivePath(zf);
-        String archiveEntryName = constructArchiveEntryName();
-        try {
-            new ZipFileWriter(outputFilePath, archiveEntryName, getContent()).write();
-        } catch (IOException e) {
-            throw new TemplatePersistenceException(this, outputFilePath, archiveEntryName, e);
-        }
-    }
-
-    public File constructArchivePath(ZipFactory zf) {
-        return new File(zf.getOutputRoot() + "/" + getOutputFile());
-    }
-
-    public String constructArchiveEntryName() {
-        return replaceProcess(getOutputFile());
     }
 
     /********************************************************************************
@@ -391,7 +349,7 @@ public class Template implements Cloneable {
      * @return output type indicator (Default to GZIP, allow "zip" over-ride
      */
     public int getOutputType() {
-        return (replaceValues.containsKey(TAG_OUTPUT_TYPE) && replaceValues.get(TAG_OUTPUT_TYPE).endsWith("zip")) ? ZipFactory.TYPE_ZIP : ZipFactory.TYPE_TAR;
+        return (replaceValues.containsKey(TAG_OUTPUT_TYPE) && replaceValues.get(TAG_OUTPUT_TYPE).endsWith("zip")) ? TYPE_ZIP : TYPE_TAR;
     }
 
     /********************************************************************************
@@ -523,30 +481,6 @@ public class Template implements Cloneable {
         return !missingWriteProperties;
     }
 
-    public static class TemplatePersistenceException extends RuntimeException {
-        private final Template template;
-        private final File outputFilePath;
-        private final String archiveEntryName;
-
-        public TemplatePersistenceException(Template template, File outputFilePath, String archiveEntryName, IOException e) {
-            super("Error persisting template " + template.getFullName() + " to zip file at " + outputFilePath + " with entry name " + archiveEntryName, e);
-            this.template = template;
-            this.outputFilePath = outputFilePath;
-            this.archiveEntryName = archiveEntryName;
-        }
-
-        public Template getTemplate() {
-            return template;
-        }
-
-        public File getOutputFilePath() {
-            return outputFilePath;
-        }
-
-        public String getArchiveEntryName() {
-            return archiveEntryName;
-        }
-    }
 
     @Override
     public String toString() {
