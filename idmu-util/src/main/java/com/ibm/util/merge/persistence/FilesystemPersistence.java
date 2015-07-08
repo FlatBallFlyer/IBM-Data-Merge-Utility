@@ -78,14 +78,16 @@ public class FilesystemPersistence {
      * @throws MergeException on Template Clone Errors
      */
     public Template saveTemplateToJsonFolder(Template template) {
-        String fileName = templateFolder + template.getFullName();
+        String fileName = templateFolder + File.separator + template.getFullName();
         File file = new File(fileName);
         BufferedWriter bw = null;
         try {
             if(!file.exists()){
                 file.createNewFile();
             }
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            File path = file.getAbsoluteFile();
+            log.info("Saving " + template.getFullName() + " to "+ path.getAbsolutePath());
+            FileWriter fw = new FileWriter(path);
             bw = new BufferedWriter(fw);
             bw.write(jsonProxy.toJson(template));
             bw.flush();

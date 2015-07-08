@@ -8,14 +8,14 @@ import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
 import com.ibm.util.merge.web.rest.servlet.result.JsonItemUpdatedResult;
-import com.ibm.util.merge.web.rest.servlet.result.NotFoundTextErrorResult;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Handles PUT /template/{templateFullName}
+ * Handles PUT /templates/{collectionName}
  */
 public class UpdateTemplateResourceHandler implements RequestHandler {
 
@@ -30,23 +30,24 @@ public class UpdateTemplateResourceHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(RequestData rd) {
-        List<String> pathParts = rd.getPathParts();
-        return rd.isPUT() && rd.pathStartsWith("/template/") && pathParts.size() == 2 && rd.requestBodyByteLength() > 10;
+        return rd.isPUT() && rd.pathStartsWith("/templates/") && rd.getPathParts().size() == 2 && rd.requestBodyByteLength() > 10;
     }
 
     @Override
     public Result handle(RequestData rd) {
         TemplateFactory tf = runtimeContext.getTemplateFactory();
-        String fullName= rd.getPathParts().get(1);
-        log.info("Listing templates for fullName=" + fullName);
-        Template found = tf.findTemplateForFullname(fullName);
+        String collectionName= rd.getPathParts().get(1);
+        Template template = new DefaultJsonProxy().fromJSON(rd.getRequestBodyString(), Template.class);
+        template.setCollection(collectionName);
+        Template found = tf.findTemplateForFullname(template.getFullName());
         Result result;
         if(found == null){
-            result = new NotFoundTextErrorResult("There is not template with name " + fullName + " to update");
+            log.info("Creating template " + template.getFullName() + " from " + rd.getRequestBodyString());
+            tf.persistTemplate(template);
+            Template newTemplateInstance = tf.cache(template);
+            result = new JsonItemUpdatedResult(newTemplateInstance);
         }else{
-            String requestBodyString = rd.getRequestBodyString();
-            log.info("UPDATE template " + fullName + " with " + requestBodyString);
-            Template template = new DefaultJsonProxy().fromJSON(requestBodyString, Template.class);
+            log.info("Updating template " + template.getFullName() + " with " + rd.getRequestBodyString());
             tf.persistTemplate(template);
             Template newTemplateInstance = tf.cache(template);
             result = new JsonItemUpdatedResult(newTemplateInstance);

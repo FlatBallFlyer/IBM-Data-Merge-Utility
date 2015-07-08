@@ -73,7 +73,18 @@ public class InitializeServlet extends HttpServlet {
     }
 
     private ArrayList<RequestHandler> createHandlerInstances() {
-        return new ArrayList<>(Arrays.asList(new AllTemplatesResourceHandler(), new AllDirectivesResourceHandler(), new CollectionTemplatesResourceHandler(), new CollectionTemplatesForTypeResourceHandler(), new CollectionForCollectionTypeColumnValueResourceHandler(), new TemplateForFullnameResourceHandler(), new CreateTemplateResourceHandler(), new UpdateTemplateResourceHandler(), new PerformMergeResourceHandler(), new DeleteTemplateResourceHandler()));
+        return new ArrayList<>(Arrays.asList(
+                new AllTemplatesResourceHandler(),
+                new AllDirectivesResourceHandler(),
+                new CollectionTemplatesResourceHandler(),
+                new CollectionTemplatesForTypeResourceHandler(),
+                new CollectionForCollectionTypeColumnValueResourceHandler(),
+                new TemplateForFullnameResourceHandler(),
+//                new CreateTemplateResourceHandler(),
+                new UpdateTemplateResourceHandler(),
+                new PerformMergeResourceHandler(),
+                new DeleteTemplateResourceHandler()
+        ));
     }
 
     private void applyInitParameters() {

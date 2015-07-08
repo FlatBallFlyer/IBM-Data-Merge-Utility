@@ -53,11 +53,13 @@ public class RestServlet extends HttpServlet {
     }
 
     private void handleRequest(HttpServletRequest request, HttpServletResponse response) {
-        logRequest(request);
         RequestData rd = new RequestData(request);
+        logRequest(rd);
         boolean handled = false;
         for (RequestHandler handler : handlerChain()) {
-            if(handler.canHandle(rd)){
+            boolean canHandle = handler.canHandle(rd);
+            log.info("Handler " + handler.getClass().getSimpleName() + "? " + canHandle);
+            if(canHandle){
                 if(handled) throw new IllegalStateException("Multiple handlers match for " + rd);
                 handled = true;
                 Result result = handler.handle(rd);
@@ -78,8 +80,8 @@ public class RestServlet extends HttpServlet {
         return findHandlerChain(getServletContext());
     }
 
-    private void logRequest(HttpServletRequest request) {
-        log.info(new RequestData(request).toString());
+    private void logRequest(RequestData rd) {
+        log.info(rd.toString());
     }
 
     @Override
