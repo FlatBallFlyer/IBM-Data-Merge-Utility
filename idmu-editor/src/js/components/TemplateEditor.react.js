@@ -10,9 +10,10 @@ var TemplateEditor = React.createClass({
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
     var sCB = this.props.sCB;
+    var dCB = this.props.dCB;
     return(
       <div className="row ">
-        <TemplateHeader ref="template_header" data={this.props.data} mCB={mCB} aCB={aCB} sCB={this.handleSave}/>
+        <TemplateHeader ref="template_header" data={this.props.data} mCB={mCB} aCB={aCB} sCB={this.handleSave} dCB={dCB}/>
         <TemplateBody ref="template_body" data={this.props.data}/>
         <TemplateFooter ref="template_footer" data={this.props.data}/>
       </div>

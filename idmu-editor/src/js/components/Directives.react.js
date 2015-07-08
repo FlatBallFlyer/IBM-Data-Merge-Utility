@@ -74,6 +74,7 @@ var RHSList = React.createClass({
     var title = this.props.title;
     var id = this.props.id;
     var data = this.props.data;
+    var dCB = this.props.dCB;
     return (
       <ul ref="" className="list-group" data-sortable-list-id={id}>
         {
@@ -81,7 +82,7 @@ var RHSList = React.createClass({
           this.props.directives.map(function(opt,i){
             var item_id = i;
             return(<li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
-              <span className="drag-handle">::</span><DirectivesEditorTrigger title={opt['name']} data={data} directive={opt} index={i}/>
+              <span className="drag-handle">::</span><DirectivesEditorTrigger title={opt['name']} data={data} directive={opt} index={i} dCB={dCB}/>
             </li>);
           })
          }
@@ -106,6 +107,7 @@ var Directives = React.createClass({
     var rhsID = "rhs";
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
+    var dCB = this.props.dCB;
     return (
 
       <div className="panel-body">
@@ -115,7 +117,7 @@ var Directives = React.createClass({
               <LHSList sort={false} key={lhsID} id={lhsID} title={"LHS"} directives={lhs} moveItemBetweenList={mCB} moveItemWithinList={aCB}/>
             </div>
             <div className="to-directives col-xs-6 col-md-6">
-              <RHSList sort={true} key={rhsID} id={rhsID} data={this.props.data} title={"RHS"} directives={rhs} moveItemBetweenList={mCB} moveItemWithinList={aCB}/>
+              <RHSList sort={true} key={rhsID} id={rhsID} data={this.props.data} title={"RHS"} directives={rhs} moveItemBetweenList={mCB} moveItemWithinList={aCB} dCB={dCB}/>
             </div>
           </div>
         </div>

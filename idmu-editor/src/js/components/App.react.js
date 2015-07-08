@@ -137,6 +137,13 @@ var App = React.createClass({
     tpl.directives = newItemArr;
     this.setState({template: tpl});
   },
+  saveDirective: function(index,payload){
+    console.debug("save directive at "+index);
+    var tpl = this.state.template;
+    var directives = tpl.directives;
+    directives[index] = payload;
+    this.setState({template: tpl});
+  },
   saveTemplateToServer: function(opts,collection) {
     console.log("save template...");
 
@@ -165,6 +172,7 @@ var App = React.createClass({
     var mCB = this.moveItemBetweenList;
     var aCB = this.moveItemWithinList;
     var sCB = this.handleSave;
+    var dCB = this.saveDirective;
     return (
       <div className="container app_view">
         <div id="template_collection" className="row template_collection">
@@ -172,7 +180,7 @@ var App = React.createClass({
         </div>
         <div id="template_ribbon" className="row template_ribbon">
           <div className="container">
-            <TemplateRibbon initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB}/>
+            <TemplateRibbon initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB}/>
           </div>
         </div>
       </div>

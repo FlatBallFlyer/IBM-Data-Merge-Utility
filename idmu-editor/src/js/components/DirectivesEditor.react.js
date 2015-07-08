@@ -7,9 +7,9 @@ var DirectivesEditorTrigger = React.createClass({
     $(el).modal();
   },
   render: function() {
-    var cb = this.props.cb;
+    var dCB = this.props.dCB;
     return(
-      <span onClick={this.handleClick}>{this.props.title}<DirectivesEditor  key={this.props.title}  ref="directive_editor" title={this.props.title} data={this.props.data}  directive={this.props.directive} index={this.props.index}/></span>
+      <span onClick={this.handleClick}>{this.props.title}<DirectivesEditor  key={this.props.title}  ref="directive_editor" title={this.props.title} data={this.props.data}  directive={this.props.directive} index={this.props.index} dCB={dCB}/></span>
     );
   }
 });
@@ -18,7 +18,8 @@ var DirectivesEditor = React.createClass({
   mixins: [ModalMixin],
   
   handleSave: function(e) {
-    console.debug(this.refs[this.props.directive.name].state);
+    var payload = this.refs[this.props.directive.name].state;
+    this.props.dCB(this.props.index,payload);
   },
   editor: function(type_in){
    var type = parseInt(type_in);

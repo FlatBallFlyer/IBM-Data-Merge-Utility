@@ -21,11 +21,12 @@ var TemplateHeader = React.createClass({
   showPanel: function(){
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
+    var dCB = this.props.dCB;
     var changeCB = this.handleChangePanel;
     if(this.state.panelConfig === 'show-directives') {
-      return(<Directives ref="directives_panel" mCB={mCB} aCB={aCB} data={this.props.data} changeCB={changeCB}/>);
+      return(<Directives ref="directives_panel" dCB={dCB} mCB={mCB} aCB={aCB} data={this.props.data} changeCB={changeCB}/>);
     }else {
-      return(<HeaderPanel ref="header_panel" data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
+      return(<HeaderPanel ref="header_panel" dCB={dCB} data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
     }
   },
   render: function(){
