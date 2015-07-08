@@ -1,11 +1,13 @@
 package com.ibm.util.merge;
 
+import com.ibm.util.merge.template.Template;
 import org.apache.log4j.Logger;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  *
@@ -50,6 +52,68 @@ public class RuntimeContext {
         return connectionFactory;
     }
 
+    /**
+     * @return
+     * @param error
+     */
+    public String getHtmlErrorMessage(MergeException error) {
+        String message;
+        Template errorTemplate;
+        HashMap<String,String> parameters = new HashMap<>();
+        parameters.put(Template.wrap("MESSAGE"), error.getError());
+        parameters.put(Template.wrap("CONTEXT"), error.getContext());
+        parameters.put(Template.wrap("TRACE"), error.getStackTrace().toString());
+        try {
+            errorTemplate = getTemplateFactory().getTemplate("system.errHtml." + error.getErrorFromClass(), "system.errHtml.", parameters);
+            errorTemplate.merge(this);
+            final String returnValue;
+            if (!errorTemplate.canWrite()) {
+returnValue = "";
+} else {
+returnValue = errorTemplate.getContent();
+}
+            getTemplateFactory().getFs().doWrite(errorTemplate);
+            message = returnValue;
+        } catch (MergeException e) {
+            message = "INVALID ERROR TEMPLATE! \n" +
+                    "Message: " + error.getError() + "\n" +
+                    "Context: " + error.getContext()+ "\n";
+        }
+        return message;
+    }
+
+    /**
+     * @return
+     * @param error
+     * @param throwable
+     */
+    public String getJsonErrorMessage(MergeException error) {
+        String message;
+        Template errorTemplate;
+        HashMap<String,String> parameters = new HashMap<>();
+        parameters.put(Template.wrap("MESSAGE"), error.getError());
+        parameters.put(Template.wrap("CONTEXT"), error.getContext());
+        parameters.put(Template.wrap("TRACE"), error.getStackTrace().toString());
+        try {
+            errorTemplate = getTemplateFactory().getTemplate("system.errJson." + error.getErrorFromClass(), "system.errJson.", parameters);
+            errorTemplate.merge(this);
+            final String returnValue;
+            if (!errorTemplate.canWrite()) {
+returnValue = "";
+} else {
+returnValue = errorTemplate.getContent();
+}
+            getTemplateFactory().getFs().doWrite(errorTemplate);
+//			errorTemplate.doWrite(rtc.getZipFactory());
+            message = returnValue;
+//			errorTemplate.packageOutput(zf, cf);
+        } catch (MergeException e) {
+            message = "INVALID ERROR TEMPLATE! \n" +
+                    "Message: " + error.getError() + "\n" +
+                    "Context: " + error.getContext() + "\n";
+        }
+        return message;
+    }
 
     public static class OutputDirectoryPathDoesNotExistException extends RuntimeException {
         private String outputDirPath;

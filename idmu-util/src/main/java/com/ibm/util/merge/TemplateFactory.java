@@ -17,10 +17,11 @@
 package com.ibm.util.merge;
 
 import com.ibm.util.merge.cache.TemplateCache;
-import com.ibm.util.merge.json.JsonProxy;
+import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
 import com.ibm.util.merge.persistence.HibernatePersistence;
+import com.ibm.util.merge.template.Template;
 import org.apache.log4j.Logger;
 
 import java.util.*;

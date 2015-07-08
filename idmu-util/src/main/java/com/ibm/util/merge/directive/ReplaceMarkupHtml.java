@@ -18,10 +18,10 @@ package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
 
-public class ReplaceMarkupHtml extends Directive implements Cloneable {
+public class ReplaceMarkupHtml extends AbstractDirective implements Cloneable {
 	protected String pattern;
 	protected String fromKey;
 	protected String toKey;
@@ -48,6 +48,7 @@ public class ReplaceMarkupHtml extends Directive implements Cloneable {
 	 * @param tf
 	 * @param rtc
 	 */
+	@Override
 	public void executeDirective(RuntimeContext rtc) throws MergeException {
 		getProvider().getData(rtc.getConnectionFactory());
 		// TODO HTML Markup - Execute

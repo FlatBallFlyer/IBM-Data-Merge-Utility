@@ -15,7 +15,9 @@
  *
  */
 
-package com.ibm.util.merge;
+package com.ibm.util.merge.template;
+
+import com.ibm.util.merge.MergeException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,6 +76,7 @@ public class Bookmark implements Cloneable {
 	 * @param  from Bookmark to clone
 	 * @throws CloneNotSupportedException 
 	 */
+	@Override
 	public Bookmark clone () throws CloneNotSupportedException {
 		return (Bookmark) super.clone();
 	}

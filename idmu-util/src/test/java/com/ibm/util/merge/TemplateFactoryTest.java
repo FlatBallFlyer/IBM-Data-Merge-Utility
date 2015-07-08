@@ -17,9 +17,10 @@
 package com.ibm.util.merge;
 
 import com.ibm.util.merge.json.DefaultJsonProxy;
-import com.ibm.util.merge.json.JsonProxy;
+import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
+import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 

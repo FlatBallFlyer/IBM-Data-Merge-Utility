@@ -18,6 +18,7 @@ package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.directive.AbstractDirective;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -28,13 +29,14 @@ import java.util.ArrayList;
 public class ProviderHtml extends ProviderHttp {
 	public ProviderHtml() {
 		super();
-		setType(Provider.TYPE_HTML);
+		setType(AbstractProvider.TYPE_HTML);
 	}
 	
 	/**
 	 * Simple clone method
-	 * @see com.ibm.util.merge.directive.provider.Provider#clone(com.ibm.util.merge.directive.Directive)
+	 * @see AbstractProvider#clone(AbstractDirective)
 	 */
+	@Override
 	public ProviderHtml clone() throws CloneNotSupportedException {
 		ProviderHtml provider = (ProviderHtml) super.clone();
 		return provider;
@@ -44,6 +46,7 @@ public class ProviderHtml extends ProviderHttp {
 	 * Retrieve the data (superclass HTTP Provider) and parse the CSV data
 	 * @param cf
 	 */
+	@Override
 	public void getData(ConnectionFactory cf) throws MergeException {
 		
 		super.getData(cf);

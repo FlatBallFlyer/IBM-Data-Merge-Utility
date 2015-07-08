@@ -11,7 +11,8 @@
   <modules>
   	<module>idmu-util</module>
   	<module>idmu-war</module>
-  	<!--<module>idmu-ear</module>-->
+    <module>idmu-api</module>
+    <!--<module>idmu-ear</module>-->
   </modules>
 
   <build>

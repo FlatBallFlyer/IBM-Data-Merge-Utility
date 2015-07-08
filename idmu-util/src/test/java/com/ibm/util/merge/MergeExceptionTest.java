@@ -16,8 +16,9 @@
  */
 package com.ibm.util.merge;
 
-import com.ibm.util.merge.directive.Directive;
+import com.ibm.util.merge.directive.AbstractDirective;
 import com.ibm.util.merge.directive.Require;
+import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +29,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class MergeExceptionTest {
 	Template template;
-	Directive directive;
+	AbstractDirective directive;
 
 	private RuntimeContext rtc;
 
@@ -111,7 +112,7 @@ public class MergeExceptionTest {
 		template.addDirective(req);
 		MergeException e = new MergeException(req, null, "Error", "Context");
 		assertNotNull(e);
-		String output = e.getHtmlErrorMessage(rtc);
+		String output = rtc.getHtmlErrorMessage(e);
 		assertEquals("<html><head></head><body><p>A Merge Execption has occured: Error <br/> Context</p></body></html>", output);
 	}
 
@@ -119,7 +120,7 @@ public class MergeExceptionTest {
 	public void testGetJsonErrorMessage() {
 		MergeException e = new MergeException(directive, null, "Error", "Context");
 		assertNotNull(e);
-		String output = e.getJsonErrorMessage(rtc);
+		String output = rtc.getJsonErrorMessage(e);
 		assertEquals("{\"message\":\"Error\",\"context\":\"Context\"}", output);
 	}
 

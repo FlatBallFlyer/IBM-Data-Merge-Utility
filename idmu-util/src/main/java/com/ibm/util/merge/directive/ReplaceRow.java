@@ -18,16 +18,16 @@ package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.DataTable;
-import com.ibm.util.merge.directive.provider.Provider;
+import com.ibm.util.merge.directive.provider.AbstractProvider;
 import org.apache.log4j.Logger;
 
 /**
  * @author Mike Storey
  *
  */
-public abstract class ReplaceRow extends Directive implements Cloneable {
+public abstract class ReplaceRow extends AbstractDirective implements Cloneable {
 	private static final Logger log = Logger.getLogger( ReplaceRow.class.getName() );
 	
 	/**
@@ -39,7 +39,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 
 	/**
 	 * clone constructor, deep-clone of notLast and onlyLast collections
-	 * @see com.ibm.util.merge.directive.Directive#clone(com.ibm.util.merge.Template)
+	 * @see AbstractDirective#clone(Template)
 	 */
 	public ReplaceRow clone(Template owner) throws CloneNotSupportedException {
 		return (ReplaceRow) super.clone();
@@ -50,13 +50,14 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 	 * @param tf
 	 * @param rtc
 	 */
+	@Override
 	public void executeDirective(RuntimeContext rtc) throws MergeException {
-		Provider provider = getProvider();
+		AbstractProvider provider = getProvider();
 		provider.getData(rtc.getConnectionFactory());
 
 		// Make sure we got some data
 		if (getProvider().size() < 1 ) {
-			if (!softFail()) {
+			if (!(isSoftFail() || isSoftFailTemplate())) {
 				throw new MergeException("No Data Found in " + getTemplate().getFullName(), provider.getQueryString());
 			} else {
 				log.warn("Softfail on Empty Resultset");
@@ -66,7 +67,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 
 		// Make sure we don't have a multi-table result.
 		if ( provider.size() > 1 ) {
-			if (!softFail()) {
+			if (!(isSoftFail() || isSoftFailTemplate())) {
 				throw new MergeException("Multi-Talbe Empty Result set returned by Directive",provider.getQueryString());
 			}
 			log.warn("Softfail on Multi-Table Resultset");
@@ -75,7 +76,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 
 		// Make sure we don't have an empty result set
 		if ( table.size() == 0 ) {
-			if (!softFail()) {
+			if (!(isSoftFail() || isSoftFailTemplate())) {
 				throw new MergeException("Empty Result set returned by Directive",provider.getQueryString());
 			} else {
 				log.warn("Softfail on Empty Resultset");
@@ -85,7 +86,7 @@ public abstract class ReplaceRow extends Directive implements Cloneable {
 
 		// Make sure we don't have a multi-row result set
 		if ( table.size() > 1 ) {
-			if (!softFail()) {
+			if (!(isSoftFail() || isSoftFailTemplate())) {
 				throw new MergeException("Multiple rows returned when single row expected", provider.getQueryString());
 			}
 			log.warn("Softfail on Multi-Row Resultset");

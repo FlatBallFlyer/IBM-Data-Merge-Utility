@@ -2,9 +2,10 @@ package com.ibm.util.merge.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.ibm.util.merge.directive.Directive;
+import com.ibm.idmu.api.JsonProxy;
+import com.ibm.util.merge.directive.AbstractDirective;
 import com.ibm.util.merge.directive.DirectiveDeserializer;
-import com.ibm.util.merge.directive.provider.Provider;
+import com.ibm.util.merge.directive.provider.AbstractProvider;
 import com.ibm.util.merge.directive.provider.ProviderDeserializer;
 
 /**
@@ -37,7 +38,7 @@ public class DefaultJsonProxy implements JsonProxy {
     }
 
     protected void registerDefaultAdapters() {
-        builder.registerTypeAdapter(Directive.class, new DirectiveDeserializer());
-        builder.registerTypeAdapter(Provider.class, new ProviderDeserializer());
+        builder.registerTypeAdapter(AbstractDirective.class, new DirectiveDeserializer());
+        builder.registerTypeAdapter(AbstractProvider.class, new ProviderDeserializer());
     }
 }

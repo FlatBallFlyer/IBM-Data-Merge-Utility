@@ -1,9 +1,9 @@
 package com.ibm.util.merge.web.rest.servlet.handler;
 
 import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.TemplateFactory;
-import com.ibm.util.merge.directive.Directive;
+import com.ibm.util.merge.directive.AbstractDirective;
 import com.ibm.util.merge.web.rest.servlet.result.JsonDataResult;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
@@ -33,9 +33,9 @@ public class AllDirectivesResourceHandler implements RequestHandler {
     public Result handle(RequestData rd) {
         TemplateFactory tf = runtimeContext.getTemplateFactory();
         List<Template> allTemplates = tf.listAllTemplates();
-        List<Directive> allDirectives = new ArrayList<>();
+        List<AbstractDirective> allDirectives = new ArrayList<>();
         for (Template template : allTemplates) {
-            List<Directive> direct = template.getDirectives();
+            List<AbstractDirective> direct = template.getDirectives();
             allDirectives.addAll(direct);
         }
         return new JsonDataResult(allDirectives);

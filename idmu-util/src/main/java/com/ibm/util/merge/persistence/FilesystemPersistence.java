@@ -1,8 +1,8 @@
 package com.ibm.util.merge.persistence;
 
 import com.google.gson.JsonSyntaxException;
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.json.JsonProxy;
+import com.ibm.util.merge.template.Template;
+import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.storage.TarFileWriter;
 import com.ibm.util.merge.storage.ZipFileWriter;
 import org.apache.commons.compress.utils.IOUtils;

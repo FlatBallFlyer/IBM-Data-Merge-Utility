@@ -18,7 +18,8 @@ package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.directive.AbstractDirective;
 import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
@@ -31,7 +32,7 @@ import java.net.URL;
  * @author Mike Storey
  *
  */
-public abstract class ProviderHttp extends Provider implements Cloneable {
+public abstract class ProviderHttp extends AbstractProvider implements Cloneable {
 	private transient String fetchedData	= "";
 	private String staticData	= "";
 	private String url			= "";
@@ -46,8 +47,9 @@ public abstract class ProviderHttp extends Provider implements Cloneable {
 	
 	/**
 	 * Simple clone method
-	 * @see com.ibm.util.merge.directive.provider.Provider#clone(com.ibm.util.merge.directive.Directive)
+	 * @see AbstractProvider#clone(AbstractDirective)
 	 */
+	@Override
 	public ProviderHttp clone() throws CloneNotSupportedException {
 		return (ProviderHttp) super.clone();
 	}
@@ -84,6 +86,7 @@ public abstract class ProviderHttp extends Provider implements Cloneable {
 	/**
 	 * The URL is the query context for this directive type.
 	 */
+	@Override
 	public String getQueryString() {
 		return url;
 	}

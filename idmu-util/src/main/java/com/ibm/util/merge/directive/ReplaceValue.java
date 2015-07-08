@@ -17,7 +17,7 @@
 package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import org.apache.log4j.Logger;
 
 /**
@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
  *
  * @author  Mike Storey
  */
-public class ReplaceValue extends Directive implements Cloneable {
+public class ReplaceValue extends AbstractDirective implements Cloneable {
 	private static final Logger log = Logger.getLogger( ReplaceValue.class.getName() );
 	private String from = "";
 	private String to = "";
@@ -51,6 +51,7 @@ public class ReplaceValue extends Directive implements Cloneable {
 	 * @param tf
 	 * @param rtc
 	 */
+	@Override
 	public void executeDirective(RuntimeContext rtc) {
 		getTemplate().addReplace(from, to);
 		log.info("Replaced " + from + " with " + to);

@@ -15,7 +15,7 @@
  *
  */
 package com.ibm.util.merge.directive;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderSql;
 
 public class ReplaceRowSql extends ReplaceRow implements Cloneable {
@@ -33,6 +33,7 @@ public class ReplaceRowSql extends ReplaceRow implements Cloneable {
 	 * Simple Clone constructor
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
+	@Override
 	public ReplaceRowSql clone(Template owner) throws CloneNotSupportedException {
 		return (ReplaceRowSql) super.clone();
 	}

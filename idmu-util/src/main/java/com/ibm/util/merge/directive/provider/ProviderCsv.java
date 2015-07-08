@@ -18,6 +18,7 @@ package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.directive.AbstractDirective;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -33,13 +34,14 @@ import java.util.ArrayList;
 public class ProviderCsv extends ProviderHttp implements Cloneable {
 	public ProviderCsv() {
 		super();
-		setType(Provider.TYPE_CSV);
+		setType(AbstractProvider.TYPE_CSV);
 	}
 	
 	/**
 	 * Simple clone method
-	 * @see com.ibm.util.merge.directive.provider.Provider#clone(com.ibm.util.merge.directive.Directive)
+	 * @see AbstractProvider#clone(AbstractDirective)
 	 */
+	@Override
 	public ProviderCsv clone() throws CloneNotSupportedException {
 		ProviderCsv provider = (ProviderCsv) super.clone();
 		return provider;
@@ -49,6 +51,7 @@ public class ProviderCsv extends ProviderHttp implements Cloneable {
 	 * Retrieve the data (superclass HTTP Provider) and parse the CSV data
 	 * @param cf
 	 */
+	@Override
 	public void getData(ConnectionFactory cf) throws MergeException {
 		super.getData(cf);
 		reset();

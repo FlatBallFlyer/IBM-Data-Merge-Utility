@@ -22,17 +22,18 @@ import com.google.gson.JsonElement;
 
 import java.lang.reflect.Type;
 
-public class ProviderDeserializer implements JsonDeserializer<Provider> {
+public class ProviderDeserializer implements JsonDeserializer<AbstractProvider> {
 
-	public Provider deserialize(JsonElement json, Type provider, JsonDeserializationContext context) {
+	@Override
+	public AbstractProvider deserialize(JsonElement json, Type provider, JsonDeserializationContext context) {
 		JsonElement jsonType = json.getAsJsonObject().get("type");
 		if (jsonType == null) {return null;}
 		int myType = jsonType.getAsInt();
 		switch (myType) {
-			case Provider.TYPE_CSV: return context.deserialize(json, ProviderCsv.class);
-			case Provider.TYPE_SQL: return context.deserialize(json, ProviderSql.class);
-			case Provider.TYPE_TAG: return context.deserialize(json, ProviderTag.class);
-			case Provider.TYPE_HTML:return context.deserialize(json, ProviderHtml.class);
+			case AbstractProvider.TYPE_CSV: return context.deserialize(json, ProviderCsv.class);
+			case AbstractProvider.TYPE_SQL: return context.deserialize(json, ProviderSql.class);
+			case AbstractProvider.TYPE_TAG: return context.deserialize(json, ProviderTag.class);
+			case AbstractProvider.TYPE_HTML:return context.deserialize(json, ProviderHtml.class);
 			default: return null;
 		}
 	}

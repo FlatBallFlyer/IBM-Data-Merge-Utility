@@ -22,24 +22,25 @@ import com.google.gson.JsonElement;
 
 import java.lang.reflect.Type;
 
-public class DirectiveDeserializer implements JsonDeserializer<Directive> {
+public class DirectiveDeserializer implements JsonDeserializer<AbstractDirective> {
 
-	public Directive deserialize(JsonElement json, Type directive, JsonDeserializationContext context) {
+	@Override
+	public AbstractDirective deserialize(JsonElement json, Type directive, JsonDeserializationContext context) {
 		int myType = json.getAsJsonObject().get("type").getAsInt();
 		switch (myType) {
-			case Directive.TYPE_REPLACE_VALUE: 		return context.deserialize(json, ReplaceValue.class);
-			case Directive.TYPE_REQUIRE: 			return context.deserialize(json, Require.class);
-			case Directive.TYPE_SQL_INSERT: 		return context.deserialize(json, InsertSubsSql.class);
-			case Directive.TYPE_SQL_REPLACE_COL: 	return context.deserialize(json, ReplaceColSql.class);
-			case Directive.TYPE_SQL_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowSql.class);
-			case Directive.TYPE_CSV_INSERT: 		return context.deserialize(json, InsertSubsCsv.class);
-			case Directive.TYPE_CSV_REPLACE_COL: 	return context.deserialize(json, ReplaceColCsv.class);
-			case Directive.TYPE_CSV_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowCsv.class);
-			case Directive.TYPE_HTML_INSERT: 		return context.deserialize(json, InsertSubsHtml.class);
-			case Directive.TYPE_HTML_REPLACE_COL: 	return context.deserialize(json, ReplaceColHtml.class);
-			case Directive.TYPE_HTML_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowHtml.class);
-			case Directive.TYPE_HTML_REPLACE_MARKUP: return context.deserialize(json, ReplaceMarkupHtml.class);
-			case Directive.TYPE_TAG_INSERT: 		return context.deserialize(json, InsertSubsTag.class);
+			case AbstractDirective.TYPE_REPLACE_VALUE: 		return context.deserialize(json, ReplaceValue.class);
+			case AbstractDirective.TYPE_REQUIRE: 			return context.deserialize(json, Require.class);
+			case AbstractDirective.TYPE_SQL_INSERT: 		return context.deserialize(json, InsertSubsSql.class);
+			case AbstractDirective.TYPE_SQL_REPLACE_COL: 	return context.deserialize(json, ReplaceColSql.class);
+			case AbstractDirective.TYPE_SQL_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowSql.class);
+			case AbstractDirective.TYPE_CSV_INSERT: 		return context.deserialize(json, InsertSubsCsv.class);
+			case AbstractDirective.TYPE_CSV_REPLACE_COL: 	return context.deserialize(json, ReplaceColCsv.class);
+			case AbstractDirective.TYPE_CSV_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowCsv.class);
+			case AbstractDirective.TYPE_HTML_INSERT: 		return context.deserialize(json, InsertSubsHtml.class);
+			case AbstractDirective.TYPE_HTML_REPLACE_COL: 	return context.deserialize(json, ReplaceColHtml.class);
+			case AbstractDirective.TYPE_HTML_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowHtml.class);
+			case AbstractDirective.TYPE_HTML_REPLACE_MARKUP: return context.deserialize(json, ReplaceMarkupHtml.class);
+			case AbstractDirective.TYPE_TAG_INSERT: 		return context.deserialize(json, InsertSubsTag.class);
 			default: return null;
 		}
 	}

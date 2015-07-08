@@ -13,7 +13,7 @@ import java.io.IOException;
  *
  */
 public class TarFileWriter {
-    private static final Logger log = Logger.getLogger(TarFileWriter.class);
+
     private File filePath;
     private String entryName;
     private String content;

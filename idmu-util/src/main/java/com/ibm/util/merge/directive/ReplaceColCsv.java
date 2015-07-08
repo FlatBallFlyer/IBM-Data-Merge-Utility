@@ -15,7 +15,7 @@
  *
  */
 package com.ibm.util.merge.directive;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
 
 public class ReplaceColCsv extends ReplaceCol implements Cloneable {
@@ -33,6 +33,7 @@ public class ReplaceColCsv extends ReplaceCol implements Cloneable {
 	 * Simple Clone constructor
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
+	@Override
 	public ReplaceColCsv clone(Template owner) throws CloneNotSupportedException {
 		return (ReplaceColCsv) super.clone();
 	}

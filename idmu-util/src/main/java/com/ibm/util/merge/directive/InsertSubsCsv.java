@@ -32,6 +32,7 @@ public class InsertSubsCsv extends InsertSubs implements Cloneable {
 	 * Simple Clone constructor
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
+	@Override
 	public InsertSubsCsv clone() throws CloneNotSupportedException {
 		return (InsertSubsCsv) super.clone();
 	}

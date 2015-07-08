@@ -18,7 +18,7 @@ package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.TestUtils;
 import org.junit.Before;
 import org.junit.Test;

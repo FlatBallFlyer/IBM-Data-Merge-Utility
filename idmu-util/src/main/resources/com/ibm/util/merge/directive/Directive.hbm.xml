@@ -20,7 +20,7 @@
    "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
 <hibernate-mapping package="com.ibm.util.merge.directive">
-    <class name="com.ibm.util.merge.directive.Directive" table="DIRECTIVE">
+    <class name="com.ibm.util.merge.directive.AbstractDirective" table="DIRECTIVE">
         <id name="idDirective" column="ID_DIRECTIVE">
             <generator class="native"/>
         </id>

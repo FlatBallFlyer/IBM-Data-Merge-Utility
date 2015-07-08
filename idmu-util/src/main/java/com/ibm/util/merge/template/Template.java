@@ -14,9 +14,11 @@
  * limitations under the License.
  *
  */
-package com.ibm.util.merge;
+package com.ibm.util.merge.template;
 
-import com.ibm.util.merge.directive.Directive;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.directive.AbstractDirective;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -58,7 +60,7 @@ public class Template implements Cloneable {
     private String description = "";
     private String outputFile = "";
     private StringBuilder content = new StringBuilder();
-    private List<Directive> directives = new ArrayList<>();
+    private List<AbstractDirective> directives = new ArrayList<>();
     private transient List<Bookmark> bookmarks = new ArrayList<>();
     private transient Map<String, String> replaceValues = new HashMap<>();
 
@@ -92,8 +94,8 @@ public class Template implements Cloneable {
         newTemplate.setContent(getContent());
         // Deep Copy Directives
         newTemplate.directives = new ArrayList<>();
-        for (Directive fromDirective : directives) {
-            Directive clone = cloneDirective(fromDirective);
+        for (AbstractDirective fromDirective : directives) {
+            AbstractDirective clone = cloneDirective(fromDirective);
             newTemplate.addDirective(clone);
         }
         // Seed Replace Values
@@ -121,8 +123,8 @@ public class Template implements Cloneable {
         return newTemplate;
     }
 
-    private Directive cloneDirective(Directive fromDirective) {
-        Directive clone;
+    private AbstractDirective cloneDirective(AbstractDirective fromDirective) {
+        AbstractDirective clone;
         try {
             clone = fromDirective.clone();
         } catch (CloneNotSupportedException e) {
@@ -144,7 +146,7 @@ public class Template implements Cloneable {
     public void merge(RuntimeContext rtc) throws MergeException {
         log.info("Begin Template Merge for:" + getFullName());
         // Process Directives
-        for (Directive directive : directives) {
+        for (AbstractDirective directive : directives) {
             directive.executeDirective(rtc);
         }
         // Clear out the all-values replace tag
@@ -384,7 +386,7 @@ public class Template implements Cloneable {
         return collection;
     }
 
-    public void addDirective(Directive newDirective) {
+    public void addDirective(AbstractDirective newDirective) {
         newDirective.setTemplate(this);
         newDirective.setIdTemplate(idtemplate);
         newDirective.setSequence(directives.size());
@@ -411,7 +413,7 @@ public class Template implements Cloneable {
         return outputFile;
     }
 
-    public List<Directive> getDirectives() {
+    public List<AbstractDirective> getDirectives() {
         return directives;
     }
 

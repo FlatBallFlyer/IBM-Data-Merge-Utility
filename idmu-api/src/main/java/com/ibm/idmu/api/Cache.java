@@ -1,4 +1,4 @@
-package com.ibm.util.merge.cache;
+package com.ibm.idmu.api;
 
 import java.util.Map;
 

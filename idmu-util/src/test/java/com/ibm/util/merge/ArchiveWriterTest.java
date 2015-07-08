@@ -18,6 +18,7 @@ package com.ibm.util.merge;
 
 import com.ibm.util.merge.storage.TarFileWriter;
 import com.ibm.util.merge.storage.ZipFileWriter;
+import com.ibm.util.merge.template.Template;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.After;

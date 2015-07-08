@@ -16,6 +16,7 @@
  */
 package com.ibm.util.merge;
 
+import com.ibm.util.merge.template.Bookmark;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

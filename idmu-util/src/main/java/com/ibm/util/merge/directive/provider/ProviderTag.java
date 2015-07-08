@@ -18,7 +18,8 @@ package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.directive.AbstractDirective;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +28,7 @@ import java.util.Arrays;
  * @author flatballflyer
  * Data provider to drive InsertSubsIf directive - Insert sub templates if a non-blank replace value exists in the hash.
  */
-public class ProviderTag extends Provider implements Cloneable {
+public class ProviderTag extends AbstractProvider implements Cloneable {
 	public static final int CONDITION_EXISTS = 0;
 	public static final int CONDITION_BLANK = 1;
 	public static final int CONDITION_NONBLANK = 2;
@@ -39,13 +40,14 @@ public class ProviderTag extends Provider implements Cloneable {
 	
 	public ProviderTag() {
 		super();
-		setType(Provider.TYPE_TAG);
+		setType(AbstractProvider.TYPE_TAG);
 	}
 	
 	/**
 	 * Simple clone method
-	 * @see com.ibm.util.merge.directive.provider.Provider#clone(com.ibm.util.merge.directive.Directive)
+	 * @see AbstractProvider#clone(AbstractDirective)
 	 */
+	@Override
 	public ProviderTag clone() throws CloneNotSupportedException {
 		return (ProviderTag) super.clone();
 	}
@@ -54,6 +56,7 @@ public class ProviderTag extends Provider implements Cloneable {
 	 * Reset the table, and if the Tag exists, add a row with the tag name/value
 	 * @param cf
 	 */
+	@Override
 	public void getData(ConnectionFactory cf) throws MergeException {
 		reset();
 		DataTable table = getNewTable();

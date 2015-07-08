@@ -19,15 +19,15 @@ package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.provider.Provider;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.directive.provider.AbstractProvider;
 
 /**
  * A merge directive which drive the merge process for a template 
  *
  * @author  Mike Storey
  */
-public abstract class Directive implements Cloneable{
+public abstract class AbstractDirective implements Cloneable{
 	// Directive Types
 	public static final int TYPE_REQUIRE 				= 0;
 	public static final int TYPE_REPLACE_VALUE 			= 1;
@@ -60,12 +60,12 @@ public abstract class Directive implements Cloneable{
 	private int 		type		= 0;
 	private boolean 	softFail	= false;
 	private String 		description	= getClass().getName();
-	private Provider 	provider;
+	private AbstractProvider provider;
 	
 	/********************************************************************************
 	 * Simple Constructor
 	 */
-	public Directive() {
+	public AbstractDirective() {
 	}
 	
 	/********************************************************************************
@@ -81,22 +81,20 @@ public abstract class Directive implements Cloneable{
 	 * Cone constructor
 	 * @throws CloneNotSupportedException
 	 */
-	public Directive clone() throws CloneNotSupportedException {
-		Directive newDirective = (Directive) super.clone();
+	@Override
+	public AbstractDirective clone() throws CloneNotSupportedException {
+		AbstractDirective newDirective = (AbstractDirective) super.clone();
 		if (provider != null) {
-			newDirective.setProvider( (Provider) provider.clone() );
+			newDirective.setProvider( (AbstractProvider) provider.clone() );
 		}
 		newDirective.template = null;
 		return newDirective;
 	}
-	
-	/********************************************************************************
-	 * SoftFail indicator (on this Directive, or the Template)
-	 */
-	public boolean softFail() {
-		return (softFail | template.isSoftFail()) ? true : false;
+
+	public boolean isSoftFailTemplate() {
+		return template.isSoftFail();
 	}
-	
+
 	/**
 	 * @return the Template Fullname + the Directive Description
 	 */
@@ -108,7 +106,7 @@ public abstract class Directive implements Cloneable{
 		return template;
 	}
 	
-	public Provider getProvider() {
+	public AbstractProvider getProvider() {
 		return provider;
 	}
 
@@ -131,7 +129,7 @@ public abstract class Directive implements Cloneable{
 		this.idTemplate = idTemplate;
 	}
 
-	public void setProvider(Provider provider) {
+	public void setProvider(AbstractProvider provider) {
 		this.provider = provider;
 		if (provider != null) {
 			provider.setDirective(this);

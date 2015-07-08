@@ -1,6 +1,7 @@
 package com.ibm.util.merge.cache;
 
-import com.ibm.util.merge.Template;
+import com.ibm.idmu.api.MemoryCache;
+import com.ibm.util.merge.template.Template;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -16,20 +16,20 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.Directive;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.directive.AbstractDirective;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public abstract class ProviderTest {
-	protected Provider provider;
-	protected Directive directive;
+	protected AbstractProvider provider;
+	protected AbstractDirective directive;
 	protected Template template;
 	
 	@Test
 	public void testProviderCloneDirective() throws CloneNotSupportedException {
-		Provider newProvider = provider.clone();
+		AbstractProvider newProvider = provider.clone();
 		assertNotEquals(provider, newProvider);
 		assertEquals(0, newProvider.size());
 		assertNull(newProvider.getDirective());

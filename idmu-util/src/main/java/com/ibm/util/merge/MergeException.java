@@ -16,12 +16,11 @@
  */
 package com.ibm.util.merge;
 
-import com.ibm.util.merge.directive.Directive;
-import com.ibm.util.merge.directive.provider.Provider;
+import com.ibm.util.merge.directive.AbstractDirective;
+import com.ibm.util.merge.directive.provider.AbstractProvider;
 import com.ibm.util.merge.json.PrettyJsonProxy;
+import com.ibm.util.merge.template.Template;
 import org.apache.log4j.Logger;
-
-import java.util.HashMap;
 
 /**
  * Merge Processing Exception Class - This is the only exception thrown by the Merge Utility
@@ -34,8 +33,8 @@ public class MergeException extends Exception {
 	private String error;
 	private String context;
 	private Template template;
-	private Directive directive;
-	private Provider provider;
+	private AbstractDirective directive;
+	private AbstractProvider provider;
 	private String errorFromClass;
 	
 	/**
@@ -81,7 +80,7 @@ public class MergeException extends Exception {
 	 * @param errorMessage
 	 * @param theContext
 	 */
-	public MergeException(Directive errDirective, Exception wrapped, String errorMessage, String theContext){
+	public MergeException(AbstractDirective errDirective, Exception wrapped, String errorMessage, String theContext){
 		super(wrapped);
 		error = errorMessage;
 		context = theContext;
@@ -97,7 +96,7 @@ public class MergeException extends Exception {
 	 * @param errorMessage
 	 * @param theContext
 	 */
-	public MergeException(Provider errProvider, Exception wrapped, String errorMessage, String theContext){
+	public MergeException(AbstractProvider errProvider, Exception wrapped, String errorMessage, String theContext){
 		super(wrapped);
 		error = errorMessage;
 		context = theContext;
@@ -116,9 +115,9 @@ public class MergeException extends Exception {
 	 */
 	private void logError() {
 		log.fatal("Merge Exception: \n" +
-			"Message: " + error + "\n" +
-			"Context: " + context + "\n" +
-			"StackTrace: ", this);
+				"Message: " + error + "\n" +
+				"Context: " + context + "\n" +
+				"StackTrace: ", this);
 	}
 	
 	/**
@@ -156,69 +155,8 @@ public class MergeException extends Exception {
 			}
 		}
 	}
-	
-	/**
-	 * @return
-	 * @param rtc
-	 */
-	public String getHtmlErrorMessage(RuntimeContext rtc) {
-		String message;
-		Template errorTemplate;
-		HashMap<String,String> parameters = new HashMap<>();
-		parameters.put(Template.wrap("MESSAGE"), error);
-		parameters.put(Template.wrap("CONTEXT"), context);
-		parameters.put(Template.wrap("TRACE"), getStackTrace().toString());
-		try {
-			errorTemplate = rtc.getTemplateFactory().getTemplate("system.errHtml." + errorFromClass, "system.errHtml.", parameters);
-			errorTemplate.merge(rtc);
-			final String returnValue;
-			if (!errorTemplate.canWrite()) {
-                returnValue = "";
-            } else {
-                returnValue = errorTemplate.getContent();
-            }
-			rtc.getTemplateFactory().getFs().doWrite(errorTemplate);
-			message = returnValue;
-		} catch (MergeException e) {
-			message = "INVALID ERROR TEMPLATE! \n" +
-					"Message: " + error + "\n" +
-					"Context: " + context + "\n";
-		}
-		return message;
-	}
 
-	/**
-	 * @return
-	 * @param rtc
-	 */
-	public String getJsonErrorMessage(RuntimeContext rtc) {
-		String message;
-		Template errorTemplate;
-		HashMap<String,String> parameters = new HashMap<>();
-		parameters.put(Template.wrap("MESSAGE"), error);
-		parameters.put(Template.wrap("CONTEXT"), context);
-		parameters.put(Template.wrap("TRACE"), getStackTrace().toString());
-		try {
-			errorTemplate = rtc.getTemplateFactory().getTemplate("system.errJson." + errorFromClass, "system.errJson.", parameters);
-			errorTemplate.merge(rtc);
-			final String returnValue;
-			if (!errorTemplate.canWrite()) {
-                returnValue = "";
-            } else {
-                returnValue = errorTemplate.getContent();
-            }
-			rtc.getTemplateFactory().getFs().doWrite(errorTemplate);
-//			errorTemplate.doWrite(rtc.getZipFactory());
-			message = returnValue;
-//			errorTemplate.packageOutput(zf, cf);
-		} catch (MergeException e) {
-			message = "INVALID ERROR TEMPLATE! \n" +
-					"Message: " + error + "\n" +
-					"Context: " + context + "\n";
-		}
-		return message;
-	}
-
+	@Override
 	public String getMessage() {
 		return super.getMessage() + " For: " + context;
 	}
@@ -237,5 +175,9 @@ public class MergeException extends Exception {
 
 	public void setError(String error) {
 		this.error = error;
+	}
+
+	public String getErrorFromClass() {
+		return errorFromClass;
 	}
 }

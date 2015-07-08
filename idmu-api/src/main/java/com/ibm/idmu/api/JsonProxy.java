@@ -1,4 +1,4 @@
-package com.ibm.util.merge.json;
+package com.ibm.idmu.api;
 
 /**
  *

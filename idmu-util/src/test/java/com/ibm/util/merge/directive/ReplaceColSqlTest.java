@@ -17,8 +17,9 @@
 package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.*;
+import com.ibm.util.merge.directive.provider.AbstractProvider;
 import com.ibm.util.merge.directive.provider.DataTable;
-import com.ibm.util.merge.directive.provider.Provider;
+import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,16 +66,18 @@ public class ReplaceColSqlTest extends ReplaceColTest {
 		assertEquals("3",template.getReplaceValue("{C}"));
 	}
 
-	private class ProviderStub extends Provider {
+	private class ProviderStub extends AbstractProvider {
 		public ProviderStub() {
 			super();
 		}
 		
+		@Override
 		public ProviderStub clone() throws CloneNotSupportedException {
 			ProviderStub provider = (ProviderStub) super.clone();
 			return provider;
 		}
 		
+		@Override
 		public void getData(ConnectionFactory cf) throws MergeException {
 			DataTable table = getNewTable();
 			ArrayList<String> row = table.getNewRow();
@@ -86,6 +89,7 @@ public class ReplaceColSqlTest extends ReplaceColTest {
 			row.add("C");row.add("3");
 		}
 
+		@Override
 		public String getQueryString() {
 			return "NA";
 		}

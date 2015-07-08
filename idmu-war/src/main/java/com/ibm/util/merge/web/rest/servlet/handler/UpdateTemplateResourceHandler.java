@@ -1,7 +1,7 @@
 package com.ibm.util.merge.web.rest.servlet.handler;
 
 import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.json.DefaultJsonProxy;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
@@ -10,8 +10,6 @@ import com.ibm.util.merge.web.rest.servlet.Result;
 import com.ibm.util.merge.web.rest.servlet.result.JsonItemUpdatedResult;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**

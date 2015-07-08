@@ -49,6 +49,7 @@ public class InitializeServlet extends HttpServlet {
     /**
      * Initialize Logging, Template and Zip Factory objects
      */
+    @Override
     public void init(ServletConfig cfg) {
         servletInitParameters = RestServlet.initParametersToMap(cfg);
         applyInitParameters();
@@ -100,6 +101,7 @@ public class InitializeServlet extends HttpServlet {
         }
     }
 
+    @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String textResult = "Last initialized successfully at " + RestServlet.findRuntimeContext(req.getServletContext()).getInitialized() + "\n" +
                 "Make a POST request to " + req.getRequestURL() + " to reinitialize and reload templates";
@@ -109,6 +111,7 @@ public class InitializeServlet extends HttpServlet {
     /**
      * Reinitializes IDMU upon POST to this servlet
      */
+    @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         initializeApp(req.getServletContext());
         new TextResponseWriter(res, "Successfully reinitialized IDMU.").write();

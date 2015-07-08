@@ -21,7 +21,7 @@
 
 <hibernate-mapping package="com.ibm.util.merge">
 
-    <class name="com.ibm.util.merge.Template" table="TEMPLATE">
+    <class name="com.ibm.util.merge.template.Template" table="TEMPLATE">
         <id name="idtemplate" column="ID_TEMPLATE">
             <generator class="native"/>
         </id>
@@ -36,7 +36,7 @@
 		<list name="directives" table="DIRECTIVE" >
 	        <key column="ID_TEMPLATE" />
 	        <index column="SEQUENCE"/>
-	        <one-to-many class="com.ibm.util.merge.directive.Directive"/>
+	        <one-to-many class="com.ibm.util.merge.directive.AbstractDirective"/>
 	    </list>
     </class>
 

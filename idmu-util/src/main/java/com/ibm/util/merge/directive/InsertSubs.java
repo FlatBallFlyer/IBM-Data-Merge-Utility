@@ -16,10 +16,10 @@
  */
 package com.ibm.util.merge.directive;
 
-import com.ibm.util.merge.Bookmark;
+import com.ibm.util.merge.template.Bookmark;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.DataTable;
 import org.apache.log4j.Logger;
 
@@ -33,7 +33,7 @@ import java.util.List;
  *
  * @author flatballflyer
  */
-public abstract class InsertSubs extends Directive implements Cloneable {
+public abstract class InsertSubs extends AbstractDirective implements Cloneable {
     private static final Logger log = Logger.getLogger(InsertSubs.class.getName());
     private static final int DEPTH_MAX = 100;
     private List<String> notLast = new ArrayList<>();
@@ -49,8 +49,9 @@ public abstract class InsertSubs extends Directive implements Cloneable {
     /**
      * clone constructor, deep-clone of notLast and onlyLast collections
      *
-     * @see com.ibm.util.merge.directive.Directive#clone(com.ibm.util.merge.Template)
+     * @see AbstractDirective#clone(Template)
      */
+    @Override
     public InsertSubs clone() throws CloneNotSupportedException {
         InsertSubs newDirective = (InsertSubs) super.clone();
         newDirective.notLast = new ArrayList<>(notLast);
@@ -67,6 +68,7 @@ public abstract class InsertSubs extends Directive implements Cloneable {
      * @throws MergeException        Infinite Loop Safety, or subTemplate Create/Merge
      * @throws DragonFlySqlException SQL Error thrown in Template.new
      */
+    @Override
     public void executeDirective(RuntimeContext rtc) throws MergeException {
         log.info("Inserting Subtemplates into: " + getTemplate().getFullName());
         // Depth counter - infinite loop safety mechanism
@@ -118,7 +120,7 @@ public abstract class InsertSubs extends Directive implements Cloneable {
 //            subTemplate.doWrite(rtc.getZipFactory());
             getTemplate().insertText(returnValue, bookmark);
         } catch (MergeException e) {
-            if (softFail()) {
+            if (isSoftFail() || isSoftFailTemplate()) {
                 log.warn("Soft Fail on Insert");
                 getTemplate().insertText("Soft Fail Exception" + e.getMessage(), bookmark);
             } else {

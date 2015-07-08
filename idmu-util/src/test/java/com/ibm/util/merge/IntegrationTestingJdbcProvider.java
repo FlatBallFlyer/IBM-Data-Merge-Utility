@@ -16,6 +16,7 @@
  */
 package com.ibm.util.merge;
 
+import com.ibm.util.merge.template.Template;
 import junitx.framework.FileAssert;
 import org.junit.Before;
 import org.junit.Test;

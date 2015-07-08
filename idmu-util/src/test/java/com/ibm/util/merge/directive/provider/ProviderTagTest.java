@@ -19,8 +19,8 @@ package com.ibm.util.merge.directive.provider;
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.Directive;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.directive.AbstractDirective;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -175,8 +175,9 @@ public class ProviderTagTest extends ProviderTest {
 		assertEquals(cloned.getValue(), myProvider.getValue());
 	}
 
-	private class DirectiveStub extends Directive {
+	private class DirectiveStub extends AbstractDirective {
 		public DirectiveStub() {}
+		@Override
 		public void executeDirective(RuntimeContext rtc) throws MergeException {}
 	}
 }

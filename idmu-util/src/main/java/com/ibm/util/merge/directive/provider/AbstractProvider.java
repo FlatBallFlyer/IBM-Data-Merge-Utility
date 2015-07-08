@@ -18,7 +18,7 @@ package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.directive.Directive;
+import com.ibm.util.merge.directive.AbstractDirective;
 
 import java.util.ArrayList;
 
@@ -28,20 +28,20 @@ import java.util.ArrayList;
  * 
  * @author Mike Storey
  */
-public abstract class Provider implements Cloneable {
+public abstract class AbstractProvider implements Cloneable {
 	public static final int	TYPE_SQL	= 1;
 	public static final int TYPE_TAG	= 2;
 	public static final int TYPE_CSV 	= 3;
 	public static final int TYPE_HTML 	= 4;
 	private transient ArrayList<DataTable> dataTables	= new ArrayList<>();
-	private transient Directive directive 				= null;
+	private transient AbstractDirective directive 				= null;
 	private int type;
 
 	/**
 	 * Simple constructor
 	 * @param 
 	 */
-	public Provider() {
+	public AbstractProvider() {
 		super();
 	}
 	
@@ -51,8 +51,9 @@ public abstract class Provider implements Cloneable {
 	 * @return the cloned Provider
 	 * @throws CloneNotSupportedException
 	 */
-	public Provider clone() throws CloneNotSupportedException {
-		Provider newProvider = (Provider) super.clone();
+	@Override
+	public AbstractProvider clone() throws CloneNotSupportedException {
+		AbstractProvider newProvider = (AbstractProvider) super.clone();
 		newProvider.directive = null;
 		newProvider.dataTables = new ArrayList<>();
 		return newProvider;
@@ -113,11 +114,11 @@ public abstract class Provider implements Cloneable {
 		return dataTables.size();
 	}
 
-	public Directive getDirective() {
+	public AbstractDirective getDirective() {
 		return directive;
 	}
 
-	public void setDirective(Directive directive) {
+	public void setDirective(AbstractDirective directive) {
 		this.directive = directive;
 	}
 

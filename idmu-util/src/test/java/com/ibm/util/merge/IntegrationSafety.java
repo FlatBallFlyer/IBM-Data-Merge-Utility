@@ -16,6 +16,7 @@
  */
 package com.ibm.util.merge;
 
+import com.ibm.util.merge.template.Template;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
