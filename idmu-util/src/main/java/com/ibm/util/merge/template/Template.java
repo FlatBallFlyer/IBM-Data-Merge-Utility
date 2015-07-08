@@ -169,7 +169,7 @@ public class Template implements Cloneable {
         // Remove all the bookmarks
         replaceAllThis(BOOKMARK_PATTERN, "");
         log.info("Merge Complete: " + getFullName());
-        rtc.getConnectionFactory().releaseConnection(getOutputFile());
+//        rtc.getConnectionFactory().releaseConnection(getOutputFile());
         log.info("ReleasedConnection for " + getOutputFile());
     }
 

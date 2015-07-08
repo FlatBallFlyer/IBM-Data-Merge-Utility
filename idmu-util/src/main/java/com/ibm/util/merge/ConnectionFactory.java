@@ -17,85 +17,89 @@
 
 package com.ibm.util.merge;
 
-import org.apache.log4j.Logger;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A connection factory for JNDI Data Sources that cache's Database Connections for 
- * the ProviderSql data provider throughout the course of a Merge. The same database
- * connection is shared by all sub-template processing that takes place under the
- * primary merge process. Database connections are cached based on the Merge GUID.
+ * the ProviderSql data provider throughout the course of a Merge.
+ * Each SqlOperation runs with it's own connection which is closed afterwards
  *
  * @author  Mike Storey
  */
 public final class ConnectionFactory {
-	private static final Logger log = Logger.getLogger( ConnectionFactory.class.getName() );
-	private static final String DBROOT = "java:/comp/env/jdbc/";
-	private final ConcurrentHashMap<String,Connection> dataDbHash = new ConcurrentHashMap<>();
-	
-    /**********************************************************************************
-	 * Data Source connection factory, creates and cache's connections that are valid
-	 * throughout the life of a merge. Connections are released by calling releaseConnection
-	 *
-	 * @param  jndiSource JNDI Data Source name
-	 * @param guid - a Guid associed with a template merge process
-	 * @throws MergeException JNDI Naming Errors
-	 * @throws MergeException Database Connection Errors
-	 * @return Connection The new Data Source connection 
-	 */
-    public Connection getDataConnection(String jndiSource, String guid) throws MergeException {
-    	String key = jndiSource + ":" + guid;
-    	// If the data source is not in the cache, create it and add it to the cache
-    	if ( !dataDbHash.containsKey(key) ) { 
-        	try {
-            	Context initContext = new InitialContext();
-            	DataSource newSource = (DataSource) initContext.lookup(DBROOT + jndiSource);
-            	Connection con = newSource.getConnection();
-            	dataDbHash.putIfAbsent(key, con);
-        	} catch (NamingException e) {
-        		throw new MergeException(e, "JNDI Connection Error ", DBROOT + jndiSource);
-        	} catch (SQLException e) {
-        		throw new MergeException(e, "Failed to get Connection", DBROOT + jndiSource);
-			}
-    	}
-    	
-    	// Return the Connection
-		return dataDbHash.get(key);
-    }
 
+	private final String jndiPrefix;
 
-    
-    /**********************************************************************************
-	 * <p>Release a connection for a guid</p>
-	 *
-	 * @param  guid Guid of template to release files for.
-	 */
-    public void releaseConnection(String guid) {
-    	for (Map.Entry<String, Connection> entry : dataDbHash.entrySet()) {
-    		if (entry.getKey().endsWith(guid)) {
+	public ConnectionFactory() {
+		jndiPrefix = "java:/comp/env/jdbc/";
+	}
+
+	public ConnectionFactory(String jndiPrefix) {
+		this.jndiPrefix = jndiPrefix;
+	}
+
+	public <T>T runSqlOperation(String jndiSource, SqlOperation<T> operation){
+		Connection con = null;
+		try {
+			DataSource dataSource = lookupDataSource(jndiSource);
+			con = dataSource.getConnection();
+			T out = operation.execute(con);
+			return out;
+		} catch (NamingException e) {
+			throw new DataSourceLookupException(jndiSource, e);
+		} catch (SQLException e) {
+			throw new SqlOperationException(jndiSource, operation, e);
+		} finally {
+			if (con != null) {
 				try {
-					entry.getValue().close();
+					con.close();
 				} catch (SQLException e) {
-					log.error("Error Colsing Connection: ", e);
-				} finally {
-					dataDbHash.remove(entry);
+					e.printStackTrace();
 				}
-    		}
-		}    	
-    }
-    
-    /**********************************************************************************
-	 * Get the size of the DB Connection Hash
-	 */
-    public int size() {
-    	return dataDbHash.size();
-    }
+			}
+		}
+
+	}
+
+	protected DataSource lookupDataSource(String jndiSourceName) throws NamingException {
+		Context initContext = new InitialContext();
+		return (DataSource) initContext.lookup(jndiPrefix + jndiSourceName);
+	}
+
+	public static class DataSourceLookupException extends RuntimeException{
+		private String jndiSource;
+
+		public DataSourceLookupException(String jndiSource, NamingException e) {
+			super("Error looking up datasource " + jndiSource, e);
+			this.jndiSource = jndiSource;
+		}
+
+		public String getJndiSource() {
+			return jndiSource;
+		}
+	}
+
+	public static class SqlOperationException extends RuntimeException{
+		private String jndiSource;
+		private SqlOperation operation;
+
+		public SqlOperationException(String jndiSource, SqlOperation operation, SQLException e) {
+			super("Error executing SqlOperation with datasource " + jndiSource, e);
+			this.jndiSource = jndiSource;
+			this.operation = operation;
+		}
+
+		public String getJndiSource() {
+			return jndiSource;
+		}
+
+		public SqlOperation getOperation() {
+			return operation;
+		}
+	}
 }
