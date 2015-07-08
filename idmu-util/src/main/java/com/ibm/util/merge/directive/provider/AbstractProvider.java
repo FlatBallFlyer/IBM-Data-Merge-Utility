@@ -50,6 +50,8 @@ public abstract class AbstractProvider implements Cloneable {
 	@Override
 	public AbstractProvider clone() throws CloneNotSupportedException {
 		AbstractProvider newProvider = (AbstractProvider) super.clone();
+
+
 		newProvider.directive = null;
 		newProvider.dataTables = new ArrayList<>();
 		return newProvider;

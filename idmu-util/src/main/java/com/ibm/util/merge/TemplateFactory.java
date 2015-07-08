@@ -84,7 +84,7 @@ final public class TemplateFactory {
         String fullName = replace.get(KEY_FULLNAME);
         log.info("GET TEMPLATE = " + fullName);
         Template rootTemplate = getTemplate(fullName, "", replace);
-        if(rootTemplate == null){
+        if (rootTemplate == null) {
             throw new IllegalArgumentException("Could not find template for request " + new HashMap<>(request).toString());
         }
         return rootTemplate;
@@ -111,21 +111,21 @@ final public class TemplateFactory {
         Template newTemplate = null;
         // Cache hit -- Return a clone of the Template in Cache
         if (templateCache.isCached(fullName)) {
-            newTemplate =templateCache.get(fullName).clone(seedReplace);
+            newTemplate = templateCache.get(fullName).clone(seedReplace);
         }
         // See if FullName template is in the database
         if (newTemplate == null && hp != null) {
             newTemplate = hp.getTemplateFullname(fullName);
             templateCache.cache(fullName, newTemplate);
             log.info("Constructed Template: " + fullName);
-            newTemplate =templateCache.get(fullName).clone(seedReplace);
+            newTemplate = templateCache.get(fullName).clone(seedReplace);
 //            }
         }
         // Check for shortName in the cache, since fullName doesn't exist
         if (newTemplate == null && templateCache.isCached(shortName)) {
             templateCache.cache(fullName, templateCache.get(shortName));
             log.info("Linked Template: " + shortName + " to " + fullName);
-            newTemplate =templateCache.get(fullName).clone(seedReplace);
+            newTemplate = templateCache.get(fullName).clone(seedReplace);
         }
         // See if the shortName (Default Template) is in the database
         if (newTemplate == null && hp != null) {
@@ -134,11 +134,10 @@ final public class TemplateFactory {
             log.info("Linked Template: " + shortName + " to " + fullName);
             newTemplate = templateCache.get(fullName).clone(seedReplace);
         }
-        if(newTemplate == null){
+        if (newTemplate == null) {
             throw new TemplateNotFoundException(fullName);
         }
         return newTemplate;
-
     }
 
     /**********************************************************************************
@@ -213,7 +212,6 @@ final public class TemplateFactory {
      * @param String fullName - the Template Full Name
      */
     public String getTemplateAsJson(String fullName) {
-
         Template template = getTemplateByFullname(fullName);
         return jsonProxy.toJson(template);
     }
@@ -242,10 +240,10 @@ final public class TemplateFactory {
         }
     }
 
-    public void deleteTemplate(Template template){
+    public void deleteTemplate(Template template) {
         templateCache.evict(template.getFullName());
         fs.deleteTemplateOnFilesystem(template);
-        if(hp != null){
+        if (hp != null) {
             hp.deleteTemplate(template);
         }
     }
@@ -295,7 +293,6 @@ final public class TemplateFactory {
                 templates.add(template);
             }
             collectionTemplatesMap.put(name, templates);
-
         }
         return collectionTemplatesMap;
     }
@@ -315,8 +312,8 @@ final public class TemplateFactory {
         List<Template> collectionTemplates = listAllTemplates();
         Template found = null;
         for (Template template : collectionTemplates) {
-            if(template.getFullName().equals(fullName)){
-                if(found != null){
+            if (template.getFullName().equals(fullName)) {
+                if (found != null) {
                     throw new IllegalStateException("Duplicate template found for fullName=" + fullName);
                 }
                 found = template;

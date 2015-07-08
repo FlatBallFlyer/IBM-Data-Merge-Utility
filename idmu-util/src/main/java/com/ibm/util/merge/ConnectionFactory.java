@@ -70,6 +70,8 @@ public final class ConnectionFactory {
     	// Return the Connection
 		return dataDbHash.get(key);
     }
+
+
     
     /**********************************************************************************
 	 * <p>Release a connection for a guid</p>

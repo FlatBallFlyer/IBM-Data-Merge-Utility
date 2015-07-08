@@ -14,11 +14,12 @@
  * limitations under the License.
  *
  */
-package com.ibm.util.merge.directive.provider;
+package com.ibm.util.merge.json;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.ibm.util.merge.directive.provider.*;
 
 import java.lang.reflect.Type;
 
@@ -30,10 +31,10 @@ public class ProviderDeserializer implements JsonDeserializer<AbstractProvider> 
 		if (jsonType == null) {return null;}
 		int myType = jsonType.getAsInt();
 		switch (myType) {
-			case TYPE_CSV: return context.deserialize(json, ProviderCsv.class);
-			case TYPE_SQL: return context.deserialize(json, ProviderSql.class);
-			case TYPE_TAG: return context.deserialize(json, ProviderTag.class);
-			case TYPE_HTML:return context.deserialize(json, ProviderHtml.class);
+			case Providers.TYPE_CSV: return context.deserialize(json, ProviderCsv.class);
+			case Providers.TYPE_SQL: return context.deserialize(json, ProviderSql.class);
+			case Providers.TYPE_TAG: return context.deserialize(json, ProviderTag.class);
+			case Providers.TYPE_HTML:return context.deserialize(json, ProviderHtml.class);
 			default: return null;
 		}
 	}

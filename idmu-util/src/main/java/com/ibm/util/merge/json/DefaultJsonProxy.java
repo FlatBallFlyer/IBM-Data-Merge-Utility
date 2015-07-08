@@ -4,9 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.directive.AbstractDirective;
-import com.ibm.util.merge.directive.DirectiveDeserializer;
 import com.ibm.util.merge.directive.provider.AbstractProvider;
-import com.ibm.util.merge.directive.provider.ProviderDeserializer;
 
 /**
  *
