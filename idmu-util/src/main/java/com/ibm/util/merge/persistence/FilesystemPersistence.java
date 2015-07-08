@@ -33,7 +33,6 @@ public class FilesystemPersistence {
      * merge-templates-folder, if it is not initilized the default value is /tmp/templates
      *
      * @param folder that contains template files
-     * @throws MergeException - Template Clone errors
      */
     public List<Template> loadAll() {
         List<Template> templates = new ArrayList<>();
@@ -75,7 +74,6 @@ public class FilesystemPersistence {
      *
      * @param Template template the Template to save
      * @return a cloned copy of the Template ready for Merge Processing
-     * @throws MergeException on Template Clone Errors
      */
     public Template saveTemplateToJsonFolder(Template template) {
         String fileName = templateFolder + File.separator + template.getFullName();
@@ -101,7 +99,6 @@ public class FilesystemPersistence {
     }
 
     public void deleteTemplateOnFilesystem(Template template) {
-//        String fileName = templateFolder + template.getFullName();
         File file = new File(new File(templateFolder), template.getFullName()+".json");
         if(file.exists()){
             if(!file.delete()){
