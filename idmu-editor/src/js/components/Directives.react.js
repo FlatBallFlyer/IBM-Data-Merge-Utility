@@ -98,7 +98,7 @@ var Directives = React.createClass({
     console.debug("handle save..");
   },
   render: function() {
-    var lhs = ALL_DIRECTIVES;
+    var lhs = this.props.data.directives;
     var rhs=this.props.data['template'] ? this.props.data['template']['directives'] : [];
     var betweenCB = this.moveItemBetweenList;
     var withinCB = this.moveItemWithinList;

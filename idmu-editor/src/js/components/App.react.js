@@ -2,14 +2,14 @@
  * @jsx React.DOM
  */
 var App = React.createClass({
-
+  
   getInitialState: function() {
     return {
       selectedCollection: "root",
       selectedRibbonItem: null,
       selectedRibbonIndex: 0,
-      data: {},
-      directives: {'directives':[]},
+      data: [],
+      directives: [],
       template: {'directives':[]}
     };
   },
@@ -22,25 +22,12 @@ var App = React.createClass({
   },
   componentDidMount: function () {
     this.initRouter();
-    this.loadTemplatesFromServer();
+    this.loadDirectivesFromServer();
+    this.loadCollectionsFromServer();
+    this.loadTemplatesFromServer("root");
   },
   handleCollectionSelected: function(selectedCollection) {
-    var data = this.state.data;
-    var keys = Object.keys(data);
-    for(var i = 0, len = keys.length; i < len; i++) {
-      var key = keys[i];
-      if(key === selectedCollection) {
-        data[key]['selected'] = true;
-      }else{
-        data[key]['selected'] = false;
-      }
-    }
-    this.setState({
-      selectedCollection: selectedCollection,
-      data: data,
-      selectedRibbonItem: null,
-      selectedRibbonIndex: 0
-    });
+    this.loadTemplatesFromServer(selectedCollection);
   },
   handleRibbonSelected: function(selectedRibbonIndex,selectedRibbonItem) {
     this.setState({selectedRibbonItem: selectedRibbonItem,selectedRibbonIndex: selectedRibbonIndex});
@@ -48,10 +35,8 @@ var App = React.createClass({
                                 selectedRibbonItem['name'],
                                 selectedRibbonItem['columnValue']);
   },
-  loadTemplatesFromServer: function() {
+  loadCollectionsFromServer: function() {
     var selectedCollection = this.state.selectedCollection;
-    var selectedRibbonItem = this.state.selectedRibbonItem;
-    var selectedRibbonIndex = this.state.selectedRibbonIndex;
     var params = {};
     $.ajax({
       url: '/idmu/templates',
@@ -59,7 +44,37 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
-        this.setState({data: data,selectedCollection: selectedCollection});
+        var uniques={};
+        var first = data[0];
+        for(var idx=0; idx < data.length; idx++) {
+          var key = data[idx].collection;
+          var name = data[idx].name;
+          uniques[key] = {collection: key};
+          console.log("key="+key);
+        }
+        var final_list = Object.keys(uniques).map(function(v){ return {collection: v}});
+        console.debug(final_list);
+        this.setState({data: final_list,selectedCollection: selectedCollection});
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
+  loadTemplatesFromServer: function(collection) {
+    var params = {};
+    $.ajax({
+      url: '/idmu/templates/'+collection,
+      dataType: 'json',
+      cache: false,
+      data: params,
+      success: function(data) {
+        this.setState({templates: data,selectedCollection: collection}, function(){
+          var sel = this.state.selectedRibbonItem || data[0];
+          this.loadTemplateFromServer(sel.collection,sel.name,sel.columnValue);
+          
+        }.bind(this));
+        
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -113,7 +128,7 @@ var App = React.createClass({
   moveItemBetweenList: function(itemId, oldListId, oldIndex, newListId, newIndex){
     console.log('moving '+itemId+' from '+oldListId+':'+oldIndex+' to '+newListId+':'+newIndex);
     //Probably want to fire an action creator here... but we'll just splice state manually
-    var newListInfo = $.extend(true, [], ALL_DIRECTIVES);
+    var newListInfo = $.extend(true, [], this.state.directives);
     var oldItemArr = newListInfo;
     var item = oldItemArr.splice(oldIndex,1);
     var tpl = this.state.template;
@@ -127,7 +142,6 @@ var App = React.createClass({
 
     var params = {template:{}};
     params.template = $.extend({},this.state.template,opts);
-    console.debug(params);
     $.ajax({
       url: '/idmu/templates/'+collection,
       dataType: 'json',
@@ -144,7 +158,8 @@ var App = React.createClass({
   },
   handleSave: function(opts) {
     this.saveTemplateToServer(opts,this.state.selectedCollection);
-    this.loadTemplatesFromServer();
+    this.loadCollectionsFromServer();
+    this.loadTemplatesFromServer(this.state.selectedCollection);
   },
   render: function() {
     var mCB = this.moveItemBetweenList;
@@ -157,7 +172,7 @@ var App = React.createClass({
         </div>
         <div id="template_ribbon" className="row template_ribbon">
           <div className="container">
-            <TemplateRibbon selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB}/>
+            <TemplateRibbon initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB}/>
           </div>
         </div>
       </div>

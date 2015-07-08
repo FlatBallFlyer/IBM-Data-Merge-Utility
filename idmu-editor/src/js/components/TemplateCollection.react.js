@@ -6,11 +6,13 @@ var TemplateCollection = React.createClass({
     this.props.selectHandler(event.target.value);
   },
   render: function() {
-    var data = this.props.data;
-    var selectedValue = data['selectedCollection'];
-    var collection = data['data'];
-    var options=Object.keys(collection).map(function(k,i){
-        return (<option key={i} value={k} label={collection[k].label}>{collection[k].label}</option>);
+    var
+        data = this.props.data,
+        selectedValue = data['selectedCollection'],
+        collection = data.data;
+    
+    var options=collection.map(function(k,i){
+      return (<option key={i} value={k.collection} label={k.collection}>{k.collection}</option>);
     });
     return(
       <div className="row no-margin">

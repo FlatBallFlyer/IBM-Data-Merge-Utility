@@ -20,6 +20,21 @@ app.get("/idmu/templates", function(req, res, next) {
   res.sendFile("tools/test/templates.json", {root: __dirname + "../../../"});
 });
 
+app.get("/idmu/templates/:collection_name",function(req,res,next){
+  var 
+          templates = JSON.parse(fs.readFileSync("tools/test/templates.json", 'utf8')),
+          collection_name = req.params.collection_name,
+          result = [];
+
+  for(var idx=0; idx<templates.length; idx++){
+    var tpl = templates[idx];
+    if(tpl.collection === collection_name){
+      result.push(tpl);
+    }
+  }
+  res.json(result);
+});
+
 app.get("/idmu/directives", function(req, res, next) {
   res.sendFile("tools/test/directives.json", {root: __dirname + "../../../"});
 });
@@ -59,26 +74,21 @@ app.put("/idmu/templates/:collection_id", function(req, res, next) {
   });
 
   //load 'templates' and modify the ribbon if needed .. and save
-
-
   var found = false;
   var templates = JSON.parse(fs.readFileSync("tools/test/templates.json", 'utf8'));
-  console.log("length="+templates[collection_id].ribbon.length);
-  for(var idx=0; idx<templates[collection_id].ribbon.length; idx++){
-    if(templates[collection_id].ribbon[idx].name === template.name){
+  var idx = 0;
+  for(idx=0; idx<templates.length; idx++){
+    var tpl = templates[idx];
+    var lhs = tpl.collection+"."+tpl.name+"."+(tpl.columnValue ? tpl.columnValue : "");
+    var rhs = collection_id + "." + template.name + (template.columnValue ? template.columnValue : "");
+    if(lhs === rhs){
       found = true;
+      break;
     }
   }
   console.log("found="+found);
   if(!found) {
-    var rx = {
-      name: template.name,
-      label: template.description
-    };
-    if(template.columnValue){
-      rx['columnValue'] = template.columnValue;
-    }
-    templates[collection_id].ribbon.push(rx);
+    templates.push(template);
     fs.writeFileSync("tools/test/templates.json", JSON.stringify(templates, null, 2));
   }
 

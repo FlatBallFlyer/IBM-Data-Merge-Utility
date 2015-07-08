@@ -1,174 +1,187 @@
-{
-    "collection": "root",
-    "columnValue": "",
-    "content": "This is a test of the encodeing <tkBookmark collection=\"root\" name=\"test\" />fff\n\nSome testing strings",
-    "description": "",
-    "directives": [
-        {
-            "description": "TestRequire",
-            "softFail": false,
-            "tags": [
-                "Foo",
-                "empty"
-            ],
-            "type": 0
-        },
-        {
-            "description": "Test Replace1",
-            "from": "Foo",
-            "softFail": false,
-            "to": "Test Foo Value",
-            "type": 1
-        },
-        {
-            "description": "TestInsertSubsTag",
-            "notLast": [
-                "empty"
-            ],
-            "onlyLast": [],
-            "provider": {
-                "condition": 0,
-                "list": false,
-                "tag": "Foo",
-                "type": 2,
-                "value": ""
-            },
-            "softFail": false,
-            "type": 2
-        },
-        {
-            "description": "TestInsertSubsSql",
-            "notLast": [
-                "empty"
-            ],
-            "onlyLast": [],
-            "provider": {
-                "columns": "A,B,C,1,2,3,4,5,6",
-                "from": "",
-                "source": "",
-                "type": 1,
-                "where": ""
-            },
-            "softFail": false,
-            "type": 10
-        },
-        {
-            "description": "TestReplaceRowSql",
-            "provider": {
-                "columns": "A,B,C,1,2,3,4,5,6",
-                "from": "",
-                "source": "",
-                "type": 1,
-                "where": ""
-            },
-            "softFail": false,
-            "type": 11
-        },
-        {
-            "description": "TestReplaceColSql",
-            "fromColumn": "Foo",
-            "provider": {
-                "columns": "A,B,C,1,2,3,4,5,6",
-                "from": "",
-                "source": "",
-                "type": 1,
-                "where": ""
-            },
-            "softFail": false,
-            "toColumn": "",
-            "type": 12
-        },
-        {
-            "description": "TestInsertSubsCsv",
-            "notLast": [
-                "empty"
-            ],
-            "onlyLast": [],
-            "provider": {
-                "staticData": "A,B,C\n1,2,3\n4,5,6",
-                "tag": "",
-                "type": 3,
-                "url": ""
-            },
-            "softFail": false,
-            "type": 21
-        },
-        {
-            "description": "TestReplaceRowCsv",
-            "provider": {
-                "staticData": "A,B,C\n1,2,3\n4,5,6",
-                "tag": "",
-                "type": 3,
-                "url": ""
-            },
-            "softFail": false,
-            "type": 22
-        },
-        {
-            "description": "TestReplaceColCsv",
-            "fromColumn": "Foo",
-            "provider": {
-                "staticData": "A,B,C\n1,2,3\n4,5,6",
-                "tag": "",
-                "type": 3,
-                "url": ""
-            },
-            "softFail": false,
-            "toColumn": "",
-            "type": 23
-        },
-        {
-            "description": "TestInsertSubsHtml",
-            "notLast": [
-                "empty"
-            ],
-            "onlyLast": [],
-            "provider": {
-                "staticData": "A,B,C\n1,2,3\n4,5,6",
-                "tag": "",
-                "type": 4,
-                "url": ""
-            },
-            "softFail": false,
-            "type": 31
-        },
-        {
-            "description": "TestReplaceColHtml",
-            "fromColumn": "Foo",
-            "provider": {
-                "staticData": "A,B,C\n1,2,3\n4,5,6",
-                "tag": "",
-                "type": 4,
-                "url": ""
-            },
-            "softFail": false,
-            "toColumn": "",
-            "type": 33
-        },
-        {
-            "description": "TestReplaceRowHtml",
-            "provider": {
-                "staticData": "A,B,C\n1,2,3\n4,5,6",
-                "tag": "",
-                "type": 4,
-                "url": ""
-            },
-            "softFail": false,
-            "type": 32
-        },
-        {
-            "description": "TestMarkupSubsHtml",
-            "pattern": "TestPattern",
-            "provider": {
-                "staticData": "A,B,C\n1,2,3\n4,5,6",
-                "tag": "",
-                "type": 4,
-                "url": ""
-            },
-            "softFail": false,
-            "type": 34
-        }
-    ],
-    "name": "allDirectives",
-    "outputFile": ""
-}
+[
+  {
+    "type":0,
+    "name": "Require Tags",
+    "description":"Directive Description (Optional)",
+    "softFail":true,
+    "tags":["Tag1"]
+  },
+  {
+    "type":1,
+    "name": "Replace Value",
+    "description": "Directive Description (Optional)",
+    "softFail":true,
+    "from": "The value to replace (will be wrapped in {brackets})",
+    "to": "The value to replace with"
+  },
+  {
+    "sequence": 1,
+    "type": 2,
+    "name": "Insert Template From Tag Data",
+    "softFail": false,
+    "description": "TestInsertSubsTag",
+    "collectionName": "",
+    "collectionColumn": "",
+    "notLast": ["empty"],
+    "onlyLast": [],
+    "provider": {
+      "type": 2,
+      "condition": 0,
+      "tag": "Foo",
+      "value": "",
+      "list": false
+    }
+  },
+  {
+    "sequence": 1,
+    "type": 10,
+    "name": "Insert Template From SQL Rows",
+    "softFail": false,
+    "description": "TestInsertSubsSql",
+    "collectionName": "",
+    "collectionColumn": "",
+    "notLast": ["empty"],
+    "onlyLast": [],
+    "provider": {
+      "type": 1,
+      "source": "",
+      "columns": "A,B,C,1,2,3,4,5,6",
+      "from": "",
+      "where": ""
+    }
+  },
+  {
+    "sequence": 1,
+    "type": 11,
+    "name": "Replace From SQL Row",
+    "softFail": false,
+    "description": "TestReplaceRowSql",
+    "provider": {
+      "type": 1,
+      "source": "",
+      "columns": "A,B,C,1,2,3,4,5,6",
+      "from": "",
+      "where": ""
+    }
+  },
+  {
+    "sequence": 1,
+    "type": 12,
+    "name": "Replace From SQL Columns",
+    "softFail": false,
+    "description": "TestReplaceColSql",
+    "fromColumn": "Foo",
+    "toColumn": "",
+    "provider": {
+      "type": 1,
+      "source": "",
+      "columns": "A,B,C,1,2,3,4,5,6",
+      "from": "",
+      "where": ""
+    }
+  },
+  {
+    "sequence": 1,
+    "type": 21,
+    "name": "Insert Templates From CSV",
+    "softFail": false,
+    "description": "TestInsertSubsCsv",
+    "collectionName": "",
+    "collectionColumn": "",
+    "notLast": ["empty"],
+    "onlyLast": [],
+    "provider": {
+      "type": 3,
+      "staticData": "A,B,C\n1,2,3\n4,5,6",
+      "url": "",
+      "tag": ""
+    }
+  },
+  {
+    "sequence": 1,
+    "type": 22,
+    "name": "Replace From CSV Row",
+    "softFail": false,
+    "description": "TestReplaceRowCsv",
+    "provider": {
+      "type": 3,
+      "staticData": "A,B,C\n1,2,3\n4,5,6",
+      "url": "",
+      "tag": ""
+    }
+  },
+  {
+    "sequence": 1,
+    "type": 23,
+    "name": "Replace From CSV Column",
+    "softFail": false,
+    "description": "TestReplaceColCsv",
+    "fromColumn": "Foo",
+    "toColumn": "",
+    "provider": {
+      "type": 3,
+      "staticData": "A,B,C\n1,2,3\n4,5,6",
+      "url": "",
+      "tag": ""
+    }
+  },
+  {
+    "sequence": 1,
+    "type": 31,
+    "name": "Insert Template From HTML Table",
+    "softFail": false,
+    "collectionName": "",
+    "collectionColumn": "",
+    "notLast": ["empty"],
+    "onlyLast": [],
+    "description": "TestInsertSubsHtml",
+    "provider": {
+      "type": 4,
+      "staticData": "A,B,C\n1,2,3\n4,5,6",
+      "url": "",
+      "tag": ""
+    }
+  },
+  {
+    "sequence": 1,
+    "type": 32,
+    "name": "Replace From HTML Rows",
+    "softFail": false,
+    "description": "TestReplaceRowHtml",
+    "provider": {
+      "type": 4,
+      "staticData": "A,B,C\n1,2,3\n4,5,6",
+      "url": "",
+      "tag": ""
+    }
+  },
+  {
+    "sequence": 1,
+    "type": 33,
+    "name": "Replace From HTML Column",
+    "softFail": false,
+    "description": "TestReplaceColHtml",
+    "fromColumn": "Foo",
+    "toColumn": "",
+    "provider": {
+      "type": 4,
+      "staticData": "A,B,C\n1,2,3\n4,5,6",
+      "url": "",
+      "tag": ""
+    }
+  },
+  {
+    "sequence": 1,
+    "type": 34,
+    "name": "Replace From HTML Pattern",
+    "softFail": false,
+    "description": "TestMarkupSubsHtml",
+    "pattern": "TestPattern",
+    "provider": {
+      "type": 4,
+      "staticData": "A,B,C\n1,2,3\n4,5,6",
+      "url": "",
+      "tag": ""
+    }
+  }
+]

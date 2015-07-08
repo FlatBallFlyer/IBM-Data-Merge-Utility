@@ -26,34 +26,25 @@ var TemplateRibbon = React.createClass({
   },
   handleNavClick: function(direction) {
     var data = this.props.data;
-    var selectedCollection = data.selectedCollection;
-    var collection = data['data'];
-    var selectedRibbon=collection[selectedCollection] ? collection[selectedCollection]['ribbon']:[];
-
     var idx = data.selectedRibbonIndex + (direction*1);
     if(idx < 0) {
-      idx = selectedRibbon.length-1;
-    }else if(idx >= selectedRibbon.length) {
+      idx = data.templates.length-1;
+    }else if(idx >= data.templates.length) {
       idx = 0;
     }
-    this.props.selectHandler(idx,selectedRibbon[idx]);
-  },
-  componentDidUpdate: function() {
-    var data = this.props.data;
-    var selectedCollection = data.selectedCollection;
-    var collection = data['data'];
-    var selectedRibbon=collection[selectedCollection] ? collection[selectedCollection]['ribbon']:null;
-    if(!data['selectedRibbonItem'] && selectedRibbon){
-      this.props.selectHandler(data.selectedRibbonIndex,selectedRibbon[data.selectedRibbonIndex]);
-    }
+    this.props.selectHandler(idx,data.templates[idx]);
   },
   render: function(){
     var data = this.props.data;
+    if(!data.templates || data.templates.length <= 0) {
+      return(<div/>);
+    }
+    
     var selectedCollection = data.selectedCollection;
     var collection = data['data'];
-    var selectedRibbon=collection[selectedCollection] ? collection[selectedCollection]['ribbon']:[];
+    var templates=data.templates;
     var selectHandler = this.props.selectHandler;
-    var item = selectedRibbon[data.selectedRibbonIndex];
+    var item = templates[data.selectedRibbonIndex];
     var newRibbon = [];
 
     var navLCB = this.handleNavLeftClick;

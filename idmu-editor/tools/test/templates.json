@@ -1,46 +1,311 @@
-{
-  "root": {
-    "label": "root",
-    "ribbon": [
-      {
-        "label": "Default",
-        "name": "default"
-      },
-      {
-        "label": "Directives",
-        "name": "directives"
-      }
-    ],
-    "selected": true
+[
+  {
+    "collection": "root",
+    "columnValue": "",
+    "name": "default",
+    "description": "Default root template",
+    "outputFile": "",
+    "content": "",
+    "directives": []
   },
-  "contact": {
-    "label": "contact",
-    "ribbon": [
+  {
+    "collection": "contact",
+    "columnValue": "",
+    "name": "cmd",
+    "description": "Default contact template",
+    "outputFile": "",
+    "content": "",
+    "directives": []
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "default",
+    "label": "default",
+    "output": "some file",
+    "content": "Long content here ...",
+    "bookmarks": [
       {
-        "label": "cmd",
-        "name": "cmd"
-      },
-      {
-        "label": "cmd",
-        "name": "cmd",
-        "columnValue": "SMS"
-      },
-      {
-        "name": "tcp",
-        "label": "Postal on the crazy",
-        "columnValue": "SMS"
-      },
-      {
-        "name": "rcp",
-        "label": "Postal on the crazy",
-        "columnValue": "SMS"
-      },
-      {
-        "name": "scp",
-        "label": "Postal on the crazy",
-        "columnValue": "SMS"
+        "id": "1",
+        "name": "Whatever"
       }
     ],
-    "selected": false
+    "directives": [
+      {
+        "type": "0",
+        "name": "Require Tags",
+        "description": "Corp. Stuff",
+        "softFail": "true",
+        "tags": [
+          "Tag1"
+        ]
+      },
+      {
+        "type": "1",
+        "name": "Replace Value",
+        "description": "Directive Description (Optional)",
+        "softFail": "true",
+        "from": "The value to replace (will be wrapped in {brackets})",
+        "to": "The value to replace with"
+      }
+    ],
+    "columnValue": "SMS",
+    "description": "Postal on the crazy"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "telex",
+    "label": "default",
+    "output": "some file",
+    "content": "Long content here ...Telex no {NAME}",
+    "bookmarks": [
+      {
+        "id": "1",
+        "name": "Whatever"
+      }
+    ],
+    "directives": [
+      {
+        "type": "0",
+        "name": "Require Tags",
+        "description": "Corp. Stuff",
+        "softFail": "true",
+        "tags": [
+          "Tag1"
+        ]
+      },
+      {
+        "type": "1",
+        "name": "Replace Value",
+        "description": "Directive Description (Optional)",
+        "softFail": "true",
+        "from": "The value to replace (will be wrapped in {brackets})",
+        "to": "The value to replace with"
+      }
+    ],
+    "columnValue": "SMS",
+    "description": "Telex message"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "fax",
+    "label": "default",
+    "output": "some file",
+    "content": "Long content here ...",
+    "bookmarks": [
+      {
+        "id": "1",
+        "name": "Whatever"
+      }
+    ],
+    "directives": [
+      {
+        "type": "0",
+        "name": "Require Tags",
+        "description": "Corp. Stuff",
+        "softFail": "true",
+        "tags": [
+          "Tag1"
+        ]
+      },
+      {
+        "type": "1",
+        "name": "Replace Value",
+        "description": "Directive Description (Optional)",
+        "softFail": "true",
+        "from": "The value to replace (will be wrapped in {brackets})",
+        "to": "The value to replace with"
+      }
+    ],
+    "columnValue": "SMS",
+    "description": "Fax  the crazy"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "tcp",
+    "label": "default",
+    "output": "some file",
+    "content": "Long content here ...",
+    "bookmarks": [
+      {
+        "id": "1",
+        "name": "Whatever"
+      }
+    ],
+    "directives": [
+      {
+        "type": "0",
+        "name": "Require Tags",
+        "description": "Corp. Stuff",
+        "softFail": "true",
+        "tags": [
+          "Tag1"
+        ]
+      },
+      {
+        "type": "1",
+        "name": "Replace Value",
+        "description": "Directive Description (Optional)",
+        "softFail": "true",
+        "from": "The value to replace (will be wrapped in {brackets})",
+        "to": "The value to replace with"
+      }
+    ],
+    "columnValue": "SMS",
+    "description": "Fax  the crazy"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "mail",
+    "label": "default",
+    "output": "some file",
+    "content": "Long content here ...",
+    "bookmarks": [
+      {
+        "id": "1",
+        "name": "Whatever"
+      }
+    ],
+    "directives": [
+      {
+        "type": "0",
+        "name": "Require Tags",
+        "description": "Corp. Stuff",
+        "softFail": "true",
+        "tags": [
+          "Tag1"
+        ]
+      }
+    ],
+    "columnValue": "",
+    "description": "Mail on the crazy"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "telexx",
+    "label": "default",
+    "output": "some file",
+    "content": "Long content here ...Telex no {NAME}",
+    "bookmarks": [
+      {
+        "id": "1",
+        "name": "Whatever"
+      }
+    ],
+    "directives": [
+      {
+        "type": "0",
+        "name": "Require Tags",
+        "description": "Corp. Stuff",
+        "softFail": "true",
+        "tags": [
+          "Tag1"
+        ]
+      },
+      {
+        "type": "1",
+        "name": "Replace Value",
+        "description": "Directive Description (Optional)",
+        "softFail": "true",
+        "from": "The value to replace (will be wrapped in {brackets})",
+        "to": "The value to replace with"
+      }
+    ],
+    "columnValue": "SMS",
+    "description": "Telex message"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "train",
+    "label": "default",
+    "output": "some file",
+    "content": "Long content here ...",
+    "bookmarks": [
+      {
+        "id": "1",
+        "name": "Whatever"
+      }
+    ],
+    "directives": [
+      {
+        "type": "0",
+        "name": "Require Tags",
+        "description": "Corp. Stuff",
+        "softFail": "true",
+        "tags": [
+          "Tag1"
+        ]
+      }
+    ],
+    "columnValue": "",
+    "description": "Train on the crazy"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "default",
+    "label": "default",
+    "output": "some file",
+    "content": "Long content here ...",
+    "bookmarks": [
+      {
+        "id": "1",
+        "name": "Whatever"
+      }
+    ],
+    "directives": [
+      {
+        "type": "0",
+        "name": "Require Tags",
+        "description": "Corp. Stuff",
+        "softFail": "true",
+        "tags": [
+          "Tag1"
+        ]
+      },
+      {
+        "type": "1",
+        "name": "Replace Value",
+        "description": "Directive Description (Optional)",
+        "softFail": "true",
+        "from": "The value to replace (will be wrapped in {brackets})",
+        "to": "The value to replace with"
+      }
+    ],
+    "columnValue": "SMS",
+    "description": "Postal on the crazy SMS"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "default",
+    "label": "default",
+    "output": "some file",
+    "content": "Long content here ...",
+    "bookmarks": [
+      {
+        "id": "1",
+        "name": "Whatever"
+      }
+    ],
+    "directives": [
+      {
+        "type": "0",
+        "name": "Require Tags",
+        "description": "Corp. Stuff",
+        "softFail": "true",
+        "tags": [
+          "Tag1"
+        ]
+      }
+    ],
+    "columnValue": "",
+    "description": "Postal on the crazy default"
   }
-}
+]
