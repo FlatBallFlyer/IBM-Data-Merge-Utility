@@ -40,7 +40,7 @@ public class ProviderTag extends AbstractProvider implements Cloneable {
 	
 	public ProviderTag() {
 		super();
-		setType(AbstractProvider.TYPE_TAG);
+		setType(Providers.TYPE_TAG);
 	}
 	
 	/**
@@ -96,12 +96,12 @@ public class ProviderTag extends AbstractProvider implements Cloneable {
 		if (isList()) {
 			for (String datum : new ArrayList<>(Arrays.asList(data.split(",")))) {
 				if (!datum.isEmpty()) {
-					ArrayList<String> row = table.getNewRow();
+					ArrayList<String> row = table.addNewRow();
 					row.add(datum);
 				}
 			}			
 		} else {
-			ArrayList<String> row = table.getNewRow();
+			ArrayList<String> row = table.addNewRow();
 			row.add(data);
 		}
 	}

@@ -35,7 +35,7 @@ public class ReplaceValue extends AbstractDirective implements Cloneable {
 	 */
 	public ReplaceValue() {
 		super();
-		setType(TYPE_REPLACE_VALUE);
+		setType(Directives.TYPE_REPLACE_VALUE);
 		setProvider(null);
 	}
 

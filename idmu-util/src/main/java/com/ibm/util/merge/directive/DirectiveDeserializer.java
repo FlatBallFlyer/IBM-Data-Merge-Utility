@@ -28,19 +28,19 @@ public class DirectiveDeserializer implements JsonDeserializer<AbstractDirective
 	public AbstractDirective deserialize(JsonElement json, Type directive, JsonDeserializationContext context) {
 		int myType = json.getAsJsonObject().get("type").getAsInt();
 		switch (myType) {
-			case AbstractDirective.TYPE_REPLACE_VALUE: 		return context.deserialize(json, ReplaceValue.class);
-			case AbstractDirective.TYPE_REQUIRE: 			return context.deserialize(json, Require.class);
-			case AbstractDirective.TYPE_SQL_INSERT: 		return context.deserialize(json, InsertSubsSql.class);
-			case AbstractDirective.TYPE_SQL_REPLACE_COL: 	return context.deserialize(json, ReplaceColSql.class);
-			case AbstractDirective.TYPE_SQL_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowSql.class);
-			case AbstractDirective.TYPE_CSV_INSERT: 		return context.deserialize(json, InsertSubsCsv.class);
-			case AbstractDirective.TYPE_CSV_REPLACE_COL: 	return context.deserialize(json, ReplaceColCsv.class);
-			case AbstractDirective.TYPE_CSV_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowCsv.class);
-			case AbstractDirective.TYPE_HTML_INSERT: 		return context.deserialize(json, InsertSubsHtml.class);
-			case AbstractDirective.TYPE_HTML_REPLACE_COL: 	return context.deserialize(json, ReplaceColHtml.class);
-			case AbstractDirective.TYPE_HTML_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowHtml.class);
-			case AbstractDirective.TYPE_HTML_REPLACE_MARKUP: return context.deserialize(json, ReplaceMarkupHtml.class);
-			case AbstractDirective.TYPE_TAG_INSERT: 		return context.deserialize(json, InsertSubsTag.class);
+			case TYPE_REPLACE_VALUE: 		return context.deserialize(json, ReplaceValue.class);
+			case TYPE_REQUIRE: 			return context.deserialize(json, Require.class);
+			case TYPE_SQL_INSERT: 		return context.deserialize(json, InsertSubsSql.class);
+			case TYPE_SQL_REPLACE_COL: 	return context.deserialize(json, ReplaceColSql.class);
+			case TYPE_SQL_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowSql.class);
+			case TYPE_CSV_INSERT: 		return context.deserialize(json, InsertSubsCsv.class);
+			case TYPE_CSV_REPLACE_COL: 	return context.deserialize(json, ReplaceColCsv.class);
+			case TYPE_CSV_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowCsv.class);
+			case TYPE_HTML_INSERT: 		return context.deserialize(json, InsertSubsHtml.class);
+			case TYPE_HTML_REPLACE_COL: 	return context.deserialize(json, ReplaceColHtml.class);
+			case TYPE_HTML_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowHtml.class);
+			case TYPE_HTML_REPLACE_MARKUP: return context.deserialize(json, ReplaceMarkupHtml.class);
+			case TYPE_TAG_INSERT: 		return context.deserialize(json, InsertSubsTag.class);
 			default: return null;
 		}
 	}

@@ -40,7 +40,7 @@ public class Require extends AbstractDirective implements Cloneable {
 	 */
 	public Require() {
 		super();
-		setType(TYPE_REQUIRE);
+		setType(Directives.TYPE_REQUIRE);
 		setProvider(null);
 	}
 

@@ -29,10 +29,6 @@ import java.util.ArrayList;
  * @author Mike Storey
  */
 public abstract class AbstractProvider implements Cloneable {
-	public static final int	TYPE_SQL	= 1;
-	public static final int TYPE_TAG	= 2;
-	public static final int TYPE_CSV 	= 3;
-	public static final int TYPE_HTML 	= 4;
 	private transient ArrayList<DataTable> dataTables	= new ArrayList<>();
 	private transient AbstractDirective directive 				= null;
 	private int type;

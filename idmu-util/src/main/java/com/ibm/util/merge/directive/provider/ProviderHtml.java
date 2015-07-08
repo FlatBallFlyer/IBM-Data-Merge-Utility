@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class ProviderHtml extends ProviderHttp {
 	public ProviderHtml() {
 		super();
-		setType(AbstractProvider.TYPE_HTML);
+		setType(Providers.TYPE_HTML);
 	}
 	
 	/**
@@ -69,9 +69,9 @@ public class ProviderHtml extends ProviderHttp {
 			
 			// Find and Process Table Row elements
 			Elements rows = table.select("tr");
-			ArrayList<String> newRow = newTable.getNewRow();;
+			ArrayList<String> newRow = newTable.addNewRow();;
 			for (Element row : rows ) {
-				if (newRow.size() > 0) {newRow = newTable.getNewRow();}
+				if (newRow.size() > 0) {newRow = newTable.addNewRow();}
 				Elements cols = row.select("td");
 				for (Element col : cols ) {
 					newRow.add(col.ownText());

@@ -30,7 +30,7 @@ public class InsertSubsHtml extends InsertSubs implements Cloneable {
 	 */
 	public InsertSubsHtml() {
 		super();
-		setType(TYPE_HTML_INSERT);
+		setType(Directives.TYPE_HTML_INSERT);
 		setProvider(new ProviderHtml());
 	}
 

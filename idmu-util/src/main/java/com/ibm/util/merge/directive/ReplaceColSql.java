@@ -25,7 +25,7 @@ public class ReplaceColSql extends ReplaceCol implements Cloneable {
 	 */
 	public ReplaceColSql() {
 		super();
-		setType(TYPE_SQL_REPLACE_COL);
+		setType(Directives.TYPE_SQL_REPLACE_COL);
 		setProvider(new ProviderSql());
 	}
 

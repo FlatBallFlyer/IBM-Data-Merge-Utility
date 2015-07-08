@@ -31,7 +31,7 @@ public class ReplaceMarkupHtml extends AbstractDirective implements Cloneable {
 	 */
 	public ReplaceMarkupHtml() {
 		super();
-		setType(TYPE_HTML_REPLACE_MARKUP);
+		setType(Directives.TYPE_HTML_REPLACE_MARKUP);
 		setProvider(new ProviderHtml());
 	}
 

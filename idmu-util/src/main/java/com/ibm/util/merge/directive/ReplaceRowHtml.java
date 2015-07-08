@@ -25,7 +25,7 @@ public class ReplaceRowHtml extends ReplaceRow implements Cloneable {
 	 */
 	public ReplaceRowHtml() {
 		super();
-		setType(TYPE_HTML_REPLACE_ROW);
+		setType(Directives.TYPE_HTML_REPLACE_ROW);
 		setProvider(new ProviderHtml());
 	}
 

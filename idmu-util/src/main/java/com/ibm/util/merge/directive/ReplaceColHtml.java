@@ -25,7 +25,7 @@ public class ReplaceColHtml extends ReplaceCol implements Cloneable {
 	 */
 	public ReplaceColHtml() {
 		super();
-		setType(TYPE_HTML_REPLACE_COL);
+		setType(Directives.TYPE_HTML_REPLACE_COL);
 		setProvider(new ProviderHtml());
 	}
 

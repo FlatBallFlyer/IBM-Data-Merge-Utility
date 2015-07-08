@@ -88,9 +88,9 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 			DataTable table = getNewTable();
 			ArrayList<String> row;
 			table.addCol("A");table.addCol("B");table.addCol("C");
-			row = table.getNewRow();
+			row = table.addNewRow();
 			row.add("1");row.add("2");row.add("3");
-			row = table.getNewRow();
+			row = table.addNewRow();
 			row.add("4");row.add("5");row.add("6");
 		}
 

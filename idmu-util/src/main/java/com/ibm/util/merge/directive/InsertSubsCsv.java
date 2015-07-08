@@ -24,7 +24,7 @@ public class InsertSubsCsv extends InsertSubs implements Cloneable {
 	 */
 	public InsertSubsCsv() {
 		super();
-		setType(TYPE_CSV_INSERT);
+		setType(Directives.TYPE_CSV_INSERT);
 		setProvider(new ProviderCsv());
 	}
 

@@ -25,7 +25,7 @@ public class ReplaceColCsv extends ReplaceCol implements Cloneable {
 	 */
 	public ReplaceColCsv() {
 		super();
-		setType(TYPE_CSV_REPLACE_COL);
+		setType(Directives.TYPE_CSV_REPLACE_COL);
 		setProvider(new ProviderCsv());
 	}
 

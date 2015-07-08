@@ -40,7 +40,7 @@ public class ProviderSql extends AbstractProvider implements Cloneable {
 	 */
 	public ProviderSql() {
 		super();
-		setType(AbstractProvider.TYPE_SQL);
+		setType(Providers.TYPE_SQL);
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class ProviderSql extends AbstractProvider implements Cloneable {
 			
 			// Populate the Table Data
 			while (rs.next() ) {
-				ArrayList<String> row = table.getNewRow();
+				ArrayList<String> row = table.addNewRow();
 			    for (int column = 1; column <= columnCount; column++) 
 			    {
 			    	String value = rs.getString(column);

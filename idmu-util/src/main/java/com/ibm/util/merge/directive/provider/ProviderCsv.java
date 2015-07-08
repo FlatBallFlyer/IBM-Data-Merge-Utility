@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class ProviderCsv extends ProviderHttp implements Cloneable {
 	public ProviderCsv() {
 		super();
-		setType(AbstractProvider.TYPE_CSV);
+		setType(Providers.TYPE_CSV);
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public class ProviderCsv extends ProviderHttp implements Cloneable {
 				table.addCol(colName);
 			}
 		    for (CSVRecord record : parser) {
-				ArrayList<String> row = table.getNewRow();
+				ArrayList<String> row = table.addNewRow();
 		    	for (String field : record) {row.add(field);}
 		    }
 		    parser.close();

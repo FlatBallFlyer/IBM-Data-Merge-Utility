@@ -56,7 +56,7 @@ public class DataTable {
 		return theData.get(row).get(col);
 	}
 	
-	public ArrayList<String> getNewRow() {
+	public ArrayList<String> addNewRow() {
 		ArrayList<String> newRow = new ArrayList<>();
 		theData.add(newRow);
 		return newRow;

@@ -30,10 +30,10 @@ public class ProviderDeserializer implements JsonDeserializer<AbstractProvider> 
 		if (jsonType == null) {return null;}
 		int myType = jsonType.getAsInt();
 		switch (myType) {
-			case AbstractProvider.TYPE_CSV: return context.deserialize(json, ProviderCsv.class);
-			case AbstractProvider.TYPE_SQL: return context.deserialize(json, ProviderSql.class);
-			case AbstractProvider.TYPE_TAG: return context.deserialize(json, ProviderTag.class);
-			case AbstractProvider.TYPE_HTML:return context.deserialize(json, ProviderHtml.class);
+			case TYPE_CSV: return context.deserialize(json, ProviderCsv.class);
+			case TYPE_SQL: return context.deserialize(json, ProviderSql.class);
+			case TYPE_TAG: return context.deserialize(json, ProviderTag.class);
+			case TYPE_HTML:return context.deserialize(json, ProviderHtml.class);
 			default: return null;
 		}
 	}

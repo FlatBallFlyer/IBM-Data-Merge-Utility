@@ -26,7 +26,7 @@ public class InsertSubsTag extends InsertSubs implements Cloneable {
 	 */
 	public InsertSubsTag() {
 		super();
-		setType(TYPE_TAG_INSERT);
+		setType(Directives.TYPE_TAG_INSERT);
 		setProvider(new ProviderTag());
 	}
 
