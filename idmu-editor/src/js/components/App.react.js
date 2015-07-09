@@ -50,10 +50,8 @@ var App = React.createClass({
           var key = data[idx].collection;
           var name = data[idx].name;
           uniques[key] = {collection: key};
-          console.log("key="+key);
         }
         var final_list = Object.keys(uniques).map(function(v){ return {collection: v}});
-        console.debug(final_list);
         this.setState({data: final_list,selectedCollection: selectedCollection});
       }.bind(this),
       error: function(xhr, status, err) {
@@ -107,6 +105,8 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
+        var text = data.content.replace(/\<tkBookmark/g,"\<div class=\"tkbookmark\"");
+        data.content = text;
         this.setState({template: data});
       }.bind(this),
       error: function(xhr, status, err) {

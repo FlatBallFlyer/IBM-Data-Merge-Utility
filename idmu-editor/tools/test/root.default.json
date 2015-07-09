@@ -4,7 +4,8 @@
   "name": "default",
   "label": "default",
   "output": "some file",
-  "content": "Long content here ...",
+  "content": "Oops raw what ? ... <tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\"/>    .. end but not {<tkBookmark collection=\"mame\" name=\"myname\"/>} the end<br>",
+  "content_a": "\nContacts for: {NAME}<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" /> But this is only a test slash here=<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" />",
   "bookmarks": [
     {
       "id": "1",
