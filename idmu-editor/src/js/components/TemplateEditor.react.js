@@ -5,7 +5,7 @@ var TemplateEditor = React.createClass({
   handleSave: function(opts) {
     /* <input class="..." other="..." > */
     var content_raw = this.refs.template_body.state.content,
-        content = content_raw.replace(/<input(>|.*?[^?]>)/g,"");
+        content = content_raw.replace(/<a(>|.*?[^?]>)/g,"");
     content = content.replace(/div class=\"tkbookmark\"/g,"tkBookmark");
     content = content.replace(/><\/div>/g,"/>");
     opts.content = content;

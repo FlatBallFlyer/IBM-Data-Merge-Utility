@@ -7,7 +7,7 @@ var BreadCrumb = React.createClass({
     this.props.bCB(this.props.data,this.props.index);
   },
   render: function(){
-    return(<a onClick={this.handleClick} className="bread-crumb">{this.props.data.collection}/{this.props.data.name}</a>);
+    return(<li><a onClick={this.handleClick} className="bread-crumb">{this.props.data.collection}.{this.props.data.name}.{this.props.data.columnName}</a></li>);
   }
 });
 
@@ -26,7 +26,13 @@ var ContentEditable = React.createClass({
     return flag;
   },
   handleBookmarkClick: function(evt){
-    this.props.bCB(evt);
+    console.log($(evt.target).prop('tagName'));
+    if($(evt.target).prop('tagName')==='A'){
+      this.props.bCB(evt);
+    }
+  },
+  handleBookmarkRemove: function(evt){
+    this.props.rCB(evt);
   },
   componentDidUpdate: function() {
         if (this.props.update || this.props.html !== this.getDOMNode().innerHTML) {
@@ -42,7 +48,7 @@ var ContentEditable = React.createClass({
                 if($(el).attr("column")) {
                   tip+= ",column="+$(el).attr("column");
                 }
-                var a=$("<input title=\""+tip+"\" class=\"toberemoved inline btn btn-warning btn-xs\" type=\"button\" value=\"tkBookmark\"/>");
+                var a=$("<a contenteditable=\"false\" title=\""+tip+"\" class=\"toberemoved inline btn btn-primary btn-xs \" type=\"button\" value=\"tkBookmark\">tkBookmark&nbsp;|<span contenteditable=\"false\" class=\"glyphicon glyphicon-remove\"></span></a>");
                 $(el).append(a);
               }
             });
@@ -57,6 +63,7 @@ var ContentEditable = React.createClass({
         }
 
     $(".toberemoved").bind("click",this.handleBookmarkClick);
+    $(".glyphicon-remove").bind("click",this.handleBookmarkRemove);
 
     },
     emitChange: function(){
@@ -75,6 +82,13 @@ var TemplateBody = React.createClass({
     state.content = this.props.data.content; //$.extend(true, {}, this.props.data.template);
     state.crumbs = [];
     return state;
+  },
+  handleBookmarkRemove: function(evt){
+    var el = $(evt.target).parent().parent().remove();
+    var cel = document.getElementById('contenteditable');
+    var html = $(cel).prop('innerHTML');
+    var state = {content: html,update:true};
+    this.setState(state);
   },
   handleBookmarkClick: function(evt){
     var el = $(evt.target).parent();
@@ -122,12 +136,11 @@ var TemplateBody = React.createClass({
   },
   handleInsert: function(collection,name,columnName){
     var el = document.getElementById('contenteditable');
-    el.focus();
     var tip = "collection="+collection+"name="+name;
     if(columnName && columnName.length > 0){
       tip+=",column="+columnName;
     }
-    var bkMark="<div class=\"tkbookmark\" collection=\""+collection+"\" name=\""+name+"\" columnName=\""+columnName+"\"></div>";
+    var bkMark="<div class=\"tkbookmark\" contenteditable=\"false\"  collection=\""+collection+"\" name=\""+name+"\" columnName=\""+columnName+"\"></div>";
     this.pasteHtmlAtCaret(bkMark);
     el = document.getElementById('contenteditable');
 
@@ -152,11 +165,13 @@ var TemplateBody = React.createClass({
         <form>
           <div className="form-group col-xs-12 col-md-12">
             <div className="form-group col-xs-12 col-md-12">
-              {crumbs}
+              <ol className="breadcrumb">
+                {crumbs}
+              </ol>
             </div>
             <div className="form-group col-xs-12 col-md-12">
               <label for="name" className="control-label">Content</label>
-                <ContentEditable html={this.state.content} id="content" onChange={this.handleContentChange} update={this.state.update} bCB={this.handleBookmarkClick}/>
+                <ContentEditable html={this.state.content} id="content" onChange={this.handleContentChange} update={this.state.update} bCB={this.handleBookmarkClick} rCB={this.handleBookmarkRemove}/>
             </div>
           </div>
         </form>

@@ -105,7 +105,7 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
-        var text = data.content.replace(/\<tkBookmark/g,"\<div class=\"tkbookmark\"");
+        var text = data.content.replace(/\<tkBookmark/g,"\<div class=\"tkbookmark\"  contenteditable=\"false\"");
         data.content = text;
         this.setState({template: data});
       }.bind(this),
@@ -187,3 +187,10 @@ var App = React.createClass({
     );
   }
 });
+
+      /*
+         <ol class="breadcrumb">
+         <li><a href="#">Home</a></li>
+         <li><a href="#">Library</a></li>
+           <li class="active">
+       */
