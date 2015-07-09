@@ -1,0 +1,38 @@
+ConnectionFactory 
+ - refactor to "Connection"
+ - implement as "lazy loader" of a single connection
+ - eliminate hash of connections
+ 
+ZipFactory
+ - refactor as "Archive"
+ - "lazy loader" of a single archive 
+ - remove hash of archives
+ 
+Template Factory 
+ - must remain static
+ - refactor getTemplate(Map<String,String[]) to be mergeTemplate(Map)
+   - extend existing getTemplate with these steps 
+     - instantiate a "connection" object 
+     - instantiate a "archive" object
+     - merge the template
+     - close connection
+     - close archive
+     - return output
+ - refactor getTemplates(String) 
+   - getTemplates(String collection, String name, String column)
+   - gets list of templates for values provided (ie name, column are "all" when empty)
+ - Implement delete(fullname) 
+   - remove from source[file or db] and cache
+ - Clean up the DB vs. Non-DB behaviour
+  	- Always get from cache - remove DB logic from getTemplate(String,String,Hash) 
+  	- "Load All" from db or files
+  	- combine "reset" and "loadAll" into a single "initlize" method
+ 
+Public Inteface for TemplateFactory.mergeTemplate() is ONLY these methods:
+ - loadAll()
+ - mergeTemplate(Map)
+ - getTemplates(String,String,String)
+ - getCollections()
+ - deleteTemplate(fullname)
+Refactor all other methods to be "protected"?
+   
