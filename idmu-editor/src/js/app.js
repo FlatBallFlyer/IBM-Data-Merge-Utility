@@ -12,7 +12,7 @@ $(document).ready(function(){
   //$(".dropdown-button").dropdown();
   React.initializeTouchEvents(true);
   React.render(
-    <App />,
+    <div className="container"><App suppressCollection={false} suppressRibbon={false}/></div>,
     document.getElementById("app_view")
   );
 });

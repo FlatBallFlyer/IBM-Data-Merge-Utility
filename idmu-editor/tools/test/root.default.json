@@ -4,7 +4,7 @@
   "name": "default",
   "label": "default",
   "output": "some file",
-  "content": "Oops rawthis asd asd <br>asd asd<br><br><br><br>This is next<br>",
+  "content": "Take <tkBookmark collection=\"contact\" name=\"type\" /> Take <tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" />",
   "content_a": "\nContacts for: {NAME}<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" /> But this is only a test slash here=<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" />",
   "bookmarks": [
     {

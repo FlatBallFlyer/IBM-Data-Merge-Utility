@@ -17,7 +17,7 @@ var TemplateCollection = React.createClass({
     return(
       <div className="row no-margin">
         <form className="form-vertical">
-          <div className="form-group">
+          <div className="form-group  col-sm-6">
             <label for="template-collection" className="col-sm-4 control-label control-label-big">Collections</label>
             <div className="col-sm-12">
               

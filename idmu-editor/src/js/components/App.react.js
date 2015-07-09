@@ -49,6 +49,7 @@ var App = React.createClass({
         for(var idx=0; idx < data.length; idx++) {
           var key = data[idx].collection;
           var name = data[idx].name;
+          var columnValue = data[idx].columnValue;
           uniques[key] = {collection: key};
         }
         var final_list = Object.keys(uniques).map(function(v){ return {collection: v}});
@@ -68,9 +69,10 @@ var App = React.createClass({
       data: params,
       success: function(data) {
         this.setState({templates: data,selectedCollection: collection}, function(){
-          var sel = this.state.selectedRibbonItem || data[0];
-          this.loadTemplateFromServer(sel.collection,sel.name,sel.columnValue);
-          
+          if(!this.props.suppressCollection){
+            var sel = this.state.selectedRibbonItem || data[0];
+            this.loadTemplateFromServer(sel.collection,sel.name,sel.columnValue);
+          }
         }.bind(this));
         
       }.bind(this),
@@ -94,6 +96,29 @@ var App = React.createClass({
       }.bind(this)
     });
   },
+  buildBodyItems: function(content){
+    var result=[];
+    var reg=new RegExp(/<tkBookmark/g);
+    var items=[];
+    var sIdx = 0;
+    var eIdx = 0;
+    var found = false;
+    while((result = reg.exec(content)) !== null) {
+      eIdx = content.indexOf("/>",result.index);
+      if(eIdx!=-1){
+        var slice1 = content.slice(sIdx,result.index);
+        var slice2 = content.slice(result.index,eIdx+2);
+        sIdx = eIdx+2;
+        items.push({type: 'text',slice: slice1});
+        items.push({type: 'bookmark',slice: slice2});
+      }
+    }
+    var slice = content.slice(sIdx);
+    if(slice && slice.length > 0){
+                                  items.push({type: 'text', slice: slice});
+                                  }
+    return items;
+  },
   loadTemplateFromServer: function(collection,id,columnValue) {
     var params = {};
     if(columnValue){
@@ -105,9 +130,11 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
-        var text = data.content.replace(/\<tkBookmark/g,"\<div class=\"tkbookmark\"  contenteditable=\"false\"");
-        data.content = text;
-        this.setState({template: data});
+                                                               data.items = this.buildBodyItems(data.content);
+                                                               var text = data.content.replace(/\<tkBookmark/g,"\<div class=\"tkbookmark\"  contenteditable=\"false\"");
+                                                               data.content = text;
+                                                               console.log(data.items);
+                                                               this.setState({template: data});
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -169,28 +196,34 @@ var App = React.createClass({
     this.loadTemplatesFromServer(this.state.selectedCollection);
   },
   render: function() {
-    var mCB = this.moveItemBetweenList;
-    var aCB = this.moveItemWithinList;
-    var sCB = this.handleSave;
-    var dCB = this.saveDirective;
     return (
-      <div className="container app_view">
+      <div className="app_view">
         <div id="template_collection" className="row template_collection">
-          <TemplateCollection selectHandler={this.handleCollectionSelected} data={this.state}/>
+          {this.header()}
         </div>
         <div id="template_ribbon" className="row template_ribbon">
-          <div className="container">
-            <TemplateRibbon initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB}/>
+          <div>
+                      {this.ribbon()}
           </div>
         </div>
       </div>
     );
-  }
-});
+  },
 
-      /*
-         <ol class="breadcrumb">
-         <li><a href="#">Home</a></li>
-         <li><a href="#">Library</a></li>
-           <li class="active">
-       */
+  header: function(){
+                     if(!this.props.suppressCollection){
+                       return(<TemplateCollection suppress={this.props.suppressCollection} selectHandler={this.handleCollectionSelected} data={this.state}/>);
+                     }else{return (<div/>);}
+},
+      ribbon: function(){
+                         if(!this.props.suppressRibbon){
+                           var mCB = this.moveItemBetweenList;
+                           var aCB = this.moveItemWithinList;
+                           var sCB = this.handleSave;
+                           var dCB = this.saveDirective;
+                           return(<TemplateRibbon  suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB}/>);
+                         }else{
+                           return(<div/>);
+                         }
+                         }
+});

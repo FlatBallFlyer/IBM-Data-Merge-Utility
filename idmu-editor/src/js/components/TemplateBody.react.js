@@ -79,7 +79,7 @@ var TemplateBody = React.createClass({
   mixins: [TextEditMixin],
   getInitialState: function() {
     var state = {};
-    state.content = this.props.data.content; //$.extend(true, {}, this.props.data.template);
+    state.content = this.props.content;
     state.crumbs = [];
     return state;
   },
@@ -100,7 +100,7 @@ var TemplateBody = React.createClass({
   },
   componentWillReceiveProps: function(nextProps) {
     var state = {};
-    state.content = nextProps.data.template.content;
+    state.content = nextProps.content.content;
     this.setState(state);
   },
   handleContentChange: function(evt){
