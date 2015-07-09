@@ -2,85 +2,34 @@
  * @jsx React.DOM
  */
 
-var InsertBookmarkTrigger = React.createClass({
-  handleClick: function(e) {
-    console.log("open modal");
-    var el = this.refs.bookmark_editor.getDOMNode();
-    $(el).modal();
+var BreadCrumb = React.createClass({
+  handleClick: function() {
+    this.props.bCB(this.props.data,this.props.index);
   },
-  render: function() {
-    var iCB = this.props.iCB;
-    return(
-      <div>
-        <span className="btn btn-primary" onClick={this.handleClick}>Insert Template</span>
-        <BookmarkEditor  key={this.props.title}  ref="bookmark_editor" title={this.props.title} iCB={iCB}/>
-      </div>
-    );
-  }
-});
-
-var BookmarkEditor = React.createClass({
-  mixins: [TextEditMixin,ModalMixin],
-  getInitialState: function() {
-    return({collection:'', name: '', columnName: ''});
-  },
-  handleSave: function(e) {
-    this.props.iCB(this.state.collection,this.state.name,this.state.columnName);
-  },
-  render: function() {
-    return (
-      <div onClick={this.handleClick} className="modal" role="dialog" aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>Insert Bookmark</h3>
-            </div>
-            <div className="modal-body">
-              <div className="row">
-                <div className="col-lg-12">
-                  <form>
-                    <div className="form-group col-xs-6 col-md-6">
-                      <label for="description" className="control-label">Collection</label>
-                      <input  onChange={this.handleTextEditChange} className="form-control" id="collection" type="text" value={this.state.collection}/>
-                    </div>
-                    <div className="form-group col-xs-6 col-md-6">
-                      <label for="description" className="control-label">Name</label>
-                      <input  onChange={this.handleTextEditChange} className="form-control" id="name" type="text" value={this.state.name}/>
-                    </div>
-                    <div className="form-group col-xs-6 col-md-6">
-                      <label for="description" className="control-label">Column Name</label>
-                      <input  onChange={this.handleTextEditChange} className="form-control" id="columnName" type="text" value={this.state.columnName}/>
-                    </div>
-                  </form>
-                </div>
-              </div>              
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-default" data-dismiss="modal">Cancel</button>
-              <button onClick={this.handleSave} type="button" className="btn btn-primary">Insert</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  render: function(){
+    return(<a onClick={this.handleClick} className="bread-crumb">{this.props.data.collection}/{this.props.data.name}</a>);
   }
 });
 
 var ContentEditable = React.createClass({
-    render: function(){
-      return(<div id="contenteditable"
-                  className="ce_block"
-            onInput={this.emitChange} 
-            onBlur={this.emitChange}
-            contentEditable
-            dangerouslySetInnerHTML={{__html: this.props.html}}></div>);
-    },
-
-    shouldComponentUpdate: function(nextProps){
-        return nextProps.html !== this.getDOMNode().innerHTML;
-    },
-    componentDidUpdate: function() {
-        if ( this.props.html !== this.getDOMNode().innerHTML ) {
+  render: function(){
+    return(<div id="contenteditable"
+                bCB={this.props.bCB}
+                className="ce_block"
+                onInput={this.emitChange} 
+                onBlur={this.emitChange}
+                contentEditable
+                dangerouslySetInnerHTML={{__html: this.props.html}}></div>);
+  },
+  shouldComponentUpdate: function(nextProps){
+    var flag = ((nextProps.html !== this.getDOMNode().innerHTML) || (nextProps.update===true));
+    return flag;
+  },
+  handleBookmarkClick: function(evt){
+    this.props.bCB(evt);
+  },
+  componentDidUpdate: function() {
+        if (this.props.update || this.props.html !== this.getDOMNode().innerHTML) {
           var els = $.parseHTML(this.props.html);
           if(els){
             els.forEach(function(el){
@@ -106,6 +55,9 @@ var ContentEditable = React.createClass({
             this.getDOMNode().innerHTML = this.props.html;
           }
         }
+
+    $(".toberemoved").bind("click",this.handleBookmarkClick);
+
     },
     emitChange: function(){
         var html = this.getDOMNode().innerHTML;
@@ -119,15 +71,26 @@ var ContentEditable = React.createClass({
 var TemplateBody = React.createClass({
   mixins: [TextEditMixin],
   getInitialState: function() {
-    return $.extend(true, {}, this.props.data.template);
+    var state = {};
+    state.content = this.props.data.content; //$.extend(true, {}, this.props.data.template);
+    state.crumbs = [];
+    return state;
+  },
+  handleBookmarkClick: function(evt){
+    var el = $(evt.target).parent();
+    var crumbs = this.state.crumbs;
+    crumbs.push({collection: $(el).attr('collection'),
+                 name: $(el).attr('name'),
+                 columnName: $(el).attr('columnName')});
+    this.setState({crumbs: crumbs});
   },
   componentWillReceiveProps: function(nextProps) {
-    this.setState(nextProps.data.template);
+    var state = {};
+    state.content = nextProps.data.template.content;
+    this.setState(state);
   },
   handleContentChange: function(evt){
-    this.lastHtml = evt.target.value;
-    //console.log(this.lastHtml);
-    this.setState({content: this.lastHtml});
+    //this.setState({content: this.lastHtml});
   },
   pasteHtmlAtCaret: function(html) {
     /*taken from stackexchange http://stackoverflow.com/a/6691294 */
@@ -157,26 +120,43 @@ var TemplateBody = React.createClass({
       }
     }
   },
-  handleInsert: function(colllection,name,columnName){
+  handleInsert: function(collection,name,columnName){
     var el = document.getElementById('contenteditable');
     el.focus();
     var tip = "collection="+collection+"name="+name;
     if(columnName && columnName.length > 0){
       tip+=",column="+columnName;
     }
-    var bkMark="<div class=\"tkbookmark\" collection=\""+collection+"\" name=\""+name+"\" columnName=\""+columnName+"\"><input title=\""+tip+"\" class=\"toberemoved inline btn btn-warning btn-xs\" type=\"button\" value=\"tkBookmark..\"/></div>";
+    var bkMark="<div class=\"tkbookmark\" collection=\""+collection+"\" name=\""+name+"\" columnName=\""+columnName+"\"></div>";
     this.pasteHtmlAtCaret(bkMark);
-    this.setState({content: $(el).prop('innerHTML')});
+    el = document.getElementById('contenteditable');
+
+    var state = {content: $(el).prop('innerHTML'),update:true};
+    this.setState(state);
+  },
+  handleBreadCrumbClick:function(opt,index){
+    var crumbs=[];
+    if(index < this.state.crumbs.length-1){
+      crumbs = this.state.crumbs.slice(0,index+1);
+      this.setState({crumbs: crumbs});
+    }
   },
   render: function(){
     var title = "Insert Bookmark";
+    var bCB = this.handleBreadCrumbClick;
+    var crumbs = this.state.crumbs.map(function(opt,i){
+      return(<BreadCrumb key={i} index={i} bCB={bCB} data={opt}/>);
+    });
     return(
-      <div className="row no-margin      ribbon-inside">
+      <div className="row no-margin ribbon-inside">
         <form>
           <div className="form-group col-xs-12 col-md-12">
             <div className="form-group col-xs-12 col-md-12">
+              {crumbs}
+            </div>
+            <div className="form-group col-xs-12 col-md-12">
               <label for="name" className="control-label">Content</label>
-                <ContentEditable html={this.state.content} id="content" onChange={this.handleContentChange}/>
+                <ContentEditable html={this.state.content} id="content" onChange={this.handleContentChange} update={this.state.update} bCB={this.handleBookmarkClick}/>
             </div>
           </div>
         </form>

@@ -83,6 +83,10 @@
     overflow-y: auto;
 }
 
+.bread-crumb{
+    margin-left: 5px;
+}
+
 /*moron*/
 
 /* content styles */
