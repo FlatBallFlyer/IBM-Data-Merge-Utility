@@ -6,9 +6,9 @@
 if [ -f sample-context.xml ]; then
     set -evx
     PROJECT_BASE_DIR="$(readlink -f "..")"
-    cd ..
+    cd ../idmu-war
     mvn tomcat7:run
-    cd build
+    cd ../build
 else
     echo "Need to run from inside the build dir at <idmu_project_dir>/build : "
     echo "./build.sh"
