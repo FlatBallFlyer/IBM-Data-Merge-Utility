@@ -62,7 +62,7 @@ public class TemplateTest {
 
 		jsonProxy = new DefaultJsonProxy();
 		rtc = TestUtils.createDefaultRuntimeContext();
-		rtc.initialize("/tmp/merge");
+		rtc.initialize();
 		ReplaceValue directive = new ReplaceValue();
 		directive.setFrom("Foo");
 		directive.setTo("Test Foo Value");

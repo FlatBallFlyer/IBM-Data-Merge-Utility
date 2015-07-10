@@ -57,17 +57,17 @@ final public class TemplateFactory {
      * The KEY_CACHE_RESET parameter will reset the Template Cache.
      * The KEY_CACHE_LOAD parameter will load all templates</p>
      *
-     * @param request HttpServletRequest
+     * @param requestParameters HttpServletRequest
      * @return Template The new Template object
      * @see Template
      */
-    public Template getTemplate(Map<String, String[]> request) {
+    public Template getTemplate(Map<String, String[]> requestParameters) {
         HashMap<String, String> replace = new HashMap<>();
         // Open the "Default" template if if not specified.
         replace.put(KEY_FULLNAME, DEFAULT_FULLNAME);
         // Iterate parameters, setting replace values
-        for (String key : request.keySet()) {
-            String value = request.get(key)[0];
+        for (String key : requestParameters.keySet()) {
+            String value = requestParameters.get(key)[0];
             replace.put(Template.wrap(key), value);
         }
         // Handle cache reset request
@@ -85,7 +85,7 @@ final public class TemplateFactory {
         log.info("GET TEMPLATE = " + fullName);
         Template rootTemplate = getTemplate(fullName, "", replace);
         if (rootTemplate == null) {
-            throw new IllegalArgumentException("Could not find template for request " + new HashMap<>(request).toString());
+            throw new IllegalArgumentException("Could not find template for request " + new HashMap<>(requestParameters).toString());
         }
         return rootTemplate;
     }
@@ -119,7 +119,6 @@ final public class TemplateFactory {
             templateCache.cache(fullName, newTemplate);
             log.info("Constructed Template: " + fullName);
             newTemplate = templateCache.get(fullName).clone(seedReplace);
-//            }
         }
         // Check for shortName in the cache, since fullName doesn't exist
         if (newTemplate == null && templateCache.isCached(shortName)) {
@@ -145,7 +144,6 @@ final public class TemplateFactory {
      *
      * @param request HttpServletRequest
      * @return JSON List of Collection Names
-     * @throws MergeException
      * @see Template
      */
     public String getCollectionNamesJSON() {

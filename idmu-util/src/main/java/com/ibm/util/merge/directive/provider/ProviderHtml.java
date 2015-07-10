@@ -59,7 +59,7 @@ public class ProviderHtml extends ProviderHttp {
 
 		// for each (find) {
 		for (Element table : tables) {
-			DataTable newTable = getNewTable();
+			DataTable newTable = addNewTable();
 			
 			// Find and Process Table Header elements
 			Elements headers = table.select("th");

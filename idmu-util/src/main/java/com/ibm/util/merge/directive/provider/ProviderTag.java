@@ -59,7 +59,7 @@ public class ProviderTag extends AbstractProvider implements Cloneable {
 	@Override
 	public void getData(ConnectionFactory cf) throws MergeException {
 		reset();
-		DataTable table = getNewTable();
+		DataTable table = addNewTable();
 		Template template = getDirective().getTemplate();
 		String theTag = Template.wrap(tag);
 		

@@ -30,6 +30,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,11 +40,14 @@ import java.util.Map;
 public class InitializeServlet extends HttpServlet {
     private Logger log = Logger.getLogger(InitializeServlet.class);
     private String warTemplatesPath = "/WEB-INF/templates";
-    private String outputDirPath = "/tmp/merge";
+    private File outputDirPath = new File("/tmp/merge");
     private final List<RequestHandler> handlerChain = new ArrayList<>();
     private Map<String, String> servletInitParameters;
 
     public InitializeServlet() {
+        if(!outputDirPath.exists()){
+            outputDirPath.mkdirs();
+        }
     }
 
     /**
@@ -59,12 +63,12 @@ public class InitializeServlet extends HttpServlet {
     private void initializeApp(ServletContext servletContext) {
         handlerChain.clear();
         handlerChain.addAll(createHandlerInstances());
-        String fullPath = servletContext.getRealPath(warTemplatesPath);
+        File templatesDirPath = new File(servletContext.getRealPath(warTemplatesPath));
         PrettyJsonProxy jsonProxy = new PrettyJsonProxy();
-        FilesystemPersistence fs = new FilesystemPersistence(fullPath, jsonProxy, System.getProperty(outputDirPath));
+        FilesystemPersistence fs = new FilesystemPersistence(templatesDirPath, jsonProxy, outputDirPath);
         TemplateFactory tf = new TemplateFactory(fs);
         RuntimeContext rtc = new RuntimeContext(tf);
-        rtc.initialize(outputDirPath);
+        rtc.initialize();
         servletContext.setAttribute("rtc", rtc);
         for (RequestHandler handler : handlerChain) {
             log.info("Initializing handler " + handler.getClass().getName());
@@ -97,7 +101,7 @@ public class InitializeServlet extends HttpServlet {
         String outputRootDir = servletInitParameters.get("merge-output-root");
         if (outputRootDir != null) {
             log.info("Setting from ServletConfig: outputDirPath=" + outputRootDir);
-            outputDirPath = outputRootDir;
+            outputDirPath = new File(outputRootDir);
         }
     }
 

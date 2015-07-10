@@ -32,9 +32,9 @@ import static org.junit.Assert.assertEquals;
 
 public class IntegrationTestingJdbcProvider {
 	HashMap<String, String[]> parameterMap;
-	String templateDir 	= "integration/templates/";
-	String outputDir 	= "integration/output/"; 
-	String validateDir 	= "integration/valid/";
+	File templateDir 	= new File("integration/templates/");
+	File outputDir 	= new File("integration/output/");
+	File validateDir 	= new File("integration/valid/");
 
 	private RuntimeContext rtc;
 

@@ -38,7 +38,7 @@ public abstract class ProviderTest {
 	@Test
 	public void testReset() {
 		provider.reset();
-		DataTable table = provider.getNewTable();
+		DataTable table = provider.addNewTable();
 		assertNotNull(table);
 		assertEquals(1, provider.size());
 	}
@@ -46,7 +46,7 @@ public abstract class ProviderTest {
 	@Test
 	public void testGetTable() {
 		assertEquals(0, provider.size());
-		provider.getNewTable();
+		provider.addNewTable();
 		assertEquals(1, provider.size());
 	}
 
@@ -63,7 +63,7 @@ public abstract class ProviderTest {
 	@Test
 	public void testGetNewTable() {
 		provider.reset();
-		DataTable newTable = provider.getNewTable();
+		DataTable newTable = provider.addNewTable();
 		assertNotNull(newTable);
 		assertEquals(1,provider.size());
 	}

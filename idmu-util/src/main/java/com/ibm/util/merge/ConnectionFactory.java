@@ -17,12 +17,12 @@
 
 package com.ibm.util.merge;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-import java.sql.Connection;
+import com.ibm.idmu.api.SqlOperation;
+import com.ibm.util.merge.db.ConnectionPoolManager;
+import com.ibm.idmu.api.PoolManager;
+
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * A connection factory for JNDI Data Sources that cache's Database Connections for 
@@ -33,69 +33,77 @@ import java.sql.SQLException;
  */
 public final class ConnectionFactory {
 
-	private final String jndiPrefix;
+	private final PoolManager poolManager;
 
 	public ConnectionFactory() {
-		jndiPrefix = "java:/comp/env/jdbc/";
+		this(new ConnectionPoolManager());
 	}
 
-	public ConnectionFactory(String jndiPrefix) {
-		this.jndiPrefix = jndiPrefix;
-	}
-
-	public <T>T runSqlOperation(String jndiSource, SqlOperation<T> operation){
-		Connection con = null;
-		try {
-			DataSource dataSource = lookupDataSource(jndiSource);
-			con = dataSource.getConnection();
-			T out = operation.execute(con);
-			return out;
-		} catch (NamingException e) {
-			throw new DataSourceLookupException(jndiSource, e);
-		} catch (SQLException e) {
-			throw new SqlOperationException(jndiSource, operation, e);
-		} finally {
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+	public ConnectionFactory(PoolManager poolManager) {
+		if(!poolManager.isPoolName("TIA")){
+			System.out.println("Adding dev datasources");
+			try {
+				poolManager.loadDriverClass("com.mysql.jdbc.Driver");
+				poolManager.createPool("tiaDB", "jdbc:mysql://localhost:3306/TIA", "root", "kanaal2");
+				poolManager.createPool("testgenDB", "jdbc:mysql://localhost:3306/testgen", "root", "kanaal2");
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		}
+		this.poolManager = poolManager;
+	}
+
+	public <T>T runSqlOperation(String poolName, SqlOperation<T> operation){
+		try {
+			return poolManager.runWithPool(poolName, operation);
+		} catch (SQLException e) {
+			throw new SqlOperationException(poolName, operation, e);
+		}
 
 	}
 
-	protected DataSource lookupDataSource(String jndiSourceName) throws NamingException {
-		Context initContext = new InitialContext();
-		return (DataSource) initContext.lookup(jndiPrefix + jndiSourceName);
+	public void closePool(String poolName) throws SQLException {
+		poolManager.closePool(poolName);
 	}
 
-	public static class DataSourceLookupException extends RuntimeException{
-		private String jndiSource;
+	public boolean isPoolName(String poolName) {
+		return poolManager.isPoolName(poolName);
+	}
 
-		public DataSourceLookupException(String jndiSource, NamingException e) {
-			super("Error looking up datasource " + jndiSource, e);
-			this.jndiSource = jndiSource;
-		}
+	public void createPool(String poolName, String jdbcConnectionUrl) throws Exception {
+		poolManager.createPool(poolName, jdbcConnectionUrl);
+	}
 
-		public String getJndiSource() {
-			return jndiSource;
-		}
+	public void createPool(String poolName, String jdbcConnectionUrl, String username, String password) throws Exception {
+		poolManager.createPool(poolName, jdbcConnectionUrl, username, password);
+	}
+
+	public void createPool(String poolName, String jdbcConnectionUrl, Properties properties) throws Exception {
+		poolManager.createPool(poolName, jdbcConnectionUrl, properties);
+	}
+
+	public void loadDriverClass(String driverClassPath) throws ClassNotFoundException {
+		poolManager.loadDriverClass(driverClassPath);
+	}
+
+	public void reset() {
+		poolManager.reset();
 	}
 
 	public static class SqlOperationException extends RuntimeException{
-		private String jndiSource;
+		private String poolName;
 		private SqlOperation operation;
 
-		public SqlOperationException(String jndiSource, SqlOperation operation, SQLException e) {
-			super("Error executing SqlOperation with datasource " + jndiSource, e);
-			this.jndiSource = jndiSource;
+		public SqlOperationException(String poolName, SqlOperation operation, Exception e) {
+			super("Error executing SqlOperation with poolname " + poolName, e);
+			this.poolName = poolName;
 			this.operation = operation;
 		}
 
-		public String getJndiSource() {
-			return jndiSource;
+		public String getPoolName() {
+			return poolName;
 		}
 
 		public SqlOperation getOperation() {

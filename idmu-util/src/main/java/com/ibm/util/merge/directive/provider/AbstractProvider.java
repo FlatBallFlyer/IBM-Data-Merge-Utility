@@ -23,108 +23,110 @@ import com.ibm.util.merge.directive.AbstractDirective;
 import java.util.ArrayList;
 
 /**
- * A data provider for standard merge processes. The data provider normalized the view of 
+ * A data provider for standard merge processes. The data provider normalized the view of
  * tabular data to a collection of DataTable objects, which are simple Array of Array<String> structures
- * 
+ *
  * @author Mike Storey
  */
 public abstract class AbstractProvider implements Cloneable {
-	private transient ArrayList<DataTable> dataTables	= new ArrayList<>();
-	private transient AbstractDirective directive 				= null;
-	private int type;
+    private transient ArrayList<DataTable> dataTables = new ArrayList<>();
+    private transient AbstractDirective directive = null;
+    private int type;
 
-	/**
-	 * Simple constructor
-	 * @param 
-	 */
-	public AbstractProvider() {
-		super();
-	}
-	
-	/**
-	 * Simple clone constructor
-	 * @param newOwner - The new Directive this is being cloned for
-	 * @return the cloned Provider
-	 * @throws CloneNotSupportedException
-	 */
-	@Override
-	public AbstractProvider clone() throws CloneNotSupportedException {
-		AbstractProvider newProvider = (AbstractProvider) super.clone();
+    /**
+     * Simple constructor
+     *
+     * @param
+     */
+    public AbstractProvider() {
+        super();
+    }
 
+    /**
+     * Simple clone constructor
+     *
+     * @param newOwner - The new Directive this is being cloned for
+     * @return the cloned Provider
+     * @throws CloneNotSupportedException
+     */
+    @Override
+    public AbstractProvider clone() throws CloneNotSupportedException {
+        AbstractProvider newProvider = (AbstractProvider) super.clone();
+        newProvider.directive = null;
+        newProvider.dataTables = new ArrayList<>();
+        return newProvider;
+    }
 
-		newProvider.directive = null;
-		newProvider.dataTables = new ArrayList<>();
-		return newProvider;
-	}
-	
-	/**
-	 * @return a new DataTable object that has been added to the Provider Tables collection
-	 */
-	public DataTable getNewTable() {
-		DataTable newTable = new DataTable();
-		dataTables.add(newTable);
-		return newTable;
-	}
+    /**
+     * @return a new DataTable object that has been added to the Provider Tables collection
+     */
+    public DataTable addNewTable() {
+        DataTable newTable = new DataTable();
+        dataTables.add(newTable);
+        return newTable;
+    }
 
-	/**
-	 * @return A new DataTable that has been added to an EMPTY collection.
-	 */
-	public void reset() {
-		dataTables = new ArrayList<>();
-	}
-	
-	/**
-	 * @param i
-	 * @return The specified DataTable
-	 */
-	public DataTable getTable(int i) {
-		if (i < 0 || i >= dataTables.size()) {return null;}
-		return dataTables.get(i);
-	}
+    /**
+     * @return A new DataTable that has been added to an EMPTY collection.
+     */
+    public void reset() {
+        dataTables = new ArrayList<>();
+    }
 
-	/**
-	 * This is the method called to request data from the provider. 
-	 * Each provider will fetch data and populate the Provider DataTables structures
-	 * 
-	 * @throws MergeException
-	 * @param cf
-	 */
-	public abstract void getData(ConnectionFactory cf) throws MergeException;
-	
-	/**
-	 * Each provider should implement this method to provide Context about the query
-	 * to be used in logging and exception handling.
-	 * @return
-	 */
-	public abstract String getQueryString();
-	
-	/**
-	 * @return The DataTables ArrayList
-	 */
-	public ArrayList<DataTable> getTables() {
-		return dataTables;
-	}
-	
-	/**
-	 * @return The number of Data Tables 
-	 */
-	public int size() {
-		return dataTables.size();
-	}
+    /**
+     * @param i
+     * @return The specified DataTable
+     */
+    public DataTable getTable(int i) {
+        if (i < 0 || i >= dataTables.size()) {
+            return null;
+        }
+        return dataTables.get(i);
+    }
 
-	public AbstractDirective getDirective() {
-		return directive;
-	}
+    /**
+     * This is the method called to request data from the provider.
+     * Each provider will fetch data and populate the Provider DataTables structures
+     *
+     * @param cf
+     * @throws MergeException
+     */
+    public abstract void getData(ConnectionFactory cf) throws MergeException;
+    /**
+     * Each provider should implement this method to provide Context about the query
+     * to be used in logging and exception handling.
+     *
+     * @return
+     */
+    public abstract String getQueryString();
 
-	public void setDirective(AbstractDirective directive) {
-		this.directive = directive;
-	}
+    /**
+     * @return The DataTables ArrayList
+     */
+    public ArrayList<DataTable> getTables() {
+        return dataTables;
+    }
 
-	public int getType() {
-		return type;
-	}
+    /**
+     * @return The number of Data Tables
+     */
+    public int size() {
+        return dataTables.size();
+    }
 
-	public void setType(int type) {
-		this.type = type;
-	}
+    public AbstractDirective getDirective() {
+        return directive;
+    }
+
+    public void setDirective(AbstractDirective directive) {
+        this.directive = directive;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 }

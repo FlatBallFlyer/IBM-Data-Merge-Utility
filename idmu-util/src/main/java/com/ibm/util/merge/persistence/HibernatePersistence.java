@@ -86,10 +86,11 @@ public class HibernatePersistence {
     }
 
     public static SessionFactory constructSessionFactory() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-        return configuration.buildSessionFactory(serviceRegistry);
+        Configuration conf = new Configuration();
+        conf.configure();
+        StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder().applySettings(conf.getProperties());
+        ServiceRegistry serviceRegistry = registryBuilder.build();
+        return conf.buildSessionFactory(serviceRegistry);
     }
 
     public void deleteTemplate(Template template) {

@@ -33,9 +33,9 @@ import static org.junit.Assert.fail;
 
 public class IntegrationSafety {
 	HashMap<String, String[]> parameterMap;
-	String templateDir 	= "src/test/resources/templates/";
-	String outputDir 	= "src/test/resources/testout/"; 
-	String validateDir 	= "src/test/resources/valid/";
+	File templateDir 	= new File("src/test/resources/templates/");
+	File outputDir 	= new File("src/test/resources/testout/");
+	File validateDir 	= new File("src/test/resources/valid/");
 
 	private RuntimeContext rtc;
 
@@ -49,13 +49,13 @@ public class IntegrationSafety {
 //		zf.setOutputRoot(outputDir);
 		
 		// Reset the output directory
-		FileUtils.cleanDirectory(new File(outputDir)); 
+		FileUtils.cleanDirectory(outputDir);
 		parameterMap = new HashMap<>();
 	}
 
 	@After
 	public void teardown() throws IOException {
-		FileUtils.cleanDirectory(new File(outputDir)); 
+		FileUtils.cleanDirectory(outputDir);
 	}
 	
 	@Test

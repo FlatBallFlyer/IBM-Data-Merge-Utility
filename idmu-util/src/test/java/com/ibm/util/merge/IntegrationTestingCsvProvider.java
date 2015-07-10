@@ -64,9 +64,9 @@ public class IntegrationTestingCsvProvider {
 	public void setup() throws MergeException, IOException {
 		// Initialize Factories
 		FileUtils.cleanDirectory(outputDir);
-		rtc = TestUtils.createRuntimeContext(templateDir.getAbsolutePath(), "/tmp/merge");
+		rtc = TestUtils.createRuntimeContext(templateDir, new File("/tmp/merge"));
 		// Reset the output directory
-		rtc.initialize(outputDir.getAbsolutePath());
+		rtc.initialize();
 
 
 		// Initialize requestMap (usually from request.getParameterMap())

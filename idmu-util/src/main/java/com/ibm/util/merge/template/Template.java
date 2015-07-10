@@ -367,7 +367,7 @@ public class Template implements Cloneable {
      * @return the full name (i.e. collection + Name + Column)
      */
     public String getFullName() {
-        return collection + "." + name + "." + columnValue;
+        return collection + "." + name + "." + (columnValue == null ? "" : columnValue);
     }
 
     public List<Bookmark> getBookmarks() {

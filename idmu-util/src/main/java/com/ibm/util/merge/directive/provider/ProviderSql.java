@@ -18,7 +18,7 @@ package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.SqlOperation;
+import com.ibm.idmu.api.SqlOperation;
 import com.ibm.util.merge.directive.AbstractDirective;
 import org.apache.log4j.Logger;
 
@@ -63,7 +63,7 @@ public class ProviderSql extends AbstractProvider implements Cloneable {
     @Override
     public void getData(ConnectionFactory cf) throws MergeException {
         reset();
-        DataTable table = getNewTable();
+        DataTable table = addNewTable();
         String queryString = getQueryString();
         log.info(getDirective().getTemplate().getFullName() + " Selecting SQL Data " + queryString);
         cf.runSqlOperation(source, new SqlOperation<Void>() {

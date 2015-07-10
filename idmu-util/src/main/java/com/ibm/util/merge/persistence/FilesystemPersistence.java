@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,16 +22,25 @@ public class FilesystemPersistence {
 
     private Logger log = Logger.getLogger(FilesystemPersistence.class);
 
-    private String templateFolder;
+    private final File templateFolder;
 
-    private String outputRoot;
+    private final File outputRoot;
 
-    private JsonProxy jsonProxy;
+    private final JsonProxy jsonProxy;
 
-    public FilesystemPersistence(String templateFolder, JsonProxy jsonProxy, String outputRoot) {
+    public FilesystemPersistence(File templateFolder, JsonProxy jsonProxy, File outputRoot) {
+        if(templateFolder == null) throw new IllegalArgumentException("Missing templateFolder");
+        if(outputRoot== null) throw new IllegalArgumentException("Missing outputRoot");
+        if(jsonProxy == null) throw new IllegalArgumentException("Missing jsonProxy");
         this.templateFolder = templateFolder;
         this.jsonProxy = jsonProxy;
         this.outputRoot = outputRoot;
+        if (!Files.exists(outputRoot.toPath())) {
+            throw new OutputDirectoryPathDoesNotExistException(outputRoot.getAbsolutePath());
+        }
+        if (!Files.isDirectory(outputRoot.toPath())) {
+            throw new NonDirectoryAtOutputDirectoryPathException(outputRoot.getAbsolutePath());
+        }
     }
 
     /**********************************************************************************
@@ -41,23 +52,18 @@ public class FilesystemPersistence {
      */
     public List<Template> loadAll() {
         List<Template> templates = new ArrayList<>();
-        if (templateFolder == null || templateFolder.isEmpty()) {
-            return templates;
-        }
         int count = 0;
-        File folder = new File(templateFolder);
-        if (folder.listFiles() == null) {
-            log.warn("Tempalte Folder data was not found! " + templateFolder);
-            return templates;
+        if (templateFolder.listFiles() == null) {
+            throw new RuntimeException("Template Folder data was not found! " + templateFolder);
         }
-        for (File file : folder.listFiles()) {
+        for (File file : templateFolder.listFiles()) {
+            log.debug("Inspect potential template file: " + file);
             if (!file.isDirectory()) {
                 try {
                     String json = String.join("\n", Files.readAllLines(file.toPath()));
                     Template template = jsonProxy.fromJSON(json, Template.class);
                     templates.add(template);
-                    log.info("Loaded template " + template.getFullName());
-//                    cacheFromJson(json);
+                    log.info("Loaded template " + template.getFullName() + " : " + file.getAbsolutePath());
                     count++;
                 } catch (JsonSyntaxException e) {
                     log.warn("Malformed JSON Template:" + file.getName(), e);
@@ -104,7 +110,7 @@ public class FilesystemPersistence {
     }
 
     public void deleteTemplateOnFilesystem(Template template) {
-        File file = new File(new File(templateFolder), template.getFullName()+".json");
+        File file = new File(templateFolder, template.getFullName()+".json");
         if(file.exists()){
             if(!file.delete()){
                 throw new RuntimeException("Could not delete template " + template.getFullName() + " at path " + file.getAbsolutePath());
@@ -182,4 +188,29 @@ public class FilesystemPersistence {
         }
     }
 
+    public static class OutputDirectoryPathDoesNotExistException extends RuntimeException {
+        private String outputDirPath;
+
+        public OutputDirectoryPathDoesNotExistException(String outputDirPath) {
+            super("The output directory does not exist: " + outputDirPath);
+            this.outputDirPath = outputDirPath;
+        }
+
+        public String getOutputDirPath() {
+            return outputDirPath;
+        }
+    }
+
+    public static class NonDirectoryAtOutputDirectoryPathException extends RuntimeException {
+        private String outputDirPath;
+
+        public NonDirectoryAtOutputDirectoryPathException(String outputDirPath) {
+            super("Path does not denote a directory: " + outputDirPath);
+            this.outputDirPath = outputDirPath;
+        }
+
+        public String getOutputDirPath() {
+            return outputDirPath;
+        }
+    }
 }

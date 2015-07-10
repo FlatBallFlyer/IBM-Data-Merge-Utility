@@ -8,6 +8,10 @@ import com.ibm.util.merge.web.rest.servlet.Result;
 import com.ibm.util.merge.web.rest.servlet.result.MergeResult;
 import org.apache.log4j.Logger;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -32,48 +36,44 @@ public class PerformMergeResourceHandler implements RequestHandler {
     @Override
     public Result handle(RequestData rd) {
 
-//        TemplateFactory tf = runtimeContext.getTemplateFactory();
-
-//        String requestBodyString = rd.getRequestBodyString();
-//        log.info("CREATE template from " + requestBodyString);
-//        Template template = new DefaultJsonProxy().fromJSON(requestBodyString, Template.class);
-//        String fullName = template.getFullName();
-//        Result result;
-//        if(tf.templateFullnameExists(fullName)){
-//            result = new ForbiddenRequestTextResult("Cannot create, there already is a template with fullName="+fullName);
-//        }else{
-//            tf.persistTemplate(template);
-//            Template newTemplateInstance = tf.cache(template);
-//            String newItemUrl = rd.newUrlForChildPath("/" + fullName);
-//            result = new JsonItemCreatedResult(newTemplateInstance, newItemUrl);
-//        }
         Template root = runtimeContext.getTemplateFactory().getTemplate(rd.getParameterMap());
         long start = System.currentTimeMillis();
-        // Create the response writer
-//        response.setContentType("text/html");
-//        PrintWriter out = response.getWriter();
-        // Get a template using the httpServletRequest constructor
-        // Perform the merge and write output
 
         try {
             root.merge(runtimeContext);
         } catch (MergeException e) {
-            throw new RuntimeException("Could not merge " + rd, e);
-        }
-//        final String returnValue;
-        if (!root.canWrite()) {
-//            returnValue = "";
-        } else {
-            runtimeContext.getTemplateFactory().getFs().doWrite(root);
-            //            returnValue = root.getContent();
-//            root.doWrite(runtimeContext.getZipFactory());
-        }
+            String htmlErrorMessage = runtimeContext.getHtmlErrorMessage(e);
+            log.error("Could not merge " + rd, e);
+            return new HtmlResult(htmlErrorMessage);
 
-//        out.write(root.getContent());
-        // Close Connections and Finalize Output
-//        root.packageOutput(rtc.getZipFactory(), rtc.getConnectionFactory());
+        }
+        if (root.canWrite()) {
+            runtimeContext.getTemplateFactory().getFs().doWrite(root);
+
+        }
         long elapsed = System.currentTimeMillis() - start;
         log.warn(String.format("Merge completed in %d milliseconds", elapsed));
         return new MergeResult(root.getContent());
+    }
+
+    public static class HtmlResult implements Result {
+        private final String html;
+
+        public HtmlResult(String htmlErrorMessage) {
+            this.html = htmlErrorMessage;
+        }
+
+        @Override
+        public void write(RequestData rd, HttpServletRequest request, HttpServletResponse response) {
+            response.setContentType("text/html");
+            response.setCharacterEncoding("UTF-8");
+            try {
+                ServletOutputStream os = response.getOutputStream();
+                os.write(this.html.getBytes("UTF-8"));
+                os.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

@@ -3,9 +3,6 @@ package com.ibm.util.merge;
 import com.ibm.util.merge.template.Template;
 import org.apache.log4j.Logger;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -24,15 +21,8 @@ public class RuntimeContext {
         log.info("Instantiated");
     }
 
-    public void initialize(String outputDirPath) {
+    public void initialize() {
         log.info("Initializing..");
-        Path path = Paths.get(outputDirPath);
-        if (!Files.exists(path)) {
-            throw new OutputDirectoryPathDoesNotExistException(outputDirPath);
-        }
-        if (!Files.isDirectory(path)) {
-            throw new NonDirectoryAtOutputDirectoryPathException(outputDirPath);
-        }
 //        zipFactory.setOutputRoot(outputDirPath);
         templateFactory.reset();
         templateFactory.loadTemplatesFromFilesystem();
@@ -53,13 +43,13 @@ public class RuntimeContext {
     }
 
     /**
-     * @return
      * @param error
+     * @return
      */
     public String getHtmlErrorMessage(MergeException error) {
         String message;
         Template errorTemplate;
-        HashMap<String,String> parameters = new HashMap<>();
+        HashMap<String, String> parameters = new HashMap<>();
         parameters.put(Template.wrap("MESSAGE"), error.getError());
         parameters.put(Template.wrap("CONTEXT"), error.getContext());
         parameters.put(Template.wrap("TRACE"), error.getStackTrace().toString());
@@ -68,29 +58,29 @@ public class RuntimeContext {
             errorTemplate.merge(this);
             final String returnValue;
             if (!errorTemplate.canWrite()) {
-returnValue = "";
-} else {
-returnValue = errorTemplate.getContent();
-}
+                returnValue = "";
+            } else {
+                returnValue = errorTemplate.getContent();
+            }
             getTemplateFactory().getFs().doWrite(errorTemplate);
             message = returnValue;
         } catch (MergeException e) {
             message = "INVALID ERROR TEMPLATE! \n" +
                     "Message: " + error.getError() + "\n" +
-                    "Context: " + error.getContext()+ "\n";
+                    "Context: " + error.getContext() + "\n";
         }
         return message;
     }
 
     /**
-     * @return
      * @param error
      * @param throwable
+     * @return
      */
     public String getJsonErrorMessage(MergeException error) {
         String message;
         Template errorTemplate;
-        HashMap<String,String> parameters = new HashMap<>();
+        HashMap<String, String> parameters = new HashMap<>();
         parameters.put(Template.wrap("MESSAGE"), error.getError());
         parameters.put(Template.wrap("CONTEXT"), error.getContext());
         parameters.put(Template.wrap("TRACE"), error.getStackTrace().toString());
@@ -99,10 +89,10 @@ returnValue = errorTemplate.getContent();
             errorTemplate.merge(this);
             final String returnValue;
             if (!errorTemplate.canWrite()) {
-returnValue = "";
-} else {
-returnValue = errorTemplate.getContent();
-}
+                returnValue = "";
+            } else {
+                returnValue = errorTemplate.getContent();
+            }
             getTemplateFactory().getFs().doWrite(errorTemplate);
 //			errorTemplate.doWrite(rtc.getZipFactory());
             message = returnValue;
@@ -113,31 +103,5 @@ returnValue = errorTemplate.getContent();
                     "Context: " + error.getContext() + "\n";
         }
         return message;
-    }
-
-    public static class OutputDirectoryPathDoesNotExistException extends RuntimeException {
-        private String outputDirPath;
-
-        public OutputDirectoryPathDoesNotExistException(String outputDirPath) {
-            super("The output directory does not exist: " + outputDirPath);
-            this.outputDirPath = outputDirPath;
-        }
-
-        public String getOutputDirPath() {
-            return outputDirPath;
-        }
-    }
-
-    public static class NonDirectoryAtOutputDirectoryPathException extends RuntimeException {
-        private String outputDirPath;
-
-        public NonDirectoryAtOutputDirectoryPathException(String outputDirPath) {
-            super("Path does not denote a directory: " + outputDirPath);
-            this.outputDirPath = outputDirPath;
-        }
-
-        public String getOutputDirPath() {
-            return outputDirPath;
-        }
     }
 }

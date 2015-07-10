@@ -21,6 +21,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -32,9 +33,9 @@ import static org.junit.Assert.assertEquals;
 
 public class IntegrationTestingHtmlProvider {
 	HashMap<String, String[]> parameterMap;
-	String templateDir 	 = "src/test/resources/templates/";
-	String outputDir 	 = "src/test/resources/testout/"; 
-	String validateDir 	 = "src/test/resources/valid/";
+	File templateDir 	 = new File("src/test/resources/templates/");
+	File outputDir 	 = new File("src/test/resources/testout/");
+	File validateDir 	 = new File("src/test/resources/valid/");
 	String htmlCorporate = "<html><head></head><body><table><tr><th>IDCORPORATE</th><th>FROM_VALUE</th><th>TO_VALUE</th></tr><tr><td>1</td><td>corpUrl</td><td>www.spacely.com</td></tr><tr><td>2</td><td>corpStreet</td><td>101 Future Ave.</td></tr><tr><td>3</td><td>corpCity</td><td>Space City</td></tr><tr><td>4</td><td>corpState</td><td>IS</td></tr><tr><td>5</td><td>corpZip</td><td>99353</table></body></html>";
 	String htmlCustomer  = "<html><head></head><body><table><tr><th>IDCUSTOMER</th><th>PRIMARY</th><th>NAME</th><th>REVENUE</th><th>PROFIT</th><th>STREET</th><th>CITY</th><th>STATE</th><th>ZIP</th><th>PHONE</th></tr><tr><td>1</td><td>James</td><td>General Motors</td><td>9824</td><td>806</td><td>5791 Pleasant Prairie End</td><td>Dysart</td><td>PA</td><td>16188-0761</td><td>(878) 179-6603</td></tr></table></body></html>";
 	String htmlCustomers = "<html><head></head><body><table><tr><th>IDCUSTOMER</th><th>PRIMARY</th><th>NAME</th><th>REVENUE</th><th>PROFIT</th><th>STREET</th><th>CITY</th><th>STATE</th><th>ZIP</th><th>PHONE</th></tr><tr><td>1</td><td>James</td><td>General Motors</td><td>9824</td><td>806</td><td>5791 Pleasant Prairie End</td><td>Dysart</td><td>PA</td><td>16188-0761</td><td>(878) 179-6603</td></tr><tr><td>2</td><td>Robert</td><td>Exxon Mobil</td><td>5661</td><td>585</td><td>1309 Burning Trail</td><td>Yazoo City</td><td>NE</td><td>68970-0108</td><td>(531) 984-8463</td></tr><tr><td>3</td><td>John</td><td>U.S. Steel</td><td>3250</td><td>195</td><td>3930 Iron Walk</td><td>Wild Horse</td><td>MO</td><td>65453-3393</td><td>(417) 591-1188</td></tr></table></body></html>";

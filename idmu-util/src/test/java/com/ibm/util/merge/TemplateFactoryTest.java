@@ -24,6 +24,7 @@ import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
@@ -52,8 +53,9 @@ public class TemplateFactoryTest {
     @Before
     public void setUp() throws Exception {
         jsonProxy = new DefaultJsonProxy();
-        rtc = new RuntimeContext(new TemplateFactory(new FilesystemPersistence("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-util/src/test/resources/templates", new PrettyJsonProxy(), System.getProperty("java.io.tmpdir"))));
-        rtc.initialize("/tmp/merge");
+        File templatesDir = new File("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-util/src/test/resources/templates");
+        rtc = new RuntimeContext(new TemplateFactory(new FilesystemPersistence(templatesDir, new PrettyJsonProxy(), new File(System.getProperty("java.io.tmpdir") + "/merge"))));
+        rtc.initialize();
         tf = rtc.getTemplateFactory();
         tf.reset();
     }

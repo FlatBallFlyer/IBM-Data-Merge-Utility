@@ -16,9 +16,12 @@
  */
 package com.ibm.util.merge;
 
+import com.ibm.idmu.api.SqlOperation;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -30,9 +33,19 @@ public class ConnectionFactoryTest {
 	@Test
 	public void testGetDataConnection() throws Exception{
 		cf = new ConnectionFactory();
-		Connection con = cf.lookupDataSource("testgenDB").getConnection();//getDataConnection("testgenDB", "TestGuid");
-		assertNotNull(con);
-		con.close();
+		Integer result = cf.runSqlOperation("testgenDB", new SqlOperation<Integer>() {
+			@Override
+			public Integer execute(Connection connection) throws SQLException {
+				Statement st = connection.createStatement();
+				st.executeQuery("SELECT 1");
+				st.close();
+				return 1;
+			}
+		});
+		assertEquals(1, result.intValue());
+// getDataConnection("testgenDB", "TestGuid");
+//		assertNotNull(con);
+//		con.close();
 //		assertEquals(1, cf.size());
 //		con = cf.getDataConnection("testgenDB", "TestGuid");
 //		assertNotNull(con);
