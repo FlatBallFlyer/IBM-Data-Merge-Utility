@@ -111,6 +111,11 @@ public class InitializeServlet extends HttpServlet {
         if(databasePoolsPropertiesPath != null){
             this.jdbcPoolsPropertiesPath = databasePoolsPropertiesPath;
         }
+        String systemPoolsPropertiesPath = System.getProperty("jdbc-pools-properties-path");
+        if(systemPoolsPropertiesPath != null){
+            log.info("Found so using passed system property value for jdbc-pools-properties-path: " + systemPoolsPropertiesPath);
+            this.jdbcPoolsPropertiesPath = systemPoolsPropertiesPath;
+        }
     }
 
     @Override
