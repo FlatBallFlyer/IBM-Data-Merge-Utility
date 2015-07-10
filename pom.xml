@@ -12,6 +12,7 @@
   	<module>idmu-util</module>
   	<module>idmu-war</module>
     <module>idmu-api</module>
+    <module>idmu-editor</module>
     <!--<module>idmu-ear</module>-->
   </modules>
 

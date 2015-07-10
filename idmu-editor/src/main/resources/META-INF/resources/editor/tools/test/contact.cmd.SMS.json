@@ -1,0 +1,21 @@
+{
+    "id": "1",
+    "collection": "contact",
+    "name": "cmd",
+    "label": "cmd",
+    "columnValue": "SMS",
+    "output": "some file",
+    "content": "Long content here ...",
+    "bookmarks": [
+        {"id": "1", "name": "Whatever"}
+    ],
+    "directives": [
+        {
+            "type":0,
+            "name": "Require Tags",
+            "description":"Corp. Stuff[sms]",
+            "softFail":false,
+            "tags":["Tag1"]
+        }
+    ]
+}
