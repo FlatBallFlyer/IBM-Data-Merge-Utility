@@ -8,3 +8,6 @@
 /build/context.xml
 /*/target
 /idmu-util/src/test/resources/testout
+/idmu-editor/src/main/node/bower_components
+/idmu-editor/src/main/node/node_modules
+/idmu-editor/src/main/node/build
