@@ -1,0 +1,346 @@
+<html>
+<head>
+    <style>
+        @CHARSET "UTF-8";
+        li              { width: 640px; }
+        h2              { width: 640px; margin: 10px 0px 0px 10px; }
+        h3              { width: 640px; margin: 10px 0px 0px 20px; }
+        p               { width: 640px; }
+        .hidden         { display: none;}
+        .instructions   { margin: 0px 0px 0px 20px; }
+        .note           { margin: 0px 0px 0px 20px; }
+        .tag            { color: red; }
+        table.commands  { border: 2px solid; margin: 0px 5px 0px 30px; padding: 0; }
+        tr.command      { border: 2px solid; margin: 0px 5px 0px 0px; padding: 0; }
+        td.command      { border: 2px solid; margin: 0px 5px 0px 0px; padding: 0; }
+	</style>
+</head>
+<body>
+    <h1>IBM Data Merge Utility Install Guide</h1>
+    <h2>Installing Pre-reqs</h2>
+        <p class="instructions">IDMU is a J2EE application that runs in any J2EE compliant container. 
+        There are optional database components that can be used for template persistence and JDBC testing and validation.
+        You can use the instructions on installing the test database JDBC data source to configure your own data sources. 
+        The tool has been developed and tested on Mac OS-X and RHEL 7.0 but should work equally well on any J2EE system
+        with JDBC data sources.</p>
+        <p>To install the Tomcat and MySql pre-requisites on a RHEL 7 server you will need the following files.</p>
+        <ul>
+            <li class="file">Java 1.8 <span class="filename">jdk-8u45-linux-x64.rpm</span> - see <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">the oracle web site</a></li>
+            <li class="file">Tomcat 1.7 <span class="filename">apache-tomcat-7.0.62.tar.gz</span> from <a href="https://tomcat.apache.org/download-70.cgi">the Tomcat web site</a></li>
+            <li class="file">MySql JDBC Drivers <span class="filename">mysql-connector-java-5.1.34.tar.gz</span> - from <a href="http://dev.mysql.com/downloads/connector/j/">the MySql JDBC download site</a></li>
+            <li class="file">RHEL ISO Image<span class="filename">RHEL-7.0-20140507.0-Server-x86_64-dvd1.iso</span> (or your own yum repository for installing MySql)</li> 
+        </ul>
+
+        <h3>Mount the ISO images as a yum repository</h3>
+            <p class="instructions">Download the above files, set the following environment variables:</p>
+            <ul>
+                <li><span class="tag">IMAGES</span> - path to RHEL ISO Image - <span class=default>/mnt/hgfs/iso/</span></li>
+                <li><span class="tag">RHEL_ISO</span> - RHEL ISO Image Name - <span class=default>RHEL-7.0-20140507.0-Server-x86_64-dvd1.iso</span></li>
+            </ul>
+
+            <table class="commands">
+                <tr>
+                    <th class="hidden">Status</th>
+                    <th class="hidden">LogFile</th>
+                    <th>Prereq</th>
+                    <th>Command</th>
+                    <th>Verify</th>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">ISOMOUNT.log</td>
+                    <td class="command"></td>
+                    <td class="command">cp ?? /etc/yum.repos.d/iso.repo</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">ISOMOUNT.log</td>
+                    <td class="command"></td>
+                    <td class="command">mkdir -p /mnt/RHEL7_64</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">ISOMOUNT.log</td>
+                    <td class="command"></td>
+                    <td class="command">mount -o loop ${IMAGES}/${RHEL_ISO} /mnt/RHEL7_64/</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">ISOMOUNT.log</td>
+                    <td class="command"></td>
+                    <td class="command">yum clean all</td>
+                    <td class="command"></td>
+                </tr>
+            </table>
+        
+        <h3>Install Java 1.8</h3>
+            <p class="instructions">Download the above files, set the following environment variables:</p>
+            <ul>
+                <li><span class="tag">{IMAGES}</span> - path to RHEL ISO Image - <span class=default>/mnt/hgfs/iso/</span></li>
+                <li><span class="tag">{RHEL_ISO}</span> - RHEL ISO Image Name - <span class=default>RHEL-7.0-20140507.0-Server-x86_64-dvd1.iso</span></li>
+            </ul>
+
+            <table class="commands">
+                <tr>
+                    <th class="hidden">Status</th>
+                    <th class="hidden">LogFile</th>
+                    <th>Prereq</th>
+                    <th>Command</th>
+                    <th>Verify</th>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">JAVA18.log</td>
+                    <td class="command"></td>
+                    <td class="command">yum erase -y java</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">JAVA18.log</td>
+                    <td class="command"></td>
+                    <td class="command">rpm -ivh --force $IMAGES/$JAVA8_RPM</td>
+                    <td class="command"></td>
+                </tr>
+            </table>
+
+        <h3>Installing Tomcat 7</h3>
+            <p class="instructions">Download the above files, set the following environment variables:</p>
+            <ul>
+                <li><span class="tag">IMAGES</span> - path to RHEL ISO Image - <span class=default>/mnt/hgfs/iso/</span></li>
+                <li><span class="tag">TOMCAT_TAR</span> - Tomcat tar file name - <span class=default>apache-tomcat-7.0.62</span></li>
+                <li><span class="tag">TOMCAT_DIR</span> - Tomcat Install directory - <span class=default>/usr/local/tomcat7</span></li>
+            </ul>
+
+            <table class="commands">
+                <tr>
+                    <th class="hidden">Status</th>
+                    <th class="hidden">LogFile</th>
+                    <th>Prereq</th>
+                    <th>Command</th>
+                    <th>Verify</th>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">TOMCAT7.log</td>
+                    <td class="command"></td>
+                    <td class="command">tar -C /tmp -xvf $IMAGES/$TOMCAT_TAR.tar.gz</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">TOMCAT7.log</td>
+                    <td class="command"></td>
+                    <td class="command">mv /tmp/$TOMCAT_TAR $TOMCAT_DIR</td>
+                    <td class="command"></td>
+                </tr>
+            </table>
+
+        <h3>Installing MySql JDBC Drivers</h3>
+            <p class="instructions">Download the above files, set the following environment variables:</p>
+            <ul>
+                <li><span class="tag">IMAGES</span> - path to RHEL ISO Image - <span class=default>/mnt/hgfs/iso/</span></li>
+                <li><span class="tag">TOMCAT_DIR</span> - Tomcat Install directory - <span class=default>/usr/local/tomcat7</span></li>
+                <li><span class="tag">MYSQL_TAR</span> - MySQL JDBC tar name - <span class=default>mysql-connector-java-5.1.34</span></li>
+            </ul>
+
+            <table class="commands">
+                <tr>
+                    <th class="hidden">Status</th>
+                    <th class="hidden">LogFile</th>
+                    <th>Prereq</th>
+                    <th>Command</th>
+                    <th>Verify</th>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">MYSQLJDBC.log</td>
+                    <td class="command"></td>
+                    <td class="command">tar -C /tmp -xvf $IMAGES/$MYSQL_TAR.tar.gz</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">MYSQLJDBC.log</td>
+                    <td class="command"></td>
+                    <td class="command">cp /tmp/$MYSQL_TAR/$MYSQL_TAR-bin.jar $TOMCAT_DIR/lib/</td>
+                    <td class="command"></td>
+                </tr>
+            </table>
+
+        <h3>Installing MySql </h3>
+            <p class="instructions">Download the above files, set the following environment variables:</p>
+            <ul>
+                <li><span class="tag">MYSQL_PW</span> - MySQL Password - <span class=default>drowssap</span></li>
+            </ul>
+
+            <table class="commands">
+                <tr>
+                    <th class="hidden">Status</th>
+                    <th class="hidden">LogFile</th>
+                    <th>Prereq</th>
+                    <th>Command</th>
+                    <th>Verify</th>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">MYSQL.log</td>
+                    <td class="command"></td>
+                    <td class="command">yum install -y mariadb-server mariadb</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">MYSQL.log</td>
+                    <td class="command"></td>
+                    <td class="command">systemctl start mariadb</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">MYSQL.log</td>
+                    <td class="command"></td>
+                    <td class="command">mysqladmin -u root password $MYSQL_PW </td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">MYSQL.log</td>
+                    <td class="command"></td>
+                    <td class="command">systemctl enable mariadb.service</td>
+                    <td class="command"></td>
+                </tr>
+            </table>
+
+    <h2>Installing IDMU</h2>
+        <p class="instructions">IDMU is a J2EE application that runs in any J2EE compliant container.</p>
+        <h3>Installing the IDMU War</h3> 
+            <p class="instructions">Download the above files, set the following environment variables:</p>
+            <ul>
+                <li><span class="tag">IMAGES</span> - path to RHEL ISO Image - <span class=default>/mnt/hgfs/iso/</span></li>
+                <li><span class="tag">TOMCAT_DIR</span> - Tomcat Install directory - <span class=default>/usr/local/tomcat7</span></li>
+            </ul>
+
+            <table class="commands">
+                <tr>
+                    <th class="hidden">Status</th>
+                    <th class="hidden">LogFile</th>
+                    <th>Prereq</th>
+                    <th>Command</th>
+                    <th>Verify</th>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">IDMU.log</td>
+                    <td class="command"></td>
+                    <td class="command">cp ${IMAGES}/idmu.war $TOMCAT_DIR/webapps</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">IDMU.log</td>
+                    <td class="command"></td>
+                    <td class="command">$TOMCAT_DIR/bin/shutdown.sh</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">IDMU.log</td>
+                    <td class="command"></td>
+                    <td class="command">$TOMCAT_DIR/bin/startup.sh </td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">IDMU.log</td>
+                    <td class="command"></td>
+                    <td class="command">sleep 3</td>
+                    <td class="command"></td>
+                </tr>
+            </table>
+
+	    <h3>Installing the Testing Database (MySql)</h3>
+            <p class="instructions">Download the above files, set the following environment variables:</p>
+            <ul>
+                <li><span class="tag">IMAGES</span> - path to RHEL ISO Image - <span class=default>/mnt/hgfs/iso/</span></li>
+                <li><span class="tag">TOMCAT_DIR</span> - Tomcat Install directory - <span class=default>/usr/local/tomcat7</span></li>
+            </ul>
+
+            <table class="commands">
+                <tr>
+                    <th class="hidden">Status</th>
+                    <th class="hidden">LogFile</th>
+                    <th>Prereq</th>
+                    <th>Command</th>
+                    <th>Verify</th>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">TESTDB.log</td>
+                    <td class="command"></td>
+                    <td class="command">mysql --user=root --password=$MYSQL_PW &lt; $IMAGES/TESTDB.sql</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">TESTDB.log</td>
+                    <td class="command"></td>
+                    <td class="command">rm -f $TOMCAT_DIR/conf/contextBackup.xml</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">TESTDB.log</td>
+                    <td class="command"></td>
+                    <td class="command">cp $TOMCAT_DIR/conf/context.xml $TOMCAT_DIR/conf/contextBackup.xml</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">TESTDB.log</td>
+                    <td class="command"></td>
+                    <td class="command">sed -e &quot;s/&lt;Context&gt;/&lt;Resource auth=&quot;Container&quot; driverClassName=&quot;com.mysql.jdbc.Driver&quot; maxActive=&quot;900&quot; maxIdle=&quot;30&quot; maxWait=&quot;10&quot; name=&quot;jdbc/testgenDB&quot; password=&quot;$MYSQL_PW&quot; type=&quot;javax.sql.DataSource&quot; url=&quot;jdbc:mysql://localhost:3306/testgen&quot; username=&quot;root&quot;&gt;&lt;Context&gt;/g&quot; $TOMCAT_DIR/conf/context.xml &gt; /tmp/newcontext.xml</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">TESTDB.log</td>
+                    <td class="command"></td>
+                    <td class="command">rm -f ${TOMCAT_DIR}/conf/context.xml</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">TESTDB.log</td>
+                    <td class="command"></td>
+                    <td class="command">cp /tmp/newcontext.xml ${TOMCAT_DIR}/conf/context.xml</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">TESTDB.log</td>
+                    <td class="command"></td>
+                    <td class="command">$TOMCAT_DIR/bin/shutdown.sh</td>
+                    <td class="command"></td>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">TESTDB.log</td>
+                    <td class="command"></td>
+                    <td class="command">$TOMCAT_DIR/bin/startup.sh </td>
+                    <td class="command"></td>
+                </tr>
+            </table>
+
+    <h2>Installation Verification</h2>
+        <h3>Simple Verification</h3>
+            <p class="instructions">After provisioning the required hardware, make sure you have downloaded the following files and placed them in a {Source} folder, either on the target server or a shared mount point. Collect and use the following information to use when you execute the commands in the command table shown below. These are the steps to install the software needed on the Hub TEMS Server. The following installation specific values are used in the instructions.</p>
+            <ul>
+                <li><span class="tag">{SomeTag}</span> - Description of Tag</li>
+                <li><span class="tag">{SomeTag}</span> - Description of Tag</li>
+                <li><span class="tag">{SomeTag}</span> - Description of Tag</li>
+            </ul>
+            <p class="note">Command Tables take the following format.</p>
+            <ul>
+                <li class="hidden">Status Indicator is always EXEC</li>
+                <li class="hidden">LogFile - The name of a log file where stdout and stderr are saved to</li>
+                <li>Prereq - A command to run to determine if this step should execute, the return code from this command should be 0 to indicate that the step is ready to run, 1 to indicate that the step is not needed and it's ok to move on to the next step, or > 2 to indicate that the pre-requisits have not been met and the execution shold fail</li>
+                <li>Command - The command to execute</li>
+                <li>Verify - A command to verify that the step competed successfully, a non-zero return code indicates a failure, and should halt processing.</li>
+            </ul>
+            <table class="commands">
+                <tr>
+                    <th class="hidden">Status</th>
+                    <th class="hidden">LogFile</th>
+                    <th>Prereq</th>
+                    <th>Command</th>
+                    <th>Verify</th>
+                </tr><tr class="command">
+                    <td class="command hidden">PEND</td>
+                    <td class="command hidden">LogFileName.log</td>
+                    <td class="command">SomeCommand.sh {parameter}</td>
+                    <td class="command">SomeCommand.sh {parameter}</td>
+                    <td class="command">SomeCommand.sh {parameter}</td>
+                </tr>
+            </table>
+
+	<table></table>
+</body>
+</html>
