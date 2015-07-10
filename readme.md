@@ -13,14 +13,39 @@ in the WebContent folder of the project in Documentation.html
 ## Developing
 First clone the project.
 
-Copy /build/sample-context.xml to /build/context.xml and adapt to your preference. This is the Tomcat context file that will be used by the maven tomcat7 plugin to run. Of course you can run on an external Tomcat as well, just mold the context.xml according to the sample based on your environment.
+Create idmu-war/src/main/webapp/WEB-INF/properties/databasePools.properties by copying the example in the same directory
 
-You can run by invoking:
+Modify databasePools.properties to contain your JDBC datasources
 
-    mvn clean install
-    mvn tomcat7:run
+Ensure nodejs is installed : http://nodejs.org/
+
+Ensure java 1.8 is installed and available on the path
+
+Ensure Maven is installed and that 'mvn' is exposed on the path : http://maven.apache.org/
+
+Go into the `build` dir and execute following helper scripts (from inside the build directory)
+
+    # set up bower and gulp
+    ./setupTools.sh
+
+    # build and run using tomcat7 maven plugin
+    ./build.sh
+    ./run.sh
+    # or
+    ./buildRun.sh
 
 This will launch the app on http://localhost:9090
+
+Build is important because it generates output from the gulp project and moves to the right place in the idmu-editor jar so it is loaded to /editor in the war.
+Just having gulp build is not enough, the files need to be copied to `idmu-editor/src/main/resources/META-INF/resources/editor/`
+The scripts do all that for you.
+
+Open a browser to
+- http://localhost:9090/editor/html/app-en-desktop.html
+- http://localhost:9090/idmu/templates (see REST services section below)
+etc
+
+
 
 ## REST services available
 There are 2 servlets:
