@@ -16,8 +16,9 @@
 		<servlet-name>Initialize</servlet-name>
 		<servlet-class>com.ibm.util.merge.web.InitializeServlet</servlet-class>
 		<init-param>
-			<param-name>log4j-init-file</param-name>
-			<param-value>/WEB-INF/properties/log4j.properties</param-value>
+			<param-name>jdbc-pools-properties-path</param-name>
+			<!-- this could also be an absolute path available on the filesystem -->
+			<param-value>/WEB-INF/properties/databasePools.properties</param-value>
 		</init-param>
 		<init-param>
 			<param-name>merge-output-root</param-name>

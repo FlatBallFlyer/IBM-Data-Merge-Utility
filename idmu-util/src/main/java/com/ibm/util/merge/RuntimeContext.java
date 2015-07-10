@@ -1,5 +1,6 @@
 package com.ibm.util.merge;
 
+import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.template.Template;
 import org.apache.log4j.Logger;
 
@@ -15,15 +16,14 @@ public class RuntimeContext {
     private final ConnectionFactory connectionFactory;
     private Date initialized = null;
 
-    public RuntimeContext(TemplateFactory templateFactory) {
+    public RuntimeContext(TemplateFactory templateFactory, ConnectionPoolManager poolManager) {
         this.templateFactory = templateFactory;
-        connectionFactory = new ConnectionFactory();
+        connectionFactory = new ConnectionFactory(poolManager);
         log.info("Instantiated");
     }
 
     public void initialize() {
         log.info("Initializing..");
-//        zipFactory.setOutputRoot(outputDirPath);
         templateFactory.reset();
         templateFactory.loadTemplatesFromFilesystem();
         initialized = new Date();

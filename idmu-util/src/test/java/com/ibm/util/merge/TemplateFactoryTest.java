@@ -16,6 +16,7 @@
  */
 package com.ibm.util.merge;
 
+import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.json.DefaultJsonProxy;
 import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
@@ -54,7 +55,7 @@ public class TemplateFactoryTest {
     public void setUp() throws Exception {
         jsonProxy = new DefaultJsonProxy();
         File templatesDir = new File("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-util/src/test/resources/templates");
-        rtc = new RuntimeContext(new TemplateFactory(new FilesystemPersistence(templatesDir, new PrettyJsonProxy(), new File(System.getProperty("java.io.tmpdir") + "/merge"))));
+        rtc = new RuntimeContext(new TemplateFactory(new FilesystemPersistence(templatesDir, new PrettyJsonProxy(), new File(System.getProperty("java.io.tmpdir") + "/merge"))), new ConnectionPoolManager());
         rtc.initialize();
         tf = rtc.getTemplateFactory();
         tf.reset();

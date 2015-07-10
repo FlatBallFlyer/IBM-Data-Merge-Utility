@@ -36,23 +36,31 @@ class JdbcDatabaseConnectionProvider implements Closeable, DatabaseConnectionPro
         this.poolName = poolName;
         this.jdbcConnectionUrl = jdbcConnectionUrl;
     }
+
     public JdbcDatabaseConnectionProvider(String poolName, String jdbcConnectionUrl, String username, String password) {
         this.poolName = poolName;
         this.jdbcConnectionUrl = jdbcConnectionUrl;
         this.username = username;
         this.password = password;
     }
+
     public JdbcDatabaseConnectionProvider(String poolName, String jdbcConnectionUrl, Properties connectionProperties) {
         this.poolName = poolName;
         this.jdbcConnectionUrl = jdbcConnectionUrl;
         this.connectionProperties = connectionProperties;
     }
 
-    PoolingDriver getPoolingDriver() throws SQLException {
-        return (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
+    PoolingDriver getPoolingDriver() throws DatabaseConnectionProviderException {
+        String url = "jdbc:apache:commons:dbcp:";
+        try {
+            return (PoolingDriver) DriverManager.getDriver(url);
+        } catch (SQLException e) {
+            throw new DatabaseConnectionProviderException("Could not load pooling driver " + url, e);
+        }
     }
+
     @Override
-    public void create() throws SQLException {
+    public void create() throws DatabaseConnectionProviderException {
         creating = true;
         PoolingDriver driver = getPoolingDriver();
         if (driver == null) throw new IllegalArgumentException("driver cannot be null");
@@ -78,17 +86,21 @@ class JdbcDatabaseConnectionProvider implements Closeable, DatabaseConnectionPro
     }
 
     protected void constructConnectionFactory() {
-        if(username != null){
+        if (username != null) {
             connectionFactory = new DriverManagerConnectionFactory(jdbcConnectionUrl, username, password == null ? "" : password);
-        }else{
+        } else {
             connectionFactory = new DriverManagerConnectionFactory(jdbcConnectionUrl, connectionProperties);
         }
     }
 
     @Override
-    public void destroy() throws SQLException {
+    public void destroy() throws DatabaseConnectionProviderException {
         destroyed = true;
-        poolingDriver.closePool(poolName);
+        try {
+            poolingDriver.closePool(poolName);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         poolingDriver = null;
         connectionFactory = null;
         poolableConnectionFactory = null;
@@ -101,12 +113,17 @@ class JdbcDatabaseConnectionProvider implements Closeable, DatabaseConnectionPro
     }
 
     @Override
-    public <T> T runWithPool(SqlOperation<T> sqlOperation) throws SQLException {
+    public <T> T runWithPool(SqlOperation<T> sqlOperation) throws DatabaseConnectionProviderException {
         ensureReady();
         Connection conn = null;
         try {
             conn = acquireConnection();
-            T out = sqlOperation.execute(conn);
+            T out = null;
+            try {
+                out = sqlOperation.execute(conn);
+            } catch (Exception e) {
+                throw new SqlOperationExecutionException(sqlOperation, jdbcConnectionUrl, e);
+            }
             return out;
         } finally {
             try {
@@ -132,16 +149,20 @@ class JdbcDatabaseConnectionProvider implements Closeable, DatabaseConnectionPro
     }
 
     @Override
-    public Connection acquireConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:apache:commons:dbcp:" + poolName);
+    public Connection acquireConnection() throws DatabaseConnectionProviderException {
+        String poolUrl = "jdbc:apache:commons:dbcp:" + poolName;
+        try {
+            return DriverManager.getConnection(poolUrl);
+        } catch (Exception e) {
+            throw new DatabaseConnectionProviderException("Error acquiring connection for pool " + poolName + " using " + poolUrl, e);
+        }
     }
 
     @Override
-    public Map<String, Object> statistics() throws SQLException {
+    public Map<String, Object> statistics() throws DatabaseConnectionProviderException {
         HashMap<String, Object> out = new HashMap<>();
         out.put("name", poolName);
         out.put("jdbcUrl", jdbcConnectionUrl);
-
         out.put("active", connectionPool.getNumActive());
         out.put("idle", connectionPool.getNumIdle());
         return out;
@@ -149,10 +170,13 @@ class JdbcDatabaseConnectionProvider implements Closeable, DatabaseConnectionPro
 
     @Override
     public void close() throws IOException {
-        try {
-            destroy();
-        } catch (SQLException e) {
-            throw new IOException(e);
+        destroy();
+    }
+
+    public class SqlOperationExecutionException extends DatabaseConnectionProviderException{
+        public <T> SqlOperationExecutionException(SqlOperation<T> sqlOperation, String jdbcConnectionUrl, Exception e) {
+            super("Error during execution of sql operation against " + jdbcConnectionUrl + " : " + sqlOperation, e);
+
         }
     }
 }

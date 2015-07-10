@@ -73,7 +73,13 @@
 					<path>/</path>
 					<!-- optional path to a context file -->
 					<!--<contextFile>${tomcatContextXml}</contextFile>-->
+
+
+					<!--
 					<contextFile>/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/build/context.xml</contextFile>
+					-->
+
+
 					<!-- optional system propoerties you want to add -->
 					<!--
 					<systemProperties>

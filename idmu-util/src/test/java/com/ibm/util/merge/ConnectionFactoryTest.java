@@ -17,6 +17,7 @@
 package com.ibm.util.merge;
 
 import com.ibm.idmu.api.SqlOperation;
+import com.ibm.util.merge.db.ConnectionPoolManager;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -32,7 +33,7 @@ public class ConnectionFactoryTest {
 
 	@Test
 	public void testGetDataConnection() throws Exception{
-		cf = new ConnectionFactory();
+		cf = new ConnectionFactory(new ConnectionPoolManager());
 		Integer result = cf.runSqlOperation("testgenDB", new SqlOperation<Integer>() {
 			@Override
 			public Integer execute(Connection connection) throws SQLException {

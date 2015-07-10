@@ -16,8 +16,10 @@
  */
 package com.ibm.util.merge.web;
 
+import com.ibm.idmu.api.PoolManagerConfiguration;
 import com.ibm.util.merge.RuntimeContext;
 import com.ibm.util.merge.TemplateFactory;
+import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
@@ -32,14 +34,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InitializeServlet extends HttpServlet {
     private Logger log = Logger.getLogger(InitializeServlet.class);
     private String warTemplatesPath = "/WEB-INF/templates";
+    private String jdbcPoolsPropertiesPath = "/WEB-INF/properties/databasePools.properties";
     private File outputDirPath = new File("/tmp/merge");
     private final List<RequestHandler> handlerChain = new ArrayList<>();
     private Map<String, String> servletInitParameters;
@@ -63,11 +63,15 @@ public class InitializeServlet extends HttpServlet {
     private void initializeApp(ServletContext servletContext) {
         handlerChain.clear();
         handlerChain.addAll(createHandlerInstances());
-        File templatesDirPath = new File(servletContext.getRealPath(warTemplatesPath));
+        File templatesDirPath = warTemplatesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(warTemplatesPath)) : new File(warTemplatesPath);
+        File poolsPropertiesPath = jdbcPoolsPropertiesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(jdbcPoolsPropertiesPath)) : new File(jdbcPoolsPropertiesPath);
         PrettyJsonProxy jsonProxy = new PrettyJsonProxy();
         FilesystemPersistence fs = new FilesystemPersistence(templatesDirPath, jsonProxy, outputDirPath);
         TemplateFactory tf = new TemplateFactory(fs);
-        RuntimeContext rtc = new RuntimeContext(tf);
+        ConnectionPoolManager poolManager = new ConnectionPoolManager();
+        PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(poolsPropertiesPath);
+        poolManager.applyConfig(config);
+        RuntimeContext rtc = new RuntimeContext(tf, poolManager);
         rtc.initialize();
         servletContext.setAttribute("rtc", rtc);
         for (RequestHandler handler : handlerChain) {
@@ -102,6 +106,10 @@ public class InitializeServlet extends HttpServlet {
         if (outputRootDir != null) {
             log.info("Setting from ServletConfig: outputDirPath=" + outputRootDir);
             outputDirPath = new File(outputRootDir);
+        }
+        String databasePoolsPropertiesPath = servletInitParameters.get("jdbc-pools-properties-path");
+        if(databasePoolsPropertiesPath != null){
+            this.jdbcPoolsPropertiesPath = databasePoolsPropertiesPath;
         }
     }
 

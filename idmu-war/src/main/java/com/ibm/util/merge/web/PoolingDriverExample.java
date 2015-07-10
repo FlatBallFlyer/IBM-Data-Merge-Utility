@@ -71,8 +71,8 @@ public class PoolingDriverExample {
 
     protected static void run(PoolManager app) throws Exception {
         app.loadDriverClass("com.mysql.jdbc.Driver");
-        String userName = "root";
-        String passWord = "kanaal2";
+        String userName = "dbuser";
+        String passWord = "dbpassword";
         app.createPool("TIA", "jdbc:mysql://localhost:3306/TIA", userName, passWord);
         app.runWithPool("TIA", new SqlOperation<Object>() {
             @Override

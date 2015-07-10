@@ -19,6 +19,7 @@ package com.ibm.util.merge.directive.provider;
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.AbstractDirective;
 import org.junit.Before;
@@ -34,7 +35,7 @@ public class ProviderTagTest extends ProviderTest {
 
 	@Before
 	public void setUp() throws Exception {
-		cf = new ConnectionFactory();
+		cf = new ConnectionFactory(new ConnectionPoolManager());
 		provider = new ProviderTag();
 		provider.reset();
 		myProvider = (ProviderTag) provider;

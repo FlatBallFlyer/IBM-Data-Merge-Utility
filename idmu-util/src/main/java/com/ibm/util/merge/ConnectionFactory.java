@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package com.ibm.util.merge;
 
 import com.ibm.idmu.api.SqlOperation;
@@ -22,92 +21,70 @@ import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.idmu.api.PoolManager;
 
 import java.sql.SQLException;
-import java.util.Properties;
+import java.util.*;
 
 /**
- * A connection factory for JNDI Data Sources that cache's Database Connections for 
+ * A connection factory for JNDI Data Sources that cache's Database Connections for
  * the ProviderSql data provider throughout the course of a Merge.
  * Each SqlOperation runs with it's own connection which is closed afterwards
  *
- * @author  Mike Storey
+ * @author Mike Storey
  */
 public final class ConnectionFactory {
+    private final PoolManager poolManager;
 
-	private final PoolManager poolManager;
+    public ConnectionFactory(PoolManager poolManager) {
+        this.poolManager = poolManager;
+    }
 
-	public ConnectionFactory() {
-		this(new ConnectionPoolManager());
-	}
+    public <T> T runSqlOperation(String poolName, SqlOperation<T> operation) {
+        return poolManager.runWithPool(poolName, operation);
+    }
 
-	public ConnectionFactory(PoolManager poolManager) {
-		if(!poolManager.isPoolName("TIA")){
-			System.out.println("Adding dev datasources");
-			try {
-				poolManager.loadDriverClass("com.mysql.jdbc.Driver");
-				poolManager.createPool("tiaDB", "jdbc:mysql://localhost:3306/TIA", "root", "kanaal2");
-				poolManager.createPool("testgenDB", "jdbc:mysql://localhost:3306/testgen", "root", "kanaal2");
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-		this.poolManager = poolManager;
-	}
+    public void closePool(String poolName) throws SQLException {
+        poolManager.closePool(poolName);
+    }
 
-	public <T>T runSqlOperation(String poolName, SqlOperation<T> operation){
-		try {
-			return poolManager.runWithPool(poolName, operation);
-		} catch (SQLException e) {
-			throw new SqlOperationException(poolName, operation, e);
-		}
+    public boolean isPoolName(String poolName) {
+        return poolManager.isPoolName(poolName);
+    }
 
-	}
+    public void createPool(String poolName, String jdbcConnectionUrl) throws Exception {
+        poolManager.createPool(poolName, jdbcConnectionUrl);
+    }
 
-	public void closePool(String poolName) throws SQLException {
-		poolManager.closePool(poolName);
-	}
+    public void createPool(String poolName, String jdbcConnectionUrl, String username, String password) throws Exception {
+        poolManager.createPool(poolName, jdbcConnectionUrl, username, password);
+    }
 
-	public boolean isPoolName(String poolName) {
-		return poolManager.isPoolName(poolName);
-	}
+    public void createPool(String poolName, String jdbcConnectionUrl, Properties properties) throws Exception {
+        poolManager.createPool(poolName, jdbcConnectionUrl, properties);
+    }
 
-	public void createPool(String poolName, String jdbcConnectionUrl) throws Exception {
-		poolManager.createPool(poolName, jdbcConnectionUrl);
-	}
+    public void loadDriverClass(String driverClassPath) throws ClassNotFoundException {
+        poolManager.loadDriverClass(driverClassPath);
+    }
 
-	public void createPool(String poolName, String jdbcConnectionUrl, String username, String password) throws Exception {
-		poolManager.createPool(poolName, jdbcConnectionUrl, username, password);
-	}
+    public void reset() {
+        poolManager.reset();
+    }
 
-	public void createPool(String poolName, String jdbcConnectionUrl, Properties properties) throws Exception {
-		poolManager.createPool(poolName, jdbcConnectionUrl, properties);
-	}
+    public static class SqlOperationException extends RuntimeException {
+        private String poolName;
+        private SqlOperation operation;
 
-	public void loadDriverClass(String driverClassPath) throws ClassNotFoundException {
-		poolManager.loadDriverClass(driverClassPath);
-	}
+        public SqlOperationException(String poolName, SqlOperation operation, Exception e) {
+            super("Error executing SqlOperation with poolname " + poolName, e);
+            this.poolName = poolName;
+            this.operation = operation;
+        }
 
-	public void reset() {
-		poolManager.reset();
-	}
+        public String getPoolName() {
+            return poolName;
+        }
 
-	public static class SqlOperationException extends RuntimeException{
-		private String poolName;
-		private SqlOperation operation;
-
-		public SqlOperationException(String poolName, SqlOperation operation, Exception e) {
-			super("Error executing SqlOperation with poolname " + poolName, e);
-			this.poolName = poolName;
-			this.operation = operation;
-		}
-
-		public String getPoolName() {
-			return poolName;
-		}
-
-		public SqlOperation getOperation() {
-			return operation;
-		}
-	}
+        public SqlOperation getOperation() {
+            return operation;
+        }
+    }
 }
