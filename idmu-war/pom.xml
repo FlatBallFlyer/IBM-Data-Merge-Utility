@@ -13,6 +13,11 @@
   <description>IBM Data Merge Utility</description>
     <dependencies>
 		<dependency>
+			<groupId>com.ibm.idmu</groupId>
+			<artifactId>idmu-editor</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<dependency>
             <groupId>com.ibm.idmu</groupId>
             <artifactId>idmu-util</artifactId>
             <version>3.0</version>
