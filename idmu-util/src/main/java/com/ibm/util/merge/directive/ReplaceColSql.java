@@ -15,7 +15,7 @@
  *
  */
 package com.ibm.util.merge.directive;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderSql;
 
 public class ReplaceColSql extends ReplaceCol implements Cloneable {
@@ -25,14 +25,15 @@ public class ReplaceColSql extends ReplaceCol implements Cloneable {
 	 */
 	public ReplaceColSql() {
 		super();
-		this.setType(TYPE_SQL_REPLACE_COL);
-		this.setProvider(new ProviderSql());
+		setType(Directives.TYPE_SQL_REPLACE_COL);
+		setProvider(new ProviderSql());
 	}
 
 	/** 
 	 * Simple Clone constructor
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
+	@Override
 	public ReplaceColSql clone(Template owner) throws CloneNotSupportedException {
 		return (ReplaceColSql) super.clone();
 	}

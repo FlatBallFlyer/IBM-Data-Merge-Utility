@@ -16,27 +16,30 @@
  */
 package com.ibm.util.merge;
 
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
-
+import com.ibm.util.merge.directive.AbstractDirective;
+import com.ibm.util.merge.directive.Require;
+import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.directive.Directive;
-import com.ibm.util.merge.directive.Require;
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class MergeExceptionTest {
 	Template template;
-	Directive directive;
-	
+	AbstractDirective directive;
+
+	private RuntimeContext rtc;
+
 	@Before
 	public void setUp() throws Exception {
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.setTemplateFolder("src/test/resources/templates/");
-		TemplateFactory.reset();
-		TemplateFactory.loadAll();
-		template = TemplateFactory.getTemplate("system.test.", "", new HashMap<String,String>());
+		rtc = TestUtils.createDefaultRuntimeContext();
+		TemplateFactory tf = rtc.getTemplateFactory();
+		tf.reset();
+		tf.loadTemplatesFromFilesystem();
+		template = tf.getTemplate("system.test.", "", new HashMap<>());
 		directive = template.getDirectives().get(0);
 	}
 
@@ -109,7 +112,7 @@ public class MergeExceptionTest {
 		template.addDirective(req);
 		MergeException e = new MergeException(req, null, "Error", "Context");
 		assertNotNull(e);
-		String output = e.getHtmlErrorMessage();
+		String output = rtc.getHtmlErrorMessage(e);
 		assertEquals("<html><head></head><body><p>A Merge Execption has occured: Error <br/> Context</p></body></html>", output);
 	}
 
@@ -117,7 +120,7 @@ public class MergeExceptionTest {
 	public void testGetJsonErrorMessage() {
 		MergeException e = new MergeException(directive, null, "Error", "Context");
 		assertNotNull(e);
-		String output = e.getJsonErrorMessage();
+		String output = rtc.getJsonErrorMessage(e);
 		assertEquals("{\"message\":\"Error\",\"context\":\"Context\"}", output);
 	}
 

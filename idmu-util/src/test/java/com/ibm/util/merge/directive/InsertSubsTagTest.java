@@ -16,56 +16,61 @@
  */
 package com.ibm.util.merge.directive;
 
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
-
+import com.ibm.util.merge.*;
+import com.ibm.util.merge.directive.provider.ProviderTag;
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.idmu.api.JsonProxy;
+import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.TemplateFactory;
-import com.ibm.util.merge.directive.provider.ProviderTag;
+import java.util.HashMap;
+
+import static org.junit.Assert.*;
 
 public class InsertSubsTagTest extends InsertSubsTest {
-	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Foo Is: {Foo}, \"}";
-	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\" collection\\u003d\\\"root\\\"/\\u003e\"}";
-	private String masterOutput= "Test Foo Is: SomeValue1, Foo Is: SomeValue2, Foo Is: SomeValue3, <tkBookmark name=\"sub\" collection=\"root\"/>";
-	private ProviderTag myProvider;
-	private InsertSubsTag myDirective;
-	
-	@Before
-	public void setUp() throws Exception {
-		directive = new InsertSubsTag();
-		myDirective = (InsertSubsTag) directive;
-		myProvider = (ProviderTag) myDirective.getProvider();
+    private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Foo Is: {Foo}, \"}";
+    private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\" collection\\u003d\\\"root\\\"/\\u003e\"}";
+    private String masterOutput = "Test Foo Is: SomeValue1, Foo Is: SomeValue2, Foo Is: SomeValue3, <tkBookmark name=\"sub\" collection=\"root\"/>";
+    private ProviderTag myProvider;
+    private InsertSubsTag myDirective;
+    private JsonProxy jsonProxy;
+    private RuntimeContext rtc;
 
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.cacheFromJson(subTemplate); 
-		TemplateFactory.cacheFromJson(masterTemplate);
-		template = TemplateFactory.getTemplate("root.master.", "", new HashMap<String,String>());
-		template.addDirective(myDirective);
+    @Before
+    public void setUp() throws Exception {
+        rtc = TestUtils.createDefaultRuntimeContext();
+        jsonProxy = new DefaultJsonProxy();
+        directive = new InsertSubsTag();
+        myDirective = (InsertSubsTag) directive;
+        myProvider = (ProviderTag) myDirective.getProvider();
+        TemplateFactory tf = rtc.getTemplateFactory();
+        tf.reset();
+        Template template2 = jsonProxy.fromJSON(subTemplate, Template.class);
+        tf.cache(template2);
+        Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
+        tf.cache(template1);
+        template = tf.getTemplate("root.master.", "", new HashMap<>());
+        template.addDirective(myDirective);
+        myProvider.setTag("Foo");
+        myProvider.setList(true);
+        myProvider.setCondition(ProviderTag.CONDITION_EXISTS);
+        template.addReplace("Foo", "SomeValue1,SomeValue2,SomeValue3");
+    }
 
-		myProvider.setTag("Foo");
-		myProvider.setList(true);
-		myProvider.setCondition(ProviderTag.CONDITION_EXISTS);
-		template.addReplace("Foo", "SomeValue1,SomeValue2,SomeValue3");
-	}
+    @Test
+    public void testInsertSubsTagClone() throws CloneNotSupportedException {
+        InsertSubsTag newDirective = (InsertSubsTag) directive.clone();
+        InsertSubsTag myDirective = (InsertSubsTag) directive;
+        assertNotEquals(myDirective, newDirective);
+        assertNull(newDirective.getTemplate());
+        assertNotEquals(myDirective.getProvider(), newDirective.getProvider());
+        assertEquals(0, newDirective.getProvider().size());
+    }
 
-	@Test
-	public void testInsertSubsTagClone() throws CloneNotSupportedException {
-		InsertSubsTag newDirective = (InsertSubsTag) directive.clone();
-		InsertSubsTag myDirective = (InsertSubsTag) directive;
-		assertNotEquals(myDirective, newDirective);
-		assertNull(newDirective.getTemplate());
-		assertNotEquals(myDirective.getProvider(), newDirective.getProvider());
-		assertEquals(0, newDirective.getProvider().size());
-	}
-
-	@Test
-	public void testExecuteDirectiveExistsList() throws MergeException {
-		directive.executeDirective();
-		assertEquals(masterOutput, template.getContent());
-	}
+    @Test
+    public void testExecuteDirectiveExistsList() throws MergeException {
+        directive.executeDirective(rtc);
+        assertEquals(masterOutput, template.getContent());
+    }
 }

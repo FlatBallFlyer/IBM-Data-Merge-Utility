@@ -16,22 +16,23 @@
  */
 package com.ibm.util.merge.directive.provider;
 
+import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.directive.AbstractDirective;
+import org.apache.commons.io.IOUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
-
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
-
 /**
  * @author Mike Storey
  *
  */
-public abstract class ProviderHttp extends Provider implements Cloneable {
+public abstract class ProviderHttp extends AbstractProvider implements Cloneable {
 	private transient String fetchedData	= "";
 	private String staticData	= "";
 	private String url			= "";
@@ -46,8 +47,9 @@ public abstract class ProviderHttp extends Provider implements Cloneable {
 	
 	/**
 	 * Simple clone method
-	 * @see com.ibm.util.merge.directive.provider.Provider#clone(com.ibm.util.merge.directive.Directive)
+	 * @see AbstractProvider#clone(AbstractDirective)
 	 */
+	@Override
 	public ProviderHttp clone() throws CloneNotSupportedException {
 		return (ProviderHttp) super.clone();
 	}
@@ -56,35 +58,37 @@ public abstract class ProviderHttp extends Provider implements Cloneable {
 	 * Fetch the data
 	 * 
 	 * @throws MergeException Wrapped SQL and Process execptions
+	 * @param cf
 	 */
 	@Override
-	public void getData() throws MergeException {
-		Template template = this.getDirective().getTemplate();
-		if (!this.url.isEmpty()) {
+	public void getData(ConnectionFactory cf) throws MergeException {
+		Template template = getDirective().getTemplate();
+		if (!url.isEmpty()) {
 			try {
-				String theUrl = template.replaceProcess(this.url);
-				this.fetchedData = IOUtils.toString(
+				String theUrl = template.replaceProcess(url);
+				fetchedData = IOUtils.toString(
 						new BufferedReader(
 						new InputStreamReader(
 						new URL(theUrl).openStream())));
 			} catch (MalformedURLException e) {
-				throw new MergeException(e, "Malformed URL", this.url);
+				throw new MergeException(e, "Malformed URL", url);
 			} catch (IOException e) {
-				throw new MergeException(e, "I-O Exception", this.url);
+				throw new MergeException(e, "I-O Exception", url);
 			}
-		} else if (!this.tag.isEmpty()) {
-			String key = Template.wrap(template.replaceProcess(this.tag));
-			this.fetchedData = template.getReplaceValue(key);
+		} else if (!tag.isEmpty()) {
+			String key = Template.wrap(template.replaceProcess(tag));
+			fetchedData = template.getReplaceValue(key);
 		} else {
-			this.fetchedData = this.staticData;
+			fetchedData = staticData;
 		}
 	}
 	
 	/**
 	 * The URL is the query context for this directive type.
 	 */
+	@Override
 	public String getQueryString() {
-		return this.url;
+		return url;
 	}
 
 	public String getFetchedData() {

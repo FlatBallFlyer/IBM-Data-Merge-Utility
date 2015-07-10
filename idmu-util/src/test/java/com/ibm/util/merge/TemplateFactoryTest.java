@@ -16,182 +16,199 @@
  */
 package com.ibm.util.merge;
 
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
-
+import com.ibm.util.merge.db.ConnectionPoolManager;
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.idmu.api.JsonProxy;
+import com.ibm.util.merge.json.PrettyJsonProxy;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
+import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.util.HashMap;
+
+import static org.junit.Assert.*;
+
 public class TemplateFactoryTest {
-	private String template1 = "{\"collection\":\"root\",\"name\":\"test\",\"columnValue\":\"\"}";
-	private String template2 = "{\"collection\":\"root\",\"name\":\"test\",\"columnValue\":\"foo\"}";
-	private String template4 = "{\"collection\":\"foo\",\"columnValue\":\"foo\",\"name\":\"default\",\"description\":\"\",\"outputFile\":\"\",\"content\":\"Testing {Foo} Template \\u003ctkBookmark name\\u003d\\\"BKM1\\\"/ collection\\u003d\\\"COL1\\\"/\\u003e and {empty} \\u003ctkBookmark name\\u003d\\\"BKM2\\\" collection\\u003d\\\"COL2\\\"//\\u003e save to {folder}\",\"directives\":[" +
-			 "{\"idTemplate\":22,\"sequence\":0,\"type\":1,\"softFail\":false,\"description\":\"Test Replace1      \",\"from\":\"Foo\",\"to\":\"Test Foo Value\"}" + 
- 			",{\"idTemplate\":22,\"sequence\":1,\"type\":0,\"softFail\":false,\"description\":\"TestRequire        \",\"tags\":[\"Foo\",\"empty\"]}" + 
- 			",{\"idTemplate\":22,\"sequence\":1,\"type\":2,\"softFail\":false,\"description\":\"TestInsertSubsTag  \",\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"provider\":{\"tag\":\"Foo\",\"condition\":0,\"list\":false,\"value\":\"\"}}" + 
- 			",{\"idTemplate\":22,\"sequence\":1,\"type\":21,\"softFail\":false,\"description\":\"TestInsertSubsCsv \",\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" +
-			",{\"idTemplate\":22,\"sequence\":1,\"type\":10,\"softFail\":false,\"description\":\"TestInsertSubsSql \",\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\"}}" + 
-			",{\"idTemplate\":22,\"sequence\":1,\"type\":31,\"softFail\":false,\"description\":\"TestInsertSubsHtml\",\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" + 
-			",{\"idTemplate\":22,\"sequence\":1,\"type\":22,\"softFail\":false,\"description\":\"TestReplaceRowCsv \",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" + 
-			",{\"idTemplate\":22,\"sequence\":1,\"type\":11,\"softFail\":false,\"description\":\"TestReplaceRowSql \",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\"}}" + 
-			",{\"idTemplate\":22,\"sequence\":1,\"type\":32,\"softFail\":false,\"description\":\"TestReplaceRowHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" + 
-			",{\"idTemplate\":22,\"sequence\":1,\"type\":23,\"softFail\":false,\"description\":\"TestReplaceColCsv \",\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" + 
-			",{\"idTemplate\":22,\"sequence\":1,\"type\":12,\"softFail\":false,\"description\":\"TestReplaceColSql \",\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\"}}" + 
-			",{\"idTemplate\":22,\"sequence\":1,\"type\":33,\"softFail\":false,\"description\":\"TestReplaceColHtml\",\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" + 
-			",{\"idTemplate\":22,\"sequence\":1,\"type\":34,\"softFail\":false,\"description\":\"TestMarkupSubsHtml\",\"pattern\":\"TestPattern\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}]}"; 
-	@Before
-	public void setUp() throws Exception {
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.reset();
-	}
+    private String template1 = "{\"collection\":\"root\",\"name\":\"test\",\"columnValue\":\"\"}";
+    private String template2 = "{\"collection\":\"root\",\"name\":\"test\",\"columnValue\":\"foo\"}";
+    private String template4 = "{\"collection\":\"foo\",\"columnValue\":\"foo\",\"name\":\"default\",\"description\":\"\",\"outputFile\":\"\",\"content\":\"Testing {Foo} Template \\u003ctkBookmark name\\u003d\\\"BKM1\\\"/ collection\\u003d\\\"COL1\\\"/\\u003e and {empty} \\u003ctkBookmark name\\u003d\\\"BKM2\\\" collection\\u003d\\\"COL2\\\"//\\u003e save to {folder}\",\"directives\":[" +
+            "{\"idTemplate\":22,\"sequence\":0,\"type\":1,\"softFail\":false,\"description\":\"Test Replace1      \",\"from\":\"Foo\",\"to\":\"Test Foo Value\"}" +
+            ",{\"idTemplate\":22,\"sequence\":1,\"type\":0,\"softFail\":false,\"description\":\"TestRequire        \",\"tags\":[\"Foo\",\"empty\"]}" +
+            ",{\"idTemplate\":22,\"sequence\":1,\"type\":2,\"softFail\":false,\"description\":\"TestInsertSubsTag  \",\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"provider\":{\"tag\":\"Foo\",\"condition\":0,\"list\":false,\"value\":\"\"}}" +
+            ",{\"idTemplate\":22,\"sequence\":1,\"type\":21,\"softFail\":false,\"description\":\"TestInsertSubsCsv \",\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" +
+            ",{\"idTemplate\":22,\"sequence\":1,\"type\":10,\"softFail\":false,\"description\":\"TestInsertSubsSql \",\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\"}}" +
+            ",{\"idTemplate\":22,\"sequence\":1,\"type\":31,\"softFail\":false,\"description\":\"TestInsertSubsHtml\",\"collectionName\":\"\",\"collectionColumn\":\"\",\"notLast\":[\"empty\"],\"onlyLast\":[],\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" +
+            ",{\"idTemplate\":22,\"sequence\":1,\"type\":22,\"softFail\":false,\"description\":\"TestReplaceRowCsv \",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" +
+            ",{\"idTemplate\":22,\"sequence\":1,\"type\":11,\"softFail\":false,\"description\":\"TestReplaceRowSql \",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\"}}" +
+            ",{\"idTemplate\":22,\"sequence\":1,\"type\":32,\"softFail\":false,\"description\":\"TestReplaceRowHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" +
+            ",{\"idTemplate\":22,\"sequence\":1,\"type\":23,\"softFail\":false,\"description\":\"TestReplaceColCsv \",\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" +
+            ",{\"idTemplate\":22,\"sequence\":1,\"type\":12,\"softFail\":false,\"description\":\"TestReplaceColSql \",\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\"}}" +
+            ",{\"idTemplate\":22,\"sequence\":1,\"type\":33,\"softFail\":false,\"description\":\"TestReplaceColHtml\",\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}" +
+            ",{\"idTemplate\":22,\"sequence\":1,\"type\":34,\"softFail\":false,\"description\":\"TestMarkupSubsHtml\",\"pattern\":\"TestPattern\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\"}}]}";
+    private JsonProxy jsonProxy;
+    private RuntimeContext rtc;
+    private TemplateFactory tf;
 
-	@Test
-	public void testGetTemplateFullNameFoundInCache() throws MergeException {
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.cacheFromJson(template1);
-		TemplateFactory.cacheFromJson(template2);
-		assertNotNull(TemplateFactory.getTemplate("root.test.foo", "", new HashMap<String,String>()));
-	}
+    @Before
+    public void setUp() throws Exception {
+        jsonProxy = new DefaultJsonProxy();
+        File templatesDir = new File("/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-util/src/test/resources/templates");
+        rtc = new RuntimeContext(new TemplateFactory(new FilesystemPersistence(templatesDir, new PrettyJsonProxy(), new File(System.getProperty("java.io.tmpdir") + "/merge"))), new ConnectionPoolManager());
+        rtc.initialize();
+        tf = rtc.getTemplateFactory();
+        tf.reset();
+    }
 
-	@Test
-	public void testGetTemplateFullNameFoundInDb() throws MergeException {
-		// TODO Template Hibernate Testing
-		TemplateFactory.setDbPersistance(false);
-//		assertNotNull(TemplateFactory.getTemplate("root.test.found", "", new HashMap<String,String>()));
-	}
+    @Test
+    public void testGetTemplateFullNameFoundInCache() throws MergeException {
+        Template template3 = jsonProxy.fromJSON(template1, Template.class);
+        rtc.getTemplateFactory().cache(template3);
+        Template template = jsonProxy.fromJSON(template2, Template.class);
+        rtc.getTemplateFactory().cache(template);
+        assertNotNull(rtc.getTemplateFactory().getTemplate("root.test.foo", "", new HashMap<>()));
+    }
 
-	@Test
-	public void testGetTemplateShortNameFoundInCache() throws MergeException {
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.cacheFromJson(template1);
-		Template template = TemplateFactory.getTemplate("root.test.nodata", "root.test.", new HashMap<String,String>());
-		assertNotNull(template);
-		assertEquals("root", template.getCollection());
-		assertEquals("test", template.getName());
-		assertEquals("", template.getColumnValue());
-	}
-	
-	@Test
-	public void testGetTemplateShortNameFoundInDb() throws MergeException {
-		// TODO Template Hibernate Testing
-		TemplateFactory.setDbPersistance(false);
-//		assertNotNull(TemplateFactory.getTemplate("root.test.foo", "", new HashMap<String,String>()));
-	}
+    @Test
+    public void testGetTemplateFullNameFoundInDb() throws MergeException {
+        // TODO Template Hibernate Testing
+//		assertNotNull(tf.getTemplate("root.test.found", "", new HashMap<String,String>()));
+    }
 
-	@Test
-	public void testGetTemplateNotFoundInCache() throws MergeException {
-		TemplateFactory.setDbPersistance(false);
-		Template template = TemplateFactory.cacheFromJson(template1);
-		assertNotNull(template);
-		template = null;
-		try {
-			template = TemplateFactory.getTemplate("bad.template.test", "", new HashMap<String,String>());
-		} catch (MergeException e) {
-			assertNull(template);
-			return;
-		}
-		fail("Template Not Found did not throw exception");
-	}
-	
-	@Test
-	public void testCacheFromJsonBasicParsing() throws MergeException {
-		Template template = TemplateFactory.cacheFromJson(template1);
-		assertEquals(1, TemplateFactory.size());
-		assertEquals("root", template.getCollection());
-		assertEquals("test", template.getName());
-		assertEquals("", template.getColumnValue());
-	}
-	
-	@Test
-	public void testCacheFromJsonAllDirectiveParsing() throws MergeException {
-		Template template = TemplateFactory.cacheFromJson(template4);
-		assertEquals(1, TemplateFactory.size());
-		assertEquals("foo", template.getCollection());
-		assertEquals("default", template.getName());
-		assertEquals(13, template.getDirectives().size());
-		assertEquals("com.ibm.util.merge.directive.ReplaceValue", 		template.getDirectives().get(0).getClass().getName());
-		assertEquals("com.ibm.util.merge.directive.Require", 			template.getDirectives().get(1).getClass().getName());
-		assertEquals("com.ibm.util.merge.directive.InsertSubsTag", 		template.getDirectives().get(2).getClass().getName());
-		assertEquals("com.ibm.util.merge.directive.InsertSubsCsv", 		template.getDirectives().get(3).getClass().getName());
-		assertEquals("com.ibm.util.merge.directive.InsertSubsSql", 		template.getDirectives().get(4).getClass().getName());
-		assertEquals("com.ibm.util.merge.directive.InsertSubsHtml", 	template.getDirectives().get(5).getClass().getName());
-		assertEquals("com.ibm.util.merge.directive.ReplaceRowCsv", 		template.getDirectives().get(6).getClass().getName());
-		assertEquals("com.ibm.util.merge.directive.ReplaceRowSql", 		template.getDirectives().get(7).getClass().getName());
-		assertEquals("com.ibm.util.merge.directive.ReplaceRowHtml", 	template.getDirectives().get(8).getClass().getName());
-		assertEquals("com.ibm.util.merge.directive.ReplaceColCsv", 		template.getDirectives().get(9).getClass().getName());
-		assertEquals("com.ibm.util.merge.directive.ReplaceColSql", 		template.getDirectives().get(10).getClass().getName());
-		assertEquals("com.ibm.util.merge.directive.ReplaceColHtml", 	template.getDirectives().get(11).getClass().getName());
-		assertEquals("com.ibm.util.merge.directive.ReplaceMarkupHtml", 	template.getDirectives().get(12).getClass().getName());
-	}
+    @Test
+    public void testGetTemplateShortNameFoundInCache() throws MergeException {
+        Template template3 = jsonProxy.fromJSON(template1, Template.class);
+        tf.cache(template3);
+        Template template = tf.getTemplate("root.test.nodata", "root.test.", new HashMap<>());
+        assertNotNull(template);
+        assertEquals("root", template.getCollection());
+        assertEquals("test", template.getName());
+        assertEquals("", template.getColumnValue());
+    }
 
-	@Test
-	public void testReset() throws MergeException {
-		TemplateFactory.reset();
-		TemplateFactory.cacheFromJson(template1);
-		TemplateFactory.cacheFromJson(template2);
-		assertEquals(2, TemplateFactory.size());
-		TemplateFactory.reset();
-		assertEquals(0, TemplateFactory.size());
-	}
+    @Test
+    public void testGetTemplateShortNameFoundInDb() throws MergeException {
+        // TODO Template Hibernate Testing
+//		assertNotNull(tf.getTemplate("root.test.foo", "", new HashMap<String,String>()));
+    }
 
+    @Test(expected = TemplateFactory.TemplateNotFoundException.class)
+    public void testGetTemplateNotFoundInCache() throws MergeException {
+        Template template3 = jsonProxy.fromJSON(template1, Template.class);
+        Template template = tf.cache(template3);
+        assertNotNull(template);
+        tf.getTemplate("bad.template.test", "", new HashMap<>());
+        fail("Template Not Found did not throw exception");
+    }
 
-	@Test
-	public void testLoadFolder() throws MergeException {
-		TemplateFactory.setTemplateFolder("src/test/resources/templates/");
-		TemplateFactory.loadAll();
-		assertEquals(60, TemplateFactory.size()); 
-	}
+    @Test
+    public void testCacheFromJsonBasicParsing() throws MergeException {
+        Template template3 = jsonProxy.fromJSON(template1, Template.class);
+        Template template = tf.cache(template3);
+        assertEquals(1, tf.size());
+        assertEquals("root", template.getCollection());
+        assertEquals("test", template.getName());
+        assertEquals("", template.getColumnValue());
+    }
 
-	@Test
-	public void testGetTemplateAsJson() throws MergeException {
-		TemplateFactory.reset();
-		String template1 = TemplateFactory.cacheFromJson(template4).asJson(true);
-		String template2 = TemplateFactory.getTemplateAsJson("foo.default.foo");
-		assertEquals(template1, template2);
-	}
-	
-	@Test
-	public void testSaveTemplateFromJsonToFile() throws MergeException {
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.setTemplateFolder("src/test/resources/testout/");
-		String template1 = TemplateFactory.saveTemplateFromJson(template4);
-		Template template2 = TemplateFactory.cacheFromJson(template4);
+    @Test
+    public void testCacheFromJsonAllDirectiveParsing() throws MergeException {
+        Template template3 = jsonProxy.fromJSON(template4, Template.class);
+        Template template = tf.cache(template3);
+        assertEquals(1, tf.size());
+        assertEquals("foo", template.getCollection());
+        assertEquals("default", template.getName());
+        assertEquals(13, template.getDirectives().size());
+        assertEquals("com.ibm.util.merge.directive.ReplaceValue", template.getDirectives().get(0).getClass().getName());
+        assertEquals("com.ibm.util.merge.directive.Require", template.getDirectives().get(1).getClass().getName());
+        assertEquals("com.ibm.util.merge.directive.InsertSubsTag", template.getDirectives().get(2).getClass().getName());
+        assertEquals("com.ibm.util.merge.directive.InsertSubsCsv", template.getDirectives().get(3).getClass().getName());
+        assertEquals("com.ibm.util.merge.directive.InsertSubsSql", template.getDirectives().get(4).getClass().getName());
+        assertEquals("com.ibm.util.merge.directive.InsertSubsHtml", template.getDirectives().get(5).getClass().getName());
+        assertEquals("com.ibm.util.merge.directive.ReplaceRowCsv", template.getDirectives().get(6).getClass().getName());
+        assertEquals("com.ibm.util.merge.directive.ReplaceRowSql", template.getDirectives().get(7).getClass().getName());
+        assertEquals("com.ibm.util.merge.directive.ReplaceRowHtml", template.getDirectives().get(8).getClass().getName());
+        assertEquals("com.ibm.util.merge.directive.ReplaceColCsv", template.getDirectives().get(9).getClass().getName());
+        assertEquals("com.ibm.util.merge.directive.ReplaceColSql", template.getDirectives().get(10).getClass().getName());
+        assertEquals("com.ibm.util.merge.directive.ReplaceColHtml", template.getDirectives().get(11).getClass().getName());
+        assertEquals("com.ibm.util.merge.directive.ReplaceMarkupHtml", template.getDirectives().get(12).getClass().getName());
+    }
+
+    @Test
+    public void testReset() throws MergeException {
+        tf.reset();
+        Template template3 = jsonProxy.fromJSON(template1, Template.class);
+        tf.cache(template3);
+        Template template = jsonProxy.fromJSON(template2, Template.class);
+        tf.cache(template);
+        assertEquals(2, tf.size());
+        tf.reset();
+        assertEquals(0, tf.size());
+    }
+
+    @Test
+    public void testLoadFolder() throws MergeException {
+        tf.loadTemplatesFromFilesystem();
+        assertEquals(60, tf.size());
+    }
+
+    @Test
+    public void testGetTemplateAsJson() throws MergeException {
+        tf.reset();
+        Template template = jsonProxy.fromJSON(template4, Template.class);
+        String template1 = new PrettyJsonProxy().toJson(tf.cache(template));
+        String template2 = tf.getTemplateAsJson("foo.default.foo");
+        assertEquals(template1, template2);
+    }
+
+    @Test
+    public void testSaveTemplateFromJsonToFile() throws MergeException {
+        tf.reset();
+        String template1 = tf.saveTemplateFromJson(template4);
+        Template template = jsonProxy.fromJSON(template4, Template.class);
+        Template template2 = tf.cache(template);
+        assertEquals(template1, new PrettyJsonProxy().toJson(template2));
+    }
+
+    @Test
+    public void testSaveTemplateFromJsonToDb() throws MergeException {
+        // TODO Template Hibernate Testing
+/*		tf.reset();
+        tf.setDbPersistance(true);
+		tf.initilizeHibernate();
+		tf.setTemplateFolder("src/test/resources/testout/");
+		String template1 = tf.saveTemplateFromJson(template4);
+		Template template2 = tf.cacheFromJson(template4);
 		assertEquals(template1, template2.asJson(true));
-	}
+*/
+    }
 
-	@Test
-	public void testSaveTemplateFromJsonToDb() throws MergeException {
-		// TODO Template Hibernate Testing
-/*		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(true);
-		TemplateFactory.initilizeHibernate();
-		TemplateFactory.setTemplateFolder("src/test/resources/testout/");
-		String template1 = TemplateFactory.saveTemplateFromJson(template4);
-		Template template2 = TemplateFactory.cacheFromJson(template4);
-		assertEquals(template1, template2.asJson(true));
-*/	}
+    @Test
+    public void testGetCollections() throws MergeException {
+        tf.reset();
+        Template template5 = jsonProxy.fromJSON(template1, Template.class);
+        tf.cache(template5);
+        Template template3 = jsonProxy.fromJSON(template2, Template.class);
+        tf.cache(template3);
+        Template template = jsonProxy.fromJSON(template4, Template.class);
+        tf.cache(template);
+        String collections = tf.getCollectionNamesJSON();
+        assertTrue(collections.contains("root"));
+        assertTrue(collections.contains("foo"));
+    }
 
-	@Test
-	public void testGetCollections() throws MergeException {
-		TemplateFactory.reset();
-		TemplateFactory.cacheFromJson(template1);
-		TemplateFactory.cacheFromJson(template2);
-		TemplateFactory.cacheFromJson(template4);
-		String collections = TemplateFactory.getCollections();
-		assertTrue(collections.contains("root"));
-		assertTrue(collections.contains("foo"));
-	}
-
-	@Test
-	public void testGetTemplates() throws MergeException {
-		TemplateFactory.reset();
-		TemplateFactory.cacheFromJson(template1);
-		TemplateFactory.cacheFromJson(template2);
-		TemplateFactory.cacheFromJson(template4);
-		String templates = TemplateFactory.getTemplates("root");
-		assertTrue(templates.contains("root.test."));
-		assertTrue(templates.contains("root.test.foo"));
-	}
+    @Test
+    public void testGetTemplates() throws MergeException {
+        tf.reset();
+        Template template5 = jsonProxy.fromJSON(template1, Template.class);
+        tf.cache(template5);
+        Template template3 = jsonProxy.fromJSON(template2, Template.class);
+        tf.cache(template3);
+        Template template = jsonProxy.fromJSON(template4, Template.class);
+        tf.cache(template);
+        String templates = tf.getTemplateNamesJSON("root");
+        assertTrue(templates.contains("root.test."));
+        assertTrue(templates.contains("root.test.foo"));
+    }
 }

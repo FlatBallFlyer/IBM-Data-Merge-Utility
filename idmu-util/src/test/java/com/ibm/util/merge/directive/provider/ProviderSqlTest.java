@@ -16,15 +16,15 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import static org.junit.Assert.*;
-
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.directive.AbstractDirective;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.Directive;
+import static org.junit.Assert.*;
 
 public class ProviderSqlTest extends ProviderTest {
 
@@ -92,8 +92,9 @@ public class ProviderSqlTest extends ProviderTest {
 		assertEquals(myProvider.getQueryString(), "SELECT COL1, COL2 FROM TABLE1, TABLE2 WHERE TABLE1.ID='Bar'");
 	}
 
-	private class DirectiveStub extends Directive {
+	private class DirectiveStub extends AbstractDirective {
 		public DirectiveStub() {}
-		public void executeDirective() throws MergeException {}
+		@Override
+		public void executeDirective(RuntimeContext rtc) throws MergeException {}
 	}
 }

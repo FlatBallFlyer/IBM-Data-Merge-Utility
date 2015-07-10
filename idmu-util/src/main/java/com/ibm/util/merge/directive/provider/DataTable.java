@@ -19,8 +19,8 @@ package com.ibm.util.merge.directive.provider;
 import java.util.ArrayList;
 
 public class DataTable {
-	private ArrayList<String> columnNames = new ArrayList<String>();
-	private ArrayList<ArrayList<String>> theData = new ArrayList<ArrayList<String>>();
+	private ArrayList<String> columnNames = new ArrayList<>();
+	private ArrayList<ArrayList<String>> theData = new ArrayList<>();
 	
 	public DataTable() {
 	}
@@ -34,7 +34,7 @@ public class DataTable {
 	}
 
 	public void addCol(String name) {
-		this.columnNames.add(name);
+		columnNames.add(name);
 	}
 	
 	public int getCol(String name) {
@@ -47,7 +47,7 @@ public class DataTable {
 	}
 
 	public String getValue(int row, String name) {
-		return getValue(row,this.getCol(name)); 
+		return getValue(row, getCol(name));
 	}
 
 	public String getValue(int row, int col) {
@@ -56,18 +56,18 @@ public class DataTable {
 		return theData.get(row).get(col);
 	}
 	
-	public ArrayList<String> getNewRow() {
-		ArrayList<String> newRow = new ArrayList<String>();
-		this.theData.add(newRow);
+	public ArrayList<String> addNewRow() {
+		ArrayList<String> newRow = new ArrayList<>();
+		theData.add(newRow);
 		return newRow;
 	}
 
 	public void addRow(ArrayList<String> newRow) {
-		this.theData.add(newRow);
+		theData.add(newRow);
 	}
 
 	public void setCols(ArrayList<String> strings) {
-		this.columnNames = strings;
+		columnNames = strings;
 	}
 
 }

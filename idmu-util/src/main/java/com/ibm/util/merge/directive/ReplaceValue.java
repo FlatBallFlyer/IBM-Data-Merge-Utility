@@ -15,16 +15,17 @@
  *
  */
 package com.ibm.util.merge.directive;
-import org.apache.log4j.Logger;
 
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.template.Template;
+import org.apache.log4j.Logger;
 
 /**
  * A simple replace From with To directive 
  *
  * @author  Mike Storey
  */
-public class ReplaceValue extends Directive implements Cloneable {
+public class ReplaceValue extends AbstractDirective implements Cloneable {
 	private static final Logger log = Logger.getLogger( ReplaceValue.class.getName() );
 	private String from = "";
 	private String to = "";
@@ -34,8 +35,8 @@ public class ReplaceValue extends Directive implements Cloneable {
 	 */
 	public ReplaceValue() {
 		super();
-		this.setType(TYPE_REPLACE_VALUE);
-		this.setProvider(null);
+		setType(Directives.TYPE_REPLACE_VALUE);
+		setProvider(null);
 	}
 
 	/**
@@ -47,10 +48,13 @@ public class ReplaceValue extends Directive implements Cloneable {
 
 	/**
 	 * Add the replace value
+	 * @param tf
+	 * @param rtc
 	 */
-	public void executeDirective() {
-		this.getTemplate().addReplace(this.from, this.to);
-		log.info("Replaced " + this.from + " with " + this.to);
+	@Override
+	public void executeDirective(RuntimeContext rtc) {
+		getTemplate().addReplace(from, to);
+		log.info("Replaced " + from + " with " + to);
 	}
 
 	public String getFrom() {

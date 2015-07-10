@@ -15,12 +15,15 @@
  *
  */
 package com.ibm.util.merge.directive.provider;
-import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
 
 public class DataTableTest {
 	private DataTable table;
@@ -28,11 +31,11 @@ public class DataTableTest {
     @Before
     public void beforeEachTest() {
     	table = new DataTable();
-		table.setCols(new ArrayList<String>(Arrays.asList("One", "Two", "Three")));
-		table.addRow(new ArrayList<String>(Arrays.asList("R1C1","R1C2","R1C3")));
-		table.addRow(new ArrayList<String>(Arrays.asList("R2C1","R2C2","R2C3")));
-		table.addRow(new ArrayList<String>(Arrays.asList("R3C1","R3C2","R3C3")));
-		table.addRow(new ArrayList<String>(Arrays.asList("R4C1","R4C2","R4C3")));
+		table.setCols(new ArrayList<>(Arrays.asList("One", "Two", "Three")));
+		table.addRow(new ArrayList<>(Arrays.asList("R1C1", "R1C2", "R1C3")));
+		table.addRow(new ArrayList<>(Arrays.asList("R2C1", "R2C2", "R2C3")));
+		table.addRow(new ArrayList<>(Arrays.asList("R3C1", "R3C2", "R3C3")));
+		table.addRow(new ArrayList<>(Arrays.asList("R4C1", "R4C2", "R4C3")));
     }
     @After
     public void afterEachTest() {

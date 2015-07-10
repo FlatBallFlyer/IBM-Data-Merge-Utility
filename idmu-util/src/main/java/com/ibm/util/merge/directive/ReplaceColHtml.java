@@ -15,7 +15,7 @@
  *
  */
 package com.ibm.util.merge.directive;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
 
 public class ReplaceColHtml extends ReplaceCol implements Cloneable {
@@ -25,14 +25,15 @@ public class ReplaceColHtml extends ReplaceCol implements Cloneable {
 	 */
 	public ReplaceColHtml() {
 		super();
-		this.setType(TYPE_HTML_REPLACE_COL);
-		this.setProvider(new ProviderHtml());
+		setType(Directives.TYPE_HTML_REPLACE_COL);
+		setProvider(new ProviderHtml());
 	}
 
 	/** 
 	 * Simple Clone constructor
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
+	@Override
 	public ReplaceColHtml clone(Template owner) throws CloneNotSupportedException {
 		return (ReplaceColHtml) super.clone();
 	}

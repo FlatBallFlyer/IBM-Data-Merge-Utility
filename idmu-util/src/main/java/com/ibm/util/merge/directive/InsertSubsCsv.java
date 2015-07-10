@@ -24,14 +24,15 @@ public class InsertSubsCsv extends InsertSubs implements Cloneable {
 	 */
 	public InsertSubsCsv() {
 		super();
-		this.setType(TYPE_CSV_INSERT);
-		this.setProvider(new ProviderCsv());
+		setType(Directives.TYPE_CSV_INSERT);
+		setProvider(new ProviderCsv());
 	}
 
 	/** 
 	 * Simple Clone constructor
 	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
 	 */
+	@Override
 	public InsertSubsCsv clone() throws CloneNotSupportedException {
 		return (InsertSubsCsv) super.clone();
 	}

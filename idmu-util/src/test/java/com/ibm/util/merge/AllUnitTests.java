@@ -10,7 +10,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	MergeExceptionTest.class, 
 	TemplateFactoryTest.class,
 	TemplateTest.class, 
-	ZipFactoryTest.class,
+	ArchiveWriterTest.class,
 	com.ibm.util.merge.directive.AllTests.class,
 	com.ibm.util.merge.directive.provider.AllTests.class,
 //	ConnectionFactoryTest.class

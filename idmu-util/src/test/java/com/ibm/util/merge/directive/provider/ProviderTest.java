@@ -16,19 +16,20 @@
  */
 package com.ibm.util.merge.directive.provider;
 
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.directive.AbstractDirective;
+import org.junit.Test;
+
 import static org.junit.Assert.*;
-import org.junit.*;
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.Directive;
 
 public abstract class ProviderTest {
-	protected Provider provider;
-	protected Directive directive;
+	protected AbstractProvider provider;
+	protected AbstractDirective directive;
 	protected Template template;
 	
 	@Test
 	public void testProviderCloneDirective() throws CloneNotSupportedException {
-		Provider newProvider = provider.clone();
+		AbstractProvider newProvider = provider.clone();
 		assertNotEquals(provider, newProvider);
 		assertEquals(0, newProvider.size());
 		assertNull(newProvider.getDirective());
@@ -37,7 +38,7 @@ public abstract class ProviderTest {
 	@Test
 	public void testReset() {
 		provider.reset();
-		DataTable table = provider.getNewTable();
+		DataTable table = provider.addNewTable();
 		assertNotNull(table);
 		assertEquals(1, provider.size());
 	}
@@ -45,7 +46,7 @@ public abstract class ProviderTest {
 	@Test
 	public void testGetTable() {
 		assertEquals(0, provider.size());
-		provider.getNewTable();
+		provider.addNewTable();
 		assertEquals(1, provider.size());
 	}
 
@@ -62,7 +63,7 @@ public abstract class ProviderTest {
 	@Test
 	public void testGetNewTable() {
 		provider.reset();
-		DataTable newTable = provider.getNewTable();
+		DataTable newTable = provider.addNewTable();
 		assertNotNull(newTable);
 		assertEquals(1,provider.size());
 	}

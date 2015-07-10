@@ -16,6 +16,10 @@
  */
 package com.ibm.util.merge;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.IOUtils;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,11 +30,9 @@ import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.io.IOUtils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public final class CompareArchives {
 	
@@ -67,7 +69,7 @@ public final class CompareArchives {
 	 * @throws IOException
 	 */
 	private static final HashMap<String, ZipEntry> getMembers(ZipFile archive) throws IOException {
-		HashMap<String, ZipEntry> map = new HashMap<String, ZipEntry>();
+		HashMap<String, ZipEntry> map = new HashMap<>();
 		@SuppressWarnings("unchecked")
 		Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) archive.entries();
 		while (entries.hasMoreElements()) {
@@ -126,7 +128,7 @@ public final class CompareArchives {
 				new FileInputStream(archive)));
 
 		TarArchiveEntry entry;
-		HashMap<String, TarArchiveEntry> map = new HashMap<String, TarArchiveEntry>();
+		HashMap<String, TarArchiveEntry> map = new HashMap<>();
 	    while ((entry = input.getNextTarEntry()) != null) {
 			map.put(entry.getName(), entry);
 		}

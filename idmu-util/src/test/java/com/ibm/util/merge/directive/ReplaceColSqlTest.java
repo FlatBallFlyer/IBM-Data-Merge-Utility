@@ -16,21 +16,24 @@
  */
 package com.ibm.util.merge.directive;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
+import com.ibm.util.merge.*;
+import com.ibm.util.merge.directive.provider.AbstractProvider;
+import com.ibm.util.merge.directive.provider.DataTable;
+import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.provider.*;
+import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 public class ReplaceColSqlTest extends ReplaceColTest {
 
+	private RuntimeContext rtc;
+
 	@Before
 	public void setUp() throws Exception {
+		rtc = TestUtils.createDefaultRuntimeContext();
 		provider = new ProviderStub();
 		directive = new ReplaceColSql();
 		ReplaceColSql myDirective = (ReplaceColSql) directive;
@@ -54,7 +57,7 @@ public class ReplaceColSqlTest extends ReplaceColTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(rtc);
 		assertTrue(template.hasReplaceKey("{A}"));
 		assertEquals("1",template.getReplaceValue("{A}"));
 		assert(template.hasReplaceKey("{B}"));
@@ -63,27 +66,30 @@ public class ReplaceColSqlTest extends ReplaceColTest {
 		assertEquals("3",template.getReplaceValue("{C}"));
 	}
 
-	private class ProviderStub extends Provider {
+	private class ProviderStub extends AbstractProvider {
 		public ProviderStub() {
 			super();
 		}
 		
+		@Override
 		public ProviderStub clone() throws CloneNotSupportedException {
 			ProviderStub provider = (ProviderStub) super.clone();
 			return provider;
 		}
 		
-		public void getData() throws MergeException {
-			DataTable table = this.getNewTable();
-			ArrayList<String> row = table.getNewRow();
+		@Override
+		public void getData(ConnectionFactory cf) throws MergeException {
+			DataTable table = addNewTable();
+			ArrayList<String> row = table.addNewRow();
 			table.addCol("FromCol");table.addCol("ToCol");
 			row.add("A");row.add("1");
-			row = table.getNewRow();
+			row = table.addNewRow();
 			row.add("B");row.add("2");
-			row = table.getNewRow();
+			row = table.addNewRow();
 			row.add("C");row.add("3");
 		}
 
+		@Override
 		public String getQueryString() {
 			return "NA";
 		}

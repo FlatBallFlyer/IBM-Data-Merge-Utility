@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-	version="3.0">
+	metadata-complete="true"
+		 version="3.0">
 	<display-name>idmu-war</display-name>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
@@ -13,10 +14,11 @@
 	</welcome-file-list>
 	<servlet>
 		<servlet-name>Initialize</servlet-name>
-		<servlet-class>com.ibm.util.merge.web.Initialize</servlet-class>
+		<servlet-class>com.ibm.util.merge.web.InitializeServlet</servlet-class>
 		<init-param>
-			<param-name>log4j-init-file</param-name>
-			<param-value>/WEB-INF/properties/log4j.properties</param-value>
+			<param-name>jdbc-pools-properties-path</param-name>
+			<!-- this could also be an absolute path available on the filesystem -->
+			<param-value>/WEB-INF/properties/databasePools.properties</param-value>
 		</init-param>
 		<init-param>
 			<param-name>merge-output-root</param-name>
@@ -34,34 +36,24 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Initialize</servlet-name>
-		<url-pattern>/Service/</url-pattern>
+		<url-pattern>/Initialize</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>Merge</servlet-name>
-		<servlet-class>com.ibm.util.merge.web.Merge</servlet-class>
+		<servlet-name>RestServlet</servlet-name>
+		<servlet-class>com.ibm.util.merge.web.RestServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Merge</servlet-name>
-		<url-pattern>/Merge/</url-pattern>
+		<servlet-name>RestServlet</servlet-name>
+		<url-pattern>/idmu/*</url-pattern>
 	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>Persist</servlet-name>
-		<servlet-class>com.ibm.util.merge.web.Persist</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Persist</servlet-name>
-		<url-pattern>/Template/</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>Query</servlet-name>
-		<servlet-class>com.ibm.util.merge.web.Query</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Query</servlet-name>
-		<url-pattern>/Query/</url-pattern>
-	</servlet-mapping>
+	<!--<servlet>-->
+		<!--<servlet-name>CatchAll</servlet-name>-->
+		<!--<servlet-class>com.ibm.util.merge.web.CatchAllServlet</servlet-class>-->
+	<!--</servlet>-->
+	<!--<servlet-mapping>-->
+		<!--<servlet-name>CatchAll</servlet-name>-->
+		<!--<url-pattern>/*</url-pattern>-->
+	<!--</servlet-mapping>-->
 
 </web-app>
