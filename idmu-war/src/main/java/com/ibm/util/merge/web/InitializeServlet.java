@@ -69,8 +69,14 @@ public class InitializeServlet extends HttpServlet {
         FilesystemPersistence fs = new FilesystemPersistence(templatesDirPath, jsonProxy, outputDirPath);
         TemplateFactory tf = new TemplateFactory(fs);
         ConnectionPoolManager poolManager = new ConnectionPoolManager();
-        PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(poolsPropertiesPath);
-        poolManager.applyConfig(config);
+        if(poolsPropertiesPath.exists()){
+            PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(poolsPropertiesPath);
+            poolManager.applyConfig(config);
+        }else{
+            log.error("Could not load databasePools properties file from non-existant path: " + poolsPropertiesPath);
+            log.error("No database config will be applied");
+        }
+
         RuntimeContext rtc = new RuntimeContext(tf, poolManager);
         rtc.initialize();
         servletContext.setAttribute("rtc", rtc);
