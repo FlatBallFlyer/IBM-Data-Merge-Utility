@@ -10,6 +10,8 @@ var del      = require("del");
 var reload   = require("gulp-livereload");
 var nodemon  = require("gulp-nodemon");
 
+var _buildDir = "../resources/META-INF/resources/editor";
+
 var paths = {
 
   /* HTML source files */
@@ -98,7 +100,8 @@ var devices = [
 
 var domain = {
   dev: {
-    static: "127.0.0.1:9000/build"
+    //static: "127.0.0.1:9000/build"
+    static: "127.0.0.1:9090/editor"
   },
   itg: {
     static: "127.0.0.1:9000/itg"
