@@ -4,7 +4,7 @@
 if [ -f sample-context.xml ]; then
     set -evx
 
-    PROJECT_BASE_DIR=$(readlink -f "..")
+    PROJECT_BASE_DIR="$(readlink -f "..")"
 
     # clean generated static sources
     rm -rf "$PROJECT_BASE_DIR"/idmu-editor/src/main/resources/META-INF/resources/editor/*
