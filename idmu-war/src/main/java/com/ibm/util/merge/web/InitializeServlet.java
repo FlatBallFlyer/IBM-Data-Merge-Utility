@@ -56,7 +56,7 @@ public class InitializeServlet extends HttpServlet {
     @Override
     public void init(ServletConfig cfg) {
         servletInitParameters = RestServlet.initParametersToMap(cfg);
-        applyInitParameters();
+        applyParameters();
         initializeApp(cfg.getServletContext());
     }
 
@@ -96,6 +96,29 @@ public class InitializeServlet extends HttpServlet {
         ));
     }
 
+    private void applyParameters() {
+        applyInitParameters();
+        applySystemParameters();
+    }
+
+    private void applySystemParameters() {
+        String systemMergeTemplatesFolder = System.getProperty("merge-templates-folder");
+        if(systemMergeTemplatesFolder != null){
+            log.info("Found so using passed system property value for merge-templates-folder: " + systemMergeTemplatesFolder);
+            this.warTemplatesPath = systemMergeTemplatesFolder;
+        }
+        String systemOutputRootDir = System.getProperty("merge-output-root");
+        if(systemOutputRootDir != null){
+            log.info("Found so using passed system property value for merge-output-root: " + systemOutputRootDir);
+            this.outputDirPath = new File(systemOutputRootDir);
+        }
+        String systemPoolsPropertiesPath = System.getProperty("jdbc-pools-properties-path");
+        if(systemPoolsPropertiesPath != null){
+            log.info("Found so using passed system property value for jdbc-pools-properties-path: " + systemPoolsPropertiesPath);
+            this.jdbcPoolsPropertiesPath = systemPoolsPropertiesPath;
+        }
+    }
+
     private void applyInitParameters() {
         String mergeTemplatesFolder = servletInitParameters.get("merge-templates-folder");
         if (mergeTemplatesFolder != null) {
@@ -110,11 +133,6 @@ public class InitializeServlet extends HttpServlet {
         String databasePoolsPropertiesPath = servletInitParameters.get("jdbc-pools-properties-path");
         if(databasePoolsPropertiesPath != null){
             this.jdbcPoolsPropertiesPath = databasePoolsPropertiesPath;
-        }
-        String systemPoolsPropertiesPath = System.getProperty("jdbc-pools-properties-path");
-        if(systemPoolsPropertiesPath != null){
-            log.info("Found so using passed system property value for jdbc-pools-properties-path: " + systemPoolsPropertiesPath);
-            this.jdbcPoolsPropertiesPath = systemPoolsPropertiesPath;
         }
     }
 
