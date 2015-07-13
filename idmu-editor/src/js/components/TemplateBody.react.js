@@ -100,7 +100,7 @@ var TemplateBody = React.createClass({
   },
   componentWillReceiveProps: function(nextProps) {
     var state = {};
-    state.content = nextProps.content.content;
+    state.content = nextProps.content;
     this.setState(state);
   },
   handleContentChange: function(evt){

@@ -4,8 +4,7 @@
   "name": "default",
   "label": "default",
   "output": "some file",
-  "content": "Take <tkBookmark collection=\"contact\" name=\"type\" /> Take <tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" />",
-  "content_a": "\nContacts for: {NAME}<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" /> But this is only a test slash here=<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" />",
+  "content": "Take .. ",
   "bookmarks": [
     {
       "id": "1",
@@ -41,5 +40,11 @@
     }
   ],
   "columnValue": "",
-  "description": "Rotten default root"
+  "description": "Rotten default root",
+  "items": [
+    {
+      "type": "text",
+      "slice": "Take .."
+    }
+  ]
 }

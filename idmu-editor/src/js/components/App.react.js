@@ -21,16 +21,18 @@ var App = React.createClass({
     window.router.init();
   },
   componentDidMount: function () {
-    this.initRouter();
-    this.loadDirectivesFromServer();
-    this.loadCollectionsFromServer();
+    if(!this.props.suppressCollection){
+      this.initRouter();
+      this.loadDirectivesFromServer();
+      this.loadCollectionsFromServer();
+    }
     this.loadTemplatesFromServer("root");
   },
   handleCollectionSelected: function(selectedCollection) {
     this.loadTemplatesFromServer(selectedCollection);
   },
   handleRibbonSelected: function(selectedRibbonIndex,selectedRibbonItem) {
-    this.setState({selectedRibbonItem: selectedRibbonItem,selectedRibbonIndex: selectedRibbonIndex});
+    //this.setState({selectedRibbonItem: selectedRibbonItem,selectedRibbonIndex: selectedRibbonIndex});
     this.loadTemplateFromServer(this.state.selectedCollection,
                                 selectedRibbonItem['name'],
                                 selectedRibbonItem['columnValue']);
@@ -131,10 +133,10 @@ var App = React.createClass({
       data: params,
       success: function(data) {
                                                                data.items = this.buildBodyItems(data.content);
+
                                                                var text = data.content.replace(/\<tkBookmark/g,"\<div class=\"tkbookmark\"  contenteditable=\"false\"");
-                                                               data.content = text;
-                                                               console.log(data.items);
-                                                               this.setState({template: data});
+            data.content = text;
+            this.setState({template: data});
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
