@@ -13,7 +13,11 @@ var BreadCrumb = React.createClass({
 
 var ContentEditable = React.createClass({
   render: function(){
-    return(<div id="contenteditable"
+    var level=this.props.level;
+    var index=this.props.index;
+    var this_ref = "contenteditable_"+level+"_"+index;
+    id = "contenteditable"
+    return(<div id={this_ref}
                 bCB={this.props.bCB}
                 className="ce_block"
                 onInput={this.emitChange} 
@@ -26,7 +30,6 @@ var ContentEditable = React.createClass({
     return flag;
   },
   handleBookmarkClick: function(evt){
-    console.log($(evt.target).prop('tagName'));
     if($(evt.target).prop('tagName')==='A'){
       this.props.bCB(evt);
     }
@@ -35,57 +38,59 @@ var ContentEditable = React.createClass({
     this.props.rCB(evt);
   },
   componentDidUpdate: function() {
-        if (this.props.update || this.props.html !== this.getDOMNode().innerHTML) {
-          var els = $.parseHTML(this.props.html);
-          if(els){
-            els.forEach(function(el){
-              if($(el).prop('tagName') == "DIV" && $(el).attr("class") === "tkbookmark"){
-                $(el).empty();
-                var escd = $(el).prop('outerHTML').replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
-                  return '&#' + i.charCodeAt(0) + ';';
-                });
-                var tip = "collection="+$(el).attr("collection")+",name="+$(el).attr("name");
-                if($(el).attr("column")) {
-                  tip+= ",column="+$(el).attr("column");
-                }
-                var a=$("<a contenteditable=\"false\" title=\""+tip+"\" class=\"toberemoved inline btn btn-primary btn-xs \" type=\"button\" value=\"tkBookmark\">tkBookmark&nbsp;|<span contenteditable=\"false\" class=\"glyphicon glyphicon-remove\"></span></a>");
-                $(el).append(a);
-              }
+    if (this.props.update || this.props.html !== this.getDOMNode().innerHTML) {
+      var els = $.parseHTML(this.props.html);
+      if(els){
+        els.forEach(function(el){
+          if($(el).prop('tagName') == "DIV" && $(el).attr("class") === "tkbookmark"){
+            $(el).empty();
+            var escd = $(el).prop('outerHTML').replace(Utils.htmlEncodeRegex(), function(i) {
+              return '&#' + i.charCodeAt(0) + ';';
             });
-            var final_el = $("<div/>");
-            els.forEach(function(el){
-              $(final_el).append(el);
-            });
-            this.getDOMNode().innerHTML = final_el.prop('innerHTML');//this.props.html;
-          }else {
-            this.getDOMNode().innerHTML = this.props.html;
+            var tip = "collection="+$(el).attr("collection")+",name="+$(el).attr("name");
+            if($(el).attr("column")) {
+              tip+= ",column="+$(el).attr("column");
+            }
+            var a=$("<a contenteditable=\"false\" title=\""+tip+"\" class=\"toberemoved inline btn btn-primary btn-xs \" type=\"button\" value=\"tkBookmark\">tkBookmark&nbsp;|<span contenteditable=\"false\" class=\"glyphicon glyphicon-remove\"></span></a>");
+            $(el).append(a);
           }
-        }
+        });
+        var final_el = $("<div/>");
+        els.forEach(function(el){
+          $(final_el).append(el);
+        });
+        this.getDOMNode().innerHTML = final_el.prop('innerHTML');//this.props.html;
+      }else {
+        this.getDOMNode().innerHTML = this.props.html;
+      }
+    }
 
     $(".toberemoved").bind("click",this.handleBookmarkClick);
     $(".glyphicon-remove").bind("click",this.handleBookmarkRemove);
 
-    },
-    emitChange: function(){
-        var html = this.getDOMNode().innerHTML;
-        if (this.props.onChange && html !== this.lastHtml) {
-          this.props.onChange({target: {value: html}});
-        }
-        this.lastHtml = html;
+  },
+  emitChange: function(){
+    var html = this.getDOMNode().innerHTML;
+    if (this.props.onChange && html !== this.lastHtml) {
+      this.props.onChange({target: {value: html}});
     }
+    this.lastHtml = html;
+  }
 });
 
 var TemplateBody = React.createClass({
   mixins: [TextEditMixin],
   getInitialState: function() {
+    this.lastHtml = this.props.content;
     var state = {};
     state.content = this.props.content;
     state.crumbs = [];
     return state;
   },
   handleBookmarkRemove: function(evt){
+    var this_ref = "contenteditable_"+this.props.level+"_"+this.props.index;
     var el = $(evt.target).parent().parent().remove();
-    var cel = document.getElementById('contenteditable');
+    var cel = document.getElementById(this_ref);
     var html = $(cel).prop('innerHTML');
     var state = {content: html,update:true};
     this.setState(state);
@@ -103,8 +108,13 @@ var TemplateBody = React.createClass({
     state.content = nextProps.content;
     this.setState(state);
   },
+  getLastHtml: function(){
+    return this.lastHtml;
+  },
   handleContentChange: function(evt){
+    //this.setState({lastHtml: evt.target.value});
     //this.setState({content: this.lastHtml});
+    this.lastHtml = evt.target.value;
   },
   pasteHtmlAtCaret: function(html) {
     /*taken from stackexchange http://stackoverflow.com/a/6691294 */
@@ -135,14 +145,15 @@ var TemplateBody = React.createClass({
     }
   },
   handleInsert: function(collection,name,columnName){
-    var el = document.getElementById('contenteditable');
+    var this_ref = "contenteditable_"+this.props.level+"_"+this.props.index;
+    var el = document.getElementById(this_ref);
     var tip = "collection="+collection+"name="+name;
     if(columnName && columnName.length > 0){
       tip+=",column="+columnName;
     }
     var bkMark="<div class=\"tkbookmark\" contenteditable=\"false\"  collection=\""+collection+"\" name=\""+name+"\" columnName=\""+columnName+"\"></div>";
     this.pasteHtmlAtCaret(bkMark);
-    el = document.getElementById('contenteditable');
+    el = document.getElementById(this_ref);
 
     var state = {content: $(el).prop('innerHTML'),update:true};
     this.setState(state);
@@ -157,9 +168,15 @@ var TemplateBody = React.createClass({
   render: function(){
     var title = "Insert Bookmark";
     var bCB = this.handleBreadCrumbClick;
+    var level = this.props.level;
     var crumbs = this.state.crumbs.map(function(opt,i){
-      return(<BreadCrumb key={i} index={i} bCB={bCB} data={opt}/>);
+      var this_ref = "bread_crumb_"+level+"_"+i;
+      return(<BreadCrumb key={i} ref={this_ref} level={level} index={i} bCB={bCB} data={opt}/>);
     });
+
+    var index = this.props.index;
+    var this_ref = "content_editable_"+level+"_"+index;
+    var bk_ref = "insert_bkm_"+level+"_"+index;
     return(
       <div className="row no-margin ribbon-inside">
         <form>
@@ -171,13 +188,13 @@ var TemplateBody = React.createClass({
             </div>
             <div className="form-group col-xs-12 col-md-12">
               <label for="name" className="control-label">Content</label>
-                <ContentEditable html={this.state.content} id="content" onChange={this.handleContentChange} update={this.state.update} bCB={this.handleBookmarkClick} rCB={this.handleBookmarkRemove}/>
+              <ContentEditable html={this.state.content} ref={this_ref} level={level} index={index} id={this_ref} onChange={this.handleContentChange} update={this.state.update} bCB={this.handleBookmarkClick} rCB={this.handleBookmarkRemove}/>
             </div>
           </div>
         </form>
         <div>
           <div className="form-group col-xs-12 col-md-12">
-            <InsertBookmarkTrigger title={title} iCB={this.handleInsert}/>
+            <InsertBookmarkTrigger ref={bk_ref} level={level} index={index} title={title} iCB={this.handleInsert}/>
           </div>            
         </div>
       </div>

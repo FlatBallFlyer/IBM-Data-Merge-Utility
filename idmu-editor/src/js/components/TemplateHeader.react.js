@@ -13,8 +13,11 @@ var TemplateHeader = React.createClass({
   },
   handleSave: function(evt) {
     var opts = {};
-    if(this.refs.header_panel) {
-      opts = $.extend({},opts,this.refs.header_panel.state);
+    var this_ref = "header_panel_"+this.props.level+"_"+this.props.index;
+      console.log("header panel="+this_ref);
+      console.debug(this.refs);
+    if(this.refs[this_ref]) {
+      opts = $.extend({},opts,this.refs[this_ref].state);
       this.props.sCB(opts);
     }
   },
@@ -22,35 +25,46 @@ var TemplateHeader = React.createClass({
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
     var dCB = this.props.dCB;
+    var level = this.props.level;
+    var index = this.props.index;
     var changeCB = this.handleChangePanel;
     if(this.state.panelConfig === 'show-directives') {
-      return(<Directives ref="directives_panel" dCB={dCB} mCB={mCB} aCB={aCB} data={this.props.data} changeCB={changeCB}/>);
+      var this_ref="directives_panel_"+level+"_"+index;
+      return(<Directives level={level} index={index} ref={this_ref} dCB={dCB} mCB={mCB} aCB={aCB} data={this.props.data} changeCB={changeCB}/>);
     }else {
-      return(<HeaderPanel ref="header_panel" dCB={dCB} data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
+      var this_ref = "header_panel_"+level+"_"+index;
+      return(<HeaderPanel level={level} index={index} ref={this_ref} dCB={dCB} data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
     }
   },
   render: function(){
     var data = this.props.data;
     var tpl = data.template;
+
+    var level=this.props.level;
+    var index=this.props.index;
+    var accordian_id = "accordian_"+level+"_"+index;
+    var panel_heading_id = "headingOne_"+level+"_"+index;
+    var show_directives_id="show-directives_"+level+"_"+index;
+    var collapse_id = "collapseOne_"+level+"_"+index;
     if(tpl){
       var columnValue = tpl['columnValue'] ? "."+tpl['columnValue'] : "";
       var name = tpl['name'];
       var label = tpl['collection']+"."+name+columnValue;
       return(
         <div className="row no-margin">
-          <div className="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          <div className="panel-group" id={accordian_id} role="tablist" aria-multiselectable="true">
             <div className="panel panel-default">
-              <div className="panel-heading" role="tab" id="headingOne">
+              <div className="panel-heading" role="tab" id={panel_heading_id}>
                 <div className="row">
                 <div className="col-xs-10 col-md-10">
-                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  <a role="button" data-toggle="collapse" data-parent={"#"+accordian_id} href={"#"+collapse_id} aria-expanded="true" aria-controls={collapse_id}>
                     <span className="control-label-big">{label}</span>
                   </a>
                 </div>
                 <div className="col-xs-1 col-md-1">
                   <a role="button" aria-expanded="true">
                     <span className="input-group-btn input-group-btn-directives">
-                      <button onClick={this.handleSave} id="show-directives" type="button" className="btn btn-primary">Save</button>
+                      <button onClick={this.handleSave} id={show_directives_id} type="button" className="btn btn-primary">Save</button>
                     </span>
                   </a>
                 </div>
@@ -60,7 +74,7 @@ var TemplateHeader = React.createClass({
                 </div>
               </div>
 
-              <div id="collapseOne" className="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div id={collapse_id} className="panel-collapse collapse" role="tabpanel" aria-labelledby={panel_heading_id}>
                 {this.showPanel()}
               </div>
             </div>

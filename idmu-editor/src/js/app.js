@@ -8,11 +8,12 @@ function supports_history_api() {
 
 
 $(document).ready(function(){
-  // Dropdown menu
-  //$(".dropdown-button").dropdown();
+  var level=0;
+  var index=0;
+  var this_ref = "app_"+level+"_"+index;
   React.initializeTouchEvents(true);
   React.render(
-    <div className="container"><App suppressCollection={false} suppressRibbon={false}/></div>,
+    <div className="container"><App level={level} index={index} suppressCollection={false} suppressRibbon={false}/></div>,
     document.getElementById("app_view")
   );
 });

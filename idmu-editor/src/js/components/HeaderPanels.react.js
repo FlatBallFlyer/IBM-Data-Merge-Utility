@@ -25,7 +25,14 @@ var HeaderPanel  = React.createClass({
     var options=directives.map(function(k,i){
       return (<option key={i} value={k.name} label={k.name}>{k.name}</option>);
     });
-      
+
+    var level=this.props.level;
+    var index=this.props.index;
+    var name_id="name"; //+level+"_"+index;
+    var directives_id="directives"; //+level+"_"+index;
+    var output_id="output"; //+level+"_"+index;
+    var description_id="description";//+level+"_"+index;
+    
     return(
       <div className="panel-body">
         <div className="row">
@@ -33,15 +40,15 @@ var HeaderPanel  = React.createClass({
 
             <form>
               <div className="form-group col-xs-4 col-md-4">
-                <label for="name" className="control-label">Name</label>
+                <label for={name_id} className="control-label">Name</label>
                 
-                <input className="form-control" id="name" type="text" value={this.state.name} onChange={this.handleTextEditChange}/>
+                <input className="form-control" id={name_id} type="text" value={this.state.name} onChange={this.handleTextEditChange}/>
               </div>
                         
               <div className="form-group col-xs-4 col-md-4">
                 <div className="input-group">
-                  <label for="name" className="control-label">Directives</label>
-                  <select id="directives" className="form-control">
+                  <label for={directives_id} className="control-label">Directives</label>
+                  <select id={directives_id} className="form-control">
                     {options}
                   </select>
                   <span className="input-group-btn input-group-btn-directives">
@@ -51,13 +58,13 @@ var HeaderPanel  = React.createClass({
               </div>
               
               <div className="form-group col-xs-4 col-md-4">
-                <label for="name" className="control-label">Output</label>
-                <input className="form-control" id="output" type="text" value={this.state.output} onChange={this.handleTextEditChange}/>
+                <label for={output_id} className="control-label">Output</label>
+                <input className="form-control" id={output_id} type="text" value={this.state.output} onChange={this.handleTextEditChange}/>
               </div>
 
               <div className="form-group col-xs-12 col-md-12">
-                <label for="name" className="control-label">Description</label>
-                <textarea className="form-control" id="description" rows="2" onChange={this.handleTextEditChange}  value={this.state.description}/>
+                <label for={description_id} className="control-label">Description</label>
+                <textarea className="form-control" id={description_id} rows="2" onChange={this.handleTextEditChange}  value={this.state.description}/>
               </div>
                         
             </form>
