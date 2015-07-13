@@ -5,7 +5,7 @@ var App = React.createClass({
   
   getInitialState: function() {
     return {
-      selectedCollection: "root",
+      selectedCollection: null, //"root",
       selectedRibbonItem: null,
       selectedRibbonIndex: 0,
       data: [],
@@ -26,7 +26,6 @@ var App = React.createClass({
       this.loadDirectivesFromServer();
       this.loadCollectionsFromServer();
     }
-    this.loadTemplatesFromServer(this.state.selectedCollection);//"root");
   },
   handleCollectionSelected: function(selectedCollection) {
     this.loadTemplatesFromServer(selectedCollection);
@@ -38,7 +37,6 @@ var App = React.createClass({
                                 selectedRibbonItem['columnValue']);
   },
   loadCollectionsFromServer: function() {
-    var selectedCollection = this.state.selectedCollection;
     var params = {};
     $.ajax({
       url: '/idmu/templates',
@@ -55,7 +53,10 @@ var App = React.createClass({
           uniques[key] = {collection: key};
         }
         var final_list = Object.keys(uniques).map(function(v){ return {collection: v}});
-        this.setState({data: final_list,selectedCollection: selectedCollection});
+        var selectedCollection = this.state.selectedCollection || final_list[0].collection;
+        this.setState({data: final_list,selectedCollection: selectedCollection},function(){
+          this.loadTemplatesFromServer(this.state.selectedCollection);
+        }.bind(this));
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -72,7 +73,7 @@ var App = React.createClass({
       success: function(data) {
         this.setState({selectedRibbonIndex: 0,templates: data,selectedCollection: collection}, function(){
           if(!this.props.suppressCollection){
-            var sel = data[0]; //this.state.selectedRibbonItem || data[0];
+            var sel = data[0];
             this.loadTemplateFromServer(sel.collection,sel.name,sel.columnValue);
           }
         }.bind(this));

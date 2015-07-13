@@ -1,5 +1,14 @@
 [
   {
+    "collection": "contact",
+    "columnValue": "",
+    "name": "default",
+    "description": "Default contact template",
+    "outputFile": "",
+    "content": "",
+    "directives": []
+  },
+  {
     "collection": "root",
     "columnValue": "",
     "name": "default",
@@ -13,15 +22,6 @@
     "columnValue": "SMS",
     "name": "default",
     "description": "Default root SMS template",
-    "outputFile": "",
-    "content": "",
-    "directives": []
-  },
-  {
-    "collection": "contact",
-    "columnValue": "",
-    "name": "default",
-    "description": "Default contact template",
     "outputFile": "",
     "content": "",
     "directives": []

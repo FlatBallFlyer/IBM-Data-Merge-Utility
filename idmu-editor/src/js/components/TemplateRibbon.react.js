@@ -2,9 +2,6 @@
  * @jsx React.DOM
  */
 var TemplateRibbonItem = React.createClass({
-  handleItemClick: function(evt){
-    this.props.cb(this.props.data);
-  },
   render: function() {
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
@@ -84,7 +81,7 @@ var TemplateRibbon = React.createClass({
 
     if(item) {
       var items = [item].map(function(opt,i){
-        return(<TemplateRibbonItem key={i} cb={selectHandler} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={opt} collection={data}/>);
+        return(<TemplateRibbonItem key={i} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={opt} collection={data}/>);
       });
 
       newRibbon = [0].map(function(opt,i){
