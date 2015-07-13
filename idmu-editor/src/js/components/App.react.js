@@ -26,13 +26,13 @@ var App = React.createClass({
       this.loadDirectivesFromServer();
       this.loadCollectionsFromServer();
     }
-    this.loadTemplatesFromServer("root");
+    this.loadTemplatesFromServer(this.state.selectedCollection);//"root");
   },
   handleCollectionSelected: function(selectedCollection) {
     this.loadTemplatesFromServer(selectedCollection);
   },
   handleRibbonSelected: function(selectedRibbonIndex,selectedRibbonItem) {
-    //this.setState({selectedRibbonItem: selectedRibbonItem,selectedRibbonIndex: selectedRibbonIndex});
+    this.setState({selectedRibbonItem: selectedRibbonItem,selectedRibbonIndex: selectedRibbonIndex});
     this.loadTemplateFromServer(this.state.selectedCollection,
                                 selectedRibbonItem['name'],
                                 selectedRibbonItem['columnValue']);
@@ -70,9 +70,9 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
-        this.setState({templates: data,selectedCollection: collection}, function(){
+        this.setState({selectedRibbonIndex: 0,templates: data,selectedCollection: collection}, function(){
           if(!this.props.suppressCollection){
-            var sel = this.state.selectedRibbonItem || data[0];
+            var sel = data[0]; //this.state.selectedRibbonItem || data[0];
             this.loadTemplateFromServer(sel.collection,sel.name,sel.columnValue);
           }
         }.bind(this));

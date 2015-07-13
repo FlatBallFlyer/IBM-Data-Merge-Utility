@@ -9,6 +9,15 @@
     "directives": []
   },
   {
+    "collection": "root",
+    "columnValue": "SMS",
+    "name": "default",
+    "description": "Default root SMS template",
+    "outputFile": "",
+    "content": "",
+    "directives": []
+  },
+  {
     "collection": "contact",
     "columnValue": "",
     "name": "default",

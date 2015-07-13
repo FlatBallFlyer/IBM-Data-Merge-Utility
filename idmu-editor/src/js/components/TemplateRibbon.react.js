@@ -70,7 +70,6 @@ var TemplateRibbon = React.createClass({
     if(!data.templates || data.templates.length <= 0) {
       return(<div/>);
     }
-    
     var selectedCollection = data.selectedCollection;
     var collection = data['data'];
     var templates=data.templates;

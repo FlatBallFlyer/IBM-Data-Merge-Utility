@@ -4,7 +4,7 @@
   "name": "default",
   "label": "default",
   "output": "some file",
-  "content": "Take .. ",
+  "content": "Take ..<tkBookmark collection=\"contact\" name=\"default\" column=\"PREFERENCE\" /> ",
   "bookmarks": [
     {
       "id": "1",
