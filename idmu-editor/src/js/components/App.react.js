@@ -31,10 +31,11 @@ var App = React.createClass({
     this.loadTemplatesFromServer(selectedCollection);
   },
   handleRibbonSelected: function(selectedRibbonIndex,selectedRibbonItem) {
-    this.setState({selectedRibbonItem: selectedRibbonItem,selectedRibbonIndex: selectedRibbonIndex});
-    this.loadTemplateFromServer(this.state.selectedCollection,
+    var collection = this.props.selection ? this.props.selection.collection : this.state.selectedCollection;
+    this.loadTemplateFromServer(collection,
                                 selectedRibbonItem['name'],
                                 selectedRibbonItem['columnValue']);
+    this.setState({selectedRibbonItem: selectedRibbonItem,selectedRibbonIndex: selectedRibbonIndex});
   },
   loadCollectionsFromServer: function() {
     var params = {};
@@ -53,7 +54,8 @@ var App = React.createClass({
           uniques[key] = {collection: key};
         }
         var final_list = Object.keys(uniques).map(function(v){ return {collection: v}});
-        var selectedCollection = this.state.selectedCollection || final_list[0].collection;
+
+        var selectedCollection = this.props.selection ? this.props.selection.collection : (this.state.selectedCollection || final_list[0].collection);
         this.setState({data: final_list,selectedCollection: selectedCollection},function(){
           this.loadTemplatesFromServer(this.state.selectedCollection);
         }.bind(this));
@@ -72,10 +74,8 @@ var App = React.createClass({
       data: params,
       success: function(data) {
         this.setState({selectedRibbonIndex: 0,templates: data,selectedCollection: collection}, function(){
-          //if(!this.props.suppressCollection){
-          var sel = data[0];
+          var sel = this.props.selection || data[0];
           this.loadTemplateFromServer(sel.collection,sel.name,sel.columnValue);
-          //}
         }.bind(this));
         
       }.bind(this),

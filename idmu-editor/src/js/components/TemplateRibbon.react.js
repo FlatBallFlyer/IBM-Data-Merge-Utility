@@ -39,13 +39,13 @@ var TemplateRibbon = React.createClass({
     var navLCB = this.handleNavLeftClick;
     if(this.props.suppressNav){
       return(
-        <div id="ribbon-left" className="col-xs-1 col-height col-middle text-center ribbon-nav ribbon-nav-width">
+        <div className="col-xs-1 col-height col-middle text-center ribbon-nav ribbon-nav-width">
           <span>&nbsp;</span>
         </div>
       );
     }else{
       return(
-        <div onClick={navLCB}  id="ribbon-left" className="col-xs-1 col-height col-middle text-center ribbon-nav ribbon-nav-width">
+        <div onClick={navLCB}  className="col-xs-1 col-height col-middle text-center ribbon-nav ribbon-nav-width">
           <span>&lt;&lt;</span>
         </div>
       );
@@ -55,12 +55,12 @@ var TemplateRibbon = React.createClass({
     var navRCB = this.handleNavRightClick;
     if(this.props.suppressNav){
       return(
-        <div id="ribbon-right" className="col-xs-1 col-height col-middle text-center ribbon-nav ribbon-nav-width">
+        <div className="col-xs-1 col-height col-middle text-center ribbon-nav ribbon-nav-width">
           <span>&nbsp;</span>
         </div>);
     }else{
       return(
-        <div onClick={navRCB} id="ribbon-right" className="col-xs-1 col-height col-middle text-center ribbon-nav ribbon-nav-width">
+        <div onClick={navRCB} className="col-xs-1 col-height col-middle text-center ribbon-nav ribbon-nav-width">
           <span>&gt;&gt;</span>
         </div>);
     }
@@ -91,7 +91,7 @@ var TemplateRibbon = React.createClass({
 
       newRibbon = [0].map(function(opt,i){
         return(
-          <div key={i} id="ribbon" className="row ribbon">
+          <div key={i} className="row ribbon">
             <div className="row-height">
               {this.leftNav()}
               <div className="col-md-10 col-height ribbon-items">                

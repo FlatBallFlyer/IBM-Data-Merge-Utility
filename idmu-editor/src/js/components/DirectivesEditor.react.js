@@ -23,7 +23,10 @@ var DirectivesEditor = React.createClass({
   mixins: [ModalMixin],
   
   handleSave: function(e) {
-    var payload = this.refs[this.props.directive.name].state;
+    var index = this.props.index;
+    var level = this.props.level;
+    var this_ref = this.props.directive.name+"_"+level+"_"+index;
+    var payload = this.refs[this_ref].state;
     this.props.dCB(this.props.index,payload);
   },
   editor: function(type_in){

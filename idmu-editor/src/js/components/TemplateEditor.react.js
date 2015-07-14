@@ -30,14 +30,18 @@ var TemplateEditor = React.createClass({
         }else{
           var el=$.parseHTML(opt.slice);
           var suppressNav = false;
+          var collection = $(el).attr('collection');
+          var name = $(el).attr('name');
           var colName = $(el).attr('column');
+          
           if(colName && colName.length>0){
             suppressNav=true;
           }
 
           var this_ref = "app_"+level+"_"+i;
+          var selection = {collection:collection,name: name,colValue:colName};
           return(
-            <App key={i} ref={this} level={level+1} index={i} suppressCollection={true} suppressRibbon={false} suppressNav={suppressNav}/>
+            <App key={i} ref={this} level={level+1} index={i} selection={selection} suppressCollection={true} suppressRibbon={false} suppressNav={suppressNav}/>
           );
         }
       });

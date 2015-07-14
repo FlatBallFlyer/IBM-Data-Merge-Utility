@@ -3,8 +3,9 @@
   "collection": "root",
   "name": "default",
   "label": "default",
-  "output": "some file",
-  "content": "This is root.default .. ",
+    "output": "some file",
+    "content_1": "<tkBookmark collection=\"contact\" name=\"default\" column=\"THIS\" />",
+  "content": "This is root.default trailing content <tkBookmark collection=\"contact\" name=\"cmd\"  /> trailer comment .. ",
   "bookmarks": [
     {
       "id": "1",
@@ -59,19 +60,5 @@
     }
   ],
   "columnValue": "",
-  "description": "Rotten default root cause",
-  "items": [
-    {
-      "type": "text",
-      "slice": "This is default "
-    },
-    {
-      "type": "bookmark",
-      "slice": "<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" />"
-    },
-    {
-      "type": "text",
-      "slice": "  crap"
-    }
-  ]
+  "description": "Rotten default root cause"
 }
