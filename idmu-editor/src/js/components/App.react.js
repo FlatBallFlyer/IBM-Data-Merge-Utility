@@ -21,7 +21,7 @@ var App = React.createClass({
     window.router.init();
   },
   componentDidMount: function () {
-    if(!this.props.suppressCollection){
+    if(this.props.level === 0){
       this.initRouter();
     }
     this.loadDirectivesFromServer();
@@ -228,26 +228,22 @@ var App = React.createClass({
   },
 
   header: function(){
-    if(!this.props.suppressCollection){
+    if(this.props.level === 0){
       var index=0;
       var level=this.props.level;
       var this_ref = "ribbon_"+level+"_"+index;
       
-      return(<TemplateCollection ref={this_ref} level={level} index={index}  suppress={this.props.suppressCollection} selectHandler={this.handleCollectionSelected} data={this.state}/>);
+      return(<TemplateCollection ref={this_ref} level={level} index={index} selectHandler={this.handleCollectionSelected} data={this.state}/>);
     }else{return (<div/>);}
   },
   ribbon: function(){
-    if(!this.props.suppressRibbon){
-      var mCB = this.moveItemBetweenList;
-      var aCB = this.moveItemWithinList;
-      var sCB = this.handleSave;
-      var dCB = this.saveDirective;
-      var index=0;
-      var level=this.props.level;
-      var this_ref = "ribbon_"+level+"_"+index;
-      return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB}/>);
-    }else{
-      return(<div/>);
-    }
+    var mCB = this.moveItemBetweenList;
+    var aCB = this.moveItemWithinList;
+    var sCB = this.handleSave;
+    var dCB = this.saveDirective;
+    var index=0;
+    var level=this.props.level;
+    var this_ref = "ribbon_"+level+"_"+index;
+    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB}/>);
   }
 });

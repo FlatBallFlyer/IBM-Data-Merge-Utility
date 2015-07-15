@@ -51,7 +51,7 @@ var TemplateEditor = React.createClass({
           var this_ref = "app_"+level+"_"+i;
           var selection = {collection:collection,name: name,colValue:colName};
           return(
-            <App key={i} ref={this} level={level+1} index={i} selection={selection} suppressCollection={true} suppressRibbon={false} suppressNav={suppressNav}/>
+            <App key={i} ref={this} level={level+1} index={i} selection={selection}  suppressNav={suppressNav}/>
           );
         }
       });
