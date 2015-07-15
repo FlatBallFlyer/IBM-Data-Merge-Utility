@@ -2,16 +2,26 @@
  * @jsx React.DOM
  */
 var TemplateEditor = React.createClass({
-  handleSave: function(opts) {
+  handleSave: function() {
     var data = this.props.data;
     var items = data.template.items;
     var self = this;
     var content_raw = items.map(function(b,i){
-      var this_ref = "template_body_"+self.props.level+"_"+i;
-      if(self.refs[this_ref]){
-        return self.refs[this_ref].getLastHtml();
+      if(b.type === 'text') {
+        var this_ref = "template_body_"+self.props.level+"_"+i;
+        if(self.refs[this_ref]){
+          return self.refs[this_ref].getText();
+        }
+      }else if(b.type === 'bookmark') {
+        return(b.slice);
       }
     }).join('');
+
+    var index=this.props.index;
+    var level=this.props.level;
+    var header_ref = "template_header_"+level+"_"+index;
+    
+    var opts = this.refs[header_ref].getHeaderValues();
     opts.content = Utils.prepareContentForSave(content_raw);
     this.props.sCB(opts);
   },
@@ -21,12 +31,12 @@ var TemplateEditor = React.createClass({
     var body_items = [];
 
     var level=this.props.level;
-    
+    var sCB = this.handleSave
     if(items){
       body_items = items.map(function(opt,i){
         if(opt.type === 'text'){
           var this_ref = "template_body_"+level+"_"+i;
-          return(<TemplateBody index={i} level={level} key={i} ref={this_ref} data={data} content={opt.slice}/>);
+          return(<TemplateBody sCB={sCB} index={i} level={level} key={i} ref={this_ref} data={data} content={opt.slice}/>);
         }else{
           var el=$.parseHTML(opt.slice);
           var suppressNav = false;

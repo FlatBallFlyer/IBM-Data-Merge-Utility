@@ -3,15 +3,8 @@
   "collection": "root",
   "name": "default",
   "label": "default",
-    "output": "some file",
-    "content_1": "<tkBookmark collection=\"contact\" name=\"default\" column=\"THIS\" />",
-  "content": "This is root.default trailing content <tkBookmark collection=\"contact\" name=\"cmd\"  /> trailer comment .. ",
-  "bookmarks": [
-    {
-      "id": "1",
-      "name": "Whatever"
-    }
-  ],
+  "columnValue": "",
+  "output": "some file",
   "directives": [
     {
       "sequence": "1",
@@ -59,6 +52,6 @@
       }
     }
   ],
-  "columnValue": "",
+  "content": "asd first fukcing monster <tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"name\" columnName=\"\" /> here <tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"name\" columnName=\"\" /> and trail here ...Nextas asd",
   "description": "Rotten default root cause"
 }

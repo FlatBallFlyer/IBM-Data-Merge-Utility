@@ -8,18 +8,16 @@ var TemplateHeader = React.createClass({
   handleChangePanel: function(evt){
     this.setState({panelConfig: evt.target.id});
   },
-  handleClickDirectives: function(evt) {
-    //set state and open dialog ..
-  },
-  handleSave: function(evt) {
+  getHeaderValues: function(){
     var opts = {};
     var this_ref = "header_panel_"+this.props.level+"_"+this.props.index;
-      console.log("header panel="+this_ref);
-      console.debug(this.refs);
     if(this.refs[this_ref]) {
       opts = $.extend({},opts,this.refs[this_ref].state);
-      this.props.sCB(opts);
     }
+    return opts;
+  },
+  handleSave: function(evt) {
+      this.props.sCB();
   },
   showPanel: function(){
     var mCB = this.props.mCB;
