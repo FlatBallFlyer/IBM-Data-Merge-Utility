@@ -37,7 +37,7 @@ var TemplateEditor = React.createClass({
         if(opt.type === 'text'){
           var this_ref = "template_body_"+level+"_"+i;
           return(<TemplateBody sCB={sCB} index={i} level={level} key={i} ref={this_ref} data={data} content={opt.slice}/>);
-        }else{
+        }else if(level < config("max_depth")){
           var el=$.parseHTML(opt.slice);
           var suppressNav = false;
           var collection = $(el).attr('collection');
@@ -53,6 +53,8 @@ var TemplateEditor = React.createClass({
           return(
             <App key={i} ref={this} level={level+1} index={i} selection={selection}  suppressNav={suppressNav}/>
           );
+        }else {
+          return(<div><h5>Exceeded max sub-template depth.</h5></div>);
         }
       });
     }

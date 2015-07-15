@@ -1,5 +1,6 @@
 var CONFIG_KEYS = {
-  "ga.id": ""
+  "ga.id": "",
+  "max_depth": 5
 };
 
 var config = (function(keys) {
