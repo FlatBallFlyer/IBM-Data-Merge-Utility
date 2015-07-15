@@ -238,8 +238,6 @@ var InsertSubTemplatesFromTagData = React.createClass({
       <div>
         <form>
           {this.description()}
-          {this.collection_name()}
-          {this.collection_column()}
           {this.not_last()}          
           {this.only_last()}
           {this.provider_condition()}
@@ -280,8 +278,6 @@ var InsertSubTemplatesFromSQLRows = React.createClass({
     return (<div>
         <form>
           {this.description()}
-          {this.collection_name()}
-          {this.collection_column()}
           {this.not_last()}
           {this.only_last()}
           {this.provider_source()}
@@ -392,8 +388,6 @@ var InsertSubTemplatesFromCSV = React.createClass({
     return (<div>
       <form>
         {this.description()}
-        {this.collection_name()}
-        {this.collection_column()}
         {this.not_last()}
         {this.only_last()}
         {this.provider_static_data()}
@@ -500,8 +494,6 @@ var InsertSubTemplatesFromHTMLTableRows = React.createClass({
     return (<div>
       <form>
         {this.description()}
-        {this.collectio_name()}
-        {this.collectio_column()}
         {this.not_last()}
         {this.only_last()}
         {this.provider_static_data()}

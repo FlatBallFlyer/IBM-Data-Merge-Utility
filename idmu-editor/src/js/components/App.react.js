@@ -92,7 +92,7 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
-        this.setState({directives: data});
+        this.setState({directives: data.directives});
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());

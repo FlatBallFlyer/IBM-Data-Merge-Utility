@@ -48,7 +48,7 @@ var LHSList = React.createClass({
           this.props.directives.map(function(opt,i){
             var item_id = i;
             return(<li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
-              <span className="drag-handle">::</span>{opt['name']}
+              <span className="drag-handle">::</span>{opt['description']}
             </li>);
           })
          }
@@ -86,7 +86,7 @@ var RHSList = React.createClass({
             return(
               <li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
                 <span className="drag-handle">::</span>
-                <DirectivesEditorTrigger ref={this_ref} level={level} index={i} title={opt['name']} data={data} directive={opt} dCB={dCB}/>
+                <DirectivesEditorTrigger ref={this_ref} level={level} index={i} title={opt['description']} data={data} directive={opt} dCB={dCB}/>
               </li>);
           })
          }
