@@ -74,6 +74,7 @@ var RHSList = React.createClass({
     var title = this.props.title;
     var data = this.props.data;
     var dCB = this.props.dCB;
+    var rCB = this.props.rCB;
 
     var level=this.props.level;
     if(this.props.directives.length === 0){
@@ -85,7 +86,7 @@ var RHSList = React.createClass({
         return(
           <li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
             <span className="drag-handle">::</span>
-            <DirectivesEditorTrigger ref={this_ref} level={level} index={i} title={opt['description']} data={data} directive={opt} dCB={dCB}/>
+            <DirectivesEditorTrigger ref={this_ref} level={level} index={i} title={opt['description']} data={data} directive={opt} rCB={rCB} dCB={dCB} />
           </li>);
       }));
     }
@@ -117,7 +118,7 @@ var Directives = React.createClass({
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
     var dCB = this.props.dCB;
-
+    var rCB = this.props.rCB;
     var level=this.props.level;
     var index=this.props.index;
     
@@ -130,7 +131,7 @@ var Directives = React.createClass({
               <LHSList level={level} index={index} ref={"lhs_"+level+"_"+index} sort={false} key={lhsID} id={lhsID} title={"LHS"} directives={lhs} moveItemBetweenList={mCB} moveItemWithinList={aCB}/>
             </div>
             <div className="to-directives col-xs-6 col-md-6">
-              <RHSList level={level} index={index} ref={"lhs_"+level+"_"+index} sort={true} key={rhsID} id={rhsID} data={this.props.data} title={"RHS"} directives={rhs} moveItemBetweenList={mCB} moveItemWithinList={aCB} dCB={dCB}/>
+              <RHSList level={level} index={index} ref={"lhs_"+level+"_"+index} sort={true} key={rhsID} id={rhsID} data={this.props.data} title={"RHS"} directives={rhs} moveItemBetweenList={mCB} moveItemWithinList={aCB} dCB={dCB} rCB={rCB}/>
             </div>
           </div>
         </div>

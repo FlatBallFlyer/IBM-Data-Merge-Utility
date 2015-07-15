@@ -144,8 +144,19 @@ var App = React.createClass({
       }.bind(this)
     });
   },
+  removeItemWithinList(level,index){
+    //console.log('moving '+itemId+' to '+listId+':'+newIndex);
+    //Probably want to fire an action creator here... but we'll just splice state manually
+    var tpl = this.state.template;
+    var newListInfo = $.extend(true, [], tpl['directives']);
+    var oldItemArr = newListInfo;
+    var item = oldItemArr.splice(index,1);
+    console.debug(oldItemArr);
+    tpl.directives = oldItemArr;
+    this.setState({template: tpl});
+  },
   moveItemWithinList: function(itemId, listId, newIndex){
-    console.log('moving '+itemId+' to '+listId+':'+newIndex);
+    //console.log('moving '+itemId+' to '+listId+':'+newIndex);
     //Probably want to fire an action creator here... but we'll just splice state manually
     var tpl = this.state.template;
     var newListInfo = $.extend(true, [], tpl['directives']);
@@ -156,7 +167,7 @@ var App = React.createClass({
     this.setState({template: tpl});
   },
   moveItemBetweenList: function(itemId, oldListId, oldIndex, newListId, newIndex){
-    console.log('moving '+itemId+' from '+oldListId+':'+oldIndex+' to '+newListId+':'+newIndex);
+    //console.log('moving '+itemId+' from '+oldListId+':'+oldIndex+' to '+newListId+':'+newIndex);
     //Probably want to fire an action creator here... but we'll just splice state manually
     var newListInfo = $.extend(true, [], this.state.directives);
     var oldItemArr = newListInfo;
@@ -168,7 +179,7 @@ var App = React.createClass({
     this.setState({template: tpl});
   },
   saveDirective: function(index,payload){
-    console.debug("save directive at "+index);
+    //console.debug("save directive at "+index);
     var tpl = this.state.template;
     var directives = tpl.directives;
     directives[index] = payload;
@@ -207,7 +218,7 @@ var App = React.createClass({
     });
   },
   handleSave: function(opts) {
-    console.log(opts);
+    //console.log(opts);
     this.saveTemplateToServer(opts,this.state.selectedCollection);
     this.loadCollectionsFromServer();
     this.loadTemplatesFromServer(this.state.selectedCollection);
@@ -241,9 +252,10 @@ var App = React.createClass({
     var aCB = this.moveItemWithinList;
     var sCB = this.handleSave;
     var dCB = this.saveDirective;
+    var rCB = this.removeItemWithinList;
     var index=0;
     var level=this.props.level;
     var this_ref = "ribbon_"+level+"_"+index;
-    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB}/>);
+    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB}/>);
   }
 });

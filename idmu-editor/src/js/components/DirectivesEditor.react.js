@@ -8,13 +8,20 @@ var DirectivesEditorTrigger = React.createClass({
     var el = this.refs[this_ref].getDOMNode();
     $(el).modal();
   },
+  removeDirective: function(e){
+    e.stopPropagation();
+    var index = this.props.index;
+    var level = this.props.level;
+    var this_ref = "directives_editor_"+level+"_"+index;
+    this.props.rCB(level,index);
+  },
   render: function() {
     var index = this.props.index;
     var level = this.props.level;
     var this_ref = "directives_editor_"+level+"_"+index;
     var dCB = this.props.dCB;
     return(
-      <span onClick={this.handleClick}>{this.props.title}<DirectivesEditor  key={this.props.title}  ref={this_ref} level={level} index={index} title={this.props.title} data={this.props.data}  directive={this.props.directive} index={this.props.index} dCB={dCB}/></span>
+      <span onClick={this.handleClick}>{this.props.title} <span className="glyphicon glyphicon-remove pull-right" onClick={this.removeDirective} style={{cursor: 'pointer',zIndex:20,color:"red"}}></span><DirectivesEditor  key={this.props.title}  ref={this_ref} level={level} index={index} title={this.props.title} data={this.props.data}  directive={this.props.directive} index={this.props.index} dCB={dCB}/></span>
     );
   }
 });

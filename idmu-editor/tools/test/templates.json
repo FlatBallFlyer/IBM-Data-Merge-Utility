@@ -209,5 +209,110 @@
     ],
     "content": "top  here<tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"default\" columnName=\"\" />",
     "description": "Rotten default root cause"
+  },
+  {
+    "content": "top  here<tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"default\" columnName=\"\" />"
+  },
+  {
+    "content": "top  here<tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"default\" columnName=\"\" />"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "default",
+    "label": "default",
+    "columnValue": "",
+    "output": "some file",
+    "directives": [
+      {
+        "description": "TestRequire",
+        "softFail": "false",
+        "tags": [
+          "Foo",
+          "empty"
+        ],
+        "type": "0"
+      }
+    ],
+    "content": "top  here<tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"default\" columnName=\"\" />",
+    "description": "Rotten default root cause"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "default",
+    "label": "default",
+    "columnValue": "",
+    "output": "some file",
+    "content": "top  here<tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"default\" columnName=\"\" />",
+    "description": "Rotten default root cause"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "default",
+    "label": "default",
+    "columnValue": "",
+    "output": "some file",
+    "directives": [
+      {
+        "description": "TestInsertSubsTag",
+        "notLast": [
+          "empty"
+        ],
+        "provider": {
+          "condition": "0",
+          "list": "false",
+          "tag": "Foo",
+          "type": "2",
+          "value": ""
+        },
+        "softFail": "false",
+        "type": "2"
+      }
+    ],
+    "content": "top  here<tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"default\" columnName=\"\" />",
+    "description": "Rotten default root cause"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "default",
+    "label": "default",
+    "columnValue": "",
+    "output": "some file",
+    "content": "top  here<tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"default\" columnName=\"\" />",
+    "description": "Rotten default root cause"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "default",
+    "label": "default",
+    "columnValue": "",
+    "output": "some file",
+    "directives": [
+      {
+        "description": "TestRequire",
+        "softFail": "false",
+        "tags": [
+          "Foo",
+          "empty"
+        ],
+        "type": "0"
+      }
+    ],
+    "content": "top  here<tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"default\" columnName=\"\" />",
+    "description": "Rotten default root cause"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "default",
+    "label": "default",
+    "columnValue": "",
+    "output": "some file",
+    "content": "top  here<tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"default\" columnName=\"\" />",
+    "description": "Rotten default root cause"
   }
 ]

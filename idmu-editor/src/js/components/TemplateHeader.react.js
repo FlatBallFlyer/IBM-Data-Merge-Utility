@@ -23,15 +23,16 @@ var TemplateHeader = React.createClass({
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
     var dCB = this.props.dCB;
+    var rCB = this.props.rCB;
     var level = this.props.level;
     var index = this.props.index;
     var changeCB = this.handleChangePanel;
     if(this.state.panelConfig === 'show-directives') {
       var this_ref="directives_panel_"+level+"_"+index;
-      return(<Directives level={level} index={index} ref={this_ref} dCB={dCB} mCB={mCB} aCB={aCB} data={this.props.data} changeCB={changeCB}/>);
+      return(<Directives level={level} index={index} ref={this_ref} rCB={rCB} dCB={dCB} mCB={mCB} aCB={aCB} data={this.props.data} changeCB={changeCB}/>);
     }else {
       var this_ref = "header_panel_"+level+"_"+index;
-      return(<HeaderPanel level={level} index={index} ref={this_ref} dCB={dCB} data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
+      return(<HeaderPanel level={level} index={index} ref={this_ref} rCB={rCB} dCB={dCB} data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
     }
   },
   render: function(){
