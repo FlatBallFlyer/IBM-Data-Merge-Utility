@@ -25,6 +25,20 @@ var TemplateEditor = React.createClass({
     opts.content = Utils.prepareContentForSave(content_raw);
     this.props.sCB(opts);
   },
+  hasInsertDirectives: function(){
+    //2,10,21,31
+    var data = this.props.data;
+    var template = data.template;
+    var found = false;
+    for(var idx=0; idx < template.directives.length; idx++) {
+      var type = parseInt(template.directives[idx].type);
+      if(type === 2 || type === 10 || type === 21 || type === 31){
+        found = true;
+        break;
+      }
+    }
+    return found;
+  },
   bodyItems: function(){
     var data = this.props.data;
     var items = data.template.items;
@@ -32,11 +46,12 @@ var TemplateEditor = React.createClass({
 
     var level=this.props.level;
     var sCB = this.handleSave
+    var hasInsertDirective = this.hasInsertDirectives();
     if(items){
       body_items = items.map(function(opt,i){
         if(opt.type === 'text'){
           var this_ref = "template_body_"+level+"_"+i;
-          return(<TemplateBody sCB={sCB} index={i} level={level} key={i} ref={this_ref} data={data} content={opt.slice}/>);
+          return(<TemplateBody sCB={sCB} index={i} level={level} key={i} ref={this_ref} data={data} content={opt.slice} hasInsertDirective={hasInsertDirective}/>);
         }else if(level < config("max_depth")){
           var el=$.parseHTML(opt.slice);
           var suppressNav = false;
@@ -44,14 +59,14 @@ var TemplateEditor = React.createClass({
           var name = $(el).attr('name');
           var colName = $(el).attr('column');
           
-          if(colName && colName.length>0){
+          if(!colName || colName.length === 0){
             suppressNav=true;
           }
 
           var this_ref = "app_"+level+"_"+i;
           var selection = {collection:collection,name: name,colValue:colName};
           return(
-            <App key={i} ref={this} level={level+1} index={i} selection={selection}  suppressNav={suppressNav}/>
+            <App key={i} ref={this_ref} level={level+1} index={i} selection={selection}  suppressNav={suppressNav}/>
           );
         }else {
           return(<div><h5>Exceeded max sub-template depth.</h5></div>);

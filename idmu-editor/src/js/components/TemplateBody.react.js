@@ -73,12 +73,21 @@ var TemplateBody = React.createClass({
       return(<div/>);
     }
   },
-  render: function(){
+  insertBookmarkTrigger: function(){
     var title = "Insert Bookmark";
     var level = this.props.level;
     var index = this.props.index;
-    var this_ref = "content_editable_"+level+"_"+index;
     var bk_ref = "insert_bkm_"+level+"_"+index;
+    if(this.props.hasInsertDirective){
+      return(<InsertBookmarkTrigger ref={bk_ref} level={level} index={index} title={title} iCB={this.handleInsert}/>);
+    }else{
+      return(<div/>);
+    }
+  },
+  render: function(){
+    var level = this.props.level;
+    var index = this.props.index;
+    var this_ref = "content_editable_"+level+"_"+index;
     return(
       <div className="row no-margin ribbon-inside">
         <form>
@@ -91,7 +100,7 @@ var TemplateBody = React.createClass({
         </form>
         <div>
           <div className="form-group col-xs-12 col-md-12">
-            <InsertBookmarkTrigger ref={bk_ref} level={level} index={index} title={title} iCB={this.handleInsert}/>
+            {this.insertBookmarkTrigger()}
           </div>            
         </div>
       </div>
