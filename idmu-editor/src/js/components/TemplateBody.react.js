@@ -66,6 +66,13 @@ var TemplateBody = React.createClass({
     var state = {content: final_text};
     this.setState(state);
   },
+  heading: function(){
+    if(this.props.index == 0){
+      return(<label for="name" className="control-label">Content</label>);
+    }else{
+      return(<div/>);
+    }
+  },
   render: function(){
     var title = "Insert Bookmark";
     var level = this.props.level;
@@ -77,7 +84,7 @@ var TemplateBody = React.createClass({
         <form>
           <div className="form-group col-xs-12 col-md-12">
             <div className="form-group col-xs-12 col-md-12">
-              <label for="name" className="control-label">Content</label>
+              {this.heading()}
               <ContentEditable content={this.state.content} ref={this_ref} level={level} index={index} id={this_ref}/>
             </div>
           </div>
