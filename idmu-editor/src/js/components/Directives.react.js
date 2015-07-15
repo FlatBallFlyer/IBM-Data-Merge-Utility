@@ -70,26 +70,31 @@ var RHSList = React.createClass({
     handle: ".drag-handle",
     scroll: true
   },
-  render: function() {
+  getRHS: function(){
     var title = this.props.title;
-    var id = this.props.id;
     var data = this.props.data;
     var dCB = this.props.dCB;
 
     var level=this.props.level;
+    if(this.props.directives.length === 0){
+      return(<li className="list-group-item">&nbsp;</li>);
+    }else{
+      return(this.props.directives.map(function(opt,i){
+        var item_id = i;
+        var this_ref = "directives_editor_trigger_"+level+"_"+i;
+        return(
+          <li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
+            <span className="drag-handle">::</span>
+            <DirectivesEditorTrigger ref={this_ref} level={level} index={i} title={opt['description']} data={data} directive={opt} dCB={dCB}/>
+          </li>);
+      }));
+    }
+  },
+  render: function() {
+    var id = this.props.id;
     return (
       <ul ref="" className="list-group" data-sortable-list-id={id}>
-        {
-          this.props.directives.map(function(opt,i){
-            var item_id = i;
-            var this_ref = "directives_editor_trigger_"+level+"_"+i;
-            return(
-              <li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
-                <span className="drag-handle">::</span>
-                <DirectivesEditorTrigger ref={this_ref} level={level} index={i} title={opt['description']} data={data} directive={opt} dCB={dCB}/>
-              </li>);
-          })
-         }
+        {this.getRHS()}
       </ul>
     );
   }

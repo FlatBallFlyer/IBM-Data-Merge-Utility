@@ -23,7 +23,7 @@ var HeaderPanel  = React.createClass({
 
     var directives = tpl['directives'] ? tpl['directives'] : [];
     var options=directives.map(function(k,i){
-      return (<option key={i} value={k.name} label={k.name}>{k.name}</option>);
+      return (<option key={i} value={k.description} label={k.description}>{k.description}</option>);
     });
 
     var level=this.props.level;

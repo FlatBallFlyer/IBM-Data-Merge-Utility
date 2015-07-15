@@ -173,5 +173,41 @@
     ],
     "content": "This is contact blue this <tkBookmark class=\"tkbookmark\" collection=\"company\" name=\"default\" columnName=\"\" />second ",
     "description": "asdblack blue face nest"
+  },
+  {
+    "id": "1",
+    "collection": "root",
+    "name": "default",
+    "label": "default",
+    "columnValue": "",
+    "output": "some file",
+    "directives": [
+      {
+        "description": "TestRequire",
+        "softFail": "false",
+        "tags": [
+          "Foo",
+          "empty"
+        ],
+        "type": "0"
+      },
+      {
+        "description": "TestInsertSubsTag",
+        "notLast": [
+          "empty"
+        ],
+        "provider": {
+          "condition": "0",
+          "list": "false",
+          "tag": "Foo",
+          "type": "2",
+          "value": ""
+        },
+        "softFail": "false",
+        "type": "2"
+      }
+    ],
+    "content": "top  here<tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"default\" columnName=\"\" />",
+    "description": "Rotten default root cause"
   }
 ]
