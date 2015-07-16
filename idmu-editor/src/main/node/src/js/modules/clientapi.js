@@ -14,11 +14,6 @@ ClientApi.prototype._since = function(days) {
 };
 
 ClientApi.prototype._get = function(url, data) {
-
-  if(DEBUG) {
-    console.log(this.name + ", url: " + url);
-  }
-
   var jqxhr = $.ajax({
     method: "GET",
     url: url,
@@ -54,16 +49,7 @@ ClientApi.prototype.get = function(options) {
   var id = this.options.id;
   if(id) {
     url += "/" + encodeURIComponent(id);
-    if(DEBUG) {
-      console.log("get " + this.name + " id: " + id +
-      ", url: " + url);
-    }
   }
-
   var data = {};
-  if(DEBUG) {
-    console.log("get " + this.name + " data: " + JSON.stringify(data, null, 4));
-  }
-
   this._get(url, data);
 }

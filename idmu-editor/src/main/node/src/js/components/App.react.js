@@ -130,15 +130,17 @@ var App = React.createClass({
     return items;
   },
   loadTemplateFromServer: function(collection,id,columnValue) {
+    /*
     var params = {};
     if(columnValue){
       params['columnValue'] = columnValue;
     }
+    */
+    var sfx = (columnValue && columnValue.length>0) ? "/"+columnValue : "";
     $.ajax({
-      url: '/idmu/templates/'+collection+'/'+id,
+      url: '/idmu/template/'+collection+'/'+id+sfx,
       dataType: 'json',
       cache: false,
-      data: params,
       success: function(data) {
         data.items = this.buildBodyItems(data.content);
 

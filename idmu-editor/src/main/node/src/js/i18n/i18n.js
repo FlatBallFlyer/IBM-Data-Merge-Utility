@@ -26,10 +26,6 @@ var i18nFormat = function(message, param) {
 };
 
 window.addEventListener("load", function() {
-  if(DEBUG) {
-    console.log("moment: " + locale());
-    console.log("numeral: " + locale());
-  }
   moment.locale(locale());
   numeral.language(locale());
 });
