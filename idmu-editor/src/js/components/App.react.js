@@ -37,6 +37,9 @@ var App = React.createClass({
                                 selectedRibbonItem['columnValue']);
     this.setState({selectedRibbonItem: selectedRibbonItem,selectedRibbonIndex: selectedRibbonIndex});
   },
+  handleAddTemplate: function(newTpl){
+    this.addNewTemplateToServer(newTpl);
+  },
   loadCollectionsFromServer: function() {
     var params = {};
     $.ajax({
@@ -151,7 +154,6 @@ var App = React.createClass({
     var newListInfo = $.extend(true, [], tpl['directives']);
     var oldItemArr = newListInfo;
     var item = oldItemArr.splice(index,1);
-    console.debug(oldItemArr);
     tpl.directives = oldItemArr;
     this.setState({template: tpl});
   },
@@ -198,10 +200,26 @@ var App = React.createClass({
       description: opts.description
     });
   },
+  addNewTemplateToServer: function(opts){
+    var params = {template:this.templateBody(opts)};
+    $.ajax({
+      url: '/idmu/templates/'+collection,
+      dataType: 'json',
+      method: 'PUT',
+      cache: false,
+      data: params,
+      success: function(data) {
+        this.setState({selectedCollection: opts.collection},function(){
+          //this.loadTemplatesFromServer(this.state.selectedCollection);
+          this.loadCollectionsFromServer();
+        }.bind(this));
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
   saveTemplateToServer: function(opts,collection) {
-    //var params = {template:{}};
-    //params.template = $.extend({},this.state.template,opts);
-    
     var params = {template:this.templateBody(opts)};
     $.ajax({
       url: '/idmu/templates/'+collection,
@@ -253,9 +271,10 @@ var App = React.createClass({
     var sCB = this.handleSave;
     var dCB = this.saveDirective;
     var rCB = this.removeItemWithinList;
+    var addTplCB = this.handleAddTemplate;
     var index=0;
     var level=this.props.level;
     var this_ref = "ribbon_"+level+"_"+index;
-    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB}/>);
+    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB} addTplCB={addTplCB}/>);
   }
 });

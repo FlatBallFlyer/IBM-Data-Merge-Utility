@@ -35,6 +35,34 @@ var TemplateHeader = React.createClass({
       return(<HeaderPanel level={level} index={index} ref={this_ref} rCB={rCB} dCB={dCB} data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
     }
   },
+  insertAddButton: function(){
+    var data = this.props.data;
+    var tpl = data.template;
+    var selection={collection: data.selectedCollection,
+                   name: tpl.name};
+
+    var level=this.props.level;
+    var index=this.props.index;
+    var this_ref = Utils.thisRef(level,index,"add_template_trigger");
+    var addTplCB = this.props.addTplCB;
+    if(level===0){
+      return(<AddTemplateTrigger level={level} index={index} ref={this_ref} title={"Add Template"} selection={selection} addTplCB={addTplCB}/>);
+    }else{
+      return(<div/>);
+    }
+  },
+  insertSaveButton: function(){
+    var level=this.props.level;
+    var index=this.props.index;
+    var show_directives_id="show-directives_"+level+"_"+index;
+    return(
+      <a role="button" aria-expanded="true">
+        <span className="input-group-btn input-group-btn-directives">
+          <button onClick={this.handleSave} id={show_directives_id} type="button" className="btn btn-primary">Save</button>
+        </span>
+      </a>
+    );
+  },
   render: function(){
     var data = this.props.data;
     var tpl = data.template;
@@ -55,17 +83,16 @@ var TemplateHeader = React.createClass({
             <div className="panel panel-default">
               <div className="panel-heading" role="tab" id={panel_heading_id}>
                 <div className="row">
-                <div className="col-xs-10 col-md-10">
+                <div className="col-xs-9 col-md-9">
                   <a role="button" data-toggle="collapse" data-parent={"#"+accordian_id} href={"#"+collapse_id} aria-expanded="true" aria-controls={collapse_id}>
                     <span className="control-label-big">{label}</span>
                   </a>
                 </div>
                 <div className="col-xs-1 col-md-1">
-                  <a role="button" aria-expanded="true">
-                    <span className="input-group-btn input-group-btn-directives">
-                      <button onClick={this.handleSave} id={show_directives_id} type="button" className="btn btn-primary">Save</button>
-                    </span>
-                  </a>
+                  {this.insertAddButton()}
+                </div>
+                <div className="col-xs-1 col-md-1">
+                  {this.insertSaveButton()}
                 </div>
                 <div className="col-xs-1 col-md-1">
                   &nbsp;

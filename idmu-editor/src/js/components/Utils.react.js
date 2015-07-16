@@ -10,6 +10,9 @@ var Utils = {
     content = content.replace(/div class=\"tkbookmark\"/g,"tkBookmark");
     content = content.replace(/><\/div>/g,"/>");
     return content;
+  },
+  thisRef: function(level,index,label){
+    return(label+"_"+level+"_"+index);
   }
 };
 
