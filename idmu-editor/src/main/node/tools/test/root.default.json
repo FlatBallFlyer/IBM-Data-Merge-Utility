@@ -5,7 +5,7 @@
   "label": "default",
   "columnValue": "",
   "output": "some file",
-  "content": "top  here<tkBookmark class=\"tkbookmark\" collection=\"contact\" name=\"default\" columnName=\"\" />",
+  "content": "",
     "description": "Rotten default root cause",
     "directives": []
 }

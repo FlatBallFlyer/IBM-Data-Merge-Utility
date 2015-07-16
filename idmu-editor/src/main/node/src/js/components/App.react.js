@@ -126,6 +126,8 @@ var App = React.createClass({
     var slice = content.slice(sIdx);
     if(slice && slice.length > 0){
       items.push({type: 'text', slice: slice});
+    }else{
+      items.push({type: 'text', slice: ""});
     }
     return items;
   },
