@@ -14,14 +14,15 @@ var TemplateCollection = React.createClass({
     var options=collection.map(function(k,i){
       return (<option key={i} value={k.collection} label={k.collection}>{k.collection}</option>);
     });
+    
+    var id = "template-collection-"+this.props.level+"-"+this.props.index;
     return(
       <div className="row no-margin">
         <form className="form-vertical">
-          <div className="form-group">
-            <label for="template-collection" className="col-sm-4 control-label control-label-big">Collections</label>
+          <div className="form-group  col-sm-6">
+            <label for={id} className="col-sm-4 control-label control-label-big">Collections</label>
             <div className="col-sm-12">
-              
-              <select id="template-collection" className="form-control input-lg" onChange={this.handleChange} value={selectedValue}>
+              <select id={id} className="form-control input-lg" onChange={this.handleChange} value={selectedValue}>
                 {options}
               </select>
             </div>

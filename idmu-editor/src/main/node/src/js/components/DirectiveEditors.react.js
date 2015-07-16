@@ -13,7 +13,7 @@ var DirectiveEditorsMixin = {
     var defaultChecked = this.state.softFail === true;
     return(
       <div className="form-group col-xs-12 col-md-12">
-        <div class="checkbox">
+        <div className="checkbox">
           <label>
             <input id="softFail" type="checkbox" onChange={this.handleCheckboxChange} checked={defaultChecked}/>&nbsp;&nbsp;Soft fail?
           </label>
@@ -102,7 +102,7 @@ var DirectiveEditorsMixin = {
   },
   provider_list: function() {
     return(<div className="form-group col-xs-6 col-md-6">
-            <div class="checkbox">
+            <div className="checkbox">
               <label>
                 <input id="provider.list" type="checkbox" onChange={this.handleCheckboxChange} checked={this.state.provider.list}/>&nbsp;&nbsp;List?
               </label>
@@ -238,8 +238,6 @@ var InsertSubTemplatesFromTagData = React.createClass({
       <div>
         <form>
           {this.description()}
-          {this.collection_name()}
-          {this.collection_column()}
           {this.not_last()}          
           {this.only_last()}
           {this.provider_condition()}
@@ -280,8 +278,6 @@ var InsertSubTemplatesFromSQLRows = React.createClass({
     return (<div>
         <form>
           {this.description()}
-          {this.collection_name()}
-          {this.collection_column()}
           {this.not_last()}
           {this.only_last()}
           {this.provider_source()}
@@ -392,8 +388,6 @@ var InsertSubTemplatesFromCSV = React.createClass({
     return (<div>
       <form>
         {this.description()}
-        {this.collection_name()}
-        {this.collection_column()}
         {this.not_last()}
         {this.only_last()}
         {this.provider_static_data()}
@@ -500,8 +494,6 @@ var InsertSubTemplatesFromHTMLTableRows = React.createClass({
     return (<div>
       <form>
         {this.description()}
-        {this.collectio_name()}
-        {this.collectio_column()}
         {this.not_last()}
         {this.only_last()}
         {this.provider_static_data()}

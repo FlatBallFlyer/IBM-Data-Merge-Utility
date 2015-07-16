@@ -48,7 +48,7 @@ var LHSList = React.createClass({
           this.props.directives.map(function(opt,i){
             var item_id = i;
             return(<li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
-              <span className="drag-handle">::</span>{opt['name']}
+              <span className="drag-handle">::</span>{opt['description']}
             </li>);
           })
          }
@@ -70,22 +70,32 @@ var RHSList = React.createClass({
     handle: ".drag-handle",
     scroll: true
   },
-  render: function() {
+  getRHS: function(){
     var title = this.props.title;
-    var id = this.props.id;
     var data = this.props.data;
     var dCB = this.props.dCB;
+    var rCB = this.props.rCB;
+
+    var level=this.props.level;
+    if(this.props.directives.length === 0){
+      return(<li className="list-group-item">&nbsp;</li>);
+    }else{
+      return(this.props.directives.map(function(opt,i){
+        var item_id = i;
+        var this_ref = "directives_editor_trigger_"+level+"_"+i;
+        return(
+          <li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
+            <span className="drag-handle">::</span>
+            <DirectivesEditorTrigger ref={this_ref} level={level} index={i} title={opt['description']} data={data} directive={opt} rCB={rCB} dCB={dCB} />
+          </li>);
+      }));
+    }
+  },
+  render: function() {
+    var id = this.props.id;
     return (
       <ul ref="" className="list-group" data-sortable-list-id={id}>
-        {
-          
-          this.props.directives.map(function(opt,i){
-            var item_id = i;
-            return(<li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
-              <span className="drag-handle">::</span><DirectivesEditorTrigger title={opt['name']} data={data} directive={opt} index={i} dCB={dCB}/>
-            </li>);
-          })
-         }
+        {this.getRHS()}
       </ul>
     );
   }
@@ -108,16 +118,20 @@ var Directives = React.createClass({
     var mCB = this.props.mCB;
     var aCB = this.props.aCB;
     var dCB = this.props.dCB;
+    var rCB = this.props.rCB;
+    var level=this.props.level;
+    var index=this.props.index;
+    
     return (
 
       <div className="panel-body">
         <div className="row">
           <div className="col-lg-12">
             <div className="from-directives col-xs-6 col-md-6">
-              <LHSList sort={false} key={lhsID} id={lhsID} title={"LHS"} directives={lhs} moveItemBetweenList={mCB} moveItemWithinList={aCB}/>
+              <LHSList level={level} index={index} ref={"lhs_"+level+"_"+index} sort={false} key={lhsID} id={lhsID} title={"LHS"} directives={lhs} moveItemBetweenList={mCB} moveItemWithinList={aCB}/>
             </div>
             <div className="to-directives col-xs-6 col-md-6">
-              <RHSList sort={true} key={rhsID} id={rhsID} data={this.props.data} title={"RHS"} directives={rhs} moveItemBetweenList={mCB} moveItemWithinList={aCB} dCB={dCB}/>
+              <RHSList level={level} index={index} ref={"lhs_"+level+"_"+index} sort={true} key={rhsID} id={rhsID} data={this.props.data} title={"RHS"} directives={rhs} moveItemBetweenList={mCB} moveItemWithinList={aCB} dCB={dCB} rCB={rCB}/>
             </div>
           </div>
         </div>
