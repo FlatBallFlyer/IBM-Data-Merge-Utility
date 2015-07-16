@@ -51,6 +51,7 @@ var paths = {
            "bower_components/moment/min/moment.min.js",
            "bower_components/numeraljs/min/numeral.min.js",
            "bower_components/director/build/director.min.js",
+           "bower_components/react/react-with-addons.min.js",
            "bower_components/Sortable/Sortable.min.js",
            "bower_components/Sortable/react-sortable-mixin.js"
           ],

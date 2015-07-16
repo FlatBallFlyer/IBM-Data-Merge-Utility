@@ -4,8 +4,7 @@
 if [ -f sample-context.xml ]; then
     set -evx
 
-    PROJECT_BASE_DIR="$(readlink -f "..")"
-
+    PROJECT_BASE_DIR=$(cd ..; pwd)
     # clean generated static sources
     rm -rf "$PROJECT_BASE_DIR"/idmu-editor/src/main/resources/META-INF/resources/editor/*
 
@@ -16,11 +15,12 @@ if [ -f sample-context.xml ]; then
 
     # build the static sources
 
-    gulp
+    (bower install && gulp)
 
     cd "$PROJECT_BASE_DIR"
 
     # copy generated static sources to the path to have them included as part of the webapp at /editor
+    mkdir -p $PROJECT_BASE_DIR"/idmu-editor/src/main/resources/META-INF/resources/editor"
     cp -R "$PROJECT_BASE_DIR"/idmu-editor/src/main/node/build/* "$PROJECT_BASE_DIR"/idmu-editor/src/main/resources/META-INF/resources/editor/
 
     # build maven ignoring tests

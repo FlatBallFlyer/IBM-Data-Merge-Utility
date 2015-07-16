@@ -5,7 +5,8 @@
 # only run when executed from inside /build dir
 if [ -f sample-context.xml ]; then
     set -evx
-    PROJECT_BASE_DIR="$(readlink -f "..")"
+    #PROJECT_BASE_DIR="$(readlink -f "..")"
+    PROJECT_BASE_DIR=$(cd ..; pwd)
     cd ../idmu-war
     mvn tomcat7:run
     cd ../build
