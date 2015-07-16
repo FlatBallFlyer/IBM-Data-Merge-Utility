@@ -40,6 +40,10 @@ var App = React.createClass({
   handleAddTemplate: function(newTpl){
     this.addNewTemplateToServer(newTpl);
   },
+  handleRemoveTemplate: function(tpl){
+    console.debug("remove..");
+    //this.addRemoveTemplateToServer(tpl);
+  },
   loadCollectionsFromServer: function() {
     var params = {};
     $.ajax({
@@ -272,9 +276,10 @@ var App = React.createClass({
     var dCB = this.saveDirective;
     var rCB = this.removeItemWithinList;
     var addTplCB = this.handleAddTemplate;
+    var removeTplCB = this.handleRemoveTemplate;
     var index=0;
     var level=this.props.level;
     var this_ref = "ribbon_"+level+"_"+index;
-    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB} addTplCB={addTplCB}/>);
+    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB} addTplCB={addTplCB} removeTplCB={removeTplCB}/>);
   }
 });

@@ -82,13 +82,14 @@ var TemplateEditor = React.createClass({
     var dCB = this.props.dCB;
     var rCB = this.props.rCB;
     var addTplCB = this.props.addTplCB;
+    var removeTplCB = this.props.removeTplCB;
     var index=this.props.index;
     var level=this.props.level;
     var this_ref = "template_header_"+level+"_"+index;
    
     return(
       <div className="row">
-        <TemplateHeader level={level} index={index} ref={this_ref} data={this.props.data} mCB={mCB} aCB={aCB} sCB={this.handleSave} dCB={dCB}  rCB={rCB} addTplCB={addTplCB}/>
+        <TemplateHeader level={level} index={index} ref={this_ref} data={this.props.data} mCB={mCB} aCB={aCB} sCB={this.handleSave} dCB={dCB}  rCB={rCB} addTplCB={addTplCB} removeTplCB={removeTplCB}/>
         {this.bodyItems()}
       </div>
     );

@@ -51,6 +51,19 @@ var TemplateHeader = React.createClass({
       return(<div/>);
     }
   },
+  insertRemoveButton: function(){
+    var level=this.props.level;
+    var index=this.props.index;
+    var this_ref = Utils.thisRef(level,index,"remove_template_trigger");
+    var removeTplCB = this.props.removeTplCB;
+    var selection = this.props.selection;
+    if(this.props.level===0){
+      //return(<div/>);
+      return(<RemoveTemplateTrigger level={level} index={index} ref={this_ref} selection={selection} removeTplCB={removeTplCB}/>);
+    }else{
+      return(<div/>);
+    }
+  },
   insertSaveButton: function(){
     var level=this.props.level;
     var index=this.props.index;
@@ -83,16 +96,19 @@ var TemplateHeader = React.createClass({
             <div className="panel panel-default">
               <div className="panel-heading" role="tab" id={panel_heading_id}>
                 <div className="row">
-                <div className="col-xs-9 col-md-9">
+                <div className="col-xs-8 col-md-8">
                   <a role="button" data-toggle="collapse" data-parent={"#"+accordian_id} href={"#"+collapse_id} aria-expanded="true" aria-controls={collapse_id}>
                     <span className="control-label-big">{label}</span>
                   </a>
                 </div>
                 <div className="col-xs-1 col-md-1">
+                  {this.insertSaveButton()}
+                </div>
+                <div className="col-xs-1 col-md-1">
                   {this.insertAddButton()}
                 </div>
                 <div className="col-xs-1 col-md-1">
-                  {this.insertSaveButton()}
+                  {this.insertRemoveButton()}
                 </div>
                 <div className="col-xs-1 col-md-1">
                   &nbsp;
