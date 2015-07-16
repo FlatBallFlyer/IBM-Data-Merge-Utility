@@ -153,11 +153,11 @@ gulp.task("js-compile", ["clean-js"], function(){
       .pipe(jshint.reporter(stylish))
       .pipe(concat("app-" + device.name + ".min.js"))
       .pipe(filesize())
-      .pipe(uglify({
+      /*.pipe(uglify({
         compress: {
           global_defs: device.defs
         }
-      }))
+      }))*/
       .pipe(filesize())
       .pipe(gulpif(prod || integration, rename({basename: "app-" + device.name + "-" + locale + "-" + version + ".min"})))
       .pipe(gulp.dest(paths.js_dest))
