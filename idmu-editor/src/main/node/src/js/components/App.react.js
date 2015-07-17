@@ -208,9 +208,10 @@ var App = React.createClass({
     $.ajax({
       url: '/idmu/template/'+collection+"."+name+sfx,
       dataType: 'json',
+      contentType: "application/json",
       method: 'POST',
       cache: false,
-      data: params,
+      data: JSON.stringify(params),
       success: function(data) {
         this.setState({selectedCollection: opts.collection},function(){
           //this.loadTemplatesFromServer(this.state.selectedCollection);
