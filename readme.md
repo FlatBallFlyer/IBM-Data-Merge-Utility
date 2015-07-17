@@ -143,7 +143,7 @@ There are 2 servlets:
         ]
       }
 
-    PUT    /idmu/template/{templateFullName} with new version template JSON
+    PUT    /idmu/templates/{collectionName} with the template template JSON
     reponse:status OK or FORBIDDEN, payload similar to GET /template/{fullName}
 
     DELETE /idmu/template/{templateFullName} Warning: really works and deletes on filesystem
