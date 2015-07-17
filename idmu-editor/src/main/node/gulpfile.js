@@ -102,7 +102,8 @@ var devices = [
 var domain = {
   dev: {
     //static: "127.0.0.1:9000/build"
-    static: "127.0.0.1:9090/editor"
+    //static: "127.0.0.1:9090/editor"
+    static: "/editor"
   },
   itg: {
     static: "127.0.0.1:9000/itg"
@@ -234,13 +235,12 @@ gulp.task("html-compile", ["clean-html"], function(){
 
     for(var index in devices) {
       var device = devices[index];
-
-      gulp.src(paths.html)
+     gulp.src(paths.html)
       .pipe(htmlreplace({
-        'js-lib':  prod ? 'https://' + domain.prod.static + '/js/lib-' + lib_version + '.min.js' : integration ? 'https://' + domain.itg.static + '/js/lib-' + lib_version + '.min.js' : 'http://' + domain.dev.static + '/js/lib.min.js',
-        'js':      prod ? 'https://' + domain.prod.static + '/js/app-' + device.name + '-' + locale + '-' + version + '.min.js' : integration ? 'https://' + domain.itg.static + '/js/app-' + device.name + '-' + locale + '-' + version + '.min.js' : 'http://' + domain.dev.static + '/js/app-' + device.name + '.min.js',
-        'css-lib': prod ? 'https://' + domain.prod.static + '/css/lib-' + lib_version + '.min.css' : integration ? 'https://' + domain.itg.static + '/css/lib-' + lib_version + '.min.css' : 'http://' + domain.dev.static + '/css/lib.min.css',
-        'css':     prod ? 'https://' + domain.prod.static + '/css/app-' + version + '.min.css' : integration ? 'https://' + domain.itg.static + '/css/app-' + version + '.min.css' : 'http://' + domain.dev.static + '/css/app.min.css'
+        'js-lib':  prod ? domain.prod.static + '/js/lib-' + lib_version + '.min.js' : integration ? domain.itg.static + '/js/lib-' + lib_version + '.min.js' :  domain.dev.static + '/js/lib.min.js',
+        'js':      prod ? domain.prod.static + '/js/app-' + device.name + '-' + locale + '-' + version + '.min.js' : integration ?  domain.itg.static + '/js/app-' + device.name + '-' + locale + '-' + version + '.min.js' : domain.dev.static + '/js/app-' + device.name + '.min.js',
+        'css-lib': prod ? domain.prod.static + '/css/lib-' + lib_version + '.min.css' : integration ?   domain.itg.static + '/css/lib-' + lib_version + '.min.css' : domain.dev.static + '/css/lib.min.css',
+        'css':     prod ? domain.prod.static + '/css/app-' + version + '.min.css' : integration ?  domain.itg.static + '/css/app-' + version + '.min.css' :  domain.dev.static + '/css/app.min.css'
       }))
       .pipe(htmlhint())
       .pipe(htmlhint.reporter())

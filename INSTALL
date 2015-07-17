@@ -1,0 +1,69 @@
+IBM Data Merge Utility
+#########################
+https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility
+
+REQUIREMENTS
+####################
+- Java 1.8
+- Apache Tomcat 7+ installed at <tomcat_root>
+
+PRE INSTALL STEPS
+####################
+- Ensure you have a databasePools.properties file
+- Ensure you have a merge output dir (temp files dir) that exists or ensure /tmp/merge exists
+
+CONFIG PARAMS REFERENCE
+#########################
+These can be passed as system properties or configured on the web.xml config as init params for the Initialize servlet
+
+jdbc-pools-properties-path
+    path to database pools properties file.
+    Default: /WEB-INF/properties/databasePools.properties (can be absolute path or /WEB-INF/.. path)
+
+merge-output-root
+    directory to hold temporary processing files. This directory must exist.
+    Default: /tmp/merge/
+
+merge-templates-folder
+    points to directory holding JSON template files.
+    Default: /WEB-INF/templates/
+
+BRIEF (ADVANCED) INSTALL STEPS
+#####################
+Ensure any needed configuration system parameters are provided (see previous section)
+Ensure the idmu-war-3.0.war is available at the desired tomcat host/port root (the application must be root)
+Open a browser to http://yourhost:yourport/editor/html/app-en-desktop.html
+
+VERBOSE INSTALL STEPS
+####################
+1. open a shell
+2. navigate into <tomcat_root>
+3. set the CATALINA_OPTS to configure the app
+
+  jdbc-pools-properties-path : path to database pools properties file. Default: /WEB-INF/properties/databasePools.properties (can be absolute path or /WEB-INF/.. path)
+  merge-output-root : directory to hold temporary processing files. This directory needs to exist. Default: /tmp/merge/
+  merge-templates-folder : points to directory holding JSON template files. Default: /WEB-INF/templates/
+
+If no options are specified the defaults will be used.
+
+Example:
+export CATALINA_OPTS="-Dmerge-output-root=/my/temp/dir/path -Dmerge-templates-foldermerge-templates-folder=/my/dir/with/jsonTemplates/ -Djdbc-pools-properties-path=/my/databasePools.properties"
+
+4. Start tomcat (in the same shell where you set CATALINA_OPTS)
+From <tomcat_root> invoke:
+  ./bin/cataline.sh run
+to run in the shell. Notice the app initializing
+Do further work in a new shell
+
+5. Deploy the app to run at server root
+Copy idmu-war-3.0.war as 'ROOT.war' into <tomcat_root>/webapps while the server is running.
+Notice how the tomcat log output deploys the IDMU application and picks up any provided parameters
+
+6. Open a browser to http://<tomcat_host>:<tomcat_port>/editor/html/app-en-desktop.html
+Eg: http://localhost:8080/editor/html/app-en-desktop.html
+
+7. To undeploy (server must be running):
+Delete <tomcat_root>/webapps/ROOT.war (or move out of /webapps)
+Notice the undeploy happening in the server console.
+
+  
