@@ -150,15 +150,12 @@ limitations under the License.
 
 	<div class="section">
 	<h3><a id="Overview">Calling the Merge Servlet</a></h3>
-	<p>The IBM Data Merge Utility is accessed via the Merge Servlet which can be
-	accessed at http://yourServer/Merge.html. Parameters passed on the http request
-	are used to initilize the Replace Hash. The Template collection, name and column value
-	can be provided as parameters. The following default values are used if not provided:</p>
-	<ul><li>collection: "root"</li>
-	<li>name: "default"</li>
-	<li>column: empty</li></ul>
-	<p>The URL: http://www.yourserver.com/Merge.html?collection=MyCollection&amp;name=MyTemplate<br/>
-	will merge the template MyTemplate from the collection MyCollection.</p>
+	<p>The IBM Data Merge Utility is accessed via the Merge rest call which can be
+	accessed at http://yourServer/merge/. Parameters passed on the http request
+	are used to initilize the Replace Hash. The Template full name value
+	is provided in the DragonFlyFullName parameter. The root.default. template is used if no name is specified.</p>
+	<p>The URL: http://www.yourserver.com/Merge?DragonFlyFullName=MyCollection.MyTemplate.<br/>
+	will merge the template MyTemplate from the collection MyCollection. Note the trailing period</p>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div></div>
 	
 	<div class="section">
