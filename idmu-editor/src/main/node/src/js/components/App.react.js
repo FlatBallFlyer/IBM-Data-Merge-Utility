@@ -41,8 +41,7 @@ var App = React.createClass({
     this.addNewTemplateToServer(newTpl);
   },
   handleRemoveTemplate: function(tpl){
-    console.debug("remove..");
-    //this.addRemoveTemplateToServer(tpl);
+    this.removeTemplateToServer(tpl);
   },
   loadCollectionsFromServer: function() {
     var params = {};
@@ -200,6 +199,26 @@ var App = React.createClass({
       description: opts.description
     });
   },
+  removeTemplateToServer: function(opts){
+    var params = this.templateBody(opts);
+    var collection = params.collection;
+    var name = params.name;
+    var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
+    $.ajax({
+      url: '/idmu/template/'+collection+"."+name+sfx,
+      contentType: "application/json",
+      method: 'DELETE',
+      cache: false,
+      success: function(data) {
+        this.setState({selectedCollection: null},function(){
+          this.loadCollectionsFromServer();
+        }.bind(this));
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error("DELETE:",status, err.toString());
+      }.bind(this)
+    });
+  },
   addNewTemplateToServer: function(opts){
     var params = this.templateBody(opts);
     var collection = params.collection;
@@ -209,12 +228,11 @@ var App = React.createClass({
       url: '/idmu/template/'+collection+"."+name+sfx,
       dataType: 'json',
       contentType: "application/json",
-      method: 'POST',
+      method: 'PUT',
       cache: false,
       data: JSON.stringify(params),
       success: function(data) {
         this.setState({selectedCollection: opts.collection},function(){
-          //this.loadTemplatesFromServer(this.state.selectedCollection);
           this.loadCollectionsFromServer();
         }.bind(this));
       }.bind(this),

@@ -52,11 +52,16 @@ var TemplateHeader = React.createClass({
     }
   },
   insertRemoveButton: function(){
+
+    var data = this.props.data;
+    var tpl = data.template;
+    var selection={collection: data.selectedCollection,
+                   name: tpl.name};
+    
     var level=this.props.level;
     var index=this.props.index;
     var this_ref = Utils.thisRef(level,index,"remove_template_trigger");
     var removeTplCB = this.props.removeTplCB;
-    var selection = this.props.selection;
     if(this.props.level===0){
       //return(<div/>);
       return(<RemoveTemplateTrigger level={level} index={index} ref={this_ref} selection={selection} removeTplCB={removeTplCB}/>);
