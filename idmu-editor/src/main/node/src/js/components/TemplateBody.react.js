@@ -67,7 +67,7 @@ var TemplateBody = React.createClass({
     this.setState(state);
   },
   heading: function(){
-    if(this.props.index == 0){
+    if(this.props.index === 0){
       return(<label for="name" className="control-label">Content</label>);
     }else{
       return(<div/>);

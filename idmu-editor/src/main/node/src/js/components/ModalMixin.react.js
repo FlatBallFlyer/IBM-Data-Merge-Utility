@@ -3,9 +3,9 @@
  */
 var ModalMixin = {
   componentDidMount: function() {
-    $(this.getDOMNode()).modal({ background: true
-                               , keyboard: true
-                               , show: false});
+    $(this.getDOMNode()).modal({ background: true,
+                               keyboard: true,
+                               show: false});
   },
   componentWillUnmount: function(){
     $(this.getDOMNode()).off('hidden');

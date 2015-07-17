@@ -31,8 +31,8 @@ var TemplateHeader = React.createClass({
       var this_ref="directives_panel_"+level+"_"+index;
       return(<Directives level={level} index={index} ref={this_ref} rCB={rCB} dCB={dCB} mCB={mCB} aCB={aCB} data={this.props.data} changeCB={changeCB}/>);
     }else {
-      var this_ref = "header_panel_"+level+"_"+index;
-      return(<HeaderPanel level={level} index={index} ref={this_ref} rCB={rCB} dCB={dCB} data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
+      var p_ref = "header_panel_"+level+"_"+index;
+      return(<HeaderPanel level={level} index={index} ref={p_ref} rCB={rCB} dCB={dCB} data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
     }
   },
   insertAddButton: function(){

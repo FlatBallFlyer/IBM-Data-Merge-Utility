@@ -74,17 +74,17 @@ var App = React.createClass({
   },
   loadTemplatesFromServer: function(collection) {
     var params = {};
+    var self = this;
     $.ajax({
       url: '/idmu/templates/'+collection,
       dataType: 'json',
       cache: false,
       data: params,
       success: function(data) {
-        this.setState({selectedRibbonIndex: 0,templates: data,selectedCollection: collection}, function(){
-          var sel = this.props.selection || data[0];
-          this.loadTemplateFromServer(sel.collection,sel.name,sel.columnValue);
-        }.bind(this));
-        
+        self.setState({selectedRibbonIndex: 0,templates: data,selectedCollection: collection}, function(){
+          var sel = self.props.selection || data[0];
+          self.loadTemplateFromServer(sel.collection,sel.name,sel.columnValue);
+        });
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -99,7 +99,7 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
-        this.setState({directives: data.directives});
+        this.setState({directives: data});
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -126,19 +126,15 @@ var App = React.createClass({
     var slice = content.slice(sIdx);
     if(slice && slice.length > 0){
       items.push({type: 'text', slice: slice});
+    }else{
+      items.push({type: 'text', slice: ""});
     }
     return items;
   },
   loadTemplateFromServer: function(collection,id,columnValue) {
-    /*
-    var params = {};
-    if(columnValue){
-      params['columnValue'] = columnValue;
-    }
-    */
-    var sfx = (columnValue && columnValue.length>0) ? "/"+columnValue : "";
+    var sfx = (columnValue && columnValue.length>0) ? "."+columnValue : ".";
     $.ajax({
-      url: '/idmu/template/'+collection+'/'+id+sfx,
+      url: '/idmu/template/'+encodeURIComponent(collection+'.'+id+sfx)+"/",
       dataType: 'json',
       cache: false,
       success: function(data) {
@@ -195,10 +191,8 @@ var App = React.createClass({
   },
   templateBody: function(opts){
     return({
-      id: opts.id,
       collection: opts.collection,
       name: opts.name,
-      label: opts.label,
       columnValue: opts.columnValue,
       output: opts.output,
       directives: opts.directives,
@@ -207,11 +201,14 @@ var App = React.createClass({
     });
   },
   addNewTemplateToServer: function(opts){
-    var params = {template:this.templateBody(opts)};
+    var params = this.templateBody(opts);
+    var collection = params.collection;
+    var name = params.name;
+    var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
     $.ajax({
-      url: '/idmu/templates/'+collection,
+      url: '/idmu/template/'+collection+"."+name+sfx,
       dataType: 'json',
-      method: 'PUT',
+      method: 'POST',
       cache: false,
       data: params,
       success: function(data) {
@@ -226,13 +223,16 @@ var App = React.createClass({
     });
   },
   saveTemplateToServer: function(opts,collection) {
-    var params = {template:this.templateBody(opts)};
+    var params = this.templateBody(opts);
+    var name = params.name;
+    var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
     $.ajax({
-      url: '/idmu/templates/'+collection,
+      url: '/idmu/template/'+collection+"."+name+sfx,
       dataType: 'json',
+      contentType: "application/json",
       method: 'PUT',
       cache: false,
-      data: params,
+      data: JSON.stringify(params),
       success: function(data) {
         this.setState({template: data});
       }.bind(this),

@@ -106,7 +106,7 @@ var TemplateRibbon = React.createClass({
               {this.rightNav()}
             </div>
           </div>
-        )}.bind(this));
+        );}.bind(this));
     }else {
       newRibbon=[0].map(function(opt,i){
         return(<div/>);

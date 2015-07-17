@@ -45,7 +45,7 @@ var TemplateEditor = React.createClass({
     var body_items = [];
 
     var level=this.props.level;
-    var sCB = this.handleSave
+    var sCB = this.handleSave;
     var hasInsertDirective = this.hasInsertDirectives();
     if(items){
       body_items = items.map(function(opt,i){
@@ -63,10 +63,10 @@ var TemplateEditor = React.createClass({
             suppressNav=true;
           }
 
-          var this_ref = "app_"+level+"_"+i;
+          var app_ref = "app_"+level+"_"+i;
           var selection = {collection:collection,name: name,colValue:colName};
           return(
-            <App key={i} ref={this_ref} level={level+1} index={i} selection={selection}  suppressNav={suppressNav}/>
+            <App key={i} ref={app_ref} level={level+1} index={i} selection={selection}  suppressNav={suppressNav}/>
           );
         }else {
           return(<div><h5>Exceeded max sub-template depth.</h5></div>);
