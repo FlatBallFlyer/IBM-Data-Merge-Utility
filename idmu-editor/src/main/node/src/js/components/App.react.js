@@ -225,7 +225,7 @@ var App = React.createClass({
     var name = params.name;
     var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
     $.ajax({
-      url: '/idmu/template/'+collection+"."+name+sfx,
+      url: '/idmu/templates/'+collection+"."+name+sfx,
       dataType: 'json',
       contentType: "application/json",
       method: 'PUT',
