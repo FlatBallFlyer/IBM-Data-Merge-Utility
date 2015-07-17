@@ -16,22 +16,26 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import static org.junit.Assert.*;
-
+import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.db.ConnectionPoolManager;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.directive.AbstractDirective;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.Directive;
+import static org.junit.Assert.*;
 
 public class ProviderTagTest extends ProviderTest {
 	//private String template1 = "{\"collection\":\"root\",\"name\":\"test\",\"columnValue\":\"\"}";
 	private ProviderTag myProvider;
 	DataTable table;
-	
+	private ConnectionFactory cf;
+
 	@Before
 	public void setUp() throws Exception {
+		cf = new ConnectionFactory(new ConnectionPoolManager());
 		provider = new ProviderTag();
 		provider.reset();
 		myProvider = (ProviderTag) provider;
@@ -48,7 +52,7 @@ public class ProviderTagTest extends ProviderTest {
 		template.addReplace("Foo", "Bar");
 		myProvider.setCondition(ProviderTag.CONDITION_EXISTS);
 		myProvider.setTag("Foo");
-		myProvider.getData();
+		myProvider.getData(cf);
 
 		assertEquals(1, myProvider.size());
 		table = myProvider.getTable(0);
@@ -61,7 +65,7 @@ public class ProviderTagTest extends ProviderTest {
 	public void testGetDataDoesNotExist() throws MergeException {
 		myProvider.setCondition(ProviderTag.CONDITION_EXISTS);
 		myProvider.setTag("Foo");
-		myProvider.getData();
+		myProvider.getData(cf);
 
 		assertEquals(1, myProvider.size());
 		table = myProvider.getTable(0);
@@ -73,7 +77,7 @@ public class ProviderTagTest extends ProviderTest {
 		template.addReplace("Foo", "Bar");
 		myProvider.setCondition(ProviderTag.CONDITION_NONBLANK);
 		myProvider.setTag("Foo");
-		myProvider.getData();
+		myProvider.getData(cf);
 
 		assertEquals(1, myProvider.size());
 		table = myProvider.getTable(0);
@@ -86,7 +90,7 @@ public class ProviderTagTest extends ProviderTest {
 		template.addReplace("Foo", "");
 		myProvider.setCondition(ProviderTag.CONDITION_NONBLANK);
 		myProvider.setTag("Foo");
-		myProvider.getData();
+		myProvider.getData(cf);
 
 		assertEquals(1, provider.size());
 		table = provider.getTable(0);
@@ -98,7 +102,7 @@ public class ProviderTagTest extends ProviderTest {
 		template.addReplace("Foo", "");
 		myProvider.setCondition(ProviderTag.CONDITION_BLANK);
 		myProvider.setTag("Foo");
-		myProvider.getData();
+		myProvider.getData(cf);
 
 		assertEquals(1, myProvider.size());
 		table = myProvider.getTable(0);
@@ -111,7 +115,7 @@ public class ProviderTagTest extends ProviderTest {
 		template.addReplace("Foo", "Bar");
 		myProvider.setCondition(ProviderTag.CONDITION_BLANK);
 		myProvider.setTag("Foo");
-		myProvider.getData();
+		myProvider.getData(cf);
 
 		assertEquals(1, provider.size());
 		table = provider.getTable(0);
@@ -124,7 +128,7 @@ public class ProviderTagTest extends ProviderTest {
 		myProvider.setCondition(ProviderTag.CONDITION_EQUALS);
 		myProvider.setTag("Foo");
 		myProvider.setValue("Bar");
-		provider.getData();
+		provider.getData(cf);
 
 		assertEquals(1, provider.size());
 		table = provider.getTable(0);
@@ -139,7 +143,7 @@ public class ProviderTagTest extends ProviderTest {
 		myProvider.setCondition(ProviderTag.CONDITION_EQUALS);
 		myProvider.setTag("Foo");
 		myProvider.setValue("Miss");
-		provider.getData();
+		provider.getData(cf);
 
 		assertEquals(1, provider.size());
 		table = provider.getTable(0);
@@ -152,7 +156,7 @@ public class ProviderTagTest extends ProviderTest {
 		myProvider.setCondition(ProviderTag.CONDITION_NONBLANK);
 		myProvider.setTag("Foo");
 		myProvider.setList(true);
-		provider.getData();
+		provider.getData(cf);
 
 		assertEquals(1, provider.size());
 		table = provider.getTable(0);
@@ -172,8 +176,9 @@ public class ProviderTagTest extends ProviderTest {
 		assertEquals(cloned.getValue(), myProvider.getValue());
 	}
 
-	private class DirectiveStub extends Directive {
+	private class DirectiveStub extends AbstractDirective {
 		public DirectiveStub() {}
-		public void executeDirective() throws MergeException {}
+		@Override
+		public void executeDirective(RuntimeContext rtc) throws MergeException {}
 	}
 }

@@ -16,34 +16,44 @@
  */
 package com.ibm.util.merge.directive;
 
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
-
+import com.ibm.util.merge.*;
+import com.ibm.util.merge.directive.provider.ProviderHtml;
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.idmu.api.JsonProxy;
+import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.TemplateFactory;
-import com.ibm.util.merge.directive.provider.ProviderHtml;
+import java.util.HashMap;
+
+import static org.junit.Assert.*;
 
 public class InsertSubsHtmlTest extends InsertSubsTest {
 	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Row: {A}, Val: {B}\\n\"}";
 	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\" collection\\u003d\\\"root\\\"/\\u003e\"}";
 	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\" collection=\"root\"/>";
 
+
+	private JsonProxy jsonProxy;
+	private RuntimeContext rtc;
+
 	@Before
 	public void setUp() throws Exception {
+
+		rtc = TestUtils.createDefaultRuntimeContext();
+
 		directive = new InsertSubsHtml();
+		jsonProxy = new DefaultJsonProxy();
 		InsertSubsHtml myDirective = (InsertSubsHtml) directive;
 		ProviderHtml myProvider = (ProviderHtml) myDirective.getProvider();
 		myProvider.setStaticData("<table><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>");
-
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.cacheFromJson(subTemplate); 
-		TemplateFactory.cacheFromJson(masterTemplate);
-		template = TemplateFactory.getTemplate("root.master.", "", new HashMap<String,String>());
+		TemplateFactory tf = rtc.getTemplateFactory();
+		tf.reset();
+		Template template2 = jsonProxy.fromJSON(subTemplate, Template.class);
+		tf.cache(template2);
+		Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
+		tf.cache(template1);
+		template = tf.getTemplate("root.master.", "", new HashMap<>());
 		template.addDirective(myDirective);
 	}
 
@@ -59,7 +69,7 @@ public class InsertSubsHtmlTest extends InsertSubsTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(rtc);
 		assertEquals(masterOutput, template.getContent());
 	}
 

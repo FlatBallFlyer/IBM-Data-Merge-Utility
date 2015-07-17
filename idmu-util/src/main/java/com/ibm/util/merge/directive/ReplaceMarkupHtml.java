@@ -15,11 +15,13 @@
  *
  */
 package com.ibm.util.merge.directive;
+
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
 
-public class ReplaceMarkupHtml extends Directive implements Cloneable {
+public class ReplaceMarkupHtml extends AbstractDirective implements Cloneable {
 	protected String pattern;
 	protected String fromKey;
 	protected String toKey;
@@ -29,8 +31,8 @@ public class ReplaceMarkupHtml extends Directive implements Cloneable {
 	 */
 	public ReplaceMarkupHtml() {
 		super();
-		this.setType(TYPE_HTML_REPLACE_MARKUP);
-		this.setProvider(new ProviderHtml());
+		setType(Directives.TYPE_HTML_REPLACE_MARKUP);
+		setProvider(new ProviderHtml());
 	}
 
 	/**
@@ -42,10 +44,13 @@ public class ReplaceMarkupHtml extends Directive implements Cloneable {
 
 	/**
 	 * Add the replace value
-	 * @throws MergeException 
+	 * @throws MergeException
+	 * @param tf
+	 * @param rtc
 	 */
-	public void executeDirective() throws MergeException {
-		this.getProvider().getData();
+	@Override
+	public void executeDirective(RuntimeContext rtc) throws MergeException {
+		getProvider().getData(rtc.getConnectionFactory());
 		// TODO HTML Markup - Execute
 		// for each match, get from/to and call this.owner.addReplace()
 	}

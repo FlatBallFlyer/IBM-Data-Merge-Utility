@@ -16,18 +16,22 @@
  */
 package com.ibm.util.merge.directive;
 
-import static org.junit.Assert.*;
-
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
+import static org.junit.Assert.*;
 
 public class RequireTest extends DirectiveTest {
 
+	private RuntimeContext rtc;
+
 	@Before
 	public void setUp() throws Exception {
+		rtc = TestUtils.createDefaultRuntimeContext();
 		directive = new Require();
 		Require myDirective = (Require) directive;
 		myDirective.setTags("Tag1,Tag2");
@@ -49,7 +53,7 @@ public class RequireTest extends DirectiveTest {
 		template.addReplace("Tag2", "Test1");
 
 		try {
-			directive.executeDirective();
+			directive.executeDirective(rtc);
 		} catch (MergeException e) {
 			fail("Pass Condition threw Exception");
 		}
@@ -61,7 +65,7 @@ public class RequireTest extends DirectiveTest {
 		template.addReplace("Tag1", "Test1");
 
 		try {
-			directive.executeDirective();
+			directive.executeDirective(rtc);
 		} catch (MergeException e) {
 			assertNotNull(e);
 			return;

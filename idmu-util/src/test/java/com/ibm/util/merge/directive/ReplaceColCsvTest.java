@@ -16,18 +16,23 @@
  */
 package com.ibm.util.merge.directive;
 
-import static org.junit.Assert.*;
-
-import org.junit.*;
-
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.TestUtils;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class ReplaceColCsvTest extends ReplaceColTest {
 
+	private RuntimeContext rtc;
+
 	@Before
 	public void setUp() throws Exception {
+		rtc = TestUtils.createDefaultRuntimeContext();
 		directive = new ReplaceColCsv();
 		ReplaceColCsv myDirective = (ReplaceColCsv) directive;
 		myDirective.setTemplate(template);
@@ -51,7 +56,7 @@ public class ReplaceColCsvTest extends ReplaceColTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(rtc);
 		assertTrue(template.hasReplaceKey("{1}"));
 		assertEquals("2",template.getReplaceValue("{1}"));
 		assert(template.hasReplaceKey("{4}"));

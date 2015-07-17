@@ -16,19 +16,23 @@
  */
 package com.ibm.util.merge.directive;
 
-import static org.junit.Assert.*;
-
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.TestUtils;
+import com.ibm.util.merge.directive.provider.ProviderHtml;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.provider.ProviderHtml;
+import static org.junit.Assert.*;
 
 public class ReplaceColHtmlTest extends ReplaceColTest {
 
+	private RuntimeContext rtc;
+
 	@Before
 	public void setUp() throws Exception {
+		rtc = TestUtils.createDefaultRuntimeContext();
 		template = new Template();
 		directive = new ReplaceColHtml();
 
@@ -52,7 +56,7 @@ public class ReplaceColHtmlTest extends ReplaceColTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(rtc);
 		assertTrue(template.hasReplaceKey("{1}"));
 		assertEquals("2",template.getReplaceValue("{1}"));
 		assert(template.hasReplaceKey("{4}"));

@@ -14,87 +14,77 @@
  * limitations under the License.
  *
  */
-
 package com.ibm.util.merge;
 
-import java.sql.Connection;
+import com.ibm.idmu.api.SqlOperation;
+import com.ibm.util.merge.db.ConnectionPoolManager;
+import com.ibm.idmu.api.PoolManager;
+
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
-import org.apache.log4j.Logger;
+import java.util.*;
 
 /**
- * A connection factory for JNDI Data Sources that cache's Database Connections for 
- * the ProviderSql data provider throughout the course of a Merge. The same database
- * connection is shared by all sub-template processing that takes place under the
- * primary merge process. Database connections are cached based on the Merge GUID.
+ * A connection factory for JNDI Data Sources that cache's Database Connections for
+ * the ProviderSql data provider throughout the course of a Merge.
+ * Each SqlOperation runs with it's own connection which is closed afterwards
  *
- * @author  Mike Storey
+ * @author Mike Storey
  */
 public final class ConnectionFactory {
-	private static final Logger log = Logger.getLogger( ConnectionFactory.class.getName() );
-	private static final String DBROOT = "java:/comp/env/jdbc/";
-	private static final ConcurrentHashMap<String,Connection> dataDbHash = new ConcurrentHashMap<String,Connection>();
-	
-    /**********************************************************************************
-	 * Data Source connection factory, creates and cache's connections that are valid
-	 * throughout the life of a merge. Connections are released by calling close
-	 *
-	 * @param  jndiSource JNDI Data Source name
-	 * @param guid - a Guid associed with a template merge process
-	 * @throws MergeException JNDI Naming Errors
-	 * @throws MergeException Database Connection Errors
-	 * @return Connection The new Data Source connection 
-	 */
-    public static Connection getDataConnection(String jndiSource, String guid) throws MergeException {
-    	String key = jndiSource + ":" + guid;
-    	// If the data source is not in the cache, create it and add it to the cache
-    	if ( !dataDbHash.containsKey(key) ) { 
-        	try {
-            	Context initContext = new InitialContext();
-            	DataSource newSource = (DataSource) initContext.lookup(DBROOT + jndiSource);
-            	Connection con = newSource.getConnection();
-            	dataDbHash.putIfAbsent(key, con);
-        	} catch (NamingException e) {
-        		throw new MergeException(e, "JNDI Connection Error ", DBROOT + jndiSource);
-        	} catch (SQLException e) {
-        		throw new MergeException(e, "Failed to get Connection", DBROOT + jndiSource);
-			}
-    	}
-    	
-    	// Return the Connection
-		return dataDbHash.get(key);
+    private final PoolManager poolManager;
+
+    public ConnectionFactory(PoolManager poolManager) {
+        this.poolManager = poolManager;
     }
-    
-    /**********************************************************************************
-	 * <p>Release a connection for a guid</p>
-	 *
-	 * @param  guid Guid of template to release files for.
-	 */
-    public static void close(String guid) {
-    	for (Map.Entry<String, Connection> entry : dataDbHash.entrySet()) {
-    		if (entry.getKey().endsWith(guid)) {
-				try {
-					entry.getValue().close();
-				} catch (SQLException e) {
-					log.error("Error Colsing Connection: ", e);
-				} finally {
-					dataDbHash.remove(entry);
-				}
-    		}
-		}    	
+
+    public <T> T runSqlOperation(String poolName, SqlOperation<T> operation) {
+        return poolManager.runWithPool(poolName, operation);
     }
-    
-    /**********************************************************************************
-	 * Get the size of the DB Connection Hash
-	 */
-    public static int size() {
-    	return dataDbHash.size();
+
+    public void closePool(String poolName) throws SQLException {
+        poolManager.closePool(poolName);
+    }
+
+    public boolean isPoolName(String poolName) {
+        return poolManager.isPoolName(poolName);
+    }
+
+    public void createPool(String poolName, String jdbcConnectionUrl) throws Exception {
+        poolManager.createPool(poolName, jdbcConnectionUrl);
+    }
+
+    public void createPool(String poolName, String jdbcConnectionUrl, String username, String password) throws Exception {
+        poolManager.createPool(poolName, jdbcConnectionUrl, username, password);
+    }
+
+    public void createPool(String poolName, String jdbcConnectionUrl, Properties properties) throws Exception {
+        poolManager.createPool(poolName, jdbcConnectionUrl, properties);
+    }
+
+    public void loadDriverClass(String driverClassPath) throws ClassNotFoundException {
+        poolManager.loadDriverClass(driverClassPath);
+    }
+
+    public void reset() {
+        poolManager.reset();
+    }
+
+    public static class SqlOperationException extends RuntimeException {
+        private String poolName;
+        private SqlOperation operation;
+
+        public SqlOperationException(String poolName, SqlOperation operation, Exception e) {
+            super("Error executing SqlOperation with poolname " + poolName, e);
+            this.poolName = poolName;
+            this.operation = operation;
+        }
+
+        public String getPoolName() {
+            return poolName;
+        }
+
+        public SqlOperation getOperation() {
+            return operation;
+        }
     }
 }

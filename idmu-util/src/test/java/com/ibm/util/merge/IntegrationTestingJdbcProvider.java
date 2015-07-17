@@ -16,8 +16,10 @@
  */
 package com.ibm.util.merge;
 
+import com.ibm.util.merge.template.Template;
 import junitx.framework.FileAssert;
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,67 +27,75 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 
 public class IntegrationTestingJdbcProvider {
 	HashMap<String, String[]> parameterMap;
-	String templateDir 	= "integration/templates/";
-	String outputDir 	= "integration/output/"; 
-	String validateDir 	= "integration/valid/";
-	
+	File templateDir 	= new File("integration/templates/");
+	File outputDir 	= new File("integration/output/");
+	File validateDir 	= new File("integration/valid/");
+
+	private RuntimeContext rtc;
+
 	@Before
-	public void setup() throws MergeException, IOException {
+	public void setup() throws Exception {
+		rtc = TestUtils.createRuntimeContext(outputDir);
 		// Initialize Factories
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.setTemplateFolder(templateDir);
-		TemplateFactory.loadAll();
-		ZipFactory.setOutputroot(outputDir);
-		
-		// Initialize context (usually from request.getParameterMap())
-//		ApplicationContext context = 
-//	    		new ClassPathXmlApplicationContext("Spring-Module.xml");
-		
+		TemplateFactory tf = rtc.getTemplateFactory();
+		tf.reset();
+
+		tf.loadTemplatesFromFilesystem();
+//		rtc.getZipFactory().setOutputRoot(outputDir);
+		parameterMap = new HashMap<>();
 	}
 
 	@Test
-	public void testDefaultTemplate() throws MergeException, IOException {
-		Template root = TemplateFactory.getTemplate(parameterMap);
-		String output = root.merge();
-		root.packageOutput();
+	public void testDefaultTemplate() throws Exception {
+		TemplateFactory tf = rtc.getTemplateFactory();
+		Template root = tf.getTemplate(parameterMap);
+		root.merge(rtc);
+		final String returnValue;
+		if (!root.canWrite()) {
+			returnValue = "";
+		} else {
+			returnValue = root.getContent();
+		}
+		tf.getFs().doWrite(root);
+//		root.doWrite(rtc.getZipFactory());
+		String output = returnValue;
+//		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + "merge1.output"))), output);
 	}
 
 	@Test
-	public void testCsvDefaultDataTar() throws MergeException, IOException {
+	public void testCsvDefaultDataTar() throws Exception {
 //		testIt("csvDef.functional.", "tar");
 		testIt("csvDef.SMTP.", ".tar");
 	}
 
 	@Test
-	public void testCsvDefaultDataZip() throws MergeException, IOException {
+	public void testCsvDefaultDataZip() throws Exception {
 		testIt("csvDef.functional.","zip");
 	}
 
 	@Test
-	public void testCsvTagDataTar() throws MergeException, IOException {
+	public void testCsvTagDataTar() throws Exception {
 		testIt("csvTag.functional.","tar");
 	}
 
 	@Test
-	public void testCsvTagDataZip() throws MergeException, IOException {
+	public void testCsvTagDataZip() throws Exception {
 		testIt("csvTag.functional.", "zip");
 	}
 
 	@Test
-	public void testCsvUrlDataTar() throws MergeException, IOException {
+	public void testCsvUrlDataTar() throws Exception {
 		testIt("csvUrl.functional.","tar.gz");
 	}
 
 	@Test
-	public void testCsvUrlDataZip() throws MergeException, IOException {
+	public void testCsvUrlDataZip() throws Exception {
 		testIt("csvUrl.functional.","zip");
 	}
 
@@ -95,7 +105,7 @@ public class IntegrationTestingJdbcProvider {
 	 * @throws MergeException
 	 * @throws IOException
 	 */
-	private void testIt(String fullName, String type) throws MergeException, IOException {
+	private void testIt(String fullName, String type) throws Exception {
 		parameterMap.put(Template.TAG_OUTPUT_TYPE, 		new String[]{type});
 		parameterMap.put(Template.TAG_OUTPUTFILE, 		new String[]{fullName+type});
 		testMerge(fullName);
@@ -107,11 +117,21 @@ public class IntegrationTestingJdbcProvider {
 	 * @throws MergeException
 	 * @throws IOException
 	 */
-	private void testMerge(String fullName) throws MergeException, IOException {
-		parameterMap.put(TemplateFactory.KEY_FULLNAME, 	new String[]{fullName});
-		Template root = TemplateFactory.getTemplate(parameterMap);
-		String mergeOutput = root.merge();
-		root.packageOutput();
+	private void testMerge(String fullName) throws Exception {
+		TemplateFactory tf = rtc.getTemplateFactory();
+		parameterMap.put(tf.KEY_FULLNAME, 	new String[]{fullName});
+		Template root = tf.getTemplate(parameterMap);
+		root.merge(rtc);
+		final String returnValue;
+		if (!root.canWrite()) {
+			returnValue = "";
+		} else {
+			returnValue = root.getContent();
+		}
+		tf.getFs().doWrite(root);
+//		root.doWrite(rtc.getZipFactory());
+		String mergeOutput = returnValue;
+//		root.packageOutput(zf, cf);
 		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + fullName + ".output"))), mergeOutput);
 	}
 }

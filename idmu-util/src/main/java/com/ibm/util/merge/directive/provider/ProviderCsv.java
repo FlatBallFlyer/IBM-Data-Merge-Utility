@@ -16,14 +16,16 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
+import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.directive.AbstractDirective;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import com.ibm.util.merge.MergeException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 
 /**
  * @author flatballflyer
@@ -32,13 +34,14 @@ import com.ibm.util.merge.MergeException;
 public class ProviderCsv extends ProviderHttp implements Cloneable {
 	public ProviderCsv() {
 		super();
-		this.setType(Provider.TYPE_CSV);
+		setType(Providers.TYPE_CSV);
 	}
 	
 	/**
 	 * Simple clone method
-	 * @see com.ibm.util.merge.directive.provider.Provider#clone(com.ibm.util.merge.directive.Directive)
+	 * @see AbstractProvider#clone(AbstractDirective)
 	 */
+	@Override
 	public ProviderCsv clone() throws CloneNotSupportedException {
 		ProviderCsv provider = (ProviderCsv) super.clone();
 		return provider;
@@ -46,25 +49,28 @@ public class ProviderCsv extends ProviderHttp implements Cloneable {
 
 	/**
 	 * Retrieve the data (superclass HTTP Provider) and parse the CSV data
+	 * @param cf
 	 */
-	public void getData() throws MergeException {
-		super.getData();
-		this.reset();
+	@Override
+	public void getData(ConnectionFactory cf) throws MergeException {
+		super.getData(cf);
+		reset();
 		DataTable table = new DataTable();
-		CSVParser parser = null;
+		CSVParser parser;
 		try {
-			parser = new CSVParser(new StringReader(this.getFetchedData()), CSVFormat.EXCEL.withHeader());
+			parser = new CSVParser(new StringReader(getFetchedData()), CSVFormat.EXCEL.withHeader());
 			for (String colName : parser.getHeaderMap().keySet() ) {
 				table.addCol(colName);
 			}
 		    for (CSVRecord record : parser) {
-				ArrayList<String> row = table.getNewRow();
+				ArrayList<String> row = table.addNewRow();
 		    	for (String field : record) {row.add(field);}
 		    }
 		    parser.close();
 		} catch (IOException e) {
-			throw new MergeException(e, "CSV Parser Stringreader IO Exception", this.getFetchedData());
+			throw new MergeException(e, "CSV Parser Stringreader IO Exception", getFetchedData());
 		}
-		if (table.size() > 0) {this.getTables().add(table);}
+		if (table.size() > 0) {
+			getTables().add(table);}
 	}
 }

@@ -16,13 +16,15 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import static org.junit.Assert.*;
-
-import org.junit.*;
-
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
-import com.ibm.util.merge.directive.Directive;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.directive.AbstractDirective;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class ProviderCsvTest extends ProviderHttpTest {
 	
@@ -49,6 +51,7 @@ public class ProviderCsvTest extends ProviderHttpTest {
 		provider = null;
 	}
 	
+	@Override
 	@Test
 	public void testGetDataFromTag() throws MergeException {
 		super.testGetDataFromTag();
@@ -57,6 +60,7 @@ public class ProviderCsvTest extends ProviderHttpTest {
 		assertEquals("r2c2", provider.getTable(0).getValue(1, "Two"));
 	}
 
+	@Override
 	@Test
 	public void testGetDataFromStatic() throws MergeException {
 		super.testGetDataFromStatic();
@@ -77,8 +81,9 @@ public class ProviderCsvTest extends ProviderHttpTest {
 		assertEquals("http://sometestdata.csv", provider.getQueryString());
 	}
 
-	private class DirectiveStub extends Directive {
+	private class DirectiveStub extends AbstractDirective {
 		public DirectiveStub() {}
-		public void executeDirective() throws MergeException {}
+		@Override
+		public void executeDirective(RuntimeContext rtc) throws MergeException {}
 	}
 }

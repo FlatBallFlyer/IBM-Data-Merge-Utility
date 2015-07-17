@@ -16,11 +16,12 @@
  */
 package com.ibm.util.merge.directive;
 
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.template.Template;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.Template;
 
 /**
  * A validation directive 
@@ -31,44 +32,48 @@ import com.ibm.util.merge.Template;
  *
  * @author  Mike Storey
  */
-public class Require extends Directive implements Cloneable {
-	private ArrayList<String> tags = new ArrayList<String>();
+public class Require extends AbstractDirective implements Cloneable {
+	private ArrayList<String> tags = new ArrayList<>();
 	
 	/**
 	 * Simple Constructor
 	 */
 	public Require() {
 		super();
-		this.setType(TYPE_REQUIRE);
-		this.setProvider(null);
+		setType(Directives.TYPE_REQUIRE);
+		setProvider(null);
 	}
 
 	/** 
 	 * Simple clone constructor, deep copy the tags list
-	 * @see com.ibm.util.merge.directive.Directive#clone(com.ibm.util.merge.Template)
+	 * @see AbstractDirective#clone(Template)
 	 */
+	@Override
 	public Require clone() throws CloneNotSupportedException {
 		return (Require) super.clone();
 	}
 	
 	/**
 	 * Check to see if the tags are in the replace stack, throw an exception if not found
-	 * @see com.ibm.util.merge.directive.Directive#executeDirective()
+	 * @see AbstractDirective#executeDirective(RuntimeContext)
+	 * @param tf
+	 * @param rtc
 	 */
-	public void executeDirective() throws MergeException {
-		for (String tag : this.tags) {
-			if (! this.getTemplate().hasReplaceValue(Template.wrap(tag)) ) {
-				throw new MergeException(this, null, "Required Tag Not Found in " + this.getTemplate().getFullName(), this.getTags());
+	@Override
+	public void executeDirective(RuntimeContext rtc) throws MergeException {
+		for (String tag : tags) {
+			if (!getTemplate().hasReplaceValue(Template.wrap(tag)) ) {
+				throw new MergeException("Required Tag Not Found in " + getTemplate().getFullName(), tag);
 			}
 		}
 	}
 
 	public String getTags() {
-		return String.join(",", this.tags);
+		return String.join(",", tags);
 	}
 
 	public void setTags(String tags) {
-		this.tags = new ArrayList<String>(Arrays.asList(tags.split(",")));
+		this.tags = new ArrayList<>(Arrays.asList(tags.split(",")));
 	}
 
 

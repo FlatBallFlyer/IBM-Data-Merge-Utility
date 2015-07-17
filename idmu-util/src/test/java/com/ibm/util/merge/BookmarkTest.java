@@ -16,11 +16,13 @@
  */
 package com.ibm.util.merge;
 
-import static org.junit.Assert.*;
-
+import com.ibm.util.merge.template.Bookmark;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class BookmarkTest {
 	private Bookmark bookmark1;

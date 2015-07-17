@@ -15,7 +15,7 @@
  *
  */
 package com.ibm.util.merge.directive;
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderSql;
 
 public class InsertSubsSql extends InsertSubs implements Cloneable {
@@ -25,8 +25,8 @@ public class InsertSubsSql extends InsertSubs implements Cloneable {
 	 */
 	public InsertSubsSql() {
 		super();
-		this.setType(TYPE_SQL_INSERT);
-		this.setProvider(new ProviderSql());
+		setType(Directives.TYPE_SQL_INSERT);
+		setProvider(new ProviderSql());
 	}
 	
 	/** 

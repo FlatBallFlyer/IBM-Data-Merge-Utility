@@ -16,24 +16,27 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import java.util.ArrayList;
-
+import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.directive.AbstractDirective;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.*;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.ibm.util.merge.MergeException;
+import java.util.ArrayList;
 
 public class ProviderHtml extends ProviderHttp {
 	public ProviderHtml() {
 		super();
-		this.setType(Provider.TYPE_HTML);
+		setType(Providers.TYPE_HTML);
 	}
 	
 	/**
 	 * Simple clone method
-	 * @see com.ibm.util.merge.directive.provider.Provider#clone(com.ibm.util.merge.directive.Directive)
+	 * @see AbstractProvider#clone(AbstractDirective)
 	 */
+	@Override
 	public ProviderHtml clone() throws CloneNotSupportedException {
 		ProviderHtml provider = (ProviderHtml) super.clone();
 		return provider;
@@ -41,20 +44,22 @@ public class ProviderHtml extends ProviderHttp {
 
 	/**
 	 * Retrieve the data (superclass HTTP Provider) and parse the CSV data
+	 * @param cf
 	 */
-	public void getData() throws MergeException {
+	@Override
+	public void getData(ConnectionFactory cf) throws MergeException {
 		
-		super.getData();
+		super.getData(cf);
 		
 		// Parse the Data
-		Document doc = Jsoup.parse(this.getFetchedData());
+		Document doc = Jsoup.parse(getFetchedData());
 
 		// Find <table> elements
 		Elements tables = doc.select("table");
 
 		// for each (find) {
 		for (Element table : tables) {
-			DataTable newTable = this.getNewTable();
+			DataTable newTable = addNewTable();
 			
 			// Find and Process Table Header elements
 			Elements headers = table.select("th");
@@ -64,9 +69,9 @@ public class ProviderHtml extends ProviderHttp {
 			
 			// Find and Process Table Row elements
 			Elements rows = table.select("tr");
-			ArrayList<String> newRow = newTable.getNewRow();;
+			ArrayList<String> newRow = newTable.addNewRow();;
 			for (Element row : rows ) {
-				if (newRow.size() > 0) {newRow = newTable.getNewRow();}
+				if (newRow.size() > 0) {newRow = newTable.addNewRow();}
 				Elements cols = row.select("td");
 				for (Element col : cols ) {
 					newRow.add(col.ownText());

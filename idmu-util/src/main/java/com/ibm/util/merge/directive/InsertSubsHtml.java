@@ -16,7 +16,7 @@
  */
 package com.ibm.util.merge.directive;
 
-import com.ibm.util.merge.Template;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
 
 /**
@@ -30,8 +30,8 @@ public class InsertSubsHtml extends InsertSubs implements Cloneable {
 	 */
 	public InsertSubsHtml() {
 		super();
-		this.setType(TYPE_HTML_INSERT);
-		this.setProvider(new ProviderHtml());
+		setType(Directives.TYPE_HTML_INSERT);
+		setProvider(new ProviderHtml());
 	}
 
 	/** 

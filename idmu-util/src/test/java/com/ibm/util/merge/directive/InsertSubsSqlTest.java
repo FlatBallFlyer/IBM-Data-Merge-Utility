@@ -16,32 +16,43 @@
  */
 package com.ibm.util.merge.directive;
 
-import static org.junit.Assert.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.ibm.util.merge.*;
+import com.ibm.util.merge.directive.provider.DataTable;
+import com.ibm.util.merge.directive.provider.AbstractProvider;
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.idmu.api.JsonProxy;
+import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
-import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.TemplateFactory;
-import com.ibm.util.merge.directive.provider.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import static org.junit.Assert.*;
 
 public class InsertSubsSqlTest extends InsertSubsTest {
 	private String subTemplate = "{\"collection\":\"root\",\"name\":\"sub\",\"content\":\"Row: {A}, Val: {B}\\n\"}";
 	private String masterTemplate = "{\"collection\":\"root\",\"name\":\"master\",\"content\":\"Test \\u003ctkBookmark name\\u003d\\\"sub\\\" collection\\u003d\\\"root\\\"/\\u003e\"}";
 	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\" collection=\"root\"/>";
 
+	private JsonProxy jsonProxy;
+	private RuntimeContext rtc;
+
 	@Before
 	public void setUp() throws Exception {
+		jsonProxy = new DefaultJsonProxy();
+		rtc = TestUtils.createDefaultRuntimeContext();
 		provider = new ProviderStub();
 		directive = new InsertSubsSql();
 		InsertSubsSql myDirective = (InsertSubsSql) directive;
 		myDirective.setProvider(provider);
-
-		TemplateFactory.reset();
-		TemplateFactory.setDbPersistance(false);
-		TemplateFactory.cacheFromJson(subTemplate); 
-		TemplateFactory.cacheFromJson(masterTemplate);
-		template = TemplateFactory.getTemplate("root.master.", "", new HashMap<String,String>());
+		TemplateFactory tf = rtc.getTemplateFactory();
+		tf.reset();
+		Template template2 = jsonProxy.fromJSON(subTemplate, Template.class);
+		tf.cache(template2);
+		Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
+		tf.cache(template1);
+		template = tf.getTemplate("root.master.", "", new HashMap<>());
 		template.addDirective(myDirective);
 	}
 
@@ -57,30 +68,33 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 
 	@Test
 	public void testExecuteDirective() throws MergeException {
-		directive.executeDirective();
+		directive.executeDirective(rtc);
 		assertEquals(masterOutput, template.getContent());
 	}
 
-	private class ProviderStub extends Provider {
+	private class ProviderStub extends AbstractProvider {
 		public ProviderStub() {
 			super();
 		}
 		
+		@Override
 		public ProviderStub clone() throws CloneNotSupportedException {
 			ProviderStub provider = (ProviderStub) super.clone();
 			return provider;
 		}
 		
-		public void getData() throws MergeException {
-			DataTable table = this.getNewTable();
+		@Override
+		public void getData(ConnectionFactory cf) throws MergeException {
+			DataTable table = addNewTable();
 			ArrayList<String> row;
 			table.addCol("A");table.addCol("B");table.addCol("C");
-			row = table.getNewRow();
+			row = table.addNewRow();
 			row.add("1");row.add("2");row.add("3");
-			row = table.getNewRow();
+			row = table.addNewRow();
 			row.add("4");row.add("5");row.add("6");
 		}
 
+		@Override
 		public String getQueryString() {
 			return "NA";
 		}
