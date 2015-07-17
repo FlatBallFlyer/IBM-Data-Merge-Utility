@@ -58,7 +58,7 @@ var BookmarkEditor = React.createClass({
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-default" data-dismiss="modal">Cancel</button>
-              <button onClick={this.handleSave} type="button" className="btn btn-primary">Insert</button>
+              <button onClick={this.handleSave} type="button" data-dismiss="modal" className="btn btn-primary">Insert</button>
             </div>
           </div>
         </div>

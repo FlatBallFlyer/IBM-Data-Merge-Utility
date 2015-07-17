@@ -28,11 +28,11 @@ var HeaderPanel  = React.createClass({
 
     var level=this.props.level;
     var index=this.props.index;
-    var name_id="name"; //+level+"_"+index;
-    var directives_id="directives"; //+level+"_"+index;
-    var output_id="output"; //+level+"_"+index;
+    var name_id="name";//+level+"_"+index;
+    var directives_id="directives";//+level+"_"+index;
+    var output_id="output";//+level+"_"+index;
     var description_id="description";//+level+"_"+index;
-    
+
     return(
       <div className="panel-body">
         <div className="row">

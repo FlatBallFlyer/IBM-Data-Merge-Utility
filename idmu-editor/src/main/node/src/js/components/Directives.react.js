@@ -6,10 +6,10 @@ var DirectivesListMixin = {
     return({directives: []});
   },
   handleSort: function(e){
-    if(this.props.sort == false){
+    if(this.props.sort === false){
       return;
     }
-    if (e.from.dataset.sortableListId==this.props.id) {
+    if (e.from.dataset.sortableListId===this.props.id) {
       this.props.moveItemWithinList(
         e.item.dataset.sortableItemId,
         e.from.dataset.sortableListId,
@@ -44,7 +44,6 @@ var LHSList = React.createClass({
     return (
       <ul ref="" className="list-group" data-sortable-list-id={id}>
         {
-          
           this.props.directives.map(function(opt,i){
             var item_id = i;
             return(<li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
@@ -80,15 +79,18 @@ var RHSList = React.createClass({
     if(this.props.directives.length === 0){
       return(<li className="list-group-item">&nbsp;</li>);
     }else{
-      return(this.props.directives.map(function(opt,i){
-        var item_id = i;
-        var this_ref = "directives_editor_trigger_"+level+"_"+i;
-        return(
-          <li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
-            <span className="drag-handle">::</span>
-            <DirectivesEditorTrigger ref={this_ref} level={level} index={i} title={opt['description']} data={data} directive={opt} rCB={rCB} dCB={dCB} />
-          </li>);
-      }));
+      return(
+        this.props.directives.map(function(opt,i){
+          var item_id = i;
+          var this_ref = "directives_editor_trigger_"+level+"_"+i;
+          return(
+            <li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
+              <span className="drag-handle">::</span>
+              <DirectivesEditorTrigger ref={this_ref} level={level} index={i} title={opt['description']} data={data} directive={opt} rCB={rCB} dCB={dCB} />
+            </li>
+          );
+        })
+      );
     }
   },
   render: function() {

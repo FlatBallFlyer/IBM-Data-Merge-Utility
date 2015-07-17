@@ -46,8 +46,9 @@ app.get("/idmu/directives", function(req, res, next) {
 });
 
 app.get("/idmu/template/:collection_id/:template_id", function(req, res, next) {
+  console.log("...");//req.params);
   var column_value = req.query.columnValue ?  "."+req.query.columnValue : "";
-  var template = req.params.collection_id+"."+req.params.template_id+column_value+".json";
+  var template = req.params.template_id+".json"; //req.params.collection_id+"."+req.params.template_id+column_value+".json";
   var file_name = "tools/test/"+template;
   console.log("template name="+file_name);
   fs.exists(file_name, function (exists) {

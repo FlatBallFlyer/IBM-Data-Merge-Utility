@@ -88,7 +88,7 @@ var DirectiveEditorsMixin = {
             <input  onChange={this.handleTextEditChange} className="form-control" id="toColumn" type="text" value={this.state.toColumn}/>
     </div>);
   },
-  provider_tag:function() {
+  provider_tag: function(){
     return(<div className="form-group col-xs-6 col-md-6">
             <label for="provider.tag" className="control-label">Tag</label>
             <input  onChange={this.handleTextEditChange} className="form-control" id="provider.tag" type="text" value={this.state.provider.tag}/>
@@ -149,12 +149,6 @@ var DirectiveEditorsMixin = {
     return(<div className="form-group col-xs-6 col-md-6">
             <label for="provider.url" className="control-label">URL</label>
             <input  onChange={this.handleTextEditChange} className="form-control" id="provider.url" type="text" value={this.state.provider.url}/>
-    </div>);
-  },
-  provider_tag: function(){
-    return(<div className="form-group col-xs-6 col-md-6">
-            <label for="provider.tag" className="control-label">Tag</label>
-            <input  onChange={this.handleTextEditChange} className="form-control" id="provider.tag" type="text" value={this.state.provider.tag}/>
     </div>);
   }
 };

@@ -14,18 +14,20 @@ if [ -f sample-context.xml ]; then
     rm -rf build
 
     # build the static sources
-
-    (bower install && gulp)
+    
+    #(bower install && gulp)
 
     cd "$PROJECT_BASE_DIR"
 
     # copy generated static sources to the path to have them included as part of the webapp at /editor
     mkdir -p $PROJECT_BASE_DIR"/idmu-editor/src/main/resources/META-INF/resources/editor"
-    cp -R "$PROJECT_BASE_DIR"/idmu-editor/src/main/node/build/* "$PROJECT_BASE_DIR"/idmu-editor/src/main/resources/META-INF/resources/editor/
+    #cp -R "$PROJECT_BASE_DIR"/idmu-editor/src/main/node/build/* "$PROJECT_BASE_DIR"/idmu-editor/src/main/resources/META-INF/resources/editor/
+    cp -R "$PROJECT_BASE_DIR"/idmu-editor/src/main/node/bower_components "$PROJECT_BASE_DIR"/idmu-editor/src/main/resources/META-INF/resources/editor/
+    cp -R "$PROJECT_BASE_DIR"/idmu-editor/src/main/node/src "$PROJECT_BASE_DIR"/idmu-editor/src/main/resources/META-INF/resources/editor/
 
     # build maven ignoring tests
 
-    mvn -DskipTests clean install
+    mvn -DskipTests install
 
 else
     echo "Need to run from inside the build dir at <idmu_project_dir>/build : "
