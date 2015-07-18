@@ -15,7 +15,7 @@ var TemplateRibbonItem = React.createClass({
     var this_ref = "template_editor_"+level+"_"+index;
     return(
       <div className="row ribbon-item">
-        <TemplateEditor ref={this_ref} level={level} index={index} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={this.props.collection} selection={this.props.data} addTplCB={addTplCB} removeTplCB={removeTplCB}/>
+        <TemplateEditor ref={this_ref} level={level} index={index} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={this.props.collection} selection={this.props.data} addTplCB={addTplCB} removeTplCB={removeTplCB} suppressNav={this.props.suppressNav}/>
       </div>
     );
   }
@@ -41,11 +41,7 @@ var TemplateRibbon = React.createClass({
   leftNav: function(){
     var navLCB = this.handleNavLeftClick;
     if(this.props.suppressNav){
-      return(
-        <div className="col-xs-1 col-height col-middle text-center ribbon-nav ribbon-nav-width">
-          <span>&nbsp;</span>
-        </div>
-      );
+      return(false);
     }else{
       return(
         <div onClick={navLCB}  className="col-xs-1 col-height col-middle text-center ribbon-nav ribbon-nav-width">
@@ -57,10 +53,7 @@ var TemplateRibbon = React.createClass({
   rightNav: function(){
     var navRCB = this.handleNavRightClick;
     if(this.props.suppressNav){
-      return(
-        <div className="col-xs-1 col-height col-middle text-center ribbon-nav ribbon-nav-width">
-          <span>&nbsp;</span>
-        </div>);
+      return(false);
     }else{
       return(
         <div onClick={navRCB} className="col-xs-1 col-height col-middle text-center ribbon-nav ribbon-nav-width">
@@ -89,18 +82,21 @@ var TemplateRibbon = React.createClass({
     var removeTplCB = this.props.removeTplCB;
 
     var level = this.props.level;
+    var suppressNav = this.props.suppressNav;
     if(item) {
       var items = [item].map(function(opt,i){
         var this_ref = "ribbon_item_"+level+"_"+i;
-        return(<TemplateRibbonItem ref={this_ref} level={level} index={i} key={i} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={opt} collection={data}  addTplCB={addTplCB}  removeTplCB={removeTplCB}/>);
+        return(<TemplateRibbonItem ref={this_ref} level={level} index={i} key={i} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={opt} collection={data}  addTplCB={addTplCB}  removeTplCB={removeTplCB} suppressNav={suppressNav}/>);
       });
 
+      var classes = "col-height ribbon-items";
+      classes += (suppressNav ? " col-md-12 no-cover ": " col-md-10 ");
       newRibbon = [0].map(function(opt,i){
         return(
           <div key={i} className="row ribbon">
             <div className="row-height">
               {this.leftNav()}
-              <div className="col-md-10 col-height ribbon-items">                
+              <div className={classes}>
                 {items}
               </div>
               {this.rightNav()}

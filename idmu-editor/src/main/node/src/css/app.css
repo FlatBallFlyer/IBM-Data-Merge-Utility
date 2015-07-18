@@ -43,9 +43,11 @@
     cursor: pointer;
 }
 
+/*
 .template_ribbon {
     margin-top: 30px;
 }
+*/
 
 .panel-default {
     border-radius: 0 !important;
@@ -79,7 +81,19 @@
     margin-left: 5px;
 }
 
-/*moron*/
+.app_view_inner {
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.form-group-content {
+    margin-bottom: -10px !important;
+}
+
+.no-cover {
+    border-left: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+}
 
 /* content styles */
 

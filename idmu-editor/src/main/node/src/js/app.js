@@ -13,7 +13,7 @@ $(document).ready(function(){
   var this_ref = "app_"+level+"_"+index;
   React.initializeTouchEvents(true);
   React.render(
-    <div className="container"><App level={level} index={index} suppressCollection={false} suppressRibbon={false}/></div>,
+    <div className="container"><App level={level} index={index} suppressCollection={false} suppressRibbon={false} suppressNav={false}/></div>,
     document.getElementById("app_view")
   );
 });

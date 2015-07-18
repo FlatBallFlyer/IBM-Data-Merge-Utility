@@ -91,7 +91,7 @@ var TemplateBody = React.createClass({
     return(
       <div className="row no-margin ribbon-inside">
         <form>
-          <div className="form-group col-xs-12 col-md-12">
+          <div className="form-group col-xs-12 col-md-12 form-group-content">
             <div className="form-group col-xs-12 col-md-12">
               {this.heading()}
               <ContentEditable content={this.state.content} ref={this_ref} level={level} index={index} id={this_ref}/>

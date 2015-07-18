@@ -95,8 +95,12 @@ var TemplateHeader = React.createClass({
       var columnValue = tpl['columnValue'] ? "."+tpl['columnValue'] : "";
       var name = tpl['name'];
       var label = tpl['collection']+"."+name+columnValue;
+      var classes = "row no-margin";
+      if(this.props.suppressNav){
+        classes += " col-md-12 "
+      }
       return(
-        <div className="row no-margin">
+        <div className={classes}>
           <div className="panel-group" id={accordian_id} role="tablist" aria-multiselectable="true">
             <div className="panel panel-default">
               <div className="panel-heading" role="tab" id={panel_heading_id}>

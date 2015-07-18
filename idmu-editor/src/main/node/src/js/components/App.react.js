@@ -267,8 +267,9 @@ var App = React.createClass({
     this.loadTemplatesFromServer(this.state.selectedCollection);
   },
   render: function() {
+    var className = this.props.level === 0 ? "app_view" : "app_view app_view_inner";
     return (
-      <div className="app_view">
+      <div className={className}>
         <div id="template_collection" className="row template_collection">
           {this.header()}
         </div>
