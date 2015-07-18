@@ -14,17 +14,14 @@ import java.io.IOException;
  *
  */
 public class TarArchive extends Archive {
-    private static final Logger log = Logger.getLogger(TarArchive.class);
-    private TarArchiveOutputStream outputStream = null;
 
     public TarArchive(String archiveFileName) {
         super(archiveFileName);
     }
 
     public void writeFile(String entryName, String content, String userName, String groupName) throws IOException {
-    	if (this.outputStream == null) {
-    		openOutputStream();
-    	}
+    	super.writeFile(entryName, content, userName, groupName);
+    	TarArchiveOutputStream outputStream = (TarArchiveOutputStream) this.getOutputStream();
         TarArchiveEntry entry = new TarArchiveEntry(entryName);
         entry.setSize(content.length());
         entry.setNames(userName, groupName);
@@ -34,15 +31,10 @@ public class TarArchive extends Archive {
         outputStream.closeArchiveEntry();
     }
     
-    private void openOutputStream() throws IOException {
+    public void openOutputStream() throws IOException {
         FileOutputStream fos = new FileOutputStream(getFilePath());
         BufferedOutputStream bos = new BufferedOutputStream(fos);
-        this.outputStream = new TarArchiveOutputStream(bos);
+        this.setOutputStream(new TarArchiveOutputStream(bos));
     }
 
-    public void closeOutputStream() throws IOException {
-    	if (this.outputStream != null) {
-            this.outputStream.close();
-    	}
-    }
 }

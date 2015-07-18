@@ -10,7 +10,6 @@ import java.util.zip.ZipOutputStream;
  *
  */
 public class ZipArchive extends Archive {
-    private ZipOutputStream outputStream;
 
     public ZipArchive(String filePath) {
     	super(filePath);
@@ -18,27 +17,19 @@ public class ZipArchive extends Archive {
 
 	@Override
     public void writeFile(String entryName, String content, String userName, String groupName) throws IOException {
-    	if (this.outputStream == null) { 
-    		openOutputStream();
-    	}
+		super.writeFile(entryName, content, userName, groupName);
         ZipEntry entry = new ZipEntry(entryName);
-        this.outputStream.putNextEntry(entry);
-        this.outputStream.write(content.getBytes());
-        this.outputStream.flush();
-        this.outputStream.closeEntry();
+        ZipOutputStream outputStream = (ZipOutputStream) this.getOutputStream();
+        outputStream.putNextEntry(entry);
+        outputStream.write(content.getBytes());
+        outputStream.flush();
+        outputStream.closeEntry();
     }
     
-    private void openOutputStream() throws IOException {
+    public void openOutputStream() throws IOException {
         FileOutputStream fos = new FileOutputStream(getFilePath());
         BufferedOutputStream bos = new BufferedOutputStream(fos);
-        this.outputStream = new ZipOutputStream(bos);
-    }
-    
-	@Override
-    public void closeOutputStream() throws IOException {
-    	if (this.outputStream != null) {
-    		this.outputStream.close();
-    	}
+        this.setOutputStream(new ZipOutputStream(bos));
     }
 
 }

@@ -3,9 +3,7 @@ package com.ibm.util.merge;
 import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.storage.Archive;
 import com.ibm.util.merge.storage.TarArchive;
-import com.ibm.util.merge.storage.TarFileWriter;
 import com.ibm.util.merge.storage.ZipArchive;
-import com.ibm.util.merge.storage.ZipFileWriter;
 import com.ibm.util.merge.template.Template;
 
 import org.apache.log4j.Logger;
@@ -25,7 +23,7 @@ public class RuntimeContext {
     private HashMap<String, Connection> connections = new HashMap<String, Connection>();
     private final ConnectionFactory connectionFactory;
     private Date initialized = null;
-    private Boolean zipFile = false;
+    private Boolean isZipFile = false;
     private Archive archive;
     private String archiveFileName = "";
 
@@ -35,19 +33,19 @@ public class RuntimeContext {
 
         // Determine output type
         if (replace.containsKey(Template.TAG_OUTPUT_TYPE)) {
-        	this.zipFile = replace.get(Template.TAG_OUTPUT_TYPE).equals(Template.TYPE_ZIP);
+        	this.isZipFile = replace.get(Template.TAG_OUTPUT_TYPE).equals(Template.TYPE_ZIP);
         }
         
         // Determine output Filename
         if (replace.containsKey(Template.TAG_OUTPUTFILE)) {
         	this.archiveFileName = replace.get(Template.TAG_OUTPUTFILE);
         } else {
-        	this.archiveFileName = UUID.randomUUID().toString();
+        	this.archiveFileName = UUID.randomUUID().toString() + (this.isZipFile ? ".zip" : ".tar");
         	replace.put(Template.TAG_OUTPUT_TYPE, this.archiveFileName);
         }
         
         // Initialize Archive
-        if (this.zipFile) {
+        if (this.isZipFile) {
         	this.archive = new ZipArchive(this.archiveFileName);
         } else {
         	this.archive = new TarArchive(this.archiveFileName);
