@@ -109,15 +109,7 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
         subTemplate.addEmptyReplace(row == table.size() - 1 ? notLast : onlyLast);
         // Merge the SubTemplate and insert the text into the Target Template
         try {
-            subTemplate.merge(rtc);
-            final String returnValue;
-            if (!subTemplate.canWrite()) {
-                returnValue = "";
-            } else {
-                returnValue = subTemplate.getContent();
-            }
-            rtc.getTemplateFactory().getFs().doWrite(subTemplate);
-//            subTemplate.doWrite(rtc.getZipFactory());
+        	final String returnValue = subTemplate.getMergedOutput(rtc);
             getTemplate().insertText(returnValue, bookmark);
         } catch (MergeException e) {
             if (isSoftFail() || isSoftFailTemplate()) {

@@ -60,6 +60,7 @@ public class Template implements Cloneable {
     private String description = "";
     private String outputFile = "";
     private StringBuilder content = new StringBuilder();
+    private Boolean merged = false;
     private List<AbstractDirective> directives = new ArrayList<>();
     private transient List<Bookmark> bookmarks = new ArrayList<>();
     private transient Map<String, String> replaceValues = new HashMap<>();
@@ -90,7 +91,7 @@ public class Template implements Cloneable {
      */
     public Template clone(Map<String, String> seedReplace) {
         Template newTemplate = cloneThisTemplate();
-        newTemplate.replaceValues = new HashMap<>();
+        newTemplate.replaceValues = seedReplace;
         newTemplate.setContent(getContent());
         // Deep Copy Directives
         newTemplate.directives = new ArrayList<>();
@@ -98,12 +99,7 @@ public class Template implements Cloneable {
             AbstractDirective clone = cloneDirective(fromDirective);
             newTemplate.addDirective(clone);
         }
-        // Seed Replace Values
-        newTemplate.replaceValues.putAll(seedReplace);
-        // Make sure we have an output file name guid
-        if (!isOutputFileSpecified()) {
-            newTemplate.replaceValues.put(TAG_OUTPUTFILE, UUID.randomUUID().toString() + (getOutputType() == TYPE_ZIP ? ".zip" : ".tar"));
-        }
+
         // Add our name to the Template Stack
         if (!newTemplate.replaceValues.containsKey(TAG_STACK)) {
             newTemplate.replaceValues.put(TAG_STACK, getFullName());
@@ -133,6 +129,18 @@ public class Template implements Cloneable {
         return clone;
     }
 
+    public String getMergedOutput(RuntimeContext rtc) throws MergeException {
+    	if (!merged) {
+    		this.merge(rtc);
+    	}
+    	
+    	if (this.outputFile.isEmpty()) {
+    		return this.content.toString();
+    	} else {
+    		rtc.writeFile(this.outputFile, this.content.toString());
+    		return "";
+    	}
+    }
     /********************************************************************************
      * <p>Merge Template. This method drives the merge process, processing directives to select data,
      * insert sub-templates, and perform search replace activities.</p>
@@ -144,7 +152,9 @@ public class Template implements Cloneable {
      * @param rtc
      */
     public void merge(RuntimeContext rtc) throws MergeException {
-        log.info("Begin Template Merge for:" + getFullName());
+    	if (this.merged) return;
+
+    	log.info("Begin Template Merge for:" + getFullName());
         // Process Directives
         for (AbstractDirective directive : directives) {
             directive.executeDirective(rtc);
@@ -168,25 +178,8 @@ public class Template implements Cloneable {
         replaceThis(TAG_OUTPUTHASH, "");
         // Remove all the bookmarks
         replaceAllThis(BOOKMARK_PATTERN, "");
+        this.merged = true;
         log.info("Merge Complete: " + getFullName());
-//        rtc.getConnectionFactory().releaseConnection(getOutputFile());
-        log.info("ReleasedConnection for " + getOutputFile());
-    }
-
-    public boolean isOutputFileSpecified() {
-        boolean specified = replaceValues.containsKey(TAG_OUTPUTFILE);
-        if (!specified) {
-            log.warn("Template " + getFullName() + " is missing System Tag : " + Template.TAG_OUTPUTFILE);
-        }
-        if (specified && getOutputFile().isEmpty()) {
-            log.warn("Output File is empty for template " + getFullName());
-            specified = false;
-        }
-        return specified;
-    }
-
-    public boolean isNullOutputFile() {
-        return outputFile.equals("/dev/null");
     }
 
     /********************************************************************************
@@ -477,12 +470,6 @@ public class Template implements Cloneable {
     public int hashCode() {
         return getFullName().hashCode();
     }
-
-    public boolean canWrite() {
-        boolean missingWriteProperties = isEmpty() || isNullOutputFile() || !isOutputFileSpecified();
-        return !missingWriteProperties;
-    }
-
 
     @Override
     public String toString() {

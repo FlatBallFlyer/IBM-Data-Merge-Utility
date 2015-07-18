@@ -16,8 +16,8 @@
  */
 package com.ibm.util.merge;
 
-import com.ibm.util.merge.storage.TarFileWriter;
-import com.ibm.util.merge.storage.ZipFileWriter;
+import com.ibm.util.merge.storage.TarArchive;
+import com.ibm.util.merge.storage.ZipArchive;
 import com.ibm.util.merge.template.Template;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -68,10 +68,10 @@ public class ArchiveWriterTest {
     }
 
     private void writeTar(StringBuilder content, String entryPath, File outputFile1) throws IOException {
-        new TarFileWriter(outputFile1, entryPath, content.toString(), "root", "root").write();
+        new TarArchive(outputFile1, entryPath, content.toString(), "root", "root").write();
     }
 
     private void writeZip(StringBuilder content, String entryPath, File outputFile1) throws IOException {
-        new ZipFileWriter(outputFile1, entryPath, content.toString()).write();
+        new ZipArchive(outputFile1, entryPath, content.toString()).write();
     }
 }

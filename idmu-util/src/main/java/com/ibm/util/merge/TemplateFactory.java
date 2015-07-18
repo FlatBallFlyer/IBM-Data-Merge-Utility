@@ -61,7 +61,7 @@ final public class TemplateFactory {
      * @return Template The new Template object
      * @see Template
      */
-    public Template getTemplate(Map<String, String[]> requestParameters) {
+    public String getMergeOutput(Map<String, String[]> requestParameters) {
         HashMap<String, String> replace = new HashMap<>();
         // Open the "Default" template if if not specified.
         replace.put(KEY_FULLNAME, DEFAULT_FULLNAME);
@@ -74,10 +74,6 @@ final public class TemplateFactory {
         if (replace.containsKey(KEY_CACHE_RESET)) {
             log.info("requested RESET");
             reset();
-        }
-        // Handle cache load request
-        if (replace.containsKey(KEY_CACHE_LOAD)) {
-            log.info("requested LOAD TEMPLATES");
             loadTemplatesFromFilesystem();
         }
         // Get the template, add the http parameter replace values to it's hash
@@ -87,7 +83,11 @@ final public class TemplateFactory {
         if (rootTemplate == null) {
             throw new IllegalArgumentException("Could not find template for request " + new HashMap<>(requestParameters).toString());
         }
-        return rootTemplate;
+        // TODO: Provide connection Pool Manager?
+        RuntimeContext rtc = new RuntimeContext(this, null, replace);
+        rootTemplate.merge(rtc);
+        rtc.finalize();
+        return rootTemplate.getMergedOutput(rtc);
     }
 
     public void loadTemplatesFromFilesystem() {
@@ -98,8 +98,7 @@ final public class TemplateFactory {
     }
 
     /**********************************************************************************
-     * Get a copy of a cached Template based on a Template Fullname, which is comprised of
-     * collection, name and columnValue (a unique key to the TEMPLATE table) The
+     * Get a copy of a cached Template based on a Template Fullname amd ShortName The
      * provided Replace hash is copied to the new Template before it is returned
      *
      * @param fullName    - Template full name
@@ -113,23 +112,9 @@ final public class TemplateFactory {
         if (templateCache.isCached(fullName)) {
             newTemplate = templateCache.get(fullName).clone(seedReplace);
         }
-        // See if FullName template is in the database
-        if (newTemplate == null && hp != null) {
-            newTemplate = hp.getTemplateFullname(fullName);
-            templateCache.cache(fullName, newTemplate);
-            log.info("Constructed Template: " + fullName);
-            newTemplate = templateCache.get(fullName).clone(seedReplace);
-        }
         // Check for shortName in the cache, since fullName doesn't exist
         if (newTemplate == null && templateCache.isCached(shortName)) {
             templateCache.cache(fullName, templateCache.get(shortName));
-            log.info("Linked Template: " + shortName + " to " + fullName);
-            newTemplate = templateCache.get(fullName).clone(seedReplace);
-        }
-        // See if the shortName (Default Template) is in the database
-        if (newTemplate == null && hp != null) {
-            newTemplate = hp.getTemplateDefault(fullName);
-            templateCache.cache(fullName, newTemplate);
             log.info("Linked Template: " + shortName + " to " + fullName);
             newTemplate = templateCache.get(fullName).clone(seedReplace);
         }

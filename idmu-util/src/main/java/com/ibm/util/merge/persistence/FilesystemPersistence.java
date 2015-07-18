@@ -3,8 +3,8 @@ package com.ibm.util.merge.persistence;
 import com.google.gson.JsonSyntaxException;
 import com.ibm.util.merge.template.Template;
 import com.ibm.idmu.api.JsonProxy;
-import com.ibm.util.merge.storage.TarFileWriter;
-import com.ibm.util.merge.storage.ZipFileWriter;
+import com.ibm.util.merge.storage.TarArchive;
+import com.ibm.util.merge.storage.ZipArchive;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.log4j.Logger;
 
@@ -129,7 +129,7 @@ public class FilesystemPersistence {
         }
         String archiveEntryName = constructArchiveEntryName(template);
         try {
-            new TarFileWriter(outputFilePath, archiveEntryName, template.getContent(), "root", "root").write();
+            new TarArchive(outputFilePath, archiveEntryName, template.getContent(), "root", "root").write();
         } catch (IOException e) {
             throw new TemplatePersistenceException(template, outputFilePath, archiveEntryName, e);
         }
@@ -143,7 +143,7 @@ public class FilesystemPersistence {
         File outputFilePath = constructArchivePath(template);
         String archiveEntryName = constructArchiveEntryName(template);
         try {
-            new ZipFileWriter(outputFilePath, archiveEntryName, template.getContent()).write();
+            new ZipArchive(outputFilePath, archiveEntryName, template.getContent()).write();
         } catch (IOException e) {
             throw new TemplatePersistenceException(template, outputFilePath, archiveEntryName, e);
         }
