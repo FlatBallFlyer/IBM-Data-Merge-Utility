@@ -9,7 +9,6 @@ var App = React.createClass({
       selectedRibbonItem: null,
       selectedRibbonIndex: 0,
       data: [],
-      directives: [],
       template: {'directives':[]}
     };
   },
@@ -32,10 +31,10 @@ var App = React.createClass({
   },
   handleRibbonSelected: function(selectedRibbonIndex,selectedRibbonItem) {
     var collection = this.props.selection ? this.props.selection.collection : this.state.selectedCollection;
-    this.loadTemplateFromServer(collection,
-                                selectedRibbonItem['name'],
-                                selectedRibbonItem['columnValue']);
-    this.setState({selectedRibbonItem: selectedRibbonItem,selectedRibbonIndex: selectedRibbonIndex});
+    this.loadTemplateFromServer(this.state.templates,
+                                selectedRibbonIndex,
+                                collection,
+                                selectedRibbonItem);
   },
   handleAddTemplate: function(newTpl){
     this.addNewTemplateToServer(newTpl);
@@ -80,10 +79,11 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
-        self.setState({selectedRibbonIndex: 0,templates: data,selectedCollection: collection}, function(){
-          var sel = self.props.selection || data[0];
-          self.loadTemplateFromServer(sel.collection,sel.name,sel.columnValue);
-        });
+        var sel = self.props.selection || data[0];
+        self.loadTemplateFromServer(data,
+                                    this.state.selectedRibbonIndex,
+                                    sel.collection,
+                                    sel);
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -98,7 +98,7 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
-        this.setState({directives: data});
+        this.directives = data;
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -130,7 +130,9 @@ var App = React.createClass({
     }
     return items;
   },
-  loadTemplateFromServer: function(collection,id,columnValue) {
+  loadTemplateFromServer: function(templates,ribbonIndex,collection,ribbonItem){
+    var id = ribbonItem.name;
+    var columnValue = ribbonItem.columnValue;
     var sfx = (columnValue && columnValue.length>0) ? "."+columnValue : ".";
     $.ajax({
       url: '/idmu/template/'+encodeURIComponent(collection+'.'+id+sfx)+"/",
@@ -141,7 +143,11 @@ var App = React.createClass({
 
         var text = data.content.replace(Utils.tkBookmarkRegex(),"\<div class=\"tkbookmark\"  contenteditable=\"false\"");
         data.content = text;
-        this.setState({template: data});
+        this.setState({templates: templates,
+                       template: data,
+                       selectedRibbonIndex: ribbonIndex,
+                       selectedRibbonItem: ribbonItem,
+                       selectedCollection: collection});
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -172,7 +178,7 @@ var App = React.createClass({
   moveItemBetweenList: function(itemId, oldListId, oldIndex, newListId, newIndex){
     //console.log('moving '+itemId+' from '+oldListId+':'+oldIndex+' to '+newListId+':'+newIndex);
     //Probably want to fire an action creator here... but we'll just splice state manually
-    var newListInfo = $.extend(true, [], this.state.directives);
+    var newListInfo = $.extend(true, [], this.directives); //this.state.directives);
     var oldItemArr = newListInfo;
     var item = oldItemArr.splice(oldIndex,1);
     var tpl = this.state.template;

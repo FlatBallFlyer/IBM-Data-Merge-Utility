@@ -81,19 +81,20 @@ var TemplateRibbon = React.createClass({
     var addTplCB = this.props.addTplCB;
     var removeTplCB = this.props.removeTplCB;
 
+    var index = this.props.index;
     var level = this.props.level;
     var suppressNav = this.props.suppressNav;
     if(item) {
       var items = [item].map(function(opt,i){
-        var this_ref = "ribbon_item_"+level+"_"+i;
-        return(<TemplateRibbonItem ref={this_ref} level={level} index={i} key={i} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={opt} collection={data}  addTplCB={addTplCB}  removeTplCB={removeTplCB} suppressNav={suppressNav}/>);
+        var this_ref = "ribbon_item_"+level+"_"+(index+i);
+        return(<TemplateRibbonItem ref={this_ref} level={level} index={index+i} key={index+i} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={opt} collection={data}  addTplCB={addTplCB}  removeTplCB={removeTplCB} suppressNav={suppressNav}/>);
       });
 
       var classes = "col-height ribbon-items";
       classes += (suppressNav ? " col-md-12 no-cover ": " col-md-10 ");
       newRibbon = [0].map(function(opt,i){
         return(
-          <div key={i} className="row ribbon">
+          <div key={index+i} className="row ribbon">
             <div className="row-height">
               {this.leftNav()}
               <div className={classes}>

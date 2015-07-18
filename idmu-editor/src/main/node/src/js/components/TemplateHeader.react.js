@@ -86,9 +86,9 @@ var TemplateHeader = React.createClass({
 
     var level=this.props.level;
     var index=this.props.index;
-    var accordian_id = "accordian_"+level+"_"+index;
-    var panel_heading_id = "headingOne_"+level+"_"+index;
-    var collapse_id = "collapseOne_"+level+"_"+index;
+    var accordian_id = "accordian_"+level+"_"+index+Utils.uuid();
+    var panel_heading_id = "headingOne_"+level+"_"+index+Utils.uuid();
+    var collapse_id = "collapseOne_"+level+"_"+index+Utils.uuid();
     var name = tpl['name'];
     var columnValue = tpl['columnValue'] ? "."+tpl['columnValue'] : "";
     var label = tpl['collection']+"."+name+columnValue;

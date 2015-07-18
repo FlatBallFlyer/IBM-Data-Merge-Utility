@@ -45,16 +45,17 @@ var TemplateEditor = React.createClass({
     var items = data.template.items;
     var body_items = [];
 
+    var index=this.props.index;
     var level=this.props.level;
     var sCB = this.handleSave;
     var hasInsertDirective = this.hasInsertDirectives();
     if(items){
       body_items = items.map(function(opt,i){
         if(opt.type === 'text'){
-          var this_ref = "template_body_"+level+"_"+i;
+          var this_ref = "template_body_"+level+"_"+(index+i);
           
-          console.debug(">>>body "+level+"/"+i+">>","|",tpl.collection,tpl.name,tpl.columnValue);
-          return(<TemplateBody sCB={sCB} index={i} level={level} key={i} ref={this_ref} data={data} content={opt.slice} hasInsertDirective={hasInsertDirective}/>);
+          console.debug(">>>body "+level+"/"+(index+i)+">>","|",tpl.collection,tpl.name,tpl.columnValue);
+          return(<TemplateBody sCB={sCB} index={index+i} level={level} key={index+i} ref={this_ref} data={data} content={opt.slice} hasInsertDirective={hasInsertDirective}/>);
           
         }else if(level < config("max_depth")){
           var el=$.parseHTML(opt.slice);
@@ -63,16 +64,17 @@ var TemplateEditor = React.createClass({
           var name = $(el).attr('name');
           var colName = $(el).attr('column');
 
-          console.debug(">>>parsed "+level+"/"+i+">>","|",opt.slice,"|",collection,name,colName);
+          console.debug(">>>parsed "+level+"/"+(index+i)+">>","|",opt.slice,"|",collection,name,colName);
           
           if(!colName || colName.length === 0){
             suppressNav=true;
           }
 
-          var app_ref = "app_"+level+"_"+i;
+          var app_ref = "app_"+level+"_"+(index+i);
           var selection = {collection:collection,name: name,colValue:colName};
+          console.log("app index>>>",index+1);
           return(
-            <App key={i} ref={app_ref} level={level+1} index={i} selection={selection}  suppressNav={suppressNav}/>
+            <App key={index+i} ref={app_ref} level={level+1} index={index+i} selection={selection}  suppressNav={suppressNav}/>
           );
         }else {
           return(<div><h5>Exceeded max sub-template depth.</h5></div>);
