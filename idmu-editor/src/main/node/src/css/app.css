@@ -35,7 +35,15 @@
 
 .ribbon-inside{
     border-bottom: 1px solid #cccccc;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 1px;
 }
+
+.form-group-content {
+    margin-bottom: 2px;
+}
+
 .ribbon-nav {
     color: #222222;
     background: #cccccc;

@@ -586,7 +586,7 @@ var ReplaceValuesFromHTMLTableColumn = React.createClass({
 */
 var ReplaceValuesFromHTML = React.createClass({
   render: function() {
-    return (<div/>);
+    return (false);
   }
 });
 

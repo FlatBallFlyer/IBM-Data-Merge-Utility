@@ -41,6 +41,7 @@ var TemplateEditor = React.createClass({
   },
   bodyItems: function(){
     var data = this.props.data;
+    var tpl = data.template;
     var items = data.template.items;
     var body_items = [];
 
@@ -51,13 +52,18 @@ var TemplateEditor = React.createClass({
       body_items = items.map(function(opt,i){
         if(opt.type === 'text'){
           var this_ref = "template_body_"+level+"_"+i;
+          
+          console.debug(">>>body "+level+"/"+i+">>","|",tpl.collection,tpl.name,tpl.columnValue);
           return(<TemplateBody sCB={sCB} index={i} level={level} key={i} ref={this_ref} data={data} content={opt.slice} hasInsertDirective={hasInsertDirective}/>);
+          
         }else if(level < config("max_depth")){
           var el=$.parseHTML(opt.slice);
           var suppressNav = false;
           var collection = $(el).attr('collection');
           var name = $(el).attr('name');
           var colName = $(el).attr('column');
+
+          console.debug(">>>parsed "+level+"/"+i+">>","|",opt.slice,"|",collection,name,colName);
           
           if(!colName || colName.length === 0){
             suppressNav=true;

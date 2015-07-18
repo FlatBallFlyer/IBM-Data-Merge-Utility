@@ -289,7 +289,7 @@ var App = React.createClass({
       var this_ref = "ribbon_"+level+"_"+index;
       
       return(<TemplateCollection ref={this_ref} level={level} index={index} selectHandler={this.handleCollectionSelected} data={this.state}/>);
-    }else{return (<div/>);}
+    }else{return (false);}
   },
   ribbon: function(){
     var mCB = this.moveItemBetweenList;

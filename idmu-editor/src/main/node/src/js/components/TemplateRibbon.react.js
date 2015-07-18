@@ -64,7 +64,7 @@ var TemplateRibbon = React.createClass({
   render: function(){
     var data = this.props.data;
     if(!data.templates || data.templates.length <= 0) {
-      return(<div/>);
+      return(false);
     }
     var selectedCollection = data.selectedCollection;
     var collection = data['data'];
@@ -105,7 +105,7 @@ var TemplateRibbon = React.createClass({
         );}.bind(this));
     }else {
       newRibbon=[0].map(function(opt,i){
-        return(<div/>);
+        return(false);
       });
     }
 

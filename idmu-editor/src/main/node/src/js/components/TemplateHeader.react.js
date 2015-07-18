@@ -48,7 +48,7 @@ var TemplateHeader = React.createClass({
     if(level===0){
       return(<AddTemplateTrigger level={level} index={index} ref={this_ref} title={"Add Template"} selection={selection} addTplCB={addTplCB}/>);
     }else{
-      return(<div/>);
+      return(false);
     }
   },
   insertRemoveButton: function(){
@@ -63,10 +63,9 @@ var TemplateHeader = React.createClass({
     var this_ref = Utils.thisRef(level,index,"remove_template_trigger");
     var removeTplCB = this.props.removeTplCB;
     if(this.props.level===0){
-      //return(<div/>);
       return(<RemoveTemplateTrigger level={level} index={index} ref={this_ref} selection={selection} removeTplCB={removeTplCB}/>);
     }else{
-      return(<div/>);
+      return(false);
     }
   },
   insertSaveButton: function(){
@@ -89,12 +88,11 @@ var TemplateHeader = React.createClass({
     var index=this.props.index;
     var accordian_id = "accordian_"+level+"_"+index;
     var panel_heading_id = "headingOne_"+level+"_"+index;
-    var show_directives_id="show-directives_"+level+"_"+index;
     var collapse_id = "collapseOne_"+level+"_"+index;
+    var name = tpl['name'];
+    var columnValue = tpl['columnValue'] ? "."+tpl['columnValue'] : "";
+    var label = tpl['collection']+"."+name+columnValue;
     if(tpl){
-      var columnValue = tpl['columnValue'] ? "."+tpl['columnValue'] : "";
-      var name = tpl['name'];
-      var label = tpl['collection']+"."+name+columnValue;
       var classes = "row no-margin";
       if(this.props.suppressNav){
         classes += " col-md-12 "
@@ -133,7 +131,7 @@ var TemplateHeader = React.createClass({
         </div>
       );
     }else{
-      return(<div/>);
+      return(false);
     }
   }
 });
