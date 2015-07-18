@@ -34,10 +34,10 @@ import java.util.*;
 final public class TemplateFactory {
     // Factory Constants
     private static final Logger log = Logger.getLogger(TemplateFactory.class.getName());
-    public final String KEY_CACHE_RESET = Template.wrap("DragonFlyCacheReset");
-    public final String KEY_CACHE_LOAD = Template.wrap("DragonFlyCacheLoad");
-    public final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
-    private final String DEFAULT_FULLNAME = "root.default.";
+    public static final String KEY_CACHE_RESET = Template.wrap("DragonFlyCacheReset");
+    public static final String KEY_CACHE_LOAD = Template.wrap("DragonFlyCacheLoad");
+    public static final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
+    public static final String DEFAULT_FULLNAME = "root.default.";
     private final FilesystemPersistence fs;
     private HibernatePersistence hp;
     private final TemplateCache templateCache;

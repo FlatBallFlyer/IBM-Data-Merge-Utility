@@ -8,7 +8,9 @@ import com.ibm.util.merge.template.Template;
 
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +57,7 @@ public class RuntimeContext {
         log.info("Instantiated");
     }
 
-    public void writeFile(String entryName, String content) {
+    public void writeFile(String entryName, String content) throws IOException {
         if (entryName.equals("/dev/null")) return;
         if (entryName.isEmpty()) return;
         
@@ -70,10 +72,11 @@ public class RuntimeContext {
     		// TODO: Get Connection
     		Connection connection = null;
     		connections.put(dataSource, connection);
+    		return connection;
     	}
     }
     
-    public void finalize() {
+    public void finalize() throws IOException, SQLException {
     	archive.closeOutputStream();
         for (Map.Entry<String, Connection> entry : connections.entrySet()) {
             entry.getValue().close();
@@ -98,23 +101,13 @@ public class RuntimeContext {
      */
     public String getHtmlErrorMessage(MergeException error) {
         String message;
-        Template errorTemplate;
-        HashMap<String, String> parameters = new HashMap<>();
-        parameters.put(Template.wrap("MESSAGE"), error.getError());
-        parameters.put(Template.wrap("CONTEXT"), error.getContext());
-        parameters.put(Template.wrap("TRACE"), error.getStackTrace().toString());
-        try {
-            errorTemplate = getTemplateFactory().getTemplate("system.errHtml." + error.getErrorFromClass(), "system.errHtml.", parameters);
-            errorTemplate.merge(this);
-            final String returnValue;
-            if (!errorTemplate.canWrite()) {
-                returnValue = "";
-            } else {
-                returnValue = errorTemplate.getContent();
-            }
-            getTemplateFactory().getFs().doWrite(errorTemplate);
-            message = returnValue;
-        } catch (MergeException e) {
+        Map<String, String[]> parameters = new HashMap<String,String[]>();
+        parameters.put(Template.wrap("MESSAGE"), 		new String[]{error.getError()});
+        parameters.put(Template.wrap("CONTEXT"), 		new String[]{error.getContext()});
+        parameters.put(Template.wrap("TRACE"), 			new String[]{error.getStackTrace().toString()});
+        parameters.put(TemplateFactory.KEY_FULLNAME , 	new String[]{"system.errHtml."});
+        message = getTemplateFactory().getMergeOutput(parameters);
+        if (message.isEmpty()) {
             message = "INVALID ERROR TEMPLATE! \n" +
                     "Message: " + error.getError() + "\n" +
                     "Context: " + error.getContext() + "\n";
@@ -129,25 +122,13 @@ public class RuntimeContext {
      */
     public String getJsonErrorMessage(MergeException error) {
         String message;
-        Template errorTemplate;
-        HashMap<String, String> parameters = new HashMap<>();
-        parameters.put(Template.wrap("MESSAGE"), error.getError());
-        parameters.put(Template.wrap("CONTEXT"), error.getContext());
-        parameters.put(Template.wrap("TRACE"), error.getStackTrace().toString());
-        try {
-            errorTemplate = getTemplateFactory().getTemplate("system.errJson." + error.getErrorFromClass(), "system.errJson.", parameters);
-            errorTemplate.merge(this);
-            final String returnValue;
-            if (!errorTemplate.canWrite()) {
-                returnValue = "";
-            } else {
-                returnValue = errorTemplate.getContent();
-            }
-            getTemplateFactory().getFs().doWrite(errorTemplate);
-//			errorTemplate.doWrite(rtc.getZipFactory());
-            message = returnValue;
-//			errorTemplate.packageOutput(zf, cf);
-        } catch (MergeException e) {
+        Map<String, String[]> parameters = new HashMap<String,String[]>();
+        parameters.put(Template.wrap("MESSAGE"), 		new String[]{error.getError()});
+        parameters.put(Template.wrap("CONTEXT"), 		new String[]{error.getContext()});
+        parameters.put(Template.wrap("TRACE"), 			new String[]{error.getStackTrace().toString()});
+        parameters.put(TemplateFactory.KEY_FULLNAME , 	new String[]{"system.errJson."});
+        message = getTemplateFactory().getMergeOutput(parameters);
+        if (message.isEmpty()) {
             message = "INVALID ERROR TEMPLATE! \n" +
                     "Message: " + error.getError() + "\n" +
                     "Context: " + error.getContext() + "\n";
