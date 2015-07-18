@@ -143,6 +143,26 @@ var App = React.createClass({
 
         var text = data.content.replace(Utils.tkBookmarkRegex(),"\<div class=\"tkbookmark\"  contenteditable=\"false\"");
         data.content = text;
+        /*
+        if(data.directives){
+          data.directives.push({
+            "description": "Insert Situations for Agent Type",
+            "notLast": ["a","b"],
+            "onlyLast": ["c","d"],
+            "provider": {
+              "columns": "*",
+              "from": "ITM6_CONFIG",
+              "source": "tiaDB",
+              "type": 1,
+              "where": "SITNAME = '{SITNAME}' AND PROFILE IN ({PROFILES}) ORDER BY FIELD(PROFILE, {PRO\
+FILES}) DESC, CRITERIA LIMIT 1"
+            },
+            "softFail": true,
+            "type": 10
+          });
+          
+        }
+        */
         this.setState({templates: templates,
                        template: data,
                        selectedRibbonIndex: ribbonIndex,
@@ -308,6 +328,6 @@ var App = React.createClass({
     var index=0;
     var level=this.props.level;
     var this_ref = "ribbon_"+level+"_"+index;
-    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB} addTplCB={addTplCB} removeTplCB={removeTplCB}/>);
+    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB} addTplCB={addTplCB} removeTplCB={removeTplCB} ldirs={this.directives}/>);
   }
 });

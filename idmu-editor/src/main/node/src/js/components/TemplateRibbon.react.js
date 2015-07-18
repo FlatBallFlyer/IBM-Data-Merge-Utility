@@ -13,9 +13,11 @@ var TemplateRibbonItem = React.createClass({
     var index = this.props.index;
     var level = this.props.level;
     var this_ref = "template_editor_"+level+"_"+index;
+    var ldirs = this.props.ldirs;
+
     return(
       <div className="row ribbon-item">
-        <TemplateEditor ref={this_ref} level={level} index={index} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={this.props.collection} selection={this.props.data} addTplCB={addTplCB} removeTplCB={removeTplCB} suppressNav={this.props.suppressNav}/>
+        <TemplateEditor ref={this_ref} level={level} index={index} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={this.props.collection} selection={this.props.data} addTplCB={addTplCB} removeTplCB={removeTplCB} suppressNav={this.props.suppressNav} ldirs={ldirs}/>
       </div>
     );
   }
@@ -84,10 +86,11 @@ var TemplateRibbon = React.createClass({
     var index = this.props.index;
     var level = this.props.level;
     var suppressNav = this.props.suppressNav;
+    var ldirs = this.props.ldirs;
     if(item) {
       var items = [item].map(function(opt,i){
         var this_ref = "ribbon_item_"+level+"_"+(index+i);
-        return(<TemplateRibbonItem ref={this_ref} level={level} index={index+i} key={index+i} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={opt} collection={data}  addTplCB={addTplCB}  removeTplCB={removeTplCB} suppressNav={suppressNav}/>);
+        return(<TemplateRibbonItem ref={this_ref} level={level} index={index+i} key={index+i} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={opt} collection={data}  addTplCB={addTplCB}  removeTplCB={removeTplCB} suppressNav={suppressNav}  ldirs={ldirs}/>);
       });
 
       var classes = "col-height ribbon-items";
