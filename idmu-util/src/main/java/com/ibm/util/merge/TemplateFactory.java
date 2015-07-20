@@ -40,14 +40,20 @@ final public class TemplateFactory {
     public static final String KEY_CACHE_LOAD = Template.wrap("DragonFlyCacheLoad");
     public static final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
     public static final String DEFAULT_FULLNAME = "root.default.";
-    private final AbstractPersistence persistence;
-    private final TemplateCache templateCache;
+    private AbstractPersistence persistence;
+	private final TemplateCache templateCache;
     private final JsonProxy jsonProxy;
 
-    public TemplateFactory(AbstractPersistence persist) {
-        this.persistence = persist;
+    public TemplateFactory() {
         templateCache = new TemplateCache();
         jsonProxy = new PrettyJsonProxy();
+        this.persistence = null;
+    }
+    
+    public TemplateFactory(AbstractPersistence persist) {
+        templateCache = new TemplateCache();
+        jsonProxy = new PrettyJsonProxy();
+        this.persistence = persist;
     }
 
     /**********************************************************************************
@@ -76,24 +82,21 @@ final public class TemplateFactory {
             log.info("requested RESET");
             reset();
         }
-        // Get the template, add the http parameter replace values to it's hash
-        String fullName = replace.get(KEY_FULLNAME);
-        log.info("GET TEMPLATE = " + fullName);
-        Template rootTemplate = getTemplate(fullName, "", replace);
-        if (rootTemplate == null) {
-            throw new IllegalArgumentException("Could not find template for request " + new HashMap<>(requestParameters).toString());
-        }
 
+        // Setup and Merge the template
         RuntimeContext rtc = new RuntimeContext(this, replace);
         String returnValue;
         try {
+            String fullName = replace.get(KEY_FULLNAME);
+            log.info("GET TEMPLATE = " + fullName);
+            Template rootTemplate = getTemplate(fullName, "", replace);
             returnValue = rootTemplate.getMergedOutput(rtc);
 		} catch (MergeException e) {
 			returnValue = rtc.getHtmlErrorMessage(e);
 		} finally {
 	        try {
 				rtc.finalize();
-			} catch (IOException | SQLException e) {
+			} catch (Exception e) {
 				log.error("Context Finalize Error:" + e.getLocalizedMessage());
 			}
 		}
@@ -108,8 +111,9 @@ final public class TemplateFactory {
      * @param shortName   - "Default" template name
      * @param seedReplace Initial replace hash
      * @return Template The new Template object
+     * @throws MergeException 
      */
-    public Template getTemplate(String fullName, String shortName, Map<String, String> seedReplace) {
+    public Template getTemplate(String fullName, String shortName, Map<String, String> seedReplace) throws MergeException {
         Template newTemplate = null;
         // Cache hit -- Return a clone of the Template in Cache
         if (templateCache.isCached(fullName)) {
@@ -122,7 +126,7 @@ final public class TemplateFactory {
             newTemplate = templateCache.get(fullName).clone(seedReplace);
         }
         if (newTemplate == null) {
-            throw new TemplateNotFoundException(fullName);
+            throw new MergeException("Template Not Found", fullName);
         }
         return newTemplate;
     }
@@ -133,8 +137,13 @@ final public class TemplateFactory {
      * @param String fullName - the Template Full Name
      */
     public String getTemplateAsJson(String fullName) {
-        Template template = getTemplate(fullName, "", new HashMap<>());
-        return jsonProxy.toJson(template);
+        Template template;
+		try {
+			template = getTemplate(fullName, "", new HashMap<>());
+	        return jsonProxy.toJson(template);
+		} catch (MergeException e) {
+			return "NOT FOUND";
+		}
     }
 
     /**********************************************************************************
@@ -181,7 +190,8 @@ final public class TemplateFactory {
      *
      * @param String json the template json
      */
-    public void deleteTemplate(Template template) {
+    public void deleteTemplate(String json) {
+        Template template = jsonProxy.fromJSON(json, Template.class);
         templateCache.evict(template.getFullName());
         persistence.deleteTemplate(template);
     }
@@ -225,7 +235,15 @@ final public class TemplateFactory {
     public TemplateCache getTemplateCache() {
         return templateCache;
     }
-    
+
+    public AbstractPersistence getPersistence() {
+		return persistence;
+	}
+
+    public void setPersistence(AbstractPersistence newPersistence) {
+		this.persistence = newPersistence;
+	}
+   
     public static class TemplateNotFoundException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 		private String templateName;
