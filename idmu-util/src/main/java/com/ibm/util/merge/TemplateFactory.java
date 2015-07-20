@@ -244,18 +244,4 @@ final public class TemplateFactory {
 		this.persistence = newPersistence;
 	}
    
-    public static class TemplateNotFoundException extends RuntimeException {
-		private static final long serialVersionUID = 1L;
-		private String templateName;
-
-        public TemplateNotFoundException(String templateName) {
-            super("Could not find template : " + templateName);
-            this.templateName = templateName;
-        }
-
-        public String getTemplateName() {
-            return templateName;
-        }
-    }
-
 }
