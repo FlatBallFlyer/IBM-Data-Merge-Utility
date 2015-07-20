@@ -16,9 +16,10 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
 import com.ibm.util.merge.directive.AbstractDirective;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -52,8 +53,7 @@ public class ProviderCsv extends ProviderHttp implements Cloneable {
 	 * @param cf
 	 */
 	@Override
-	public void getData(ConnectionFactory cf) throws MergeException {
-		super.getData(cf);
+	public void getData(RuntimeContext rtc) throws MergeException {
 		reset();
 		DataTable table = new DataTable();
 		CSVParser parser;

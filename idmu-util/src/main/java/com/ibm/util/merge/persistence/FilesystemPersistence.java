@@ -3,44 +3,28 @@ package com.ibm.util.merge.persistence;
 import com.google.gson.JsonSyntaxException;
 import com.ibm.util.merge.template.Template;
 import com.ibm.idmu.api.JsonProxy;
-import com.ibm.util.merge.storage.TarArchive;
-import com.ibm.util.merge.storage.ZipArchive;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  */
-public class FilesystemPersistence {
+public class FilesystemPersistence extends AbstractPersistence {
 
     private Logger log = Logger.getLogger(FilesystemPersistence.class);
-
     private final File templateFolder;
-
-    private final File outputRoot;
-
     private final JsonProxy jsonProxy;
 
-    public FilesystemPersistence(File templateFolder, JsonProxy jsonProxy, File outputRoot) {
+    public FilesystemPersistence(File templateFolder, JsonProxy jsonProxy) {
         if(templateFolder == null) throw new IllegalArgumentException("Missing templateFolder");
-        if(outputRoot== null) throw new IllegalArgumentException("Missing outputRoot");
         if(jsonProxy == null) throw new IllegalArgumentException("Missing jsonProxy");
         this.templateFolder = templateFolder;
         this.jsonProxy = jsonProxy;
-        this.outputRoot = outputRoot;
-        if (!Files.exists(outputRoot.toPath())) {
-            throw new OutputDirectoryPathDoesNotExistException(outputRoot.getAbsolutePath());
-        }
-        if (!Files.isDirectory(outputRoot.toPath())) {
-            throw new NonDirectoryAtOutputDirectoryPathException(outputRoot.getAbsolutePath());
-        }
     }
 
     /**********************************************************************************
@@ -50,8 +34,9 @@ public class FilesystemPersistence {
      *
      * @param folder that contains template files
      */
-    public List<Template> loadAll() {
-        List<Template> templates = new ArrayList<>();
+	@Override
+    public List<Template> loadAllTemplates() {
+		List<Template> templates = new ArrayList<>();
         int count = 0;
         if (templateFolder.listFiles() == null) {
             throw new RuntimeException("Template Folder data was not found! " + templateFolder);
@@ -86,7 +71,9 @@ public class FilesystemPersistence {
      * @param Template template the Template to save
      * @return a cloned copy of the Template ready for Merge Processing
      */
-    public Template saveTemplateToJsonFolder(Template template) {
+	@Override
+    public void saveTemplate(Template template) {
+		deleteTemplate(template);
         String fileName = templateFolder + File.separator + template.getFullName();
         File file = new File(fileName);
         BufferedWriter bw = null;
@@ -106,10 +93,11 @@ public class FilesystemPersistence {
         } finally {
             IOUtils.closeQuietly(bw);
         }
-        return template;
+        return;
     }
 
-    public void deleteTemplateOnFilesystem(Template template) {
+	@Override
+    public void deleteTemplate(Template template) {
         File file = new File(templateFolder, template.getFullName()+".json");
         if(file.exists()){
             if(!file.delete()){
@@ -122,95 +110,61 @@ public class FilesystemPersistence {
         }
     }
 
-    public void writeTarFile(Template template) {
-        File outputFilePath = constructArchivePath(template);
-        if(!outputFilePath.getParentFile().exists()){
-            throw new IllegalArgumentException("The parent directory does not exist for file " + outputFilePath.getAbsolutePath());
-        }
-        String archiveEntryName = constructArchiveEntryName(template);
-        try {
-            new TarArchive(outputFilePath, archiveEntryName, template.getContent(), "root", "root").write();
-        } catch (IOException e) {
-            throw new TemplatePersistenceException(template, outputFilePath, archiveEntryName, e);
-        }
-    }
+//    public static class TemplatePersistenceException extends RuntimeException {
+//    	// TO DO Serial Version UID
+//		private static final long serialVersionUID = 1L;
+//		private final Template template;
+//        private final File outputFilePath;
+//        private final String archiveEntryName;
+//
+//        public TemplatePersistenceException(Template template, File outputFilePath, String archiveEntryName, IOException e) {
+//            super("Error persisting template " + template.getFullName() + " to zip file at " + outputFilePath + " with entry name " + archiveEntryName, e);
+//            this.template = template;
+//            this.outputFilePath = outputFilePath;
+//            this.archiveEntryName = archiveEntryName;
+//        }
+//
+//        public Template getTemplate() {
+//            return template;
+//        }
+//
+//        public File getOutputFilePath() {
+//            return outputFilePath;
+//        }
+//
+//        public String getArchiveEntryName() {
+//            return archiveEntryName;
+//        }
+//    }
 
-    public String constructArchiveEntryName(Template template) {
-        return template.replaceProcess(template.getOutputFile());
-    }
+//    public static class OutputDirectoryPathDoesNotExistException extends RuntimeException {
+//    	// TO DO Serial Version UID
+//		private static final long serialVersionUID = 1L;
+//		private String outputDirPath;
+//
+//        public OutputDirectoryPathDoesNotExistException(String outputDirPath) {
+//            super("The output directory does not exist: " + outputDirPath);
+//            this.outputDirPath = outputDirPath;
+//        }
+//
+//        public String getOutputDirPath() {
+//            return outputDirPath;
+//        }
+//    }
+//
+//    public static class NonDirectoryAtOutputDirectoryPathException extends RuntimeException {
+//    	// TO DO Serial Version UID
+//		private static final long serialVersionUID = 1L;
+//		private String outputDirPath;
+//
+//        public NonDirectoryAtOutputDirectoryPathException(String outputDirPath) {
+//            super("Path does not denote a directory: " + outputDirPath);
+//            this.outputDirPath = outputDirPath;
+//        }
+//
+//        public String getOutputDirPath() {
+//            return outputDirPath;
+//        }
+//    }
 
-    public void writeZipFile(Template template) {
-        File outputFilePath = constructArchivePath(template);
-        String archiveEntryName = constructArchiveEntryName(template);
-        try {
-            new ZipArchive(outputFilePath, archiveEntryName, template.getContent()).write();
-        } catch (IOException e) {
-            throw new TemplatePersistenceException(template, outputFilePath, archiveEntryName, e);
-        }
-    }
-
-    public File constructArchivePath(Template template) {
-        return new File(outputRoot + "/" + template.getOutputFile());
-    }
-
-    public void doWrite(Template template) {
-        if (template.canWrite()) {
-            if (template.getOutputType() == Template.TYPE_ZIP) {
-                writeZipFile(template);
-            } else {
-                writeTarFile(template);
-            }
-        }
-    }
-
-    public static class TemplatePersistenceException extends RuntimeException {
-        private final Template template;
-        private final File outputFilePath;
-        private final String archiveEntryName;
-
-        public TemplatePersistenceException(Template template, File outputFilePath, String archiveEntryName, IOException e) {
-            super("Error persisting template " + template.getFullName() + " to zip file at " + outputFilePath + " with entry name " + archiveEntryName, e);
-            this.template = template;
-            this.outputFilePath = outputFilePath;
-            this.archiveEntryName = archiveEntryName;
-        }
-
-        public Template getTemplate() {
-            return template;
-        }
-
-        public File getOutputFilePath() {
-            return outputFilePath;
-        }
-
-        public String getArchiveEntryName() {
-            return archiveEntryName;
-        }
-    }
-
-    public static class OutputDirectoryPathDoesNotExistException extends RuntimeException {
-        private String outputDirPath;
-
-        public OutputDirectoryPathDoesNotExistException(String outputDirPath) {
-            super("The output directory does not exist: " + outputDirPath);
-            this.outputDirPath = outputDirPath;
-        }
-
-        public String getOutputDirPath() {
-            return outputDirPath;
-        }
-    }
-
-    public static class NonDirectoryAtOutputDirectoryPathException extends RuntimeException {
-        private String outputDirPath;
-
-        public NonDirectoryAtOutputDirectoryPathException(String outputDirPath) {
-            super("Path does not denote a directory: " + outputDirPath);
-            this.outputDirPath = outputDirPath;
-        }
-
-        public String getOutputDirPath() {
-            return outputDirPath;
-        }
-    }
 }

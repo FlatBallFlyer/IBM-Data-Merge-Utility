@@ -16,10 +16,11 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.AbstractDirective;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
@@ -61,7 +62,7 @@ public abstract class ProviderHttp extends AbstractProvider implements Cloneable
 	 * @param cf
 	 */
 	@Override
-	public void getData(ConnectionFactory cf) throws MergeException {
+	public void getData(RuntimeContext rtc) throws MergeException {
 		Template template = getDirective().getTemplate();
 		if (!url.isEmpty()) {
 			try {

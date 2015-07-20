@@ -16,10 +16,10 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
-import com.ibm.idmu.api.SqlOperation;
+import com.ibm.util.merge.RuntimeContext;
 import com.ibm.util.merge.directive.AbstractDirective;
+
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -61,34 +61,42 @@ public class ProviderSql extends AbstractProvider implements Cloneable {
      * @throws MergeException Wrapped SQL and Process execptions
      */
     @Override
-    public void getData(ConnectionFactory cf) throws MergeException {
-        reset();
-        DataTable table = addNewTable();
-        String queryString = getQueryString();
-        log.info(getDirective().getTemplate().getFullName() + " Selecting SQL Data " + queryString);
-        cf.runSqlOperation(source, new SqlOperation<Void>() {
-            @Override
-            public Void execute(Connection connection) throws SQLException {
-                PreparedStatement st = connection.prepareStatement(queryString, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                ResultSet rs = st.executeQuery();
-                // Populate the Table Column names
-                ResultSetMetaData meta = rs.getMetaData();
-                final int columnCount = meta.getColumnCount();
-                for (int column = 1; column <= columnCount; column++) {
-                    table.addCol(meta.getColumnName(column));
-                }
-                // Populate the Table Data
-                while (rs.next()) {
-                    ArrayList<String> row = table.addNewRow();
-                    for (int column = 1; column <= columnCount; column++) {
-                        String value = rs.getString(column);
-                        row.add(value != null ? value : "");
-                    }
-                }
-                log.info("Sql Dataprovider read " + Integer.toString(table.size()) + " rows");
-                return null;
-            }
-        });
+    public void getData(RuntimeContext rtc) throws MergeException {
+		this.reset();
+		DataTable table = this.addNewTable();
+		Connection con = null;
+		
+		try {
+			// Prepare and Execute the SQL Statement
+			String queryString = this.getQueryString();
+			log.info(this.getDirective().getTemplate().getFullName() + " Selecting SQL Data " + queryString );
+			
+			con = rtc.getConnection(this.source);
+			PreparedStatement st = con.prepareStatement(queryString, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = st.executeQuery();
+			
+			// Populate the Table Column names
+			ResultSetMetaData meta = rs.getMetaData();
+			final int columnCount = meta.getColumnCount();
+		    for (int column = 1; column <= columnCount; column++) 
+		    {
+		    	table.addCol(meta.getColumnName(column));
+		    }
+			
+			// Populate the Table Data
+			while (rs.next() ) {
+				ArrayList<String> row = table.addNewRow();
+			    for (int column = 1; column <= columnCount; column++) 
+			    {
+			    	String value = rs.getString(column);
+			    	row.add( value != null ? value : "");
+			    }
+			}
+		} catch (SQLException e) {
+			throw new MergeException(e, "Invalid Merge Data", this.getQueryString() );
+		} finally {
+			log.info("Sql Dataprovider read " + Integer.toString(table.size()) + " rows");			
+		}
     }
 
     /**

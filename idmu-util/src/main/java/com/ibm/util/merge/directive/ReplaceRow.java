@@ -53,7 +53,7 @@ public abstract class ReplaceRow extends AbstractDirective implements Cloneable 
 	@Override
 	public void executeDirective(RuntimeContext rtc) throws MergeException {
 		AbstractProvider provider = getProvider();
-		provider.getData(rtc.getConnectionFactory());
+		provider.getData(rtc);
 
 		// Make sure we got some data
 		if (getProvider().size() < 1 ) {

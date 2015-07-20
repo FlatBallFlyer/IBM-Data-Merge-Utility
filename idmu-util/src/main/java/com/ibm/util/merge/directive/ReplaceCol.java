@@ -53,7 +53,7 @@ public abstract class ReplaceCol extends AbstractDirective implements Cloneable 
 	 */
 	@Override
 	public void executeDirective(RuntimeContext rtc) throws MergeException {
-		getProvider().getData(rtc.getConnectionFactory());
+		getProvider().getData(rtc);
 		for (DataTable table : getProvider().getTables() ) {
 	 		int from = table.getCol(fromColumn);
 			int to = table.getCol(toColumn);

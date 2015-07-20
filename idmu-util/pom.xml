@@ -15,7 +15,7 @@
 			<groupId>com.ibm.idmu</groupId>
 			<artifactId>idmu-api</artifactId>
 			<version>3.0</version>
-		</dependency>
+		</dependency> 
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>

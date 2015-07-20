@@ -16,9 +16,10 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.RuntimeContext;
 import com.ibm.util.merge.directive.AbstractDirective;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -47,9 +48,9 @@ public class ProviderHtml extends ProviderHttp {
 	 * @param cf
 	 */
 	@Override
-	public void getData(ConnectionFactory cf) throws MergeException {
-		
-		super.getData(cf);
+	public void getData(RuntimeContext rtc) throws MergeException {
+		// Get the data
+		super.getData(rtc);
 		
 		// Parse the Data
 		Document doc = Jsoup.parse(getFetchedData());

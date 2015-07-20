@@ -19,8 +19,10 @@ package com.ibm.util.merge.template;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.RuntimeContext;
 import com.ibm.util.merge.directive.AbstractDirective;
+
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -137,7 +139,11 @@ public class Template implements Cloneable {
     	if (this.outputFile.isEmpty()) {
     		return this.content.toString();
     	} else {
-    		rtc.writeFile(this.outputFile, this.content.toString());
+    		try {
+				rtc.writeFile(this.outputFile, this.content.toString());
+			} catch (IOException e) {
+				throw new MergeException(this, e, "Error writing output file", this.outputFile);
+			}
     		return "";
     	}
     }

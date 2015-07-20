@@ -50,7 +50,7 @@ public class ReplaceMarkupHtml extends AbstractDirective implements Cloneable {
 	 */
 	@Override
 	public void executeDirective(RuntimeContext rtc) throws MergeException {
-		getProvider().getData(rtc.getConnectionFactory());
+		getProvider().getData(rtc);
 		// TODO HTML Markup - Execute
 		// for each match, get from/to and call this.owner.addReplace()
 	}

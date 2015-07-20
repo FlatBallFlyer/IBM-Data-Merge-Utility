@@ -139,7 +139,8 @@ public class ConnectionPoolManager implements PoolManager {
     }
 
     public static class LoadConnectionPoolPropertiesException extends RuntimeException {
-        private final String name;
+		private static final long serialVersionUID = 1L;
+		private final String name;
         private final String propertiesPath;
 
         public LoadConnectionPoolPropertiesException(String name, String propertiesPath, Exception e) {

@@ -16,22 +16,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
 /**
  *
  */
 public class RuntimeContext {
+    private static final String DBROOT = "java:/comp/env/jdbc/";
     private static final Logger log = Logger.getLogger(RuntimeContext.class);
     private final TemplateFactory templateFactory;
     private HashMap<String, Connection> connections = new HashMap<String, Connection>();
-    private final ConnectionFactory connectionFactory;
     private Date initialized = null;
     private Boolean isZipFile = false;
     private Archive archive;
     private String archiveFileName = "";
 
-    public RuntimeContext(TemplateFactory templateFactory, ConnectionPoolManager poolManager, HashMap<String,String> replace) {
-        this.templateFactory = templateFactory;
-        connectionFactory = new ConnectionFactory(poolManager);
+    public RuntimeContext(TemplateFactory factory, HashMap<String,String> replace) {
+        this.templateFactory = factory;
 
         // Determine output type
         if (replace.containsKey(Template.TAG_OUTPUT_TYPE)) {
@@ -43,10 +47,10 @@ public class RuntimeContext {
         	this.archiveFileName = replace.get(Template.TAG_OUTPUTFILE);
         } else {
         	this.archiveFileName = UUID.randomUUID().toString() + (this.isZipFile ? ".zip" : ".tar");
-        	replace.put(Template.TAG_OUTPUT_TYPE, this.archiveFileName);
+        	replace.put(Template.TAG_OUTPUTFILE, this.archiveFileName);
         }
         
-        // Initialize Archive
+        // Initialize Archive object
         if (this.isZipFile) {
         	this.archive = new ZipArchive(this.archiveFileName);
         } else {
@@ -59,24 +63,32 @@ public class RuntimeContext {
 
     public void writeFile(String entryName, String content) throws IOException {
         if (entryName.equals("/dev/null")) return;
-        if (entryName.isEmpty()) return;
+        if (content.isEmpty()) return;
         
 		// TODO: Determine User and Group attributes to use
     	archive.writeFile(entryName, content, "", "");
     }
     
-    public Connection getConnection(String dataSource) {
+    public Connection getConnection(String dataSource) throws MergeException {
+    	Connection theConnection;
     	if (this.connections.containsKey(dataSource)) {
-    		return connections.get(dataSource);
+    		theConnection = connections.get(dataSource);
     	} else {
-    		// TODO: Get Connection
-    		// Connection connection = connectionFactory.getConnection(?);
-    		Connection connection = null;
-    		connections.put(dataSource, connection);
-    		return connection;
+			try {
+				// TODO - reactor to use real connection pool and remove JNDI dependency
+				Context initContext = new InitialContext();
+				DataSource newSource = (DataSource) initContext.lookup(DBROOT + dataSource);
+				theConnection = newSource.getConnection();
+	    		connections.put(dataSource, theConnection);
+			} catch (NamingException e) {
+				throw new MergeException("Naming Exception getting new DataSource", DBROOT + dataSource);
+			} catch (SQLException e) {
+				throw new MergeException("SQL Exception getting new DataSource", DBROOT + dataSource);
+			}
     	}
-    }
-    
+    	return theConnection;
+	}
+    		
     public void finalize() throws IOException, SQLException {
     	archive.closeOutputStream();
         for (Map.Entry<String, Connection> entry : connections.entrySet()) {
@@ -92,10 +104,6 @@ public class RuntimeContext {
         return templateFactory;
     }
 
-    public ConnectionFactory getConnectionFactory() {
-        return connectionFactory;
-    }
-    
     /**
      * @param error
      * @return
@@ -136,4 +144,5 @@ public class RuntimeContext {
         }
         return message;
     }
+
 }

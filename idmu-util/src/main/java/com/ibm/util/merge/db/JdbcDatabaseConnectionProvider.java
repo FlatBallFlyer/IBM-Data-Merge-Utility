@@ -174,7 +174,8 @@ class JdbcDatabaseConnectionProvider implements Closeable, DatabaseConnectionPro
     }
 
     public class SqlOperationExecutionException extends DatabaseConnectionProviderException{
-        public <T> SqlOperationExecutionException(SqlOperation<T> sqlOperation, String jdbcConnectionUrl, Exception e) {
+		private static final long serialVersionUID = 1L;
+		public <T> SqlOperationExecutionException(SqlOperation<T> sqlOperation, String jdbcConnectionUrl, Exception e) {
             super("Error during execution of sql operation against " + jdbcConnectionUrl + " : " + sqlOperation, e);
 
         }
