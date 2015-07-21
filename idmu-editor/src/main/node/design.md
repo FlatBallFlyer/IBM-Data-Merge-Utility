@@ -7,6 +7,7 @@
 - [Ribbon](#template_ribbon)
 - [RibbonItem](#template_ribbon_item)
 - [TemplateEditor](#template_editor)
+-- [Handling Bookmarks](#bookmarks)
 - [TemplateHeader](#template_header)
 - [HeaderPanel](#header_panel)
 - [Directives](#directives)
@@ -128,6 +129,8 @@ The class acts as container for multiple components as stated
 in the BOM. The class also acts as a narrow channel for template
 save actions.
 
+
+<a name="bookmarks"/>
 ### Handling Of Bookmarks
 
 When it is time to render this component the following
