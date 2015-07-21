@@ -73,3 +73,32 @@ The important server interaction methods are
 - saveTemplate
 
 ```
+
+## TemplateCollection
+
+The class encapsulates the selection behavior of top-level templates.
+Note that this component is never utilized when the `App` component
+is nested. This logic is implemented in the `App:header` method.
+
+
+## TemplateRibbon
+
+The ribbon component acts as a container for a group of templates in
+a selected collection. The behavior is like a cover-flow showing a
+single template at a time. Provisions for left/right navigation are
+provided.
+
+For each concrete template in the collection a `TemplateRibbonItem`
+is embedded. The template itself is lazily loaded when the item
+is in view.
+
+When the left/right buttons are clicked the `App:collectionSelected`
+is called.
+
+
+## TemplateRibbonItem
+
+The class encapsulates ribbon related behavior and embeds the
+`TemplateEditor` component for a particular template.
+
+## TemplateEditor
