@@ -10,9 +10,9 @@
   - [Handling Sub-Templates](#bookmarks)
   - [Handling Save](#handle_save_action)
 - [TemplateHeader](#template_header)
-- [HeaderPanel](#header_panel)
+- [HeaderPanel (Accordion)](#header_panel)
 - [Directives](#directives)
-  - [Drag and Drop](#drag_drop)
+  - [Drag and Drop](#drag_and_drop)
 
 
 <a name="overview"/>
@@ -73,9 +73,10 @@ be embedded inside other components in a nested fashion.
 The important top-level states are
 
 ```
+- global directives
+- top-level collection
 - selected collection
 - selected ribbon item
-- global directives
 - templates for selected collection
 - current template in view
 ```
@@ -83,7 +84,6 @@ The important top-level states are
 The important server interaction methods are
 
 ```
-
 - loadDirectives
 - loadCollections
 - loadTemplates
@@ -91,7 +91,6 @@ The important server interaction methods are
 - addTemplate
 - removeTemplate
 - saveTemplate
-
 ```
 
 <a name="template_collection"/>
@@ -181,6 +180,10 @@ header level components `HeaderPanel` (to edit name, description,
 and action) or the `Directives` panel to configure the directives
 for the template.
 
+- When a switch between panels are required the `{panelConfig: show-header|show-directives}`
+is set. When set the render action is triggered and based on current state
+the appropriate panel is shown or rendered. See `TemplateHeader:showPanel` method.
+
 
 ### AddTemplateTrigger
 
@@ -249,18 +252,32 @@ The component fires the `App:moveItemWithinList` when items are
 moved within the list for re-ordering, and fires the `App:moveItemBetweenList`
 when an item is dropped from the `LHSList` component.
 
-Each of the list item is embeds `DirectivesEditorTrigger` component
+Each of the list item embeds `DirectivesEditorTrigger` component
 to either edit the configuration or to remove the item from the
 template.
 
 ### DirectivesEditorTrigger
 
-   Actions [edit, remove]
-   
-### DirectiveEditors (modal)
-           RequireTags
-           ReplaceValue
-           InsertSubTemplatesFromTagData
+Component encapsulates the edit, and remove behavior of included
+directives of a template. The remove action triggers a callback
+in `App:removeTemplate` method. The `double-click` action triggers
+`DirectivesEditor` show modal behavior.
+
+
+<a name="directives_editor"/>   
+### DirectivesEditor
+
+This component simply renders the appropriate modal based on the
+`template.directives[i].type` field see `DirectivesEditor:editor`
+method. It also provides the `save` callback which collects the
+new edits and dispatches to the `App:saveDirective` method.
+
+Some of the modals are
+```
+- RequireTags
+- ReplaceValue
+- InsertSubTemplatesFromTagData
+```
 
 
 
