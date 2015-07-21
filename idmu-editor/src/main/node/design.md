@@ -3,8 +3,13 @@
 - [Overview](#overview)
 - [Component BOM](#bom)
 - [App](#app)
+- [TemplateCollection](#template_collection)
 - [Ribbon](#template_ribbon)
 - [RibbonItem](#template_ribbon_item)
+- [TemplateEditor](#template_editor)
+- [TemplateHeader](#template_header)
+- [HeaderPanel](#header_panel)
+- [Directives](#directives)
 
 
 <a name="overview"/>
