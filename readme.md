@@ -55,11 +55,17 @@ There are 2 servlets:
   Leverages RequestHandlers to handle requests for the active RuntimeContext instance
 
 ## Supported URLs
+    GET/POST /idmu/merge?DragonFlyFullName=fullname&{additional requestParameters} triggers a merge
+    	response: HTML representation of merge output
+
     GET    /idmu/directives (full url example http://localhost:9090/idmu/directives)
     	{[{"type":1,"name":"Replace Value"},...]}
 
-    GET    /idmu/templates?collection=value
-        {["fullname": "root.default.","fullname": "root.allDirectives.",....]}
+    GET    /idmu/collections (full url example http://localhost:9090/idmu/collections)
+    	{["root","test",.....]}
+    
+    GET    /idmu/templates/{collectionName} (full url example http://localhost:9090/idmu/templates/root)
+        {["root.default.","root.allDirectives",....]}
 
     GET    /idmu/template/{templateFullName}
 	    {Template json}
@@ -69,9 +75,6 @@ There are 2 servlets:
 
     DELETE /idmu/template/{templateFullName} 
     	response: status OK or NOT_FOUND
-
-    GET/POST /idmu/merge?{requestParameters} triggers a merge
-    	response: HTML representation of merge output
 
 
 ## License
