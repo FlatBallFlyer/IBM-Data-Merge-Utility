@@ -1,5 +1,7 @@
 package com.ibm.util.merge.directive;
 
+import java.util.ArrayList;
+
 /**
  *
  */
@@ -28,4 +30,36 @@ public class Directives {
     public static final int	TYPE_MONGO_INSERT			= 61;
     public static final int TYPE_MONGO_REPLACE_ROW 		= 62;
     public static final int TYPE_MONGO_REPLACE_COL 		= 63;
+    public static final ArrayList<DirectiveName> directiveNames  = new ArrayList<DirectiveName>();
+    
+    public Directives() {
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_REQUIRE, 			"Require Tags"));
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_REPLACE_VALUE, 		"Replace Value"));
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_TAG_INSERT, 		"Insert Subs from Tag"));
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_SQL_INSERT, 		"Insert Subs from SQL"));
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_SQL_REPLACE_ROW, 	"Replace Row from SQL"));
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_SQL_REPLACE_COL, 	"Ceplace Col from SQL"));
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_CSV_INSERT, 		"Insert Subs from CSV"));
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_CSV_REPLACE_ROW, 	"Replace Row from CSV"));
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_CSV_REPLACE_COL, 	"Replace Col from CSV"));
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_HTML_INSERT, 		"Insert Subs from HTML"));
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_HTML_REPLACE_ROW, 	"Replace Row from HTML"));
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_HTML_REPLACE_COL, 	"Replace Col from HTML"));
+    	Directives.directiveNames.add(new DirectiveName(Directives.TYPE_HTML_REPLACE_MARKUP, "Replace from HTML Markup"));
+    }
+    
+    public ArrayList<DirectiveName>getDirectiveNames() {
+    	return directiveNames;
+    }
+    
+    public class DirectiveName {
+    	@SuppressWarnings("unused")
+		private int type;
+    	@SuppressWarnings("unused")
+		private String name;
+    	public DirectiveName(int type, String name) {
+    		this.name = name;
+    		this.type = type;
+    	}
+    }
 }

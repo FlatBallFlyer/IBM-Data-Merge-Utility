@@ -16,13 +16,10 @@
  */
 package com.ibm.util.merge;
 
-import com.ibm.util.merge.db.ConnectionPoolManager;
-import com.ibm.util.merge.json.DefaultJsonProxy;
 import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
-import com.ibm.util.merge.persistence.HibernatePersistence;
 import com.ibm.util.merge.template.Template;
 
 import org.junit.Before;
@@ -36,12 +33,13 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-// todo Finalize Testing Templates and Collections
+// TODO Finalize Testing Templates and Collections
 public class TemplateFactoryFilePersistTest {
 	private String templatesFolder = "src/test/resources/templates";
 	private File templatesDir = new File(templatesFolder);
+	private JsonProxy proxy = new PrettyJsonProxy();
 	private AbstractPersistence filePersist = new FilesystemPersistence(templatesDir, new PrettyJsonProxy());
-    private TemplateFactory testFactory = new TemplateFactory(filePersist);
+    private TemplateFactory testFactory = new TemplateFactory(filePersist, proxy);
     private int count = 56;
     
     @Before
@@ -94,6 +92,13 @@ public class TemplateFactoryFilePersistTest {
     public void testGetTemplateNamesJson() throws MergeException {
     	String templates = testFactory.getTemplateNamesJSON("root");
     	String answer = "[\n  \"root.default.\",\n  \"root.allDirectives.\"\n]";
+    	assertEquals(answer, templates);
+    }
+
+    @Test
+    public void testGetDirectiveNamesJson() throws MergeException {
+    	String templates = testFactory.getDirectiveNamesJSON();
+    	String answer = "[\n  {\n    \"type\": 0,\n    \"name\": \"Require Tags\"\n  },\n  {\n    \"type\": 1,\n    \"name\": \"Replace Value\"\n  },\n  {\n    \"type\": 2,\n    \"name\": \"Insert Subs from Tag\"\n  },\n  {\n    \"type\": 10,\n    \"name\": \"Insert Subs from SQL\"\n  },\n  {\n    \"type\": 11,\n    \"name\": \"Replace Row from SQL\"\n  },\n  {\n    \"type\": 12,\n    \"name\": \"Ceplace Col from SQL\"\n  },\n  {\n    \"type\": 21,\n    \"name\": \"Insert Subs from CSV\"\n  },\n  {\n    \"type\": 22,\n    \"name\": \"Replace Row from CSV\"\n  },\n  {\n    \"type\": 23,\n    \"name\": \"Replace Col from CSV\"\n  },\n  {\n    \"type\": 31,\n    \"name\": \"Insert Subs from HTML\"\n  },\n  {\n    \"type\": 32,\n    \"name\": \"Replace Row from HTML\"\n  },\n  {\n    \"type\": 33,\n    \"name\": \"Replace Col from HTML\"\n  },\n  {\n    \"type\": 34,\n    \"name\": \"Replace from HTML Markup\"\n  }\n]";
     	assertEquals(answer, templates);
     }
 

@@ -1,6 +1,6 @@
 package com.ibm.util.merge.web.rest.servlet;
 
-import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.TemplateFactory;
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public interface RequestHandler {
 
-    void initialize(Map<String, String> initParameters, RuntimeContext runtimeContext);
+    void initialize(Map<String, String> initParameters, TemplateFactory tf);
 
     boolean canHandle(RequestData rd);
 

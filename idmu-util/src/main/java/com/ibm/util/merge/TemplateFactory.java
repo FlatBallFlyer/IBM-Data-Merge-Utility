@@ -18,6 +18,8 @@ package com.ibm.util.merge;
 
 import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.cache.TemplateCache;
+import com.ibm.util.merge.directive.Directives;
+import com.ibm.util.merge.directive.Directives.DirectiveName;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.template.Template;
@@ -52,6 +54,7 @@ final public class TemplateFactory {
         templateCache = new TemplateCache();
         jsonProxy = proxy;
         this.persistence = persist;
+        reset();
     }
 
     /**********************************************************************************
@@ -145,9 +148,21 @@ final public class TemplateFactory {
     }
 
     /**********************************************************************************
+     * <p>Get a JSON List of Dierctive Types.</p>
+     *
+     * @return JSON List of Directive Types and Names
+     * @see Template
+     */
+    public String getDirectiveNamesJSON() {
+    	Directives directives = new Directives();
+        ArrayList<DirectiveName>theList = directives.getDirectiveNames();
+        return jsonProxy.toJson(theList);
+    }
+
+
+    /**********************************************************************************
      * <p>Get a JSON List of Collections.</p>
      *
-     * @param request HttpServletRequest
      * @return JSON List of Collection Names
      * @see Template
      */
@@ -188,10 +203,11 @@ final public class TemplateFactory {
      *
      * @param String json the template json
      */
-    public void deleteTemplate(String json) {
+    public String deleteTemplate(String json) {
         Template template = jsonProxy.fromJSON(json, Template.class);
         templateCache.evict(template.getFullName());
         persistence.deleteTemplate(template);
+        return "OK";
     }
 
     /**********************************************************************************

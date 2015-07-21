@@ -4,7 +4,7 @@ import com.ibm.util.merge.*;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.result.MergeResult;
+import com.ibm.util.merge.web.rest.servlet.result.JsonDataResult;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -12,9 +12,9 @@ import java.util.Map;
 /**
  * Handles POST /merge
  */
-public class PerformMergeResourceHandler implements RequestHandler {
+public class PutTemplateResourceHandler implements RequestHandler {
 
-    private static final Logger log = Logger.getLogger(PerformMergeResourceHandler.class);
+    private static final Logger log = Logger.getLogger(PutTemplateResourceHandler.class);
 
     private TemplateFactory tf;
 
@@ -25,16 +25,14 @@ public class PerformMergeResourceHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(RequestData rd) {
-        return (rd.isGET()) && rd.pathEquals("/merge");
+        return (rd.isPUT()) && rd.pathEquals("/template");
     }
 
     @Override
     public Result handle(RequestData rd) {
-    	Long start = System.currentTimeMillis();
-        String result = tf.getMergeOutput(rd.getParameterMap());
-        long elapsed = System.currentTimeMillis() - start;
-        log.warn(String.format("Merge completed in %d milliseconds", elapsed));
-        return new MergeResult(result);
+        String template = rd.getPathParts().get(1);
+        log.warn("putTemplate for " + template);
+        return new JsonDataResult(tf.saveTemplateFromJson(template));
     }
 
 }
