@@ -1,6 +1,7 @@
 # Table of Contents
-[Overview](#overview)
-[Component BOM](#bom)
+
+- [Overview](#overview)
+- [Component BOM](#bom)
 
 <a name="overview"/>
 # Overview
