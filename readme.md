@@ -56,101 +56,22 @@ There are 2 servlets:
 
 ## Supported URLs
     GET    /idmu/directives (full url example http://localhost:9090/idmu/directives)
-    [
-      {
-        "notLast": [
-          "empty"
-        ],
-        "onlyLast": [],
-        "sequence": 0,
-        "type": 2,
-        "softFail": false,
-        "description": "TestInsertSubsTag",
-        "provider": {
-          "type": 2
-        }
-      },
-      {
-        "notLast": [],
-        "onlyLast": [],
-        "sequence": 1,
-        "type": 2,
-        "softFail": false,
-        "description": "Create Postal Message File",
-        "provider": {
-          "type": 2
-        }
-      }, ... ]
+    	{[{"type":1,"name":"Replace Value"},...]}
 
-    GET    /idmu/templates
-        [
-          {
-            "collection": "contact",
-            "columnValue": "",
-            "name": "cmd",
-            "description": "Command Default Template (EMPTY)",
-            "outputFile": "",
-            "content": "",
-            "directives": []
-          },
-          {
-            "collection": "contact",
-            "columnValue": "SMS",
-            "name": "cmd",
-            "description": "Send SMS Command",
-            "outputFile": "",
-            "content": "\ncurl http://textbelt.com/text -d number{phone} -d message\u003dTime to Renew!\u003ctkBookmark collection\u003d\"special\" name\u003d\"SMTP\"/\u003e",
-            "directives": [
-              {
-                "sequence": 0,
-                "type": 2,
-                "softFail": false,
-                "description": "TestInsertSubsTag",
-                "provider": {
-                  "type": 2
-                }
-              }
-            ]
-          }, ... ]
-
-    GET    /idmu/templates/{collectionName}
-    (similar payloads)
-
-    GET    /idmu/templates/{collectionName}/{type}
-    (similar payloads)
-
-    GET    /idmu/templates/{collectionName}/{type}?columnValue={columnValue}
-    (similar payloads)
+    GET    /idmu/templates?collection=value
+        {["fullname": "root.default.","fullname": "root.allDirectives.",....]}
 
     GET    /idmu/template/{templateFullName}
-    {
-        "collection": "contact",
-        "columnValue": "SMS",
-        "name": "cmd",
-        "description": "Send SMS Command",
-        "outputFile": "",
-        "content": "\ncurl http://textbelt.com/text -d number{phone} -d message\u003dTime to Renew!\u003ctkBookmark collection\u003d\"special\" name\u003d\"SMTP\"/\u003e",
-        "directives": [
-          {
-            "sequence": 0,
-            "type": 2,
-            "softFail": false,
-            "description": "TestInsertSubsTag",
-            "provider": {
-              "type": 2
-            }
-          }
-        ]
-      }
+	    {Template json}
 
-    PUT    /idmu/templates/{collectionName} with the template template JSON
-    reponse:status OK or FORBIDDEN, payload similar to GET /template/{fullName}
+    PUT    /idmu/template/{Template json}
+    	reponse:status OK or FORBIDDEN
 
-    DELETE /idmu/template/{templateFullName} Warning: really works and deletes on filesystem
-    response: status OK or NOT_FOUND
+    DELETE /idmu/template/{templateFullName} 
+    	response: status OK or NOT_FOUND
 
     GET/POST /idmu/merge?{requestParameters} triggers a merge
-    response: HTML representation of result
+    	response: HTML representation of merge output
 
 
 ## License

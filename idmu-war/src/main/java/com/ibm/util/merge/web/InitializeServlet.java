@@ -66,8 +66,8 @@ public class InitializeServlet extends HttpServlet {
         File templatesDirPath = warTemplatesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(warTemplatesPath)) : new File(warTemplatesPath);
         File poolsPropertiesPath = jdbcPoolsPropertiesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(jdbcPoolsPropertiesPath)) : new File(jdbcPoolsPropertiesPath);
         PrettyJsonProxy jsonProxy = new PrettyJsonProxy();
-        FilesystemPersistence fs = new FilesystemPersistence(templatesDirPath, jsonProxy, outputDirPath);
-        TemplateFactory tf = new TemplateFactory(fs);
+        FilesystemPersistence fsp = new FilesystemPersistence(templatesDirPath, jsonProxy);
+        TemplateFactory tf = new TemplateFactory(fs, jsonProxy);
         ConnectionPoolManager poolManager = new ConnectionPoolManager();
         if(poolsPropertiesPath.exists()){
             PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(poolsPropertiesPath);
@@ -77,7 +77,7 @@ public class InitializeServlet extends HttpServlet {
             log.error("No database config will be applied");
         }
 
-        RuntimeContext rtc = new RuntimeContext(tf, poolManager);
+        TemplateFactory tf new TemplateFactory();
         rtc.initialize();
         servletContext.setAttribute("rtc", rtc);
         for (RequestHandler handler : handlerChain) {

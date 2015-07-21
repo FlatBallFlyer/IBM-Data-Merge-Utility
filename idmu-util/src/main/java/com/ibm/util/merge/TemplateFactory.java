@@ -48,9 +48,9 @@ final public class TemplateFactory {
         this.persistence = null;
     }
     
-    public TemplateFactory(AbstractPersistence persist) {
+    public TemplateFactory(AbstractPersistence persist, JsonProxy proxy) {
         templateCache = new TemplateCache();
-        jsonProxy = new PrettyJsonProxy();
+        jsonProxy = proxy;
         this.persistence = persist;
     }
 
