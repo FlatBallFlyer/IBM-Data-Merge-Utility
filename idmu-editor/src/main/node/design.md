@@ -7,11 +7,12 @@
 - [Ribbon](#template_ribbon)
 - [RibbonItem](#template_ribbon_item)
 - [TemplateEditor](#template_editor)
-  - [Handling Bookmarks](#bookmarks)
+  - [Handling Sub-Templates](#bookmarks)
   - [Handling Save](#handle_save_action)
 - [TemplateHeader](#template_header)
 - [HeaderPanel](#header_panel)
 - [Directives](#directives)
+  - [Drag and Drop](#drag_drop)
 
 
 <a name="overview"/>
@@ -224,12 +225,33 @@ class includes the `TextEditMixin` for edit operations.
 <a name="directives"/>
 ## Directives
 
+The component acts as a container for the drag and drop
+directive configuration for a template. It embeds the
+directive source and target `LHSList` and `RHSList`
+components for drag and drop behavior.
 
+
+<a name="drag_and_drop"/>
 ### LHSList (available all directives, DnD source)
+
+The component acts as the `source` of drag drop behavior. It
+uses the `Sortable.js` component and provides the `handleSort`
+method using the `DirectivesListMixin`.
 
 
 ### RHSList (configured directives, DnD target)
-          [<li>DirectivesEditorTrigger</li> ...]
+
+The component acts as the `target` of drag drop behavior. It
+uses the `Sortable.js` component and provides the `handleSort`
+method using the `DirectivesListMixin`.
+
+The component fires the `App:moveItemWithinList` when items are
+moved within the list for re-ordering, and fires the `App:moveItemBetweenList`
+when an item is dropped from the `LHSList` component.
+
+Each of the list item is embeds `DirectivesEditorTrigger` component
+to either edit the configuration or to remove the item from the
+template.
 
 ### DirectivesEditorTrigger
 
