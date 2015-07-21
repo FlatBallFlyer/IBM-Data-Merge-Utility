@@ -3,6 +3,8 @@
 - [Overview](#overview)
 - [Component BOM](#bom)
 - [App](#app)
+- [Ribbon](#template_ribbon)
+- [RibbonItem](#template_ribbon_item)
 
 
 <a name="overview"/>
@@ -84,6 +86,7 @@ The important server interaction methods are
 
 ```
 
+<a name="template_collection"/>
 ## TemplateCollection
 
 The class encapsulates the selection behavior of top-level templates.
@@ -91,6 +94,7 @@ Note that this component is never utilized when the `App` component
 is nested. This logic is implemented in the `App:header` method.
 
 
+<a name="template_ribbon"/>
 ## TemplateRibbon
 
 The ribbon component acts as a container for a group of templates in
@@ -106,11 +110,13 @@ When the left/right buttons are clicked the `App:collectionSelected`
 is called.
 
 
+<a name="template_ribbon_item"/>
 ## TemplateRibbonItem
 
 The class encapsulates ribbon related behavior and embeds the
 `TemplateEditor` component for a particular template.
 
+<a name="template_editor"/>
 ## TemplateEditor
 
 The class acts as container for multiple components as stated
@@ -152,6 +158,7 @@ text content and/or any newly inserted bookmark.
 - Finally the `App:saveTemplate` method is invoked.
 
 
+<a name="template_header"/>
 ## TemplateHeader
 
 The header component provides for the following.
@@ -190,6 +197,7 @@ callback.
 This is a simple callback that dispatches to `App:saveTemplate` callaback.
 
        
+<a name="header_panel"/>
 ## HeaderPanel
 
 Provides for viewing and editing of the following fields. The
@@ -203,6 +211,7 @@ class includes the `TextEditMixin` for edit operations.
 ```
 
 
+<a name="directives"/>
 ## Directives
 
 
