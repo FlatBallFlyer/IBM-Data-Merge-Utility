@@ -1,8 +1,14 @@
+# Table of Contents
+[Overview](#overview)
+[Component BOM](#bom)
+
+<a name="overview"/>
 # Overview
 
 This document presents the main components in the application
 and also documents the individual components.
 
+<a name="bom"/>
 # Component BOM
 ```
 App(d)
