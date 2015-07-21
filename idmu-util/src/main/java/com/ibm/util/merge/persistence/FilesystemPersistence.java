@@ -98,7 +98,8 @@ public class FilesystemPersistence extends AbstractPersistence {
 
 	@Override
     public void deleteTemplate(Template template) {
-        File file = new File(templateFolder, template.getFullName()+".json");
+        String fileName = templateFolder + File.separator + template.getFullName();
+        File file = new File(fileName);
         if(file.exists()){
             if(!file.delete()){
                 throw new RuntimeException("Could not delete template " + template.getFullName() + " at path " + file.getAbsolutePath());

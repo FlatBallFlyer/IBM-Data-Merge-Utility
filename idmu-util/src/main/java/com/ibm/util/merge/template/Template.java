@@ -57,13 +57,13 @@ public class Template implements Cloneable {
     // Attributes
     private transient long idtemplate = 0;
     private String collection = "";
-    private String columnValue = "";
     private String name = "";
+    private String columnValue = "";
     private String description = "";
     private String outputFile = "";
     private StringBuilder content = new StringBuilder();
-    private Boolean merged = false;
     private List<AbstractDirective> directives = new ArrayList<>();
+    private transient Boolean merged = false;
     private transient List<Bookmark> bookmarks = new ArrayList<>();
     private transient Map<String, String> replaceValues = new HashMap<>();
 

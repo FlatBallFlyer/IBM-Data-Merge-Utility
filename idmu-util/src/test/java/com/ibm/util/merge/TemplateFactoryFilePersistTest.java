@@ -38,11 +38,11 @@ import static org.junit.Assert.*;
 
 // todo Finalize Testing Templates and Collections
 public class TemplateFactoryFilePersistTest {
-	private String templatesFolder = "/home/spectre/Projects/IBM/IBM-Data-Merge-Utility/idmu-util/src/test/resources/templates";
+	private String templatesFolder = "src/test/resources/templates";
 	private File templatesDir = new File(templatesFolder);
 	private AbstractPersistence filePersist = new FilesystemPersistence(templatesDir, new PrettyJsonProxy());
     private TemplateFactory testFactory = new TemplateFactory(filePersist);
-    private int count = 20;
+    private int count = 56;
     
     @Before
     public void setUp() throws Exception {
@@ -63,12 +63,12 @@ public class TemplateFactoryFilePersistTest {
 
     @Test
     public void testGetTemplateShortNameFoundInCache() throws MergeException {
-    	Template template = testFactory.getTemplate("root.default.fake", "root.default", new HashMap<String,String>());
+    	Template template = testFactory.getTemplate("root.default.fake", "root.default.", new HashMap<String,String>());
         assertNotNull(template);
         assertEquals("root.default.", template.getFullName());
     }
 
-    @Test(expected = TemplateFactory.TemplateNotFoundException.class)
+    @Test(expected = MergeException.class)
     public void testGetTemplateNotFoundInCache() throws MergeException {
     	testFactory.setPersistence(filePersist);
     	testFactory.reset();
@@ -80,33 +80,34 @@ public class TemplateFactoryFilePersistTest {
     public void testGetMergeOutput() {
         Map<String, String[]> parameters = new HashMap<String,String[]>();
         parameters.put(TemplateFactory.KEY_FULLNAME , 	new String[]{"root.default."});
-    	assertEquals("This is the default template", testFactory.getMergeOutput(parameters));
+    	assertEquals("This is the Default Template", testFactory.getMergeOutput(parameters));
     }
     
     @Test
     public void testGetTemplateAsJson() throws MergeException, IOException {
     	String template = testFactory.getTemplateAsJson("root.allDirectives.");
     	File file = new File(templatesDir + File.separator + "root.allDirectives..json");
-    	assertEquals(Files.readAllLines(file.toPath()), template);
+    	assertEquals(String.join("\n", Files.readAllLines(file.toPath())), template);
     }
 
     @Test
     public void testGetTemplateNamesJson() throws MergeException {
     	String templates = testFactory.getTemplateNamesJSON("root");
-    	assertEquals("[\"root.default\",\"root.allDirectives\"]", templates);
+    	String answer = "[\n  \"root.default.\",\n  \"root.allDirectives.\"\n]";
+    	assertEquals(answer, templates);
     }
 
     @Test
     public void testSaveDeleteTemplateFromJson() throws MergeException {
-    	String template = "[collection='',name='',column='',content='']";
-    	assertEquals("errormessage", testFactory.getTemplateAsJson("test.foo."));
+    	String template = "{collection=\"test\",name=\"foo\",column=\"\",content=\"Some Content\"}";
+    	assertEquals("NOT FOUND", testFactory.getTemplateAsJson("test.foo."));
     	testFactory.saveTemplateFromJson(template);
     	assertNotNull(testFactory.getTemplate("test.foo.", "", new HashMap<String,String>()));
     	testFactory.reset();
     	assertNotNull(testFactory.getTemplate("test.foo.", "", new HashMap<String,String>()));
     	testFactory.deleteTemplate(template);
-    	assertEquals("errormessage", testFactory.getTemplateAsJson("test.foo."));
+    	assertEquals("NOT FOUND", testFactory.getTemplateAsJson("test.foo."));
     	testFactory.reset();
-    	assertEquals("errormessage", testFactory.getTemplateAsJson("test.foo."));
+    	assertEquals("NOT FOUND", testFactory.getTemplateAsJson("test.foo."));
     }
 }

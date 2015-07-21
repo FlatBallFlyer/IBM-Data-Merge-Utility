@@ -31,7 +31,7 @@ public abstract class AbstractDirective implements Cloneable{
 	// Attributes
 	private transient Template 	template;
 	private transient long 		idTemplate 	= 0;
-	private int			sequence	= 0;
+	private transient int			sequence	= 0;
 	private int 		type		= 0;
 	private boolean 	softFail	= false;
 	private String 		description	= getClass().getName();

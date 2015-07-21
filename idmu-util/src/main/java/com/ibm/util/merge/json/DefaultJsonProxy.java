@@ -37,6 +37,8 @@ public class DefaultJsonProxy implements JsonProxy {
 
     protected void registerDefaultAdapters() {
         builder.registerTypeAdapter(AbstractDirective.class, new DirectiveDeserializer());
+        builder.registerTypeAdapter(AbstractDirective.class, new DirectiveSerializer());
         builder.registerTypeAdapter(AbstractProvider.class, new ProviderDeserializer());
+        builder.registerTypeAdapter(AbstractProvider.class, new ProviderSerializer());
     }
 }
