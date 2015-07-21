@@ -5,11 +5,11 @@ and also documents the individual components.
 
 # Component BOM
 ```
-App
-  TemplateCollection
-  Ribbon
-   RibbonItem
-    TemplateEditor
+App(d)
+  TemplateCollection(d)
+  Ribbon(d)
+   RibbonItem(d)
+    TemplateEditor(d)
      TemplateHeader
        Actions[Add,Remove,Save]
        HeaderPanel
@@ -140,3 +140,77 @@ called. The following sequence of action happens.
 text content and/or any newly inserted bookmark.
 
 - Finally the `App:saveTemplate` method is invoked.
+
+
+## TemplateHeader
+
+The header component provides for the following.
+
+- Embed template level behavior components like add, remove, and save
+
+- Accordion like behavior that encapsulates either the strictly
+header level components `HeaderPanel` (to edit name, description,
+and action) or the `Directives` panel to configure the directives
+for the template.
+
+
+### AddTemplateTrigger
+
+This component encapsulates the behavior when the `Add` button is
+clicked by the user. The click action is to instantiate the `AddTemplate`
+modal dialog.
+
+
+### AddTemplate Modal
+
+This component encupsulates a modal dialog to capture the
+`collection`, `name`, and optionally the `column` attribute
+of a template and fire the `App:addTemplate` callback.
+
+
+### RemoveTemplateTrigger
+
+This component encapsulates the behavior when the `Remove` button is
+clicked by the user. The click action will call the `App::removeTemplate`
+callback.
+
+
+### Saving Template Action
+
+This is a simple callback that dispatches to `App:saveTemplate` callaback.
+
+       
+## HeaderPanel
+
+Provides for viewing and editing of the following fields. The
+class includes the `TextEditMixin` for edit operations.
+
+```
+- name
+- description
+- output
+- selected directives
+```
+
+
+## Directives
+
+
+### LHSList (available all directives, DnD source)
+
+
+### RHSList (configured directives, DnD target)
+          [<li>DirectivesEditorTrigger</li> ...]
+
+### DirectivesEditorTrigger
+
+   Actions [edit, remove]
+   
+### DirectiveEditors (modal)
+           RequireTags
+           ReplaceValue
+           InsertSubTemplatesFromTagData
+
+
+
+
