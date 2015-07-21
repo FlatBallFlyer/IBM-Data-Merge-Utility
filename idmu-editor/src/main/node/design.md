@@ -102,3 +102,41 @@ The class encapsulates ribbon related behavior and embeds the
 `TemplateEditor` component for a particular template.
 
 ## TemplateEditor
+
+The class acts as container for multiple components as stated
+in the BOM. The class also acts as a narrow channel for template
+save actions.
+
+### Handling Of Bookmarks
+
+When it is time to render this component the following
+action takes place.
+
+- The `TemplateHeader` is instantiated and rendered.
+
+- Next `template.content` is chunked into `body_items`. The chunking happens
+at the boundries of detected bookmarks `<tkBookmark/>` tags.
+
+- Each item in the collection can either be of type `text` or of
+type `bookmark` with associated data attribute (i.e. text or tag with
+attributes)
+
+- Finally the `body_items` are traversed and based on the type of
+the item either a `TemplateBody` is instantiated or an `App` is
+instantiated.
+
+
+### Handling Of Save Action
+
+When a save action happens either due to user pressing the `Save` button
+or when a bookmark is inserted the `TemplateEditor:handleSave` method is
+called. The following sequence of action happens.
+
+- The header values are collected
+
+- The configured directives are collected
+
+- The `template.content` text is re-constructed using newly introduced
+text content and/or any newly inserted bookmark.
+
+- Finally the `App:saveTemplate` method is invoked.
