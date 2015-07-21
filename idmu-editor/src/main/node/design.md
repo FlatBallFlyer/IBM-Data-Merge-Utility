@@ -2,6 +2,8 @@
 
 - [Overview](#overview)
 - [Component BOM](#bom)
+- [App](#app)
+
 
 <a name="overview"/>
 # Overview
@@ -50,6 +52,7 @@ App(d)
      
 ```
 
+<a name="app"/>
 ## App
 
 The App component encapsulates the top top-level state, and all
