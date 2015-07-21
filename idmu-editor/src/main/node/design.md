@@ -7,7 +7,8 @@
 - [Ribbon](#template_ribbon)
 - [RibbonItem](#template_ribbon_item)
 - [TemplateEditor](#template_editor)
--- [Handling Bookmarks](#bookmarks)
+  - [Handling Bookmarks](#bookmarks)
+  - [Handling Save](#handle_save_action)
 - [TemplateHeader](#template_header)
 - [HeaderPanel](#header_panel)
 - [Directives](#directives)
@@ -150,6 +151,7 @@ the item either a `TemplateBody` is instantiated or an `App` is
 instantiated.
 
 
+<a name="handle_save_action"/>
 ### Handling Of Save Action
 
 When a save action happens either due to user pressing the `Save` button
