@@ -20,6 +20,7 @@
   - [Nesting Levels & Index] (#levels_index)
   - [jQuery] (#jQuery)
   - [Utils] (#utils)
+- [Screen Shots] (#screen_shots)
 
 
 <a name="overview"/>
@@ -373,3 +374,13 @@ The `Utils` class implements
 - methods related to extracting the `<tkBookmark/>` tags
 - `uuid` generator which is used to suffix sibling accordian panel indices
 
+<a name="screen_shots"/>
+## Screen Shots
+
+- ![Main Controller](screen_shots/main-controller.png)
+- ![Add Template](screen_shots/add-template.png)
+- ![Bookmark Inserter](screen_shots/bookmark-inserter.png)
+- ![Directives Editor](screen_shots/directives-editor.png)
+- ![Drag Drop Directives](screen_shots/drag-drop-directives.png)
+- ![Nested Template](screen_shots/nested-template-editor.png)
+- ![Template Header](screen_shots/template-properties-editor.png)
