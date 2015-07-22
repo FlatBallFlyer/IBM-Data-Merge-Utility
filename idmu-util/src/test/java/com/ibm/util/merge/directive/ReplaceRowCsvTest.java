@@ -50,7 +50,7 @@ public class ReplaceRowCsvTest extends ReplaceRowTest {
 
 	@Test
 	public void testCloneTemplate() throws CloneNotSupportedException {
-		ReplaceRowCsv newDirective = (ReplaceRowCsv) directive.clone();
+		ReplaceRowCsv newDirective = new ReplaceRowCsv((ReplaceRowCsv)directive);
 		ReplaceRowCsv myDirective = (ReplaceRowCsv) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());

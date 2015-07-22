@@ -21,6 +21,7 @@ import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.DataTable;
+
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import java.util.List;
  *
  * @author flatballflyer
  */
-public abstract class InsertSubs extends AbstractDirective implements Cloneable {
+public abstract class InsertSubs extends AbstractDirective {
     private static final Logger log = Logger.getLogger(InsertSubs.class.getName());
     private static final int DEPTH_MAX = 100;
     private List<String> notLast = new ArrayList<>();
@@ -46,19 +47,12 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
         super();
     }
 
-    /**
-     * clone constructor, deep-clone of notLast and onlyLast collections
-     *
-     * @see AbstractDirective#clone(Template)
-     */
-    @Override
-    public InsertSubs clone() throws CloneNotSupportedException {
-        InsertSubs newDirective = (InsertSubs) super.clone();
-        newDirective.notLast = new ArrayList<>(notLast);
-        newDirective.onlyLast = new ArrayList<>(onlyLast);
-        return newDirective;
+    public InsertSubs(InsertSubs from) {
+    	super(from);
+    	this.setNotLast( 	from.getNotLast());
+    	this.setOnlyLast( 	from.getOnlyLast());
     }
-
+    
     /**
      * Execute Directive - will get the data and insert the sub-templates
      *
@@ -95,7 +89,7 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
         String collection = bookmark.getCollection();
         String name = bookmark.getName();
         String column = table.getValue(row, bookmark.getColumn());
-        Template subTemplate = rtc.getTemplateFactory().getTemplate(collection + "." + name + "." + column, collection + "." + name + ".", getTemplate().getReplaceValues());
+        Template subTemplate = rtc.getTemplateFactory().getMergableTemplate(collection + "." + name + "." + column, collection + "." + name + ".", getTemplate().getReplaceValues());
         log.info("Inserting Template " + subTemplate.getFullName() + " into " + getTemplate().getFullName());
         // Add the Row replace values
         for (int col = 0; col < table.cols(); col++) {
@@ -116,7 +110,7 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
             }
         }
     }
-
+    
     public String getNotLast() {
         return String.join(",", notLast);
     }

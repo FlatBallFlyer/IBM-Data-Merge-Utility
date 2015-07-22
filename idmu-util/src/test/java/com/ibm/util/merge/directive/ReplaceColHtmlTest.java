@@ -46,7 +46,7 @@ public class ReplaceColHtmlTest extends ReplaceColTest {
 
 	@Test
 	public void testCloneReplaceColHtml() throws CloneNotSupportedException {
-		ReplaceColHtml newDirective = (ReplaceColHtml) directive.clone();
+		ReplaceColHtml newDirective = new ReplaceColHtml((ReplaceColHtml)directive);
 		ReplaceColHtml myDirective = (ReplaceColHtml) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());

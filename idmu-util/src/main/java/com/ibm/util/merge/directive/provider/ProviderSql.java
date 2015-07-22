@@ -18,8 +18,6 @@ package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
-import com.ibm.util.merge.directive.AbstractDirective;
-
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -28,7 +26,7 @@ import java.util.ArrayList;
 /**
  * @author flatballflyer
  */
-public class ProviderSql extends AbstractProvider implements Cloneable {
+public class ProviderSql extends AbstractProvider {
     private static final Logger log = Logger.getLogger(ProviderSql.class.getName());
     private String source = "";
     private String columns = "";
@@ -42,16 +40,13 @@ public class ProviderSql extends AbstractProvider implements Cloneable {
         super();
         setType(Providers.TYPE_SQL);
     }
-
-    /**
-     * Simple clone method
-     *
-     * @see AbstractProvider#clone(AbstractDirective)
-     */
-    @Override
-    public ProviderSql clone() throws CloneNotSupportedException {
-        ProviderSql provider = (ProviderSql) super.clone();
-        return provider;
+    
+    public ProviderSql(ProviderSql from) {
+    	super(from);
+    	this.setSource(from.getSource());
+    	this.setColumns(from.getColumns());
+    	this.setFrom(from.getFrom());
+    	this.setWhere(from.getWhere());
     }
 
     /**

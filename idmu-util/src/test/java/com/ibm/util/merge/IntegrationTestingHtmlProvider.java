@@ -84,6 +84,7 @@ public class IntegrationTestingHtmlProvider {
 	@Test
 	public void testhtmlTagDataTar() throws Exception {
 		testIt("htmlTag.functional.","tar");
+		assertTrue(true);
 	}
 
 	@Test

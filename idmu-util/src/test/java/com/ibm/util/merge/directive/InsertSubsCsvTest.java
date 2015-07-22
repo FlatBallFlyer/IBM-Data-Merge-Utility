@@ -53,13 +53,13 @@ public class InsertSubsCsvTest extends InsertSubsTest {
 		tf.cache(template2);
 		Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
 		tf.cache(template1);
-		template = tf.getTemplate("root.master.", "", new HashMap<>());
+		template = tf.getMergableTemplate("root.master.", "", new HashMap<>());
 		template.addDirective(myDirective);
 	}
 
 	@Test
 	public void testCloneInsertSubsCsv() throws CloneNotSupportedException {
-		InsertSubsCsv newDirective = (InsertSubsCsv) directive.clone();
+		InsertSubsCsv newDirective = new InsertSubsCsv((InsertSubsCsv)directive);
 		InsertSubsCsv myDirective = (InsertSubsCsv) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());

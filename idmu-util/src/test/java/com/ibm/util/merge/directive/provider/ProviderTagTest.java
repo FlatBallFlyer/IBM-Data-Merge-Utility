@@ -163,7 +163,7 @@ public class ProviderTagTest extends ProviderTest {
 
 	@Test
 	public void testClone() throws CloneNotSupportedException {
-		ProviderTag cloned = myProvider.clone();
+		ProviderTag cloned = new ProviderTag(myProvider);
 		assertNotEquals(cloned, provider);
 		assertNotEquals(cloned.getDirective(), myProvider.getDirective());
 		assertEquals(cloned.getCondition(), myProvider.getCondition());

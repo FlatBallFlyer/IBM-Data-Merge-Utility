@@ -32,7 +32,7 @@ import java.util.Arrays;
  *
  * @author  Mike Storey
  */
-public class Require extends AbstractDirective implements Cloneable {
+public class Require extends AbstractDirective {
 	private ArrayList<String> tags = new ArrayList<>();
 	
 	/**
@@ -43,14 +43,11 @@ public class Require extends AbstractDirective implements Cloneable {
 		setType(Directives.TYPE_REQUIRE);
 		setProvider(null);
 	}
-
-	/** 
-	 * Simple clone constructor, deep copy the tags list
-	 * @see AbstractDirective#clone(Template)
-	 */
-	@Override
-	public Require clone() throws CloneNotSupportedException {
-		return (Require) super.clone();
+	
+	public Require(Require from) {
+		super(from);
+		this.setTags(from.getTags());
+		setProvider(null);
 	}
 	
 	/**

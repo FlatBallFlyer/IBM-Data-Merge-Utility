@@ -18,7 +18,6 @@ package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.DataTable;
 import com.ibm.util.merge.directive.provider.AbstractProvider;
 import org.apache.log4j.Logger;
@@ -27,7 +26,7 @@ import org.apache.log4j.Logger;
  * @author Mike Storey
  *
  */
-public abstract class ReplaceRow extends AbstractDirective implements Cloneable {
+public abstract class ReplaceRow extends AbstractDirective {
 	private static final Logger log = Logger.getLogger( ReplaceRow.class.getName() );
 	
 	/**
@@ -36,13 +35,9 @@ public abstract class ReplaceRow extends AbstractDirective implements Cloneable 
 	public ReplaceRow() {
 		super();
 	}
-
-	/**
-	 * clone constructor, deep-clone of notLast and onlyLast collections
-	 * @see AbstractDirective#clone(Template)
-	 */
-	public ReplaceRow clone(Template owner) throws CloneNotSupportedException {
-		return (ReplaceRow) super.clone();
+	
+	public ReplaceRow(ReplaceRow from) {
+		super(from);
 	}
 
 	/**

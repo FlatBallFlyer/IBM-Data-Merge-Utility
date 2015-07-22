@@ -72,7 +72,7 @@ public class TemplateCache extends MemoryCache<String, Template> {
         // Iterate the Hash
         for (Template template : asMap().values()) {
             if (collections.contains(template.getCollection())) {
-            	theTemplates.add(template.clone(new HashMap<String,String>()));
+            	theTemplates.add(new Template(template, new HashMap<String,String>()));
             }
         }
         // Return the Set

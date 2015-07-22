@@ -42,7 +42,7 @@ public class BookmarkTest {
 
 	@Test
 	public void testClone() throws CloneNotSupportedException {
-		Bookmark newBookmark = bookmark1.clone();
+		Bookmark newBookmark = new Bookmark(bookmark1);
 		assertNotEquals(newBookmark, bookmark1);
 		assertEquals(bookmark1.getName(), newBookmark.getName());
 		assertEquals(bookmark1.getSize(), newBookmark.getSize());

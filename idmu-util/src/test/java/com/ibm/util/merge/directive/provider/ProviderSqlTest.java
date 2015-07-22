@@ -51,7 +51,7 @@ public class ProviderSqlTest extends ProviderTest {
 	@Test
 	public void testProviderSqlCloneDirective() throws CloneNotSupportedException {
 		ProviderSql myProvider = (ProviderSql) provider;
-		ProviderSql newProvider = (ProviderSql) provider.clone();
+		ProviderSql newProvider = new ProviderSql((ProviderSql)provider);
 		assertNotEquals(provider, newProvider);
 		assertNull(newProvider.getDirective());
 		assertEquals(myProvider.getColumns(), newProvider.getColumns());

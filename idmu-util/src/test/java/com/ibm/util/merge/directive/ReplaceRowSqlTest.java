@@ -45,7 +45,7 @@ public class ReplaceRowSqlTest extends ReplaceRowTest {
 
 	@Test
 	public void testCloneReplaceRowHtml() throws CloneNotSupportedException {
-		ReplaceRowSql newDirective = (ReplaceRowSql) directive.clone();
+		ReplaceRowSql newDirective = new ReplaceRowSql((ReplaceRowSql)directive);
 		ReplaceRowSql myDirective = (ReplaceRowSql) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());

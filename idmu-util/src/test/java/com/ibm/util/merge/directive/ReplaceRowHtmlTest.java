@@ -49,7 +49,7 @@ public class ReplaceRowHtmlTest extends ReplaceRowTest {
 
 	@Test
 	public void testCloneReplaceRowHtml() throws CloneNotSupportedException {
-		ReplaceRowHtml newDirective = (ReplaceRowHtml) directive.clone();
+		ReplaceRowHtml newDirective = new ReplaceRowHtml((ReplaceRowHtml)directive);
 		ReplaceRowHtml myDirective = (ReplaceRowHtml) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());

@@ -1,6 +1,5 @@
 package com.ibm.util.merge;
 
-import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.storage.Archive;
 import com.ibm.util.merge.storage.TarArchive;
 import com.ibm.util.merge.storage.ZipArchive;
@@ -10,8 +9,6 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -36,6 +33,7 @@ public class MergeContext {
     private Boolean isZipFile = false;
     private Archive archive;
     private String archiveFileName = "";
+    private String archiveChkSums = "";
 
     public MergeContext(TemplateFactory factory, HashMap<String,String> replace) {
         this.templateFactory = factory;
@@ -64,13 +62,13 @@ public class MergeContext {
         log.info("Instantiated");
     }
 
-    public String writeFile(String entryName, String content) throws IOException, MergeException {
-        if (entryName.equals("/dev/null")) return "";
-        if (content.isEmpty()) return "";
+    public void writeFile(String entryName, String content) throws IOException, MergeException {
+        if (entryName.equals("/dev/null")) return;
+        if (content.isEmpty()) return;
         
 		// Providing blank values for User and Group attributes to use
     	String chksum = archive.writeFile(entryName, content, "", "");
-    	return chksum;
+    	setArchiveChkSums(getArchiveChkSums() + chksum + "\n");
     }
     
     public Connection getConnection(String dataSource) throws MergeException {
@@ -108,7 +106,15 @@ public class MergeContext {
         return templateFactory;
     }
 
-    /**
+    public String getArchiveChkSums() {
+		return archiveChkSums;
+	}
+
+	public void setArchiveChkSums(String archiveChkSums) {
+		this.archiveChkSums = archiveChkSums;
+	}
+
+	/**
      * @param error
      * @return
      */

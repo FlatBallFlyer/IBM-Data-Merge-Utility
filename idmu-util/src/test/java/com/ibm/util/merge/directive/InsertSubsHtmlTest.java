@@ -53,13 +53,13 @@ public class InsertSubsHtmlTest extends InsertSubsTest {
 		tf.cache(template2);
 		Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
 		tf.cache(template1);
-		template = tf.getTemplate("root.master.", "", new HashMap<>());
+		template = tf.getMergableTemplate("root.master.", "", new HashMap<>());
 		template.addDirective(myDirective);
 	}
 
 	@Test
 	public void testCloneReplaceColHtml() throws CloneNotSupportedException {
-		InsertSubsHtml newDirective = (InsertSubsHtml) directive.clone();
+		InsertSubsHtml newDirective = new InsertSubsHtml((InsertSubsHtml)directive);
 		InsertSubsHtml myDirective = (InsertSubsHtml) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());

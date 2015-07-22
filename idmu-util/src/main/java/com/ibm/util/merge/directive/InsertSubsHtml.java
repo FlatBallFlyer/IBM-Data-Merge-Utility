@@ -15,15 +15,9 @@
  *
  */
 package com.ibm.util.merge.directive;
-
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
 
-/**
- * @author flatballflyer
- *
- */
-public class InsertSubsHtml extends InsertSubs implements Cloneable {
+public class InsertSubsHtml extends InsertSubs {
 	
 	/**
 	 * Simple Constructor
@@ -34,11 +28,9 @@ public class InsertSubsHtml extends InsertSubs implements Cloneable {
 		setProvider(new ProviderHtml());
 	}
 
-	/** 
-	 * Simple Clone constructor
-	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
-	 */
-	public InsertSubsHtml clone(Template owner) throws CloneNotSupportedException {
-		return (InsertSubsHtml) super.clone();
+	public InsertSubsHtml(InsertSubsHtml from) {
+		super(from);
+		setProvider(new ProviderHtml((ProviderHtml)from.getProvider()));
 	}
+
 }

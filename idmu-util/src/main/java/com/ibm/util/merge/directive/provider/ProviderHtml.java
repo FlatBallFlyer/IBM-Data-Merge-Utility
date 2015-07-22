@@ -18,8 +18,6 @@ package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
-import com.ibm.util.merge.directive.AbstractDirective;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -33,14 +31,8 @@ public class ProviderHtml extends ProviderHttp {
 		setType(Providers.TYPE_HTML);
 	}
 	
-	/**
-	 * Simple clone method
-	 * @see AbstractProvider#clone(AbstractDirective)
-	 */
-	@Override
-	public ProviderHtml clone() throws CloneNotSupportedException {
-		ProviderHtml provider = (ProviderHtml) super.clone();
-		return provider;
+	public ProviderHtml(ProviderHtml from) {
+		super(from);
 	}
 
 	/**

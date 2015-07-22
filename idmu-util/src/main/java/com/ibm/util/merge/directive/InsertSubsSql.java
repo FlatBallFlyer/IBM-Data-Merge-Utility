@@ -15,10 +15,9 @@
  *
  */
 package com.ibm.util.merge.directive;
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderSql;
 
-public class InsertSubsSql extends InsertSubs implements Cloneable {
+public class InsertSubsSql extends InsertSubs {
 	
 	/**
 	 * Simple Constructor
@@ -29,12 +28,9 @@ public class InsertSubsSql extends InsertSubs implements Cloneable {
 		setProvider(new ProviderSql());
 	}
 	
-	/** 
-	 * Simple Clone constructor
-	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
-	 */
-	public InsertSubsSql clone(Template owner) throws CloneNotSupportedException {
-		return (InsertSubsSql) super.clone();
+	public InsertSubsSql(InsertSubsSql from) {
+		super(from);
+		setProvider(new ProviderSql((ProviderSql)from.getProvider()));
 	}
 	
 }

@@ -47,7 +47,7 @@ public class ReplaceColSqlTest extends ReplaceColTest {
 
 	@Test
 	public void testCloneReplaceColSql() throws CloneNotSupportedException {
-		ReplaceColSql newDirective = (ReplaceColSql) directive.clone();
+		ReplaceColSql newDirective = new ReplaceColSql((ReplaceColSql)directive);
 		ReplaceColSql myDirective = (ReplaceColSql) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());

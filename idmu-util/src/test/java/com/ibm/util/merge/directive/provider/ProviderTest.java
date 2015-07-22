@@ -28,14 +28,6 @@ public abstract class ProviderTest {
 	protected Template template;
 	
 	@Test
-	public void testProviderCloneDirective() throws CloneNotSupportedException {
-		AbstractProvider newProvider = provider.clone();
-		assertNotEquals(provider, newProvider);
-		assertEquals(0, newProvider.size());
-		assertNull(newProvider.getDirective());
-	}
-
-	@Test
 	public void testReset() {
 		provider.reset();
 		DataTable table = provider.addNewTable();

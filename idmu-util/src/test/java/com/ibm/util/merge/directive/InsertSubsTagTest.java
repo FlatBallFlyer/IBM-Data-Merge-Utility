@@ -50,7 +50,7 @@ public class InsertSubsTagTest extends InsertSubsTest {
         tf.cache(template2);
         Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
         tf.cache(template1);
-        template = tf.getTemplate("root.master.", "", new HashMap<>());
+        template = tf.getMergableTemplate("root.master.", "", new HashMap<>());
         template.addDirective(myDirective);
         myProvider.setTag("Foo");
         myProvider.setList(true);
@@ -60,7 +60,7 @@ public class InsertSubsTagTest extends InsertSubsTest {
 
     @Test
     public void testInsertSubsTagClone() throws CloneNotSupportedException {
-        InsertSubsTag newDirective = (InsertSubsTag) directive.clone();
+        InsertSubsTag newDirective = new InsertSubsTag((InsertSubsTag)directive);
         InsertSubsTag myDirective = (InsertSubsTag) directive;
         assertNotEquals(myDirective, newDirective);
         assertNull(newDirective.getTemplate());

@@ -72,7 +72,7 @@ public class TemplateTest {
 		template.setCollection("root");
 		template.setName("default");
 		template.setColumnValue("none");
-		template = template.clone(new HashMap<>());
+		template = new Template(template, new HashMap<>());
 		template.addReplace("empty","NOT");
 		template.addReplace("folder","/tmp/output/");
 	}
@@ -87,7 +87,7 @@ public class TemplateTest {
 	public void testClone() throws MergeException {
 		HashMap<String,String> replace = new HashMap<>();
 		replace.put("{Seed}", "Value");
-		Template that = template.clone(replace);
+		Template that = new Template(template, replace);
 		that.setColumnValue("");
 		assertNotEquals(template, that);
 		assertEquals(template.getCollection(), 			that.getCollection());
@@ -400,14 +400,14 @@ public class TemplateTest {
 
 	@Test
 	public void testEquals() throws MergeException {
-		Template that = template.clone(new HashMap<>());
+		Template that = new Template(template, new HashMap<>());
 		assertEquals("root.default.none", template.getFullName());
 		assertEquals(template, that);
 	}
 
 	@Test
 	public void testNotEquals() throws MergeException {
-		Template that = template.clone(new HashMap<>());
+		Template that = new Template(template, new HashMap<>());
 		that.setColumnValue("");
 		assertNotEquals(template, that);
 	}

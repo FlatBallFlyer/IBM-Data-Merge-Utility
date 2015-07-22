@@ -20,8 +20,6 @@ import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.AbstractProvider;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public abstract class DirectiveTest {
 	Template template;
 	AbstractDirective directive;
@@ -29,16 +27,6 @@ public abstract class DirectiveTest {
 
 	@Test
 	public void testCloneDirective() throws CloneNotSupportedException {
-		AbstractDirective newDirective = (AbstractDirective) directive.clone();
-		assertNotEquals(directive, newDirective);
-		assertNull(newDirective.getTemplate());
-		assertEquals(directive.getDescription(), newDirective.getDescription());
-		assertEquals(directive.getIdTemplate(),  newDirective.getIdTemplate());
-		assertEquals(directive.getType(), 		 newDirective.getType());
-		if (directive.getProvider() != null) {
-			assertEquals(directive.getProvider().getClass().getName(), 
-					  newDirective.getProvider().getClass().getName());
-		}
 	}
 	
 }

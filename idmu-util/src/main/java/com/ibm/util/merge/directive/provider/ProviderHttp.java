@@ -19,8 +19,6 @@ package com.ibm.util.merge.directive.provider;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.template.Template;
-import com.ibm.util.merge.directive.AbstractDirective;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
@@ -48,13 +46,12 @@ public abstract class ProviderHttp extends AbstractProvider implements Cloneable
 		super();
 	}
 	
-	/**
-	 * Simple clone method
-	 * @see AbstractProvider#clone(AbstractDirective)
-	 */
-	@Override
-	public ProviderHttp clone() throws CloneNotSupportedException {
-		return (ProviderHttp) super.clone();
+	public ProviderHttp(ProviderHttp from) {
+		super(from);
+		this.setFetchedData("");
+		this.setStaticData(from.getStaticData());
+		this.setUrl(from.getUrl());
+		this.setTag(from.getTag());
 	}
 
 	/**

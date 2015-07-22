@@ -71,7 +71,7 @@ public class ProviderCsvTest extends ProviderHttpTest {
 
 	@Test
 	public void testProviderCsvCloneDirective() throws CloneNotSupportedException {
-		ProviderCsv newProvider = (ProviderCsv) provider.clone();
+		ProviderCsv newProvider = new ProviderCsv((ProviderCsv)provider);
 		assertNotEquals(provider, newProvider);
 		assertNull(newProvider.getDirective());
 	}

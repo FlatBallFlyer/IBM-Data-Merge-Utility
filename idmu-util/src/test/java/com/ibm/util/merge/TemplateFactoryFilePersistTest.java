@@ -56,14 +56,14 @@ public class TemplateFactoryFilePersistTest {
 
     @Test
     public void testGetTemplateFullNameFoundInCache() throws MergeException {
-    	Template template = testFactory.getTemplate("root.default.", "root.foo", new HashMap<String,String>());
+    	Template template = testFactory.getMergableTemplate("root.default.", "root.foo", new HashMap<String,String>());
         assertNotNull(template);
         assertEquals("root.default.", template.getFullName());
     }
 
     @Test
     public void testGetTemplateShortNameFoundInCache() throws MergeException {
-    	Template template = testFactory.getTemplate("root.default.fake", "root.default.", new HashMap<String,String>());
+    	Template template = testFactory.getMergableTemplate("root.default.fake", "root.default.", new HashMap<String,String>());
         assertNotNull(template);
         assertEquals("root.default.", template.getFullName());
     }
@@ -71,7 +71,7 @@ public class TemplateFactoryFilePersistTest {
     @Test(expected = MergeException.class)
     public void testGetTemplateNotFoundInCache() throws MergeException {
     	testFactory.reset();
-    	testFactory.getTemplate("root.bad.fake", "root.fake.", new HashMap<String,String>());
+    	testFactory.getMergableTemplate("root.bad.fake", "root.fake.", new HashMap<String,String>());
         fail("Template Not Found did not throw exception");
     }
 
@@ -85,7 +85,7 @@ public class TemplateFactoryFilePersistTest {
     @Test
     public void testGetTemplateAsJson() throws MergeException, IOException {
     	String template = testFactory.getTemplateAsJson("root.allDirectives.");
-    	String answer = "{\"collection\":\"root\",\"name\":\"allDirectives\",\"columnValue\":\"\",\"description\":\"\",\"outputFile\":\"\",\"content\":\"This is a test of the encodeing \\u003ctkBookmark collection\\u003d\\\"root\\\" name\\u003d\\\"test\\\" /\\u003e\",\"directives\":[{\"tags\":[\"Foo\",\"empty\"],\"type\":0,\"softFail\":false,\"description\":\"TestRequire\"},{\"from\":\"Foo\",\"to\":\"Test Foo Value\",\"type\":1,\"softFail\":false,\"description\":\"Test Replace1\"},{\"notLast\":[\"empty\"],\"onlyLast\":[],\"type\":2,\"softFail\":false,\"description\":\"TestInsertSubsTag\",\"provider\":{\"tag\":\"Foo\",\"condition\":0,\"list\":false,\"value\":\"\",\"type\":2}},{\"notLast\":[\"empty\"],\"onlyLast\":[],\"type\":10,\"softFail\":false,\"description\":\"TestInsertSubsSql\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\",\"type\":1}},{\"type\":11,\"softFail\":false,\"description\":\"TestReplaceRowSql\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\",\"type\":1}},{\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"type\":12,\"softFail\":false,\"description\":\"TestReplaceColSql\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\",\"type\":1}},{\"notLast\":[\"empty\"],\"onlyLast\":[],\"type\":21,\"softFail\":false,\"description\":\"TestInsertSubsCsv\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":3}},{\"type\":22,\"softFail\":false,\"description\":\"TestReplaceRowCsv\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":3}},{\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"type\":23,\"softFail\":false,\"description\":\"TestReplaceColCsv\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":3}},{\"notLast\":[\"empty\"],\"onlyLast\":[],\"type\":31,\"softFail\":false,\"description\":\"TestInsertSubsHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}},{\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"type\":33,\"softFail\":false,\"description\":\"TestReplaceColHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}},{\"type\":32,\"softFail\":false,\"description\":\"TestReplaceRowHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}},{\"pattern\":\"TestPattern\",\"type\":34,\"softFail\":false,\"description\":\"TestMarkupSubsHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}";
+    	String answer = "{\"collection\":\"root\",\"name\":\"allDirectives\",\"columnValue\":\"\",\"description\":\"\",\"outputFile\":\"\",\"content\":\"This is a test of the encodeing \\u003ctkBookmark collection\\u003d\\\"root\\\" name\\u003d\\\"test\\\" /\\u003e\",\"directives\":[{\"tags\":[\"Foo\",\"empty\"],\"type\":0,\"softFail\":false,\"description\":\"TestRequire\"},{\"from\":\"Foo\",\"to\":\"Test Foo Value\",\"type\":1,\"softFail\":false,\"description\":\"Test Replace1\"},{\"notLast\":[\"empty\"],\"onlyLast\":[\"\"],\"type\":2,\"softFail\":false,\"description\":\"TestInsertSubsTag\",\"provider\":{\"tag\":\"Foo\",\"condition\":0,\"list\":false,\"value\":\"\",\"type\":2}},{\"notLast\":[\"empty\"],\"onlyLast\":[\"\"],\"type\":10,\"softFail\":false,\"description\":\"TestInsertSubsSql\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\",\"type\":1}},{\"type\":11,\"softFail\":false,\"description\":\"TestReplaceRowSql\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\",\"type\":1}},{\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"type\":12,\"softFail\":false,\"description\":\"TestReplaceColSql\",\"provider\":{\"source\":\"\",\"columns\":\"A,B,C,1,2,3,4,5,6\",\"from\":\"\",\"where\":\"\",\"type\":1}},{\"notLast\":[\"empty\"],\"onlyLast\":[\"\"],\"type\":21,\"softFail\":false,\"description\":\"TestInsertSubsCsv\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":3}},{\"type\":22,\"softFail\":false,\"description\":\"TestReplaceRowCsv\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":3}},{\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"type\":23,\"softFail\":false,\"description\":\"TestReplaceColCsv\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":3}},{\"notLast\":[\"empty\"],\"onlyLast\":[\"\"],\"type\":31,\"softFail\":false,\"description\":\"TestInsertSubsHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}},{\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"type\":33,\"softFail\":false,\"description\":\"TestReplaceColHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}},{\"type\":32,\"softFail\":false,\"description\":\"TestReplaceRowHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}},{\"pattern\":\"TestPattern\",\"type\":34,\"softFail\":false,\"description\":\"TestMarkupSubsHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}";
     	assertEquals(answer, template);
     }
 
@@ -132,9 +132,9 @@ public class TemplateFactoryFilePersistTest {
     	String template = "{collection=\"test\",name=\"foo\",column=\"\",content=\"Some Content\"}";
     	assertEquals("NOT FOUND", testFactory.getTemplateAsJson("test.foo."));
     	testFactory.saveTemplateFromJson(template);
-    	assertNotNull(testFactory.getTemplate("test.foo.", "", new HashMap<String,String>()));
+    	assertNotNull(testFactory.getMergableTemplate("test.foo.", "", new HashMap<String,String>()));
     	testFactory.reset();
-    	assertNotNull(testFactory.getTemplate("test.foo.", "", new HashMap<String,String>()));
+    	assertNotNull(testFactory.getMergableTemplate("test.foo.", "", new HashMap<String,String>()));
     	testFactory.deleteTemplate(template);
     	assertEquals("NOT FOUND", testFactory.getTemplateAsJson("test.foo."));
     	testFactory.reset();

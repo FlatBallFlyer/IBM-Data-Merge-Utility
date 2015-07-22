@@ -73,7 +73,7 @@ public class ProviderHtmlTest extends ProviderHttpTest {
 
 	@Test
 	public void testProviderHtmlCloneDirective() throws CloneNotSupportedException {
-		ProviderHtml newProvider = (ProviderHtml) provider.clone();
+		ProviderHtml newProvider = new ProviderHtml((ProviderHtml)provider);
 		assertNotEquals(provider, newProvider);
 		assertNull(newProvider.getDirective());
 	}

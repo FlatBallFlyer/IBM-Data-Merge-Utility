@@ -27,20 +27,33 @@ import com.ibm.util.merge.directive.provider.AbstractProvider;
  *
  * @author  Mike Storey
  */
-public abstract class AbstractDirective implements Cloneable{
+public abstract class AbstractDirective {
 	// Attributes
 	private transient Template 	template;
 	private transient long 		idTemplate 	= 0;
-	private transient int			sequence	= 0;
-	private int 		type		= 0;
-	private boolean 	softFail	= false;
-	private String 		description	= getClass().getName();
-	private AbstractProvider provider;
+	private transient int		sequence	= 0;
+	private int 				type		= 0;
+	private boolean 			softFail	= false;
+	private String 				description	= getClass().getName();
+	private AbstractProvider 	provider;
 	
 	/********************************************************************************
 	 * Simple Constructor
 	 */
 	public AbstractDirective() {
+	}
+	
+	/********************************************************************************
+	 * Clone-like Constructor
+	 */
+	public AbstractDirective(AbstractDirective from) {
+		this.template 	= null;
+		this.idTemplate = from.getIdTemplate();
+		this.sequence	= from.getSequence();
+		this.type		= from.getType();
+		this.softFail	= from.isSoftFail();
+		this.description = from.getDescription();
+		this.provider	= null; // provided in concrete implementation
 	}
 	
 	/********************************************************************************
@@ -51,20 +64,6 @@ public abstract class AbstractDirective implements Cloneable{
 	 * @param rtc
 	 */
 	public abstract void executeDirective(MergeContext rtc) throws MergeException;
-
-	/********************************************************************************
-	 * Cone constructor
-	 * @throws CloneNotSupportedException
-	 */
-	@Override
-	public AbstractDirective clone() throws CloneNotSupportedException {
-		AbstractDirective newDirective = (AbstractDirective) super.clone();
-		if (provider != null) {
-			newDirective.setProvider( (AbstractProvider) provider.clone() );
-		}
-		newDirective.template = null;
-		return newDirective;
-	}
 
 	public boolean isSoftFailTemplate() {
 		return template.isSoftFail();

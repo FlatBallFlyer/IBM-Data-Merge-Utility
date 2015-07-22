@@ -28,7 +28,7 @@ import java.util.ArrayList;
  *
  * @author Mike Storey
  */
-public abstract class AbstractProvider implements Cloneable {
+public abstract class AbstractProvider {
     private transient ArrayList<DataTable> dataTables = new ArrayList<>();
     private transient AbstractDirective directive = null;
     private int type;
@@ -42,19 +42,10 @@ public abstract class AbstractProvider implements Cloneable {
         super();
     }
 
-    /**
-     * Simple clone constructor
-     *
-     * @param newOwner - The new Directive this is being cloned for
-     * @return the cloned Provider
-     * @throws CloneNotSupportedException
-     */
-    @Override
-    public AbstractProvider clone() throws CloneNotSupportedException {
-        AbstractProvider newProvider = (AbstractProvider) super.clone();
-        newProvider.directive = null;
-        newProvider.dataTables = new ArrayList<>();
-        return newProvider;
+    public AbstractProvider(AbstractProvider from) {
+    	this.dataTables = new ArrayList<DataTable>();
+    	this.setType(from.getType());
+    	this.directive = null;
     }
 
     /**

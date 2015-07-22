@@ -87,7 +87,7 @@ final public class TemplateFactory {
         try {
             String fullName = replace.get(KEY_FULLNAME);
             log.info("GET TEMPLATE = " + fullName);
-            Template rootTemplate = getTemplate(fullName, "", replace);
+            Template rootTemplate = getMergableTemplate(fullName, "", replace);
             returnValue = rootTemplate.getMergedOutput(rtc);
 		} catch (MergeException e) {
 			returnValue = rtc.getHtmlErrorMessage(e);
@@ -111,17 +111,17 @@ final public class TemplateFactory {
      * @return Template The new Template object
      * @throws MergeException 
      */
-    public Template getTemplate(String fullName, String shortName, Map<String, String> seedReplace) throws MergeException {
+    public Template getMergableTemplate(String fullName, String shortName, Map<String, String> seedReplace) throws MergeException {
         Template newTemplate = null;
         // Cache hit -- Return a clone of the Template in Cache
         if (templateCache.isCached(fullName)) {
-            newTemplate = templateCache.get(fullName).clone(seedReplace);
+            newTemplate = new Template(templateCache.get(fullName), seedReplace);
         }
         // Check for shortName in the cache, since fullName doesn't exist
         if (newTemplate == null && templateCache.isCached(shortName)) {
             templateCache.cache(fullName, templateCache.get(shortName));
             log.info("Linked Template: " + shortName + " to " + fullName);
-            newTemplate = templateCache.get(fullName).clone(seedReplace);
+            newTemplate = new Template(templateCache.get(fullName), seedReplace);
         }
         if (newTemplate == null) {
             throw new MergeException("Template Not Found", fullName);
@@ -137,7 +137,7 @@ final public class TemplateFactory {
     public String getTemplateAsJson(String fullName) {
         Template template;
 		try {
-			template = getTemplate(fullName, "", new HashMap<>());
+			template = getMergableTemplate(fullName, "", new HashMap<>());
 	        return jsonProxy.toJson(template);
 		} catch (MergeException e) {
 			return "NOT FOUND";
@@ -220,8 +220,8 @@ final public class TemplateFactory {
     	ArrayList<Template> templates = new ArrayList<Template>();
     	templates = jsonProxy.fromJSON(json, templates.getClass());
     	for (Template template : templates) {
-    		Template newTemplate = cache(template);
-    		persistence.saveTemplate(newTemplate);
+    		cache(template);
+    		persistence.saveTemplate(template);
     	}
     	return jsonProxy.toJson(templates);
     }
@@ -234,9 +234,9 @@ final public class TemplateFactory {
      */
     public String saveTemplateFromJson(String json) {
         Template template1 = jsonProxy.fromJSON(json, Template.class);
-        Template template = cache(template1);
-        persistence.saveTemplate(template);
-        return jsonProxy.toJson(template);
+        cache(template1);
+        persistence.saveTemplate(template1);
+        return jsonProxy.toJson(template1);
     }
 
     /**********************************************************************************
@@ -276,11 +276,10 @@ final public class TemplateFactory {
      *
      * @param String json the template json
      */
-    public Template cache(Template template) {
+    public void cache(Template template) {
+    	template.setMergable(false);
         templateCache.cache(template.getFullName(), template);
         log.info(template.getFullName() + " has been cached");
-        Template clone = templateCache.get(template.getFullName()).clone(new HashMap<>());
-        return clone;
     }
 
    public int size() {

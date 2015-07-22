@@ -18,8 +18,7 @@ package com.ibm.util.merge.template;
 
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
-import com.ibm.util.merge.directive.AbstractDirective;
-
+import com.ibm.util.merge.directive.*;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -64,6 +63,7 @@ public class Template implements Cloneable {
     private StringBuilder content = new StringBuilder();
     private List<AbstractDirective> directives = new ArrayList<>();
     private transient Boolean merged = false;
+    private transient Boolean mergable = false;
     private transient List<Bookmark> bookmarks = new ArrayList<>();
     private transient Map<String, String> replaceValues = new HashMap<>();
 
@@ -84,64 +84,74 @@ public class Template implements Cloneable {
     }
 
     /**********************************************************************************
-     * Template Clone constructor, used to get a copy of a cached template and initialize it
-     * for merge processing. Performs deep copy of all objects and collections and populates
-     * the replace values hash with initial values.
+     * "Mergable" template constructor (copy of a template that is cache)
      *
      * @param seedReplace Initial replace hash
      * @throws MergeException - Wrapper of clone not supported exceptions
      */
-    public Template clone(Map<String, String> seedReplace) {
-        Template newTemplate = cloneThisTemplate();
-        newTemplate.replaceValues.putAll(seedReplace);
-        newTemplate.setContent(getContent());
+    public Template(Template from, Map<String, String> seedReplace) {
+        this.setIdtemplate(		from.getIdtemplate());
+        this.setCollection( 	from.getCollection());
+        this.setName(  			from.getName());
+        this.setColumnValue( 	from.getColumnValue());
+        this.setDescription( 	from.getDescription());
+        this.setOutputFile(  	from.outputFile);
+        this.setContent(		from.getContent());
+        
+        this.setDirectives(  	new ArrayList<>());
+        this.setMerged(  		false);
+        this.setMergable( 		true);
+        this.setReplaceValues( 	new HashMap<>());
+
         // Deep Copy Directives
-        newTemplate.directives = new ArrayList<>();
-        for (AbstractDirective fromDirective : directives) {
-            AbstractDirective clone = cloneDirective(fromDirective);
-            newTemplate.addDirective(clone);
+        for (AbstractDirective fromDirective : from.getDirectives()) {
+        	this.addDirective(getNewDirective(fromDirective));
         }
+
+        // Seed the replace stack
+        this.replaceValues.putAll(seedReplace);
 
         // Add our name to the Template Stack
-        appendToReplaceValue(newTemplate.replaceValues, TAG_STACK, newTemplate.getFullName(), "/"); 
-        return newTemplate;
+        this.appendToReplaceValue(TAG_STACK, this.getFullName(), "/");
     }
 
-    private Template cloneThisTemplate() {
-        Template newTemplate;
-        try {
-            newTemplate = (Template) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Template implementation does not support clone()", e);
-        }
-        return newTemplate;
-    }
-
-    private AbstractDirective cloneDirective(AbstractDirective fromDirective) {
-        AbstractDirective clone;
-        try {
-            clone = fromDirective.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Template implementation does not support clone()", e);
-        }
-        return clone;
+    private AbstractDirective getNewDirective(AbstractDirective fromDirective) {
+    	switch (fromDirective.getType()) {
+    	case Directives.TYPE_REQUIRE			: return new Require((Require)fromDirective);
+    	case Directives.TYPE_REPLACE_VALUE		: return new ReplaceValue((ReplaceValue)fromDirective);
+    	case Directives.TYPE_TAG_INSERT 		: return new InsertSubsTag((InsertSubsTag)fromDirective);
+    	case Directives.TYPE_SQL_INSERT 		: return new InsertSubsSql((InsertSubsSql)fromDirective);
+    	case Directives.TYPE_SQL_REPLACE_ROW 	: return new ReplaceRowSql((ReplaceRowSql)fromDirective);
+    	case Directives.TYPE_SQL_REPLACE_COL 	: return new ReplaceColSql((ReplaceColSql)fromDirective);
+    	case Directives.TYPE_CSV_INSERT 		: return new InsertSubsCsv((InsertSubsCsv)fromDirective);
+    	case Directives.TYPE_CSV_REPLACE_ROW 	: return new ReplaceRowCsv((ReplaceRowCsv)fromDirective);
+    	case Directives.TYPE_CSV_REPLACE_COL 	: return new ReplaceColCsv((ReplaceColCsv)fromDirective);
+    	case Directives.TYPE_HTML_INSERT 		: return new InsertSubsHtml((InsertSubsHtml)fromDirective);
+    	case Directives.TYPE_HTML_REPLACE_ROW 	: return new ReplaceRowHtml((ReplaceRowHtml)fromDirective);
+    	case Directives.TYPE_HTML_REPLACE_COL 	: return new ReplaceColHtml((ReplaceColHtml)fromDirective);
+    	case Directives.TYPE_HTML_REPLACE_MARKUP : return new ReplaceMarkupHtml((ReplaceMarkupHtml)fromDirective);
+    	}
+    	return null;
     }
 
     public String getMergedOutput(MergeContext rtc) throws MergeException {
-    	if (!merged) {
+    	if (!this.mergable) {
+    		throw new RuntimeException("Merge requested on Un-Mergable Template!");
+    	}
+    	
+    	if (!this.merged) {
     		this.merge(rtc);
     	}
     	
     	if (this.outputFile.isEmpty()) {
     		return this.content.toString();
     	} else {
+    		String fileName = this.replaceProcess(this.outputFile);
+    		String content = this.content.toString();
     		try {
-    			String fileName = this.replaceProcess(this.outputFile);
-    			String content = this.content.toString();
-				String chksum = rtc.writeFile(fileName, content);
-				this.appendToReplaceValue(this.replaceValues, Template.TAG_OUTPUTHASH, fileName + "=" + chksum, "\n");
+				rtc.writeFile(fileName, content);
 			} catch (IOException e) {
-				throw new MergeException(this, e, "Error writing output file", this.outputFile);
+				throw new MergeException(this, e, "Error writing output file", fileName);
 			}
     		return "";
     	}
@@ -166,6 +176,10 @@ public class Template implements Cloneable {
         }
         // Clear out the all-values replace tag
         replaceValues.remove(TAG_ALL_VALUES);
+
+        // Get the output hash replace value
+        replaceValues.put(TAG_OUTPUTHASH, rtc.getArchiveChkSums());
+
         // Process Replace Stack and build "All Values" replace value
         String allValues = "";
         for (Map.Entry<String, String> entry : replaceValues.entrySet()) {
@@ -288,11 +302,11 @@ public class Template implements Cloneable {
         }
     }
 
-    public void appendToReplaceValue(Map<String, String> replace, String key, String value, String seperator) {
-        if (!replace.containsKey(key)) {
-        	replace.put(key, value);
+    public void appendToReplaceValue(String key, String value, String seperator) {
+        if (!this.replaceValues.containsKey(key)) {
+        	this.replaceValues.put(key, value);
         } else {
-        	replace.put(key, replace.get(key) + seperator + value);
+        	this.replaceValues.put(key, this.replaceValues.get(key) + seperator + value);
         }
     }
 
@@ -337,13 +351,6 @@ public class Template implements Cloneable {
      */
     public String getStack() {
         return getReplaceValue(TAG_STACK);
-    }
-
-    /**
-     * @return the Output File name (from replace hash)
-     */
-    public String getOutputFile() {
-        return getReplaceValue(TAG_OUTPUTFILE);
     }
 
     /**
@@ -411,6 +418,13 @@ public class Template implements Cloneable {
         return description;
     }
 
+    /**
+     * @return the Output File name (from replace hash)
+     */
+    public String getOutputFile() {
+        return this.outputFile;
+    }
+
     public String getContent() {
         return content.toString();
     }
@@ -423,7 +437,32 @@ public class Template implements Cloneable {
         return directives;
     }
 
-    public void setContent(String content) {
+    private void setMerged(boolean b) {
+		this.merged = b;
+		
+	}
+
+    public Boolean getMergable() {
+		return mergable;
+	}
+
+	public void setBookmarks(List<Bookmark> bookmarks) {
+		this.bookmarks = bookmarks;
+	}
+
+	public void setMergable(Boolean mergable) {
+		this.mergable = mergable;
+	}
+
+	public void setDirectives(List<AbstractDirective> directives) {
+		this.directives = directives;
+	}
+
+	public void setReplaceValues(Map<String, String> replaceValues) {
+		this.replaceValues = replaceValues;
+	}
+
+	public void setContent(String content) {
         setContent(new StringBuilder(content));
     }
 

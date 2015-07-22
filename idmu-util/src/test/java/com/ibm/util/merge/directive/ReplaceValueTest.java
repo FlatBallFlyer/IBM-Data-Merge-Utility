@@ -44,7 +44,7 @@ public class ReplaceValueTest extends DirectiveTest {
 	@Test
 	public void testCloneTemplate() throws CloneNotSupportedException {
 		ReplaceValue myDirective = (ReplaceValue) directive;
-		ReplaceValue newDirective = (ReplaceValue) directive.clone();
+		ReplaceValue newDirective = new ReplaceValue((ReplaceValue)directive);
 		assertNotEquals(directive, newDirective);
 		assertEquals(myDirective.getFrom(), newDirective.getFrom());
 		assertEquals(myDirective.getTo(), 	newDirective.getTo());

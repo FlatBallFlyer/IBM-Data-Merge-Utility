@@ -59,18 +59,6 @@ public abstract class ProviderHttpTest extends ProviderTest {
 	}
 
 	@Test
-	public void testProviderHttpCloneDirective() throws CloneNotSupportedException {
-		ProviderHttp newProvider = (ProviderHttp) provider.clone();
-		ProviderHttp myProvider = (ProviderHttp) provider;
-		assertNotEquals(myProvider, newProvider);
-		assertEquals(0, newProvider.size());
-		assertNull(newProvider.getDirective());
-		assertEquals(myProvider.getUrl(), 			newProvider.getUrl());
-		assertEquals(myProvider.getStaticData(), 	newProvider.getStaticData());
-		assertEquals(myProvider.getTag(), 			newProvider.getTag());
-	}
-
-	@Test
 	public void testSetTag() {
 		ProviderHttp myProvider = (ProviderHttp) provider; 
 		myProvider.setTag("Test");
