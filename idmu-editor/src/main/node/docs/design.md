@@ -377,10 +377,23 @@ The `Utils` class implements
 <a name="screen_shots"/>
 ## Screen Shots
 
+### Main Controller
 - ![Main Controller](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/main-controller.png)
+
+### Template Header
 - ![Template Header](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/template-properties-editor.png)
+
+### Add Template Dialog
 - ![Add Template](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/add-template.png)
+
+### Bookmark Inserter
 - ![Bookmark Inserter](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/bookmark-inserter.png)
+
+### Directives Editor
 - ![Directives Editor](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/directives-editor.png)
+
+### Drag Drop Directives
 - ![Drag Drop Directives](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/drag-drop-directives.png)
+
+### Nested Template
 - ![Nested Template](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/nested-template-editor.png)
