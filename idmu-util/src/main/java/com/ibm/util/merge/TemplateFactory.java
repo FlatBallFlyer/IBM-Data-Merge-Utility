@@ -29,7 +29,6 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.*;
-import java.util.jar.Attributes.Name;
 
 /**
  * This class implements a Caching Template Factory as well as all aspects of Template Persistence
@@ -182,11 +181,6 @@ final public class TemplateFactory {
         theList = templateCache.getCollectionsFromCache();
         return jsonProxy.toJson(theList);
     }
-    public class Name {
-		private String collection;
-    	public Name(String col) { collection = col; }
-    }
-
 
     /**********************************************************************************
      * <p>Get a JSON List of Templates in a collection.</p>

@@ -84,7 +84,7 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 		}
 		
 		@Override
-		public void getData(ConnectionFactory cf) throws MergeException {
+		public void getData(MergeContext ctx) throws MergeException {
 			DataTable table = addNewTable();
 			ArrayList<String> row;
 			table.addCol("A");table.addCol("B");table.addCol("C");

@@ -76,7 +76,7 @@ public class ReplaceRowSqlTest extends ReplaceRowTest {
 		}
 		
 		@Override
-		public void getData(ConnectionFactory cf) throws MergeException {
+		public void getData(MergeContext ctx) throws MergeException {
 			DataTable table = addNewTable();
 			ArrayList<String> row = table.addNewRow();
 			table.addCol("A");table.addCol("B");table.addCol("C");

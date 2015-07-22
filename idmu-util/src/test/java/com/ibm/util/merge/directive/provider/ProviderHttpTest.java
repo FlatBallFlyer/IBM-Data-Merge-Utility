@@ -16,20 +16,19 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.db.ConnectionPoolManager;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public abstract class ProviderHttpTest extends ProviderTest {
-	private ConnectionFactory cf;
+	private MergeContext cf;
 
 	@Before
 	public void setup(){
-		cf = new ConnectionFactory(new ConnectionPoolManager());
+//		cf = new ConnectionFactory(new ConnectionPoolManager());
 	}
 
 	@Test

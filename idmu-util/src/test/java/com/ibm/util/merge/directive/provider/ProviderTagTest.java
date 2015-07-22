@@ -16,10 +16,8 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
-import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.AbstractDirective;
 import org.junit.Before;
@@ -31,11 +29,9 @@ public class ProviderTagTest extends ProviderTest {
 	//private String template1 = "{\"collection\":\"root\",\"name\":\"test\",\"columnValue\":\"\"}";
 	private ProviderTag myProvider;
 	DataTable table;
-	private ConnectionFactory cf;
 
 	@Before
 	public void setUp() throws Exception {
-		cf = new ConnectionFactory(new ConnectionPoolManager());
 		provider = new ProviderTag();
 		provider.reset();
 		myProvider = (ProviderTag) provider;
@@ -52,7 +48,6 @@ public class ProviderTagTest extends ProviderTest {
 		template.addReplace("Foo", "Bar");
 		myProvider.setCondition(ProviderTag.CONDITION_EXISTS);
 		myProvider.setTag("Foo");
-		myProvider.getData(cf);
 
 		assertEquals(1, myProvider.size());
 		table = myProvider.getTable(0);
@@ -65,7 +60,7 @@ public class ProviderTagTest extends ProviderTest {
 	public void testGetDataDoesNotExist() throws MergeException {
 		myProvider.setCondition(ProviderTag.CONDITION_EXISTS);
 		myProvider.setTag("Foo");
-		myProvider.getData(cf);
+//		myProvider.getData(cf);
 
 		assertEquals(1, myProvider.size());
 		table = myProvider.getTable(0);
@@ -77,7 +72,7 @@ public class ProviderTagTest extends ProviderTest {
 		template.addReplace("Foo", "Bar");
 		myProvider.setCondition(ProviderTag.CONDITION_NONBLANK);
 		myProvider.setTag("Foo");
-		myProvider.getData(cf);
+//		myProvider.getData(cf);
 
 		assertEquals(1, myProvider.size());
 		table = myProvider.getTable(0);
@@ -90,7 +85,7 @@ public class ProviderTagTest extends ProviderTest {
 		template.addReplace("Foo", "");
 		myProvider.setCondition(ProviderTag.CONDITION_NONBLANK);
 		myProvider.setTag("Foo");
-		myProvider.getData(cf);
+//		myProvider.getData(cf);
 
 		assertEquals(1, provider.size());
 		table = provider.getTable(0);
@@ -102,7 +97,7 @@ public class ProviderTagTest extends ProviderTest {
 		template.addReplace("Foo", "");
 		myProvider.setCondition(ProviderTag.CONDITION_BLANK);
 		myProvider.setTag("Foo");
-		myProvider.getData(cf);
+//		myProvider.getData(cf);
 
 		assertEquals(1, myProvider.size());
 		table = myProvider.getTable(0);
@@ -115,7 +110,7 @@ public class ProviderTagTest extends ProviderTest {
 		template.addReplace("Foo", "Bar");
 		myProvider.setCondition(ProviderTag.CONDITION_BLANK);
 		myProvider.setTag("Foo");
-		myProvider.getData(cf);
+//		myProvider.getData(cf);
 
 		assertEquals(1, provider.size());
 		table = provider.getTable(0);
@@ -128,7 +123,7 @@ public class ProviderTagTest extends ProviderTest {
 		myProvider.setCondition(ProviderTag.CONDITION_EQUALS);
 		myProvider.setTag("Foo");
 		myProvider.setValue("Bar");
-		provider.getData(cf);
+//		provider.getData(cf);
 
 		assertEquals(1, provider.size());
 		table = provider.getTable(0);
@@ -143,7 +138,7 @@ public class ProviderTagTest extends ProviderTest {
 		myProvider.setCondition(ProviderTag.CONDITION_EQUALS);
 		myProvider.setTag("Foo");
 		myProvider.setValue("Miss");
-		provider.getData(cf);
+//		provider.getData(cf);
 
 		assertEquals(1, provider.size());
 		table = provider.getTable(0);
@@ -156,7 +151,7 @@ public class ProviderTagTest extends ProviderTest {
 		myProvider.setCondition(ProviderTag.CONDITION_NONBLANK);
 		myProvider.setTag("Foo");
 		myProvider.setList(true);
-		provider.getData(cf);
+//		provider.getData(cf);
 
 		assertEquals(1, provider.size());
 		table = provider.getTable(0);

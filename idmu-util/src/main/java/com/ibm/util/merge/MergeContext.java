@@ -68,7 +68,7 @@ public class MergeContext {
         if (entryName.equals("/dev/null")) return "";
         if (content.isEmpty()) return "";
         
-		// TODO: Determine User and Group attributes to use
+		// Providing blank values for User and Group attributes to use
     	String chksum = archive.writeFile(entryName, content, "", "");
     	return chksum;
     }

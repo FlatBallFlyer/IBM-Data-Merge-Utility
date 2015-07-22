@@ -35,7 +35,7 @@ import static org.junit.Assert.*;
 public class TemplateTest {
 	private Template template;
 	private String templateString = "Testing {Foo} Template <tkBookmark name=\"BKM1\" collection=\"foo\"/> and {empty} <tkBookmark name=\"BKM2\" collection=\"foo\"/> save to {folder}";
-	private String mergeOutput = "Testing Test Foo Value Template  and NOT  save to /tmp/output/";
+	//private String mergeOutput = "Testing Test Foo Value Template  and NOT  save to /tmp/output/";
 	private String testInsert1 = "Testing {Foo} Template Test<tkBookmark name=\"BKM1\" collection=\"foo\"/> and {empty} <tkBookmark name=\"BKM2\" collection=\"foo\"/> save to {folder}";
 	private String testInsert2 = "Testing {Foo} Template Test<tkBookmark name=\"BKM1\" collection=\"foo\"/> and {empty} Test<tkBookmark name=\"BKM2\" collection=\"foo\"/> save to {folder}";
 	private String replaceTest = "Testing Fixed Template <tkBookmark name=\"BKM1\" collection=\"foo\"/> and {empty} <tkBookmark name=\"BKM2\" collection=\"foo\"/> save to {folder}";
@@ -113,17 +113,9 @@ public class TemplateTest {
 
 
 		template.merge(rtc);
-		final String returnValue;
-		if (!template.canWrite()) {
-			returnValue = "";
-		} else {
-			returnValue = template.getContent();
-			rtc.getTemplateFactory().getFs().doWrite(template);
-		}
-
-//		template.doWrite(rtc.getZipFactory());
-		String output = returnValue;
-		assertEquals(mergeOutput, output);
+		String returnValue = template.getContent();
+		String expected = "Some value";
+		assertEquals(expected, returnValue);
 	}
 
 	@Test

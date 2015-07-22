@@ -1,9 +1,5 @@
 package com.ibm.util.merge;
 
-import com.ibm.util.merge.db.ConnectionPoolManager;
-import com.ibm.util.merge.json.PrettyJsonProxy;
-import com.ibm.util.merge.persistence.FilesystemPersistence;
-
 import java.io.File;
 
 /**
@@ -28,8 +24,7 @@ public class TestUtils {
     }
 
     public static MergeContext createRuntimeContext(File jsonTemplatesDirectoryPath, File outputRoot) {
-        ConnectionPoolManager poolManager = new ConnectionPoolManager();
-        MergeContext mergeContext = new MergeContext(new TemplateFactory(new FilesystemPersistence(jsonTemplatesDirectoryPath, new PrettyJsonProxy(), outputRoot)), poolManager);
+        MergeContext mergeContext = null;
         return mergeContext;
     }
 }

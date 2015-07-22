@@ -78,7 +78,7 @@ public class ReplaceColSqlTest extends ReplaceColTest {
 		}
 		
 		@Override
-		public void getData(ConnectionFactory cf) throws MergeException {
+		public void getData(MergeContext ctx) throws MergeException {
 			DataTable table = addNewTable();
 			ArrayList<String> row = table.addNewRow();
 			table.addCol("FromCol");table.addCol("ToCol");
