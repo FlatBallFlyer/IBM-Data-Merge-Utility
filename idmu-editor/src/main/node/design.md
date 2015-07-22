@@ -17,7 +17,9 @@
 - [TemplateBody] (#template_bodyp)
 - [Implementation Detais] (#implementation_detail)
   - [Callbacks] (#callbacks)
-  - [Nesting Leels & Index] (#levels_index)
+  - [Nesting Levels & Index] (#levels_index)
+  - [jQuery] (#jQuery)
+  - [Utils] (#utils)
 
 
 <a name="overview"/>
@@ -348,3 +350,23 @@ the loop index is passed through as the `index` property of the component.
 
 - Key - When a `key` is required for a component the name of key is suffixed
 with the `level` and `index` property of the component.
+
+<a name="jQuery"/>
+### jQuery
+
+Some of the components do use `jQuery`. The components are
+
+```
+- ContentEditable
+- SortableMixin (Directives drag drop)
+- Extending/cloning objects
+```
+
+<a name="utils"/>
+### Utils
+
+The `Utils` class implements
+
+- methods related to extracting the `<tkBookmark/>` tags
+- `uuid` generator which is used to suffix sibling accordian panel indices
+
