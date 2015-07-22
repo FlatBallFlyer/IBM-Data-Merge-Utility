@@ -85,7 +85,7 @@ public class InitializeServlet extends HttpServlet {
 
         JsonProxy jsonProxy = (prettyJson ? new PrettyJsonProxy() : new DefaultJsonProxy());
         AbstractPersistence persist = (dbPersist ? new FilesystemPersistence(templatesDirPath, jsonProxy) : new HibernatePersistence());
-        TemplateFactory tf = new TemplateFactory(persist, jsonProxy);
+        TemplateFactory tf = new TemplateFactory(persist, jsonProxy, outputDirPath);
         servletContext.setAttribute("TemplateFactory", tf);
 
         for (RequestHandler handler : handlerChain) {

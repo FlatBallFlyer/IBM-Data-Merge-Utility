@@ -20,14 +20,16 @@ import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.cache.TemplateCache;
 import com.ibm.util.merge.directive.Directives;
 import com.ibm.util.merge.directive.Directives.DirectiveName;
-import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.AbstractPersistence;
+import com.ibm.util.merge.template.CollectionName;
 import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.TemplateName;
 
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.*;
+import java.util.jar.Attributes.Name;
 
 /**
  * This class implements a Caching Template Factory as well as all aspects of Template Persistence
@@ -144,6 +146,19 @@ final public class TemplateFactory {
     }
 
     /**********************************************************************************
+     * Get a collection of Templates
+     *
+     * @param list of Collection names
+     * @return Json array of Template objects
+     */
+	public String getTemplatesJSON(List<String> collections) {
+    	ArrayList<Template> theList;
+        theList = templateCache.getTemplates(collections);
+        return jsonProxy.toJson(theList);
+    }
+
+
+    /**********************************************************************************
      * <p>Get a JSON List of Dierctive Types.</p>
      *
      * @return JSON List of Directive Types and Names
@@ -163,9 +178,13 @@ final public class TemplateFactory {
      * @see Template
      */
     public String getCollectionNamesJSON() {
-        Set<String> theList;// = new ArrayList<String>();
+        Set<CollectionName> theList;
         theList = templateCache.getCollectionsFromCache();
         return jsonProxy.toJson(theList);
+    }
+    public class Name {
+		private String collection;
+    	public Name(String col) { collection = col; }
     }
 
 
@@ -177,11 +196,43 @@ final public class TemplateFactory {
      * @see Template
      */
     public String getTemplateNamesJSON(String collection) {
-        Set<String> theList;// = new ArrayList<String>();
+        ArrayList<TemplateName> theList;
         theList = templateCache.getTemplateFullnamesFromCache(collection);
+        java.util.Collections.sort(theList);
         return jsonProxy.toJson(theList);
     }
 
+    /**********************************************************************************
+     * <p>Get a JSON List of Templates in a collection with a given name.</p>
+     *
+     * @param collection, name
+     * @return JSON List of Template Name
+     * @see Template
+     */
+    public String getTemplateNamesJSON(String collection, String name) {
+    	ArrayList<TemplateName> theList;
+        theList = templateCache.getTemplateFullnamesFromCache(collection, name);
+        java.util.Collections.sort(theList);
+        return jsonProxy.toJson(theList);
+    }
+    
+    /**********************************************************************************
+     * Persist a collection of Templates
+     *
+     * @param String json array of template json
+     */
+    @SuppressWarnings("unchecked")
+	public String saveTemplatesFromJson(String json) {
+    	ArrayList<Template> templates = new ArrayList<Template>();
+    	templates = jsonProxy.fromJSON(json, templates.getClass());
+    	for (Template template : templates) {
+    		Template newTemplate = cache(template);
+    		persistence.saveTemplate(newTemplate);
+    	}
+    	return jsonProxy.toJson(templates);
+    }
+
+    
     /**********************************************************************************
      * Persist a template, through the template cache
      *
@@ -253,5 +304,5 @@ final public class TemplateFactory {
  	public File getOutputRoot() {
 		return outputRoot;
 	}
-   
+ 	   
 }
