@@ -281,11 +281,14 @@ This component simply renders the appropriate modal based on the
 method. It also provides the `save` callback which collects the
 new edits and dispatches to the `App:saveDirective` method.
 
-Some of the modals are
+Some of the modals are below. See `DirectiveEditors` for full list
+of editors.
+
 ```
 - RequireTags
 - ReplaceValue
 - InsertSubTemplatesFromTagData
+...
 ```
 
 <a name="template_body"/>
