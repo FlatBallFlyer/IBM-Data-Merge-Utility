@@ -73,7 +73,7 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
         log.info("Inserting Subtemplates into: " + getTemplate().getFullName());
         // Depth counter - infinite loop safety mechanism
         if (getTemplate().getStack().split("/").length >= DEPTH_MAX) {
-            throw new MergeException("Insert Subs Infinite Loop suspected", getFullName());
+            throw new MergeException("Insert Subs Infinite Loop suspected", getTemplate().getStack());
         }
         // Get the table data and iterate the rows
         getProvider().getData(rtc);
@@ -84,12 +84,8 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
                 // Iterate over target bookmarks
                 for (Bookmark bookmark : getTemplate().getBookmarks()) {
                     log.info("Processing bookmark " + bookmark.getName());
-                    try {
-                        // Create and Insert a new sub-template
-                        processSubTemplate(rtc, table, row, bookmark);
-                    } catch (Exception e) {
-                        log.error("Error while processing bookmark subtemplate for " + bookmark.getName(), e);
-                    }
+                    // Create and Insert a new sub-template
+                    processSubTemplate(rtc, table, row, bookmark);
                 }
             }
         }

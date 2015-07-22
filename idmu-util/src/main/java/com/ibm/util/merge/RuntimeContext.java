@@ -8,6 +8,7 @@ import com.ibm.util.merge.template.Template;
 
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -52,9 +53,9 @@ public class RuntimeContext {
         
         // Initialize Archive object
         if (this.isZipFile) {
-        	this.archive = new ZipArchive(this.archiveFileName);
+        	this.archive = new ZipArchive(factory.getOutputRoot() + File.separator + this.archiveFileName);
         } else {
-        	this.archive = new TarArchive(this.archiveFileName);
+        	this.archive = new TarArchive(factory.getOutputRoot() + File.separator + this.archiveFileName);
         }
         
         initialized = new Date();
@@ -111,10 +112,10 @@ public class RuntimeContext {
     public String getHtmlErrorMessage(MergeException error) {
         String message;
         Map<String, String[]> parameters = new HashMap<String,String[]>();
-        parameters.put(Template.wrap("MESSAGE"), 		new String[]{error.getError()});
-        parameters.put(Template.wrap("CONTEXT"), 		new String[]{error.getContext()});
-        parameters.put(Template.wrap("TRACE"), 			new String[]{error.getStackTrace().toString()});
-        parameters.put(TemplateFactory.KEY_FULLNAME , 	new String[]{"system.errHtml."});
+        parameters.put("MESSAGE", 		new String[]{error.getError()});
+        parameters.put("CONTEXT", 		new String[]{error.getContext()});
+        parameters.put("TRACE", 		new String[]{error.getStackTrace().toString()});
+        parameters.put("DragonFlyFullName",	new String[]{"system.errHtml."});
         message = getTemplateFactory().getMergeOutput(parameters);
         if (message.isEmpty()) {
             message = "INVALID ERROR TEMPLATE! \n" +
@@ -132,10 +133,10 @@ public class RuntimeContext {
     public String getJsonErrorMessage(MergeException error) {
         String message;
         Map<String, String[]> parameters = new HashMap<String,String[]>();
-        parameters.put(Template.wrap("MESSAGE"), 		new String[]{error.getError()});
-        parameters.put(Template.wrap("CONTEXT"), 		new String[]{error.getContext()});
-        parameters.put(Template.wrap("TRACE"), 			new String[]{error.getStackTrace().toString()});
-        parameters.put(TemplateFactory.KEY_FULLNAME , 	new String[]{"system.errJson."});
+        parameters.put("MESSAGE", 		new String[]{error.getError()});
+        parameters.put("CONTEXT", 		new String[]{error.getContext()});
+        parameters.put("TRACE", 		new String[]{error.getStackTrace().toString()});
+        parameters.put("DragonFlyFullName", new String[]{"system.errJson."});
         message = getTemplateFactory().getMergeOutput(parameters);
         if (message.isEmpty()) {
             message = "INVALID ERROR TEMPLATE! \n" +

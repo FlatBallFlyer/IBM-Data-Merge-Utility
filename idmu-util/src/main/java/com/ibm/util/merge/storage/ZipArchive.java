@@ -18,14 +18,15 @@ public class ZipArchive extends Archive {
 	@Override
     public void writeFile(String entryName, String content, String userName, String groupName) throws IOException {
 		super.writeFile(entryName, content, userName, groupName);
-        ZipEntry entry = new ZipEntry(entryName);
         ZipOutputStream outputStream = (ZipOutputStream) this.getOutputStream();
+        ZipEntry entry = new ZipEntry(entryName);
         outputStream.putNextEntry(entry);
         outputStream.write(content.getBytes());
         outputStream.flush();
         outputStream.closeEntry();
     }
     
+	@Override
     public void openOutputStream() throws IOException {
         FileOutputStream fos = new FileOutputStream(getFilePath());
         BufferedOutputStream bos = new BufferedOutputStream(fos);

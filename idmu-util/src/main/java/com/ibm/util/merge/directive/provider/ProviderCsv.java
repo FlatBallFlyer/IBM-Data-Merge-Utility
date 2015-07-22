@@ -54,23 +54,26 @@ public class ProviderCsv extends ProviderHttp implements Cloneable {
 	 */
 	@Override
 	public void getData(RuntimeContext rtc) throws MergeException {
-		reset();
-		DataTable table = new DataTable();
+		// Get the data
+		super.getData(rtc);
+		
+		DataTable newTable = new DataTable();
 		CSVParser parser;
 		try {
 			parser = new CSVParser(new StringReader(getFetchedData()), CSVFormat.EXCEL.withHeader());
 			for (String colName : parser.getHeaderMap().keySet() ) {
-				table.addCol(colName);
+				newTable.addCol(colName);
 			}
 		    for (CSVRecord record : parser) {
-				ArrayList<String> row = table.addNewRow();
+				ArrayList<String> row = newTable.addNewRow();
 		    	for (String field : record) {row.add(field);}
 		    }
 		    parser.close();
 		} catch (IOException e) {
 			throw new MergeException(e, "CSV Parser Stringreader IO Exception", getFetchedData());
 		}
-		if (table.size() > 0) {
-			getTables().add(table);}
+		if (newTable.size() > 0) {
+			getTables().add(newTable);
+		}
 	}
 }

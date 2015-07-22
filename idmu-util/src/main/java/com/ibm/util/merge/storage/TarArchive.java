@@ -15,10 +15,11 @@ import java.io.IOException;
  */
 public class TarArchive extends Archive {
 
-    public TarArchive(String archiveFileName) {
-        super(archiveFileName);
+    public TarArchive(String filePath) {
+        super(filePath);
     }
 
+	@Override
     public void writeFile(String entryName, String content, String userName, String groupName) throws IOException {
     	super.writeFile(entryName, content, userName, groupName);
     	TarArchiveOutputStream outputStream = (TarArchiveOutputStream) this.getOutputStream();
@@ -31,6 +32,7 @@ public class TarArchive extends Archive {
         outputStream.closeArchiveEntry();
     }
     
+	@Override
     public void openOutputStream() throws IOException {
         FileOutputStream fos = new FileOutputStream(getFilePath());
         BufferedOutputStream bos = new BufferedOutputStream(fos);

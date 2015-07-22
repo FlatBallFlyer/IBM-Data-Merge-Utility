@@ -26,6 +26,7 @@ import com.ibm.util.merge.template.Template;
 
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -37,23 +38,18 @@ final public class TemplateFactory {
     // Factory Constants
     private static final Logger log = Logger.getLogger(TemplateFactory.class.getName());
     public static final String KEY_CACHE_RESET = Template.wrap("DragonFlyCacheReset");
-    public static final String KEY_CACHE_LOAD = Template.wrap("DragonFlyCacheLoad");
     public static final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
     public static final String DEFAULT_FULLNAME = "root.default.";
-    private AbstractPersistence persistence;
+    private final AbstractPersistence persistence;
+    private final File outputRoot;
 	private final TemplateCache templateCache;
     private final JsonProxy jsonProxy;
 
-    public TemplateFactory() {
-        templateCache = new TemplateCache();
-        jsonProxy = new PrettyJsonProxy();
-        this.persistence = null;
-    }
-    
-    public TemplateFactory(AbstractPersistence persist, JsonProxy proxy) {
-        templateCache = new TemplateCache();
-        jsonProxy = proxy;
+    public TemplateFactory(AbstractPersistence persist, JsonProxy proxy, File outputRootDir) {
+        this.templateCache = new TemplateCache();
+        this.jsonProxy = proxy;
         this.persistence = persist;
+        this.outputRoot = outputRootDir;
         reset();
     }
 
@@ -254,8 +250,8 @@ final public class TemplateFactory {
 		return persistence;
 	}
 
-    public void setPersistence(AbstractPersistence newPersistence) {
-		this.persistence = newPersistence;
+ 	public File getOutputRoot() {
+		return outputRoot;
 	}
    
 }

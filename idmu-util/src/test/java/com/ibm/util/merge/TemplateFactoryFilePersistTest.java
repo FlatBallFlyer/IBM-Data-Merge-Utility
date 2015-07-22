@@ -33,14 +33,14 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-// TODO Finalize Testing Templates and Collections
 public class TemplateFactoryFilePersistTest {
 	private String templatesFolder = "src/test/resources/templates";
 	private File templatesDir = new File(templatesFolder);
 	private JsonProxy proxy = new PrettyJsonProxy();
 	private AbstractPersistence filePersist = new FilesystemPersistence(templatesDir, new PrettyJsonProxy());
-    private TemplateFactory testFactory = new TemplateFactory(filePersist, proxy);
-    private int count = 56;
+	private File outputDir = new File("src/test/resources/testout/");
+    private TemplateFactory testFactory = new TemplateFactory(filePersist, proxy, outputDir);
+    private int count = 57;
     
     @Before
     public void setUp() throws Exception {
@@ -68,7 +68,6 @@ public class TemplateFactoryFilePersistTest {
 
     @Test(expected = MergeException.class)
     public void testGetTemplateNotFoundInCache() throws MergeException {
-    	testFactory.setPersistence(filePersist);
     	testFactory.reset();
     	testFactory.getTemplate("root.bad.fake", "root.fake.", new HashMap<String,String>());
         fail("Template Not Found did not throw exception");

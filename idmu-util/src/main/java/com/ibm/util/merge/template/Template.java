@@ -41,17 +41,17 @@ public class Template implements Cloneable {
     public static final String LFT = "{";
     public static final String RGT = "}";
     public static final String TAG_STACK = wrap("DragonFlyTemplateStack");
-    public static final String TAG_ALL_VALUES = wrap("DragonFlyReplaceValues");
-    public static final String TAG_OUTPUTFILE = wrap("DragonFlyOutputFile");
-    public static final String TAG_OUTPUTHASH = wrap("DragonFlyOutputHash");
-    public static final String TAG_SOFTFAIL = wrap("DragonFlySoftFail");
-    public static final String TAG_OUTPUT_TYPE = wrap("DragonOutputType");
-    public static final String TAG_SEQUENCE = wrap("DragonSequence");
+    public static final String TAG_ALL_VALUES 	= wrap("DragonFlyReplaceValues");
+    public static final String TAG_OUTPUTFILE 	= wrap("DragonFlyOutputFile");
+    public static final String TAG_OUTPUTHASH 	= wrap("DragonFlyOutputHash");
+    public static final String TAG_SOFTFAIL 	= wrap("DragonFlySoftFail");
+    public static final String TAG_OUTPUT_TYPE 	= wrap("DragonFlyOutputType");
+    public static final String TAG_SEQUENCE 	= wrap("DragonFlySequence");
     public static final String BOOKMARK_PATTERN_STRING = "(<tkBookmark.*?/>)";
     public static final Pattern BOOKMARK_PATTERN = Pattern.compile(BOOKMARK_PATTERN_STRING);
     // Factory Constants
-    public static final int TYPE_ZIP = 1;
-    public static final int TYPE_TAR = 2;
+    public static final String TYPE_ZIP = "zip";
+    public static final String TYPE_TAR = "tar";
     // Template Constants
     private static final Logger log = Logger.getLogger(Template.class.getName());
     // Attributes
@@ -93,7 +93,7 @@ public class Template implements Cloneable {
      */
     public Template clone(Map<String, String> seedReplace) {
         Template newTemplate = cloneThisTemplate();
-        newTemplate.replaceValues = seedReplace;
+        newTemplate.replaceValues.putAll(seedReplace);
         newTemplate.setContent(getContent());
         // Deep Copy Directives
         newTemplate.directives = new ArrayList<>();
@@ -140,7 +140,8 @@ public class Template implements Cloneable {
     		return this.content.toString();
     	} else {
     		try {
-				rtc.writeFile(this.outputFile, this.content.toString());
+    			String fileName = this.replaceProcess(this.outputFile);
+				rtc.writeFile(fileName, this.content.toString());
 			} catch (IOException e) {
 				throw new MergeException(this, e, "Error writing output file", this.outputFile);
 			}
@@ -347,10 +348,10 @@ public class Template implements Cloneable {
     }
 
     /**
-     * @return output type indicator (Default to GZIP, allow "zip" over-ride
+     * @return output type indicator (Default to tar, allow "zip" over-ride
      */
-    public int getOutputType() {
-        return (replaceValues.containsKey(TAG_OUTPUT_TYPE) && replaceValues.get(TAG_OUTPUT_TYPE).endsWith("zip")) ? TYPE_ZIP : TYPE_TAR;
+    public String getOutputType() {
+        return (replaceValues.containsKey(TAG_OUTPUT_TYPE) && replaceValues.get(TAG_OUTPUT_TYPE).equals(TYPE_ZIP)) ? TYPE_ZIP : TYPE_TAR;
     }
 
     /********************************************************************************

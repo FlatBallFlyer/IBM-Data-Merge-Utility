@@ -1,8 +1,1 @@
-{
-	"collection":"contact",
-	"name":"postal",
-	"columnValue":"",
-	"description":"Postal Mail Textfile",
-	"outputFile":"postal/{NAME}.mail.txt",
-	"content":"Dear: {PREFERENCE} {NAME} from {STREET} {CITY}, {STATE} {ZIP} - Please renew your subscriptions"
- }
+{"collection":"contact","name":"postal","columnValue":"","description":"Postal Mail Textfile","outputFile":"postal/{NAME}.mail.txt","content":"Dear: {PREFERENCE} {NAME} from {STREET} {CITY}, {STATE} {ZIP} - Please renew your subscriptions"}
