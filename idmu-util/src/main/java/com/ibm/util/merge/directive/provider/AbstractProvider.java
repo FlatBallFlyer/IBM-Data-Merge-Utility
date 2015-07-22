@@ -17,7 +17,7 @@
 package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.directive.AbstractDirective;
 
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public abstract class AbstractProvider implements Cloneable {
      * @param cf
      * @throws MergeException
      */
-    public abstract void getData(RuntimeContext rtc) throws MergeException;
+    public abstract void getData(MergeContext rtc) throws MergeException;
     
     /**
      * Each provider should implement this method to provide Context about the query

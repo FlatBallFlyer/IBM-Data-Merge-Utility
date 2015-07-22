@@ -81,7 +81,7 @@ final public class TemplateFactory {
         }
 
         // Setup and Merge the template
-        RuntimeContext rtc = new RuntimeContext(this, replace);
+        MergeContext rtc = new MergeContext(this, replace);
         String returnValue;
         try {
             String fullName = replace.get(KEY_FULLNAME);

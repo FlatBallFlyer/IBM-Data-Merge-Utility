@@ -35,7 +35,7 @@ public class InsertSubsTagTest extends InsertSubsTest {
     private ProviderTag myProvider;
     private InsertSubsTag myDirective;
     private JsonProxy jsonProxy;
-    private RuntimeContext rtc;
+    private MergeContext rtc;
 
     @Before
     public void setUp() throws Exception {

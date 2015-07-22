@@ -55,14 +55,12 @@ public class TemplateTest {
 	private String testReplaceColHtmlJson = "{" + testJsonBase + ",{\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"sequence\":1,\"type\":33,\"softFail\":false,\"description\":\"TestReplaceColHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}"; 
 	private String testMarkupHtmlJson = 	"{" + testJsonBase + ",{\"pattern\":\"TestPattern\",\"sequence\":1,\"type\":34,\"softFail\":false,\"description\":\"TestMarkupSubsHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}";
 	private JsonProxy jsonProxy;
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
 
 		jsonProxy = new DefaultJsonProxy();
-		rtc = TestUtils.createDefaultRuntimeContext();
-		rtc.initialize();
 		ReplaceValue directive = new ReplaceValue();
 		directive.setFrom("Foo");
 		directive.setTo("Test Foo Value");

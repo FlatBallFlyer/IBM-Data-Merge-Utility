@@ -1,6 +1,6 @@
 package com.ibm.util.merge.web;
 
-import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
@@ -24,10 +24,10 @@ public class RestServlet extends HttpServlet {
     private static final Logger log = Logger.getLogger(RestServlet.class);
 
 
-    public static RuntimeContext findRuntimeContext(ServletContext servletContext) {
-        RuntimeContext rtc = (RuntimeContext) servletContext.getAttribute("rtc");
+    public static MergeContext findRuntimeContext(ServletContext servletContext) {
+        MergeContext rtc = (MergeContext) servletContext.getAttribute("rtc");
         if(rtc == null){
-            throw new IllegalStateException("Could not find RuntimeContext attribute 'rtc' in ServletContext");
+            throw new IllegalStateException("Could not find MergeContext attribute 'rtc' in ServletContext");
         }
         return rtc;
     }
@@ -36,7 +36,7 @@ public class RestServlet extends HttpServlet {
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
         log.info("Initializing with servletConfig: " + servletConfig);
-        RuntimeContext rtc = findRuntimeContext(servletConfig.getServletContext());
+        MergeContext rtc = findRuntimeContext(servletConfig.getServletContext());
         log.info("RTC=" + rtc);
         List<RequestHandler> handlerChain = findHandlerChain(servletConfig.getServletContext());
         log.info("handlerChain=" + handlerChain);

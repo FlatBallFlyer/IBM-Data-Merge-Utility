@@ -31,7 +31,7 @@ public class MergeExceptionTest {
 	Template template;
 	AbstractDirective directive;
 
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {

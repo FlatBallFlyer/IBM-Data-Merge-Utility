@@ -18,7 +18,7 @@ package com.ibm.util.merge.web;
 
 import com.ibm.idmu.api.JsonProxy;
 import com.ibm.idmu.api.PoolManagerConfiguration;
-import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.json.DefaultJsonProxy;

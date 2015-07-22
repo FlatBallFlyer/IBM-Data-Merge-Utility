@@ -17,7 +17,7 @@
 package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
 
@@ -49,7 +49,7 @@ public class ReplaceMarkupHtml extends AbstractDirective implements Cloneable {
 	 * @param rtc
 	 */
 	@Override
-	public void executeDirective(RuntimeContext rtc) throws MergeException {
+	public void executeDirective(MergeContext rtc) throws MergeException {
 		getProvider().getData(rtc);
 		// TODO HTML Markup - Execute
 		// for each match, get from/to and call this.owner.addReplace()

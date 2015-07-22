@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 
 public class ReplaceRowSqlTest extends ReplaceRowTest {
 
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {

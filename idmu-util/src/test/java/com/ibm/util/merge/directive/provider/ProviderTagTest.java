@@ -18,7 +18,7 @@ package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.ConnectionFactory;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.AbstractDirective;
@@ -179,6 +179,6 @@ public class ProviderTagTest extends ProviderTest {
 	private class DirectiveStub extends AbstractDirective {
 		public DirectiveStub() {}
 		@Override
-		public void executeDirective(RuntimeContext rtc) throws MergeException {}
+		public void executeDirective(MergeContext rtc) throws MergeException {}
 	}
 }

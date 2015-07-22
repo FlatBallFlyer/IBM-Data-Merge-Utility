@@ -17,7 +17,7 @@
 package com.ibm.util.merge.template;
 
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.directive.AbstractDirective;
 
 import org.apache.log4j.Logger;
@@ -131,7 +131,7 @@ public class Template implements Cloneable {
         return clone;
     }
 
-    public String getMergedOutput(RuntimeContext rtc) throws MergeException {
+    public String getMergedOutput(MergeContext rtc) throws MergeException {
     	if (!merged) {
     		this.merge(rtc);
     	}
@@ -158,7 +158,7 @@ public class Template implements Cloneable {
      * @throws MergeException Save Output File errors
      * @param rtc
      */
-    public void merge(RuntimeContext rtc) throws MergeException {
+    public void merge(MergeContext rtc) throws MergeException {
     	if (this.merged) return;
 
     	log.info("Begin Template Merge for:" + getFullName());

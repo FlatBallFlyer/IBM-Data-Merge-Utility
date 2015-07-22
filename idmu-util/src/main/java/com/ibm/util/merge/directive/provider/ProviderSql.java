@@ -17,7 +17,7 @@
 package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.directive.AbstractDirective;
 
 import org.apache.log4j.Logger;
@@ -61,7 +61,7 @@ public class ProviderSql extends AbstractProvider implements Cloneable {
      * @throws MergeException Wrapped SQL and Process execptions
      */
     @Override
-    public void getData(RuntimeContext rtc) throws MergeException {
+    public void getData(MergeContext rtc) throws MergeException {
 		this.reset();
 		DataTable table = this.addNewTable();
 		Connection con = null;

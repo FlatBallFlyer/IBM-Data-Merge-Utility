@@ -35,7 +35,7 @@ public class InsertSubsCsvTest extends InsertSubsTest {
 	private TemplateFactory tf;
 
 	private JsonProxy jsonProxy;
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {

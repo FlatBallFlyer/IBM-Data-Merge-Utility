@@ -25,9 +25,9 @@ import javax.sql.DataSource;
 /**
  *
  */
-public class RuntimeContext {
+public class MergeContext {
     private static final String DBROOT = "java:/comp/env/jdbc/";
-    private static final Logger log = Logger.getLogger(RuntimeContext.class);
+    private static final Logger log = Logger.getLogger(MergeContext.class);
     private final TemplateFactory templateFactory;
     private HashMap<String, Connection> connections = new HashMap<String, Connection>();
     private Date initialized = null;
@@ -35,7 +35,7 @@ public class RuntimeContext {
     private Archive archive;
     private String archiveFileName = "";
 
-    public RuntimeContext(TemplateFactory factory, HashMap<String,String> replace) {
+    public MergeContext(TemplateFactory factory, HashMap<String,String> replace) {
         this.templateFactory = factory;
 
         // Determine output type

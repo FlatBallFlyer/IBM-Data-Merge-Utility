@@ -16,8 +16,16 @@
  */
 package com.ibm.util.merge;
 
+import com.ibm.idmu.api.JsonProxy;
+import com.ibm.util.merge.json.PrettyJsonProxy;
+import com.ibm.util.merge.persistence.AbstractPersistence;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import com.ibm.util.merge.template.Template;
+
 import junitx.framework.FileAssert;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,110 +36,71 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertTrue;
 
 public class IntegrationTestingJdbcProvider {
 	HashMap<String, String[]> parameterMap;
-	File templateDir 	= new File("integration/templates/");
-	File outputDir 	= new File("integration/output/");
-	File validateDir 	= new File("integration/valid/");
-
-	private RuntimeContext rtc;
+	File templateDir 	= new File("src/test/resources/templates/");
+	File outputDir 		= new File("src/test/resources/testout/");
+	File validateDir 	= new File("src/test/resources/valid/");
+    JsonProxy jsonProxy = new PrettyJsonProxy();
+    AbstractPersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
+    TemplateFactory tf 	= new TemplateFactory(persist, jsonProxy, outputDir);
 
 	@Before
-	public void setup() throws Exception {
-		rtc = TestUtils.createRuntimeContext(outputDir);
-		// Initialize Factories
-		TemplateFactory tf = rtc.getTemplateFactory();
-		tf.reset();
-
-		tf.loadTemplatesFromFilesystem();
-//		rtc.getZipFactory().setOutputRoot(outputDir);
+	public void setup() throws MergeException, IOException {
+		// Initialize requestMap (usually from request.getParameterMap())
 		parameterMap = new HashMap<>();
 	}
 
+	@After
+	public void teardown() throws IOException {
+		FileUtils.cleanDirectory(outputDir); 
+	}
+	
 	@Test
-	public void testDefaultTemplate() throws Exception {
-		TemplateFactory tf = rtc.getTemplateFactory();
-		Template root = tf.getTemplate(parameterMap);
-		root.merge(rtc);
-		final String returnValue;
-		if (!root.canWrite()) {
-			returnValue = "";
-		} else {
-			returnValue = root.getContent();
-		}
-		tf.getFs().doWrite(root);
-//		root.doWrite(rtc.getZipFactory());
-		String output = returnValue;
-//		root.packageOutput(zf, cf);
-		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + "merge1.output"))), output);
+	public void testDefaultTemplate() throws MergeException, IOException {
+		String output = tf.getMergeOutput(parameterMap);
+		assertEquals("This is the Default Template", output);
 	}
 
 	@Test
-	public void testCsvDefaultDataTar() throws Exception {
-//		testIt("csvDef.functional.", "tar");
-		testIt("csvDef.SMTP.", ".tar");
+	public void testjdbcDefaultDataTar() throws Exception {
+		testIt("jdbcDef.functional.", "tar");
 	}
 
 	@Test
-	public void testCsvDefaultDataZip() throws Exception {
-		testIt("csvDef.functional.","zip");
+	public void testjdbcDefaultDataZip() throws Exception {
+		testIt("jdbcDef.functional.","zip");
 	}
 
 	@Test
-	public void testCsvTagDataTar() throws Exception {
-		testIt("csvTag.functional.","tar");
+	public void testjdbcTagDataTar() throws Exception {
+		testIt("jdbcTag.functional.","tar");
 	}
 
 	@Test
-	public void testCsvTagDataZip() throws Exception {
-		testIt("csvTag.functional.", "zip");
+	public void testjdbcTagDataZip() throws Exception {
+		testIt("jdbcTag.functional.", "zip");
 	}
 
 	@Test
-	public void testCsvUrlDataTar() throws Exception {
-		testIt("csvUrl.functional.","tar.gz");
+	public void testjdbcUrlDataTar() throws Exception {
+		testIt("jdbcUrl.functional.","tar");
 	}
 
 	@Test
-	public void testCsvUrlDataZip() throws Exception {
-		testIt("csvUrl.functional.","zip");
+	public void testjdbcUrlDataZip() throws Exception {
+		testIt("jdbcUrl.functional.","zip");
 	}
 
-	/**
-	 * @param fullName
-	 * @param type
-	 * @throws MergeException
-	 * @throws IOException
-	 */
 	private void testIt(String fullName, String type) throws Exception {
-		parameterMap.put(Template.TAG_OUTPUT_TYPE, 		new String[]{type});
-		parameterMap.put(Template.TAG_OUTPUTFILE, 		new String[]{fullName+type});
-		testMerge(fullName);
-		FileAssert.assertBinaryEquals(new File(validateDir + fullName + "." + type),new File(outputDir + fullName + "." + type));
-	}
-
-	/**
-	 * @param fullName
-	 * @throws MergeException
-	 * @throws IOException
-	 */
-	private void testMerge(String fullName) throws Exception {
-		TemplateFactory tf = rtc.getTemplateFactory();
-		parameterMap.put(tf.KEY_FULLNAME, 	new String[]{fullName});
-		Template root = tf.getTemplate(parameterMap);
-		root.merge(rtc);
-		final String returnValue;
-		if (!root.canWrite()) {
-			returnValue = "";
-		} else {
-			returnValue = root.getContent();
-		}
-		tf.getFs().doWrite(root);
-//		root.doWrite(rtc.getZipFactory());
-		String mergeOutput = returnValue;
-//		root.packageOutput(zf, cf);
-		assertEquals(String.join("\n", Files.readAllLines(Paths.get(validateDir + fullName + ".output"))), mergeOutput);
+		String fileName = fullName + type;
+		parameterMap.put("DragonFlyFullName", 	new String[]{fullName});
+		parameterMap.put("DragonFlyOutputFile", new String[]{fileName});
+		parameterMap.put("DragonFlyOutputType", new String[]{type});
+		String output = tf.getMergeOutput(parameterMap);
+		assertTrue(output.trim().isEmpty());
+		CompareArchives.assertArchiveEquals(type, new File(validateDir, fileName).getAbsolutePath(), new File(outputDir, fileName).getAbsolutePath());
 	}
 }

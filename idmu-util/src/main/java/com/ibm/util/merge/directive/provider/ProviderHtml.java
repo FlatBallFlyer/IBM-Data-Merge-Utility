@@ -17,7 +17,7 @@
 package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.directive.AbstractDirective;
 
 import org.jsoup.Jsoup;
@@ -48,7 +48,7 @@ public class ProviderHtml extends ProviderHttp {
 	 * @param cf
 	 */
 	@Override
-	public void getData(RuntimeContext rtc) throws MergeException {
+	public void getData(MergeContext rtc) throws MergeException {
 		// Get the data
 		super.getData(rtc);
 		

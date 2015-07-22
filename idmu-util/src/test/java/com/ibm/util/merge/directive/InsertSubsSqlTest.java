@@ -36,7 +36,7 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 	private String masterOutput= "Test Row: 1, Val: 2\nRow: 4, Val: 5\n<tkBookmark name=\"sub\" collection=\"root\"/>";
 
 	private JsonProxy jsonProxy;
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {

@@ -18,7 +18,7 @@ package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.template.Bookmark;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.DataTable;
 import org.apache.log4j.Logger;
@@ -69,7 +69,7 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
      * @throws DragonFlySqlException SQL Error thrown in Template.new
      */
     @Override
-    public void executeDirective(RuntimeContext rtc) throws MergeException {
+    public void executeDirective(MergeContext rtc) throws MergeException {
         log.info("Inserting Subtemplates into: " + getTemplate().getFullName());
         // Depth counter - infinite loop safety mechanism
         if (getTemplate().getStack().split("/").length >= DEPTH_MAX) {
@@ -91,7 +91,7 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
         }
     }
 
-    private void processSubTemplate(RuntimeContext rtc, DataTable table, int row, Bookmark bookmark) throws MergeException {
+    private void processSubTemplate(MergeContext rtc, DataTable table, int row, Bookmark bookmark) throws MergeException {
         String collection = bookmark.getCollection();
         String name = bookmark.getName();
         String column = table.getValue(row, bookmark.getColumn());

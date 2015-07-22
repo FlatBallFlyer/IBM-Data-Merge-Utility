@@ -17,7 +17,7 @@
 package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.TestUtils;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 
 public class ReplaceColCsvTest extends ReplaceColTest {
 
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
