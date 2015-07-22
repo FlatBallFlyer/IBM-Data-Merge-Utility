@@ -14,7 +14,10 @@
 - [Directives](#directives)
   - [Drag and Drop](#drag_and_drop)
 - [DirectivesEditor] (#directives_editor)
-- [TemplateBody] (#template_body)
+- [TemplateBody] (#template_bodyp)
+- [Implementation Detais] (#implementation_detail)
+  - [Callbacks] (#callbacks)
+  - [Nesting Leels & Index] (#levels_index)
 
 
 <a name="overview"/>
@@ -292,7 +295,10 @@ callback to handle the `insert bookmark`.
 
 ## ContentEditable
 
-The component simply wraps a `<textarea/>` for the content to be edited.
+The component simply wraps a `<textarea/>` for the content to be edited. The
+onlt special method is `handleInsert`. This method inserts a <tkBookmark/>
+tag at the caret position in the text content area, and triggers a state
+change.
 
 ## InsertBookmarkTrigger
 
@@ -304,6 +310,41 @@ When the the user triggers the `Insert Bookmark` the modal dialog
 
 The modal dialog captures the template `collection`, `name`, and `column` properties
 for inserting a sub-template. This component simply delegates the 'save'
-action back to `ContentEditable:insertBookmark`
-method.
+action back to `ContentEditable:insertBookmark` method.
 
+<a name="implementation_details"/>
+## Implementation Details
+
+<a name="callbacks"/>
+### Callbacks
+
+All callbacks pertaining changes to application level state changes, and server
+interactions are passed along as component properties. Some of the convention used
+are
+
+```
+sCB - Save callback
+rCB - Remove callback
+iCB - Insert callback
+mCB - Move item between list callback
+aCB - Move item within list callback
+dCB - Save directive callback
+addTplCB - Add template callback
+removeTplCB - REmove template callback
+```
+
+<a name="levels_index"/>
+### Levels and Index
+
+Due to the recursive/nested nature of the application the following
+rules are used to derive the values for component `key` and element id's.
+
+- Level - The current nesting level is passed down through `App` as the `level`
+property whenever an `App` component is instantiated.
+
+
+- Index - When a collection of something is rendered (example ribbon items)
+the loop index is passed through as the `index` property of the component.
+
+- Key - When a `key` is required for a component the name of key is suffixed
+with the `level` and `index` property of the component.
