@@ -13,7 +13,8 @@
 - [HeaderPanel (Accordion)](#header_panel)
 - [Directives](#directives)
   - [Drag and Drop](#drag_and_drop)
-- [DirectivesEditor] (#directives_edito)
+- [DirectivesEditor] (#directives_editor)
+- [TemplateBody] (#template_body)
 
 
 <a name="overview"/>
@@ -282,6 +283,7 @@ Some of the modals are
 - InsertSubTemplatesFromTagData
 ```
 
+<a name="template_body"/>
 ## TemplateBody
 
 The component acts a container for the content text area and the
