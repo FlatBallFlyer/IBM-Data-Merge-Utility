@@ -4,6 +4,8 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.log4j.Logger;
 
+import com.ibm.util.merge.MergeException;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,8 +22,8 @@ public class TarArchive extends Archive {
     }
 
 	@Override
-    public void writeFile(String entryName, String content, String userName, String groupName) throws IOException {
-    	super.writeFile(entryName, content, userName, groupName);
+    public String writeFile(String entryName, String content, String userName, String groupName) throws IOException, MergeException {
+    	String chksum = super.writeFile(entryName, content, userName, groupName);
     	TarArchiveOutputStream outputStream = (TarArchiveOutputStream) this.getOutputStream();
         TarArchiveEntry entry = new TarArchiveEntry(entryName);
         entry.setSize(content.length());
@@ -30,6 +32,7 @@ public class TarArchive extends Archive {
         outputStream.write(content.getBytes());
         outputStream.flush();
         outputStream.closeArchiveEntry();
+        return chksum;
     }
     
 	@Override

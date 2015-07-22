@@ -40,7 +40,7 @@ public class Template implements Cloneable {
     // Global Constants (Reserved Tags)
     public static final String LFT = "{";
     public static final String RGT = "}";
-    public static final String TAG_STACK = wrap("DragonFlyTemplateStack");
+    public static final String TAG_STACK 		= wrap("DragonFlyTemplateStack");
     public static final String TAG_ALL_VALUES 	= wrap("DragonFlyReplaceValues");
     public static final String TAG_OUTPUTFILE 	= wrap("DragonFlyOutputFile");
     public static final String TAG_OUTPUTHASH 	= wrap("DragonFlyOutputHash");
@@ -103,11 +103,7 @@ public class Template implements Cloneable {
         }
 
         // Add our name to the Template Stack
-        if (!newTemplate.replaceValues.containsKey(TAG_STACK)) {
-            newTemplate.replaceValues.put(TAG_STACK, getFullName());
-        } else {
-            newTemplate.replaceValues.put(TAG_STACK, newTemplate.replaceValues.get(TAG_STACK) + "/" + newTemplate.getFullName());
-        }
+        appendToReplaceValue(newTemplate.replaceValues, TAG_STACK, newTemplate.getFullName(), "/"); 
         return newTemplate;
     }
 
@@ -141,7 +137,9 @@ public class Template implements Cloneable {
     	} else {
     		try {
     			String fileName = this.replaceProcess(this.outputFile);
-				rtc.writeFile(fileName, this.content.toString());
+    			String content = this.content.toString();
+				String chksum = rtc.writeFile(fileName, content);
+				this.appendToReplaceValue(this.replaceValues, Template.TAG_OUTPUTHASH, fileName + "=" + chksum, "\n");
 			} catch (IOException e) {
 				throw new MergeException(this, e, "Error writing output file", this.outputFile);
 			}
@@ -290,6 +288,14 @@ public class Template implements Cloneable {
         }
     }
 
+    public void appendToReplaceValue(Map<String, String> replace, String key, String value, String seperator) {
+        if (!replace.containsKey(key)) {
+        	replace.put(key, value);
+        } else {
+        	replace.put(key, replace.get(key) + seperator + value);
+        }
+    }
+
     /********************************************************************************
      * Process the replace hash on the provided string
      *
@@ -318,7 +324,7 @@ public class Template implements Cloneable {
             throw new IllegalArgumentException("Unknown key: " + key);
         }
     }
-
+    
     /**
      * @return soft fail indicator (from replace hash)
      */

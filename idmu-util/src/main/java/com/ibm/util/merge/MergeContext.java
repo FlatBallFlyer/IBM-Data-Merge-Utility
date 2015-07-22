@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -62,12 +64,13 @@ public class MergeContext {
         log.info("Instantiated");
     }
 
-    public void writeFile(String entryName, String content) throws IOException {
-        if (entryName.equals("/dev/null")) return;
-        if (content.isEmpty()) return;
+    public String writeFile(String entryName, String content) throws IOException, MergeException {
+        if (entryName.equals("/dev/null")) return "";
+        if (content.isEmpty()) return "";
         
 		// TODO: Determine User and Group attributes to use
-    	archive.writeFile(entryName, content, "", "");
+    	String chksum = archive.writeFile(entryName, content, "", "");
+    	return chksum;
     }
     
     public Connection getConnection(String dataSource) throws MergeException {

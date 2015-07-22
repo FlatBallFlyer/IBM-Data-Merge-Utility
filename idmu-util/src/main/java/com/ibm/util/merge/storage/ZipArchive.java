@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.ibm.util.merge.MergeException;
+
 /**
  *
  */
@@ -16,14 +18,15 @@ public class ZipArchive extends Archive {
     }
 
 	@Override
-    public void writeFile(String entryName, String content, String userName, String groupName) throws IOException {
-		super.writeFile(entryName, content, userName, groupName);
+    public String writeFile(String entryName, String content, String userName, String groupName) throws IOException, MergeException {
+		String chksum = super.writeFile(entryName, content, userName, groupName);
         ZipOutputStream outputStream = (ZipOutputStream) this.getOutputStream();
         ZipEntry entry = new ZipEntry(entryName);
         outputStream.putNextEntry(entry);
         outputStream.write(content.getBytes());
         outputStream.flush();
         outputStream.closeEntry();
+        return chksum;
     }
     
 	@Override
