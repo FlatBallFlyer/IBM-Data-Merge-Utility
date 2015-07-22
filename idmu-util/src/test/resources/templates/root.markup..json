@@ -1,23 +1,25 @@
 {
 	"collection":"root",
-	"name":"allDirectives",
-	"columnValue":"",
+	"name":"markup",
 	"description":"",
 	"outputFile":"",
-	"content":"This is a test of the encodeing <tkBookmark collection=\"root\" name=\"test\" />",
+	"content":"This is a test of the encodeing <tkBookmark name=\"test\" collection=\"root\" />",
 	"directives":[
 		{
+			"sequence": 1,
 		  	"type": 0,
 		  	"softFail": false,
 		  	"description": "TestRequire",
 		  	"tags": ["Foo","empty"]
 		},{
+			"sequence": 0,
 			"type": 1,
 			"softFail": false,
 			"description": "Test Replace1",
 			"from": "Foo",
 			"to": "Test Foo Value"
 		},{
+			"sequence": 1,
 			"type": 2,
 			"softFail": false,
 			"description": "TestInsertSubsTag",
@@ -31,6 +33,7 @@
 				"list": false
 			 }
 		},{
+			"sequence": 1,
 			"type": 10,
 			"softFail": false,
 			"description": "TestInsertSubsSql",
@@ -44,6 +47,7 @@
 				"where": ""
 			 }
 		},{
+			"sequence": 1,
 			"type": 11,
 			"softFail": false,
 			"description": "TestReplaceRowSql",
@@ -55,6 +59,7 @@
 				"where": ""
 			 }
 		},{
+			"sequence": 1,
 			"type": 12,
 			"softFail": false,
 			"description": "TestReplaceColSql",
@@ -68,6 +73,7 @@
 				"where": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 21,
 			"softFail": false,
 			"description": "TestInsertSubsCsv",
@@ -80,6 +86,7 @@
 				"tag": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 22,
 			"softFail": false,
 			"description": "TestReplaceRowCsv",
@@ -90,6 +97,7 @@
 				"tag": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 23,
 			"softFail": false,
 			"description": "TestReplaceColCsv",
@@ -102,6 +110,7 @@
 				"tag": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 31,
 			"softFail": false,
 			"notLast": ["empty"],
@@ -114,6 +123,7 @@
 				"tag": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 33,
 			"softFail": false,
 			"description": "TestReplaceColHtml",
@@ -126,6 +136,7 @@
 				"tag": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 32,
 			"softFail": false,
 			"description": "TestReplaceRowHtml",
@@ -136,6 +147,7 @@
 				"tag": ""
 			}
 		},{
+			"sequence": 1,
 			"type": 34,
 			"softFail": false,
 			"description": "TestMarkupSubsHtml",
@@ -148,4 +160,5 @@
 			}
 		}
 	]
+
  }

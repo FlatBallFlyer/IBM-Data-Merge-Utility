@@ -20,10 +20,6 @@ import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
-import com.ibm.util.merge.template.Template;
-
-import junitx.framework.FileAssert;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -31,8 +27,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;

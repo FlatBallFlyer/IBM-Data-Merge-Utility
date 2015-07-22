@@ -1,1 +1,4 @@
-{"collection":"contact","name":"outSMTP"}
+{
+	"collection":"contact",
+	"name":"outSMTP"
+}
