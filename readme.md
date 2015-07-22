@@ -62,10 +62,13 @@ There are 2 servlets:
     	[{"type": 0,"name": "Require Tags"},{"type": 1,"name": "Replace Value"},...]
   
     GET /idmu/collections (full url example http://localhost:9090/idmu/collections)
-    	{["root","test",.....]}
+    	[{"collection":"root"},{"collection":"special"},...]
     
     GET /idmu/templates/{collectionName} (full url example http://localhost:9090/idmu/templates/root)
-        {["root.default.","root.allDirectives",....]}
+        [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]
+
+    GET /idmu/templates/{collectionName} (full url example http://localhost:9090/idmu/system/errHtml)
+        [{"collection":"system","name":"errHtml","columnValue":""},{"collection":"system","name":"errHtml",...}]
 
     GET /idmu/template/{templateFullName}
 	    {Template json}
@@ -76,6 +79,11 @@ There are 2 servlets:
     DELETE /idmu/template/{templateFullName} 
     	response: status OK or NOT_FOUND
 
+    GET /idmu/templatePackage/{collectionName,collectionName...} (full url example http://localhost:9090/idmu/templatePackage/root,system)
+        [TemplateJson,TemplateJson...]
+
+    PUT /idmu/templatePackage/{Templates} (full url example http://localhost:9090/idmu/templates/[Template,Template])
+    	reponse:status OK or FORBIDDEN
 
 ## License
 
