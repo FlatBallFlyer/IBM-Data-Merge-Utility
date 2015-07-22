@@ -13,6 +13,7 @@
 - [HeaderPanel (Accordion)](#header_panel)
 - [Directives](#directives)
   - [Drag and Drop](#drag_and_drop)
+- [DirectivesEditor] (#directives_edito)
 
 
 <a name="overview"/>
@@ -256,6 +257,8 @@ Each of the list item embeds `DirectivesEditorTrigger` component
 to either edit the configuration or to remove the item from the
 template.
 
+
+<a name="directives_editor"/>
 ### DirectivesEditorTrigger
 
 Component encapsulates the edit, and remove behavior of included
@@ -279,6 +282,26 @@ Some of the modals are
 - InsertSubTemplatesFromTagData
 ```
 
+## TemplateBody
+
+The component acts a container for the content text area and the
+insert bookmark button. The component also provides the
+callback to handle the `insert bookmark`.
+
+## ContentEditable
+
+The component simply wraps a `<textarea/>` for the content to be edited.
+
+## InsertBookmarkTrigger
+
+When the the user triggers the `Insert Bookmark` the modal dialog
+`InsertBookmark` is activated.
+
+## InsertBookmark (modal)
 
 
+The modal dialog captures the template `collection`, `name`, and `column` properties
+for inserting a sub-template. This component simply delegates the 'save'
+action back to `ContentEditable:insertBookmark`
+method.
 
