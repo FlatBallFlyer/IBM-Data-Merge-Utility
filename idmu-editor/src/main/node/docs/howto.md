@@ -43,8 +43,20 @@ on the 'Add' button on the dialog a new template will be created according to th
 <a name="remove_template"/>
 ## Remove Template
 
+To remove a template load the templates from the collection, navigate to the
+template of interest and press the 'Remove' button on the title bar of the
+template. 
+
+![Remove Template](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/left-right-nav.png)
+
 <a name="save_template"/>
 ## Save Template
+
+To save a template load the templates from the collection, navigate to the
+template of interest, make changes and press the 'Save' button on the title
+bar of the template. 
+
+![Save Template](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/left-right-nav.png)
 
 <a name="edit_template_properties"/>
 ## Edit Template Properties
