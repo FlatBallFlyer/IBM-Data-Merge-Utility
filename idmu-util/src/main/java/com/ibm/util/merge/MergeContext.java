@@ -24,7 +24,6 @@ public class MergeContext {
     private static final Logger log = Logger.getLogger(MergeContext.class);
     private final TemplateFactory templateFactory;
     private HashMap<String, Connection> connections = new HashMap<String, Connection>();
-    private Date initialized = null;
     private Boolean isZipFile = false;
     private Archive archive;
     private String archiveFileName = "";
@@ -53,7 +52,6 @@ public class MergeContext {
         	this.archive = new TarArchive(factory.getOutputRoot() + File.separator + this.archiveFileName);
         }
         
-        initialized = new Date();
         log.info("Instantiated");
     }
 
@@ -85,10 +83,6 @@ public class MergeContext {
         for (Map.Entry<String, Connection> entry : connections.entrySet()) {
             entry.getValue().close();
         }
-    }
-
-    public Date getInitialized() {
-        return initialized;
     }
 
     public TemplateFactory getTemplateFactory() {

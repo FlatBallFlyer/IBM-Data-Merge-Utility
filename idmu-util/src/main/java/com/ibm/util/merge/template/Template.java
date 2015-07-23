@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  * @see #merge()
  * @see #packageOutput()
  */
-public class Template implements Cloneable {
+public class Template {
     // Global Constants (Reserved Tags)
     public static final String LFT = "{";
     public static final String RGT = "}";
@@ -92,30 +92,33 @@ public class Template implements Cloneable {
      * @param seedReplace Initial replace hash
      * @throws MergeException - Wrapper of clone not supported exceptions
      */
-    public Template(Template from, Map<String, String> seedReplace) {
-        this.setIdtemplate(		from.getIdtemplate());
-        this.setCollection( 	from.getCollection());
-        this.setName(  			from.getName());
-        this.setColumnValue( 	from.getColumnValue());
-        this.setDescription( 	from.getDescription());
-        this.setOutputFile(  	from.outputFile);
-        this.setContent(		from.getContent());
+    public Template getMergable(Map<String, String> seedReplace) {
+    	Template to = new Template();
+    	to.setIdtemplate(		this.getIdtemplate());
+    	to.setCollection( 	this.getCollection());
+    	to.setName(  			this.getName());
+    	to.setColumnValue( 	this.getColumnValue());
+    	to.setDescription( 	this.getDescription());
+    	to.setOutputFile(  	this.outputFile);
+    	to.setContent(		this.getContent());
         
-        this.setDirectives(  	new ArrayList<>());
-        this.setMerged(  		false);
-        this.setMergable( 		true);
-        this.setReplaceValues( 	new HashMap<>());
+    	to.setDirectives(  	new ArrayList<>());
+    	to.setMerged(  		false);
+    	to.setMergable( 		true);
+    	to.setReplaceValues( 	new HashMap<>());
 
         // Deep Copy Directives
-        for (AbstractDirective fromDirective : from.getDirectives()) {
-        	this.addDirective(fromDirective.asNew());
+        for (AbstractDirective fromDirective : this.getDirectives()) {
+        	to.addDirective(fromDirective.asNew());
         }
 
         // Seed the replace stack
-        this.replaceValues.putAll(seedReplace);
+        to.replaceValues.putAll(seedReplace);
 
         // Add our name to the Template Stack
-        this.appendToReplaceValue(TAG_STACK, this.getFullName(), "/");
+        to.appendToReplaceValue(TAG_STACK, this.getFullName(), "/");
+        
+        return to;
     }
 
     public String getMergedOutput(MergeContext rtc) throws MergeException {
