@@ -1,12 +1,12 @@
 package com.ibm.util.merge.storage;
 
+import com.ibm.util.merge.MergeException;
+
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import com.ibm.util.merge.MergeException;
 
 /**
  *

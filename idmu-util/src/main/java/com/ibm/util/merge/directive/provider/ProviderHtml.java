@@ -16,8 +16,8 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
+import com.ibm.util.merge.MergeException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

@@ -20,7 +20,6 @@ import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;

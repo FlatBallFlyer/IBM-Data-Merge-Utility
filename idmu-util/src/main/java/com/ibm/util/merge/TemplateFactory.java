@@ -24,7 +24,6 @@ import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.template.CollectionName;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.TemplateName;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -132,7 +131,7 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Get a template as jSon from cache
      *
-     * @param String fullName - the Template Full Name
+     * @param fullName - the Template Full Name
      */
     public String getTemplateAsJson(String fullName) {
         Template template;
@@ -147,7 +146,7 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Get a collection of Templates
      *
-     * @param list of Collection names
+     * @param collections of Collection names
      * @return Json array of Template objects
      */
 	public String getTemplatesJSON(List<String> collections) {
@@ -185,7 +184,6 @@ final public class TemplateFactory {
     /**********************************************************************************
      * <p>Get a JSON List of Templates in a collection.</p>
      *
-     * @param request HttpServletRequest
      * @return JSON List of Collection Names
      * @see Template
      */
@@ -213,9 +211,8 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Persist a collection of Templates
      *
-     * @param String json array of template json
+     * @param json array of template json
      */
-    @SuppressWarnings("unchecked")
 	public String saveTemplatesFromJson(String json) {
     	ArrayList<Template> templates = new ArrayList<Template>();
     	templates = jsonProxy.fromJSON(json, templates.getClass());
@@ -230,7 +227,7 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Persist a template, through the template cache
      *
-     * @param String json the template json
+     * @param json the template json
      */
     public String saveTemplateFromJson(String json) {
         Template template1 = jsonProxy.fromJSON(json, Template.class);
@@ -242,7 +239,7 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Delete a template from Cache and Persistence
      *
-     * @param String json the template json
+     * @param json the template json
      */
     public String deleteTemplate(String json) {
         Template template = jsonProxy.fromJSON(json, Template.class);
@@ -274,7 +271,7 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Add a template to the cache, and return a cloned copy
      *
-     * @param String json the template json
+     * @param template the template json
      */
     public void cache(Template template) {
     	template.setMergable(false);

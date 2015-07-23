@@ -18,7 +18,6 @@ package com.ibm.util.merge.web;
 
 import com.ibm.idmu.api.JsonProxy;
 import com.ibm.idmu.api.PoolManagerConfiguration;
-import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.json.DefaultJsonProxy;
@@ -29,7 +28,6 @@ import com.ibm.util.merge.persistence.HibernatePersistence;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.handler.*;
 import com.ibm.util.merge.web.rest.servlet.writer.TextResponseWriter;
-
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletConfig;
@@ -37,10 +35,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class InitializeServlet extends HttpServlet {
     private Logger log = Logger.getLogger(InitializeServlet.class);

@@ -16,8 +16,8 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
+import com.ibm.util.merge.MergeException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;

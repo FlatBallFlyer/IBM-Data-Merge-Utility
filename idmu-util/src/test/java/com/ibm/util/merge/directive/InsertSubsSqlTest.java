@@ -16,17 +16,21 @@
  */
 package com.ibm.util.merge.directive;
 
-import com.ibm.util.merge.*;
-import com.ibm.util.merge.directive.provider.DataTable;
-import com.ibm.util.merge.directive.provider.AbstractProvider;
-import com.ibm.util.merge.json.DefaultJsonProxy;
 import com.ibm.idmu.api.JsonProxy;
+import com.ibm.util.merge.MergeContext;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.TemplateFactory;
+import com.ibm.util.merge.TestUtils;
+import com.ibm.util.merge.directive.provider.AbstractProvider;
+import com.ibm.util.merge.directive.provider.DataTable;
+import com.ibm.util.merge.json.DefaultJsonProxy;
 import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -52,13 +56,14 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 		tf.cache(template2);
 		Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
 		tf.cache(template1);
-		template = tf.getMergableTemplate("root.master.", "", new HashMap<>());
+		Map<String, String> seedReplace = new HashMap<>();
+		template = tf.getMergableTemplate("root.master.", "", seedReplace);
 		template.addDirective(myDirective);
 	}
 
 	@Test
 	public void testCloneInsertSubslSql() throws CloneNotSupportedException {
-		InsertSubsSql newDirective = new InsertSubsSql((InsertSubsSql)directive);
+		InsertSubsSql newDirective = new InsertSubsSql();
 		InsertSubsSql myDirective = (InsertSubsSql) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());

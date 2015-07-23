@@ -1,11 +1,11 @@
 package com.ibm.util.merge.storage;
 
+import com.ibm.util.merge.MergeException;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import com.ibm.util.merge.MergeException;
 
 public abstract class Archive {
     private String filePath;

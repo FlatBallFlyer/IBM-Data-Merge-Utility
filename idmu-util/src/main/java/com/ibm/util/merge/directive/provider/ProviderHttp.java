@@ -16,8 +16,8 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
+import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.template.Template;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;

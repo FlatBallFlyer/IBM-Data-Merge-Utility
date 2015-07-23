@@ -18,7 +18,7 @@ package com.ibm.util.merge.directive;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public abstract class InsertSubsTest extends DirectiveTest {
 

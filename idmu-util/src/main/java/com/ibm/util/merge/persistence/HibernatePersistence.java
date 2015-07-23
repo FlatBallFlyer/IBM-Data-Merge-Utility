@@ -1,8 +1,8 @@
 package com.ibm.util.merge.persistence;
 
 import com.ibm.util.merge.template.Template;
-
 import org.apache.log4j.Logger;
+
 import java.util.List;
 
 /**

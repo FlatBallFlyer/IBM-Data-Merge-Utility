@@ -1,6 +1,6 @@
 package com.ibm.util.merge.web.rest.servlet.handler;
 
-import com.ibm.util.merge.*;
+import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;

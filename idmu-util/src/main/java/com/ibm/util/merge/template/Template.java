@@ -16,13 +16,16 @@
  */
 package com.ibm.util.merge.template;
 
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
+import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.directive.*;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

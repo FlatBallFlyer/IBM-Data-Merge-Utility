@@ -22,7 +22,6 @@ import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
 import com.ibm.util.merge.template.Template;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -78,7 +77,7 @@ public class TemplateFactoryFilePersistTest {
     @Test
     public void testGetMergeOutput() {
         Map<String, String[]> parameters = new HashMap<String,String[]>();
-        parameters.put(TemplateFactory.KEY_FULLNAME , 	new String[]{"root.default."});
+        parameters.put(TemplateFactory.KEY_FULLNAME, new String[]{"root.default."});
     	assertEquals("This is the Default Template", testFactory.getMergeOutput(parameters));
     }
     
@@ -132,9 +131,9 @@ public class TemplateFactoryFilePersistTest {
     	String template = "{collection=\"test\",name=\"foo\",column=\"\",content=\"Some Content\"}";
     	assertEquals("NOT FOUND", testFactory.getTemplateAsJson("test.foo."));
     	testFactory.saveTemplateFromJson(template);
-    	assertNotNull(testFactory.getMergableTemplate("test.foo.", "", new HashMap<String,String>()));
+    	assertNotNull(testFactory.getMergableTemplate("test.foo.", "", new HashMap<String, String>()));
     	testFactory.reset();
-    	assertNotNull(testFactory.getMergableTemplate("test.foo.", "", new HashMap<String,String>()));
+    	assertNotNull(testFactory.getMergableTemplate("test.foo.", "", new HashMap<String, String>()));
     	testFactory.deleteTemplate(template);
     	assertEquals("NOT FOUND", testFactory.getTemplateAsJson("test.foo."));
     	testFactory.reset();

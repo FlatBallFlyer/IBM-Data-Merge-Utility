@@ -16,8 +16,8 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.AbstractDirective;
+import com.ibm.util.merge.template.Template;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -1,8 +1,8 @@
 package com.ibm.util.merge.persistence;
 
-import java.util.List;
-
 import com.ibm.util.merge.template.Template;
+
+import java.util.List;
 
 public abstract class AbstractPersistence {
 

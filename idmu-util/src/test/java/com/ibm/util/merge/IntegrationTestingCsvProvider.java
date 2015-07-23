@@ -20,7 +20,6 @@ import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -30,7 +29,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class IntegrationTestingCsvProvider {
 	static final String csvCorporate = "IDCORPORATE,FROM_VALUE,TO_VALUE\n1,corpUrl,www.spacely.com\n2,corpStreet,101 Future Ave.\n3,corpCity,Space City\n4,corpState,IS\n5,corpZip,99353";

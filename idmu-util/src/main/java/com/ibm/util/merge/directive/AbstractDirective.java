@@ -17,10 +17,10 @@
 
 package com.ibm.util.merge.directive;
 
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
-import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.directive.provider.AbstractProvider;
+import com.ibm.util.merge.template.Template;
 
 /**
  * A merge directive which drive the merge process for a template 

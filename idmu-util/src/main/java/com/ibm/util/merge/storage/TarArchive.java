@@ -1,8 +1,8 @@
 package com.ibm.util.merge.storage;
 
+import com.ibm.util.merge.MergeException;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import com.ibm.util.merge.MergeException;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;

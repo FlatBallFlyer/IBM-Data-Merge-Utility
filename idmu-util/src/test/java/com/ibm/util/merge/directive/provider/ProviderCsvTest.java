@@ -16,10 +16,10 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.MergeContext;
-import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.directive.AbstractDirective;
+import com.ibm.util.merge.template.Template;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

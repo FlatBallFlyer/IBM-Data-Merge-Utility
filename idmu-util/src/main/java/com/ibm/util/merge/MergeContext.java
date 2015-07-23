@@ -4,9 +4,12 @@ import com.ibm.util.merge.storage.Archive;
 import com.ibm.util.merge.storage.TarArchive;
 import com.ibm.util.merge.storage.ZipArchive;
 import com.ibm.util.merge.template.Template;
-
 import org.apache.log4j.Logger;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -15,11 +18,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 
 /**
  *
