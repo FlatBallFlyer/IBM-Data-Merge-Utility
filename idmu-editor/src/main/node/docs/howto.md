@@ -9,7 +9,6 @@
 - [Configure Template Directives](#configure_template_direcives)
 - [Edit Template Directives](#edit_template_directive_properties)
 - [Insert Sub-Template](#insert_sub_template)
-- [Add Template Content](#add_content)
 
 
 <a name="load_collection"/>
@@ -125,8 +124,4 @@ the template screen is refreshed with the new bookmark expanded as a sub-templat
 
 ![Insert Dialog](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/bookmark-inserter.png)
 
-
-
-<a name="add_content"/>
-## Add Template Content
 
