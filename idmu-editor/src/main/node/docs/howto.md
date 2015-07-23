@@ -108,6 +108,25 @@ To change the properties of a configured template directive
 <a name="insert_sub_template"/>
 ## Insert Sub-Template
 
+- To insert a sub-template you must have configured the template
+with an 'Insert' directive.
+
+- If there is an 'Insert' directive a 'Insert Template' button will appear below
+the 'Content' area.
+
+- By clicking on the 'Insert Template' button a dialog is presented to capture the
+collection, template name, and column name (optional) for the sub-template.
+
+- When the 'Insert' button is pressed a new bookmark is inserted into the content and
+the template screen is refreshed with the new bookmark expanded as a sub-template.
+
+![Insert Button](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/insert-template-button.png)
+
+
+![Insert Dialog](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/bookmark-inserter.png)
+
+
+
 <a name="add_content"/>
 ## Add Template Content
 
