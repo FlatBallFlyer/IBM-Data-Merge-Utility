@@ -26,13 +26,19 @@
 <a name="navigate_templates"/>
 ## Navigate Between Templates
 
-After a collection is selected templates in the collection can be viewed by
+After a collection is selected, templates in the collection can be viewed by
 clicking on the Left/Right bar of the template view.
 
 ![Template Navigation](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/left-right-nav.png)
 
 <a name="add_template"/>
 ## Add Template
+
+To add a template click on the 'Add' button available on the title bar of a template. A dialog
+box will be presented to get the collection, name of template, and columnValue if any. By clicking
+on the 'Add' button on the dialog a new template will be created according to the spec.
+
+![Add Template](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/add-template.png)
 
 <a name="remove_template"/>
 ## Remove Template
