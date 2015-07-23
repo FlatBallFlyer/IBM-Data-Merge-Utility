@@ -16,11 +16,11 @@
  */
 package com.ibm.util.merge.directive;
 
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.TestUtils;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
+import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 
 public class ReplaceColHtmlTest extends ReplaceColTest {
 
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
@@ -46,7 +46,7 @@ public class ReplaceColHtmlTest extends ReplaceColTest {
 
 	@Test
 	public void testCloneReplaceColHtml() throws CloneNotSupportedException {
-		ReplaceColHtml newDirective = (ReplaceColHtml) directive.clone();
+		ReplaceColHtml newDirective = new ReplaceColHtml((ReplaceColHtml)directive);
 		ReplaceColHtml myDirective = (ReplaceColHtml) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());

@@ -25,9 +25,9 @@ package com.ibm.util.merge.web;/*
 // Here's a simple example of how to use the PoolingDriver.
 //
 
+import com.ibm.idmu.api.PoolManager;
 import com.ibm.idmu.api.SqlOperation;
 import com.ibm.util.merge.db.ConnectionPoolManager;
-import com.ibm.idmu.api.PoolManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;

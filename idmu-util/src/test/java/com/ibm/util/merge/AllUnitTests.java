@@ -8,12 +8,10 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ 
 	BookmarkTest.class, 
 	MergeExceptionTest.class, 
-	TemplateFactoryTest.class,
+	TemplateFactoryFilePersistTest.class,
 	TemplateTest.class, 
-	ArchiveWriterTest.class,
 	com.ibm.util.merge.directive.AllTests.class,
 	com.ibm.util.merge.directive.provider.AllTests.class,
-//	ConnectionFactoryTest.class
 	})
 public class AllUnitTests {
 

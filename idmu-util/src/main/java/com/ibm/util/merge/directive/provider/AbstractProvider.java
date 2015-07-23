@@ -16,7 +16,7 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.directive.AbstractDirective;
 
@@ -28,7 +28,7 @@ import java.util.ArrayList;
  *
  * @author Mike Storey
  */
-public abstract class AbstractProvider implements Cloneable {
+public abstract class AbstractProvider {
     private transient ArrayList<DataTable> dataTables = new ArrayList<>();
     private transient AbstractDirective directive = null;
     private int type;
@@ -42,19 +42,10 @@ public abstract class AbstractProvider implements Cloneable {
         super();
     }
 
-    /**
-     * Simple clone constructor
-     *
-     * @param newOwner - The new Directive this is being cloned for
-     * @return the cloned Provider
-     * @throws CloneNotSupportedException
-     */
-    @Override
-    public AbstractProvider clone() throws CloneNotSupportedException {
-        AbstractProvider newProvider = (AbstractProvider) super.clone();
-        newProvider.directive = null;
-        newProvider.dataTables = new ArrayList<>();
-        return newProvider;
+    public AbstractProvider(AbstractProvider from) {
+    	this.dataTables = new ArrayList<DataTable>();
+    	this.setType(from.getType());
+    	this.directive = null;
     }
 
     /**
@@ -91,7 +82,8 @@ public abstract class AbstractProvider implements Cloneable {
      * @param cf
      * @throws MergeException
      */
-    public abstract void getData(ConnectionFactory cf) throws MergeException;
+    public abstract void getData(MergeContext rtc) throws MergeException;
+    
     /**
      * Each provider should implement this method to provide Context about the query
      * to be used in logging and exception handling.

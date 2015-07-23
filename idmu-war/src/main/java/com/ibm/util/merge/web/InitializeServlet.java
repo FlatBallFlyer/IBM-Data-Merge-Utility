@@ -16,12 +16,15 @@
  */
 package com.ibm.util.merge.web;
 
+import com.ibm.idmu.api.JsonProxy;
 import com.ibm.idmu.api.PoolManagerConfiguration;
-import com.ibm.util.merge.RuntimeContext;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.db.ConnectionPoolManager;
+import com.ibm.util.merge.json.DefaultJsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
+import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
+import com.ibm.util.merge.persistence.HibernatePersistence;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.handler.*;
 import com.ibm.util.merge.web.rest.servlet.writer.TextResponseWriter;
@@ -34,11 +37,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class InitializeServlet extends HttpServlet {
     private Logger log = Logger.getLogger(InitializeServlet.class);
     private String warTemplatesPath = "/WEB-INF/templates";
+    private Boolean dbPersist = false;
+    private Boolean prettyJson = true;
     private String jdbcPoolsPropertiesPath = "/WEB-INF/properties/databasePools.properties";
     private File outputDirPath = new File("/tmp/merge");
     private final List<RequestHandler> handlerChain = new ArrayList<>();
@@ -65,9 +73,7 @@ public class InitializeServlet extends HttpServlet {
         handlerChain.addAll(createHandlerInstances());
         File templatesDirPath = warTemplatesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(warTemplatesPath)) : new File(warTemplatesPath);
         File poolsPropertiesPath = jdbcPoolsPropertiesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(jdbcPoolsPropertiesPath)) : new File(jdbcPoolsPropertiesPath);
-        PrettyJsonProxy jsonProxy = new PrettyJsonProxy();
-        FilesystemPersistence fs = new FilesystemPersistence(templatesDirPath, jsonProxy, outputDirPath);
-        TemplateFactory tf = new TemplateFactory(fs);
+
         ConnectionPoolManager poolManager = new ConnectionPoolManager();
         if(poolsPropertiesPath.exists()){
             PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(poolsPropertiesPath);
@@ -77,28 +83,26 @@ public class InitializeServlet extends HttpServlet {
             log.error("No database config will be applied");
         }
 
-        RuntimeContext rtc = new RuntimeContext(tf, poolManager);
-        rtc.initialize();
-        servletContext.setAttribute("rtc", rtc);
+        JsonProxy jsonProxy = (prettyJson ? new PrettyJsonProxy() : new DefaultJsonProxy());
+        AbstractPersistence persist = (dbPersist ? new FilesystemPersistence(templatesDirPath, jsonProxy) : new HibernatePersistence());
+        TemplateFactory tf = new TemplateFactory(persist, jsonProxy, outputDirPath);
+        servletContext.setAttribute("TemplateFactory", tf);
+
         for (RequestHandler handler : handlerChain) {
             log.info("Initializing handler " + handler.getClass().getName());
-            handler.initialize(servletInitParameters, rtc);
+            handler.initialize(servletInitParameters, tf);
         }
         servletContext.setAttribute("handlerChain", handlerChain);
     }
 
     private ArrayList<RequestHandler> createHandlerInstances() {
         return new ArrayList<>(Arrays.asList(
-                new AllTemplatesResourceHandler(),
-                new AllDirectivesResourceHandler(),
-                new CollectionTemplatesResourceHandler(),
-                new CollectionTemplatesForTypeResourceHandler(),
-                new CollectionForCollectionTypeColumnValueResourceHandler(),
-                new TemplateForFullnameResourceHandler(),
-//                new CreateTemplateResourceHandler(),
-                new UpdateTemplateResourceHandler(),
                 new PerformMergeResourceHandler(),
-                new DeleteTemplateResourceHandler()
+                new GetTemplateResourceHandler(),
+                new PutTemplateResourceHandler(),
+                new DelTemplateResourceHandler(),
+                new GetDirectivesResourceHandler(),
+                new GetCollectionsResourceHandler()
         ));
     }
 
@@ -123,6 +127,16 @@ public class InitializeServlet extends HttpServlet {
             log.info("Found so using passed system property value for jdbc-pools-properties-path: " + systemPoolsPropertiesPath);
             this.jdbcPoolsPropertiesPath = systemPoolsPropertiesPath;
         }
+        String systemPrettyJson = System.getProperty("pretty-json");
+        if(systemPrettyJson != null){
+            log.info("Found so using passed system property value for pretty-json: " + systemPrettyJson);
+            this.prettyJson = systemPrettyJson.equals("yes"); 
+        }
+        String systemDbPersist = System.getProperty("db-persist");
+        if(systemDbPersist != null){
+            log.info("Found so using passed system property value for pretty-json: " + systemDbPersist);
+            this.dbPersist = systemDbPersist.equals("yes"); 
+        }
     }
 
     private void applyInitParameters() {
@@ -139,6 +153,16 @@ public class InitializeServlet extends HttpServlet {
         String databasePoolsPropertiesPath = servletInitParameters.get("jdbc-pools-properties-path");
         if(databasePoolsPropertiesPath != null){
             this.jdbcPoolsPropertiesPath = databasePoolsPropertiesPath;
+        }
+        String prettyJsonParameter = servletInitParameters.get("pretty-json");
+        if (prettyJsonParameter != null) {
+            log.info("Setting from ServletConfig: prettyJson=" + prettyJsonParameter);
+            this.prettyJson = prettyJson.equals("yes");
+        }
+        String dbPersistParameter = servletInitParameters.get("db-persist");
+        if (dbPersistParameter != null) {
+            log.info("Setting from ServletConfig: dbPersist=" + dbPersistParameter);
+            this.dbPersist = dbPersistParameter.equals("yes");
         }
     }
 

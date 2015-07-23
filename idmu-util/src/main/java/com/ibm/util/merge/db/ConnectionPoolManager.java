@@ -2,8 +2,8 @@ package com.ibm.util.merge.db;
 
 import com.ibm.idmu.api.DatabaseConnectionProvider;
 import com.ibm.idmu.api.PoolManager;
-import com.ibm.idmu.api.SqlOperation;
 import com.ibm.idmu.api.PoolManagerConfiguration;
+import com.ibm.idmu.api.SqlOperation;
 
 import java.io.File;
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
+ * Manages the connection pools. A single instance should be managed
  */
 public class ConnectionPoolManager implements PoolManager {
 
@@ -139,7 +139,8 @@ public class ConnectionPoolManager implements PoolManager {
     }
 
     public static class LoadConnectionPoolPropertiesException extends RuntimeException {
-        private final String name;
+		private static final long serialVersionUID = 1L;
+		private final String name;
         private final String propertiesPath;
 
         public LoadConnectionPoolPropertiesException(String name, String propertiesPath, Exception e) {

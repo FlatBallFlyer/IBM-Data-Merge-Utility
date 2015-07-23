@@ -16,10 +16,10 @@
  */
 package com.ibm.util.merge.directive.provider;
 
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.AbstractDirective;
+import com.ibm.util.merge.template.Template;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,7 +73,7 @@ public class ProviderHtmlTest extends ProviderHttpTest {
 
 	@Test
 	public void testProviderHtmlCloneDirective() throws CloneNotSupportedException {
-		ProviderHtml newProvider = (ProviderHtml) provider.clone();
+		ProviderHtml newProvider = new ProviderHtml((ProviderHtml)provider);
 		assertNotEquals(provider, newProvider);
 		assertNull(newProvider.getDirective());
 	}
@@ -86,6 +86,6 @@ public class ProviderHtmlTest extends ProviderHttpTest {
 	private class DirectiveStub extends AbstractDirective {
 		public DirectiveStub() {}
 		@Override
-		public void executeDirective(RuntimeContext rtc) throws MergeException {}
+		public void executeDirective(MergeContext rtc) throws MergeException {}
 	}
 }

@@ -16,10 +16,10 @@
  */
 package com.ibm.util.merge.directive;
 
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.TestUtils;
+import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 
 public class RequireTest extends DirectiveTest {
 
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
@@ -42,7 +42,7 @@ public class RequireTest extends DirectiveTest {
 	@Test
 	public void testCloneRequire() throws CloneNotSupportedException {
 		Require myDirective = (Require) directive;
-		Require newDirective = (Require) directive.clone();
+		Require newDirective = new Require((Require)directive);
 		assertNotEquals(directive, newDirective);
 		assertEquals(myDirective.getTags(), newDirective.getTags());
 	}

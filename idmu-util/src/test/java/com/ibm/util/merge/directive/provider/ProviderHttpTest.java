@@ -16,20 +16,20 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.db.ConnectionPoolManager;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public abstract class ProviderHttpTest extends ProviderTest {
-	private ConnectionFactory cf;
+	private MergeContext cf;
 
 	@Before
 	public void setup(){
-		cf = new ConnectionFactory(new ConnectionPoolManager());
+//		cf = new ConnectionFactory(new ConnectionPoolManager());
 	}
 
 	@Test
@@ -57,18 +57,6 @@ public abstract class ProviderHttpTest extends ProviderTest {
 		myProvider.setStaticData("");
 		myProvider.getData(cf);
 		assertEquals(0,myProvider.size());
-	}
-
-	@Test
-	public void testProviderHttpCloneDirective() throws CloneNotSupportedException {
-		ProviderHttp newProvider = (ProviderHttp) provider.clone();
-		ProviderHttp myProvider = (ProviderHttp) provider;
-		assertNotEquals(myProvider, newProvider);
-		assertEquals(0, newProvider.size());
-		assertNull(newProvider.getDirective());
-		assertEquals(myProvider.getUrl(), 			newProvider.getUrl());
-		assertEquals(myProvider.getStaticData(), 	newProvider.getStaticData());
-		assertEquals(myProvider.getTag(), 			newProvider.getTag());
 	}
 
 	@Test

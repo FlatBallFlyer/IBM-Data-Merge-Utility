@@ -16,10 +16,10 @@
  */
 package com.ibm.util.merge.directive;
 
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.TestUtils;
+import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 
 public class ReplaceValueTest extends DirectiveTest {
 
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
@@ -44,7 +44,7 @@ public class ReplaceValueTest extends DirectiveTest {
 	@Test
 	public void testCloneTemplate() throws CloneNotSupportedException {
 		ReplaceValue myDirective = (ReplaceValue) directive;
-		ReplaceValue newDirective = (ReplaceValue) directive.clone();
+		ReplaceValue newDirective = new ReplaceValue((ReplaceValue)directive);
 		assertNotEquals(directive, newDirective);
 		assertEquals(myDirective.getFrom(), newDirective.getFrom());
 		assertEquals(myDirective.getTo(), 	newDirective.getTo());

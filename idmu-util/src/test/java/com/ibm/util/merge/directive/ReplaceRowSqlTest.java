@@ -16,9 +16,11 @@
  */
 package com.ibm.util.merge.directive;
 
-import com.ibm.util.merge.*;
-import com.ibm.util.merge.directive.provider.DataTable;
+import com.ibm.util.merge.MergeContext;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.TestUtils;
 import com.ibm.util.merge.directive.provider.AbstractProvider;
+import com.ibm.util.merge.directive.provider.DataTable;
 import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +31,7 @@ import static org.junit.Assert.*;
 
 public class ReplaceRowSqlTest extends ReplaceRowTest {
 
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
@@ -45,7 +47,7 @@ public class ReplaceRowSqlTest extends ReplaceRowTest {
 
 	@Test
 	public void testCloneReplaceRowHtml() throws CloneNotSupportedException {
-		ReplaceRowSql newDirective = (ReplaceRowSql) directive.clone();
+		ReplaceRowSql newDirective = new ReplaceRowSql((ReplaceRowSql)directive);
 		ReplaceRowSql myDirective = (ReplaceRowSql) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());
@@ -76,7 +78,7 @@ public class ReplaceRowSqlTest extends ReplaceRowTest {
 		}
 		
 		@Override
-		public void getData(ConnectionFactory cf) throws MergeException {
+		public void getData(MergeContext ctx) throws MergeException {
 			DataTable table = addNewTable();
 			ArrayList<String> row = table.addNewRow();
 			table.addCol("A");table.addCol("B");table.addCol("C");

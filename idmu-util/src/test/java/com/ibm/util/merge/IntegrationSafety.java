@@ -16,8 +16,10 @@
  */
 package com.ibm.util.merge;
 
-import com.ibm.util.merge.template.Template;
-import org.apache.commons.io.FileUtils;
+import com.ibm.idmu.api.JsonProxy;
+import com.ibm.util.merge.json.PrettyJsonProxy;
+import com.ibm.util.merge.persistence.AbstractPersistence;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,85 +30,39 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 
 public class IntegrationSafety {
 	HashMap<String, String[]> parameterMap;
 	File templateDir 	= new File("src/test/resources/templates/");
-	File outputDir 	= new File("src/test/resources/testout/");
+	File outputDir 		= new File("src/test/resources/testout/");
 	File validateDir 	= new File("src/test/resources/valid/");
-
-	private RuntimeContext rtc;
+    JsonProxy jsonProxy = new PrettyJsonProxy();
+    AbstractPersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
+    TemplateFactory tf 	= new TemplateFactory(persist, jsonProxy, outputDir);
 
 	@Before
 	public void setup() throws MergeException, IOException {
-		rtc = TestUtils.createRuntimeContext(outputDir);
-		// Initialize Factories
-		TemplateFactory tf = rtc.getTemplateFactory();
-		tf.reset();
-		tf.loadTemplatesFromFilesystem();
-//		zf.setOutputRoot(outputDir);
-		
-		// Reset the output directory
-		FileUtils.cleanDirectory(outputDir);
-		parameterMap = new HashMap<>();
+		parameterMap = new HashMap<String, String[]>();
 	}
 
 	@After
 	public void teardown() throws IOException {
-		FileUtils.cleanDirectory(outputDir);
 	}
 	
 	@Test
 	public void testSafetyInsert() throws NoSuchAlgorithmException, IOException  {
-		try {
-			testIt("safety.insert.", "tar");
-		} catch (MergeException e) {
-			return;
-		}
-		fail("Safety Insert failed to throw exception");
-	}
-
-	@Test(expected = RuntimeException.class)
-	public void testSafetyReplace() throws Exception{
-
-			parameterMap.put("FROM",	new String[]{"Safety Replace {FROM} Value"});
-			testIt("safety.replace.", "tar");
-
-		fail("Safety Replace failed to throw exception");
+		parameterMap.put("DragonFlyFullName", 	new String[]{"safety.insert."});
+		String expected = "<html><head></head><body><p>A Merge Execption has occured: Insert Subs Infinite Loop suspected <br/> ";
+		String output = tf.getMergeOutput(parameterMap);
+		assertEquals(expected, output.substring(0, expected.length()));
 	}
 
 	@Test
-	public void testInsertTagAsList() throws NoSuchAlgorithmException, IOException, MergeException  {
-		parameterMap.put("Words",	new String[]{"One, Two, Three, Four and Five"});
-		assertEquals("The words are: One, - Two, - Three, - Four and Five. -", testIt("root.list.", "tar"));
-	}
-
-	/**
-	 * @param fullName
-	 * @param type
-	 * @throws MergeException
-	 * @throws IOException
-	 * @throws NoSuchAlgorithmException 
-	 */
-	private String testIt(String fullName, String type) throws MergeException, IOException, NoSuchAlgorithmException {
-		parameterMap.put("DragonOutputType", 	new String[]{type});
-		parameterMap.put("DragonFlyOutputFile", new String[]{fullName+type});
-		parameterMap.put("DragonFlyFullName", 	new String[]{fullName});
-		TemplateFactory tf = rtc.getTemplateFactory();
-		Template root = tf.getTemplate(parameterMap);
-		root.merge(rtc);
-		final String returnValue;
-		if (!root.canWrite()) {
-			returnValue = "";
-		} else {
-			returnValue = root.getContent();
-		}
-		tf.getFs().doWrite(root);
-//		root.doWrite(zf);
-		String output = returnValue;
-//		root.packageOutput(zf, cf);
-		return output;
+	public void testSafetyReplace() throws Exception{
+		parameterMap.put("DragonFlyFullName", 	new String[]{"safety.replace."});
+		String expected = "Test Replace To contains From {FROM}";
+		String output = tf.getMergeOutput(parameterMap);
+		assertEquals(expected, output);
 	}
 }

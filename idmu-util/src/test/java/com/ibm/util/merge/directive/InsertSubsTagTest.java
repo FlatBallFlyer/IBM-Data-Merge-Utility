@@ -16,10 +16,13 @@
  */
 package com.ibm.util.merge.directive;
 
-import com.ibm.util.merge.*;
+import com.ibm.idmu.api.JsonProxy;
+import com.ibm.util.merge.MergeContext;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.TemplateFactory;
+import com.ibm.util.merge.TestUtils;
 import com.ibm.util.merge.directive.provider.ProviderTag;
 import com.ibm.util.merge.json.DefaultJsonProxy;
-import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +38,7 @@ public class InsertSubsTagTest extends InsertSubsTest {
     private ProviderTag myProvider;
     private InsertSubsTag myDirective;
     private JsonProxy jsonProxy;
-    private RuntimeContext rtc;
+    private MergeContext rtc;
 
     @Before
     public void setUp() throws Exception {
@@ -50,7 +53,7 @@ public class InsertSubsTagTest extends InsertSubsTest {
         tf.cache(template2);
         Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
         tf.cache(template1);
-        template = tf.getTemplate("root.master.", "", new HashMap<>());
+        template = tf.getMergableTemplate("root.master.", "", new HashMap<>());
         template.addDirective(myDirective);
         myProvider.setTag("Foo");
         myProvider.setList(true);
@@ -60,7 +63,7 @@ public class InsertSubsTagTest extends InsertSubsTest {
 
     @Test
     public void testInsertSubsTagClone() throws CloneNotSupportedException {
-        InsertSubsTag newDirective = (InsertSubsTag) directive.clone();
+        InsertSubsTag newDirective = new InsertSubsTag((InsertSubsTag)directive);
         InsertSubsTag myDirective = (InsertSubsTag) directive;
         assertNotEquals(myDirective, newDirective);
         assertNull(newDirective.getTemplate());

@@ -17,8 +17,8 @@
 package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
+import com.ibm.util.merge.template.Template;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class ReplaceMarkupHtmlTest extends DirectiveTest {
 
 	@Test
 	public void testCloneReplaceRowHtml() throws CloneNotSupportedException {
-		ReplaceRowHtml newDirective = (ReplaceRowHtml) directive.clone();
+		ReplaceRowHtml newDirective = new ReplaceRowHtml((ReplaceRowHtml)directive);
 		ReplaceRowHtml myDirective = (ReplaceRowHtml) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());

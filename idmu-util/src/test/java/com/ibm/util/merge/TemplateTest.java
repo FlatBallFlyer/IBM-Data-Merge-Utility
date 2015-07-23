@@ -16,13 +16,13 @@
  */
 package com.ibm.util.merge;
 
+import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.directive.*;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
 import com.ibm.util.merge.directive.provider.ProviderHtml;
 import com.ibm.util.merge.directive.provider.ProviderSql;
 import com.ibm.util.merge.directive.provider.ProviderTag;
 import com.ibm.util.merge.json.DefaultJsonProxy;
-import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +35,7 @@ import static org.junit.Assert.*;
 public class TemplateTest {
 	private Template template;
 	private String templateString = "Testing {Foo} Template <tkBookmark name=\"BKM1\" collection=\"foo\"/> and {empty} <tkBookmark name=\"BKM2\" collection=\"foo\"/> save to {folder}";
-	private String mergeOutput = "Testing Test Foo Value Template  and NOT  save to /tmp/output/";
+	//private String mergeOutput = "Testing Test Foo Value Template  and NOT  save to /tmp/output/";
 	private String testInsert1 = "Testing {Foo} Template Test<tkBookmark name=\"BKM1\" collection=\"foo\"/> and {empty} <tkBookmark name=\"BKM2\" collection=\"foo\"/> save to {folder}";
 	private String testInsert2 = "Testing {Foo} Template Test<tkBookmark name=\"BKM1\" collection=\"foo\"/> and {empty} Test<tkBookmark name=\"BKM2\" collection=\"foo\"/> save to {folder}";
 	private String replaceTest = "Testing Fixed Template <tkBookmark name=\"BKM1\" collection=\"foo\"/> and {empty} <tkBookmark name=\"BKM2\" collection=\"foo\"/> save to {folder}";
@@ -55,14 +55,12 @@ public class TemplateTest {
 	private String testReplaceColHtmlJson = "{" + testJsonBase + ",{\"fromColumn\":\"Foo\",\"toColumn\":\"\",\"sequence\":1,\"type\":33,\"softFail\":false,\"description\":\"TestReplaceColHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}"; 
 	private String testMarkupHtmlJson = 	"{" + testJsonBase + ",{\"pattern\":\"TestPattern\",\"sequence\":1,\"type\":34,\"softFail\":false,\"description\":\"TestMarkupSubsHtml\",\"provider\":{\"staticData\":\"A,B,C\\n1,2,3\\n4,5,6\",\"url\":\"\",\"tag\":\"\",\"type\":4}}]}";
 	private JsonProxy jsonProxy;
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
 
 		jsonProxy = new DefaultJsonProxy();
-		rtc = TestUtils.createDefaultRuntimeContext();
-		rtc.initialize();
 		ReplaceValue directive = new ReplaceValue();
 		directive.setFrom("Foo");
 		directive.setTo("Test Foo Value");
@@ -74,7 +72,7 @@ public class TemplateTest {
 		template.setCollection("root");
 		template.setName("default");
 		template.setColumnValue("none");
-		template = template.clone(new HashMap<>());
+		template = new Template(template, new HashMap<>());
 		template.addReplace("empty","NOT");
 		template.addReplace("folder","/tmp/output/");
 	}
@@ -89,7 +87,7 @@ public class TemplateTest {
 	public void testClone() throws MergeException {
 		HashMap<String,String> replace = new HashMap<>();
 		replace.put("{Seed}", "Value");
-		Template that = template.clone(replace);
+		Template that = new Template(template, replace);
 		that.setColumnValue("");
 		assertNotEquals(template, that);
 		assertEquals(template.getCollection(), 			that.getCollection());
@@ -115,17 +113,9 @@ public class TemplateTest {
 
 
 		template.merge(rtc);
-		final String returnValue;
-		if (!template.canWrite()) {
-			returnValue = "";
-		} else {
-			returnValue = template.getContent();
-			rtc.getTemplateFactory().getFs().doWrite(template);
-		}
-
-//		template.doWrite(rtc.getZipFactory());
-		String output = returnValue;
-		assertEquals(mergeOutput, output);
+		String returnValue = template.getContent();
+		String expected = "Some value";
+		assertEquals(expected, returnValue);
 	}
 
 	@Test
@@ -410,14 +400,14 @@ public class TemplateTest {
 
 	@Test
 	public void testEquals() throws MergeException {
-		Template that = template.clone(new HashMap<>());
+		Template that = new Template(template, new HashMap<>());
 		assertEquals("root.default.none", template.getFullName());
 		assertEquals(template, that);
 	}
 
 	@Test
 	public void testNotEquals() throws MergeException {
-		Template that = template.clone(new HashMap<>());
+		Template that = new Template(template, new HashMap<>());
 		that.setColumnValue("");
 		assertNotEquals(template, that);
 	}

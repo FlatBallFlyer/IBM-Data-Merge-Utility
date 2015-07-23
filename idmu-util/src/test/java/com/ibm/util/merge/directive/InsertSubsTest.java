@@ -18,19 +18,9 @@ package com.ibm.util.merge.directive;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public abstract class InsertSubsTest extends DirectiveTest {
-
-	@Test
-	public void testCloneInsertSubs() throws CloneNotSupportedException {
-		InsertSubs newDirective = (InsertSubs) directive.clone();
-		InsertSubs myDirective = (InsertSubs) directive;
-		assertNotEquals(myDirective, newDirective);
-		assertNull(newDirective.getTemplate());
-		assertEquals(myDirective.getNotLast(), 				newDirective.getNotLast());
-		assertEquals(myDirective.getOnlyLast(),				newDirective.getOnlyLast());
-	}
 
 	@Test
 	public void testSetNotLast() {

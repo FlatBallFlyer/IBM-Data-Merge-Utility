@@ -31,15 +31,14 @@ public class MergeExceptionTest {
 	Template template;
 	AbstractDirective directive;
 
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
 		rtc = TestUtils.createDefaultRuntimeContext();
 		TemplateFactory tf = rtc.getTemplateFactory();
 		tf.reset();
-		tf.loadTemplatesFromFilesystem();
-		template = tf.getTemplate("system.test.", "", new HashMap<>());
+		template = tf.getMergableTemplate("system.test.", "", new HashMap<>());
 		directive = template.getDirectives().get(0);
 	}
 

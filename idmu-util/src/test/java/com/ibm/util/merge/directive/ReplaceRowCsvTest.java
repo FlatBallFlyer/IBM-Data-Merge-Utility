@@ -16,11 +16,11 @@
  */
 package com.ibm.util.merge.directive;
 
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.TestUtils;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
+import com.ibm.util.merge.template.Template;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 
 public class ReplaceRowCsvTest extends ReplaceRowTest {
 
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
@@ -50,7 +50,7 @@ public class ReplaceRowCsvTest extends ReplaceRowTest {
 
 	@Test
 	public void testCloneTemplate() throws CloneNotSupportedException {
-		ReplaceRowCsv newDirective = (ReplaceRowCsv) directive.clone();
+		ReplaceRowCsv newDirective = new ReplaceRowCsv((ReplaceRowCsv)directive);
 		ReplaceRowCsv myDirective = (ReplaceRowCsv) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());

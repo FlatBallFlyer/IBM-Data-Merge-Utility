@@ -16,11 +16,11 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.ConnectionFactory;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.template.Template;
-import com.ibm.util.merge.directive.AbstractDirective;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,6 +33,7 @@ import java.net.URL;
  *
  */
 public abstract class ProviderHttp extends AbstractProvider implements Cloneable {
+	private static final Logger log = Logger.getLogger(ProviderHttp.class.getName() );
 	private transient String fetchedData	= "";
 	private String staticData	= "";
 	private String url			= "";
@@ -45,13 +46,12 @@ public abstract class ProviderHttp extends AbstractProvider implements Cloneable
 		super();
 	}
 	
-	/**
-	 * Simple clone method
-	 * @see AbstractProvider#clone(AbstractDirective)
-	 */
-	@Override
-	public ProviderHttp clone() throws CloneNotSupportedException {
-		return (ProviderHttp) super.clone();
+	public ProviderHttp(ProviderHttp from) {
+		super(from);
+		this.setFetchedData("");
+		this.setStaticData(from.getStaticData());
+		this.setUrl(from.getUrl());
+		this.setTag(from.getTag());
 	}
 
 	/**
@@ -61,7 +61,7 @@ public abstract class ProviderHttp extends AbstractProvider implements Cloneable
 	 * @param cf
 	 */
 	@Override
-	public void getData(ConnectionFactory cf) throws MergeException {
+	public void getData(MergeContext rtc) throws MergeException {
 		Template template = getDirective().getTemplate();
 		if (!url.isEmpty()) {
 			try {
@@ -71,13 +71,20 @@ public abstract class ProviderHttp extends AbstractProvider implements Cloneable
 						new InputStreamReader(
 						new URL(theUrl).openStream())));
 			} catch (MalformedURLException e) {
-				throw new MergeException(e, "Malformed URL", url);
+				throw new MergeException(this, e, "Malformed URL", url);
 			} catch (IOException e) {
-				throw new MergeException(e, "I-O Exception", url);
+				throw new MergeException(this, e, "I-O Exception", url);
 			}
 		} else if (!tag.isEmpty()) {
 			String key = Template.wrap(template.replaceProcess(tag));
-			fetchedData = template.getReplaceValue(key);
+			if (template.hasReplaceKey(key)) {
+				fetchedData = template.getReplaceValue(key);
+			} else {
+				log.warn("Tag Data requuested but missing:" + key);
+				if (!this.getDirective().isSoftFail()) {
+					throw new MergeException(this, null, "Required Tag is not present:", key);
+				}
+			}
 		} else {
 			fetchedData = staticData;
 		}
@@ -88,7 +95,9 @@ public abstract class ProviderHttp extends AbstractProvider implements Cloneable
 	 */
 	@Override
 	public String getQueryString() {
-		return url;
+		if (!url.isEmpty()) return url;
+		if (!tag.isEmpty()) return tag;
+		return staticData;
 	}
 
 	public String getFetchedData() {

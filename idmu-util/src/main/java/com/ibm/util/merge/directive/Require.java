@@ -16,8 +16,8 @@
  */
 package com.ibm.util.merge.directive;
 
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
 import com.ibm.util.merge.template.Template;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import java.util.Arrays;
  *
  * @author  Mike Storey
  */
-public class Require extends AbstractDirective implements Cloneable {
+public class Require extends AbstractDirective {
 	private ArrayList<String> tags = new ArrayList<>();
 	
 	/**
@@ -43,24 +43,21 @@ public class Require extends AbstractDirective implements Cloneable {
 		setType(Directives.TYPE_REQUIRE);
 		setProvider(null);
 	}
-
-	/** 
-	 * Simple clone constructor, deep copy the tags list
-	 * @see AbstractDirective#clone(Template)
-	 */
-	@Override
-	public Require clone() throws CloneNotSupportedException {
-		return (Require) super.clone();
+	
+	public Require(Require from) {
+		super(from);
+		this.setTags(from.getTags());
+		setProvider(null);
 	}
 	
 	/**
 	 * Check to see if the tags are in the replace stack, throw an exception if not found
-	 * @see AbstractDirective#executeDirective(RuntimeContext)
+	 * @see AbstractDirective#executeDirective(MergeContext)
 	 * @param tf
 	 * @param rtc
 	 */
 	@Override
-	public void executeDirective(RuntimeContext rtc) throws MergeException {
+	public void executeDirective(MergeContext rtc) throws MergeException {
 		for (String tag : tags) {
 			if (!getTemplate().hasReplaceValue(Template.wrap(tag)) ) {
 				throw new MergeException("Required Tag Not Found in " + getTemplate().getFullName(), tag);

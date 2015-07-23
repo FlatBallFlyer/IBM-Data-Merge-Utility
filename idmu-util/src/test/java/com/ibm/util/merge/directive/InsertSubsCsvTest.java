@@ -16,10 +16,13 @@
  */
 package com.ibm.util.merge.directive;
 
-import com.ibm.util.merge.*;
+import com.ibm.idmu.api.JsonProxy;
+import com.ibm.util.merge.MergeContext;
+import com.ibm.util.merge.MergeException;
+import com.ibm.util.merge.TemplateFactory;
+import com.ibm.util.merge.TestUtils;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
 import com.ibm.util.merge.json.DefaultJsonProxy;
-import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +38,7 @@ public class InsertSubsCsvTest extends InsertSubsTest {
 	private TemplateFactory tf;
 
 	private JsonProxy jsonProxy;
-	private RuntimeContext rtc;
+	private MergeContext rtc;
 
 	@Before
 	public void setUp() throws Exception {
@@ -53,13 +56,13 @@ public class InsertSubsCsvTest extends InsertSubsTest {
 		tf.cache(template2);
 		Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
 		tf.cache(template1);
-		template = tf.getTemplate("root.master.", "", new HashMap<>());
+		template = tf.getMergableTemplate("root.master.", "", new HashMap<>());
 		template.addDirective(myDirective);
 	}
 
 	@Test
 	public void testCloneInsertSubsCsv() throws CloneNotSupportedException {
-		InsertSubsCsv newDirective = (InsertSubsCsv) directive.clone();
+		InsertSubsCsv newDirective = new InsertSubsCsv((InsertSubsCsv)directive);
 		InsertSubsCsv myDirective = (InsertSubsCsv) directive;
 		assertNotEquals(myDirective, newDirective);
 		assertNull(newDirective.getTemplate());

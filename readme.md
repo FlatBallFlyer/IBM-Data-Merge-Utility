@@ -55,103 +55,54 @@ There are 2 servlets:
   Leverages RequestHandlers to handle requests for the active RuntimeContext instance
 
 ## Supported URLs
-    GET    /idmu/directives (full url example http://localhost:9090/idmu/directives)
-    [
-      {
-        "notLast": [
-          "empty"
-        ],
-        "onlyLast": [],
-        "sequence": 0,
-        "type": 2,
-        "softFail": false,
-        "description": "TestInsertSubsTag",
-        "provider": {
-          "type": 2
-        }
-      },
-      {
-        "notLast": [],
-        "onlyLast": [],
-        "sequence": 1,
-        "type": 2,
-        "softFail": false,
-        "description": "Create Postal Message File",
-        "provider": {
-          "type": 2
-        }
-      }, ... ]
+	Perform a Merge
+    GET /idmu/merge?DragonFlyFullName=fullname&{additional requestParameters} 
+    	example: http://localhost:9090/idmu/merge?DragonFlyFullName=root.default. 
+    	response: HTML representation of merge output
 
-    GET    /idmu/templates
-        [
-          {
-            "collection": "contact",
-            "columnValue": "",
-            "name": "cmd",
-            "description": "Command Default Template (EMPTY)",
-            "outputFile": "",
-            "content": "",
-            "directives": []
-          },
-          {
-            "collection": "contact",
-            "columnValue": "SMS",
-            "name": "cmd",
-            "description": "Send SMS Command",
-            "outputFile": "",
-            "content": "\ncurl http://textbelt.com/text -d number{phone} -d message\u003dTime to Renew!\u003ctkBookmark collection\u003d\"special\" name\u003d\"SMTP\"/\u003e",
-            "directives": [
-              {
-                "sequence": 0,
-                "type": 2,
-                "softFail": false,
-                "description": "TestInsertSubsTag",
-                "provider": {
-                  "type": 2
-                }
-              }
-            ]
-          }, ... ]
+	Get a list of all supported Directives
+    GET /idmu/directives 
+		example: http://localhost:9090/idmu/directives
+    	response: [{"type": 0,"name": "Require Tags"},{"type": 1,"name": "Replace Value"},...]
+    	
+	Get a list of all collections
+    GET /idmu/collections 
+    	example: http://localhost:9090/idmu/collections
+    	response: [{"collection":"root"},{"collection":"special"},...]
+    
+	Get a list of all template names in a collection
+    GET /idmu/templates/{collectionName} 
+    	example: http://localhost:9090/idmu/templates/root
+        response: [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]
 
-    GET    /idmu/templates/{collectionName}
-    (similar payloads)
+	Get a list of all template names in a collection with a given name
+    GET /idmu/templates/{collectionName}/{tempalteName}
+    	example: http://localhost:9090/idmu/system/errHtml
+        response: [{"collection":"system","name":"errHtml","columnValue":""},{"collection":"system","name":"errHtml",...}]
 
-    GET    /idmu/templates/{collectionName}/{type}
-    (similar payloads)
+	Get a template
+    GET /idmu/template/{templateFullName}
+    	example: http://localhost:9090/idmu/template/root.default.
+	    response: {Template json}
 
-    GET    /idmu/templates/{collectionName}/{type}?columnValue={columnValue}
-    (similar payloads)
+	Save a template
+    PUT /idmu/template/{Template json}
+    	response: status OK or FORBIDDEN
 
-    GET    /idmu/template/{templateFullName}
-    {
-        "collection": "contact",
-        "columnValue": "SMS",
-        "name": "cmd",
-        "description": "Send SMS Command",
-        "outputFile": "",
-        "content": "\ncurl http://textbelt.com/text -d number{phone} -d message\u003dTime to Renew!\u003ctkBookmark collection\u003d\"special\" name\u003d\"SMTP\"/\u003e",
-        "directives": [
-          {
-            "sequence": 0,
-            "type": 2,
-            "softFail": false,
-            "description": "TestInsertSubsTag",
-            "provider": {
-              "type": 2
-            }
-          }
-        ]
-      }
+	Delete a template
+    DELETE /idmu/template/{templateFullName} 
+    	example: http://localhost:9090/idmu/template/root.default.
+    	response: status OK or NOT_FOUND
 
-    PUT    /idmu/templates/{collectionName} with the template template JSON
-    reponse:status OK or FORBIDDEN, payload similar to GET /template/{fullName}
+	Get a whole bunch of templates
+    GET /idmu/templatePackage/{collectionName,collectionName...} 
+    	example: http://localhost:9090/idmu/templatePackage/root,system)
+        response: [TemplateJson,TemplateJson...]
 
-    DELETE /idmu/template/{templateFullName} Warning: really works and deletes on filesystem
-    response: status OK or NOT_FOUND
-
-    GET/POST /idmu/merge?{requestParameters} triggers a merge
-    response: HTML representation of result
-
+	Save a whole bunch of templates
+    PUT /idmu/templatePackage/{Templates} 
+    	example: http://localhost:9090/idmu/templates/[Template,Template])
+    	response: status OK or FORBIDDEN
 
 ## License
 

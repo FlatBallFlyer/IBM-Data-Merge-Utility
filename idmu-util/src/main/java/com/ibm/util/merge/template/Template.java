@@ -16,12 +16,16 @@
  */
 package com.ibm.util.merge.template;
 
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.directive.AbstractDirective;
+import com.ibm.util.merge.directive.*;
 import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,29 +42,31 @@ public class Template implements Cloneable {
     // Global Constants (Reserved Tags)
     public static final String LFT = "{";
     public static final String RGT = "}";
-    public static final String TAG_STACK = wrap("DragonFlyTemplateStack");
-    public static final String TAG_ALL_VALUES = wrap("DragonFlyReplaceValues");
-    public static final String TAG_OUTPUTFILE = wrap("DragonFlyOutputFile");
-    public static final String TAG_OUTPUTHASH = wrap("DragonFlyOutputHash");
-    public static final String TAG_SOFTFAIL = wrap("DragonFlySoftFail");
-    public static final String TAG_OUTPUT_TYPE = wrap("DragonOutputType");
-    public static final String TAG_SEQUENCE = wrap("DragonSequence");
+    public static final String TAG_STACK 		= wrap("DragonFlyTemplateStack");
+    public static final String TAG_ALL_VALUES 	= wrap("DragonFlyReplaceValues");
+    public static final String TAG_OUTPUTFILE 	= wrap("DragonFlyOutputFile");
+    public static final String TAG_OUTPUTHASH 	= wrap("DragonFlyOutputHash");
+    public static final String TAG_SOFTFAIL 	= wrap("DragonFlySoftFail");
+    public static final String TAG_OUTPUT_TYPE 	= wrap("DragonFlyOutputType");
+    public static final String TAG_SEQUENCE 	= wrap("DragonFlySequence");
     public static final String BOOKMARK_PATTERN_STRING = "(<tkBookmark.*?/>)";
     public static final Pattern BOOKMARK_PATTERN = Pattern.compile(BOOKMARK_PATTERN_STRING);
     // Factory Constants
-    public static final int TYPE_ZIP = 1;
-    public static final int TYPE_TAR = 2;
+    public static final String TYPE_ZIP = "zip";
+    public static final String TYPE_TAR = "tar";
     // Template Constants
     private static final Logger log = Logger.getLogger(Template.class.getName());
     // Attributes
     private transient long idtemplate = 0;
     private String collection = "";
-    private String columnValue = "";
     private String name = "";
+    private String columnValue = "";
     private String description = "";
     private String outputFile = "";
     private StringBuilder content = new StringBuilder();
     private List<AbstractDirective> directives = new ArrayList<>();
+    private transient Boolean merged = false;
+    private transient Boolean mergable = false;
     private transient List<Bookmark> bookmarks = new ArrayList<>();
     private transient Map<String, String> replaceValues = new HashMap<>();
 
@@ -81,58 +87,78 @@ public class Template implements Cloneable {
     }
 
     /**********************************************************************************
-     * Template Clone constructor, used to get a copy of a cached template and initialize it
-     * for merge processing. Performs deep copy of all objects and collections and populates
-     * the replace values hash with initial values.
+     * "Mergable" template constructor (copy of a template that is cache)
      *
      * @param seedReplace Initial replace hash
      * @throws MergeException - Wrapper of clone not supported exceptions
      */
-    public Template clone(Map<String, String> seedReplace) {
-        Template newTemplate = cloneThisTemplate();
-        newTemplate.replaceValues = new HashMap<>();
-        newTemplate.setContent(getContent());
+    public Template(Template from, Map<String, String> seedReplace) {
+        this.setIdtemplate(		from.getIdtemplate());
+        this.setCollection( 	from.getCollection());
+        this.setName(  			from.getName());
+        this.setColumnValue( 	from.getColumnValue());
+        this.setDescription( 	from.getDescription());
+        this.setOutputFile(  	from.outputFile);
+        this.setContent(		from.getContent());
+        
+        this.setDirectives(  	new ArrayList<>());
+        this.setMerged(  		false);
+        this.setMergable( 		true);
+        this.setReplaceValues( 	new HashMap<>());
+
         // Deep Copy Directives
-        newTemplate.directives = new ArrayList<>();
-        for (AbstractDirective fromDirective : directives) {
-            AbstractDirective clone = cloneDirective(fromDirective);
-            newTemplate.addDirective(clone);
+        for (AbstractDirective fromDirective : from.getDirectives()) {
+        	this.addDirective(getNewDirective(fromDirective));
         }
-        // Seed Replace Values
-        newTemplate.replaceValues.putAll(seedReplace);
-        // Make sure we have an output file name guid
-        if (!isOutputFileSpecified()) {
-            newTemplate.replaceValues.put(TAG_OUTPUTFILE, UUID.randomUUID().toString() + (getOutputType() == TYPE_ZIP ? ".zip" : ".tar"));
-        }
+
+        // Seed the replace stack
+        this.replaceValues.putAll(seedReplace);
+
         // Add our name to the Template Stack
-        if (!newTemplate.replaceValues.containsKey(TAG_STACK)) {
-            newTemplate.replaceValues.put(TAG_STACK, getFullName());
-        } else {
-            newTemplate.replaceValues.put(TAG_STACK, newTemplate.replaceValues.get(TAG_STACK) + "/" + newTemplate.getFullName());
-        }
-        return newTemplate;
+        this.appendToReplaceValue(TAG_STACK, this.getFullName(), "/");
     }
 
-    private Template cloneThisTemplate() {
-        Template newTemplate;
-        try {
-            newTemplate = (Template) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Template implementation does not support clone()", e);
-        }
-        return newTemplate;
+    private AbstractDirective getNewDirective(AbstractDirective fromDirective) {
+    	switch (fromDirective.getType()) {
+    	case Directives.TYPE_REQUIRE			: return new Require((Require)fromDirective);
+    	case Directives.TYPE_REPLACE_VALUE		: return new ReplaceValue((ReplaceValue)fromDirective);
+    	case Directives.TYPE_TAG_INSERT 		: return new InsertSubsTag((InsertSubsTag)fromDirective);
+    	case Directives.TYPE_SQL_INSERT 		: return new InsertSubsSql((InsertSubsSql)fromDirective);
+    	case Directives.TYPE_SQL_REPLACE_ROW 	: return new ReplaceRowSql((ReplaceRowSql)fromDirective);
+    	case Directives.TYPE_SQL_REPLACE_COL 	: return new ReplaceColSql((ReplaceColSql)fromDirective);
+    	case Directives.TYPE_CSV_INSERT 		: return new InsertSubsCsv((InsertSubsCsv)fromDirective);
+    	case Directives.TYPE_CSV_REPLACE_ROW 	: return new ReplaceRowCsv((ReplaceRowCsv)fromDirective);
+    	case Directives.TYPE_CSV_REPLACE_COL 	: return new ReplaceColCsv((ReplaceColCsv)fromDirective);
+    	case Directives.TYPE_HTML_INSERT 		: return new InsertSubsHtml((InsertSubsHtml)fromDirective);
+    	case Directives.TYPE_HTML_REPLACE_ROW 	: return new ReplaceRowHtml((ReplaceRowHtml)fromDirective);
+    	case Directives.TYPE_HTML_REPLACE_COL 	: return new ReplaceColHtml((ReplaceColHtml)fromDirective);
+    	case Directives.TYPE_HTML_REPLACE_MARKUP : return new ReplaceMarkupHtml((ReplaceMarkupHtml)fromDirective);
+    	}
+    	return null;
     }
 
-    private AbstractDirective cloneDirective(AbstractDirective fromDirective) {
-        AbstractDirective clone;
-        try {
-            clone = fromDirective.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Template implementation does not support clone()", e);
-        }
-        return clone;
+    public String getMergedOutput(MergeContext rtc) throws MergeException {
+    	if (!this.mergable) {
+    		throw new RuntimeException("Merge requested on Un-Mergable Template!");
+    	}
+    	
+    	if (!this.merged) {
+    		this.merge(rtc);
+    	}
+    	
+    	if (this.outputFile.isEmpty()) {
+    		return this.content.toString();
+    	} else {
+    		String fileName = this.replaceProcess(this.outputFile);
+    		String content = this.content.toString();
+    		try {
+				rtc.writeFile(fileName, content);
+			} catch (IOException e) {
+				throw new MergeException(this, e, "Error writing output file", fileName);
+			}
+    		return "";
+    	}
     }
-
     /********************************************************************************
      * <p>Merge Template. This method drives the merge process, processing directives to select data,
      * insert sub-templates, and perform search replace activities.</p>
@@ -143,14 +169,20 @@ public class Template implements Cloneable {
      * @throws MergeException Save Output File errors
      * @param rtc
      */
-    public void merge(RuntimeContext rtc) throws MergeException {
-        log.info("Begin Template Merge for:" + getFullName());
+    public void merge(MergeContext rtc) throws MergeException {
+    	if (this.merged) return;
+
+    	log.info("Begin Template Merge for:" + getFullName());
         // Process Directives
         for (AbstractDirective directive : directives) {
             directive.executeDirective(rtc);
         }
         // Clear out the all-values replace tag
         replaceValues.remove(TAG_ALL_VALUES);
+
+        // Get the output hash replace value
+        replaceValues.put(TAG_OUTPUTHASH, rtc.getArchiveChkSums());
+
         // Process Replace Stack and build "All Values" replace value
         String allValues = "";
         for (Map.Entry<String, String> entry : replaceValues.entrySet()) {
@@ -168,25 +200,8 @@ public class Template implements Cloneable {
         replaceThis(TAG_OUTPUTHASH, "");
         // Remove all the bookmarks
         replaceAllThis(BOOKMARK_PATTERN, "");
+        this.merged = true;
         log.info("Merge Complete: " + getFullName());
-//        rtc.getConnectionFactory().releaseConnection(getOutputFile());
-        log.info("ReleasedConnection for " + getOutputFile());
-    }
-
-    public boolean isOutputFileSpecified() {
-        boolean specified = replaceValues.containsKey(TAG_OUTPUTFILE);
-        if (!specified) {
-            log.warn("Template " + getFullName() + " is missing System Tag : " + Template.TAG_OUTPUTFILE);
-        }
-        if (specified && getOutputFile().isEmpty()) {
-            log.warn("Output File is empty for template " + getFullName());
-            specified = false;
-        }
-        return specified;
-    }
-
-    public boolean isNullOutputFile() {
-        return outputFile.equals("/dev/null");
     }
 
     /********************************************************************************
@@ -290,6 +305,14 @@ public class Template implements Cloneable {
         }
     }
 
+    public void appendToReplaceValue(String key, String value, String seperator) {
+        if (!this.replaceValues.containsKey(key)) {
+        	this.replaceValues.put(key, value);
+        } else {
+        	this.replaceValues.put(key, this.replaceValues.get(key) + seperator + value);
+        }
+    }
+
     /********************************************************************************
      * Process the replace hash on the provided string
      *
@@ -318,7 +341,7 @@ public class Template implements Cloneable {
             throw new IllegalArgumentException("Unknown key: " + key);
         }
     }
-
+    
     /**
      * @return soft fail indicator (from replace hash)
      */
@@ -334,13 +357,6 @@ public class Template implements Cloneable {
     }
 
     /**
-     * @return the Output File name (from replace hash)
-     */
-    public String getOutputFile() {
-        return getReplaceValue(TAG_OUTPUTFILE);
-    }
-
-    /**
      * @return the Output Hash String (from replace hash)
      */
     public String getOutputHash() {
@@ -348,10 +364,10 @@ public class Template implements Cloneable {
     }
 
     /**
-     * @return output type indicator (Default to GZIP, allow "zip" over-ride
+     * @return output type indicator (Default to tar, allow "zip" over-ride
      */
-    public int getOutputType() {
-        return (replaceValues.containsKey(TAG_OUTPUT_TYPE) && replaceValues.get(TAG_OUTPUT_TYPE).endsWith("zip")) ? TYPE_ZIP : TYPE_TAR;
+    public String getOutputType() {
+        return (replaceValues.containsKey(TAG_OUTPUT_TYPE) && replaceValues.get(TAG_OUTPUT_TYPE).equals(TYPE_ZIP)) ? TYPE_ZIP : TYPE_TAR;
     }
 
     /********************************************************************************
@@ -405,6 +421,13 @@ public class Template implements Cloneable {
         return description;
     }
 
+    /**
+     * @return the Output File name (from replace hash)
+     */
+    public String getOutputFile() {
+        return this.outputFile;
+    }
+
     public String getContent() {
         return content.toString();
     }
@@ -417,7 +440,32 @@ public class Template implements Cloneable {
         return directives;
     }
 
-    public void setContent(String content) {
+    private void setMerged(boolean b) {
+		this.merged = b;
+		
+	}
+
+    public Boolean getMergable() {
+		return mergable;
+	}
+
+	public void setBookmarks(List<Bookmark> bookmarks) {
+		this.bookmarks = bookmarks;
+	}
+
+	public void setMergable(Boolean mergable) {
+		this.mergable = mergable;
+	}
+
+	public void setDirectives(List<AbstractDirective> directives) {
+		this.directives = directives;
+	}
+
+	public void setReplaceValues(Map<String, String> replaceValues) {
+		this.replaceValues = replaceValues;
+	}
+
+	public void setContent(String content) {
         setContent(new StringBuilder(content));
     }
 
@@ -477,12 +525,6 @@ public class Template implements Cloneable {
     public int hashCode() {
         return getFullName().hashCode();
     }
-
-    public boolean canWrite() {
-        boolean missingWriteProperties = isEmpty() || isNullOutputFile() || !isOutputFileSpecified();
-        return !missingWriteProperties;
-    }
-
 
     @Override
     public String toString() {

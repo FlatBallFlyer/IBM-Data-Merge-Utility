@@ -28,18 +28,18 @@ public class DirectiveSerializer implements JsonSerializer<AbstractDirective> {
 	@Override
 	public JsonElement serialize(AbstractDirective src, Type directive, JsonSerializationContext context) {
 		switch (src.getType()) {
-			case Directives.TYPE_REPLACE_VALUE: 		return context.serialize((ReplaceValue)src);
-			case Directives.TYPE_REQUIRE: 			return context.serialize((Require)src);
-			case Directives.TYPE_TAG_INSERT:			return context.serialize((InsertSubsTag)src);
-			case Directives.TYPE_SQL_INSERT: 		return context.serialize((InsertSubsSql)src);
-			case Directives.TYPE_SQL_REPLACE_COL: 	return context.serialize((ReplaceColSql)src);
-			case Directives.TYPE_SQL_REPLACE_ROW: 	return context.serialize((ReplaceRowSql)src);
-			case Directives.TYPE_CSV_INSERT: 		return context.serialize((InsertSubsCsv)src);
-			case Directives.TYPE_CSV_REPLACE_COL: 	return context.serialize((ReplaceColCsv)src);
-			case Directives.TYPE_CSV_REPLACE_ROW: 	return context.serialize((ReplaceRowCsv)src);
-			case Directives.TYPE_HTML_INSERT: 		return context.serialize((InsertSubsHtml)src);
-			case Directives.TYPE_HTML_REPLACE_COL: 	return context.serialize((ReplaceColHtml)src);
-			case Directives.TYPE_HTML_REPLACE_ROW: 	return context.serialize((ReplaceRowHtml)src);
+			case Directives.TYPE_REPLACE_VALUE: 	 return context.serialize((ReplaceValue)src);
+			case Directives.TYPE_REQUIRE: 			 return context.serialize((Require)src);
+			case Directives.TYPE_TAG_INSERT:		 return context.serialize((InsertSubsTag)src);
+			case Directives.TYPE_SQL_INSERT: 		 return context.serialize((InsertSubsSql)src);
+			case Directives.TYPE_SQL_REPLACE_COL: 	 return context.serialize((ReplaceColSql)src);
+			case Directives.TYPE_SQL_REPLACE_ROW: 	 return context.serialize((ReplaceRowSql)src);
+			case Directives.TYPE_CSV_INSERT: 		 return context.serialize((InsertSubsCsv)src);
+			case Directives.TYPE_CSV_REPLACE_COL: 	 return context.serialize((ReplaceColCsv)src);
+			case Directives.TYPE_CSV_REPLACE_ROW: 	 return context.serialize((ReplaceRowCsv)src);
+			case Directives.TYPE_HTML_INSERT: 		 return context.serialize((InsertSubsHtml)src);
+			case Directives.TYPE_HTML_REPLACE_COL: 	 return context.serialize((ReplaceColHtml)src);
+			case Directives.TYPE_HTML_REPLACE_ROW: 	 return context.serialize((ReplaceRowHtml)src);
 			case Directives.TYPE_HTML_REPLACE_MARKUP:return context.serialize((ReplaceMarkupHtml)src);
 			default: return null;
 		}

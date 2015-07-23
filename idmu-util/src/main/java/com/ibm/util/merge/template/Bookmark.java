@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  *
  * @author  Mike Storey
  */
-public class Bookmark implements Cloneable {
+public class Bookmark {
 	private static final Pattern NAME_PATTERN 		= Pattern.compile("name.*?=.*?\"(.*?)\"");
 	private static final Pattern COLLECTION_PATTERN = Pattern.compile("collection.*?=.*?\"(.*?)\"");
 	private static final Pattern COLUMN_PATTERN 	= Pattern.compile("column.*?=.*?\"(.*?)\"");
@@ -70,15 +70,10 @@ public class Bookmark implements Cloneable {
 		} 
 	}
 	
-	/********************************************************************************
-	 * <p>Bookmark Clone constructor</p>
-	 *
-	 * @param  from Bookmark to clone
-	 * @throws CloneNotSupportedException 
-	 */
-	@Override
-	public Bookmark clone () throws CloneNotSupportedException {
-		return (Bookmark) super.clone();
+	public Bookmark(Bookmark from) {
+		this.setCollection(	from.getCollection());
+		this.setName(		from.getName());
+		this.setColumn(		from.getColumn());
 	}
 	
 	/**********************************************************************************
@@ -91,23 +86,14 @@ public class Bookmark implements Cloneable {
 	}
 
 	// - SIMPLE GETTERS BELOW HERE -
-	/**
-	 * @return the name
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @return the start
-	 */
 	public int getStart() {
 		return start;
 	}
 
-	/**
-	 * @return the size
-	 */
 	public int getSize() {
 		return size;
 	}
@@ -118,6 +104,10 @@ public class Bookmark implements Cloneable {
 
 	public String getColumn() {
 		return column;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setCollection(String collection) {

@@ -16,9 +16,8 @@
  */
 package com.ibm.util.merge.directive;
 
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.DataTable;
 
 /**
@@ -27,7 +26,7 @@ import com.ibm.util.merge.directive.provider.DataTable;
  * 
  * @author Mike Storey
  */
-public abstract class ReplaceCol extends AbstractDirective implements Cloneable {
+public abstract class ReplaceCol extends AbstractDirective {
 	private String fromColumn	= "";
 	private String toColumn		= "";
 	
@@ -38,11 +37,10 @@ public abstract class ReplaceCol extends AbstractDirective implements Cloneable 
 		super();
 	}
 	
-	/**
-	 * Clone constructor
-	 */
-	public ReplaceCol clone(Template owner) throws CloneNotSupportedException {
-		return (ReplaceCol) super.clone();
+	public ReplaceCol(ReplaceCol from) {
+		super(from);
+		this.setFromColumn(from.getFromColumn());
+		this.setToColumn(from.getToColumn());
 	}
 	
 	/**
@@ -52,8 +50,8 @@ public abstract class ReplaceCol extends AbstractDirective implements Cloneable 
 	 * @param rtc
 	 */
 	@Override
-	public void executeDirective(RuntimeContext rtc) throws MergeException {
-		getProvider().getData(rtc.getConnectionFactory());
+	public void executeDirective(MergeContext rtc) throws MergeException {
+		getProvider().getData(rtc);
 		for (DataTable table : getProvider().getTables() ) {
 	 		int from = table.getCol(fromColumn);
 			int to = table.getCol(toColumn);

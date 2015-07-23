@@ -16,8 +16,8 @@
  */
 package com.ibm.util.merge.directive.provider;
 
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.AbstractDirective;
+import com.ibm.util.merge.template.Template;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -27,14 +27,6 @@ public abstract class ProviderTest {
 	protected AbstractDirective directive;
 	protected Template template;
 	
-	@Test
-	public void testProviderCloneDirective() throws CloneNotSupportedException {
-		AbstractProvider newProvider = provider.clone();
-		assertNotEquals(provider, newProvider);
-		assertEquals(0, newProvider.size());
-		assertNull(newProvider.getDirective());
-	}
-
 	@Test
 	public void testReset() {
 		provider.reset();

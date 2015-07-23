@@ -17,7 +17,7 @@
 package com.ibm.util.merge.directive;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
 
-public class InsertSubsCsv extends InsertSubs implements Cloneable {
+public class InsertSubsCsv extends InsertSubs {
 
 	/**
 	 * Simple Constructor
@@ -28,12 +28,8 @@ public class InsertSubsCsv extends InsertSubs implements Cloneable {
 		setProvider(new ProviderCsv());
 	}
 
-	/** 
-	 * Simple Clone constructor
-	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
-	 */
-	@Override
-	public InsertSubsCsv clone() throws CloneNotSupportedException {
-		return (InsertSubsCsv) super.clone();
+	public InsertSubsCsv(InsertSubsCsv from) {
+		super(from);
+		setProvider(new ProviderCsv((ProviderCsv)from.getProvider()));
 	}
 }

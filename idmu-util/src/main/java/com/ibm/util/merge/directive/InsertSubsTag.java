@@ -16,10 +16,9 @@
  */
 package com.ibm.util.merge.directive;
 
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.ProviderTag;
 
-public class InsertSubsTag extends InsertSubs implements Cloneable {
+public class InsertSubsTag extends InsertSubs {
 
 	/**
 	 * Simple Constructor
@@ -30,11 +29,9 @@ public class InsertSubsTag extends InsertSubs implements Cloneable {
 		setProvider(new ProviderTag());
 	}
 
-	/** 
-	 * Simple Clone constructor
-	 * @see com.ibm.util.merge.directive.InsertSubs#clone()
-	 */
-	public InsertSubsTag clone(Template owner) throws CloneNotSupportedException {
-		return (InsertSubsTag) super.clone();
+	public InsertSubsTag(InsertSubsTag from) {
+		super(from);
+		setProvider(new ProviderTag((ProviderTag)from.getProvider()));
 	}
+
 }

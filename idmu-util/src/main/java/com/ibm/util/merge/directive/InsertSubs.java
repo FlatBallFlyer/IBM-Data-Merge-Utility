@@ -16,11 +16,11 @@
  */
 package com.ibm.util.merge.directive;
 
-import com.ibm.util.merge.template.Bookmark;
+import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.RuntimeContext;
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.directive.provider.DataTable;
+import com.ibm.util.merge.template.Bookmark;
+import com.ibm.util.merge.template.Template;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import java.util.List;
  *
  * @author flatballflyer
  */
-public abstract class InsertSubs extends AbstractDirective implements Cloneable {
+public abstract class InsertSubs extends AbstractDirective {
     private static final Logger log = Logger.getLogger(InsertSubs.class.getName());
     private static final int DEPTH_MAX = 100;
     private List<String> notLast = new ArrayList<>();
@@ -46,19 +46,12 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
         super();
     }
 
-    /**
-     * clone constructor, deep-clone of notLast and onlyLast collections
-     *
-     * @see AbstractDirective#clone(Template)
-     */
-    @Override
-    public InsertSubs clone() throws CloneNotSupportedException {
-        InsertSubs newDirective = (InsertSubs) super.clone();
-        newDirective.notLast = new ArrayList<>(notLast);
-        newDirective.onlyLast = new ArrayList<>(onlyLast);
-        return newDirective;
+    public InsertSubs(InsertSubs from) {
+    	super(from);
+    	this.setNotLast( 	from.getNotLast());
+    	this.setOnlyLast( 	from.getOnlyLast());
     }
-
+    
     /**
      * Execute Directive - will get the data and insert the sub-templates
      *
@@ -69,14 +62,14 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
      * @throws DragonFlySqlException SQL Error thrown in Template.new
      */
     @Override
-    public void executeDirective(RuntimeContext rtc) throws MergeException {
+    public void executeDirective(MergeContext rtc) throws MergeException {
         log.info("Inserting Subtemplates into: " + getTemplate().getFullName());
         // Depth counter - infinite loop safety mechanism
         if (getTemplate().getStack().split("/").length >= DEPTH_MAX) {
-            throw new MergeException("Insert Subs Infinite Loop suspected", getFullName());
+            throw new MergeException("Insert Subs Infinite Loop suspected", getTemplate().getStack());
         }
         // Get the table data and iterate the rows
-        getProvider().getData(rtc.getConnectionFactory());
+        getProvider().getData(rtc);
         for (DataTable table : getProvider().getTables()) {
 
             for (int row = 0; row < table.size(); row++) {
@@ -84,22 +77,18 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
                 // Iterate over target bookmarks
                 for (Bookmark bookmark : getTemplate().getBookmarks()) {
                     log.info("Processing bookmark " + bookmark.getName());
-                    // Create the new sub-template
-                    try {
-                        processSubTemplate(rtc, table, row, bookmark);
-                    } catch (Exception e) {
-                        log.error("Error while processing bookmark subtemplate for " + bookmark.getName(), e);
-                    }
+                    // Create and Insert a new sub-template
+                    processSubTemplate(rtc, table, row, bookmark);
                 }
             }
         }
     }
 
-    private void processSubTemplate(RuntimeContext rtc, DataTable table, int row, Bookmark bookmark) throws MergeException {
+    private void processSubTemplate(MergeContext rtc, DataTable table, int row, Bookmark bookmark) throws MergeException {
         String collection = bookmark.getCollection();
         String name = bookmark.getName();
         String column = table.getValue(row, bookmark.getColumn());
-        Template subTemplate = rtc.getTemplateFactory().getTemplate(collection + "." + name + "." + column, collection + "." + name + ".", getTemplate().getReplaceValues());
+        Template subTemplate = rtc.getTemplateFactory().getMergableTemplate(collection + "." + name + "." + column, collection + "." + name + ".", getTemplate().getReplaceValues());
         log.info("Inserting Template " + subTemplate.getFullName() + " into " + getTemplate().getFullName());
         // Add the Row replace values
         for (int col = 0; col < table.cols(); col++) {
@@ -109,15 +98,7 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
         subTemplate.addEmptyReplace(row == table.size() - 1 ? notLast : onlyLast);
         // Merge the SubTemplate and insert the text into the Target Template
         try {
-            subTemplate.merge(rtc);
-            final String returnValue;
-            if (!subTemplate.canWrite()) {
-                returnValue = "";
-            } else {
-                returnValue = subTemplate.getContent();
-            }
-            rtc.getTemplateFactory().getFs().doWrite(subTemplate);
-//            subTemplate.doWrite(rtc.getZipFactory());
+        	final String returnValue = subTemplate.getMergedOutput(rtc);
             getTemplate().insertText(returnValue, bookmark);
         } catch (MergeException e) {
             if (isSoftFail() || isSoftFailTemplate()) {
@@ -128,7 +109,7 @@ public abstract class InsertSubs extends AbstractDirective implements Cloneable 
             }
         }
     }
-
+    
     public String getNotLast() {
         return String.join(",", notLast);
     }
