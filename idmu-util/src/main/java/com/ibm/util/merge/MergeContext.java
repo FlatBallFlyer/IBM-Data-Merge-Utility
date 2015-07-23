@@ -1,15 +1,13 @@
 package com.ibm.util.merge;
 
+import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.storage.Archive;
 import com.ibm.util.merge.storage.TarArchive;
 import com.ibm.util.merge.storage.ZipArchive;
 import com.ibm.util.merge.template.Template;
+
 import org.apache.log4j.Logger;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -23,7 +21,6 @@ import java.util.UUID;
  *
  */
 public class MergeContext {
-    private static final String DBROOT = "java:/comp/env/jdbc/";
     private static final Logger log = Logger.getLogger(MergeContext.class);
     private final TemplateFactory templateFactory;
     private HashMap<String, Connection> connections = new HashMap<String, Connection>();
@@ -70,23 +67,17 @@ public class MergeContext {
     }
     
     public Connection getConnection(String dataSource) throws MergeException {
-    	Connection theConnection;
     	if (this.connections.containsKey(dataSource)) {
-    		theConnection = connections.get(dataSource);
-    	} else {
-			try {
-				// TODO - reactor to use real connection pool and remove JNDI dependency
-				Context initContext = new InitialContext();
-				DataSource newSource = (DataSource) initContext.lookup(DBROOT + dataSource);
-				theConnection = newSource.getConnection();
-	    		connections.put(dataSource, theConnection);
-			} catch (NamingException e) {
-				throw new MergeException("Naming Exception getting new DataSource", DBROOT + dataSource);
-			} catch (SQLException e) {
-				throw new MergeException("SQL Exception getting new DataSource", DBROOT + dataSource);
-			}
-    	}
-    	return theConnection;
+    		return connections.get(dataSource);
+    	} 
+    	
+		ConnectionPoolManager manager = this.templateFactory.getPoolManager();
+		if ( !manager.isPoolName(dataSource) ) {
+			throw new MergeException("DataSource not found in Connection Pool Manager", dataSource);
+		}
+
+//		connections.put(dataSource, manager.acquireConnection(dataSource));
+		return connections.get(dataSource);
 	}
     		
     public void finalize() throws IOException, SQLException {

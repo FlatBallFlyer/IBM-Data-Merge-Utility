@@ -18,12 +18,14 @@ package com.ibm.util.merge;
 
 import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.cache.TemplateCache;
+import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.directive.Directives;
 import com.ibm.util.merge.directive.Directives.DirectiveName;
 import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.template.CollectionName;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.TemplateName;
+
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -44,6 +46,7 @@ final public class TemplateFactory {
     private final File outputRoot;
 	private final TemplateCache templateCache;
     private final JsonProxy jsonProxy;
+    private ConnectionPoolManager poolManager;
 
     public TemplateFactory(AbstractPersistence persist, JsonProxy proxy, File outputRootDir) {
         this.templateCache = new TemplateCache();
@@ -213,6 +216,7 @@ final public class TemplateFactory {
      *
      * @param json array of template json
      */
+	@SuppressWarnings("unchecked")
 	public String saveTemplatesFromJson(String json) {
     	ArrayList<Template> templates = new ArrayList<Template>();
     	templates = jsonProxy.fromJSON(json, templates.getClass());
@@ -279,11 +283,19 @@ final public class TemplateFactory {
         log.info(template.getFullName() + " has been cached");
     }
 
-   public int size() {
+    public int size() {
         return templateCache.size();
     }
 
-    public TemplateCache getTemplateCache() {
+    public ConnectionPoolManager getPoolManager() {
+		return poolManager;
+	}
+
+	public void setPoolManager(ConnectionPoolManager poolManager) {
+		this.poolManager = poolManager;
+	}
+
+	public TemplateCache getTemplateCache() {
         return templateCache;
     }
 
