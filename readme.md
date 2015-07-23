@@ -55,44 +55,54 @@ There are 2 servlets:
   Leverages RequestHandlers to handle requests for the active RuntimeContext instance
 
 ## Supported URLs
+	Perform a Merge
     GET /idmu/merge?DragonFlyFullName=fullname&{additional requestParameters} 
     	example: http://localhost:9090/idmu/merge?DragonFlyFullName=root.default. 
     	response: HTML representation of merge output
 
+	Get a list of all supported Directives
     GET /idmu/directives 
 		example: http://localhost:9090/idmu/directives
     	response: [{"type": 0,"name": "Require Tags"},{"type": 1,"name": "Replace Value"},...]
-  
+    	
+	Get a list of all collections
     GET /idmu/collections 
     	example: http://localhost:9090/idmu/collections
     	response: [{"collection":"root"},{"collection":"special"},...]
     
+	Get a list of all template names in a collection
     GET /idmu/templates/{collectionName} 
     	example: http://localhost:9090/idmu/templates/root
         response: [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]
 
-    GET /idmu/templates/{collectionName} 
+	Get a list of all template names in a collection with a given name
+    GET /idmu/templates/{collectionName}/{tempalteName}
     	example: http://localhost:9090/idmu/system/errHtml
         response: [{"collection":"system","name":"errHtml","columnValue":""},{"collection":"system","name":"errHtml",...}]
 
+	Get a template
     GET /idmu/template/{templateFullName}
     	example: http://localhost:9090/idmu/template/root.default.
 	    response: {Template json}
 
+	Save a template
     PUT /idmu/template/{Template json}
-    	reponse: status OK or FORBIDDEN
+    	response: status OK or FORBIDDEN
 
+	Delete a template
     DELETE /idmu/template/{templateFullName} 
     	example: http://localhost:9090/idmu/template/root.default.
     	response: status OK or NOT_FOUND
 
+	Get a whole bunch of templates
     GET /idmu/templatePackage/{collectionName,collectionName...} 
     	example: http://localhost:9090/idmu/templatePackage/root,system)
         response: [TemplateJson,TemplateJson...]
 
+	Save a whole bunch of templates
     PUT /idmu/templatePackage/{Templates} 
     	example: http://localhost:9090/idmu/templates/[Template,Template])
-    	reponse: status OK or FORBIDDEN
+    	response: status OK or FORBIDDEN
 
 ## License
 
