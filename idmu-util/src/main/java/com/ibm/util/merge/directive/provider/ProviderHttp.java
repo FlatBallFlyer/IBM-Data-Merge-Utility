@@ -46,12 +46,12 @@ public abstract class ProviderHttp extends AbstractProvider implements Cloneable
 		super();
 	}
 	
-	public ProviderHttp(ProviderHttp from) {
-		super(from);
+	public void copyFieldsFrom(ProviderHttp from) {
+		this.copyFieldsFrom((AbstractProvider)from);
 		this.setFetchedData("");
-		this.setStaticData(from.getStaticData());
-		this.setUrl(from.getUrl());
-		this.setTag(from.getTag());
+		this.setStaticData(	from.getStaticData());
+		this.setUrl(		from.getUrl());
+		this.setTag(		from.getTag());
 	}
 
 	/**

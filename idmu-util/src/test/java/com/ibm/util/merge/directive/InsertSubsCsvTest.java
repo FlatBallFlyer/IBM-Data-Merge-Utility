@@ -61,16 +61,6 @@ public class InsertSubsCsvTest extends InsertSubsTest {
 	}
 
 	@Test
-	public void testCloneInsertSubsCsv() throws CloneNotSupportedException {
-		InsertSubsCsv newDirective = new InsertSubsCsv((InsertSubsCsv)directive);
-		InsertSubsCsv myDirective = (InsertSubsCsv) directive;
-		assertNotEquals(myDirective, newDirective);
-		assertNull(newDirective.getTemplate());
-		assertNotEquals(myDirective.getProvider(), newDirective.getProvider());
-		assertEquals(0, newDirective.getProvider().size());
-	}
-
-	@Test
 	public void testExecuteDirective() throws MergeException {
 		directive.executeDirective(rtc);
 		assertEquals(masterOutput, template.getContent());

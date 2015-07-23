@@ -45,16 +45,6 @@ public class ReplaceColCsvTest extends ReplaceColTest {
 	}
 
 	@Test
-	public void testCloneReplaceColCsv() throws CloneNotSupportedException {
-		ReplaceColCsv newDirective = new ReplaceColCsv((ReplaceColCsv)directive);
-		ReplaceColCsv myDirective = (ReplaceColCsv) directive;
-		assertNotEquals(myDirective, newDirective);
-		assertNull(newDirective.getTemplate());
-		assertNotEquals(myDirective.getProvider(), newDirective.getProvider());
-		assertEquals(0, newDirective.getProvider().size());
-	}
-
-	@Test
 	public void testExecuteDirective() throws MergeException {
 		directive.executeDirective(rtc);
 		assertTrue(template.hasReplaceKey("{1}"));

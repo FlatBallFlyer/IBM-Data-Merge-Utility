@@ -28,9 +28,10 @@ public class ReplaceColHtml extends ReplaceCol {
 		setProvider(new ProviderHtml());
 	}
 
-	public ReplaceColHtml(ReplaceColHtml from) {
-		super(from);
-		setProvider(new ProviderHtml((ProviderHtml)from.getProvider()));
+	public ReplaceColHtml asNew() {
+		ReplaceColHtml to = new ReplaceColHtml();
+		to.copyFieldsFrom((ReplaceCol)this);
+		return to;
 	}
 
 }

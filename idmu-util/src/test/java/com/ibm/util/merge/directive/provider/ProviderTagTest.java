@@ -161,19 +161,14 @@ public class ProviderTagTest extends ProviderTest {
 		assertEquals("Wilma", table.getValue(2, 0));
 	}
 
-	@Test
-	public void testClone() throws CloneNotSupportedException {
-		ProviderTag cloned = new ProviderTag(myProvider);
-		assertNotEquals(cloned, provider);
-		assertNotEquals(cloned.getDirective(), myProvider.getDirective());
-		assertEquals(cloned.getCondition(), myProvider.getCondition());
-		assertEquals(cloned.getTag(), myProvider.getTag());
-		assertEquals(cloned.getValue(), myProvider.getValue());
-	}
-
 	private class DirectiveStub extends AbstractDirective {
 		public DirectiveStub() {}
 		@Override
 		public void executeDirective(MergeContext rtc) throws MergeException {}
+		@Override
+		public AbstractDirective asNew() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 }

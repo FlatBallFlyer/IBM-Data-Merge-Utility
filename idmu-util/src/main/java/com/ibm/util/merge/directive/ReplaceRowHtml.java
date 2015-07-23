@@ -28,9 +28,10 @@ public class ReplaceRowHtml extends ReplaceRow {
 		setProvider(new ProviderHtml());
 	}
 	
-	public ReplaceRowHtml(ReplaceRowHtml from) {
-		super(from);
-		setProvider(new ProviderHtml((ProviderHtml)from.getProvider()));
+	public ReplaceRowHtml asNew() {
+		ReplaceRowHtml to = new ReplaceRowHtml();
+		to.copyFieldsFrom((ReplaceRow)this);
+		return to;
 	}
 
 }

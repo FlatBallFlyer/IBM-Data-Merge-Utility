@@ -46,16 +46,6 @@ public class ReplaceRowSqlTest extends ReplaceRowTest {
 	}
 
 	@Test
-	public void testCloneReplaceRowHtml() throws CloneNotSupportedException {
-		ReplaceRowSql newDirective = new ReplaceRowSql((ReplaceRowSql)directive);
-		ReplaceRowSql myDirective = (ReplaceRowSql) directive;
-		assertNotEquals(myDirective, newDirective);
-		assertNull(newDirective.getTemplate());
-		assertNotEquals(myDirective.getProvider(), newDirective.getProvider());
-		assertEquals(0, newDirective.getProvider().size());
-	}
-
-	@Test
 	public void testExecuteDirective() throws MergeException {
 		directive.executeDirective(rtc);
 		assertTrue(template.hasReplaceKey("{A}"));
@@ -88,6 +78,12 @@ public class ReplaceRowSqlTest extends ReplaceRowTest {
 		@Override
 		public String getQueryString() {
 			return "NA";
+		}
+
+		@Override
+		public AbstractProvider asNew() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 }

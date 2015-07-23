@@ -108,7 +108,7 @@ public class Template implements Cloneable {
 
         // Deep Copy Directives
         for (AbstractDirective fromDirective : from.getDirectives()) {
-        	this.addDirective(getNewDirective(fromDirective));
+        	this.addDirective(fromDirective.asNew());
         }
 
         // Seed the replace stack
@@ -116,25 +116,6 @@ public class Template implements Cloneable {
 
         // Add our name to the Template Stack
         this.appendToReplaceValue(TAG_STACK, this.getFullName(), "/");
-    }
-
-    private AbstractDirective getNewDirective(AbstractDirective fromDirective) {
-    	switch (fromDirective.getType()) {
-    	case Directives.TYPE_REQUIRE			: return new Require((Require)fromDirective);
-    	case Directives.TYPE_REPLACE_VALUE		: return new ReplaceValue((ReplaceValue)fromDirective);
-    	case Directives.TYPE_TAG_INSERT 		: return new InsertSubsTag((InsertSubsTag)fromDirective);
-    	case Directives.TYPE_SQL_INSERT 		: return new InsertSubsSql((InsertSubsSql)fromDirective);
-    	case Directives.TYPE_SQL_REPLACE_ROW 	: return new ReplaceRowSql((ReplaceRowSql)fromDirective);
-    	case Directives.TYPE_SQL_REPLACE_COL 	: return new ReplaceColSql((ReplaceColSql)fromDirective);
-    	case Directives.TYPE_CSV_INSERT 		: return new InsertSubsCsv((InsertSubsCsv)fromDirective);
-    	case Directives.TYPE_CSV_REPLACE_ROW 	: return new ReplaceRowCsv((ReplaceRowCsv)fromDirective);
-    	case Directives.TYPE_CSV_REPLACE_COL 	: return new ReplaceColCsv((ReplaceColCsv)fromDirective);
-    	case Directives.TYPE_HTML_INSERT 		: return new InsertSubsHtml((InsertSubsHtml)fromDirective);
-    	case Directives.TYPE_HTML_REPLACE_ROW 	: return new ReplaceRowHtml((ReplaceRowHtml)fromDirective);
-    	case Directives.TYPE_HTML_REPLACE_COL 	: return new ReplaceColHtml((ReplaceColHtml)fromDirective);
-    	case Directives.TYPE_HTML_REPLACE_MARKUP : return new ReplaceMarkupHtml((ReplaceMarkupHtml)fromDirective);
-    	}
-    	return null;
     }
 
     public String getMergedOutput(MergeContext rtc) throws MergeException {

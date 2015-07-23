@@ -37,10 +37,10 @@ public abstract class ReplaceCol extends AbstractDirective {
 		super();
 	}
 	
-	public ReplaceCol(ReplaceCol from) {
-		super(from);
-		this.setFromColumn(from.getFromColumn());
-		this.setToColumn(from.getToColumn());
+	public void copyFieldsFrom(ReplaceCol from) {
+		this.copyFieldsFrom((AbstractDirective)from);
+		this.setFromColumn(	from.getFromColumn());
+		this.setToColumn(	from.getToColumn());
 	}
 	
 	/**

@@ -20,6 +20,7 @@ import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.directive.provider.AbstractProvider;
 import com.ibm.util.merge.directive.provider.DataTable;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -36,8 +37,8 @@ public abstract class ReplaceRow extends AbstractDirective {
 		super();
 	}
 	
-	public ReplaceRow(ReplaceRow from) {
-		super(from);
+	public void copyFieldsFrom(ReplaceRow from) {
+		this.copyFieldsFrom((AbstractDirective)from);
 	}
 
 	/**

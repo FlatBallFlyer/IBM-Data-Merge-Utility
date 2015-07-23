@@ -17,6 +17,7 @@
 package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.MergeContext;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -38,11 +39,12 @@ public class ReplaceValue extends AbstractDirective {
 		setProvider(null);
 	}
 	
-	public ReplaceValue(ReplaceValue from) {
-		super(from);
-		this.setFrom(from.getFrom());
-		this.setTo(from.getTo());
-		setProvider(null);
+	public ReplaceValue asNew() {
+		ReplaceValue to = new ReplaceValue();
+		to.copyFieldsFrom((AbstractDirective)this);
+		to.setFrom(	this.getFrom());
+		to.setTo(	this.getTo());
+		return to;
 	}
 
 	/**

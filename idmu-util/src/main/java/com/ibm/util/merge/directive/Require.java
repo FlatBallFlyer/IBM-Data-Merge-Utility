@@ -44,10 +44,11 @@ public class Require extends AbstractDirective {
 		setProvider(null);
 	}
 	
-	public Require(Require from) {
-		super(from);
-		this.setTags(from.getTags());
-		setProvider(null);
+	public Require asNew() {
+		Require to = new Require();
+		to.copyFieldsFrom((AbstractDirective)this);
+		to.setTags(	this.getTags());
+		return to;
 	}
 	
 	/**

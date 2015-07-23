@@ -42,12 +42,14 @@ public class ProviderTag extends AbstractProvider {
 		setType(Providers.TYPE_TAG);
 	}
 	
-	public ProviderTag(ProviderTag from) {
-		super(from);
-		this.setTag(		from.getTag());
-		this.setCondition(	from.getCondition());
-		this.setList(		from.isList());
-		this.setValue(		from.getValue());
+	public ProviderTag asNew() {
+		ProviderTag to = new ProviderTag();
+		to.copyFieldsFrom((AbstractProvider)this);
+		to.setTag(		this.getTag());
+		to.setCondition(this.getCondition());
+		to.setList(		this.isList());
+		to.setValue(	this.getValue());
+		return to;
 	}
 
 	/**

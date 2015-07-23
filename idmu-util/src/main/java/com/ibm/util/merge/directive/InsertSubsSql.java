@@ -28,9 +28,10 @@ public class InsertSubsSql extends InsertSubs {
 		setProvider(new ProviderSql());
 	}
 	
-	public InsertSubsSql(InsertSubsSql from) {
-		super(from);
-		setProvider(new ProviderSql((ProviderSql)from.getProvider()));
+	public InsertSubsSql asNew() {
+		InsertSubsSql to = new InsertSubsSql();
+		to.copyFieldsFrom((InsertSubs)this);
+		return to;
 	}
 	
 }

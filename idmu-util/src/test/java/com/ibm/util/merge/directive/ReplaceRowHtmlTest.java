@@ -48,16 +48,6 @@ public class ReplaceRowHtmlTest extends ReplaceRowTest {
 	}
 
 	@Test
-	public void testCloneReplaceRowHtml() throws CloneNotSupportedException {
-		ReplaceRowHtml newDirective = new ReplaceRowHtml((ReplaceRowHtml)directive);
-		ReplaceRowHtml myDirective = (ReplaceRowHtml) directive;
-		assertNotEquals(myDirective, newDirective);
-		assertNull(newDirective.getTemplate());
-		assertNotEquals(myDirective.getProvider(), newDirective.getProvider());
-		assertEquals(0, newDirective.getProvider().size());
-	}
-
-	@Test
 	public void testExecuteDirective() throws MergeException {
 		directive.executeDirective(rtc);
 		assertTrue(template.hasReplaceKey("{A}"));
