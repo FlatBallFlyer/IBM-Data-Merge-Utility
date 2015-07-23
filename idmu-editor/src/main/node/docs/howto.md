@@ -1,7 +1,7 @@
 # Table of Contents
 
 - [Load A Collection](#load_collection)
-- [Navigate Between Templates)(#navigate_templates)
+- [Navigate Between Templates](#navigate_templates)
 - [Add Template](#add_template)
 - [Remove Template](#remove_template)
 - [Save Template](#save_template)
@@ -20,11 +20,16 @@
 - A soon as the collection is selected all templates are loaded in the collection
 - You may navigate between template by clicking on the Left/Right bars of the template editor
 
-- ![Load A Collection](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/main-controller.png)
+![Load A Collection](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/main-controller.png)
 
 
 <a name="navigate_templates"/>
 ## Navigate Between Templates
+
+After a collection is selected templates in the collection can be viewed by
+clicking on the Left/Right bar of the template view.
+
+![Template Navigation](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/left-right-nav.png)
 
 <a name="add_template"/>
 ## Add Template
