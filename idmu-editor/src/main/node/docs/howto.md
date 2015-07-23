@@ -72,6 +72,19 @@ template.
 <a name="configure_template_directives"/>
 ## Configure Template Directives
 
+To configure the template directives
+
+- Expand the template properties area by clicking on the title of the template
+- Click on the 'Configure' button next to the directives select list
+- A new panel is shown as in the image below.
+- You can drag the items from the left hand side list onto the right and side. This
+  action will add the selected directive to the template.
+- You may also rearrange the order of directives in the template by dragging the left
+ hand side items and placing it in the right position.
+
+
+![Configure Directives ](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/drag-drop-directives.png)
+
 <a name="edit_template_directive_properties"/>
 ## Edit Template Directives
 
