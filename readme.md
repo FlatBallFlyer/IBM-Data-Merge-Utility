@@ -63,7 +63,7 @@ There are 2 servlets:
 		example: http://localhost:9090/idmu/directives
     	response: [{"type": 0,"name": "Require Tags"},{"type": 1,"name": "Replace Value"},...]
   
-    GET /idmu/collections (full url 
+    GET /idmu/collections 
     	example: http://localhost:9090/idmu/collections
     	response: [{"collection":"root"},{"collection":"special"},...]
     
