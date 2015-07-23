@@ -61,6 +61,14 @@ bar of the template.
 <a name="edit_template_properties"/>
 ## Edit Template Properties
 
+The basic template properties like name, output, and description 
+can be edited or changed by clicking on the title of the
+template (which is shown as a hyper-link). This will expand the area and show the
+basic properties of the template. After making changes you may wish to save the
+template.
+
+![Edit Template Properties](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/template-properties-editor.png)
+
 <a name="configure_template_directives"/>
 ## Configure Template Directives
 
