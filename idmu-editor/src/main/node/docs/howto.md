@@ -81,9 +81,15 @@ To configure the template directives
   action will add the selected directive to the template.
 - You may also rearrange the order of directives in the template by dragging the left
  hand side items and placing it in the right position.
+- To remove a directive from the template click on the 'red' cross button on the item.
 
 
 ![Configure Directives ](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/drag-drop-directives.png)
+
+
+*Note* - After adding or changing directives and/or it's properties you must hit the 'Back'
+button on this panel, and then press the 'Save' button on the title bar. Otherwise your
+changes will not be saved.
 
 <a name="edit_template_directive_properties"/>
 ## Edit Template Directives
