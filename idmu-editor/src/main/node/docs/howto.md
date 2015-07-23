@@ -94,6 +94,17 @@ changes will not be saved.
 <a name="edit_template_directive_properties"/>
 ## Edit Template Directives
 
+To change the properties of a configured template directive
+
+- go to the directive configuration panel
+- double-click on the item on the left hand side of the list.
+- This will bring up a property editor for that particular directive type.
+- Make your edits and press the 'Save' button on the dialog editor
+- Make sure to hit the 'Back' button
+- Finally 'Save' the whole template
+
+![Edit Directives](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/directives-editor.png)
+
 <a name="insert_sub_template"/>
 ## Insert Sub-Template
 
