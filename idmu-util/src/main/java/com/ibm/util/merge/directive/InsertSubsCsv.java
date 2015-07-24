@@ -28,8 +28,9 @@ public class InsertSubsCsv extends InsertSubs {
 		setProvider(new ProviderCsv());
 	}
 
-	public InsertSubsCsv(InsertSubsCsv from) {
-		super(from);
-		setProvider(new ProviderCsv((ProviderCsv)from.getProvider()));
+	public InsertSubsCsv asNew() {
+		InsertSubsCsv to = new InsertSubsCsv();
+		to.copyFieldsFrom((InsertSubs)this);
+		return to;
 	}
 }

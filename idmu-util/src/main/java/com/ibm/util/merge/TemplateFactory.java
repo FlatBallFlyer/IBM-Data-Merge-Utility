@@ -42,12 +42,20 @@ final public class TemplateFactory {
     public static final String KEY_CACHE_RESET = Template.wrap("DragonFlyCacheReset");
     public static final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
     public static final String DEFAULT_FULLNAME = "root.default.";
+    
+    // Factory Attributes
     private final AbstractPersistence persistence;
     private final File outputRoot;
 	private final TemplateCache templateCache;
     private final JsonProxy jsonProxy;
     private ConnectionPoolManager poolManager;
-
+    
+    // Factory Counters
+    private double mergeCount = 0;
+    private double mergeTime = 0;
+    private Date initialized = null;
+    private double templatesMerged = 0;
+    
     public TemplateFactory(AbstractPersistence persist, JsonProxy proxy, File outputRootDir) {
         this.templateCache = new TemplateCache();
         this.jsonProxy = proxy;
@@ -69,7 +77,9 @@ final public class TemplateFactory {
      * @see Template
      */
     public String getMergeOutput(Map<String, String[]> requestParameters) {
+        double begin = System.currentTimeMillis();
         HashMap<String, String> replace = new HashMap<>();
+        
         // Open the "Default" template if if not specified.
         replace.put(KEY_FULLNAME, DEFAULT_FULLNAME);
         // Iterate parameters, setting replace values
@@ -100,6 +110,8 @@ final public class TemplateFactory {
 				log.error("Context Finalize Error:" + e.getLocalizedMessage());
 			}
 		}
+        this.mergeCount++;
+        this.mergeTime += System.currentTimeMillis() - begin;
         return returnValue;
     }
 
@@ -117,17 +129,18 @@ final public class TemplateFactory {
         Template newTemplate = null;
         // Cache hit -- Return a clone of the Template in Cache
         if (templateCache.isCached(fullName)) {
-            newTemplate = new Template(templateCache.get(fullName), seedReplace);
+            newTemplate = templateCache.get(fullName).getMergable(seedReplace);
         }
         // Check for shortName in the cache, since fullName doesn't exist
         if (newTemplate == null && templateCache.isCached(shortName)) {
             templateCache.cache(fullName, templateCache.get(shortName));
             log.info("Linked Template: " + shortName + " to " + fullName);
-            newTemplate = new Template(templateCache.get(fullName), seedReplace);
+            newTemplate = templateCache.get(fullName).getMergable(seedReplace);
         }
         if (newTemplate == null) {
             throw new MergeException("Template Not Found", fullName);
         }
+        this.templatesMerged++;
         return newTemplate;
     }
 
@@ -253,6 +266,23 @@ final public class TemplateFactory {
     }
 
     /**********************************************************************************
+     * Add a template to the cache, and return a cloned copy
+     *
+     * @param template the template json
+     */
+    public String getStatusPage() {
+    	HashMap<String, String[]> parameterMap = new HashMap<String, String[]>();
+		parameterMap.put("DragonFlyFullName", 	new String[]{"system.status."});
+		parameterMap.put("MERGE_COUNT", 		new String[]{Double.toString(mergeCount)});
+		parameterMap.put("MERGE_TIME", 			new String[]{Double.toString(mergeTime)});
+		parameterMap.put("MERGE_AVG", 			new String[]{Double.toString(mergeTime/mergeCount)});
+		parameterMap.put("TEMPLATES_MERGED", 	new String[]{Double.toString(templatesMerged)});
+		parameterMap.put("LAST_RESET", 			new String[]{this.initialized.toString()});
+		parameterMap.put("TEMPLATES_CACHED", 	new String[]{Integer.toString(this.templateCache.size())});
+		return this.getMergeOutput(parameterMap);
+    }
+
+    /**********************************************************************************
      * Reset and Reload the cache 
      */
     public void reset() {
@@ -260,7 +290,8 @@ final public class TemplateFactory {
         templateCache.clear();
         loadTemplates();
         log.info("Reset Complete");
-    }
+        initialized = new Date();
+   }
 
     /**********************************************************************************
      * Load all templates from persistence
@@ -282,7 +313,7 @@ final public class TemplateFactory {
         templateCache.cache(template.getFullName(), template);
         log.info(template.getFullName() + " has been cached");
     }
-
+    
     public int size() {
         return templateCache.size();
     }

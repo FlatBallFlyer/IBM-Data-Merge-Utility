@@ -21,6 +21,7 @@ import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.directive.provider.DataTable;
 import com.ibm.util.merge.template.Bookmark;
 import com.ibm.util.merge.template.Template;
+
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -46,8 +47,8 @@ public abstract class InsertSubs extends AbstractDirective {
         super();
     }
 
-    public InsertSubs(InsertSubs from) {
-    	super(from);
+    public void copyFieldsFrom(InsertSubs from) {
+    	this.copyFieldsFrom((AbstractDirective)from);
     	this.setNotLast( 	from.getNotLast());
     	this.setOnlyLast( 	from.getOnlyLast());
     }

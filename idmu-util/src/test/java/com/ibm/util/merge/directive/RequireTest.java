@@ -40,14 +40,6 @@ public class RequireTest extends DirectiveTest {
 	}
 
 	@Test
-	public void testCloneRequire() throws CloneNotSupportedException {
-		Require myDirective = (Require) directive;
-		Require newDirective = new Require((Require)directive);
-		assertNotEquals(directive, newDirective);
-		assertEquals(myDirective.getTags(), newDirective.getTags());
-	}
-
-	@Test
 	public void testExecuteDirectivePass() {
 		template.addReplace("Tag1", "Test1");
 		template.addReplace("Tag2", "Test1");

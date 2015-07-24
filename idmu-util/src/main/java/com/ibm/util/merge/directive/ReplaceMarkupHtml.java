@@ -34,12 +34,13 @@ public class ReplaceMarkupHtml extends AbstractDirective {
 		setProvider(new ProviderHtml());
 	}
 	
-	public ReplaceMarkupHtml(ReplaceMarkupHtml from) {
-		super(from);
-		this.setPattern(from.getPattern());
-		this.setFromKey(from.getFromKey());
-		this.setToKey(from.toKey);
-		setProvider(new ProviderHtml((ProviderHtml)from.getProvider()));
+	public ReplaceMarkupHtml asNew() {
+		ReplaceMarkupHtml to = new ReplaceMarkupHtml();
+		to.copyFieldsFrom((AbstractDirective)this);		
+		to.setPattern(	this.getPattern());
+		to.setFromKey(	this.getFromKey());
+		to.setToKey(	this.getToKey());
+		return to;
 	}
 
 	/**

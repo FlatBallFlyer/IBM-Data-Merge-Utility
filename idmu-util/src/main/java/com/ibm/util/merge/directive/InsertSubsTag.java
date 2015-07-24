@@ -29,9 +29,10 @@ public class InsertSubsTag extends InsertSubs {
 		setProvider(new ProviderTag());
 	}
 
-	public InsertSubsTag(InsertSubsTag from) {
-		super(from);
-		setProvider(new ProviderTag((ProviderTag)from.getProvider()));
+	public InsertSubsTag asNew() {
+		InsertSubsTag to = new InsertSubsTag();
+		to.copyFieldsFrom((InsertSubs)this);
+		return to;
 	}
 
 }

@@ -103,5 +103,11 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 		public String getQueryString() {
 			return "NA";
 		}
+
+		@Override
+		public AbstractProvider asNew() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 }

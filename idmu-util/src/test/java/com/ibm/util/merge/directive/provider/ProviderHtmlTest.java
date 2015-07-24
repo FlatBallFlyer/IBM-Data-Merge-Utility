@@ -72,13 +72,6 @@ public class ProviderHtmlTest extends ProviderHttpTest {
 	}
 
 	@Test
-	public void testProviderHtmlCloneDirective() throws CloneNotSupportedException {
-		ProviderHtml newProvider = new ProviderHtml((ProviderHtml)provider);
-		assertNotEquals(provider, newProvider);
-		assertNull(newProvider.getDirective());
-	}
-
-	@Test
 	public void testGetQueryString() {
 		assertEquals("http://sometestdata.csv", provider.getQueryString());
 	}
@@ -87,5 +80,10 @@ public class ProviderHtmlTest extends ProviderHttpTest {
 		public DirectiveStub() {}
 		@Override
 		public void executeDirective(MergeContext rtc) throws MergeException {}
+		@Override
+		public AbstractDirective asNew() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 }

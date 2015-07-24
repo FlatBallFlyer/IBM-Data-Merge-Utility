@@ -42,7 +42,9 @@ public abstract class AbstractProvider {
         super();
     }
 
-    public AbstractProvider(AbstractProvider from) {
+    public abstract AbstractProvider asNew();
+    
+    public void copyFieldsFrom(AbstractProvider from) {
     	this.dataTables = new ArrayList<DataTable>();
     	this.setType(from.getType());
     	this.directive = null;

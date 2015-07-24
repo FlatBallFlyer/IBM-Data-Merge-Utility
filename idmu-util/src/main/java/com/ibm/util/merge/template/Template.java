@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  * @see #merge()
  * @see #packageOutput()
  */
-public class Template implements Cloneable {
+public class Template {
     // Global Constants (Reserved Tags)
     public static final String LFT = "{";
     public static final String RGT = "}";
@@ -92,49 +92,33 @@ public class Template implements Cloneable {
      * @param seedReplace Initial replace hash
      * @throws MergeException - Wrapper of clone not supported exceptions
      */
-    public Template(Template from, Map<String, String> seedReplace) {
-        this.setIdtemplate(		from.getIdtemplate());
-        this.setCollection( 	from.getCollection());
-        this.setName(  			from.getName());
-        this.setColumnValue( 	from.getColumnValue());
-        this.setDescription( 	from.getDescription());
-        this.setOutputFile(  	from.outputFile);
-        this.setContent(		from.getContent());
+    public Template getMergable(Map<String, String> seedReplace) {
+    	Template to = new Template();
+    	to.setIdtemplate(		this.getIdtemplate());
+    	to.setCollection( 	this.getCollection());
+    	to.setName(  			this.getName());
+    	to.setColumnValue( 	this.getColumnValue());
+    	to.setDescription( 	this.getDescription());
+    	to.setOutputFile(  	this.outputFile);
+    	to.setContent(		this.getContent());
         
-        this.setDirectives(  	new ArrayList<>());
-        this.setMerged(  		false);
-        this.setMergable( 		true);
-        this.setReplaceValues( 	new HashMap<>());
+    	to.setDirectives(  	new ArrayList<>());
+    	to.setMerged(  		false);
+    	to.setMergable( 		true);
+    	to.setReplaceValues( 	new HashMap<>());
 
         // Deep Copy Directives
-        for (AbstractDirective fromDirective : from.getDirectives()) {
-        	this.addDirective(getNewDirective(fromDirective));
+        for (AbstractDirective fromDirective : this.getDirectives()) {
+        	to.addDirective(fromDirective.asNew());
         }
 
         // Seed the replace stack
-        this.replaceValues.putAll(seedReplace);
+        to.replaceValues.putAll(seedReplace);
 
         // Add our name to the Template Stack
-        this.appendToReplaceValue(TAG_STACK, this.getFullName(), "/");
-    }
-
-    private AbstractDirective getNewDirective(AbstractDirective fromDirective) {
-    	switch (fromDirective.getType()) {
-    	case Directives.TYPE_REQUIRE			: return new Require((Require)fromDirective);
-    	case Directives.TYPE_REPLACE_VALUE		: return new ReplaceValue((ReplaceValue)fromDirective);
-    	case Directives.TYPE_TAG_INSERT 		: return new InsertSubsTag((InsertSubsTag)fromDirective);
-    	case Directives.TYPE_SQL_INSERT 		: return new InsertSubsSql((InsertSubsSql)fromDirective);
-    	case Directives.TYPE_SQL_REPLACE_ROW 	: return new ReplaceRowSql((ReplaceRowSql)fromDirective);
-    	case Directives.TYPE_SQL_REPLACE_COL 	: return new ReplaceColSql((ReplaceColSql)fromDirective);
-    	case Directives.TYPE_CSV_INSERT 		: return new InsertSubsCsv((InsertSubsCsv)fromDirective);
-    	case Directives.TYPE_CSV_REPLACE_ROW 	: return new ReplaceRowCsv((ReplaceRowCsv)fromDirective);
-    	case Directives.TYPE_CSV_REPLACE_COL 	: return new ReplaceColCsv((ReplaceColCsv)fromDirective);
-    	case Directives.TYPE_HTML_INSERT 		: return new InsertSubsHtml((InsertSubsHtml)fromDirective);
-    	case Directives.TYPE_HTML_REPLACE_ROW 	: return new ReplaceRowHtml((ReplaceRowHtml)fromDirective);
-    	case Directives.TYPE_HTML_REPLACE_COL 	: return new ReplaceColHtml((ReplaceColHtml)fromDirective);
-    	case Directives.TYPE_HTML_REPLACE_MARKUP : return new ReplaceMarkupHtml((ReplaceMarkupHtml)fromDirective);
-    	}
-    	return null;
+        to.appendToReplaceValue(TAG_STACK, this.getFullName(), "/");
+        
+        return to;
     }
 
     public String getMergedOutput(MergeContext rtc) throws MergeException {

@@ -28,9 +28,10 @@ public class InsertSubsHtml extends InsertSubs {
 		setProvider(new ProviderHtml());
 	}
 
-	public InsertSubsHtml(InsertSubsHtml from) {
-		super(from);
-		setProvider(new ProviderHtml((ProviderHtml)from.getProvider()));
+	public InsertSubsHtml asNew() {
+		InsertSubsHtml to = new InsertSubsHtml();
+		to.copyFieldsFrom((InsertSubs)this);
+		return to;
 	}
 
 }

@@ -23,8 +23,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class ReplaceMarkupHtmlTest extends DirectiveTest {
 
 	@Before
@@ -40,16 +38,6 @@ public class ReplaceMarkupHtmlTest extends DirectiveTest {
 
 	@After
 	public void tearDown() throws Exception {
-	}
-
-	@Test
-	public void testCloneReplaceRowHtml() throws CloneNotSupportedException {
-		ReplaceRowHtml newDirective = new ReplaceRowHtml((ReplaceRowHtml)directive);
-		ReplaceRowHtml myDirective = (ReplaceRowHtml) directive;
-		assertNotEquals(myDirective, newDirective);
-		assertNull(newDirective.getTemplate());
-		assertNotEquals(myDirective.getProvider(), newDirective.getProvider());
-		assertEquals(0, newDirective.getProvider().size());
 	}
 
 	@Test

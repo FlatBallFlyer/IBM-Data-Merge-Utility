@@ -49,17 +49,6 @@ public class ProviderSqlTest extends ProviderTest {
 	}
 	
 	@Test
-	public void testProviderSqlCloneDirective() throws CloneNotSupportedException {
-		ProviderSql myProvider = (ProviderSql) provider;
-		ProviderSql newProvider = new ProviderSql((ProviderSql)provider);
-		assertNotEquals(provider, newProvider);
-		assertNull(newProvider.getDirective());
-		assertEquals(myProvider.getColumns(), newProvider.getColumns());
-		newProvider.setColumns("Foo");
-		assertNotEquals(myProvider.getColumns(), newProvider.getColumns());
-	}
-
-	@Test
 	public void testGetQueryString1() throws MergeException {
 		ProviderSql myProvider = (ProviderSql) provider;
 		myProvider.setColumns("COL1, COL2, {Foo}");
@@ -96,5 +85,10 @@ public class ProviderSqlTest extends ProviderTest {
 		public DirectiveStub() {}
 		@Override
 		public void executeDirective(MergeContext rtc) throws MergeException {}
+		@Override
+		public AbstractDirective asNew() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 }

@@ -62,16 +62,6 @@ public class InsertSubsTagTest extends InsertSubsTest {
     }
 
     @Test
-    public void testInsertSubsTagClone() throws CloneNotSupportedException {
-        InsertSubsTag newDirective = new InsertSubsTag((InsertSubsTag)directive);
-        InsertSubsTag myDirective = (InsertSubsTag) directive;
-        assertNotEquals(myDirective, newDirective);
-        assertNull(newDirective.getTemplate());
-        assertNotEquals(myDirective.getProvider(), newDirective.getProvider());
-        assertEquals(0, newDirective.getProvider().size());
-    }
-
-    @Test
     public void testExecuteDirectiveExistsList() throws MergeException {
         directive.executeDirective(rtc);
         assertEquals(masterOutput, template.getContent());

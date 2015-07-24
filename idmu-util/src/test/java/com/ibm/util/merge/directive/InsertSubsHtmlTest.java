@@ -61,16 +61,6 @@ public class InsertSubsHtmlTest extends InsertSubsTest {
 	}
 
 	@Test
-	public void testCloneReplaceColHtml() throws CloneNotSupportedException {
-		InsertSubsHtml newDirective = new InsertSubsHtml((InsertSubsHtml)directive);
-		InsertSubsHtml myDirective = (InsertSubsHtml) directive;
-		assertNotEquals(myDirective, newDirective);
-		assertNull(newDirective.getTemplate());
-		assertNotEquals(myDirective.getProvider(), newDirective.getProvider());
-		assertEquals(0, newDirective.getProvider().size());
-	}
-
-	@Test
 	public void testExecuteDirective() throws MergeException {
 		directive.executeDirective(rtc);
 		assertEquals(masterOutput, template.getContent());

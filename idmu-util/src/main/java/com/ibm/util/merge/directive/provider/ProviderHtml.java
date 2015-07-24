@@ -31,8 +31,10 @@ public class ProviderHtml extends ProviderHttp {
 		setType(Providers.TYPE_HTML);
 	}
 	
-	public ProviderHtml(ProviderHtml from) {
-		super(from);
+	public ProviderHtml asNew() {
+		ProviderHtml to = new ProviderHtml();
+		to.copyFieldsFrom((ProviderHttp)this);
+		return to;
 	}
 
 	/**

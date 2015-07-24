@@ -28,9 +28,10 @@ public class ReplaceColSql extends ReplaceCol {
 		setProvider(new ProviderSql());
 	}
 	
-	public ReplaceColSql(ReplaceColSql from) {
-		super(from);
-		setProvider(new ProviderSql((ProviderSql)from.getProvider()));
+	public ReplaceColSql asNew() {
+		ReplaceColSql to = new ReplaceColSql();
+		to.copyFieldsFrom((ReplaceCol)this);
+		return to;
 	}
 
 }

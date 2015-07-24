@@ -28,9 +28,10 @@ public class ReplaceColCsv extends ReplaceCol {
 		setProvider(new ProviderCsv());
 	}
 	
-	public ReplaceColCsv(ReplaceColCsv from) {
-		super(from);
-		setProvider(new ProviderCsv((ProviderCsv)from.getProvider()));
+	public ReplaceColCsv asNew() {
+		ReplaceColCsv to = new ReplaceColCsv();
+		to.copyFieldsFrom((ReplaceCol)this);
+		return to;
 	}
 
 }

@@ -28,9 +28,10 @@ public class ReplaceRowSql extends ReplaceRow {
 		setProvider(new ProviderSql());
 	}
 	
-	public ReplaceRowSql(ReplaceRowSql from) {
-		super(from);
-		setProvider(new ProviderSql((ProviderSql)from.getProvider()));
+	public ReplaceRowSql asNew() {
+		ReplaceRowSql to = new ReplaceRowSql();
+		to.copyFieldsFrom((ReplaceRow)this);
+		return to;
 	}
 
 }

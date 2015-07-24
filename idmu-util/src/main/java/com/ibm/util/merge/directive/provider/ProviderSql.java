@@ -41,12 +41,14 @@ public class ProviderSql extends AbstractProvider {
         setType(Providers.TYPE_SQL);
     }
     
-    public ProviderSql(ProviderSql from) {
-    	super(from);
-    	this.setSource(from.getSource());
-    	this.setColumns(from.getColumns());
-    	this.setFrom(from.getFrom());
-    	this.setWhere(from.getWhere());
+    public ProviderSql asNew() {
+    	ProviderSql to = new ProviderSql ();
+    	to.copyFieldsFrom((AbstractProvider)this);
+    	to.setSource(	this.getSource());
+    	to.setColumns(	this.getColumns());
+    	to.setFrom(		this.getFrom());
+    	to.setWhere(	this.getWhere());
+    	return to;
     }
 
     /**

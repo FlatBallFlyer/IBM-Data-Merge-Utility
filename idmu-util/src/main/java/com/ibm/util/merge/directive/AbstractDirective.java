@@ -43,17 +43,23 @@ public abstract class AbstractDirective {
 	public AbstractDirective() {
 	}
 	
+	public abstract AbstractDirective asNew();
+	
 	/********************************************************************************
-	 * Clone-like Constructor
+	 * Copy from
 	 */
-	public AbstractDirective(AbstractDirective from) {
-		this.template 	= null;
-		this.idTemplate = from.getIdTemplate();
-		this.sequence	= from.getSequence();
-		this.type		= from.getType();
-		this.softFail	= from.isSoftFail();
-		this.description = from.getDescription();
-		this.provider	= null; // provided in concrete implementation
+	public void copyFieldsFrom(AbstractDirective from) {
+		this.setTemplate(		null);
+		this.setIdTemplate(		from.getIdTemplate());
+		this.setSequence(		from.getSequence());
+		this.setType(			from.getType());
+		this.setSoftFail(		from.isSoftFail());
+		this.setDescription(	from.getDescription());
+		if (from.getProvider() == null) {
+			this.setProvider(null);
+		} else {
+			this.setProvider(	from.getProvider().asNew());
+		}
 	}
 	
 	/********************************************************************************
@@ -132,5 +138,6 @@ public abstract class AbstractDirective {
 
 	public void setSequence(int sequence) {
 		this.sequence = sequence;
-	}	
+	}
+
 }
