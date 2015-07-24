@@ -1,7 +1,6 @@
 # Table of Contents
 
 - [Load A Collection](#load_collection)
-- [Navigate Between Templates](#navigate_templates)
 - [Add Template](#add_template)
 - [Remove Template](#remove_template)
 - [Save Template](#save_template)
@@ -14,37 +13,45 @@
 <a name="load_collection"/>
 ## Load A Collection
 
-- Load the application in browser
-- Select a collection from the 'Collections' select list
-- A soon as the collection is selected all templates are loaded in the collection
-- You may navigate between template by clicking on the Left/Right bars of the template editor
+A collection is a container for organizing templates. You can create multiple containers that have one or many templates assigned to them.
+
+To access collections, perform the following steps:
+
+1. Navigate to the IDMU application in your browser.
+2. Select a collection from the 'Collections' select list.
+3. Upon selection of a collection, all the IDMU will display all the available templates in the collection.
+4. You may navigate between the templates by clicking on the Left/Right bars in the template editor.
+ 
+Figure #1 - Collection Page
 
 ![Load A Collection](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/main-controller.png)
 
-
-<a name="navigate_templates"/>
-## Navigate Between Templates
-
-After a collection is selected, templates in the collection can be viewed by
-clicking on the Left/Right bar of the template view.
+Figure #2 Navigating Between Templates Using Left and Right Arrows
 
 ![Template Navigation](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/left-right-nav.png)
 
 <a name="add_template"/>
 ## Add Template
 
-To add a template click on the 'Add' button available on the title bar of a template. A dialog
-box will be presented to get the collection, name of template, and columnValue if any. By clicking
-on the 'Add' button on the dialog a new template will be created according to the spec.
+The template is the core component of the IDMU Template editor. A template provides the ability to create a message, define merge fields, specify directives to drive the retrevial of data, and perform the required inserts of that data. Once the IDMU processes the template, the IDMU can deliver multiple output files from a single merge into a zip or tar archive.
+
+Perform the following steps to create a template:
+
+1. Click on the 'Add' button in the title bar of a template. 
+2. Upon clicking, the IDMU will launch a dialog box will enabling you to enter the collection, name of template, and columnValue if any. By clicking
+3. Upon completion of these fields, click on the 'Add' button on the dialog. This will create the new template.
+
+Figure 3 - Creating a new template
 
 ![Add Template](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/add-template.png)
 
 <a name="remove_template"/>
-## Remove Template
+## Removing a Template
 
-To remove a template load the templates from the collection, navigate to the
-template of interest and press the 'Remove' button on the title bar of the
-template. 
+You can add or remove templates in any collection. Perform the following steps to remove a template:
+
+1. Navigate to the collection and template of interest within that collection.
+2. Click on the 'Remove' button on the top right of the title bar of the template.
 
 ![Remove Template](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/post-integ/idmu-editor/src/main/node/docs/screen-shots/left-right-nav.png)
 
