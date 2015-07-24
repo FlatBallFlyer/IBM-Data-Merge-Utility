@@ -22,9 +22,7 @@ import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.json.DefaultJsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
-import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
-import com.ibm.util.merge.persistence.HibernatePersistence;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.handler.*;
 import com.ibm.util.merge.web.rest.servlet.writer.TextResponseWriter;
@@ -73,7 +71,6 @@ public class InitializeServlet extends HttpServlet {
         handlerChain.addAll(createHandlerInstances());
         File templatesDirPath = warTemplatesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(warTemplatesPath)) : new File(warTemplatesPath);
         File poolsPropertiesPath = jdbcPoolsPropertiesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(jdbcPoolsPropertiesPath)) : new File(jdbcPoolsPropertiesPath);
-
         ConnectionPoolManager poolManager = new ConnectionPoolManager();
         if(poolsPropertiesPath.exists()){
             PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(poolsPropertiesPath);
@@ -82,12 +79,11 @@ public class InitializeServlet extends HttpServlet {
             log.error("Could not load databasePools properties file from non-existant path: " + poolsPropertiesPath);
             log.error("No database config will be applied");
         }
-
         JsonProxy jsonProxy = (prettyJson ? new PrettyJsonProxy() : new DefaultJsonProxy());
-        AbstractPersistence persist = (dbPersist ? new FilesystemPersistence(templatesDirPath, jsonProxy) : new HibernatePersistence());
-        TemplateFactory tf = new TemplateFactory(persist, jsonProxy, outputDirPath);
+        FilesystemPersistence filesystemPersistence = new FilesystemPersistence(templatesDirPath, jsonProxy);
+//        AbstractPersistence persist = (dbPersist ? filesystemPersistence : new HibernatePersistence());
+        TemplateFactory tf = new TemplateFactory(filesystemPersistence, jsonProxy, outputDirPath);
         servletContext.setAttribute("TemplateFactory", tf);
-
         for (RequestHandler handler : handlerChain) {
             log.info("Initializing handler " + handler.getClass().getName());
             handler.initialize(servletInitParameters, tf);
@@ -102,7 +98,10 @@ public class InitializeServlet extends HttpServlet {
                 new PutTemplateResourceHandler(),
                 new DelTemplateResourceHandler(),
                 new GetDirectivesResourceHandler(),
-                new GetCollectionsResourceHandler()
+                new GetCollectionsResourceHandler(),
+                new GetTemplatePackageResourceHandler(),
+                new PutTemplatePackageResourceHandler(),
+                new GetCollectionTemplatesWithNameResourceHandler()
         ));
     }
 
@@ -168,9 +167,7 @@ public class InitializeServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        String textResult = "Last initialized successfully at " + RestServlet.findRuntimeContext(req.getServletContext()).getInitialized() + "\n" +
-                "Make a POST request to " + req.getRequestURL() + " to reinitialize and reload templates";
-        new TextResponseWriter(res, textResult).write();
+        res.getWriter().write("Initialized");
     }
 
     /**
