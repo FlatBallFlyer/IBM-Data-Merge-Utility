@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import java.util.Map;
 
 /**
- * Handles POST /merge
+ * GET /idmu/template/{templateFullName}
  */
 public class GetTemplateResourceHandler implements RequestHandler {
 
@@ -25,7 +25,7 @@ public class GetTemplateResourceHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(RequestData rd) {
-        return (rd.isGET()) && rd.pathEquals("/template");
+        return (rd.isGET()) && rd.pathStartsWith("/template") && rd.getPathParts().size() == 2;
     }
 
     @Override

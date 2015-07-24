@@ -10,11 +10,11 @@ import org.apache.log4j.Logger;
 import java.util.Map;
 
 /**
- * Handles POST /merge
+ * PUT /idmu/templatePackage/{Templates}
  */
-public class GetTemplatesResourceHandler implements RequestHandler {
+public class PutTemplatePackageResourceHandler implements RequestHandler {
 
-    private static final Logger log = Logger.getLogger(GetTemplatesResourceHandler.class);
+    private static final Logger log = Logger.getLogger(PutTemplatePackageResourceHandler.class);
 
     private TemplateFactory tf;
 
@@ -25,14 +25,14 @@ public class GetTemplatesResourceHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(RequestData rd) {
-        return (rd.isGET()) && rd.pathEquals("/templates");
+        return (rd.isPUT()) && rd.pathEquals("/templatePackage");
     }
 
     @Override
     public Result handle(RequestData rd) {
-        String collection = rd.getPathParts().get(1);
-        log.warn("getTemplates for " + collection);
-        return new JsonDataResult(tf.getTemplateNamesJSON(collection));
+        String potentiallyMultiplePackagesJSON = rd.getRequestBodyString();
+        throw new UnsupportedOperationException("Save uploaded template package(s) for JSON : " + potentiallyMultiplePackagesJSON);
+//        return new JsonDataResult(tf.saveTemplateFromJson(template));
     }
 
 }

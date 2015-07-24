@@ -10,11 +10,11 @@ import org.apache.log4j.Logger;
 import java.util.Map;
 
 /**
- * DELETE /idmu/template/{templateFullName}
+ * GET /idmu/template/{templateFullName}
  */
-public class DelTemplateResourceHandler implements RequestHandler {
+public class GetCollectionTemplatesWithNameResourceHandler implements RequestHandler {
 
-    private static final Logger log = Logger.getLogger(DelTemplateResourceHandler.class);
+    private static final Logger log = Logger.getLogger(GetCollectionTemplatesWithNameResourceHandler.class);
 
     private TemplateFactory tf;
 
@@ -25,14 +25,15 @@ public class DelTemplateResourceHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(RequestData rd) {
-        return (rd.isDELETE()) && rd.pathStartsWith("/template/") && rd.getPathParts().size() == 2;
+        return (rd.isGET()) && rd.pathStartsWith("/templates/") && rd.getPathParts().size() == 3;
     }
 
     @Override
     public Result handle(RequestData rd) {
-        String fullname = rd.getPathParts().get(1);
-        log.warn("delTemplate for " + fullname);
-        return new JsonDataResult(tf.deleteTemplate(fullname));
+        String collectionName = rd.getPathParts().get(1);
+        String templateName = rd.getPathParts().get(2);
+        throw new UnsupportedOperationException("TODO list templates for collection " + collectionName + " that have name " + templateName);
+//        return new JsonDataResult(tf.getTemplateAsJson(fullName));
     }
 
 }
