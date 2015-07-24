@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import java.util.Map;
 
 /**
- * Handles POST /merge
+ * GET /idmu/merge?DragonFlyFullName=fullname&{additional requestParameters}
  */
 public class PerformMergeResourceHandler implements RequestHandler {
 

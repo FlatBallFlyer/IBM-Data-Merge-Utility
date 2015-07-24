@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import java.util.Map;
 
 /**
- * Handles POST /merge
+ * GET /idmu/directives
  */
 public class GetDirectivesResourceHandler implements RequestHandler {
 

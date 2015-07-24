@@ -6,6 +6,7 @@ import com.ibm.idmu.api.PoolManagerConfiguration;
 import com.ibm.idmu.api.SqlOperation;
 
 import java.io.File;
+import java.sql.Connection;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -124,6 +125,11 @@ public class ConnectionPoolManager implements PoolManager {
     @Override
     public Map<String, Object> statistics(String poolName) throws PoolManagerException {
         return connectionProviders.get(poolName).statistics();
+    }
+
+    @Override
+    public Connection acquireConnection(String poolName){
+        return connectionProviders.get(poolName).acquireConnection();
     }
 
     @Override

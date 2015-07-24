@@ -1,6 +1,5 @@
 package com.ibm.util.merge.web;
 
-import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
@@ -23,21 +22,9 @@ import java.util.Map;
 public class RestServlet extends HttpServlet {
     private static final Logger log = Logger.getLogger(RestServlet.class);
 
-
-    public static MergeContext findRuntimeContext(ServletContext servletContext) {
-        MergeContext rtc = (MergeContext) servletContext.getAttribute("rtc");
-        if(rtc == null){
-            throw new IllegalStateException("Could not find MergeContext attribute 'rtc' in ServletContext");
-        }
-        return rtc;
-    }
-
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        log.info("Initializing with servletConfig: " + servletConfig);
-        MergeContext rtc = findRuntimeContext(servletConfig.getServletContext());
-        log.info("RTC=" + rtc);
         List<RequestHandler> handlerChain = findHandlerChain(servletConfig.getServletContext());
         log.info("handlerChain=" + handlerChain);
     }
@@ -48,7 +35,6 @@ public class RestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-
         handleRequest(request, response);
     }
 
@@ -59,19 +45,19 @@ public class RestServlet extends HttpServlet {
         for (RequestHandler handler : handlerChain()) {
             boolean canHandle = handler.canHandle(rd);
             log.info("Handler " + handler.getClass().getSimpleName() + "? " + canHandle);
-            if(canHandle){
-                if(handled) throw new IllegalStateException("Multiple handlers match for " + rd);
+            if (canHandle) {
+                if (handled) throw new IllegalStateException("Multiple handlers match for " + rd);
                 handled = true;
                 Result result = handler.handle(rd);
                 result.write(rd, request, response);
-                if(response.getStatus() >= 200 && response.getStatus() < 300){
+                if (response.getStatus() >= 200 && response.getStatus() < 300) {
                     log.info("Successfully handled request with " + handler.getClass().getName() + " : " + rd);
-                }else{
+                } else {
                     log.error("Failed to handle request with " + handler.getClass().getName() + " : " + rd);
                 }
             }
         }
-        if(!handled){
+        if (!handled) {
             throw new RuntimeException("Unhandled : " + rd);
         }
     }
@@ -112,7 +98,7 @@ public class RestServlet extends HttpServlet {
     public static Map<String, String> initParametersToMap(ServletConfig cfg) {
         Enumeration<String> names = cfg.getInitParameterNames();
         HashMap<String, String> out = new HashMap<>();
-        while(names.hasMoreElements()){
+        while (names.hasMoreElements()) {
             String name = names.nextElement();
             out.put(name, cfg.getInitParameter(name));
         }

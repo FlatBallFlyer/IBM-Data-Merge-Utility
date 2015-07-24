@@ -1,5 +1,6 @@
 package com.ibm.idmu.api;
 
+import java.sql.Connection;
 import java.util.Map;
 import java.util.Properties;
 
@@ -16,6 +17,7 @@ public interface PoolManager {
     <T> T runWithPool(String poolName, SqlOperation<T> sqlOperation) throws PoolManagerException;
     void loadDriverClass(String driverClassPath) throws ClassNotFoundException;
     Map<String, Object> statistics(String poolName) throws PoolManagerException;
+    Connection acquireConnection(String poolName);
     void reset();
 
     public static class PoolManagerException extends RuntimeException{
