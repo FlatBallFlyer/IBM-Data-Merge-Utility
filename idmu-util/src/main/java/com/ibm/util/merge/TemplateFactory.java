@@ -193,8 +193,9 @@ final public class TemplateFactory {
      * @see Template
      */
     public String getCollectionNamesJSON() {
-        Set<CollectionName> theList;
+        ArrayList<CollectionName> theList;
         theList = templateCache.getCollectionsFromCache();
+        java.util.Collections.sort(theList);
         return jsonProxy.toJson(theList);
     }
 

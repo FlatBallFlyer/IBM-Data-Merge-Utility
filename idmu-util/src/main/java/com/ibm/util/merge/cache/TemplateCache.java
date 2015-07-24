@@ -14,16 +14,18 @@ public class TemplateCache extends MemoryCache<String, Template> {
     /**
      * @return list of Collection names found in cache
      */
-    public Set<CollectionName> getCollectionsFromCache() {
-        Set<CollectionName> theCollections = new HashSet<>();
+    public ArrayList<CollectionName> getCollectionsFromCache() {
+        HashMap<String,CollectionName> theCollections = new HashMap<String,CollectionName>();
         // Iterate the Hash
         for (Template template : asMap().values()) {
-            if (!theCollections.contains(template.getCollection())) {
-                theCollections.add(new CollectionName(template.getCollection()));
+            if (!theCollections.containsKey(template.getCollection())) {
+                theCollections.put(template.getCollection(), new CollectionName(template.getCollection()));
             }
         }
-        // Return the JSON String
-        return theCollections;
+        // Return the Set
+        ArrayList<CollectionName> theNames = new ArrayList<CollectionName>();
+        theNames.addAll(theCollections.values());
+        return theNames;
     }
 
     /**
