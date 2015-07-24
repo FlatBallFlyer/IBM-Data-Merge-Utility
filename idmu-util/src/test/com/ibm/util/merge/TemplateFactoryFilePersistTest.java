@@ -17,11 +17,13 @@
 package com.ibm.util.merge;
 
 import com.ibm.idmu.api.JsonProxy;
+import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.json.DefaultJsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
 import com.ibm.util.merge.template.Template;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,7 +42,8 @@ public class TemplateFactoryFilePersistTest {
 	private JsonProxy proxy = new DefaultJsonProxy();
 	private AbstractPersistence filePersist = new FilesystemPersistence(templatesDir, new PrettyJsonProxy());
 	private File outputDir = new File("src/test/resources/testout/");
-    private TemplateFactory testFactory = new TemplateFactory(filePersist, proxy, outputDir);
+    ConnectionPoolManager manager = new ConnectionPoolManager();
+    private TemplateFactory testFactory = new TemplateFactory(filePersist, proxy, outputDir, manager);
     private int count = 62;
     
     @Before

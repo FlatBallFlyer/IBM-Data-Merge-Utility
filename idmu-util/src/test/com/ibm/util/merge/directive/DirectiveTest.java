@@ -16,8 +16,10 @@
  */
 package com.ibm.util.merge.directive;
 
+import com.ibm.util.merge.directive.AbstractDirective;
 import com.ibm.util.merge.directive.provider.AbstractProvider;
 import com.ibm.util.merge.template.Template;
+
 import org.junit.Test;
 
 public abstract class DirectiveTest {

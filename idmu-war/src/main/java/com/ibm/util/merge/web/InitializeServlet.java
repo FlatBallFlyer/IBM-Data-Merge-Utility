@@ -82,7 +82,7 @@ public class InitializeServlet extends HttpServlet {
         JsonProxy jsonProxy = (prettyJson ? new PrettyJsonProxy() : new DefaultJsonProxy());
         FilesystemPersistence filesystemPersistence = new FilesystemPersistence(templatesDirPath, jsonProxy);
 //        AbstractPersistence persist = (dbPersist ? filesystemPersistence : new HibernatePersistence());
-        TemplateFactory tf = new TemplateFactory(filesystemPersistence, jsonProxy, outputDirPath);
+        TemplateFactory tf = new TemplateFactory(filesystemPersistence, jsonProxy, outputDirPath, poolManager);
         servletContext.setAttribute("TemplateFactory", tf);
         for (RequestHandler handler : handlerChain) {
             log.info("Initializing handler " + handler.getClass().getName());
@@ -101,7 +101,8 @@ public class InitializeServlet extends HttpServlet {
                 new GetCollectionsResourceHandler(),
                 new GetTemplatePackageResourceHandler(),
                 new PutTemplatePackageResourceHandler(),
-                new GetCollectionTemplatesWithNameResourceHandler()
+                new GetTemplateNamesForCollectionResourceHandler(),
+                new GetTemplateNamesForNameResourceHandler()
         ));
     }
 

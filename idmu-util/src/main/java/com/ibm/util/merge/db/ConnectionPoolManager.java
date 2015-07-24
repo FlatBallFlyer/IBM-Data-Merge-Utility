@@ -127,7 +127,6 @@ public class ConnectionPoolManager implements PoolManager {
         return connectionProviders.get(poolName).statistics();
     }
 
-    @Override
     public Connection acquireConnection(String poolName){
         return connectionProviders.get(poolName).acquireConnection();
     }

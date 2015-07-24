@@ -12,9 +12,9 @@ import java.util.Map;
 /**
  * GET /idmu/template/{templateFullName}
  */
-public class GetCollectionTemplatesWithNameResourceHandler implements RequestHandler {
+public class GetTemplateNamesForNameResourceHandler implements RequestHandler {
 
-    private static final Logger log = Logger.getLogger(GetCollectionTemplatesWithNameResourceHandler.class);
+    private static final Logger log = Logger.getLogger(GetTemplateNamesForNameResourceHandler.class);
 
     private TemplateFactory tf;
 
@@ -32,8 +32,7 @@ public class GetCollectionTemplatesWithNameResourceHandler implements RequestHan
     public Result handle(RequestData rd) {
         String collectionName = rd.getPathParts().get(1);
         String templateName = rd.getPathParts().get(2);
-        throw new UnsupportedOperationException("TODO list templates for collection " + collectionName + " that have name " + templateName);
-//        return new JsonDataResult(tf.getTemplateAsJson(fullName));
+    	return new JsonDataResult(tf.getTemplateNamesJSON(collectionName, templateName));
     }
 
 }

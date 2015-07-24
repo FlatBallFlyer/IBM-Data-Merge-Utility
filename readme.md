@@ -7,8 +7,7 @@ associated with a template.
 
 ## Documentation
 
-IDMU is looking for a html home, until that time you can access the documentation
-in the WebContent folder of the project in Documentation.html
+See the GitHub project wiki for links to documentation. 
 
 ## Developing
 First clone the project.

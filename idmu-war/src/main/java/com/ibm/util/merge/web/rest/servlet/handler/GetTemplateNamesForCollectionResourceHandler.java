@@ -12,9 +12,9 @@ import java.util.Map;
 /**
  * GET /idmu/template/{templateFullName}
  */
-public class GetTemplateResourceHandler implements RequestHandler {
+public class GetTemplateNamesForCollectionResourceHandler implements RequestHandler {
 
-    private static final Logger log = Logger.getLogger(GetTemplateResourceHandler.class);
+    private static final Logger log = Logger.getLogger(GetTemplateNamesForCollectionResourceHandler.class);
 
     private TemplateFactory tf;
 
@@ -25,14 +25,13 @@ public class GetTemplateResourceHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(RequestData rd) {
-        return (rd.isGET()) && rd.pathStartsWith("/template/") && rd.getPathParts().size() == 2;
+        return (rd.isGET()) && rd.pathStartsWith("/templates/") && rd.getPathParts().size() == 2;
     }
 
     @Override
     public Result handle(RequestData rd) {
-        String fullName = rd.getPathParts().get(1);
-        log.warn("getTemplate for " + fullName);
-        return new JsonDataResult(tf.getTemplateAsJson(fullName));
+        String collectionName = rd.getPathParts().get(1);
+    	return new JsonDataResult(tf.getTemplateNamesJSON(collectionName));
     }
 
 }
