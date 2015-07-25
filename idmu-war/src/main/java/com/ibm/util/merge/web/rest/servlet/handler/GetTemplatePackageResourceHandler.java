@@ -4,9 +4,11 @@ import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
+import com.ibm.util.merge.web.rest.servlet.result.JsonDataResult;
+
 import org.apache.log4j.Logger;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -31,13 +33,12 @@ public class GetTemplatePackageResourceHandler implements RequestHandler {
     @Override
     public Result handle(RequestData rd) {
         String collectionNames = rd.getPathParts().get(1);
-        String[] names = collectionNames.split(",");
-        for (String collectionName : names) {
-            log.info("TODO Load collection to add to package(s) download: " + collectionName);
+        log.warn("get template collections " + collectionNames);
+        ArrayList<String> names = new ArrayList<String>();
+        for (String name : collectionNames.split(",")) {
+        	names.add(name);
         }
-        throw new UnsupportedOperationException("TODO : return template package json for collections: " + Arrays.asList(names));
-//        log.warn("getTemplates for " + collectionNames);
-//        return new JsonDataResult(tf.getTemplateNamesJSON(collectionNames));
+    	return new JsonDataResult(tf.getTemplatesJSON(names));
     }
 
 }

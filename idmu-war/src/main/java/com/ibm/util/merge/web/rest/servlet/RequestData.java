@@ -15,7 +15,47 @@ public class RequestData {
 
     private final String method;
     private final byte[] requestBody;
-    private final Locale preferredLocale;
+    public String getMethod() {
+		return method;
+	}
+
+	public byte[] getRequestBody() {
+		return requestBody;
+	}
+
+	public Locale getPreferredLocale() {
+		return preferredLocale;
+	}
+
+	public List<Locale> getLocales() {
+		return locales;
+	}
+
+	public Map<String, String[]> getParams() {
+		return params;
+	}
+
+	public String getPathInfo() {
+		return pathInfo;
+	}
+
+	public String getQueryString() {
+		return queryString;
+	}
+
+	public Map<String, List<String>> getHeaders() {
+		return headers;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public String getRequestUrl() {
+		return requestUrl;
+	}
+
+	private final Locale preferredLocale;
     private final List<Locale> locales;
     private final Map<String, String[]> params;
     private final String pathInfo;

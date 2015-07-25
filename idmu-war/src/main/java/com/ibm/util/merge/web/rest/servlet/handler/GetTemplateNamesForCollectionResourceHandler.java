@@ -31,6 +31,7 @@ public class GetTemplateNamesForCollectionResourceHandler implements RequestHand
     @Override
     public Result handle(RequestData rd) {
         String collectionName = rd.getPathParts().get(1);
+        log.warn("get template Names for " + collectionName);
     	return new JsonDataResult(tf.getTemplateNamesJSON(collectionName));
     }
 

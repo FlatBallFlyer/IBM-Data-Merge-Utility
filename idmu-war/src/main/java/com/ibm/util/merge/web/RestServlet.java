@@ -3,6 +3,7 @@ package com.ibm.util.merge.web;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
+
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletConfig;
@@ -11,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +35,8 @@ public class RestServlet extends HttpServlet {
         log.info("handlerChain=" + handlerChain);
     }
 
-    public static List<RequestHandler> findHandlerChain(ServletContext servletContext) {
+    @SuppressWarnings("unchecked")
+	public static List<RequestHandler> findHandlerChain(ServletContext servletContext) {
         return (List<RequestHandler>) servletContext.getAttribute("handlerChain");
     }
 

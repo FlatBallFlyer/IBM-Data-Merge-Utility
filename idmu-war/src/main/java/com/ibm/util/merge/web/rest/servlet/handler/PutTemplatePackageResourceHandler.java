@@ -4,6 +4,8 @@ import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
+import com.ibm.util.merge.web.rest.servlet.result.JsonDataResult;
+
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -30,8 +32,8 @@ public class PutTemplatePackageResourceHandler implements RequestHandler {
     @Override
     public Result handle(RequestData rd) {
         String potentiallyMultiplePackagesJSON = rd.getRequestBodyString();
-        throw new UnsupportedOperationException("Save uploaded template package(s) for JSON : " + potentiallyMultiplePackagesJSON);
-//        return new JsonDataResult(tf.saveTemplateFromJson(template));
+        log.warn("Put TemplateS");
+        return new JsonDataResult(tf.saveTemplatesFromJson(potentiallyMultiplePackagesJSON));
     }
 
 }

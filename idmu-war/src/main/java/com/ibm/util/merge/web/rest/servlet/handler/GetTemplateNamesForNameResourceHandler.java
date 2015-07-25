@@ -32,6 +32,7 @@ public class GetTemplateNamesForNameResourceHandler implements RequestHandler {
     public Result handle(RequestData rd) {
         String collectionName = rd.getPathParts().get(1);
         String templateName = rd.getPathParts().get(2);
+        log.warn("get templates " + collectionName + "." + templateName);
     	return new JsonDataResult(tf.getTemplateNamesJSON(collectionName, templateName));
     }
 
