@@ -19,8 +19,8 @@ package com.ibm.util.merge;
 import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.cache.TemplateCache;
 import com.ibm.util.merge.db.ConnectionPoolManager;
+import com.ibm.util.merge.directive.AbstractDirective;
 import com.ibm.util.merge.directive.Directives;
-import com.ibm.util.merge.directive.DirectiveName;
 import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.template.CollectionName;
 import com.ibm.util.merge.template.Template;
@@ -181,7 +181,7 @@ final public class TemplateFactory {
      */
     public String getDirectiveNamesJSON() {
     	Directives directives = new Directives();
-        ArrayList<DirectiveName>theList = directives.getDirectiveNames();
+        ArrayList<AbstractDirective>theList = directives.getDirectives();
         return jsonProxy.toJson(theList);
     }
 

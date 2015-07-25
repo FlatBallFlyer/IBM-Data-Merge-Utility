@@ -24,6 +24,7 @@ public class InsertSubsSql extends InsertSubs {
 	 */
 	public InsertSubsSql() {
 		super();
+		this.setDescription("Insert Subtemplates from SQL Data");
 		setType(Directives.TYPE_SQL_INSERT);
 		setProvider(new ProviderSql());
 	}

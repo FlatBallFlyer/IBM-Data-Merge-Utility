@@ -30,6 +30,7 @@ public class ReplaceMarkupHtml extends AbstractDirective {
 	 */
 	public ReplaceMarkupHtml() {
 		super();
+		this.setDescription("Add Replace from HTML Markup");
 		setType(Directives.TYPE_HTML_REPLACE_MARKUP);
 		setProvider(new ProviderHtml());
 	}

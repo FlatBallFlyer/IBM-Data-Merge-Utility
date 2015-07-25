@@ -24,6 +24,7 @@ public class InsertSubsCsv extends InsertSubs {
 	 */
 	public InsertSubsCsv() {
 		super();
+		this.setDescription("Insert Subtemplates from CSV Data");
 		setType(Directives.TYPE_CSV_INSERT);
 		setProvider(new ProviderCsv());
 	}

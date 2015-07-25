@@ -24,6 +24,7 @@ public class ReplaceColSql extends ReplaceCol {
 	 */
 	public ReplaceColSql() {
 		super();
+		this.setDescription("Add Replace from SQL Column");
 		setType(Directives.TYPE_SQL_REPLACE_COL);
 		setProvider(new ProviderSql());
 	}

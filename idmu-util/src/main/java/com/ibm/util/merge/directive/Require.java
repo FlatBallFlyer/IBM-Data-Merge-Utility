@@ -40,6 +40,7 @@ public class Require extends AbstractDirective {
 	 */
 	public Require() {
 		super();
+		this.setDescription("Require Tags");
 		setType(Directives.TYPE_REQUIRE);
 		setProvider(null);
 	}

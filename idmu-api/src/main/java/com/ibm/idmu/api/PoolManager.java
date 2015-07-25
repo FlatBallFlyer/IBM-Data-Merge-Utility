@@ -21,7 +21,12 @@ public interface PoolManager {
     void reset();
 
     public static class PoolManagerException extends RuntimeException{
-        public PoolManagerException(String message) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -8439762899883280165L;
+
+		public PoolManagerException(String message) {
             super(message);
         }
 

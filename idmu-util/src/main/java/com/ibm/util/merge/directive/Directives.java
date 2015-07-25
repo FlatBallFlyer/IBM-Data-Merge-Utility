@@ -2,6 +2,7 @@ package com.ibm.util.merge.directive;
 
 import java.util.ArrayList;
 
+
 /**
  *
  */
@@ -32,25 +33,25 @@ public class Directives {
     public static final int TYPE_MONGO_REPLACE_COL 		= 63;
     
     // List of directive names
-    public final ArrayList<DirectiveName> directiveNames  = new ArrayList<DirectiveName>();
+    public final ArrayList<AbstractDirective> directives  = new ArrayList<AbstractDirective>();
     
     public Directives() {
-    	directiveNames.add(new DirectiveName(Directives.TYPE_REQUIRE, 			"Require Tags"));
-    	directiveNames.add(new DirectiveName(Directives.TYPE_REPLACE_VALUE, 		"Replace Value"));
-    	directiveNames.add(new DirectiveName(Directives.TYPE_TAG_INSERT, 		"Insert Subs from Tag"));
-    	directiveNames.add(new DirectiveName(Directives.TYPE_SQL_INSERT, 		"Insert Subs from SQL"));
-    	directiveNames.add(new DirectiveName(Directives.TYPE_SQL_REPLACE_ROW, 	"Replace Row from SQL"));
-    	directiveNames.add(new DirectiveName(Directives.TYPE_SQL_REPLACE_COL, 	"Ceplace Col from SQL"));
-    	directiveNames.add(new DirectiveName(Directives.TYPE_CSV_INSERT, 		"Insert Subs from CSV"));
-    	directiveNames.add(new DirectiveName(Directives.TYPE_CSV_REPLACE_ROW, 	"Replace Row from CSV"));
-    	directiveNames.add(new DirectiveName(Directives.TYPE_CSV_REPLACE_COL, 	"Replace Col from CSV"));
-    	directiveNames.add(new DirectiveName(Directives.TYPE_HTML_INSERT, 		"Insert Subs from HTML"));
-    	directiveNames.add(new DirectiveName(Directives.TYPE_HTML_REPLACE_ROW, 	"Replace Row from HTML"));
-    	directiveNames.add(new DirectiveName(Directives.TYPE_HTML_REPLACE_COL, 	"Replace Col from HTML"));
-    	directiveNames.add(new DirectiveName(Directives.TYPE_HTML_REPLACE_MARKUP, "Replace from HTML Markup"));
+    	directives.add(new Require());
+    	directives.add(new ReplaceValue());
+    	directives.add(new InsertSubsTag());
+    	directives.add(new InsertSubsSql());
+    	directives.add(new ReplaceRowSql());
+    	directives.add(new ReplaceColSql());
+    	directives.add(new InsertSubsCsv());
+    	directives.add(new ReplaceRowCsv());
+    	directives.add(new ReplaceColCsv());
+    	directives.add(new InsertSubsHtml());
+    	directives.add(new ReplaceRowHtml());
+    	directives.add(new ReplaceColHtml());
+    	directives.add(new ReplaceMarkupHtml());
     }
     
-    public ArrayList<DirectiveName>getDirectiveNames() {
-    	return directiveNames;
+    public ArrayList<AbstractDirective>getDirectives() {
+    	return directives;
     }
 }
