@@ -9,7 +9,6 @@ var App = React.createClass({
       selectedRibbonItem: null,
       selectedRibbonIndex: 0,
       data: [],
-      directives: [],
       template: {'directives':[]}
     };
   },
@@ -32,36 +31,26 @@ var App = React.createClass({
   },
   handleRibbonSelected: function(selectedRibbonIndex,selectedRibbonItem) {
     var collection = this.props.selection ? this.props.selection.collection : this.state.selectedCollection;
-    this.loadTemplateFromServer(collection,
-                                selectedRibbonItem['name'],
-                                selectedRibbonItem['columnValue']);
-    this.setState({selectedRibbonItem: selectedRibbonItem,selectedRibbonIndex: selectedRibbonIndex});
+    this.loadTemplateFromServer(this.state.templates,
+                                selectedRibbonIndex,
+                                collection,
+                                selectedRibbonItem);
   },
   handleAddTemplate: function(newTpl){
     this.addNewTemplateToServer(newTpl);
   },
   handleRemoveTemplate: function(tpl){
-    console.debug("remove..");
-    //this.addRemoveTemplateToServer(tpl);
+    this.removeTemplateToServer(tpl);
   },
   loadCollectionsFromServer: function() {
     var params = {};
     $.ajax({
-      url: '/idmu/templates',
+      url: '/idmu/collections',
       dataType: 'json',
       cache: false,
       data: params,
       success: function(data) {
-        var uniques={};
-        var first = data[0];
-        for(var idx=0; idx < data.length; idx++) {
-          var key = data[idx].collection;
-          var name = data[idx].name;
-          var columnValue = data[idx].columnValue;
-          uniques[key] = {collection: key};
-        }
-        var final_list = Object.keys(uniques).map(function(v){ return {collection: v}});
-
+        var final_list = data;
         var selectedCollection = this.props.selection ? this.props.selection.collection : (this.state.selectedCollection || final_list[0].collection);
         this.setState({data: final_list,selectedCollection: selectedCollection},function(){
           this.loadTemplatesFromServer(this.state.selectedCollection);
@@ -81,10 +70,11 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
-        self.setState({selectedRibbonIndex: 0,templates: data,selectedCollection: collection}, function(){
-          var sel = self.props.selection || data[0];
-          self.loadTemplateFromServer(sel.collection,sel.name,sel.columnValue);
-        });
+        var sel = self.props.selection || data[0];
+        self.loadTemplateFromServer(data,
+                                    this.state.selectedRibbonIndex,
+                                    sel.collection,
+                                    sel);
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -99,7 +89,7 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
-        this.setState({directives: data});
+        this.directives = data;
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -131,7 +121,9 @@ var App = React.createClass({
     }
     return items;
   },
-  loadTemplateFromServer: function(collection,id,columnValue) {
+  loadTemplateFromServer: function(templates,ribbonIndex,collection,ribbonItem){
+    var id = ribbonItem.name;
+    var columnValue = ribbonItem.columnValue;
     var sfx = (columnValue && columnValue.length>0) ? "."+columnValue : ".";
     $.ajax({
       url: '/idmu/template/'+encodeURIComponent(collection+'.'+id+sfx)+"/",
@@ -142,7 +134,31 @@ var App = React.createClass({
 
         var text = data.content.replace(Utils.tkBookmarkRegex(),"\<div class=\"tkbookmark\"  contenteditable=\"false\"");
         data.content = text;
-        this.setState({template: data});
+        /*
+        if(data.directives){
+          data.directives.push({
+            "description": "Insert Situations for Agent Type",
+            "notLast": ["a","b"],
+            "onlyLast": ["c","d"],
+            "provider": {
+              "columns": "*",
+              "from": "ITM6_CONFIG",
+              "source": "tiaDB",
+              "type": 1,
+              "where": "SITNAME = '{SITNAME}' AND PROFILE IN ({PROFILES}) ORDER BY FIELD(PROFILE, {PRO\
+FILES}) DESC, CRITERIA LIMIT 1"
+            },
+            "softFail": true,
+            "type": 10
+          });
+          
+        }
+        */
+        this.setState({templates: templates,
+                       template: data,
+                       selectedRibbonIndex: ribbonIndex,
+                       selectedRibbonItem: ribbonItem,
+                       selectedCollection: collection});
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -173,7 +189,7 @@ var App = React.createClass({
   moveItemBetweenList: function(itemId, oldListId, oldIndex, newListId, newIndex){
     //console.log('moving '+itemId+' from '+oldListId+':'+oldIndex+' to '+newListId+':'+newIndex);
     //Probably want to fire an action creator here... but we'll just splice state manually
-    var newListInfo = $.extend(true, [], this.state.directives);
+    var newListInfo = $.extend(true, [], this.directives); //this.state.directives);
     var oldItemArr = newListInfo;
     var item = oldItemArr.splice(oldIndex,1);
     var tpl = this.state.template;
@@ -200,21 +216,41 @@ var App = React.createClass({
       description: opts.description
     });
   },
+  removeTemplateToServer: function(opts){
+    var params = this.templateBody(opts);
+    var collection = params.collection;
+    var name = params.name;
+    var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
+    $.ajax({
+      url: '/idmu/template/'+collection+"."+name+sfx+"/",
+      contentType: "application/json",
+      method: 'DELETE',
+      cache: false,
+      success: function(data) {
+        this.setState({selectedCollection: null},function(){
+          this.loadCollectionsFromServer();
+        }.bind(this));
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error("DELETE:",status, err.toString());
+      }.bind(this)
+    });
+  },
   addNewTemplateToServer: function(opts){
     var params = this.templateBody(opts);
     var collection = params.collection;
     var name = params.name;
     var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
     $.ajax({
-      url: '/idmu/template/'+collection+"."+name+sfx,
+      //url: '/idmu/templates/'+collection+"."+name+sfx,
+      url: '/idmu/template/',
       dataType: 'json',
       contentType: "application/json",
-      method: 'POST',
+      method: 'PUT',
       cache: false,
       data: JSON.stringify(params),
       success: function(data) {
         this.setState({selectedCollection: opts.collection},function(){
-          //this.loadTemplatesFromServer(this.state.selectedCollection);
           this.loadCollectionsFromServer();
         }.bind(this));
       }.bind(this),
@@ -228,7 +264,7 @@ var App = React.createClass({
     var name = params.name;
     var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
     $.ajax({
-      url: '/idmu/template/'+collection+"."+name+sfx,
+      url: '/idmu/template/',
       dataType: 'json',
       contentType: "application/json",
       method: 'PUT',
@@ -249,8 +285,9 @@ var App = React.createClass({
     this.loadTemplatesFromServer(this.state.selectedCollection);
   },
   render: function() {
+    var className = this.props.level === 0 ? "app_view" : "app_view app_view_inner";
     return (
-      <div className="app_view">
+      <div className={className}>
         <div id="template_collection" className="row template_collection">
           {this.header()}
         </div>
@@ -270,7 +307,7 @@ var App = React.createClass({
       var this_ref = "ribbon_"+level+"_"+index;
       
       return(<TemplateCollection ref={this_ref} level={level} index={index} selectHandler={this.handleCollectionSelected} data={this.state}/>);
-    }else{return (<div/>);}
+    }else{return (false);}
   },
   ribbon: function(){
     var mCB = this.moveItemBetweenList;
@@ -283,6 +320,6 @@ var App = React.createClass({
     var index=0;
     var level=this.props.level;
     var this_ref = "ribbon_"+level+"_"+index;
-    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB} addTplCB={addTplCB} removeTplCB={removeTplCB}/>);
+    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB} addTplCB={addTplCB} removeTplCB={removeTplCB} ldirs={this.directives}/>);
   }
 });

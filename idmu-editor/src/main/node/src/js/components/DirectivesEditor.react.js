@@ -68,7 +68,7 @@ var DirectivesEditor = React.createClass({
    }else if(type === 34){
      return(<ReplaceValuesFromHTML  ref={this_ref} index={index} level={level} data={this.props.data} directive={this.props.directive} />);
    }else{
-     return(<div/>);
+     return(false);
    }
   },
   render: function() {
@@ -89,7 +89,7 @@ var DirectivesEditor = React.createClass({
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-              <button onClick={this.handleSave} type="button" className="btn btn-primary">Save changes</button>
+              <button onClick={this.handleSave} type="button" className="btn btn-primary" data-dismiss="modal">Save changes</button>
             </div>
           </div>
         </div>
