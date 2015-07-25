@@ -153,7 +153,7 @@ final public class TemplateFactory {
     public String getTemplateAsJson(String fullName) {
         Template template;
 		try {
-			template = getMergableTemplate(fullName, "", new HashMap<>());
+			template = getMergableTemplate(fullName, "", new HashMap<String,String>());
 	        return jsonProxy.toJson(template);
 		} catch (MergeException e) {
 			return "NOT FOUND";

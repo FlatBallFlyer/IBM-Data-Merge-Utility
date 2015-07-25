@@ -137,7 +137,7 @@ public class TemplateFactoryFilePersistTest {
     	assertNotNull(testFactory.getMergableTemplate("test.foo.", "", new HashMap<String, String>()));
     	testFactory.reset();
     	assertNotNull(testFactory.getMergableTemplate("test.foo.", "", new HashMap<String, String>()));
-    	testFactory.deleteTemplate(template);
+    	testFactory.deleteTemplate("test.foo.");
     	assertEquals("NOT FOUND", testFactory.getTemplateAsJson("test.foo."));
     	testFactory.reset();
     	assertEquals("NOT FOUND", testFactory.getTemplateAsJson("test.foo."));

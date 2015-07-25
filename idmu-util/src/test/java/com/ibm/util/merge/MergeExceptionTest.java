@@ -38,7 +38,7 @@ public class MergeExceptionTest {
 		rtc = TestUtils.createDefaultRuntimeContext();
 		TemplateFactory tf = rtc.getTemplateFactory();
 		tf.reset();
-		template = tf.getMergableTemplate("system.test.", "", new HashMap<>());
+		template = tf.getMergableTemplate("system.test.", "", new HashMap<String,String>());
 		directive = template.getDirectives().get(0);
 	}
 

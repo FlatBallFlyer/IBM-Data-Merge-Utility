@@ -56,7 +56,7 @@ public class InsertSubsHtmlTest extends InsertSubsTest {
 		tf.cache(template2);
 		Template template1 = jsonProxy.fromJSON(masterTemplate, Template.class);
 		tf.cache(template1);
-		template = tf.getMergableTemplate("root.master.", "", new HashMap<>());
+		template = tf.getMergableTemplate("root.master.", "", new HashMap<String,String>());
 		template.addDirective(myDirective);
 	}
 
