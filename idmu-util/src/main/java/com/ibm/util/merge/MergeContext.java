@@ -89,7 +89,7 @@ public class MergeContext {
 			throw new MergeException("DataSource not found in Connection Pool Manager", dataSource);
 		}
 
-//		connections.put(dataSource, manager.acquireConnection(dataSource));
+		connections.put(dataSource, manager.acquireConnection(dataSource));
 		return connections.get(dataSource);
 	}
     		

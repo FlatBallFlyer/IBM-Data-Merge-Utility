@@ -1,8 +1,9 @@
 {
 	"collection":"jdbc",
 	"name":"customer",
-	"description":"JDBC Customer (Inserted into Report, Inserts Contact)",
-	"content":"\nContacts for: {NAME}<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" />",
+	"description":"Customer Template (Inserted into Report, Inserts Contacts)",
+	"outputFile":"",
+	"content":"Contacts for: {NAME}/n<tkBookmark collection=\"contact\" name=\"type\" column=\"PREFERENCE\" />",
 	"directives":[
 		{
 		  	"type": 0,
@@ -25,7 +26,7 @@
 			"onlyLast": ["period"],
 			"provider": {
 				"type": 1,
-				"source": "testgenDB",
+				"source": "testgenDb",
 				"columns": "*",
 				"from": "CONTACT",
 				"where": "IDCUSTOMER = '{IDCUSTOMER}'"
