@@ -45,21 +45,12 @@ var App = React.createClass({
   loadCollectionsFromServer: function() {
     var params = {};
     $.ajax({
-      url: '/idmu/templates',
+      url: '/idmu/collections',
       dataType: 'json',
       cache: false,
       data: params,
       success: function(data) {
-        var uniques={};
-        var first = data[0];
-        for(var idx=0; idx < data.length; idx++) {
-          var key = data[idx].collection;
-          var name = data[idx].name;
-          var columnValue = data[idx].columnValue;
-          uniques[key] = {collection: key};
-        }
-        var final_list = Object.keys(uniques).map(function(v){ return {collection: v}});
-
+        var final_list = data;
         var selectedCollection = this.props.selection ? this.props.selection.collection : (this.state.selectedCollection || final_list[0].collection);
         this.setState({data: final_list,selectedCollection: selectedCollection},function(){
           this.loadTemplatesFromServer(this.state.selectedCollection);
@@ -231,7 +222,7 @@ FILES}) DESC, CRITERIA LIMIT 1"
     var name = params.name;
     var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
     $.ajax({
-      url: '/idmu/template/'+collection+"."+name+sfx,
+      url: '/idmu/template/'+collection+"."+name+sfx+"/",
       contentType: "application/json",
       method: 'DELETE',
       cache: false,
@@ -251,7 +242,8 @@ FILES}) DESC, CRITERIA LIMIT 1"
     var name = params.name;
     var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
     $.ajax({
-      url: '/idmu/templates/'+collection+"."+name+sfx,
+      //url: '/idmu/templates/'+collection+"."+name+sfx,
+      url: '/idmu/template/',
       dataType: 'json',
       contentType: "application/json",
       method: 'PUT',
@@ -272,7 +264,7 @@ FILES}) DESC, CRITERIA LIMIT 1"
     var name = params.name;
     var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
     $.ajax({
-      url: '/idmu/templates/'+collection+"."+name+sfx,
+      url: '/idmu/template/',
       dataType: 'json',
       contentType: "application/json",
       method: 'PUT',

@@ -89,7 +89,7 @@ var DirectivesEditor = React.createClass({
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-              <button onClick={this.handleSave} type="button" className="btn btn-primary">Save changes</button>
+              <button onClick={this.handleSave} type="button" className="btn btn-primary" data-dismiss="modal">Save changes</button>
             </div>
           </div>
         </div>

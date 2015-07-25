@@ -106,7 +106,7 @@ var RHSList = React.createClass({
 
 var Directives = React.createClass({
   getInitialState: function() {
-    return {name: 'Blah', output: 'Output', description: ''};
+    return {name: 'Blah', output: 'Output'};
   },
   handleSave: function(e) {
     console.debug("handle save..");
