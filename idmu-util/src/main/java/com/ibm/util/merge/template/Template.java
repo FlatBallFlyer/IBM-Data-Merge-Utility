@@ -102,10 +102,10 @@ public class Template {
     	to.setOutputFile(  	this.outputFile);
     	to.setContent(		this.getContent());
         
-    	to.setDirectives(  	new ArrayList<>());
+    	to.setDirectives(  	new ArrayList<AbstractDirective>());
     	to.setMerged(  		false);
     	to.setMergable( 		true);
-    	to.setReplaceValues( 	new HashMap<>());
+    	to.setReplaceValues( 	new HashMap<String, String>());
 
         // Deep Copy Directives
         for (AbstractDirective fromDirective : this.getDirectives()) {

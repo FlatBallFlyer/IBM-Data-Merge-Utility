@@ -72,7 +72,7 @@ public class TemplateTest {
 		template.setCollection("root");
 		template.setName("default");
 		template.setColumnValue("none");
-		template = template.getMergable(new HashMap<>());
+		template = template.getMergable(new HashMap<String, String>());
 		template.addReplace("empty","NOT");
 		template.addReplace("folder","/tmp/output/");
 	}
@@ -400,14 +400,14 @@ public class TemplateTest {
 
 	@Test
 	public void testEquals() throws MergeException {
-		Template that = template.getMergable(new HashMap<>());
+		Template that = template.getMergable(new HashMap<String,String>());
 		assertEquals("root.default.none", template.getFullName());
 		assertEquals(template, that);
 	}
 
 	@Test
 	public void testNotEquals() throws MergeException {
-		Template that = template.getMergable(new HashMap<>());
+		Template that = template.getMergable(new HashMap<String,String>());
 		that.setColumnValue("");
 		assertNotEquals(template, that);
 	}

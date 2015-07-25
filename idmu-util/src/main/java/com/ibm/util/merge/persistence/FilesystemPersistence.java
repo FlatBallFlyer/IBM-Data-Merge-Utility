@@ -61,7 +61,7 @@ public class FilesystemPersistence extends AbstractPersistence {
             log.debug("Inspect potential template file: " + file);
             if (!file.isDirectory()) {
                 try {
-                    String json = String.join("\n", Files.readAllLines(file.toPath()));
+                    String json = new String(Files.readAllBytes(file.toPath()));
                     Template template = jsonProxy.fromJSON(json, Template.class);
                     templates.add(template);
                     log.info("Loaded template " + template.getFullName() + " : " + file.getAbsolutePath());
@@ -90,7 +90,7 @@ public class FilesystemPersistence extends AbstractPersistence {
 	@Override
     public void saveTemplate(Template template) {
 		deleteTemplate(template);
-        String fileName = templateFolder + File.separator + template.getFullName();
+        String fileName = templateFolder + File.separator + template.getFullName() + ".json";
         File file = new File(fileName);
         BufferedWriter bw = null;
         try {
@@ -114,7 +114,7 @@ public class FilesystemPersistence extends AbstractPersistence {
 
 	@Override
     public void deleteTemplate(Template template) {
-        String fileName = templateFolder + File.separator + template.getFullName();
+        String fileName = templateFolder + File.separator + template.getFullName() + ".json";
         File file = new File(fileName);
         if(file.exists()){
             if(!file.delete()){
