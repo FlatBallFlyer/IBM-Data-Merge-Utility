@@ -25,7 +25,7 @@ import com.ibm.util.merge.directive.provider.AbstractProvider;
 import com.ibm.util.merge.directive.provider.DataTable;
 import com.ibm.util.merge.json.DefaultJsonProxy;
 import com.ibm.util.merge.template.Template;
-import org.junit.Before;
+import org.junit.Before; 
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -106,7 +106,6 @@ public class InsertSubsSqlTest extends InsertSubsTest {
 
 		@Override
 		public AbstractProvider asNew() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 	}

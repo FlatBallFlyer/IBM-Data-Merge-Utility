@@ -17,6 +17,7 @@
 package com.ibm.util.merge;
 
 import com.ibm.idmu.api.JsonProxy;
+import com.ibm.idmu.api.PoolManagerConfiguration;
 import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.AbstractPersistence;
@@ -39,14 +40,18 @@ public class IntegrationTestingJdbcProvider {
 	File templateDir 	= new File("src/test/resources/templates/");
 	File outputDir 		= new File("src/test/resources/testout/");
 	File validateDir 	= new File("src/test/resources/valid/");
+    File jdbcProperties = new File("/src/test/resources/properties/databasePools.properties");
     JsonProxy jsonProxy = new PrettyJsonProxy();
     AbstractPersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
-    ConnectionPoolManager manager = new ConnectionPoolManager();
-    TemplateFactory tf 	= new TemplateFactory(persist, jsonProxy, outputDir, manager);
+    ConnectionPoolManager poolManager = new ConnectionPoolManager();
+    
+    TemplateFactory tf 	= new TemplateFactory(persist, jsonProxy, outputDir, poolManager);
 
 	@Before
 	public void setup() throws MergeException, IOException {
 		// Initialize requestMap (usually from request.getParameterMap())
+	    PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(jdbcProperties);
+	    poolManager.applyConfig(config);
 		parameterMap = new HashMap<>();
 	}
 
@@ -62,33 +67,13 @@ public class IntegrationTestingJdbcProvider {
 	}
 
 	@Test
-	public void testjdbcDefaultDataTar() throws Exception {
-		testIt("jdbcDef.functional.", "tar");
+	public void testjdbcDataTar() throws Exception {
+		testIt("jdbc.functional.", "tar");
 	}
 
 	@Test
-	public void testjdbcDefaultDataZip() throws Exception {
-		testIt("jdbcDef.functional.","zip");
-	}
-
-	@Test
-	public void testjdbcTagDataTar() throws Exception {
-		testIt("jdbcTag.functional.","tar");
-	}
-
-	@Test
-	public void testjdbcTagDataZip() throws Exception {
-		testIt("jdbcTag.functional.", "zip");
-	}
-
-	@Test
-	public void testjdbcUrlDataTar() throws Exception {
-		testIt("jdbcUrl.functional.","tar");
-	}
-
-	@Test
-	public void testjdbcUrlDataZip() throws Exception {
-		testIt("jdbcUrl.functional.","zip");
+	public void testjdbcDataZip() throws Exception {
+		testIt("jdbc.functional.","zip");
 	}
 
 	private void testIt(String fullName, String type) throws Exception {
