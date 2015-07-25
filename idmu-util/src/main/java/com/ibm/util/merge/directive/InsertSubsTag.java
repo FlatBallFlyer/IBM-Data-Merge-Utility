@@ -25,6 +25,7 @@ public class InsertSubsTag extends InsertSubs {
 	 */
 	public InsertSubsTag() {
 		super();
+		this.setDescription("Insert Subtemplates from Tagged Data");
 		setType(Directives.TYPE_TAG_INSERT);
 		setProvider(new ProviderTag());
 	}

@@ -24,6 +24,7 @@ public class ReplaceRowHtml extends ReplaceRow {
 	 */
 	public ReplaceRowHtml() {
 		super();
+		this.setDescription("Add Replace from Html Row");
 		setType(Directives.TYPE_HTML_REPLACE_ROW);
 		setProvider(new ProviderHtml());
 	}

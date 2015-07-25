@@ -22,7 +22,7 @@ import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.json.DefaultJsonProxy;
 import com.ibm.util.merge.json.PrettyJsonProxy;
-import com.ibm.util.merge.persistence.FilesystemPersistence;
+import com.ibm.util.merge.persistence.*;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.handler.*;
 import com.ibm.util.merge.web.rest.servlet.writer.TextResponseWriter;
@@ -41,7 +41,11 @@ import java.util.List;
 import java.util.Map;
 
 public class InitializeServlet extends HttpServlet {
-    private Logger log = Logger.getLogger(InitializeServlet.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6542461667547308985L;
+	private Logger log = Logger.getLogger(InitializeServlet.class);
     private String warTemplatesPath = "/WEB-INF/templates";
     private Boolean dbPersist = false;
     private Boolean prettyJson = true;
@@ -81,8 +85,8 @@ public class InitializeServlet extends HttpServlet {
         }
         JsonProxy jsonProxy = (prettyJson ? new PrettyJsonProxy() : new DefaultJsonProxy());
         FilesystemPersistence filesystemPersistence = new FilesystemPersistence(templatesDirPath, jsonProxy);
-//        AbstractPersistence persist = (dbPersist ? filesystemPersistence : new HibernatePersistence());
-        TemplateFactory tf = new TemplateFactory(filesystemPersistence, jsonProxy, outputDirPath, poolManager);
+        AbstractPersistence persist = (AbstractPersistence) (dbPersist ? filesystemPersistence : filesystemPersistence);
+        TemplateFactory tf = new TemplateFactory(persist, jsonProxy, outputDirPath, poolManager);
         servletContext.setAttribute("TemplateFactory", tf);
         for (RequestHandler handler : handlerChain) {
             log.info("Initializing handler " + handler.getClass().getName());

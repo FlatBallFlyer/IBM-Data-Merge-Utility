@@ -24,6 +24,7 @@ public class ReplaceRowSql extends ReplaceRow {
 	 */
 	public ReplaceRowSql() {
 		super();
+		this.setDescription("Add Replace from SQL Row");
 		setType(Directives.TYPE_SQL_REPLACE_ROW);
 		setProvider(new ProviderSql());
 	}

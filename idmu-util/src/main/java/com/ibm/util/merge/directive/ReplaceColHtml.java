@@ -24,6 +24,7 @@ public class ReplaceColHtml extends ReplaceCol {
 	 */
 	public ReplaceColHtml() {
 		super();
+		this.setDescription("Add Replace from Html Column");
 		setType(Directives.TYPE_HTML_REPLACE_COL);
 		setProvider(new ProviderHtml());
 	}

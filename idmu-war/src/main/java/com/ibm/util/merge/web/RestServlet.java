@@ -20,7 +20,11 @@ import java.util.Map;
  *
  */
 public class RestServlet extends HttpServlet {
-    private static final Logger log = Logger.getLogger(RestServlet.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3077892479360668874L;
+	private static final Logger log = Logger.getLogger(RestServlet.class);
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {

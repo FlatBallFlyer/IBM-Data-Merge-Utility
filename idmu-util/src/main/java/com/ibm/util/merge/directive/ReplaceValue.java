@@ -35,6 +35,7 @@ public class ReplaceValue extends AbstractDirective {
 	 */
 	public ReplaceValue() {
 		super();
+		this.setDescription("Add a Repalce Value");
 		setType(Directives.TYPE_REPLACE_VALUE);
 		setProvider(null);
 	}

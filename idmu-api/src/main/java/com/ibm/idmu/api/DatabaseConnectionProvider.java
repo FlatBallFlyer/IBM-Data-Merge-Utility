@@ -15,7 +15,12 @@ public interface DatabaseConnectionProvider {
     Map<String, Object> statistics() throws DatabaseConnectionProviderException;
 
     public static class DatabaseConnectionProviderException extends RuntimeException{
-        public DatabaseConnectionProviderException(String message) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -1889891368175097509L;
+
+		public DatabaseConnectionProviderException(String message) {
             super(message);
         }
 

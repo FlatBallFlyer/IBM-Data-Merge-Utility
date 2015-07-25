@@ -24,6 +24,7 @@ public class InsertSubsHtml extends InsertSubs {
 	 */
 	public InsertSubsHtml() {
 		super();
+		this.setDescription("Insert Subtemplates from HTML Data");		
 		setType(Directives.TYPE_HTML_INSERT);
 		setProvider(new ProviderHtml());
 	}

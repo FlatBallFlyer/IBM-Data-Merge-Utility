@@ -13,7 +13,11 @@ import java.io.IOException;
  * This servlet only catches unmapped requests for this web application.
  */
 public class CatchAllServlet extends HttpServlet {
-    private Logger log = Logger.getLogger(CatchAllServlet.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -959717532656133689L;
+	private Logger log = Logger.getLogger(CatchAllServlet.class);
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestData rd = new RequestData(req);

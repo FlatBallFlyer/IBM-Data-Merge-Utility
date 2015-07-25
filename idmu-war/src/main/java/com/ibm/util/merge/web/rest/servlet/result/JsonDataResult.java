@@ -2,7 +2,6 @@ package com.ibm.util.merge.web.rest.servlet.result;
 
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.writer.JsonResponseWriter;
 import com.ibm.util.merge.web.rest.servlet.writer.TextResponseWriter;
 
 import org.apache.log4j.Logger;

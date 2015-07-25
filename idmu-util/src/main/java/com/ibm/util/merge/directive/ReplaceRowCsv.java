@@ -24,6 +24,7 @@ public class ReplaceRowCsv extends ReplaceRow {
 	 */
 	public ReplaceRowCsv() {
 		super();
+		this.setDescription("Add Replace from CSV Row");
 		setType(Directives.TYPE_CSV_REPLACE_ROW);
 		setProvider(new ProviderCsv());
 	}

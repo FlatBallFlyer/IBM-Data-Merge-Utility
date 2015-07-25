@@ -24,6 +24,7 @@ public class ReplaceColCsv extends ReplaceCol {
 	 */
 	public ReplaceColCsv() {
 		super();
+		this.setDescription("Add Replace from CSV Column");
 		setType(Directives.TYPE_CSV_REPLACE_COL);
 		setProvider(new ProviderCsv());
 	}
