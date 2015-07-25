@@ -97,16 +97,16 @@ public class InitializeServlet extends HttpServlet {
 
     private ArrayList<RequestHandler> createHandlerInstances() {
         return new ArrayList<>(Arrays.asList(
+        		new DelTemplateResourceHandler(),
+        		new GetCollectionsResourceHandler(),
+        		new GetDirectivesResourceHandler(),
+        		new GetTemplateNamesForCollectionResourceHandler(),
+        		new GetTemplateNamesForNameResourceHandler(),
+        		new GetTemplatePackageResourceHandler(),
+        		new GetTemplateResourceHandler(),
                 new PerformMergeResourceHandler(),
-                new GetTemplateResourceHandler(),
-                new PutTemplateResourceHandler(),
-                new DelTemplateResourceHandler(),
-                new GetDirectivesResourceHandler(),
-                new GetCollectionsResourceHandler(),
-                new GetTemplatePackageResourceHandler(),
                 new PutTemplatePackageResourceHandler(),
-                new GetTemplateNamesForCollectionResourceHandler(),
-                new GetTemplateNamesForNameResourceHandler()
+                new PutTemplateResourceHandler()
         ));
     }
 

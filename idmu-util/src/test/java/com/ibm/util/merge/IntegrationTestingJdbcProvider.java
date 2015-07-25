@@ -17,12 +17,12 @@
 package com.ibm.util.merge;
 
 import com.ibm.idmu.api.JsonProxy;
+import com.ibm.idmu.api.PoolManagerConfiguration;
 import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,27 +32,30 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class IntegrationTestingJdbcProvider {
 	HashMap<String, String[]> parameterMap;
 	File templateDir 	= new File("src/test/resources/templates/");
 	File outputDir 		= new File("src/test/resources/testout/");
 	File validateDir 	= new File("src/test/resources/valid/");
+    File jdbcProperties = new File("src/test/resources/properties/databasePools.properties"); 
     JsonProxy jsonProxy = new PrettyJsonProxy();
     AbstractPersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
-    ConnectionPoolManager manager = new ConnectionPoolManager();
-    TemplateFactory tf 	= new TemplateFactory(persist, jsonProxy, outputDir, manager);
+    ConnectionPoolManager poolManager = new ConnectionPoolManager();
+    PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(jdbcProperties);
+    
+    TemplateFactory tf 	= new TemplateFactory(persist, jsonProxy, outputDir, poolManager);
 
 	@Before
 	public void setup() throws MergeException, IOException {
 		// Initialize requestMap (usually from request.getParameterMap())
+	    poolManager.applyConfig(config);
 		parameterMap = new HashMap<>();
 	}
 
 	@After
 	public void teardown() throws IOException {
-		FileUtils.cleanDirectory(outputDir); 
+//		FileUtils.cleanDirectory(outputDir); 
 	}
 	
 	@Test
@@ -62,33 +65,13 @@ public class IntegrationTestingJdbcProvider {
 	}
 
 	@Test
-	public void testjdbcDefaultDataTar() throws Exception {
-		testIt("jdbcDef.functional.", "tar");
+	public void testjdbcDataTar() throws Exception {
+		testIt("jdbc.functional.", "tar");
 	}
 
 	@Test
-	public void testjdbcDefaultDataZip() throws Exception {
-		testIt("jdbcDef.functional.","zip");
-	}
-
-	@Test
-	public void testjdbcTagDataTar() throws Exception {
-		testIt("jdbcTag.functional.","tar");
-	}
-
-	@Test
-	public void testjdbcTagDataZip() throws Exception {
-		testIt("jdbcTag.functional.", "zip");
-	}
-
-	@Test
-	public void testjdbcUrlDataTar() throws Exception {
-		testIt("jdbcUrl.functional.","tar");
-	}
-
-	@Test
-	public void testjdbcUrlDataZip() throws Exception {
-		testIt("jdbcUrl.functional.","zip");
+	public void testjdbcDataZip() throws Exception {
+		testIt("jdbc.functional.","zip");
 	}
 
 	private void testIt(String fullName, String type) throws Exception {
@@ -97,7 +80,7 @@ public class IntegrationTestingJdbcProvider {
 		parameterMap.put("DragonFlyOutputFile", new String[]{fileName});
 		parameterMap.put("DragonFlyOutputType", new String[]{type});
 		String output = tf.getMergeOutput(parameterMap);
-		assertTrue(output.trim().isEmpty());
+		assertEquals("", output.trim());
 		CompareArchives.assertArchiveEquals(type, new File(validateDir, fileName).getAbsolutePath(), new File(outputDir, fileName).getAbsolutePath());
 	}
 }

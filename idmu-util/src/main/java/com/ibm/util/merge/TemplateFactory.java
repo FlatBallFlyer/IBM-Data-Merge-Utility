@@ -258,10 +258,16 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Delete a template from Cache and Persistence
      *
-     * @param json the template json
+     * @param template full name
+     * @throws MergeException 
      */
-    public String deleteTemplate(String json) {
-        Template template = jsonProxy.fromJSON(json, Template.class);
+    public String deleteTemplate(String fullName) {
+        Template template;
+		try {
+			template = this.getMergableTemplate(fullName, "", new HashMap<String,String>());
+		} catch (MergeException e) {
+			return "FORBIDDEN";
+		}
         templateCache.evict(template.getFullName());
         persistence.deleteTemplate(template);
         return "OK";
