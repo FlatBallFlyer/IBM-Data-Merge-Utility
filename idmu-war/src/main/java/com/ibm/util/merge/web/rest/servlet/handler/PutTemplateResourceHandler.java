@@ -41,12 +41,12 @@ public class PutTemplateResourceHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(RequestData rd) {
-        return (rd.isPUT()) && rd.pathEquals("/template");
+        return (rd.isPUT()) && rd.pathEquals("/template/");
     }
 
     @Override
     public Result handle(RequestData rd) {
-        String template = rd.getPathParts().get(1);
+        String template = new String(rd.getRequestBody());
         log.warn("putTemplate for " + template);
         return new JsonDataResult(tf.saveTemplateFromJson(template));
     }

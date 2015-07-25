@@ -33,7 +33,6 @@ import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 
-
 public class IntegrationSafety {
 	HashMap<String, String[]> parameterMap;
 	File templateDir 	= new File("src/test/resources/templates/");

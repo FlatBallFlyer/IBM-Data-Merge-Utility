@@ -23,7 +23,6 @@ import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.persistence.AbstractPersistence;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,31 +32,30 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class IntegrationTestingJdbcProvider {
 	HashMap<String, String[]> parameterMap;
 	File templateDir 	= new File("src/test/resources/templates/");
 	File outputDir 		= new File("src/test/resources/testout/");
 	File validateDir 	= new File("src/test/resources/valid/");
-    File jdbcProperties = new File("/src/test/resources/properties/databasePools.properties");
+    File jdbcProperties = new File("src/test/resources/properties/databasePools.properties"); 
     JsonProxy jsonProxy = new PrettyJsonProxy();
     AbstractPersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
     ConnectionPoolManager poolManager = new ConnectionPoolManager();
+    PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(jdbcProperties);
     
     TemplateFactory tf 	= new TemplateFactory(persist, jsonProxy, outputDir, poolManager);
 
 	@Before
 	public void setup() throws MergeException, IOException {
 		// Initialize requestMap (usually from request.getParameterMap())
-	    PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(jdbcProperties);
 	    poolManager.applyConfig(config);
 		parameterMap = new HashMap<>();
 	}
 
 	@After
 	public void teardown() throws IOException {
-		FileUtils.cleanDirectory(outputDir); 
+//		FileUtils.cleanDirectory(outputDir); 
 	}
 	
 	@Test
@@ -82,7 +80,7 @@ public class IntegrationTestingJdbcProvider {
 		parameterMap.put("DragonFlyOutputFile", new String[]{fileName});
 		parameterMap.put("DragonFlyOutputType", new String[]{type});
 		String output = tf.getMergeOutput(parameterMap);
-		assertTrue(output.trim().isEmpty());
+		assertEquals("", output.trim());
 		CompareArchives.assertArchiveEquals(type, new File(validateDir, fileName).getAbsolutePath(), new File(outputDir, fileName).getAbsolutePath());
 	}
 }
