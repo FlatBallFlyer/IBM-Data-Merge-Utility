@@ -86,9 +86,9 @@ var AddTemplate = React.createClass({
               <div className="row">
                 <div className="col-lg-12">
                   <form>
-                     {this.insertCollection()}
-      p               {this.insertName()}
-                     {this.insertColumn()}
+                    {this.insertCollection()}
+                    {this.insertName()}
+                    {this.insertColumn()}
                   </form>
                 </div>
               </div>

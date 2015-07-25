@@ -68,7 +68,7 @@ var DirectivesEditor = React.createClass({
    }else if(type === 34){
      return(<ReplaceValuesFromHTML  ref={this_ref} index={index} level={level} data={this.props.data} directive={this.props.directive} />);
    }else{
-     return(<div/>);
+     return(false);
    }
   },
   render: function() {

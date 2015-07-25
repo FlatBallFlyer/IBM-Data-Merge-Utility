@@ -41,32 +41,40 @@ var TemplateEditor = React.createClass({
   },
   bodyItems: function(){
     var data = this.props.data;
+    var tpl = data.template;
     var items = data.template.items;
     var body_items = [];
 
+    var index=this.props.index;
     var level=this.props.level;
     var sCB = this.handleSave;
     var hasInsertDirective = this.hasInsertDirectives();
     if(items){
       body_items = items.map(function(opt,i){
         if(opt.type === 'text'){
-          var this_ref = "template_body_"+level+"_"+i;
-          return(<TemplateBody sCB={sCB} index={i} level={level} key={i} ref={this_ref} data={data} content={opt.slice} hasInsertDirective={hasInsertDirective}/>);
+          var this_ref = "template_body_"+level+"_"+(index+i);
+          
+          console.debug(">>>body "+level+"/"+(index+i)+">>","|",tpl.collection,tpl.name,tpl.columnValue);
+          return(<TemplateBody sCB={sCB} index={index+i} level={level} key={index+i} ref={this_ref} data={data} content={opt.slice} hasInsertDirective={hasInsertDirective}/>);
+          
         }else if(level < config("max_depth")){
           var el=$.parseHTML(opt.slice);
           var suppressNav = false;
           var collection = $(el).attr('collection');
           var name = $(el).attr('name');
           var colName = $(el).attr('column');
+
+          console.debug(">>>parsed "+level+"/"+(index+i)+">>","|",opt.slice,"|",collection,name,colName);
           
           if(!colName || colName.length === 0){
             suppressNav=true;
           }
 
-          var app_ref = "app_"+level+"_"+i;
+          var app_ref = "app_"+level+"_"+(index+i);
           var selection = {collection:collection,name: name,colValue:colName};
+          console.log("app index>>>",index+1);
           return(
-            <App key={i} ref={app_ref} level={level+1} index={i} selection={selection}  suppressNav={suppressNav}/>
+            <App key={index+i} ref={app_ref} level={level+1} index={index+i} selection={selection}  suppressNav={suppressNav}/>
           );
         }else {
           return(<div><h5>Exceeded max sub-template depth.</h5></div>);
@@ -86,10 +94,11 @@ var TemplateEditor = React.createClass({
     var index=this.props.index;
     var level=this.props.level;
     var this_ref = "template_header_"+level+"_"+index;
+    var ldirs = this.props.ldirs;
    
     return(
       <div className="row">
-        <TemplateHeader level={level} index={index} ref={this_ref} data={this.props.data} mCB={mCB} aCB={aCB} sCB={this.handleSave} dCB={dCB}  rCB={rCB} addTplCB={addTplCB} removeTplCB={removeTplCB}/>
+        <TemplateHeader level={level} index={index} ref={this_ref} data={this.props.data} mCB={mCB} aCB={aCB} sCB={this.handleSave} dCB={dCB}  rCB={rCB} addTplCB={addTplCB} removeTplCB={removeTplCB} suppressNav={this.props.suppressNav} ldirs={ldirs}/>
         {this.bodyItems()}
       </div>
     );

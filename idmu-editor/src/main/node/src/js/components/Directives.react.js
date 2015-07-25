@@ -41,10 +41,11 @@ var LHSList = React.createClass({
   render: function() {
     var title = this.props.title;
     var id = this.props.id;
+    var ldirs = this.props.ldirs;
     return (
       <ul ref="" className="list-group" data-sortable-list-id={id}>
         {
-          this.props.directives.map(function(opt,i){
+          ldirs.map(function(opt,i){
             var item_id = i;
             return(<li className="list-group-item" key={item_id} data-sortable-item-id={item_id}>
               <span className="drag-handle">::</span>{opt['description']}
@@ -111,7 +112,7 @@ var Directives = React.createClass({
     console.debug("handle save..");
   },
   render: function() {
-    var lhs = this.props.data.directives;
+    var lhs = this.props.data.ldirs;
     var rhs=this.props.data['template'] ? this.props.data['template']['directives'] : [];
     var betweenCB = this.moveItemBetweenList;
     var withinCB = this.moveItemWithinList;
@@ -123,6 +124,7 @@ var Directives = React.createClass({
     var rCB = this.props.rCB;
     var level=this.props.level;
     var index=this.props.index;
+    var ldirs=this.props.ldirs;
     
     return (
 
@@ -130,10 +132,10 @@ var Directives = React.createClass({
         <div className="row">
           <div className="col-lg-12">
             <div className="from-directives col-xs-6 col-md-6">
-              <LHSList level={level} index={index} ref={"lhs_"+level+"_"+index} sort={false} key={lhsID} id={lhsID} title={"LHS"} directives={lhs} moveItemBetweenList={mCB} moveItemWithinList={aCB}/>
+              <LHSList level={level} index={index} ref={"lhs_"+level+"_"+index} sort={false} key={lhsID} id={lhsID} title={"LHS"} directives={lhs} moveItemBetweenList={mCB} moveItemWithinList={aCB} ldirs={ldirs}/>
             </div>
             <div className="to-directives col-xs-6 col-md-6">
-              <RHSList level={level} index={index} ref={"lhs_"+level+"_"+index} sort={true} key={rhsID} id={rhsID} data={this.props.data} title={"RHS"} directives={rhs} moveItemBetweenList={mCB} moveItemWithinList={aCB} dCB={dCB} rCB={rCB}/>
+              <RHSList level={level} index={index} ref={"lhs_"+level+"_"+index} sort={true} key={rhsID} id={rhsID} data={this.props.data} title={"RHS"} directives={rhs} moveItemBetweenList={mCB} moveItemWithinList={aCB} dCB={dCB} rCB={rCB} ldirs={ldirs}/>
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@ var TemplateHeader = React.createClass({
     return {panelConfig: 'show-header'};
   },
   handleChangePanel: function(evt){
+    console.log("handleChangePanel",evt.target.id);
     this.setState({panelConfig: evt.target.id});
   },
   getHeaderValues: function(){
@@ -27,9 +28,10 @@ var TemplateHeader = React.createClass({
     var level = this.props.level;
     var index = this.props.index;
     var changeCB = this.handleChangePanel;
+    var ldirs = this.props.ldirs;
     if(this.state.panelConfig === 'show-directives') {
       var this_ref="directives_panel_"+level+"_"+index;
-      return(<Directives level={level} index={index} ref={this_ref} rCB={rCB} dCB={dCB} mCB={mCB} aCB={aCB} data={this.props.data} changeCB={changeCB}/>);
+      return(<Directives level={level} index={index} ref={this_ref} rCB={rCB} dCB={dCB} mCB={mCB} aCB={aCB} data={this.props.data} changeCB={changeCB} ldirs={ldirs}/>);
     }else {
       var p_ref = "header_panel_"+level+"_"+index;
       return(<HeaderPanel level={level} index={index} ref={p_ref} rCB={rCB} dCB={dCB} data={this.props.data} mCB={mCB} aCB={aCB} changeCB={changeCB}/>);
@@ -48,20 +50,24 @@ var TemplateHeader = React.createClass({
     if(level===0){
       return(<AddTemplateTrigger level={level} index={index} ref={this_ref} title={"Add Template"} selection={selection} addTplCB={addTplCB}/>);
     }else{
-      return(<div/>);
+      return(false);
     }
   },
   insertRemoveButton: function(){
+
+    var data = this.props.data;
+    var tpl = data.template;
+    var selection={collection: data.selectedCollection,
+                   name: tpl.name};
+    
     var level=this.props.level;
     var index=this.props.index;
     var this_ref = Utils.thisRef(level,index,"remove_template_trigger");
     var removeTplCB = this.props.removeTplCB;
-    var selection = this.props.selection;
     if(this.props.level===0){
-      //return(<div/>);
       return(<RemoveTemplateTrigger level={level} index={index} ref={this_ref} selection={selection} removeTplCB={removeTplCB}/>);
     }else{
-      return(<div/>);
+      return(false);
     }
   },
   insertSaveButton: function(){
@@ -82,16 +88,19 @@ var TemplateHeader = React.createClass({
 
     var level=this.props.level;
     var index=this.props.index;
-    var accordian_id = "accordian_"+level+"_"+index;
-    var panel_heading_id = "headingOne_"+level+"_"+index;
-    var show_directives_id="show-directives_"+level+"_"+index;
-    var collapse_id = "collapseOne_"+level+"_"+index;
+    var accordian_id = "accordian_"+level+"_"+index+Utils.uuid();
+    var panel_heading_id = "headingOne_"+level+"_"+index+Utils.uuid();
+    var collapse_id = "collapseOne_"+level+"_"+index+Utils.uuid();
+    var name = tpl['name'];
+    var columnValue = tpl['columnValue'] ? "."+tpl['columnValue'] : "";
+    var label = tpl['collection']+"."+name+columnValue;
     if(tpl){
-      var columnValue = tpl['columnValue'] ? "."+tpl['columnValue'] : "";
-      var name = tpl['name'];
-      var label = tpl['collection']+"."+name+columnValue;
+      var classes = "row no-margin";
+      if(this.props.suppressNav){
+        classes += " col-md-12 "
+      }
       return(
-        <div className="row no-margin">
+        <div className={classes}>
           <div className="panel-group" id={accordian_id} role="tablist" aria-multiselectable="true">
             <div className="panel panel-default">
               <div className="panel-heading" role="tab" id={panel_heading_id}>
@@ -124,7 +133,7 @@ var TemplateHeader = React.createClass({
         </div>
       );
     }else{
-      return(<div/>);
+      return(false);
     }
   }
 });

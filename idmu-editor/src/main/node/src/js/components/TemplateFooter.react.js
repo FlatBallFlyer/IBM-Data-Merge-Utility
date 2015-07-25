@@ -3,7 +3,7 @@
  */
 var TemplateFooter = React.createClass({
   render: function(){
-    return(<div/>);
+    return(false);
   }
 });
 
