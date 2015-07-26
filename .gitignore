@@ -7,10 +7,13 @@
 /build/TIADB.sql
 /build/context.xml
 /*/target
+/WebContent
+/src
 /idmu-util/src/test/resources/testout
 /idmu-editor/src/main/node/bower_components
 /idmu-editor/src/main/node/node_modules
 /idmu-editor/src/main/node/build
+/idmu-editor/src/main/resources/META-INF
 /idmu-editor/src/main/resources/META-INF/resources/editor/css
 /idmu-editor/src/main/resources/META-INF/resources/editor/font
 /idmu-editor/src/main/resources/META-INF/resources/editor/html

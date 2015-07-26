@@ -32,9 +32,36 @@ import java.io.File;
 import java.util.*;
 
 /**
- * This class implements a Caching Template Factory as well as all aspects of Template Persistence
- *
- * @author Mike Storey
+ * <p>This class implements the public interface for IDMU.</p> 
+ * 
+ * <h3>Usage:</h3>
+ *  
+ * <h4>To Initialize the Factory</h4>
+ * <pre>
+ * {@code
+ * File templateDir    = new File("PATH TO TEMPLATES");
+ * File outputDir      = new File("PATH TO OUTPUT DIR");
+ * File jdbcProperties = new File("PATH TO DATABASE_PROPS"); 
+ * JsonProxy jsonProxy = new PrettyJsonProxy(); // or DefaultJsonProxy()
+ * ConnectionPoolManager poolManager = new ConnectionPoolManager();
+ * PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(jdbcProperties);
+ * AbstractPersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
+ * 	or 
+ * AbstractPersistence persist = new DatabasePersistence(dataSourceName);
+ *     
+ * TemplateFactory tf 	= new TemplateFactory(persist, jsonProxy, outputDir, poolManager);
+ * }
+ * </pre>
+ * 
+ * <h4>To Use the factory to merge a template.</h4>
+ * <pre>
+ * {@code
+ * String returnValue = tf.getMergeOutput(Map<String, String[]>; requestParameters)
+ * }
+ * </pre>
+ * 
+ * @see #getMergeOutput(Map)
+ * 
  */
 final public class TemplateFactory {
     // Factory Constants
@@ -42,13 +69,14 @@ final public class TemplateFactory {
     public static final String KEY_CACHE_RESET = Template.wrap("DragonFlyCacheReset");
     public static final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
     public static final String DEFAULT_FULLNAME = "root.default.";
+    public static final String SYSTEM_STATUS_PAGE = "system.status.";
     
     // Factory Attributes
     private final AbstractPersistence persistence;
     private final File outputRoot;
 	private final TemplateCache templateCache;
     private final JsonProxy jsonProxy;
-    private ConnectionPoolManager poolManager;
+    private final ConnectionPoolManager poolManager;
     
     // Factory Counters
     private double mergeCount = 0;
@@ -66,15 +94,26 @@ final public class TemplateFactory {
     }
 
     /**********************************************************************************
-     * <p>Template from Servlet request Constructor. Initiates a template based on http Servlet Request
-     * parameters. Servlet request parameters are used to initialize the Replace hash. The
-     * template to be used is specified on the KEY_FULLNAME parameter.
-     * If no template is provided the DEFAULT_FULLNAME value is used.
-     * The KEY_CACHE_RESET parameter will reset the Template Cache.
-     * The KEY_CACHE_LOAD parameter will load all templates</p>
+     * <p>Call this method Merge a template with it's sub-templates and data.</p>
+     * <p>The request parameters list contains the initial replace values for the merge.
+     * The following examples show the use of special parameters
+     * 
+     * <pre>
+	 * {@code
+	 * TemplateFactory.KEY_FULLNAME specifies the fullname (collection.name.column) of the Template to merge.
+	 *      parameterMap.put(TemplateFactory.KEY_FULLNAME, new String[]{"root.test."});
+	 *      The full name will always have two delimiters i.e. - note the trailing period.
+     * TemplateFactory.KEY_CACHE_RESET will clear and reload the template cache - use after updating templates
+	 * Template.TAG_OUTPUT_TYPE = Template.TYPE_ZIP to create a zip archive instead of the default TYPE_TAR archive.
+	 * Template.TAG_OUTPUTFILE to override the GUID generated output file name 
+	 *      Use at your own risk, concurrent merges with the same output file will fail with unpredictable results.
+	 * Template.TAG_SOFTFAIL to enable "Soft Fail" for the merge 
+	 *      (merge exceptions are written to output allowing merge to continue, useful for testing)
+	 * }
+	 * </pre>
      *
-     * @param requestParameters HttpServletRequest
-     * @return Template The new Template object
+     * @param requestParameters a request parameters map of String, String[] i.e. ServletRequest.parameters
+     * @return String the Merged Output
      * @see Template
      */
     public String getMergeOutput(Map<String, String[]> requestParameters) {
@@ -117,14 +156,13 @@ final public class TemplateFactory {
     }
 
     /**********************************************************************************
-     * Get a copy of a cached Template based on a Template Fullname amd ShortName The
-     * provided Replace hash is copied to the new Template before it is returned
+     * Get a mergable copy of a cached Template based desired and default template name
      *
      * @param fullName    - Template full name
-     * @param shortName   - "Default" template name
-     * @param seedReplace Initial replace hash
+     * @param shortName   - "Default" template full name (if full name not found)
+     * @param seedReplace - Initial replace hash
      * @return Template The new Template object
-     * @throws MergeException 
+     * @throws MergeException when the template is not found or can not be merged
      */
     public Template getMergableTemplate(String fullName, String shortName, Map<String, String> seedReplace) throws MergeException {
         Template newTemplate = null;
@@ -149,6 +187,7 @@ final public class TemplateFactory {
      * Get a template as jSon from cache
      *
      * @param fullName - the Template Full Name
+     * @return String - a single template JSON string or "NOT FOUND"
      */
     public String getTemplateAsJson(String fullName) {
         Template template;
@@ -176,8 +215,8 @@ final public class TemplateFactory {
     /**********************************************************************************
      * <p>Get a JSON List of Dierctive Types.</p>
      *
-     * @return JSON List of Directive Types and Names
-     * @see Template
+     * @return JSON List of Directive JSON objects for all supported directives
+     * @see Directives
      */
     public String getDirectiveNamesJSON() {
     	Directives directives = new Directives();
@@ -189,8 +228,7 @@ final public class TemplateFactory {
     /**********************************************************************************
      * <p>Get a JSON List of Collections.</p>
      *
-     * @return JSON List of Collection Names
-     * @see Template
+     * @return JSON List of Collection Names in the form ["collection":"root","collection":"test"...]
      */
     public String getCollectionNamesJSON() {
         ArrayList<CollectionName> theList;
@@ -200,10 +238,11 @@ final public class TemplateFactory {
     }
 
     /**********************************************************************************
-     * <p>Get a JSON List of Templates in a collection.</p>
+     * <p>Get a JSON List of Template Names for a collection.</p>
      *
-     * @return JSON List of Collection Names
-     * @see Template
+     * @param collection collection name
+     * @return JSON List of template names
+     * 	in the form [{"collection":"root","name":"default","columnValue":""},...]
      */
     public String getTemplateNamesJSON(String collection) {
         ArrayList<TemplateName> theList;
@@ -215,8 +254,10 @@ final public class TemplateFactory {
     /**********************************************************************************
      * <p>Get a JSON List of Templates in a collection with a given name.</p>
      *
-     * @param collection, name
+     * @param collection the Collection Name
+     * @param name the Tempalte Name
      * @return JSON List of Template Name
+     * 	in the form [{"collection":"root","name":"default","columnValue":""},...]
      * @see Template
      */
     public String getTemplateNamesJSON(String collection, String name) {
@@ -230,6 +271,7 @@ final public class TemplateFactory {
      * Persist a collection of Templates
      *
      * @param json array of template json
+     * @return the saved templates json array
      */
 	@SuppressWarnings("unchecked")
 	public String saveTemplatesFromJson(String json) {
@@ -247,6 +289,7 @@ final public class TemplateFactory {
      * Persist a template, through the template cache
      *
      * @param json the template json
+     * @return the saved template json string
      */
     public String saveTemplateFromJson(String json) {
         Template template1 = jsonProxy.fromJSON(json, Template.class);
@@ -258,8 +301,8 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Delete a template from Cache and Persistence
      *
-     * @param template full name
-     * @throws MergeException 
+     * @param fullName the template fullname
+     * @return "OK" or "FORBIDDEN"
      */
     public String deleteTemplate(String fullName) {
         Template template;
@@ -274,13 +317,13 @@ final public class TemplateFactory {
     }
 
     /**********************************************************************************
-     * Add a template to the cache, and return a cloned copy
+     * Get the TemplateFactory status page
      *
-     * @param template the template json
+     * @return the HTML Status paged as merged from TemplateFactory.SYSTEM_STATUS_PAGE
      */
     public String getStatusPage() {
     	HashMap<String, String[]> parameterMap = new HashMap<String, String[]>();
-		parameterMap.put("DragonFlyFullName", 	new String[]{"system.status."});
+		parameterMap.put(TemplateFactory.KEY_FULLNAME, new String[]{TemplateFactory.SYSTEM_STATUS_PAGE});
 		parameterMap.put("MERGE_COUNT", 		new String[]{Double.toString(mergeCount)});
 		parameterMap.put("MERGE_TIME", 			new String[]{Double.toString(mergeTime)});
 		parameterMap.put("MERGE_AVG", 			new String[]{Double.toString(mergeTime/mergeCount)});
@@ -322,26 +365,37 @@ final public class TemplateFactory {
         log.info(template.getFullName() + " has been cached");
     }
     
+    /**
+     * @return cache size
+     */
     public int size() {
         return templateCache.size();
     }
 
+    /**
+     * @return the pool manager
+     */
     public ConnectionPoolManager getPoolManager() {
 		return poolManager;
 	}
 
-	public void setPoolManager(ConnectionPoolManager poolManager) {
-		this.poolManager = poolManager;
-	}
-
+	/**
+	 * @return the template cache
+	 */
 	public TemplateCache getTemplateCache() {
         return templateCache;
     }
 
+    /**
+     * @return the persistence object
+     */
     public AbstractPersistence getPersistence() {
 		return persistence;
 	}
 
+ 	/**
+ 	 * @return the output root folder
+ 	 */
  	public File getOutputRoot() {
 		return outputRoot;
 	}
