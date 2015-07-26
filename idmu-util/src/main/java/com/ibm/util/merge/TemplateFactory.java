@@ -102,7 +102,7 @@ final public class TemplateFactory {
 	 * {@code
 	 * TemplateFactory.KEY_FULLNAME specifies the fullname (collection.name.column) of the Template to merge.
 	 *      parameterMap.put(TemplateFactory.KEY_FULLNAME, new String[]{"root.test."});
-	 *      The full name will always have two delimiters i.e. - note the trailing period.
+	 *      The full name will always have two delimiters - note the trailing period.
      * TemplateFactory.KEY_CACHE_RESET will clear and reload the template cache - use after updating templates
 	 * Template.TAG_OUTPUT_TYPE = Template.TYPE_ZIP to create a zip archive instead of the default TYPE_TAR archive.
 	 * Template.TAG_OUTPUTFILE to override the GUID generated output file name 
@@ -158,9 +158,9 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Get a mergable copy of a cached Template based desired and default template name
      *
-     * @param fullName    - Template full name
-     * @param shortName   - "Default" template full name (if full name not found)
-     * @param seedReplace - Initial replace hash
+     * @param fullName Template full name
+     * @param shortName "Default" template full name (if full name not found)
+     * @param seedReplace Initial replace hash
      * @return Template The new Template object
      * @throws MergeException when the template is not found or can not be merged
      */
@@ -186,8 +186,8 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Get a template as jSon from cache
      *
-     * @param fullName - the Template Full Name
-     * @return String - a single template JSON string or "NOT FOUND"
+     * @param fullName the Template Full Name
+     * @return String a single template JSON string or "NOT FOUND"
      */
     public String getTemplateAsJson(String fullName) {
         Template template;
