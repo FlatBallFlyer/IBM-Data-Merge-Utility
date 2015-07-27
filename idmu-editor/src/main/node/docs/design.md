@@ -26,11 +26,10 @@
 <a name="overview"/>
 # Overview
 
-This document presents the main components in the application
-and also documents the individual components.
+This document describes the main components of the IDMU template editor application.
 
 <a name="bom"/>
-# Component BOM
+# IDMU Template Editor Bill of Materials
 ```
 App(d)
   TemplateCollection(d)
@@ -71,14 +70,14 @@ App(d)
 ```
 
 <a name="app"/>
-## App
+## App Component
 
-The App component encapsulates the top top-level state, and all
+The App component encapsulates the top top-level state of the IDMU template editor, and all
 interactions with the server. It is also the primary source of
 render trigger due to state changes. The component is meant to
 be embedded inside other components in a nested fashion.
 
-The important top-level states are
+The important top-level states are:
 
 ```
 - global directives
@@ -89,7 +88,7 @@ The important top-level states are
 - current template in view
 ```
 
-The important server interaction methods are
+The important server interaction methods are:
 
 ```
 - loadDirectives
@@ -104,7 +103,7 @@ The important server interaction methods are
 <a name="template_collection"/>
 ## TemplateCollection
 
-The class encapsulates the selection behavior of top-level templates.
+This component encapsulates the selection behavior of top-level templates.
 Note that this component is never utilized when the `App` component
 is nested. This logic is implemented in the `App:header` method.
 
@@ -112,38 +111,35 @@ is nested. This logic is implemented in the `App:header` method.
 <a name="template_ribbon"/>
 ## TemplateRibbon
 
-The ribbon component acts as a container for a group of templates in
+The ribbon class acts as a container for a group of templates in
 a selected collection. The behavior is like a cover-flow showing a
-single template at a time. Provisions for left/right navigation are
-provided.
+single template at a time. The component provides left/right navigation.
 
-For each concrete template in the collection a `TemplateRibbonItem`
-is embedded. The template itself is lazily loaded when the item
+The IDUMU template editor embeds a `TemplateRibbonItem` for each template
+in the application. The template itself is lazily loaded when the item
 is in view.
 
-When the left/right buttons are clicked the `App:collectionSelected`
-is called.
+When you click the left/right buttons, the app calls `App:collectionSelected.
 
 
 <a name="template_ribbon_item"/>
 ## TemplateRibbonItem
 
-The class encapsulates ribbon related behavior and embeds the
+This class encapsulates ribbon related behavior and embeds the
 `TemplateEditor` component for a particular template.
 
 <a name="template_editor"/>
 ## TemplateEditor
 
-The class acts as container for multiple components as stated
-in the BOM. The class also acts as a narrow channel for template
+This class acts as container for multiple components as stated
+in the BOM. This class also acts as a narrow channel for template
 save actions.
 
 
 <a name="bookmarks"/>
 ### Handling Of Bookmarks
 
-When it is time to render this component the following
-action takes place.
+The following actions take place when the IDMU renders this component:
 
 - The `TemplateHeader` is instantiated and rendered.
 
@@ -162,8 +158,8 @@ instantiated.
 <a name="handle_save_action"/>
 ### Handling Of Save Action
 
-When a save action happens either due to user pressing the `Save` button
-or when a bookmark is inserted the `TemplateEditor:handleSave` method is
+When user executes a save action by either pressing the `Save` button
+or when a user inserts a bookmark, the `TemplateEditor:handleSave` method is
 called. The following sequence of action happens.
 
 - The header values are collected
@@ -179,11 +175,11 @@ text content and/or any newly inserted bookmark.
 <a name="template_header"/>
 ## TemplateHeader
 
-The header component provides for the following.
+This header component provides for the following.
 
-- Embed template level behavior components like add, remove, and save
+- Embeds template level behavior components like add, remove, and save
 
-- Accordion like behavior that encapsulates either the strictly
+- Provides Accordion like behavior that encapsulates either the strictly
 header level components `HeaderPanel` (to edit name, description,
 and action) or the `Directives` panel to configure the directives
 for the template.
