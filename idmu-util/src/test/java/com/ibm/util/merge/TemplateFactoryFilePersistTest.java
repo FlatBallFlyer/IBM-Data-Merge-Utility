@@ -44,7 +44,7 @@ public class TemplateFactoryFilePersistTest {
 	private File outputDir = new File("src/test/resources/testout/");
     ConnectionPoolManager manager = new ConnectionPoolManager();
     private TemplateFactory testFactory = new TemplateFactory(filePersist, proxy, outputDir, manager);
-    private int count = 62;
+    private int count = 61;
     
     @Before
     public void setUp() throws Exception {
