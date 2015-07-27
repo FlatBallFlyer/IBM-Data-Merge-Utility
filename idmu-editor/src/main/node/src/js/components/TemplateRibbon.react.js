@@ -83,6 +83,7 @@ var TemplateRibbon = React.createClass({
   render: function(){
     var data = this.props.data;
     if(!data.templates || data.templates.length <= 0) {
+      console.log("templateribbon:render -- templates empty");
       return(false);
     }
     var selectedCollection = data.selectedCollection;
@@ -90,6 +91,7 @@ var TemplateRibbon = React.createClass({
     var templates=data.templates;
     var selectHandler = this.props.selectHandler;
     var item = templates[data.selectedRibbonIndex];
+    console.log("templateribbon:render -- selectedRibbonIndex = "+data.selectedRibbonIndex);
     var newRibbon = [];
 
     var mCB = this.props.mCB;
@@ -126,6 +128,7 @@ var TemplateRibbon = React.createClass({
           </div>
         );}.bind(this));
     }else {
+      console.log("templateribbon:render -- item empty");
       newRibbon=[0].map(function(opt,i){
         return(false);
       });

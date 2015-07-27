@@ -70,7 +70,6 @@ var TemplateEditor = React.createClass({
         if(opt.type === 'text'){
           var this_ref = "template_body_"+level+"_"+(index+i);
           
-          console.debug(">>>body "+level+"/"+(index+i)+">>","|",tpl.collection,tpl.name,tpl.columnValue);
           return(<TemplateBody sCB={sCB} index={index+i} level={level} key={index+i} ref={this_ref} data={data} content={opt.slice} hasInsertDirective={hasInsertDirective}/>);
           
         }else if(level < config("max_depth")){
@@ -79,16 +78,12 @@ var TemplateEditor = React.createClass({
           var collection = $(el).attr('collection');
           var name = $(el).attr('name');
           var colName = $(el).attr('column');
-
-          console.debug(">>>parsed "+level+"/"+(index+i)+">>","|",opt.slice,"|",collection,name,colName);
-          
           if(!colName || colName.length === 0){
             suppressNav=true;
           }
 
           var app_ref = "app_"+level+"_"+(index+i);
           var selection = {collection:collection,name: name,colValue:colName};
-          console.log("app index>>>",index+1);
           return(
             <App key={index+i} ref={app_ref} level={level+1} index={index+i} selection={selection}  suppressNav={suppressNav}/>
           );

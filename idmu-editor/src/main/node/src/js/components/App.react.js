@@ -93,8 +93,9 @@ var App = React.createClass({
       data: params,
       success: function(data) {
         var sel = self.props.selection || data[0];
+        var selectedRibbonIndex = self.props.level == 0 ? 0 : this.state.selectedRibbonIndex;
         self.loadTemplateFromServer(data,
-                                    this.state.selectedRibbonIndex,
+                                    selectedRibbonIndex,
                                     sel.collection,
                                     sel);
       }.bind(this),
@@ -153,29 +154,7 @@ var App = React.createClass({
       cache: false,
       success: function(data) {
         data.items = this.buildBodyItems(data.content);
-
-        var text = data.content.replace(Utils.tkBookmarkRegex(),"\<div class=\"tkbookmark\"  contenteditable=\"false\"");
-        data.content = text;
-        /*
-        if(data.directives){
-          data.directives.push({
-            "description": "Insert Situations for Agent Type",
-            "notLast": ["a","b"],
-            "onlyLast": ["c","d"],
-            "provider": {
-              "columns": "*",
-              "from": "ITM6_CONFIG",
-              "source": "tiaDB",
-              "type": 1,
-              "where": "SITNAME = '{SITNAME}' AND PROFILE IN ({PROFILES}) ORDER BY FIELD(PROFILE, {PRO\
-FILES}) DESC, CRITERIA LIMIT 1"
-            },
-            "softFail": true,
-            "type": 10
-          });
-          
-        }
-        */
+        console.log("app:loadtemplate -- ribbonIndex = "+ribbonIndex);
         this.setState({templates: templates,
                        template: data,
                        selectedRibbonIndex: ribbonIndex,
