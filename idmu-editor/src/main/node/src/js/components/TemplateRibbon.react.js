@@ -1,3 +1,19 @@
+/*
+* Copyright 2015, 2015 IBM
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/
 /**
  * @jsx React.DOM
  */
@@ -10,6 +26,7 @@ var TemplateRibbonItem = React.createClass({
     var rCB = this.props.rCB;
     var addTplCB = this.props.addTplCB;
     var removeTplCB = this.props.removeTplCB;
+    var mergeTplCB = this.props.mergeTplCB;
     var index = this.props.index;
     var level = this.props.level;
     var this_ref = "template_editor_"+level+"_"+index;
@@ -17,7 +34,7 @@ var TemplateRibbonItem = React.createClass({
 
     return(
       <div className="row ribbon-item">
-        <TemplateEditor ref={this_ref} level={level} index={index} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={this.props.collection} selection={this.props.data} addTplCB={addTplCB} removeTplCB={removeTplCB} suppressNav={this.props.suppressNav} ldirs={ldirs}/>
+        <TemplateEditor ref={this_ref} level={level} index={index} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={this.props.collection} selection={this.props.data} addTplCB={addTplCB} removeTplCB={removeTplCB} mergeTplCB={mergeTplCB} suppressNav={this.props.suppressNav} ldirs={ldirs}/>
       </div>
     );
   }
@@ -82,6 +99,7 @@ var TemplateRibbon = React.createClass({
     var rCB = this.props.rCB;
     var addTplCB = this.props.addTplCB;
     var removeTplCB = this.props.removeTplCB;
+    var mergeTplCB = this.props.mergeTplCB;
 
     var index = this.props.index;
     var level = this.props.level;
@@ -90,7 +108,7 @@ var TemplateRibbon = React.createClass({
     if(item) {
       var items = [item].map(function(opt,i){
         var this_ref = "ribbon_item_"+level+"_"+(index+i);
-        return(<TemplateRibbonItem ref={this_ref} level={level} index={index+i} key={index+i} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={opt} collection={data}  addTplCB={addTplCB}  removeTplCB={removeTplCB} suppressNav={suppressNav}  ldirs={ldirs}/>);
+        return(<TemplateRibbonItem ref={this_ref} level={level} index={index+i} key={index+i} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={opt} collection={data}  addTplCB={addTplCB} mergeTplCB={mergeTplCB} removeTplCB={removeTplCB} suppressNav={suppressNav}  ldirs={ldirs}/>);
       });
 
       var classes = "col-height ribbon-items";

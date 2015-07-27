@@ -1,3 +1,19 @@
+/*
+* Copyright 2015, 2015 IBM
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/
 /**
  * @jsx React.DOM
  */
@@ -41,6 +57,12 @@ var App = React.createClass({
   },
   handleRemoveTemplate: function(tpl){
     this.removeTemplateToServer(tpl);
+  },
+  handleMergeTemplate: function(tpl){
+    var colValue = (tpl.columnValue && tpl.columnValue.length>0)?tpl.columnValue : "";
+    var templateName = tpl.collection + "." + tpl.name + "." + colValue;
+    var url = '/idmu/merge?DragonFlyFullName='+templateName;
+    window.open(url,'IDMU-Merge');
   },
   loadCollectionsFromServer: function() {
     var params = {};
@@ -317,9 +339,10 @@ FILES}) DESC, CRITERIA LIMIT 1"
     var rCB = this.removeItemWithinList;
     var addTplCB = this.handleAddTemplate;
     var removeTplCB = this.handleRemoveTemplate;
+    var mergeTplCB = this.handleMergeTemplate;
     var index=0;
     var level=this.props.level;
     var this_ref = "ribbon_"+level+"_"+index;
-    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB} addTplCB={addTplCB} removeTplCB={removeTplCB} ldirs={this.directives}/>);
+    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB} addTplCB={addTplCB} mergeTplCB={mergeTplCB} removeTplCB={removeTplCB} ldirs={this.directives}/>);
   }
 });

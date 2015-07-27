@@ -14,9 +14,20 @@
 * limitations under the License.
 *
 */
-
-var I18N_KEYS = {
-  "name": "en",
-  "no": "No",
-  "yes": "Yes"
-};
+/**
+ * @jsx React.DOM
+ */
+var MergeTemplateTrigger = React.createClass({
+  handleClick: function(e) {
+    this.props.mergeTplCB(this.props.selection);
+  },
+  render: function() {
+    return(
+      <a role="button" aria-expanded="true">
+        <span className="input-group-btn input-group-btn-directives">
+          <button onClick={this.handleClick} type="button" className="btn">Merge</button>
+        </span>
+      </a>
+    );
+  }
+});
