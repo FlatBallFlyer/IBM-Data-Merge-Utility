@@ -239,7 +239,7 @@ var App = React.createClass({
       collection: opts.collection,
       name: opts.name,
       columnValue: opts.columnValue,
-      output: opts.output,
+      outputFile: opts.outputFile,
       directives: opts.directives,
       content: opts.content,
       description: opts.description

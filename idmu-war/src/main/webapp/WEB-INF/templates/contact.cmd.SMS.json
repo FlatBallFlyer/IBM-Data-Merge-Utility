@@ -3,7 +3,7 @@
   "name": "cmd",
   "columnValue": "SMS",
   "description": "Send SMS Command",
-  "outputFile": "",
+  "outputFile": "output-field",
   "content": "\ncurl http://textbelt.com/text -d number{phone} -d message\u003dTime to Renew! \u003ctkBookmark collection\u003d\"special\" name\u003d\"SMS\" column\u003d\"\" /\u003e\u003ctkBookmark collection\u003d\"special\" name\u003d\"SMTP\"/\u003e",
   "directives": [
     {

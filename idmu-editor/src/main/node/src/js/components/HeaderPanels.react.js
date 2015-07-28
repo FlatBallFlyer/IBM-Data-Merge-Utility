@@ -46,7 +46,7 @@ var HeaderPanel  = React.createClass({
     var index=this.props.index;
     var name_id="name";//+level+"_"+index;
     var directives_id="directives";//+level+"_"+index;
-    var output_id="output";//+level+"_"+index;
+    var output_id="outputFile";//+level+"_"+index;
     var description_id="description";//+level+"_"+index;
 
     return(
@@ -75,7 +75,7 @@ var HeaderPanel  = React.createClass({
               
               <div className="form-group col-xs-4 col-md-4">
                 <label for={output_id} className="control-label">Output</label>
-                <input className="form-control" id={output_id} type="text" value={this.state.output} onChange={this.handleTextEditChange}/>
+                <input className="form-control" id={output_id} type="text" value={this.state.outputFile} onChange={this.handleTextEditChange}/>
               </div>
 
               <div className="form-group col-xs-12 col-md-12">
