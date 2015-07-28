@@ -158,7 +158,7 @@ var DirectiveEditorsMixin = {
   provider_static_data: function() {
     return(<div className="form-group col-xs-6 col-md-12">
             <label for="provider.staticData" className="control-label">Static Data</label>
-            <input  onChange={this.handleTextEditChange} className="form-control" id="provider.staticData" type="text" value={this.state.provider.staticData}/>
+            <textarea  rows={3} onChange={this.handleTextEditChange} className="form-control" id="provider.staticData" type="text" value={this.state.provider.staticData}/>
     </div>);
   },
   provider_url: function(){        
