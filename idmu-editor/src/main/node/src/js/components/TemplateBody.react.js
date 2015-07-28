@@ -99,9 +99,13 @@ var TemplateBody = React.createClass({
   },
   handleInsert: function(collection,name,columnName){
     var bkMark="<tkBookmark collection=\""+collection+"\" name=\""+name+"\" column=\""+columnName+"\" />";
-    var final_text = this.pasteTextAtCaret(bkMark);
-    var state = {content: final_text};
-    this.setState(state);
+    if(this.props.addSubTplCB({collection:collection,name:name,directives:[]})===true){
+      var final_text = this.pasteTextAtCaret(bkMark);
+      var state = {content: final_text};
+      this.setState(state);
+    }else{
+      alert("could not add sub-template "+collection+"."+name+". to the server");
+    }
   },
   heading: function(){
     if(this.props.index === 0){

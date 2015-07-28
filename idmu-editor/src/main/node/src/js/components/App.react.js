@@ -59,6 +59,9 @@ var App = React.createClass({
   handleRemoveTemplate: function(tpl){
     this.removeTemplateToServer(tpl);
   },
+  handleAddSubTemplate: function(sTpl){
+    return(this.addSubTemplateToServer(sTpl));
+  },
   handleMergeTemplate: function(tpl){
     var colValue = (tpl.columnValue && tpl.columnValue.length>0)?tpl.columnValue : "";
     var templateName = tpl.collection + "." + tpl.name + "." + colValue;
@@ -288,6 +291,27 @@ var App = React.createClass({
       }.bind(this)
     });
   },
+  addSubTemplateToServer: function(opts){
+    var result = false;
+    var params = this.templateBody(opts);
+    $.ajax({
+      async: false,
+      url: '/idmu/template/',
+      dataType: 'json',
+      contentType: "application/json",
+      method: 'PUT',
+      cache: false,
+      data: JSON.stringify(params),
+      success: function(data) {
+        result = true;
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+        result = false;
+      }.bind(this)
+    });
+    return result;
+  },
   saveTemplateToServer: function(opts,collection) {
     var params = this.templateBody(opts);
     var name = params.name;
@@ -346,6 +370,7 @@ var App = React.createClass({
     var dCB = this.saveDirective;
     var rCB = this.removeItemWithinList;
     var addTplCB = this.handleAddTemplate;
+    var addSubTplCB = this.handleAddSubTemplate;
     var removeTplCB = this.handleRemoveTemplate;
     var mergeTplCB = this.handleMergeTemplate;
     var index=0;
@@ -353,6 +378,6 @@ var App = React.createClass({
     var this_ref = "ribbon_"+level+"_"+index;
 
     ldirs = this.directives;
-    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB} addTplCB={addTplCB} mergeTplCB={mergeTplCB} removeTplCB={removeTplCB} ldirs={ldirs}/>);
+    return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB} addTplCB={addTplCB} addSubTplCB={addSubTplCB} mergeTplCB={mergeTplCB} removeTplCB={removeTplCB} ldirs={ldirs}/>);
   }
 });

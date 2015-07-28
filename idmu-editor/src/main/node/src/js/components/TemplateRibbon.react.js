@@ -25,6 +25,7 @@ var TemplateRibbonItem = React.createClass({
     var dCB = this.props.dCB;
     var rCB = this.props.rCB;
     var addTplCB = this.props.addTplCB;
+    var addSubTplCB = this.props.addSubTplCB;
     var removeTplCB = this.props.removeTplCB;
     var mergeTplCB = this.props.mergeTplCB;
     var index = this.props.index;
@@ -34,7 +35,7 @@ var TemplateRibbonItem = React.createClass({
 
     return(
       <div className="row ribbon-item">
-        <TemplateEditor ref={this_ref} level={level} index={index} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={this.props.collection} selection={this.props.data} addTplCB={addTplCB} removeTplCB={removeTplCB} mergeTplCB={mergeTplCB} suppressNav={this.props.suppressNav} ldirs={ldirs}/>
+        <TemplateEditor ref={this_ref} level={level} index={index} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={this.props.collection} selection={this.props.data}  addSubTplCB={addSubTplCB} addTplCB={addTplCB} removeTplCB={removeTplCB} mergeTplCB={mergeTplCB} suppressNav={this.props.suppressNav} ldirs={ldirs}/>
       </div>
     );
   }
@@ -98,6 +99,7 @@ var TemplateRibbon = React.createClass({
     var dCB = this.props.dCB;
     var rCB = this.props.rCB;
     var addTplCB = this.props.addTplCB;
+    var addSubTplCB = this.props.addSubTplCB;
     var removeTplCB = this.props.removeTplCB;
     var mergeTplCB = this.props.mergeTplCB;
 
@@ -108,7 +110,7 @@ var TemplateRibbon = React.createClass({
     if(item) {
       var items = [item].map(function(opt,i){
         var this_ref = "ribbon_item_"+level+"_"+(index+i);
-        return(<TemplateRibbonItem ref={this_ref} level={level} index={index+i} key={index+i} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={opt} collection={data}  addTplCB={addTplCB} mergeTplCB={mergeTplCB} removeTplCB={removeTplCB} suppressNav={suppressNav}  ldirs={ldirs}/>);
+        return(<TemplateRibbonItem ref={this_ref} level={level} index={index+i} key={index+i} rCB={rCB} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} data={opt} collection={data}   addSubTplCB={addSubTplCB} addTplCB={addTplCB} mergeTplCB={mergeTplCB} removeTplCB={removeTplCB} suppressNav={suppressNav}  ldirs={ldirs}/>);
       });
 
       var classes = "col-height ribbon-items";

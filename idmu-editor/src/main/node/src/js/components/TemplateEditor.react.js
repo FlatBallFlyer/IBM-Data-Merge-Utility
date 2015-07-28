@@ -64,6 +64,7 @@ var TemplateEditor = React.createClass({
     var index=this.props.index;
     var level=this.props.level;
     var sCB = this.handleSave;
+    var addSubTplCB = this.props.addSubTplCB;
     var hasInsertDirective = this.hasInsertDirectives();
     var ldirs = this.props.ldirs;
     if(items){
@@ -71,7 +72,7 @@ var TemplateEditor = React.createClass({
         if(opt.type === 'text'){
           var this_ref = "template_body_"+level+"_"+(index+i);
           
-          return(<TemplateBody sCB={sCB} index={index+i} level={level} key={index+i} ref={this_ref} data={data} content={opt.slice} hasInsertDirective={hasInsertDirective}/>);
+          return(<TemplateBody   addSubTplCB={addSubTplCB} sCB={sCB} index={index+i} level={level} key={index+i} ref={this_ref} data={data} content={opt.slice} hasInsertDirective={hasInsertDirective}/>);
           
         }else if(level < config("max_depth")){
           var el=$.parseHTML(opt.slice);
