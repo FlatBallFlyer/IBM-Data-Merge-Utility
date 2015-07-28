@@ -106,13 +106,17 @@ var TemplateHeader = React.createClass({
     var level=this.props.level;
     var index=this.props.index;
     var show_directives_id="show-directives_"+level+"_"+index;
-    return(
-      <a role="button" aria-expanded="true">
+
+    if(this.state.panelConfig === 'show-header') {
+      return(
+        <a role="button" aria-expanded="true">
         <span className="input-group-btn input-group-btn-directives">
-          <button onClick={this.handleSave} id={show_directives_id} type="button" className="btn btn-primary">Save</button>
+        <button onClick={this.handleSave} id={show_directives_id} type="button" className="btn btn-primary">Save</button>
         </span>
-      </a>
-    );
+        </a>);
+    }else{
+      return(false);
+    }
   },
   render: function(){
     var data = this.props.data;

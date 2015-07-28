@@ -23,7 +23,7 @@ var ContentEditable = React.createClass({
   getInitialState: function() {
     var level=this.props.level;
     var index=this.props.index;
-    var this_ref = "contenteditable_"+level+"_"+index;
+    var this_ref = "contenteditable_"+level+"_"+index+"_"+this.props.uuid;
     var state={};
     state[this_ref]=this.props.content;
     return(state);
@@ -31,7 +31,7 @@ var ContentEditable = React.createClass({
   componentWillReceiveProps: function(nextProps) {
     var level=this.props.level;
     var index=this.props.index;
-    var this_ref = "contenteditable_"+level+"_"+index;
+    var this_ref = "contenteditable_"+level+"_"+index+"_"+this.props.uuid;
     var state = {};
     state[this_ref] = nextProps.content;
     this.setState(state);
@@ -39,7 +39,7 @@ var ContentEditable = React.createClass({
   componentDidMount: function() {
     var level=this.props.level;
     var index=this.props.index;
-    var this_ref = "#contenteditable_"+level+"_"+index;
+    var this_ref = "#contenteditable_"+level+"_"+index+"_"+this.props.uuid;
     jQuery.each(jQuery(this_ref), function() {
       var offset = this.offsetHeight - this.clientHeight;
       var rCB = function(el) {
@@ -54,7 +54,7 @@ var ContentEditable = React.createClass({
   render: function(){
     var level=this.props.level;
     var index=this.props.index;
-    var this_ref = "contenteditable_"+level+"_"+index;
+    var this_ref = "contenteditable_"+level+"_"+index+"_"+this.props.uuid;
     return(<textarea id={this_ref}
                      rows={3}
                      className="form-control resizable-textarea" 
@@ -68,12 +68,13 @@ var TemplateBody = React.createClass({
   getInitialState: function() {
     var state = {};
     state.content = this.props.content;
+    this.uuid = Utils.uuid();
     return state;
   },
   getText: function(){
     var level = this.props.level;
     var index = this.props.index;
-    var this_ref = "#contenteditable_"+level+"_"+index;
+    var this_ref = "#contenteditable_"+level+"_"+index+"_"+this.uuid;
     return($(this_ref).val()); 
  },
   componentWillReceiveProps: function(nextProps) {
@@ -82,7 +83,7 @@ var TemplateBody = React.createClass({
     this.setState(state);
   },
   pasteTextAtCaret: function(text) {
-    var this_ref = "#contenteditable_"+this.props.level+"_"+this.props.index;
+    var this_ref = "#contenteditable_"+this.props.level+"_"+this.props.index+"_"+this.uuid;
     var cursorPos = $(this_ref).prop('selectionStart'),
         v = $(this_ref).val(),
         textBefore=v.substring(0,cursorPos),
@@ -132,13 +133,13 @@ var TemplateBody = React.createClass({
   render: function(){
     var level = this.props.level;
     var index = this.props.index;
-    var this_ref = "content_editable_"+level+"_"+index;
+    var this_ref = "content_editable_"+level+"_"+index+"_"+this.uuid;
     return(
       <div className="row no-margin ribbon-inside">
         <form>
           <div className="form-group col-xs-12 col-md-12">
             {this.heading()}
-            <ContentEditable content={this.state.content} ref={this_ref} level={level} index={index} id={this_ref}/>
+            <ContentEditable uuid={this.uuid} content={this.state.content} ref={this_ref} level={level} index={index} id={this_ref}/>
           </div>
         </form>
         {this.insertBookmarkTrigger()}

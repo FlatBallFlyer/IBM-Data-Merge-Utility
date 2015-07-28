@@ -160,7 +160,7 @@ var Directives = React.createClass({
             <div className="col-xs-11 col-md-11">&nbsp;</div>
             <div className="col-xs-1 col-md-1">
               <span className="input-group-btn">
-                <button id="show-header" onClick={this.props.changeCB} type="button" className="btn btn-xs">Back</button>
+                <button id="show-header" onClick={this.props.changeCB} type="button" className="btn btn-xs btn-primary">Back</button>
               </span>
             </div>
           </div>
