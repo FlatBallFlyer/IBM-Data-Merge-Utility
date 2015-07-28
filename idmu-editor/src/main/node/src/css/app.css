@@ -119,6 +119,13 @@
     border-right: 1px solid #cccccc;
 }
 
+
+resizable-textarea {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    resize: none;
+}
+
 /* content styles */
 
 .inside {

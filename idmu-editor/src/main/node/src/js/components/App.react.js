@@ -87,8 +87,9 @@ var App = React.createClass({
   loadTemplatesFromServer: function(collection) {
     var params = {};
     var self = this;
+    var sfx = self.props.level !== 0 ? "/"+self.props.selection.name : "";
     $.ajax({
-      url: '/idmu/templates/'+collection,
+      url: '/idmu/templates/'+collection+sfx,
       dataType: 'json',
       cache: false,
       data: params,
@@ -271,7 +272,6 @@ var App = React.createClass({
     var name = params.name;
     var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
     $.ajax({
-      //url: '/idmu/templates/'+collection+"."+name+sfx,
       url: '/idmu/template/',
       dataType: 'json',
       contentType: "application/json",

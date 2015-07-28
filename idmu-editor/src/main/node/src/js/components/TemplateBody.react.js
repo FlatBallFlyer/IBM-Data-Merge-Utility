@@ -36,13 +36,28 @@ var ContentEditable = React.createClass({
     state[this_ref] = nextProps.content;
     this.setState(state);
   },
+  componentDidMount: function() {
+    var level=this.props.level;
+    var index=this.props.index;
+    var this_ref = "#contenteditable_"+level+"_"+index;
+    jQuery.each(jQuery(this_ref), function() {
+      var offset = this.offsetHeight - this.clientHeight;
+      var rCB = function(el) {
+        jQuery(el).css('height', 'auto').css('height', el.scrollHeight + offset);
+      };
+  
+      jQuery(this).on('keyup input cut paste', function(){
+        rCB(this);
+      });
+    });
+  },
   render: function(){
     var level=this.props.level;
     var index=this.props.index;
     var this_ref = "contenteditable_"+level+"_"+index;
     return(<textarea id={this_ref}
                      rows={3}
-                     className="form-control" 
+                     className="form-control resizable-textarea" 
                      onChange={this.handleTextEditChange}
                      value={this.state[this_ref]}/>);
   }
@@ -73,7 +88,13 @@ var TemplateBody = React.createClass({
         textBefore=v.substring(0,cursorPos),
         textAfter=v.substring(cursorPos,v.length),
         final_text = textBefore+text+textAfter;
-    $(this_ref).val(final_text);
+
+    var el = $(this_ref);
+    $(el).val(final_text);
+
+    var offset = $(el)[0].offsetHeight - $(el)[0].clientHeight;
+    $(el).css('height', 'auto').css('height', $(el)[0].scrollHeight + offset);
+
     return(final_text);
   },
   handleInsert: function(collection,name,columnName){
