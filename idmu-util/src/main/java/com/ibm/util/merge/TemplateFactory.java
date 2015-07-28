@@ -293,6 +293,7 @@ final public class TemplateFactory {
      */
     public String saveTemplateFromJson(String json) {
         Template template1 = jsonProxy.fromJSON(json, Template.class);
+        if (template1.getFullName().equals("..")) {return "FORBIDDEN";}
         cache(template1);
         persistence.saveTemplate(template1);
         return jsonProxy.toJson(template1);
