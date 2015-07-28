@@ -22,7 +22,6 @@ var TemplateHeader = React.createClass({
     return {panelConfig: 'show-header'};
   },
   handleChangePanel: function(evt){
-    console.log("handleChangePanel",evt.target.id);
     this.setState({panelConfig: evt.target.id});
   },
   getHeaderValues: function(){

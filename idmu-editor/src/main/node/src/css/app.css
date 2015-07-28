@@ -61,9 +61,9 @@
 }
 
 .ribbon-nav {
+    background-clip: content-box;
     color: #222222;
     background: #cccccc;
-    background-clip: content-box;
     cursor: pointer;
 }
 
@@ -163,6 +163,12 @@
     vertical-align: bottom;
     float: none;
     display: table-cell;
+}
+
+.template-not-exist{
+    padding-left: 50px;
+    background: red;
+    color: white;
 }
 
 @media (min-width: 480px) {

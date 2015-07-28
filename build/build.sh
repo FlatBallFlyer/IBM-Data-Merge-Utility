@@ -14,10 +14,10 @@ if [ -f sample-context.xml ]; then
     rm -rf build
 
     # build the static sources
-    npm install
-    bower install
-    gulp fonts-copy-init
-    gulp
+    #npm install
+    #bower install
+    #gulp fonts-copy-init
+    #gulp
 
 
 

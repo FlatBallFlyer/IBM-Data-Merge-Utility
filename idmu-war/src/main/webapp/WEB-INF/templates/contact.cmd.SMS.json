@@ -1,21 +1,28 @@
 {
-	"collection":"contact",
-	"name":"cmd",
-	"columnValue":"SMS",
-	"description":"Send SMS Command",
-	"content":"\ncurl http://textbelt.com/text -d number{phone} -d message=Time to Renew!<tkBookmark collection=\"special\" name=\"SMTP\"/>",
- 	"directives":[
-		{
-			"type": 2,
-			"softFail": false,
-			"description": "TestInsertSubsTag",
-			"notLast": ["empty"],
-			"onlyLast": [],
-			"provider": {
-				"type": 2,
-				"condition": 1,
-				"tag": "EMAIL"
-			 }
-		}
-	]
- }
+  "collection": "contact",
+  "name": "cmd",
+  "columnValue": "SMS",
+  "description": "Send SMS Command",
+  "outputFile": "",
+  "content": "\ncurl http://textbelt.com/text -d number{phone} -d message\u003dTime to Renew! \u003ctkBookmark collection\u003d\"special\" name\u003d\"SMS\" column\u003d\"\" /\u003e\u003ctkBookmark collection\u003d\"special\" name\u003d\"SMTP\"/\u003e",
+  "directives": [
+    {
+      "notLast": [
+        "empty"
+      ],
+      "onlyLast": [
+        ""
+      ],
+      "type": 2,
+      "softFail": false,
+      "description": "TestInsertSubsTag",
+      "provider": {
+        "tag": "EMAIL",
+        "condition": 1,
+        "list": false,
+        "value": "",
+        "type": 2
+      }
+    }
+  ]
+}

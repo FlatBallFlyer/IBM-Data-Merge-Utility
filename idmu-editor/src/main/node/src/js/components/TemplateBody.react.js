@@ -77,7 +77,7 @@ var TemplateBody = React.createClass({
     return(final_text);
   },
   handleInsert: function(collection,name,columnName){
-    var bkMark="<tkBookmark class=\"tkbookmark\" collection=\""+collection+"\" name=\""+name+"\" columnName=\""+columnName+"\" />";
+    var bkMark="<tkBookmark collection=\""+collection+"\" name=\""+name+"\" column=\""+columnName+"\" />";
     var final_text = this.pasteTextAtCaret(bkMark);
     var state = {content: final_text};
     this.setState(state);
