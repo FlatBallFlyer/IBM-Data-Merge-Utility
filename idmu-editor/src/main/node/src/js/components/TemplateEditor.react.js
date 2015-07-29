@@ -80,26 +80,16 @@ var TemplateEditor = React.createClass({
           var collection = $(el).attr('collection');
           var name = $(el).attr('name');
           var colName = $(el).attr('column');
-          
-          if(opt.missingTemplate===true) {
-            return(
-              <div key={app_key} className="row no-margin col-xs-12 col-md-12">
-                <h5 className="template-not-exist">Template {collection}.{name}. does not exist</h5>
-              </div>
-            );
-          }else {
-          
-            if(!colName || colName.length === 0){
-              suppressNav=true;
-            }
-
-            var app_ref = "app_"+level+"_"+(index+i);
-            var selection = {collection:collection,name: name,columnValue:null};//colName};
-            var app_key=collection+"."+name+"."+colName+"."+(level+1)+"."+(index+1);
-            return(
-              <App key={app_key} ref={app_key} level={level+1} index={index+i} selection={selection}  suppressNav={suppressNav} ldirs={ldirs}/>
-            );
+          if(!colName || colName.length === 0){
+            suppressNav=true;
           }
+
+          var app_ref = "app_"+level+"_"+(index+i);
+          var selection = {collection:collection,name: name,columnValue:null};//colName};
+          var app_key=collection+"."+name+"."+colName+"."+(level+1)+"."+(index+1);
+          return(
+            <App key={app_key} ref={app_key} level={level+1} index={index+i} selection={selection}  suppressNav={suppressNav} ldirs={ldirs}/>
+          );
         }else {
           return(<div><h5>Exceeded max sub-template depth.</h5></div>);
         }

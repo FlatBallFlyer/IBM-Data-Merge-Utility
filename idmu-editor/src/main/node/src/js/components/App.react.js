@@ -97,8 +97,10 @@ var App = React.createClass({
       cache: false,
       data: params,
       success: function(data) {
+        if(self.props.level !== 0 && data.length == 0){
+          data.push({collection: collection, name: self.props.selection.name});
+        }
         var sel = self.props.selection || data[0];
-        console.log("app:loadTemplatesFromServer ",sel);
         var selectedRibbonIndex = self.props.level == 0 ? 0 : this.state.selectedRibbonIndex;
         self.loadTemplateFromServer(data,
                                     selectedRibbonIndex,
@@ -144,7 +146,7 @@ var App = React.createClass({
 
         items.push({type: 'text',slice: slice1});
         var bk = {type: 'bookmark',slice: slice2};
-        bk['missingTemplate'] = !this.templateExist(collection,name);
+        /*bk['missingTemplate'] = !this.templateExist(collection,name);*/
         items.push(bk);
       }
     }
@@ -180,7 +182,8 @@ var App = React.createClass({
     var id = ribbonItem.name;
     var columnValue = ribbonItem.columnValue;
     var sfx = (columnValue && columnValue.length>0) ? "."+columnValue : ".";
-    var url = '/idmu/template/'+encodeURIComponent(collection+'.'+id+sfx)+"/";
+    var tplFullName = encodeURIComponent(collection+'.'+id+sfx);
+    var url = '/idmu/template/'+tplFullName+"/";
     $.ajax({
       url: url,
       dataType: 'json',
@@ -194,6 +197,31 @@ var App = React.createClass({
                        selectedCollection: collection});
       }.bind(this),
       error: function(xhr, status, err) {
+        var dummy = {
+          collection: collection,
+          name: id,
+          columnValue: columnValue
+        };
+        var dummyTemplate = {
+          collection: collection,
+          name: id,
+          columnValue: columnValue,
+          directives: [],
+          content: "",
+          error: true,
+          errorMsg: err.toString()
+        };
+        dummyTemplate.items = this.buildBodyItems(dummyTemplate.content);
+        var tmpTpl = templates[ribbonIndex];
+        if(tmpTpl && (tmpTpl.collection !== collection || tmpTpl.name !== id || tmpTpl.columnValue !== columnValue)) {
+          
+          templates.splice(ribbonIndex, 0, dummy);
+        }
+        this.setState({templates: templates,
+                       template: dummyTemplate,
+                       selectedRibbonIndex: ribbonIndex,
+                       selectedRibbonItem: ribbonItem,
+                       selectedCollection: collection});
         console.error("FETCH TEMPLATE: "+url+"-", status, err.toString());
       }.bind(this)
     });

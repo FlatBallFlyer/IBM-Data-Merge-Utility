@@ -72,8 +72,11 @@ var TemplateHeader = React.createClass({
 
     var data = this.props.data;
     var tpl = data.template;
-    var selection={collection: data.selectedCollection,
-                   name: tpl.name};
+    var selection={
+      collection: data.selectedCollection,
+      name: tpl.name,
+      columnValue: tpl.columnValue
+    };
     
     var level=this.props.level;
     var index=this.props.index;
@@ -130,6 +133,9 @@ var TemplateHeader = React.createClass({
     var name = tpl['name'];
     var columnValue = tpl['columnValue'] ? "."+tpl['columnValue'] : "";
     var label = tpl['collection']+"."+name+columnValue;
+    if(tpl.error === true){
+      label+=" [missing]";
+    }
     if(tpl){
       var classes = "row no-margin col-md-12 col-xs-12";
       return(
