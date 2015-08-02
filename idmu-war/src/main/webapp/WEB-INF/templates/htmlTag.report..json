@@ -1,1 +1,0 @@
-{"collection":"htmlTag","name":"report","description":"Report to Test InsertSubs from Collection for Column","outputFile":"FullReport.txt","content":"Begin Customers\n<tkBookmark collection=\"htmlTag\" name=\"customer\"/>\nEnd Customers","directives":[{"sequence":1,"type":31,"description":"Insert Customers","provider":{"type":4,"tag":"htmlCustomers"}}]}

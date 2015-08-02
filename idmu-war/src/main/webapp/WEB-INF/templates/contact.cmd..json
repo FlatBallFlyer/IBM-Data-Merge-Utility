@@ -1,9 +1,0 @@
-{
-  "collection": "contact",
-  "name": "cmd",
-  "columnValue": "",
-  "description": "Command Default Template (EMPTY)",
-  "outputFile": "",
-  "content": "My content",
-  "directives": []
-}

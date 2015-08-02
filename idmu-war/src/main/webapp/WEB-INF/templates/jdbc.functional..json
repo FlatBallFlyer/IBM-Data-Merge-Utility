@@ -1,1 +1,0 @@
-{"collection":"jdbc","name":"functional","description":"JDBC Root Functional Test","content":"<tkBookmark collection=\"jdbc\" name=\"report\"/>\n","directives":[{"sequence":1,"type":2,"description":"InsertSubsIfTagExists","provider":{"type":2,"condition":0,"tag":"DragonFlyFullName"}}]}
