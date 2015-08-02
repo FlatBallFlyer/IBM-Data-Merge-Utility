@@ -92,12 +92,6 @@ if ( $INSTALL_TOMCAT eq "yes" ) {
 	`tar -C /tmp -xvf ${IMAGES}/${TOMCAT_TAR}.tar.gz`;
 	`mv /tmp/${TOMCAT_TAR} ${TOMCAT_DIR}`;
 
-	if ( $INSTALL_TESTDB eq 'yes' ) {
-		(-e $IMAGES . "/" . $MYSQL_TAR . ".tar.gz") or die "MySQL JDBC Driver Tar Image $IMAGES/$MYSQL_TAR.tar.gz not found!";
-		print "\nInstalling MySql JDBC Drivers";
-		`tar -C /tmp -xvf ${IMAGES}/${MYSQL_TAR}.tar.gz`;
-		`cp /tmp/${MYSQL_TAR}/${MYSQL_TAR}-bin.jar ${TOMCAT_DIR}/lib/`;
-	}
 }
 
 #------------------------------------------------------------------
@@ -112,26 +106,21 @@ if ( $INSTALL_MYSQL eq "yes" ) {
 
 #------------------------------------------------------------------
 # Load Test Database
-if ( $INSTALL_TESTDB eq "yes" ) { 
-	(-e "${IMAGES}/TESTDB.sql") or die "Test Database Load Script $IMAGES/TESTDB.sql not found!";
-	(-e "${TOMCAT_DIR}/conf/context.xml") or die "Tomcat Context.xml not found in $TOMCAT_DIR/conf!";
-
-	print "\nInstalling Test Database ";
-	`mysql --user=root --password=${MYSQL_PW} < ${IMAGES}/TESTDB.sql`;
-
-	print "\nInstalling testDb JDBC Data Source ";
-	`rm -f ${TOMCAT_DIR}/conf/contextBackup.xml`;
-	`cp ${TOMCAT_DIR}/conf/context.xml ${TOMCAT_DIR}/conf/contextBackup.xml`;
-	`sed -e "s/<\\/Context>/<Resource auth=\\"Container\\" driverClassName=\\"com.mysql.jdbc.Driver\\" maxActive=\\"900\\" maxIdle=\\"30\\" maxWait=\\"10\\" name=\\"jdbc\\/testgenDB\\"     password=\\"${MYSQL_PW}\\" type=\\"javax.sql.DataSource\\" url=\\"jdbc:mysql:\\/\\/localhost:3306\\/testgen\\"     username=\\"root\\"\\/><\\/Context>/g" ${TOMCAT_DIR}/conf/context.xml > /tmp/newcontext.xml`;
-	`rm -f ${TOMCAT_DIR}/conf/context.xml`;
-	`cp /tmp/newcontext.xml ${TOMCAT_DIR}/conf/context.xml`;
+if ( $INSTALL_TESTDB eq "yes" ) {
+    (-e "${IMAGES}/TESTDB.sql") or die "Test Database Load Script $IMAGES/TESTDB.sql not found!";
+    (-e "${TOMCAT_DIR}/conf/context.xml") or die "Tomcat Context.xml not found in $TOMCAT_DIR/conf!";
+    
+    print "\nInstalling Test Database ";
+    `mysql --user=root --password=${MYSQL_PW} < ${IMAGES}/TESTDB.sql`;
+    
 }
 
 #------------------------------------------------------------------
 # Install IDMU war and start tomcat
-(-e  $IMAGES . '/idmu.war') or die "Missing IDMU.war file";
+(-e  $IMAGES . '/ROOT.war') or die "Missing IDMU ROOT.war file";
 print "\nInstalling IDMU and Starting Tomcat";
-`cp ${IMAGES}/idmu.war ${TOMCAT_DIR}/webapps`;
+`rm -rf ${TOMCAT_DIR}/webapps/ROOT`;
+`cp ${IMAGES}/ROOT.war ${TOMCAT_DIR}/webapps`;
 `${TOMCAT_DIR}/bin/startup.sh`;
 `sleep 3`;
 print "\nDone!\n";
@@ -139,20 +128,20 @@ print "\nDone!\n";
 #------------------------------------------------------------------
 # Verification (Simple)
 # This command should echo "This is the default tempalte" - minimally functional
-`curl "localhost:8080/idmu/Merge/"`; 
+`curl "localhost:8080/idmu/Merge/"`;
 
 #------------------------------------------------------------------
 # Verification (SQL Data Provider - Requres testgenDb)
 # This command should return a long report of "Customers" and "Contacts"
-if ( $INSTALL_TESTDB eq "yes" ) { 
-	`curl "localhost:8080/idmu/Merge/?DragonFlyFullName=jdbc.report."`;
+if ( $INSTALL_TESTDB eq "yes" ) {
+    `curl "localhost:8080/idmu/Merge/?DragonFlyFullName=jdbc.report."`;
 }
 
 #------------------------------------------------------------------
 # Verification (Advanced - tar archive creation)
 # This command should return an empty string and create a tar file in /tmp/merge
-if ( $INSTALL_TESTDB eq 'yes' ) { 
-	`curl "localhost:8080/idmu/Merge/?DragonFlyFullName=csvDef.functional."`;
+if ( $INSTALL_TESTDB eq 'yes' ) {
+    `curl "localhost:8080/idmu/Merge/?DragonFlyFullName=csvDef.functional."`;
 }
 
 exit 0;
