@@ -26,13 +26,16 @@ import com.ibm.util.merge.persistence.*;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.handler.*;
 import com.ibm.util.merge.web.rest.servlet.writer.TextResponseWriter;
+
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,6 +53,7 @@ public class InitializeServlet extends HttpServlet {
     private Boolean dbPersist = false;
     private Boolean prettyJson = true;
     private String jdbcPoolsPropertiesPath = "/WEB-INF/properties/databasePools.properties";
+    private String log4jPropertiesPath = "/WEB-INF/properties/log4j.properties";
     private File outputDirPath = new File("/tmp/merge");
     private final List<RequestHandler> handlerChain = new ArrayList<>();
     private Map<String, String> servletInitParameters;
@@ -73,6 +77,8 @@ public class InitializeServlet extends HttpServlet {
     private void initializeApp(ServletContext servletContext) {
         handlerChain.clear();
         handlerChain.addAll(createHandlerInstances());
+        String log4jTruePath = jdbcPoolsPropertiesPath.indexOf("/WEB-INF") == 0 ? servletContext.getRealPath(log4jPropertiesPath) : log4jPropertiesPath;
+	    PropertyConfigurator.configure(log4jTruePath);
         File templatesDirPath = warTemplatesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(warTemplatesPath)) : new File(warTemplatesPath);
         File poolsPropertiesPath = jdbcPoolsPropertiesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(jdbcPoolsPropertiesPath)) : new File(jdbcPoolsPropertiesPath);
         ConnectionPoolManager poolManager = new ConnectionPoolManager();
@@ -131,6 +137,11 @@ public class InitializeServlet extends HttpServlet {
             log.info("Found so using passed system property value for jdbc-pools-properties-path: " + systemPoolsPropertiesPath);
             this.jdbcPoolsPropertiesPath = systemPoolsPropertiesPath;
         }
+        String systemLog4jPropertiesPath = System.getProperty("log4j-init-file");
+        if(systemLog4jPropertiesPath != null){
+            log.info("Found so using passed system property value for log4j-init-file: " + systemLog4jPropertiesPath);
+            this.log4jPropertiesPath = systemLog4jPropertiesPath;
+        }
         String systemPrettyJson = System.getProperty("pretty-json");
         if(systemPrettyJson != null){
             log.info("Found so using passed system property value for pretty-json: " + systemPrettyJson);
@@ -138,7 +149,7 @@ public class InitializeServlet extends HttpServlet {
         }
         String systemDbPersist = System.getProperty("db-persist");
         if(systemDbPersist != null){
-            log.info("Found so using passed system property value for pretty-json: " + systemDbPersist);
+            log.info("Found so using passed system property value for db-persist: " + systemDbPersist);
             this.dbPersist = systemDbPersist.equals("yes"); 
         }
     }
@@ -157,6 +168,10 @@ public class InitializeServlet extends HttpServlet {
         String databasePoolsPropertiesPath = servletInitParameters.get("jdbc-pools-properties-path");
         if(databasePoolsPropertiesPath != null){
             this.jdbcPoolsPropertiesPath = databasePoolsPropertiesPath;
+        }
+        String log4jPropertiesPath = servletInitParameters.get("log4j-init-file");
+        if(log4jPropertiesPath != null){
+            this.log4jPropertiesPath = log4jPropertiesPath;
         }
         String prettyJsonParameter = servletInitParameters.get("pretty-json");
         if (prettyJsonParameter != null) {

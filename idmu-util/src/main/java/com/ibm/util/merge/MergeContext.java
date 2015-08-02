@@ -76,7 +76,7 @@ public class MergeContext {
         
 		// Providing blank values for User and Group attributes to use
     	String chksum = archive.writeFile(entryName, content, "", "");
-    	setArchiveChkSums(getArchiveChkSums() + chksum + "\n");
+    	setArchiveChkSums(getArchiveChkSums() + entryName + "=" + chksum + "\n");
     }
     
     public Connection getConnection(String dataSource) throws MergeException {

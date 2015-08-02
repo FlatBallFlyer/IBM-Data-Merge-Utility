@@ -68,7 +68,7 @@ final public class TemplateFactory {
     private static final Logger log = Logger.getLogger(TemplateFactory.class.getName());
     public static final String KEY_CACHE_RESET = Template.wrap("DragonFlyCacheReset");
     public static final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
-    public static final String DEFAULT_FULLNAME = "root.default.";
+    public static final String DEFAULT_FULLNAME = "system.default.";
     public static final String SYSTEM_STATUS_PAGE = "system.status.";
     
     // Factory Attributes
