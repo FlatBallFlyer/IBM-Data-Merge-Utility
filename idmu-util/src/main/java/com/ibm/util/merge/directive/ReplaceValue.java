@@ -42,7 +42,7 @@ public class ReplaceValue extends AbstractDirective {
 	
 	public ReplaceValue asNew() {
 		ReplaceValue to = new ReplaceValue();
-		to.copyFieldsFrom((AbstractDirective)this);
+		to.copyFieldsFrom(this);
 		to.setFrom(	this.getFrom());
 		to.setTo(	this.getTo());
 		return to;

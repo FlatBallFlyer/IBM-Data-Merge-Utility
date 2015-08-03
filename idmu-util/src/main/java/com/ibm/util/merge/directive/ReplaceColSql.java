@@ -31,7 +31,7 @@ public class ReplaceColSql extends ReplaceCol {
 	
 	public ReplaceColSql asNew() {
 		ReplaceColSql to = new ReplaceColSql();
-		to.copyFieldsFrom((ReplaceCol)this);
+		to.copyFieldsFrom(this);
 		return to;
 	}
 

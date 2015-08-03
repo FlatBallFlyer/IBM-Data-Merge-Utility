@@ -17,23 +17,25 @@
 package com.ibm.util.merge.directive;
 
 import com.ibm.util.merge.MergeException;
-import com.ibm.util.merge.directive.provider.ProviderHtml;
-import com.ibm.util.merge.template.Template;
+//import com.ibm.util.merge.directive.provider.ProviderHtml;
+//import com.ibm.util.merge.template.Template;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+@Ignore
 public class ReplaceMarkupHtmlTest extends DirectiveTest {
 
 	@Before
 	public void setUp() throws Exception {
-		template = new Template();
-		directive = new ReplaceRowHtml();
-
-		ReplaceRowHtml myDirective = (ReplaceRowHtml) directive;
-		template.addDirective(myDirective);
-		ProviderHtml myProvider = (ProviderHtml) myDirective.getProvider();
-		myProvider.setStaticData("<html><head></head><body></body></html>");
+//		template = new Template();
+//		directive = new ReplaceRowHtml();
+//
+//		ReplaceRowHtml myDirective = (ReplaceRowHtml) directive;
+//		template.addDirective(myDirective);
+//		ProviderHtml myProvider = (ProviderHtml) myDirective.getProvider();
+//		myProvider.setStaticData("<html><head></head><body></body></html>");
 	}
 
 	@After
@@ -43,9 +45,7 @@ public class ReplaceMarkupHtmlTest extends DirectiveTest {
 	@Test
 	public void testExecuteDirective() throws MergeException {
 		// TODO - Test when HTML Markup implemented
-//		directive.executeDirective();
-//		assertTrue(template.hasReplaceKey("{SomeValue}"));
-//		assertEquals("SomeDataValue",template.getReplaceValue("{SomeValue}"));
+
 	}
 
 }

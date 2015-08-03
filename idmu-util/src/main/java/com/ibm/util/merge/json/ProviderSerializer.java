@@ -28,10 +28,10 @@ public class ProviderSerializer implements JsonSerializer<AbstractProvider> {
 	@Override
 	public JsonElement serialize(AbstractProvider src, Type provider, JsonSerializationContext context) {
 		switch (src.getType()) {
-			case Providers.TYPE_CSV: 	return context.serialize((ProviderCsv)src);
-			case Providers.TYPE_HTML: 	return context.serialize((ProviderHtml)src);
-			case Providers.TYPE_SQL:	return context.serialize((ProviderSql)src);
-			case Providers.TYPE_TAG: 	return context.serialize((ProviderTag)src);
+			case Providers.TYPE_CSV: 	return context.serialize(src);
+//			case Providers.TYPE_HTML: 	return context.serialize((ProviderHtml)src);
+			case Providers.TYPE_SQL:	return context.serialize(src);
+			case Providers.TYPE_TAG: 	return context.serialize(src);
 			default: return null;
 		}
 	}

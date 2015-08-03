@@ -31,7 +31,7 @@ public class InsertSubsCsv extends InsertSubs {
 
 	public InsertSubsCsv asNew() {
 		InsertSubsCsv to = new InsertSubsCsv();
-		to.copyFieldsFrom((InsertSubs)this);
+		to.copyFieldsFrom(this);
 		return to;
 	}
 }

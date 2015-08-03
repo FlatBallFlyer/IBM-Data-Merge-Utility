@@ -48,7 +48,7 @@ public class Require extends AbstractDirective {
 	
 	public Require asNew() {
 		Require to = new Require();
-		to.copyFieldsFrom((AbstractDirective)this);
+		to.copyFieldsFrom(this);
 		to.setTags(	this.getTags());
 		return to;
 	}

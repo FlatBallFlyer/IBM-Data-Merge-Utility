@@ -47,6 +47,7 @@ public class InitializeServlet extends HttpServlet {
 	private static final long serialVersionUID = -6542461667547308985L;
 	private Logger log = Logger.getLogger(InitializeServlet.class);
     private String warTemplatesPath = "/WEB-INF/templates";
+    private String templatesPersistencePoolName = "idmuTemplates";
     private Boolean dbPersist = false;
     private Boolean prettyJson = true;
     private String jdbcPoolsPropertiesPath = "/WEB-INF/properties/databasePools.properties";
@@ -84,8 +85,16 @@ public class InitializeServlet extends HttpServlet {
             log.error("No database config will be applied");
         }
         JsonProxy jsonProxy = (prettyJson ? new PrettyJsonProxy() : new DefaultJsonProxy());
-        FilesystemPersistence filesystemPersistence = new FilesystemPersistence(templatesDirPath, jsonProxy);
-        AbstractPersistence persist = (AbstractPersistence) (dbPersist ? filesystemPersistence : filesystemPersistence);
+
+        final TemplatePersistence persist;
+        if(dbPersist){
+            JdbcTemplatePersistence jdbcPersistence = new JdbcTemplatePersistence(poolManager);
+            jdbcPersistence.setPoolName(templatesPersistencePoolName);
+            persist = jdbcPersistence;
+        }else{
+            FilesystemPersistence filesystemPersistence = new FilesystemPersistence(templatesDirPath, jsonProxy);
+            persist = filesystemPersistence;
+        }
         TemplateFactory tf = new TemplateFactory(persist, jsonProxy, outputDirPath, poolManager);
         servletContext.setAttribute("TemplateFactory", tf);
         for (RequestHandler handler : handlerChain) {
@@ -131,6 +140,11 @@ public class InitializeServlet extends HttpServlet {
             log.info("Found so using passed system property value for jdbc-pools-properties-path: " + systemPoolsPropertiesPath);
             this.jdbcPoolsPropertiesPath = systemPoolsPropertiesPath;
         }
+        String systemTemplatesPersistencePoolName = System.getProperty("jdbc-persistence-templates-poolname");
+        if(systemTemplatesPersistencePoolName != null){
+            log.info("Found so using passed system property value for jdbc-persistence-templates-poolname: " + systemTemplatesPersistencePoolName);
+            this.templatesPersistencePoolName = systemTemplatesPersistencePoolName;
+        }
         String systemPrettyJson = System.getProperty("pretty-json");
         if(systemPrettyJson != null){
             log.info("Found so using passed system property value for pretty-json: " + systemPrettyJson);
@@ -157,6 +171,10 @@ public class InitializeServlet extends HttpServlet {
         String databasePoolsPropertiesPath = servletInitParameters.get("jdbc-pools-properties-path");
         if(databasePoolsPropertiesPath != null){
             this.jdbcPoolsPropertiesPath = databasePoolsPropertiesPath;
+        }
+        String templatesPersistencePoolName = servletInitParameters.get("jdbc-persistence-templates-poolname");
+        if(templatesPersistencePoolName != null){
+            this.templatesPersistencePoolName = templatesPersistencePoolName;
         }
         String prettyJsonParameter = servletInitParameters.get("pretty-json");
         if (prettyJsonParameter != null) {

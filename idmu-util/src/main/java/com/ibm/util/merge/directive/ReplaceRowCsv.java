@@ -31,7 +31,7 @@ public class ReplaceRowCsv extends ReplaceRow {
 	
 	public ReplaceRowCsv asNew() {
 		ReplaceRowCsv to = new ReplaceRowCsv();
-		to.copyFieldsFrom((ReplaceRow)this);
+		to.copyFieldsFrom(this);
 		return to;
 	}
 

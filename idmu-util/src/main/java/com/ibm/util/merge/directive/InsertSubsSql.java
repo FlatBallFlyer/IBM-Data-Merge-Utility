@@ -31,7 +31,7 @@ public class InsertSubsSql extends InsertSubs {
 	
 	public InsertSubsSql asNew() {
 		InsertSubsSql to = new InsertSubsSql();
-		to.copyFieldsFrom((InsertSubs)this);
+		to.copyFieldsFrom(this);
 		return to;
 	}
 	

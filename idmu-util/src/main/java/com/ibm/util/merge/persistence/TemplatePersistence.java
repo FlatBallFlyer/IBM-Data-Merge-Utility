@@ -14,25 +14,15 @@
  * limitations under the License.
  *
  */
-package com.ibm.util.merge.directive;
-import com.ibm.util.merge.directive.provider.ProviderHtml;
+package com.ibm.util.merge.persistence;
 
-public class ReplaceColHtml extends ReplaceCol {
-	
-	/**
-	 * Simple Constructor
-	 */
-	public ReplaceColHtml() {
-		super();
-		this.setDescription("Add Replace from Html Column");
-		setType(Directives.TYPE_HTML_REPLACE_COL);
-		setProvider(new ProviderHtml());
-	}
+import com.ibm.util.merge.template.Template;
 
-	public ReplaceColHtml asNew() {
-		ReplaceColHtml to = new ReplaceColHtml();
-		to.copyFieldsFrom((ReplaceCol)this);
-		return to;
-	}
+import java.util.List;
 
+public interface TemplatePersistence {
+
+	List<Template> loadAllTemplates();
+	void saveTemplate(Template template);
+	void deleteTemplate(Template template);
 }

@@ -31,7 +31,7 @@ public class ReplaceRowSql extends ReplaceRow {
 	
 	public ReplaceRowSql asNew() {
 		ReplaceRowSql to = new ReplaceRowSql();
-		to.copyFieldsFrom((ReplaceRow)this);
+		to.copyFieldsFrom(this);
 		return to;
 	}
 

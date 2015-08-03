@@ -43,7 +43,7 @@ public class ProviderSql extends AbstractProvider {
     
     public ProviderSql asNew() {
     	ProviderSql to = new ProviderSql ();
-    	to.copyFieldsFrom((AbstractProvider)this);
+    	to.copyFieldsFrom(this);
     	to.setSource(	this.getSource());
     	to.setColumns(	this.getColumns());
     	to.setFrom(		this.getFrom());
