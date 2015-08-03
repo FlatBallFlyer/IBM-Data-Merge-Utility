@@ -19,7 +19,7 @@ package com.ibm.util.merge;
 import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.directive.*;
 import com.ibm.util.merge.directive.provider.ProviderCsv;
-import com.ibm.util.merge.directive.provider.ProviderHtml;
+//import com.ibm.util.merge.directive.provider.ProviderHtml;
 import com.ibm.util.merge.directive.provider.ProviderSql;
 import com.ibm.util.merge.directive.provider.ProviderTag;
 import com.ibm.util.merge.json.DefaultJsonProxy;
@@ -340,56 +340,56 @@ public class TemplateTest {
 		assertEquals("com.ibm.util.merge.directive.provider.ProviderSql", directive.getProvider().getClass().getName());
 	}
 	
-	@Test
-	public void testInsertSubsHtmlAsJson() {
-		InsertSubsHtml directive = new InsertSubsHtml();
-		directive.setDescription("TestInsertSubsHtml");
-		directive.setNotLast("empty");
-		ProviderHtml providerHtml = (ProviderHtml) directive.getProvider();
-		providerHtml.setStaticData("A,B,C\n1,2,3\n4,5,6");
-		template.addDirective(directive);
-		String asJson = templateJSON();
-		assertEquals(testInsertSubsHtmlJson, asJson);
-		assertEquals("com.ibm.util.merge.directive.provider.ProviderHtml", directive.getProvider().getClass().getName());
-	}
-	
-	@Test
-	public void testReplaceRowHtmlAsJson() {
-		ReplaceRowHtml directive = new ReplaceRowHtml();
-		directive.setDescription("TestReplaceRowHtml");
-		ProviderHtml providerHtml = (ProviderHtml) directive.getProvider();
-		providerHtml.setStaticData("A,B,C\n1,2,3\n4,5,6");
-		template.addDirective(directive);
-		String asJson = templateJSON();
-		assertEquals(testReplaceRowHtmlJson, asJson);
-		assertEquals("com.ibm.util.merge.directive.provider.ProviderHtml", directive.getProvider().getClass().getName());
-	}
-	
-	@Test
-	public void testReplaceColHtmlAsJson() {
-		ReplaceColHtml directive = new ReplaceColHtml();
-		directive.setDescription("TestReplaceColHtml");
-		directive.setFromColumn("Foo");
-		ProviderHtml providerHtml = (ProviderHtml) directive.getProvider();
-		providerHtml.setStaticData("A,B,C\n1,2,3\n4,5,6");
-		template.addDirective(directive);
-		String asJson = templateJSON();
-		assertEquals(testReplaceColHtmlJson, asJson);
-		assertEquals("com.ibm.util.merge.directive.provider.ProviderHtml", directive.getProvider().getClass().getName());
-	}
-	
-	@Test
-	public void testReplaceMarkupHtmlAsJson() {
-		ReplaceMarkupHtml directive = new ReplaceMarkupHtml();
-		directive.setDescription("TestMarkupSubsHtml");
-		directive.setPattern("TestPattern");
-		ProviderHtml providerHtml = (ProviderHtml) directive.getProvider();
-		providerHtml.setStaticData("A,B,C\n1,2,3\n4,5,6");
-		template.addDirective(directive);
-		String asJson = templateJSON();
-		assertEquals(testMarkupHtmlJson, asJson);
-		assertEquals("com.ibm.util.merge.directive.provider.ProviderHtml", directive.getProvider().getClass().getName());
-	}
+//	@Test
+//	public void testInsertSubsHtmlAsJson() {
+//		InsertSubsHtml directive = new InsertSubsHtml();
+//		directive.setDescription("TestInsertSubsHtml");
+//		directive.setNotLast("empty");
+//		ProviderHtml providerHtml = (ProviderHtml) directive.getProvider();
+//		providerHtml.setStaticData("A,B,C\n1,2,3\n4,5,6");
+//		template.addDirective(directive);
+//		String asJson = templateJSON();
+//		assertEquals(testInsertSubsHtmlJson, asJson);
+//		assertEquals("com.ibm.util.merge.directive.provider.ProviderHtml", directive.getProvider().getClass().getName());
+//	}
+//
+//	@Test
+//	public void testReplaceRowHtmlAsJson() {
+//		ReplaceRowHtml directive = new ReplaceRowHtml();
+//		directive.setDescription("TestReplaceRowHtml");
+//		ProviderHtml providerHtml = (ProviderHtml) directive.getProvider();
+//		providerHtml.setStaticData("A,B,C\n1,2,3\n4,5,6");
+//		template.addDirective(directive);
+//		String asJson = templateJSON();
+//		assertEquals(testReplaceRowHtmlJson, asJson);
+//		assertEquals("com.ibm.util.merge.directive.provider.ProviderHtml", directive.getProvider().getClass().getName());
+//	}
+//
+//	@Test
+//	public void testReplaceColHtmlAsJson() {
+//		ReplaceColHtml directive = new ReplaceColHtml();
+//		directive.setDescription("TestReplaceColHtml");
+//		directive.setFromColumn("Foo");
+//		ProviderHtml providerHtml = (ProviderHtml) directive.getProvider();
+//		providerHtml.setStaticData("A,B,C\n1,2,3\n4,5,6");
+//		template.addDirective(directive);
+//		String asJson = templateJSON();
+//		assertEquals(testReplaceColHtmlJson, asJson);
+//		assertEquals("com.ibm.util.merge.directive.provider.ProviderHtml", directive.getProvider().getClass().getName());
+//	}
+//
+//	@Test
+//	public void testReplaceMarkupHtmlAsJson() {
+//		ReplaceMarkupHtml directive = new ReplaceMarkupHtml();
+//		directive.setDescription("TestMarkupSubsHtml");
+//		directive.setPattern("TestPattern");
+//		ProviderHtml providerHtml = (ProviderHtml) directive.getProvider();
+//		providerHtml.setStaticData("A,B,C\n1,2,3\n4,5,6");
+//		template.addDirective(directive);
+//		String asJson = templateJSON();
+//		assertEquals(testMarkupHtmlJson, asJson);
+//		assertEquals("com.ibm.util.merge.directive.provider.ProviderHtml", directive.getProvider().getClass().getName());
+//	}
 
 	@Test
 	public void testAddDirective() {

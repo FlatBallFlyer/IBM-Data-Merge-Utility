@@ -21,7 +21,7 @@ import com.ibm.util.merge.cache.TemplateCache;
 import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.directive.AbstractDirective;
 import com.ibm.util.merge.directive.Directives;
-import com.ibm.util.merge.persistence.AbstractPersistence;
+import com.ibm.util.merge.persistence.TemplatePersistence;
 import com.ibm.util.merge.template.CollectionName;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.TemplateName;
@@ -45,9 +45,9 @@ import java.util.*;
  * JsonProxy jsonProxy = new PrettyJsonProxy(); // or DefaultJsonProxy()
  * ConnectionPoolManager poolManager = new ConnectionPoolManager();
  * PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(jdbcProperties);
- * AbstractPersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
+ * TemplatePersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
  * 	or 
- * AbstractPersistence persist = new DatabasePersistence(dataSourceName);
+ * TemplatePersistence persist = new DatabasePersistence(dataSourceName);
  *     
  * TemplateFactory tf 	= new TemplateFactory(persist, jsonProxy, outputDir, poolManager);
  * }
@@ -72,7 +72,7 @@ final public class TemplateFactory {
     public static final String SYSTEM_STATUS_PAGE = "system.status.";
     
     // Factory Attributes
-    private final AbstractPersistence persistence;
+    private final TemplatePersistence persistence;
     private final File outputRoot;
 	private final TemplateCache templateCache;
     private final JsonProxy jsonProxy;
@@ -84,7 +84,7 @@ final public class TemplateFactory {
     private Date initialized = null;
     private double templatesMerged = 0;
     
-    public TemplateFactory(AbstractPersistence persist, JsonProxy proxy, File outputRootDir, ConnectionPoolManager manager) {
+    public TemplateFactory(TemplatePersistence persist, JsonProxy proxy, File outputRootDir, ConnectionPoolManager manager) {
         this.templateCache = new TemplateCache();
         this.jsonProxy = proxy;
         this.persistence = persist;
@@ -390,7 +390,7 @@ final public class TemplateFactory {
     /**
      * @return the persistence object
      */
-    public AbstractPersistence getPersistence() {
+    public TemplatePersistence getPersistence() {
 		return persistence;
 	}
 

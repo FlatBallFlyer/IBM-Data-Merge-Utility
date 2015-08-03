@@ -25,6 +25,10 @@
 			<param-value>/tmp/merge/</param-value>
 		</init-param>
 		<init-param>
+			<param-name>jdbc-persistence-templates-poolname</param-name>
+			<param-value>idmuTemplates</param-value>
+		</init-param>
+		<init-param>
 			<param-name>merge-templates-folder</param-name>
 			<param-value>/WEB-INF/templates/</param-value>
 		</init-param>

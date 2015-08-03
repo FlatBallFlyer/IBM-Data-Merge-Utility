@@ -37,10 +37,10 @@ public class DirectiveDeserializer implements JsonDeserializer<AbstractDirective
 			case Directives.TYPE_CSV_INSERT: 		return context.deserialize(json, InsertSubsCsv.class);
 			case Directives.TYPE_CSV_REPLACE_COL: 	return context.deserialize(json, ReplaceColCsv.class);
 			case Directives.TYPE_CSV_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowCsv.class);
-			case Directives.TYPE_HTML_INSERT: 		return context.deserialize(json, InsertSubsHtml.class);
-			case Directives.TYPE_HTML_REPLACE_COL: 	return context.deserialize(json, ReplaceColHtml.class);
-			case Directives.TYPE_HTML_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowHtml.class);
-			case Directives.TYPE_HTML_REPLACE_MARKUP: return context.deserialize(json, ReplaceMarkupHtml.class);
+//			case Directives.TYPE_HTML_INSERT: 		return context.deserialize(json, InsertSubsHtml.class);
+//			case Directives.TYPE_HTML_REPLACE_COL: 	return context.deserialize(json, ReplaceColHtml.class);
+//			case Directives.TYPE_HTML_REPLACE_ROW: 	return context.deserialize(json, ReplaceRowHtml.class);
+//			case Directives.TYPE_HTML_REPLACE_MARKUP: return context.deserialize(json, ReplaceMarkupHtml.class);
 			case Directives.TYPE_TAG_INSERT: 		return context.deserialize(json, InsertSubsTag.class);
 			default: return null;
 		}

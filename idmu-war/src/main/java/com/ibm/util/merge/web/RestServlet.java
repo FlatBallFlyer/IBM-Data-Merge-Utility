@@ -43,6 +43,8 @@ public class RestServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = -3077892479360668874L;
 	private static final Logger log = Logger.getLogger(RestServlet.class);
+    private final String editorShortcutPath = "/edit";
+    private String editorPath = "/editor/html/app-en-desktop.html";
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -64,25 +66,31 @@ public class RestServlet extends HttpServlet {
     private void handleRequest(HttpServletRequest request, HttpServletResponse response) {
         RequestData rd = new RequestData(request);
         logRequest(rd);
-        boolean handled = false;
-        for (RequestHandler handler : handlerChain()) {
-            boolean canHandle = handler.canHandle(rd);
-            log.info("Handler " + handler.getClass().getSimpleName() + "? " + canHandle);
-            if (canHandle) {
-                if (handled) throw new IllegalStateException("Multiple handlers match for " + rd);
-                handled = true;
-                Result result = handler.handle(rd);
-                result.write(rd, request, response);
-                if (response.getStatus() >= 200 && response.getStatus() < 300) {
-                    log.info("Successfully handled request with " + handler.getClass().getName() + " : " + rd);
-                } else {
-                    log.error("Failed to handle request with " + handler.getClass().getName() + " : " + rd);
+        if(rd.pathEquals(editorShortcutPath) && rd.isGET()){
+            response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
+            response.setHeader("Location", request.getScheme() + "://"+request.getHeader("Host") + request.getServletContext().getContextPath() + editorPath);
+        }else{
+            boolean handled = false;
+            for (RequestHandler handler : handlerChain()) {
+                boolean canHandle = handler.canHandle(rd);
+                log.info("Handler " + handler.getClass().getSimpleName() + "? " + canHandle);
+                if (canHandle) {
+                    if (handled) throw new IllegalStateException("Multiple handlers match for " + rd);
+                    handled = true;
+                    Result result = handler.handle(rd);
+                    result.write(rd, request, response);
+                    if (response.getStatus() >= 200 && response.getStatus() < 300) {
+                        log.info("Successfully handled request with " + handler.getClass().getName() + " : " + rd);
+                    } else {
+                        log.error("Failed to handle request with " + handler.getClass().getName() + " : " + rd);
+                    }
                 }
             }
+            if (!handled) {
+                throw new RuntimeException("Unhandled : " + rd);
+            }
         }
-        if (!handled) {
-            throw new RuntimeException("Unhandled : " + rd);
-        }
+
     }
 
     private List<RequestHandler> handlerChain() {

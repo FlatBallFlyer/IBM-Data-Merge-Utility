@@ -19,9 +19,8 @@ package com.ibm.util.merge;
 import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.json.PrettyJsonProxy;
-import com.ibm.util.merge.persistence.AbstractPersistence;
+import com.ibm.util.merge.persistence.TemplatePersistence;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -46,7 +45,7 @@ public class IntegrationTestingHtmlProvider {
 	File outputDir 		= new File("src/test/resources/testout/");
 	File validateDir 	= new File("src/test/resources/valid/");
     JsonProxy jsonProxy = new PrettyJsonProxy();
-    AbstractPersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
+    TemplatePersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
     ConnectionPoolManager manager = new ConnectionPoolManager();
     TemplateFactory tf 	= new TemplateFactory(persist, jsonProxy, outputDir, manager);
 

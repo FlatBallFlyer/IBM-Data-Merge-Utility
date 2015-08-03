@@ -34,7 +34,7 @@ public class ProviderCsv extends ProviderHttp {
 	
 	public ProviderCsv asNew() {
 		ProviderCsv to = new ProviderCsv();
-		to.copyFieldsFrom((ProviderHttp)this);
+		to.copyFieldsFrom(this);
 		return to;
 	}
 

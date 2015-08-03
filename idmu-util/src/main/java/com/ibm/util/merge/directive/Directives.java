@@ -61,10 +61,10 @@ public class Directives {
     	directives.add(new InsertSubsCsv());
     	directives.add(new ReplaceRowCsv());
     	directives.add(new ReplaceColCsv());
-    	directives.add(new InsertSubsHtml());
-    	directives.add(new ReplaceRowHtml());
-    	directives.add(new ReplaceColHtml());
-    	directives.add(new ReplaceMarkupHtml());
+//    	directives.add(new InsertSubsHtml());
+//    	directives.add(new ReplaceRowHtml());
+//    	directives.add(new ReplaceColHtml());
+//    	directives.add(new ReplaceMarkupHtml());
     }
     
     public ArrayList<AbstractDirective>getDirectives() {

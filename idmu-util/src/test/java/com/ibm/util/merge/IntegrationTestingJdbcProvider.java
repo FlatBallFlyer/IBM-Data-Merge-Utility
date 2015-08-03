@@ -20,7 +20,7 @@ import com.ibm.idmu.api.JsonProxy;
 import com.ibm.idmu.api.PoolManagerConfiguration;
 import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.json.PrettyJsonProxy;
-import com.ibm.util.merge.persistence.AbstractPersistence;
+import com.ibm.util.merge.persistence.TemplatePersistence;
 import com.ibm.util.merge.persistence.FilesystemPersistence;
 
 import org.junit.After;
@@ -40,7 +40,7 @@ public class IntegrationTestingJdbcProvider {
 	File validateDir 	= new File("src/test/resources/valid/");
     File jdbcProperties = new File("src/test/resources/properties/databasePools.properties"); 
     JsonProxy jsonProxy = new PrettyJsonProxy();
-    AbstractPersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
+    TemplatePersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
     ConnectionPoolManager poolManager = new ConnectionPoolManager();
     PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(jdbcProperties);
     

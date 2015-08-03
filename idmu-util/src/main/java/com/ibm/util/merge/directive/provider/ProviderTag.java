@@ -44,7 +44,7 @@ public class ProviderTag extends AbstractProvider {
 	
 	public ProviderTag asNew() {
 		ProviderTag to = new ProviderTag();
-		to.copyFieldsFrom((AbstractProvider)this);
+		to.copyFieldsFrom(this);
 		to.setTag(		this.getTag());
 		to.setCondition(this.getCondition());
 		to.setList(		this.isList());

@@ -32,7 +32,7 @@ public class InsertSubsTag extends InsertSubs {
 
 	public InsertSubsTag asNew() {
 		InsertSubsTag to = new InsertSubsTag();
-		to.copyFieldsFrom((InsertSubs)this);
+		to.copyFieldsFrom(this);
 		return to;
 	}
 

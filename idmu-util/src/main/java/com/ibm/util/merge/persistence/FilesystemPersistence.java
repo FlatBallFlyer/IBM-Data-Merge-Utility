@@ -30,7 +30,7 @@ import java.util.List;
 /**
  *
  */
-public class FilesystemPersistence extends AbstractPersistence {
+public class FilesystemPersistence implements TemplatePersistence {
 
     private Logger log = Logger.getLogger(FilesystemPersistence.class);
     private final File templateFolder;
