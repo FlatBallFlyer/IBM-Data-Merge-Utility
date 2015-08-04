@@ -1,0 +1,80 @@
+@charset "UTF-8";
+/* CSS Document */
+
+@import url(http://fonts.googleapis.com/css?family=Roboto:900,100,300,700,400|Roboto+Slab:400,300,700);
+
+body {
+	font-family: 'Roboto', sans-serif;
+	padding-top: 105px;
+	font-weight: 300;
+	font-size: 1.3em;
+	position: relative;
+	color: #777;
+}
+
+.navbar-default {
+	padding: 10px 0;
+	background-color: #337ab7;
+	border: none;
+}
+
+.navbar-default .navbar-nav li a {
+	color: white;
+	padding-bottom: 2px;
+}
+
+.navbar-default .navbar-nav .active a {
+	font-weight: 500;
+	color: white;
+	background: transparent;
+	border-bottom: 1px solid #FFF;
+	text-shadow: none;
+}
+
+.navbar-default .navbar-nav .active a:hover {
+	background: transparent;
+}
+
+.navbar-toggle  {
+	background-color: white;
+}
+
+h1 { 
+	font-family: 'Roboto Slab', serif;
+	font-weight: 900;
+	color: #fffff;
+}
+
+h2 { 
+	font-family: 'Roboto', sans-serif;
+	font-weight: 700;
+	color: #4178be;
+}
+
+h3 { 
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
+	color: #4178be; 
+}
+
+h4 { 
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
+	color: #4178be; 
+}
+
+li { 
+	margin: 0px 0px 0px 0px; 
+}
+
+th {
+	text-align: center;
+}
+
+td {
+	text-align: center;
+}
+
+.table-bordered
+	{
+}

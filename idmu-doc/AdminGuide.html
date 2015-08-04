@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBM Data Merge Utility</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+        	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#collapse">
+            	<span class="sr-only">Toggle navigation</span>
+                <span class="glyphicon glyphicon-arrow-down"></span>
+                MENU
+           </button>   
+         <div class="navbar-header">
+        	<a class="navbar-brand" href="#"><img src="images/IBMlogo.png"></a>
+        </div>                         
+        <div class="collapse navbar-collapse" id="collapse">  
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">User</a></li>
+                <li class="active"><a href="#">Admin</a></li>        
+                <li><a href="#">Developer</a></li>
+            </ul>
+        </div>
+    </nav> 
+<body>    
+<div class="container">    
+<h1><a id="top">IBM Data Merge Utility Documentation</a></h1>            		
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href="#Licensing"><strong>Licensing</strong></a></li>
+            <li><a href="#Dependencies"><strong>Dependencies</strong></a></li>
+            <li><a href="#Overview"><strong>Overview</strong></a></li>
+            <li class="dropdown"><a href="#Installing" data-toggle="dropdown"><strong>Installing</strong><span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#QuickInstall">Quick Install</a></li>
+                    <li><a href="#EntDepArch">Enterprise Deployment Architecture<li> 
+                        <ul>
+                            <li><a href="#ChangeMgmt">Change Management</a></li>
+                            <li><a href="#HighAvail">High Availability Options</a></li>
+                            <li><a href="#Scale">Scaling Options</a></li>
+                        </ul>
+                    </li> 
+                </ul>               
+            </li>
+            <li class="dropdown"><a href="#Admin" data-toggle="dropdown"><strong>Administrating</strong><span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#DevelopIns">Development Install</a></li>
+                    <li><a href="#ProdIns">Production Install</a></li>
+                    <li><a href="#SecSer">Securing the server</a></li>
+                    <li><a href="#HouseLogs">Housekeeping of Merge Output / Logs</a></li>
+                    <li><a href="#Backup">Backup / Restore Guidelines</a></li>
+                    <li><a href="#Config">Configuration Options</a></li>
+                    <ul>
+                        <li><a href="#ConfigJDBC">Configuring JDBC Data Sources</a></li>
+                        <li><a href="#TempPers">Template Persistence Options</a></li>
+                          <ul>
+                            <li><a href="#ConfigFile">Config File System Persistence</a></li>
+                            <li><a href="#ConfigData">Config Database Persistence</a></li>
+                           </ul> 
+                        <li><a href="#Merge">Merge Output Directory</a></li>
+                        <li><a href="#DefPack">Default Package Name</a></li>
+                        <li><a href="#pretty">json "pretty" formatting</a></li>
+                        <li><a href="#Log">Logging</a></li>
+                    </ul>
+                </ul>               
+            </li>
+        </ul>
+   
+<h3><a id="Licensing">Licensing</a></h3>
+        Copyright <div class="glyphicon glyphicon-copyright-mark"></div> 2015, 2015 IBM	<div class="glyphicon glyphicon-registration-mark"></div>
+        <p></p>	
+		<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
+    
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	
+<h3><a id="Dependencies">Dependencies</a></h3>
+	<p>The Java code has the following Open Source dependencies:</p>
+	<ul>
+		<li>Log4j - <a href="http://logging.apache.org/log4j/">http://logging.apache.org/log4j/</a></li>
+		<li>jUnit - <a href="http://junit.org">http://junit.org</a></li>
+		<li>Commons CSV - <a href="https://commons.apache.org/proper/commons-csv/">https://commons.apache.org/proper/commons-csv/</a></li>
+		<li>jSoup - <a href="http://jsoup.org">http://jsoup.org</a></li>
+		<li>gson - <a href="https://code.google.com/p/google-gson/">https://code.google.com/p/google-gson/</a></li>
+		<li>hibernate ORM - <a href="http://hibernate.org/orm/">http://hibernate.org/orm/</a></li>
+	</ul>
+<h4>Maven Build Values</h4>	
+<pre><code>&lt;dependencies&gt;
+	&lt;dependency&gt;
+		&lt;groupId&gt;junit&lt;/groupId&gt;
+		&lt;artifactId&gt;junit&lt;/artifactId&gt;
+		&lt;version&gt;4.11&lt;/version&gt;
+		&lt;scope&gt;test&lt;/scope&gt;
+	&lt;/dependency&gt;
+	&lt;dependency&gt;
+		&lt;groupId&gt;log4j&lt;/groupId&gt;
+		&lt;artifactId&gt;log4j&lt;/artifactId&gt;
+		&lt;version&gt;1.2.17&lt;/version&gt;
+	&lt;/dependency&gt;
+	&lt;dependency&gt;
+		&lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+		&lt;artifactId&gt;commons-csv&lt;/artifactId&gt;
+		&lt;version&gt;1.1&lt;/version&gt;
+	&lt;/dependency&gt;
+	&lt;dependency&gt;
+		&lt;groupId&gt;org.jsoup&lt;/groupId&gt;
+		&lt;artifactId&gt;jsoup&lt;/artifactId&gt;
+		&lt;version&gt;1.8.2&lt;/version&gt;
+	&lt;/dependency&gt;
+	&lt;dependency&gt;
+		&lt;groupId&gt;com.google.code.gson&lt;/groupId&gt;
+		&lt;artifactId&gt;gson&lt;/artifactId&gt;
+		&lt;version&gt;2.3.1&lt;/version&gt;
+	&lt;/dependency&gt;
+	&lt;dependency&gt;
+		&lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+		&lt;artifactId&gt;hibernate-core&lt;/artifactId&gt;
+		&lt;version&gt;5.0.0.CR1&lt;/version&gt;
+	&lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>
+    	
+<h3><a id="Overview">Overview</a></h3>
+	<video class="video" controls><source src="video/cut1.mp4" type="video/mp4"></video>
+	<p>The IBM Data Merge Utility is an open source general purpose Java utility, exposed as an HTTP service, that uses Templates with your data source to create one or more merge output files. The merge process is driven by a set of directives associated with a template. The two types of directives are Replace and Insert and they drive the replacement of key values in a template, and the insertion of sub-templates. You can download source from GitHub here: <a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility">https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility</a></p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>
+    
+<h3><a id="QuickInstall">Quick Install</a></h3>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h3><a id="EntDepArch">Enterprise Deployment Architecture</a></h3>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h4><a id="ChangeMgmt">Change Management</a></h4>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h4><a id="HighAvail">High Availability Options</a></h4>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h4><a id="Scale">Scaling of Options</a></h4>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h3><a id="Admin">Administrating</a></h3>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h3><a id="DevelopIns">Development Install</a></h3>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h3><a id="ProdIns">Production Install</a></h3>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h3><a id="SecSer">Securing the server</a></h3>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h3><a id="HouseLogs">Housekeeping of Merge Output / Logs</a></h3>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h3><a id="Backup">Backup / Restore guidelines</a></h3>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h3><a id="Config">Configuration Options</a></h3>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h4><a id="ConfigJDBC">Configuring JDBC Data Sources</a></h4>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h4><a id="TempPers">Template Persistence Options</a></h4>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h4><a id="ConfigFile">Configure File System Persistence</a></h4>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h4><a id="ConfigData">Configure Database Persistence</a></h4>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h4><a id="Merge">Merge Output Directory</a></h4>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h4><a id="DefPack">Default Package Name</a></h4>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h4><a id="pretty">json "pretty" formatting</a></h4>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h4><a id="Log">Logging</a></h4>
+<p>Need Content</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+		  	
+</div><!--end of container-->
+<!--javascript-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="js/myscript.js"</script>
+</body>
+</html>
