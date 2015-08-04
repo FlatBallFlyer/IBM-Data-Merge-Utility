@@ -22,6 +22,7 @@ import com.ibm.util.merge.directive.provider.DataTable;
 import com.ibm.util.merge.template.Bookmark;
 import com.ibm.util.merge.template.Template;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -112,7 +113,7 @@ public abstract class InsertSubs extends AbstractDirective {
     }
     
     public String getNotLast() {
-        return String.join(",", notLast);
+        return StringUtils.join(notLast, ",");
     }
 
     public void setNotLast(String notLast) {
@@ -120,7 +121,7 @@ public abstract class InsertSubs extends AbstractDirective {
     }
 
     public String getOnlyLast() {
-        return String.join(",", onlyLast);
+        return StringUtils.join(onlyLast, ",");
     }
 
     public void setOnlyLast(String onlyLast) {

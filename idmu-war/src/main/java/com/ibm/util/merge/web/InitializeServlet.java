@@ -146,17 +146,15 @@ public class InitializeServlet extends HttpServlet {
             log.info("Found so using passed system property value for jdbc-pools-properties-path: " + systemPoolsPropertiesPath);
             this.jdbcPoolsPropertiesPath = systemPoolsPropertiesPath;
         }
-<<<<<<< HEAD
         String systemLog4jPropertiesPath = System.getProperty("log4j-init-file");
         if(systemLog4jPropertiesPath != null){
             log.info("Found so using passed system property value for log4j-init-file: " + systemLog4jPropertiesPath);
             this.log4jPropertiesPath = systemLog4jPropertiesPath;
-=======
+        }
         String systemTemplatesPersistencePoolName = System.getProperty("jdbc-persistence-templates-poolname");
         if(systemTemplatesPersistencePoolName != null){
             log.info("Found so using passed system property value for jdbc-persistence-templates-poolname: " + systemTemplatesPersistencePoolName);
             this.templatesPersistencePoolName = systemTemplatesPersistencePoolName;
->>>>>>> v31work
         }
         String systemPrettyJson = System.getProperty("pretty-json");
         if(systemPrettyJson != null){
@@ -185,15 +183,13 @@ public class InitializeServlet extends HttpServlet {
         if(databasePoolsPropertiesPath != null){
             this.jdbcPoolsPropertiesPath = databasePoolsPropertiesPath;
         }
-<<<<<<< HEAD
         String log4jPropertiesPath = servletInitParameters.get("log4j-init-file");
         if(log4jPropertiesPath != null){
             this.log4jPropertiesPath = log4jPropertiesPath;
-=======
+        }
         String templatesPersistencePoolName = servletInitParameters.get("jdbc-persistence-templates-poolname");
         if(templatesPersistencePoolName != null){
             this.templatesPersistencePoolName = templatesPersistencePoolName;
->>>>>>> v31work
         }
         String prettyJsonParameter = servletInitParameters.get("pretty-json");
         if (prettyJsonParameter != null) {

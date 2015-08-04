@@ -23,6 +23,8 @@ import com.ibm.util.merge.template.Template;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.apache.commons.lang3.StringUtils;
+
 
 /**
  * A validation directive 
@@ -69,7 +71,7 @@ public class Require extends AbstractDirective {
 	}
 
 	public String getTags() {
-		return String.join(",", tags);
+		return StringUtils.join(tags, ",");
 	}
 
 	public void setTags(String tags) {

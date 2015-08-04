@@ -23,7 +23,6 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ 
 	DataTableTest.class, 
 	ProviderCsvTest.class,
-	ProviderHtmlTest.class, 
 	ProviderSqlTest.class, 
 	ProviderTagTest.class 
 })

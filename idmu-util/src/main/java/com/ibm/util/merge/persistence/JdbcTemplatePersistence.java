@@ -85,7 +85,7 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                     long id = rs.getLong("ID_TEMPLATE");
                     t.setIdtemplate(id);
                     t.setCollection(rs.getString("COLLECTION"));
-                    t.setName(rs.getString("NAME"));
+                    t.setName(rs.getString("TEMPLATE_NAME"));
                     t.setColumnValue(rs.getString("COLUMN_VALUE"));
                     t.setOutputFile(rs.getString("OUTPUT"));
                     t.setDescription(rs.getString("DESCRIPTION"));
@@ -114,7 +114,7 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
             PreparedStatement ps = null;
             try {
 
-                String query = "INSERT INTO TEMPLATE(`COLLECTION`, `NAME`, `COLUMN_VALUE`, `OUTPUT`, `DESCRIPTION`, `CONTENT`) VALUES (?, ?, ?, ?, ?, ?)";
+                String query = "INSERT INTO TEMPLATE(COLLECTION, TEMPLATE_NAME, COLUMN_VALUE, OUTPUT, DESCRIPTION, CONTENT) VALUES (?, ?, ?, ?, ?, ?)";
                 ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 // set the values for each column by order (starts with 1)
                 ps.setString(1, template.getCollection());
