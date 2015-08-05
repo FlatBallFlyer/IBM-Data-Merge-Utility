@@ -17,6 +17,8 @@
 
 package com.ibm.util.merge.directive;
 
+import java.util.HashMap;
+
 import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.directive.provider.AbstractProvider;
@@ -44,6 +46,14 @@ public abstract class AbstractDirective {
 	}
 	
 	public abstract AbstractDirective asNew();
+	public abstract String getD1();
+	public abstract void setD1(String value);
+	public abstract String getD2();
+	public abstract void setD2(String value);
+	public abstract String getD3();
+	public abstract void setD3(String value);
+	public abstract String getD4();
+	public abstract void setD4(String value);
 	
 	/********************************************************************************
 	 * Copy from
@@ -90,6 +100,10 @@ public abstract class AbstractDirective {
 		return provider;
 	}
 
+	public String getSoftFail() {
+		return (this.softFail ? "Y" : "N");
+	}
+
 	public boolean isSoftFail() {
 		return softFail;
 	}
@@ -122,6 +136,10 @@ public abstract class AbstractDirective {
 
 	public void setSoftFail(boolean softFail) {
 		this.softFail = softFail;
+	}
+
+	public void setSoftFail(String softFail) {
+		this.softFail = softFail.equals("Y");
 	}
 
 	public void setDescription(String description) {

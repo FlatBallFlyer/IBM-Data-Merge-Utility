@@ -22,6 +22,7 @@ import com.ibm.util.merge.TestUtils;
 import com.ibm.util.merge.directive.provider.AbstractProvider;
 import com.ibm.util.merge.directive.provider.DataTable;
 import com.ibm.util.merge.template.Template;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -90,6 +91,54 @@ public class ReplaceColSqlTest extends ReplaceColTest {
 		public AbstractProvider asNew() {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public String getP1() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void setP1(String value) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public String getP2() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void setP2(String value) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public String getP3() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void setP3(String value) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public String getP4() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void setP4(String value) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 }

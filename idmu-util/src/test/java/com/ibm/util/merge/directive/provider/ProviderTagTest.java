@@ -20,6 +20,7 @@ import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.directive.AbstractDirective;
 import com.ibm.util.merge.template.Template;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -169,6 +170,46 @@ public class ProviderTagTest extends ProviderTest {
 		public AbstractDirective asNew() {
 			// TODO Auto-generated method stub
 			return null;
+		}
+		@Override
+		public String getD1() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public void setD1(String value) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public String getD2() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public void setD2(String value) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public String getD3() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public void setD3(String value) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public String getD4() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public void setD4(String value) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 }

@@ -96,4 +96,28 @@ public abstract class ReplaceRow extends AbstractDirective {
 		log.info("Values added by Replace Row:" + String.valueOf(table.cols()));
 	}
 
+    public String getD1() {
+    	return "";
+    }
+	public void setD1(String value) {
+		return;
+	}
+	public String getD2() {
+    	return "";
+	}
+	public void setD2(String value) {
+		return;
+	}
+	public String getD3() {
+		return "";
+	}
+	public void setD3(String value) {
+		return;
+	}
+	public String getD4() {
+		return "";
+	}
+	public void setD4(String value) {
+		return;
+	}
 }

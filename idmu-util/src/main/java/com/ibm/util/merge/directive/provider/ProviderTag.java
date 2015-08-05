@@ -123,6 +123,10 @@ public class ProviderTag extends AbstractProvider {
 		return list;
 	}
 
+	public String getList() {
+		return (list ? "Y" : "N");
+	}
+
 	public String getValue() {
 		return value;
 	}
@@ -135,12 +139,59 @@ public class ProviderTag extends AbstractProvider {
 		this.condition = condition;
 	}
 
+	public void setCondition(String condition) {
+		this.condition = Integer.parseInt(condition);
+	}
+
 	public void setList(boolean list) {
 		this.list = list;
+	}
+
+	public void setList(String list) {
+		this.list = list.equals("Y");
 	}
 
 	public void setValue(String value) {
 		this.value = value;
 	}
 
+	@Override
+	public String getP1() {
+		return this.getTag();
+	}
+
+	@Override
+	public void setP1(String value) {
+		this.setTag(value);
+	}
+
+	@Override
+	public String getP2() {
+		return Integer.toString(this.getCondition());
+	}
+
+	@Override
+	public void setP2(String value) {
+		this.setCondition(Integer.parseInt(value));
+	}
+
+	@Override
+	public String getP3() {
+		return this.getList();
+	}
+
+	@Override
+	public void setP3(String value) {
+		this.setList(value);
+	}
+
+	@Override
+	public String getP4() {
+		return this.getValue();
+	}
+
+	@Override
+	public void setP4(String value) {
+		this.setValue(value);
+	}
 }

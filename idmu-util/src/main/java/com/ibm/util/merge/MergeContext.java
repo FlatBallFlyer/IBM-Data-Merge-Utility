@@ -117,13 +117,14 @@ public class MergeContext {
      * @return
      */
     public String getHtmlErrorMessage(MergeException error) {
-        String message;
+        String message = "";
         Map<String, String[]> parameters = new HashMap<String,String[]>();
         parameters.put("MESSAGE", 		new String[]{error.getError()});
         parameters.put("CONTEXT", 		new String[]{error.getContext()});
         parameters.put("TRACE", 		new String[]{error.getStackTrace().toString()});
         parameters.put("DragonFlyFullName",	new String[]{"system.errHtml."});
-        message = getTemplateFactory().getMergeOutput(parameters);
+    	message = getTemplateFactory().getMergeOutput(parameters);
+
         if (message.isEmpty()) {
             message = "INVALID ERROR TEMPLATE! \n" +
                     "Message: " + error.getError() + "\n" +

@@ -18,7 +18,10 @@ package com.ibm.util.merge.persistence;
 
 import com.ibm.idmu.api.PoolManager;
 import com.ibm.idmu.api.SqlOperation;
+import com.ibm.util.merge.directive.AbstractDirective;
+import com.ibm.util.merge.directive.Directives;
 import com.ibm.util.merge.template.Template;
+
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -50,14 +53,14 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
 
     @Override
     public List<Template> loadAllTemplates() {
-        List<Template> templates = poolManager.runWithPool(poolName, new LoadTemplatesSqlOperation());
+        List<Template> templates = poolManager.runWithPool(poolName, new LoadTemplatesSqlOperation(poolManager, poolName));
         return templates;
     }
 
     @Override
     public void saveTemplate(final Template template) {
         deleteTemplate(template);
-        this.poolManager.runWithPool(poolName, new SaveNewTemplateSqlOperation(template));
+        this.poolManager.runWithPool(poolName, new SaveNewTemplateSqlOperation(template, poolManager, poolName));
     }
 
     @Override
@@ -70,7 +73,15 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
     }
 
     public static class LoadTemplatesSqlOperation implements SqlOperation<List<Template>> {
-        @Override
+        private final PoolManager poolManager;
+        private final String poolName;
+
+        public LoadTemplatesSqlOperation(PoolManager poolManager, String poolName) {
+        	this.poolManager= poolManager;
+        	this.poolName = poolName;
+        }
+
+    	@Override
         public List<Template> execute(Connection connection) throws SQLException {
             Statement st = null;
             ResultSet rs = null;
@@ -82,15 +93,64 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                 while (rs.next()) {
                     // for each row create a new template instance and set column values
                     Template t = new Template();
-                    long id = rs.getLong("ID_TEMPLATE");
-                    t.setIdtemplate(id);
                     t.setCollection(rs.getString("COLLECTION"));
                     t.setName(rs.getString("TEMPLATE_NAME"));
                     t.setColumnValue(rs.getString("COLUMN_VALUE"));
                     t.setOutputFile(rs.getString("OUTPUT"));
                     t.setDescription(rs.getString("DESCRIPTION"));
                     t.setContent(rs.getString("CONTENT"));
+                    this.poolManager.runWithPool(this.poolName, new LoadDirectivesSqlOperation(t));
                     out.add(t);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (rs != null) rs.close();
+                if (st != null) st.close();
+            }
+            return out;
+        }
+    }
+
+    public static class LoadDirectivesSqlOperation implements SqlOperation<Object> {
+    	private final Template template;
+    	
+    	public LoadDirectivesSqlOperation(Template template) {
+        	this.template = template;
+        }
+
+    	@Override
+        public Object execute(Connection connection) throws SQLException {
+            Statement st = null;
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            List<AbstractDirective> out = null;
+            Directives directives = new Directives();
+            		
+            try {
+                String query = "SELECT * FROM DIRECTIVE WHERE COLLECTION = ? AND TEMPLATE_NAME = ? AND COLUMN_VALU = ? ORDER BY SEQUENCE";
+                ps = connection.prepareStatement(query);
+                ps.setString(1, this.template.getCollection());
+                ps.setString(2, this.template.getName());
+                ps.setString(3, this.template.getColumnValue());
+                ps.execute();
+                rs = ps.getResultSet();
+                out = new ArrayList<AbstractDirective>();
+                while (rs.next()) {
+                    // for each row create a new directive instance and set object values
+                	AbstractDirective d = directives.getNewDirective(rs.getInt("DIR_TYPE"));
+                    d.setSequence(rs.getInt("SEQUENCE"));
+                    d.setSoftFail(rs.getString("SOFT_FAIL"));
+                    d.setDescription(rs.getString("DESCRIPTION"));
+                    d.setD1(rs.getString("DIR_1"));
+                    d.setD2(rs.getString("DIR_2"));
+                    d.setD3(rs.getString("DIR_3"));
+                    d.setD4(rs.getString("DIR_4"));
+                    d.getProvider().setP1(rs.getString("PRO_1"));
+                    d.getProvider().setP2(rs.getString("PRO_2"));
+                    d.getProvider().setP3(rs.getString("PRO_3"));
+                    d.getProvider().setP4(rs.getString("PRO_4"));
+                    template.addDirective(d);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -104,9 +164,13 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
 
     public static class SaveNewTemplateSqlOperation implements SqlOperation<Void> {
         private final Template template;
+        private final PoolManager poolManager;
+        private final String poolName;
 
-        public SaveNewTemplateSqlOperation(Template template) {
+        public SaveNewTemplateSqlOperation(Template template, PoolManager poolManager, String poolName) {
             this.template = template;
+            this.poolManager = poolManager;
+            this.poolName = poolName;
         }
 
         @Override
@@ -129,12 +193,56 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                 if (rs != null && rs.next()) {
                     long generatedTemplateId = rs.getLong(1);
                     template.setIdtemplate(generatedTemplateId);
+                    for ( AbstractDirective directive : template.getDirectives() ) {
+                        this.poolManager.runWithPool(poolName, new SaveNewDirectivesSqlOperation(directive));
+                    }
+                    // 
                 }else{
                     throw new IllegalStateException("Did not get generated template id from DB for " + template);
                 }
                 return null;
             } catch (Exception e) {
                 throw new RuntimeException("Error creating template " + template, e);
+            } finally {
+                if (ps != null) ps.close();
+            }
+        }
+    }
+
+    public static class SaveNewDirectivesSqlOperation implements SqlOperation<Void> {
+        private final AbstractDirective directive;
+
+        public SaveNewDirectivesSqlOperation(AbstractDirective directive) {
+            this.directive = directive;
+        }
+
+        @Override
+        public Void execute(Connection connection) throws SQLException {
+            PreparedStatement ps = null;
+            try {
+
+                String query = "INSERT INTO IDMU.DIRECTIVE (COLLECTION, TEMPLATE_NAME, COLUMN_VALUE, SEQUENCE, DIR_TYPE, DESCRIPTION, SOFT_FAIL, DIR_1, DIR_2, DIR_3, DIR_4, PRO_1, PRO_2, PRO_3, PRO_4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                // set the values for each column by order (starts with 1)
+                ps.setString( 1, directive.getTemplate().getCollection());
+                ps.setString( 2, directive.getTemplate().getName());
+                ps.setString( 3, directive.getTemplate().getColumnValue());
+                ps.setInt(	  4, directive.getSequence());
+                ps.setInt(	  5, directive.getType());
+                ps.setString( 6, directive.getDescription());
+                ps.setString( 7, directive.getSoftFail());
+                ps.setString( 8, directive.getD1());
+                ps.setString( 9, directive.getD2());
+                ps.setString(10, directive.getD3());
+                ps.setString(11, directive.getD4());
+                ps.setString(12, directive.getProvider().getP1());
+                ps.setString(13, directive.getProvider().getP2());
+                ps.setString(14, directive.getProvider().getP3());
+                ps.setString(15, directive.getProvider().getP4());
+                ps.execute();
+                return null;
+            } catch (Exception e) {
+                throw new RuntimeException("Error creating directive " + directive, e);
             } finally {
                 if (ps != null) ps.close();
             }
@@ -153,9 +261,10 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
             PreparedStatement ps = null;
             try {
                 // delete the correct template
-                ps = connection.prepareStatement("DELETE FROM TEMPLATE WHERE ID_TEMPLATE = ?");
-                // set unique identifier for template
-                ps.setLong(1, template.getIdtemplate());
+                ps = connection.prepareStatement("DELETE FROM TEMPLATE WHERE COLLECTION = ? AND TEMPLATE_NAME = ? AND COLUMN_VALUE = ?");
+                ps.setString(1, template.getCollection());
+                ps.setString(2, template.getName());
+                ps.setString(3, template.getColumnValue());
                 ps.execute();
                 int updated = ps.getUpdateCount();
                 if (updated < 1) {

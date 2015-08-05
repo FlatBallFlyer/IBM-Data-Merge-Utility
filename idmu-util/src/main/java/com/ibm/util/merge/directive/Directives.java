@@ -17,6 +17,8 @@
 package com.ibm.util.merge.directive;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 
 /**
@@ -49,25 +51,33 @@ public class Directives {
     public static final int TYPE_MONGO_REPLACE_COL 		= 63;
     
     // List of directive names
-    public final ArrayList<AbstractDirective> directives  = new ArrayList<AbstractDirective>();
+    public final HashMap<Integer,AbstractDirective> directives = new HashMap<Integer,AbstractDirective>();
     
     public Directives() {
-    	directives.add(new Require());
-    	directives.add(new ReplaceValue());
-    	directives.add(new InsertSubsTag());
-    	directives.add(new InsertSubsSql());
-    	directives.add(new ReplaceRowSql());
-    	directives.add(new ReplaceColSql());
-    	directives.add(new InsertSubsCsv());
-    	directives.add(new ReplaceRowCsv());
-    	directives.add(new ReplaceColCsv());
-//    	directives.add(new InsertSubsHtml());
-//    	directives.add(new ReplaceRowHtml());
-//    	directives.add(new ReplaceColHtml());
-//    	directives.add(new ReplaceMarkupHtml());
+    	directives.put(TYPE_REQUIRE, 			new Require());
+    	directives.put(TYPE_REPLACE_VALUE, 		new ReplaceValue());
+    	directives.put(TYPE_TAG_INSERT, 		new InsertSubsTag());
+    	directives.put(TYPE_SQL_INSERT, 		new InsertSubsSql());
+    	directives.put(TYPE_SQL_REPLACE_ROW, 	new ReplaceRowSql());
+    	directives.put(TYPE_SQL_REPLACE_COL, 	new ReplaceColSql());
+    	directives.put(TYPE_CSV_INSERT, 		new InsertSubsCsv());
+    	directives.put(TYPE_CSV_REPLACE_ROW, 	new ReplaceRowCsv());
+    	directives.put(TYPE_CSV_REPLACE_COL, 	new ReplaceColCsv());
+//    	directives.add(TYPE_HTML_INSERT, 		new InsertSubsHtml());
+//    	directives.add(TYPE_HTML_REPLACE_ROW, 	new ReplaceRowHtml());
+//    	directives.add(TYPE_HTML_REPLACE_COL, 	new ReplaceColHtml());
+//    	directives.add(TYPE_HTML_REPLACE_MARKUP, new ReplaceMarkupHtml());
     }
     
-    public ArrayList<AbstractDirective>getDirectives() {
-    	return directives;
+    public ArrayList<AbstractDirective> getDirectives() {
+    	ArrayList<AbstractDirective> list = new ArrayList<AbstractDirective>();
+    	for(Entry<Integer, AbstractDirective> entry: directives.entrySet()) {
+            list.add(entry.getValue());
+        }    	
+    	return list;
+    }
+    
+    public AbstractDirective getNewDirective(int type) {
+    	return directives.get(new Integer(type)).asNew();
     }
 }

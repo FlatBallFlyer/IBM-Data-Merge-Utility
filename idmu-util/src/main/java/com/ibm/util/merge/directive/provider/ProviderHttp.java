@@ -19,6 +19,7 @@ package com.ibm.util.merge.directive.provider;
 import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.template.Template;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
@@ -32,12 +33,12 @@ import java.net.URL;
  * @author Mike Storey
  *
  */
-public abstract class ProviderHttp extends AbstractProvider implements Cloneable {
+public abstract class ProviderHttp extends AbstractProvider {
 	private static final Logger log = Logger.getLogger(ProviderHttp.class.getName() );
 	private transient String fetchedData	= "";
-	private String staticData	= "";
 	private String url			= "";
 	private String tag			= "";
+	private String staticData	= "";
 	
 	/**
 	 * Simple Constructor
@@ -132,4 +133,43 @@ public abstract class ProviderHttp extends AbstractProvider implements Cloneable
 		this.tag = tag;
 	}
 
+	@Override
+	public String getP1() {
+		return this.getUrl();
+	}
+
+	@Override
+	public void setP1(String value) {
+		this.setUrl(value);
+	}
+
+	@Override
+	public String getP2() {
+		return this.getTag();
+	}
+
+	@Override
+	public void setP2(String value) {
+		this.setTag(value);
+	}
+
+	@Override
+	public String getP3() {
+		return "";
+	}
+
+	@Override
+	public void setP3(String value) {
+		return;
+	}
+
+	@Override
+	public String getP4() {
+		return this.getStaticData();
+	}
+
+	@Override
+	public void setP4(String value) {
+		this.setStaticData(value);
+	}
 }

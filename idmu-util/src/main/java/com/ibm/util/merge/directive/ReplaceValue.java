@@ -75,5 +75,28 @@ public class ReplaceValue extends AbstractDirective {
 		this.to = to;
 	}
 
-
+	public String getD1() {
+    	return this.getFrom();
+    }
+	public void setD1(String value) {
+		this.setFrom(value);
+	}
+	public String getD2() {
+    	return this.getTo();
+	}
+	public void setD2(String value) {
+		this.setTo(value);
+	}
+	public String getD3() {
+		return "";
+	}
+	public void setD3(String value) {
+		return;
+	}
+	public String getD4() {
+		return "";
+	}
+	public void setD4(String value) {
+		return;
+	}
 }

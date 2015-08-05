@@ -18,6 +18,7 @@ package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
+
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -118,31 +119,72 @@ public class ProviderSql extends AbstractProvider {
         return source;
     }
 
-    public void setSource(String source) {
-        this.source = source;
-    }
-
     public String getColumns() {
         return columns;
-    }
-
-    public void setColumns(String columns) {
-        this.columns = columns;
     }
 
     public String getFrom() {
         return from;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
     public String getWhere() {
         return where;
+    }
+
+    public void setColumns(String columns) {
+        this.columns = columns;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
     }
 
     public void setWhere(String where) {
         this.where = where;
     }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+	@Override
+	public String getP1() {
+		return this.getSource();
+	}
+
+	@Override
+	public void setP1(String value) {
+		this.setSource(value);
+	}
+
+	@Override
+	public String getP2() {
+		return this.getColumns();
+	}
+
+	@Override
+	public void setP2(String value) {
+		this.setColumns(value);
+	}
+
+	@Override
+	public String getP3() {
+		return this.getFrom();
+	}
+
+	@Override
+	public void setP3(String value) {
+		this.setFrom(value);
+	}
+
+	@Override
+	public String getP4() {
+		return this.getWhere();
+	}
+
+	@Override
+	public void setP4(String value) {
+		this.setWhere(value);
+	}
+
 }

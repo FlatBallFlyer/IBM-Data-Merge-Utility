@@ -47,7 +47,7 @@ public abstract class InsertSubs extends AbstractDirective {
     public InsertSubs() {
         super();
     }
-
+	
     public void copyFieldsFrom(InsertSubs from) {
     	this.copyFieldsFrom((AbstractDirective)from);
     	this.setNotLast( 	from.getNotLast());
@@ -127,4 +127,29 @@ public abstract class InsertSubs extends AbstractDirective {
     public void setOnlyLast(String onlyLast) {
         this.onlyLast = new ArrayList<>(Arrays.asList(onlyLast.split(",")));
     }
+
+    public String getD1() {
+    	return this.getOnlyLast();
+    }
+	public void setD1(String value) {
+		this.setOnlyLast(value);
+	}
+	public String getD2() {
+		return this.getNotLast();
+	}
+	public void setD2(String value) {
+		this.setNotLast(value);
+	}
+	public String getD3() {
+		return "";
+	}
+	public void setD3(String value) {
+		return;
+	}
+	public String getD4() {
+		return "";
+	}
+	public void setD4(String value) {
+		return;
+	}
 }

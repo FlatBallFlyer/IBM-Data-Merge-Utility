@@ -18,6 +18,7 @@ package com.ibm.util.merge.directive.provider;
 
 import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -31,7 +32,7 @@ public class ProviderCsv extends ProviderHttp {
 		super();
 		setType(Providers.TYPE_CSV);
 	}
-	
+
 	public ProviderCsv asNew() {
 		ProviderCsv to = new ProviderCsv();
 		to.copyFieldsFrom(this);

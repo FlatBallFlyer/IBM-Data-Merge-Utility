@@ -78,5 +78,29 @@ public class Require extends AbstractDirective {
 		this.tags = new ArrayList<>(Arrays.asList(tags.split(",")));
 	}
 
+	public String getD1() {
+    	return this.getTags();
+    }
+	public void setD1(String value) {
+		this.setTags(value);
+	}
+	public String getD2() {
+    	return "";
+	}
+	public void setD2(String value) {
+		return;
+	}
+	public String getD3() {
+		return "";
+	}
+	public void setD3(String value) {
+		return;
+	}
+	public String getD4() {
+		return "";
+	}
+	public void setD4(String value) {
+		return;
+	}
 
 }

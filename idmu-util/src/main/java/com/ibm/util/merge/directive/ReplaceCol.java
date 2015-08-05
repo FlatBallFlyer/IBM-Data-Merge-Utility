@@ -79,4 +79,28 @@ public abstract class ReplaceCol extends AbstractDirective {
 		this.toColumn = toColumn;
 	}
 
+    public String getD1() {
+    	return this.getFromColumn();
+    }
+	public void setD1(String value) {
+		this.setFromColumn(value);
+	}
+	public String getD2() {
+		return this.getToColumn();
+	}
+	public void setD2(String value) {
+		this.setToColumn(value);
+	}
+	public String getD3() {
+		return "";
+	}
+	public void setD3(String value) {
+		return;
+	}
+	public String getD4() {
+		return "";
+	}
+	public void setD4(String value) {
+		return;
+	}
 }

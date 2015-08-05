@@ -43,6 +43,14 @@ public abstract class AbstractProvider {
     }
 
     public abstract AbstractProvider asNew();
+    public abstract String getP1();
+    public abstract void setP1(String value);
+    public abstract String getP2();
+    public abstract void setP2(String value);
+    public abstract String getP3();
+    public abstract void setP3(String value);
+    public abstract String getP4();
+    public abstract void setP4(String value);
     
     public void copyFieldsFrom(AbstractProvider from) {
     	this.dataTables = new ArrayList<DataTable>();
