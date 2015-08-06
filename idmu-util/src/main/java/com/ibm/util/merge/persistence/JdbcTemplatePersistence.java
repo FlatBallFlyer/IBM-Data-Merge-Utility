@@ -88,7 +88,7 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
             List<Template> out = null;
             try {
                 st = connection.createStatement();
-                rs = st.executeQuery("SELECT * FROM TEMPLATE");
+                rs = st.executeQuery("SELECT * FROM IDMU_TEMPLATE");
                 out = new ArrayList<>();
                 while (rs.next()) {
                     // for each row create a new template instance and set column values
@@ -96,7 +96,7 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                     t.setCollection(rs.getString("COLLECTION"));
                     t.setName(rs.getString("TEMPLATE_NAME"));
                     t.setColumnValue(rs.getString("COLUMN_VALUE"));
-                    t.setOutputFile(rs.getString("OUTPUT"));
+                    t.setOutputFile(rs.getString("OUTPUT_FILE"));
                     t.setDescription(rs.getString("DESCRIPTION"));
                     t.setContent(rs.getString("CONTENT"));
                     this.poolManager.runWithPool(this.poolName, new LoadDirectivesSqlOperation(t));
@@ -128,7 +128,7 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
             Directives directives = new Directives();
             		
             try {
-                String query = "SELECT * FROM DIRECTIVE WHERE COLLECTION = ? AND TEMPLATE_NAME = ? AND COLUMN_VALU = ? ORDER BY SEQUENCE";
+                String query = "SELECT * FROM IDMU_DIRECTIVE WHERE COLLECTION = ? AND TEMPLATE_NAME = ? AND COLUMN_VALUE = ? ORDER BY SEQUENCE";
                 ps = connection.prepareStatement(query);
                 ps.setString(1, this.template.getCollection());
                 ps.setString(2, this.template.getName());
@@ -146,10 +146,12 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                     d.setD2(rs.getString("DIR_2"));
                     d.setD3(rs.getString("DIR_3"));
                     d.setD4(rs.getString("DIR_4"));
-                    d.getProvider().setP1(rs.getString("PRO_1"));
-                    d.getProvider().setP2(rs.getString("PRO_2"));
-                    d.getProvider().setP3(rs.getString("PRO_3"));
-                    d.getProvider().setP4(rs.getString("PRO_4"));
+                    if (d.getProvider() != null) {
+	                    d.getProvider().setP1(rs.getString("PRO_1"));
+	                    d.getProvider().setP2(rs.getString("PRO_2"));
+	                    d.getProvider().setP3(rs.getString("PRO_3"));
+	                    d.getProvider().setP4(rs.getString("PRO_4"));
+                    }
                     template.addDirective(d);
                 }
             } catch (SQLException e) {
@@ -178,8 +180,8 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
             PreparedStatement ps = null;
             try {
 
-                String query = "INSERT INTO TEMPLATE(COLLECTION, TEMPLATE_NAME, COLUMN_VALUE, OUTPUT, DESCRIPTION, CONTENT) VALUES (?, ?, ?, ?, ?, ?)";
-                ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                String query = "INSERT INTO IDMU_TEMPLATE(COLLECTION, TEMPLATE_NAME, COLUMN_VALUE, OUTPUT_FILE, DESCRIPTION, CONTENT) VALUES (?, ?, ?, ?, ?, ?)";
+                ps = connection.prepareStatement(query);
                 // set the values for each column by order (starts with 1)
                 ps.setString(1, template.getCollection());
                 ps.setString(2, template.getName());
@@ -188,17 +190,8 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                 ps.setString(5, template.getDescription());
                 ps.setString(6, template.getContent());
                 ps.execute();
-                ResultSet rs = ps.getGeneratedKeys();
-
-                if (rs != null && rs.next()) {
-                    long generatedTemplateId = rs.getLong(1);
-                    template.setIdtemplate(generatedTemplateId);
-                    for ( AbstractDirective directive : template.getDirectives() ) {
-                        this.poolManager.runWithPool(poolName, new SaveNewDirectivesSqlOperation(directive));
-                    }
-                    // 
-                }else{
-                    throw new IllegalStateException("Did not get generated template id from DB for " + template);
+                for ( AbstractDirective directive : template.getDirectives() ) {
+                    this.poolManager.runWithPool(poolName, new SaveNewDirectivesSqlOperation(directive));
                 }
                 return null;
             } catch (Exception e) {
@@ -220,9 +213,11 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
         public Void execute(Connection connection) throws SQLException {
             PreparedStatement ps = null;
             try {
-
-                String query = "INSERT INTO IDMU.DIRECTIVE (COLLECTION, TEMPLATE_NAME, COLUMN_VALUE, SEQUENCE, DIR_TYPE, DESCRIPTION, SOFT_FAIL, DIR_1, DIR_2, DIR_3, DIR_4, PRO_1, PRO_2, PRO_3, PRO_4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                String query = "INSERT INTO IDMU_DIRECTIVE (COLLECTION, TEMPLATE_NAME, COLUMN_VALUE, SEQUENCE, DIR_TYPE, DESCRIPTION, SOFT_FAIL, "
+                		+ "DIR_1, DIR_2, DIR_3, DIR_4, "
+                		+ "PRO_1, PRO_2, PRO_3, PRO_4) "
+                		+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                ps = connection.prepareStatement(query);
                 // set the values for each column by order (starts with 1)
                 ps.setString( 1, directive.getTemplate().getCollection());
                 ps.setString( 2, directive.getTemplate().getName());
@@ -235,10 +230,17 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                 ps.setString( 9, directive.getD2());
                 ps.setString(10, directive.getD3());
                 ps.setString(11, directive.getD4());
-                ps.setString(12, directive.getProvider().getP1());
-                ps.setString(13, directive.getProvider().getP2());
-                ps.setString(14, directive.getProvider().getP3());
-                ps.setString(15, directive.getProvider().getP4());
+                if (directive.getProvider() != null) {
+                    ps.setString(12, directive.getProvider().getP1());
+                    ps.setString(13, directive.getProvider().getP2());
+                    ps.setString(14, directive.getProvider().getP3());
+                    ps.setString(15, directive.getProvider().getP4());
+                } else {
+                    ps.setString(12, "");
+                    ps.setString(13, "");
+                    ps.setString(14, "");
+                    ps.setString(15, "");
+                }
                 ps.execute();
                 return null;
             } catch (Exception e) {
@@ -261,15 +263,15 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
             PreparedStatement ps = null;
             try {
                 // delete the correct template
-                ps = connection.prepareStatement("DELETE FROM TEMPLATE WHERE COLLECTION = ? AND TEMPLATE_NAME = ? AND COLUMN_VALUE = ?");
+                ps = connection.prepareStatement("DELETE FROM IDMU_TEMPLATE WHERE COLLECTION = ? AND TEMPLATE_NAME = ? AND COLUMN_VALUE = ?");
                 ps.setString(1, template.getCollection());
                 ps.setString(2, template.getName());
                 ps.setString(3, template.getColumnValue());
                 ps.execute();
-                int updated = ps.getUpdateCount();
-                if (updated < 1) {
-                    throw new IllegalArgumentException("Delete didn't update table");
-                }
+//                int updated = ps.getUpdateCount();
+//                if (updated < 1) {
+//                    throw new IllegalArgumentException("Delete didn't update table");
+//                }
                 return null;
             } catch (Exception e) {
                 throw new RuntimeException("Error deleting template " + template, e);

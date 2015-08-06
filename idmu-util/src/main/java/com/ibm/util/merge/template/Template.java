@@ -94,9 +94,9 @@ public class Template {
      */
     public Template getMergable(Map<String, String> seedReplace) {
     	Template to = new Template();
-    	to.setIdtemplate(		this.getIdtemplate());
+    	to.setIdtemplate(	this.getIdtemplate());
     	to.setCollection( 	this.getCollection());
-    	to.setName(  			this.getName());
+    	to.setName(  		this.getName());
     	to.setColumnValue( 	this.getColumnValue());
     	to.setDescription( 	this.getDescription());
     	to.setOutputFile(  	this.outputFile);
@@ -104,12 +104,14 @@ public class Template {
         
     	to.setDirectives(  	new ArrayList<AbstractDirective>());
     	to.setMerged(  		false);
-    	to.setMergable( 		true);
-    	to.setReplaceValues( 	new HashMap<String, String>());
+    	to.setMergable( 	true);
+    	to.setReplaceValues(new HashMap<String, String>());
 
         // Deep Copy Directives
         for (AbstractDirective fromDirective : this.getDirectives()) {
-        	to.addDirective(fromDirective.asNew());
+        	if (fromDirective != null) {
+            	to.addDirective(fromDirective.asNew());
+        	}
         }
 
         // Seed the replace stack
