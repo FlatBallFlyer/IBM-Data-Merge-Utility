@@ -52,7 +52,7 @@ public class InitializeServlet extends HttpServlet {
     private String warTemplatesPath = "/WEB-INF/templates";
     private String templatesPersistencePoolName = "idmuTemplates";
     private Boolean dbPersist = false;
-    private Boolean prettyJson = true;
+    private Boolean prettyJson = false;
     private String jdbcPoolsPropertiesPath = "/WEB-INF/properties/databasePools.properties";
     private String log4jPropertiesPath = "/WEB-INF/properties/log4j.properties";
     private File outputDirPath = new File("/tmp/merge");
@@ -80,6 +80,7 @@ public class InitializeServlet extends HttpServlet {
         handlerChain.addAll(createHandlerInstances());
         String log4jTruePath = jdbcPoolsPropertiesPath.indexOf("/WEB-INF") == 0 ? servletContext.getRealPath(log4jPropertiesPath) : log4jPropertiesPath;
 	    PropertyConfigurator.configure(log4jTruePath);
+        JsonProxy jsonProxy = (this.prettyJson ? new PrettyJsonProxy() : new DefaultJsonProxy());
         File templatesDirPath = warTemplatesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(warTemplatesPath)) : new File(warTemplatesPath);
         File poolsPropertiesPath = jdbcPoolsPropertiesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(jdbcPoolsPropertiesPath)) : new File(jdbcPoolsPropertiesPath);
         ConnectionPoolManager poolManager = new ConnectionPoolManager();
@@ -90,7 +91,6 @@ public class InitializeServlet extends HttpServlet {
             log.error("Could not load databasePools properties file from non-existant path: " + poolsPropertiesPath);
             log.error("No database config will be applied");
         }
-        JsonProxy jsonProxy = (prettyJson ? new PrettyJsonProxy() : new DefaultJsonProxy());
 
         final TemplatePersistence persist;
         if(dbPersist){
@@ -121,6 +121,7 @@ public class InitializeServlet extends HttpServlet {
         		new GetTemplateResourceHandler(),
                 new PerformMergeResourceHandler(),
                 new PutTemplatePackageResourceHandler(),
+                new DelTemplatePackageResourceHandler(),
                 new PutTemplateResourceHandler()
         ));
     }
@@ -181,20 +182,23 @@ public class InitializeServlet extends HttpServlet {
         }
         String databasePoolsPropertiesPath = servletInitParameters.get("jdbc-pools-properties-path");
         if(databasePoolsPropertiesPath != null){
+            log.info("Setting from ServletConfig: databasePoolsPropertiesPath=" + databasePoolsPropertiesPath);
             this.jdbcPoolsPropertiesPath = databasePoolsPropertiesPath;
         }
         String log4jPropertiesPath = servletInitParameters.get("log4j-init-file");
         if(log4jPropertiesPath != null){
+            log.info("Setting from ServletConfig: log4jPropertiesPath=" + log4jPropertiesPath);
             this.log4jPropertiesPath = log4jPropertiesPath;
         }
         String templatesPersistencePoolName = servletInitParameters.get("jdbc-persistence-templates-poolname");
         if(templatesPersistencePoolName != null){
+            log.info("Setting from ServletConfig templatesPersistencePoolName=" + templatesPersistencePoolName);
             this.templatesPersistencePoolName = templatesPersistencePoolName;
         }
         String prettyJsonParameter = servletInitParameters.get("pretty-json");
         if (prettyJsonParameter != null) {
             log.info("Setting from ServletConfig: prettyJson=" + prettyJsonParameter);
-            this.prettyJson = prettyJson.equals("yes");
+            this.prettyJson = prettyJsonParameter.equals("yes");
         }
         String dbPersistParameter = servletInitParameters.get("db-persist");
         if (dbPersistParameter != null) {

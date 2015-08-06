@@ -24,6 +24,7 @@ import com.ibm.util.merge.directive.Directives;
 import com.ibm.util.merge.persistence.TemplatePersistence;
 import com.ibm.util.merge.template.CollectionName;
 import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.TemplateList;
 import com.ibm.util.merge.template.TemplateName;
 
 import org.apache.log4j.Logger;
@@ -206,7 +207,7 @@ final public class TemplateFactory {
      * @return Json array of Template objects
      */
 	public String getTemplatesJSON(List<String> collections) {
-    	ArrayList<Template> theList;
+    	TemplateList theList;
         theList = templateCache.getTemplates(collections);
         return jsonProxy.toJson(theList);
     }
@@ -273,13 +274,12 @@ final public class TemplateFactory {
      * @param json array of template json
      * @return the saved templates json array
      */
-	@SuppressWarnings("unchecked")
 	public String saveTemplatesFromJson(String json) {
-    	ArrayList<Template> templates = new ArrayList<Template>();
+		TemplateList templates = new TemplateList();
     	templates = jsonProxy.fromJSON(json, templates.getClass());
-    	for (Template template : templates) {
+    	for (Template template : templates.templates) {
     		cache(template);
-    		persistence.saveTemplate(template);
+			persistence.saveTemplate(template.getMergable(new HashMap<String,String>()));
     	}
     	return jsonProxy.toJson(templates);
     }
@@ -289,14 +289,14 @@ final public class TemplateFactory {
      * Persist a template, through the template cache
      *
      * @param json the template json
-     * @return the saved template json string
+     * @return the saved template json string, FORBIDDEN for invalid template name or FAIL if an error occurred.
      */
     public String saveTemplateFromJson(String json) {
-        Template template1 = jsonProxy.fromJSON(json, Template.class);
-        if (template1.getFullName().equals("..")) {return "FORBIDDEN";}
-        cache(template1);
-        persistence.saveTemplate(template1);
-        return jsonProxy.toJson(template1);
+        Template template = jsonProxy.fromJSON(json, Template.class);
+        if (template.getFullName().equals("..")) {return "FORBIDDEN";}
+        cache(template);
+        persistence.saveTemplate(template.getMergable(new HashMap<String,String>()));
+        return jsonProxy.toJson(template);
     }
 
     /**********************************************************************************
@@ -309,11 +309,25 @@ final public class TemplateFactory {
         Template template;
 		try {
 			template = this.getMergableTemplate(fullName, "", new HashMap<String,String>());
+	        templateCache.evict(template.getFullName());
+	        persistence.deleteTemplate(template);
+	        return "OK";
 		} catch (MergeException e) {
 			return "FORBIDDEN";
 		}
-        templateCache.evict(template.getFullName());
-        persistence.deleteTemplate(template);
+    }
+
+    /**********************************************************************************
+     * Delete a collection of template from Cache and Persistence
+     *
+     * @param fullName the template fullname
+     * @return "OK" or "FORBIDDEN"
+     */
+    public String deleteCollections(List<String> collections) {
+        TemplateList templates = this.templateCache.getTemplates(collections);
+        for (Template template : templates.templates) {
+        	this.deleteTemplate(template.getFullName());
+        }
         return "OK";
     }
 

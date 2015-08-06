@@ -19,6 +19,7 @@ package com.ibm.util.merge.cache;
 import com.ibm.idmu.api.MemoryCache;
 import com.ibm.util.merge.template.CollectionName;
 import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.TemplateList;
 import com.ibm.util.merge.template.TemplateName;
 
 import java.util.*;
@@ -81,12 +82,12 @@ public class TemplateCache extends MemoryCache<String, Template> {
      * @param collections - List of collection names
      * @return list of Templates from the colleciton, matching name
      */
-    public ArrayList<Template> getTemplates(List<String> collections) {
-    	ArrayList<Template> theTemplates = new ArrayList<Template>();
+    public TemplateList getTemplates(List<String> collections) {
+    	TemplateList theTemplates = new TemplateList();
         // Iterate the Hash
         for (Template template : asMap().values()) {
             if (collections.contains(template.getCollection())) {
-            	theTemplates.add(template.getMergable(new HashMap<String,String>()));
+            	theTemplates.templates.add(template.getMergable(new HashMap<String,String>()));
             }
         }
         // Return the Set
