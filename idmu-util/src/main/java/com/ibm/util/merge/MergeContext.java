@@ -118,18 +118,19 @@ public class MergeContext {
      */
     public String getHtmlErrorMessage(MergeException error) {
         String message = "";
-        Map<String, String[]> parameters = new HashMap<String,String[]>();
-        parameters.put("MESSAGE", 		new String[]{error.getError()});
-        parameters.put("CONTEXT", 		new String[]{error.getContext()});
-        parameters.put("TRACE", 		new String[]{error.getStackTrace().toString()});
-        parameters.put("DragonFlyFullName",	new String[]{"system.errHtml."});
-    	message = getTemplateFactory().getMergeOutput(parameters);
-
-        if (message.isEmpty()) {
+        HashMap<String, String> parameters = new HashMap<String,String>();
+        parameters.put("MESSAGE",error.getError());
+        parameters.put("CONTEXT", 		error.getContext());
+        parameters.put("TRACE", 		error.getStackTrace().toString());
+        Template errTemplate;
+		try {
+			errTemplate = getTemplateFactory().getMergableTemplate("system.errHtml", "", parameters);
+	    	message = errTemplate.getMergedOutput(this);
+		} catch (MergeException e) {
             message = "INVALID ERROR TEMPLATE! \n" +
                     "Message: " + error.getError() + "\n" +
                     "Context: " + error.getContext() + "\n";
-        }
+		}
         return message;
     }
 
@@ -140,17 +141,19 @@ public class MergeContext {
      */
     public String getJsonErrorMessage(MergeException error) {
         String message;
-        Map<String, String[]> parameters = new HashMap<String,String[]>();
-        parameters.put("MESSAGE", 		new String[]{error.getError()});
-        parameters.put("CONTEXT", 		new String[]{error.getContext()});
-        parameters.put("TRACE", 		new String[]{error.getStackTrace().toString()});
-        parameters.put("DragonFlyFullName", new String[]{"system.errJson."});
-        message = getTemplateFactory().getMergeOutput(parameters);
-        if (message.isEmpty()) {
+        Map<String, String> parameters = new HashMap<String,String>();
+        parameters.put("MESSAGE", 		error.getError());
+        parameters.put("CONTEXT", 		error.getContext());
+        parameters.put("TRACE", 		error.getStackTrace().toString());
+        Template jsonTemplate;
+		try {
+			jsonTemplate = getTemplateFactory().getMergableTemplate("system.errJson.", "", parameters);
+	        message = jsonTemplate.getMergedOutput(this);
+		} catch (MergeException e) {
             message = "INVALID ERROR TEMPLATE! \n" +
                     "Message: " + error.getError() + "\n" +
                     "Context: " + error.getContext() + "\n";
-        }
+		}
         return message;
     }
 
