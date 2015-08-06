@@ -34,7 +34,7 @@
 		</init-param>
 		<init-param>
 			<param-name>db-persist</param-name>
-			<param-value>no</param-value>
+			<param-value>yes</param-value>
 		</init-param>
 		<init-param>
 			<param-name>pretty-json</param-name>
