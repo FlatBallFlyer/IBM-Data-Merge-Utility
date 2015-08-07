@@ -5,11 +5,8 @@
     <parent>
         <artifactId>idmu</artifactId>
         <groupId>com.ibm.idmu</groupId>
-        <version>3.0</version>
+        <version>3.1.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>idmu-api</artifactId>
-
-
 </project>

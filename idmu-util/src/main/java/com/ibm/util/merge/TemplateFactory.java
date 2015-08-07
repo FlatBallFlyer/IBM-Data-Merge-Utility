@@ -338,7 +338,7 @@ final public class TemplateFactory {
      */
     public String getStatusPage() {
     	HashMap<String, String[]> parameterMap = new HashMap<String, String[]>();
-		parameterMap.put(TemplateFactory.KEY_FULLNAME, new String[]{TemplateFactory.SYSTEM_STATUS_PAGE});
+		parameterMap.put("DragonFlyFullName", 	new String[]{TemplateFactory.SYSTEM_STATUS_PAGE});
 		parameterMap.put("MERGE_COUNT", 		new String[]{Double.toString(mergeCount)});
 		parameterMap.put("MERGE_TIME", 			new String[]{Double.toString(mergeTime)});
 		parameterMap.put("MERGE_AVG", 			new String[]{Double.toString(mergeTime/mergeCount)});
