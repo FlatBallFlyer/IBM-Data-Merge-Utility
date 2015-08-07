@@ -40,6 +40,10 @@
 			<param-name>pretty-json</param-name>
 			<param-value>no</param-value>
 		</init-param>
+		<init-param>
+			<param-name>secure-server</param-name>
+			<param-value>no</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>

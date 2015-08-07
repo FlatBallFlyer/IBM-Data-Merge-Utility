@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +52,7 @@ public class InitializeServlet extends HttpServlet {
     private String templatesPersistencePoolName = "idmuTemplates";
     private Boolean dbPersist = false;
     private Boolean prettyJson = false;
+    private Boolean secure = false;
     private String jdbcPoolsPropertiesPath = "/WEB-INF/properties/databasePools.properties";
     private String log4jPropertiesPath = "/WEB-INF/properties/log4j.properties";
     private File outputDirPath = new File("/tmp/merge");
@@ -111,19 +111,23 @@ public class InitializeServlet extends HttpServlet {
     }
 
     private ArrayList<RequestHandler> createHandlerInstances() {
-        return new ArrayList<>(Arrays.asList(
-        		new DelTemplateResourceHandler(),
-        		new GetCollectionsResourceHandler(),
-        		new GetDirectivesResourceHandler(),
-        		new GetTemplateNamesForCollectionResourceHandler(),
-        		new GetTemplateNamesForNameResourceHandler(),
-        		new GetTemplatePackageResourceHandler(),
-        		new GetTemplateResourceHandler(),
-                new PerformMergeResourceHandler(),
-                new PutTemplatePackageResourceHandler(),
-                new DelTemplatePackageResourceHandler(),
-                new PutTemplateResourceHandler()
-        ));
+    	ArrayList<RequestHandler> thelist = new ArrayList<RequestHandler>();
+		thelist.add(new GetCollectionsResourceHandler());
+		thelist.add(new GetDirectivesResourceHandler());
+		thelist.add(new GetTemplateNamesForCollectionResourceHandler());
+		thelist.add(new GetTemplateNamesForNameResourceHandler());
+		thelist.add(new GetTemplatePackageResourceHandler());
+		thelist.add(new GetTemplateResourceHandler());
+		thelist.add(new PerformMergeResourceHandler());
+		thelist.add(new FetchArchiveResourceHandler());
+		thelist.add(new GetStatusResourceHandler());
+		if (!this.secure) {
+			thelist.add(new PutTemplateResourceHandler());
+			thelist.add(new PutTemplatePackageResourceHandler());
+	    	thelist.add(new DelTemplateResourceHandler());
+			thelist.add(new DelTemplatePackageResourceHandler());
+		}
+        return thelist;
     }
 
     private void applyParameters() {
@@ -167,6 +171,11 @@ public class InitializeServlet extends HttpServlet {
             log.info("Found so using passed system property value for db-persist: " + systemDbPersist);
             this.dbPersist = systemDbPersist.equals("yes"); 
         }
+        String systemSecure = System.getProperty("secure-server");
+        if(systemSecure != null){
+            log.info("Found so using passed system property value for secure-server: " + systemSecure);
+            this.secure = systemSecure.equals("yes"); 
+        }
     }
 
     private void applyInitParameters() {
@@ -204,6 +213,11 @@ public class InitializeServlet extends HttpServlet {
         if (dbPersistParameter != null) {
             log.info("Setting from ServletConfig: dbPersist=" + dbPersistParameter);
             this.dbPersist = dbPersistParameter.equals("yes");
+        }
+        String secureServer = servletInitParameters.get("secure-server");
+        if (secureServer != null) {
+            log.info("Setting from ServletConfig: secure-server=" + secureServer);
+            this.secure = secureServer.equals("yes");
         }
     }
 
