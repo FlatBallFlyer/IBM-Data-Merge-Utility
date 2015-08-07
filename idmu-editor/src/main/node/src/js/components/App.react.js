@@ -47,7 +47,6 @@ var App = React.createClass({
   },
   handleRibbonSelected: function(selectedRibbonIndex,selectedRibbonItem) {
     var collection = this.props.selection ? this.props.selection.collection : this.state.selectedCollection;
-    console.log("app:handleRibbonSelected ",this.props.selection);
     this.loadTemplateFromServer(this.state.templates,
                                 selectedRibbonIndex,
                                 collection,
@@ -146,7 +145,6 @@ var App = React.createClass({
 
         items.push({type: 'text',slice: slice1});
         var bk = {type: 'bookmark',slice: slice2};
-        /*bk['missingTemplate'] = !this.templateExist(collection,name);*/
         items.push(bk);
       }
     }
@@ -178,6 +176,30 @@ var App = React.createClass({
     });
     return exist;
   },
+  fixDirectives: function(in_dxs){
+    var dxs = in_dxs;
+    for(var i=0; i<dxs.length; i++){
+      var dx = dxs[i];
+      if(dx.tags && dx.tags.length > 0){
+        dx.tags = dx.tags.join(",");
+      }else {
+        dx.tags = "";
+      }
+
+      if(dx.onlyLast && dx.onlyLast.length > 0){
+        dx.onlyLast = dx.onlyLast.join(",");
+      }else {
+        dx.onlyLast = [];
+      }
+
+      if(dx.notLast && dx.notLast.length > 0){
+        dx.notLast = dx.notLast.join(",");
+      }else {
+        dx.notLast = [];
+      }
+    }
+    return dxs;
+  },
   loadTemplateFromServer: function(templates,ribbonIndex,collection,ribbonItem){
     var id = ribbonItem.name;
     var columnValue = ribbonItem.columnValue;
@@ -190,6 +212,7 @@ var App = React.createClass({
       cache: false,
       success: function(data) {
         data.items = this.buildBodyItems(data.content);
+        data.directives = this.fixDirectives(data.directives);
         this.setState({templates: templates,
                        template: data,
                        selectedRibbonIndex: ribbonIndex,
@@ -266,7 +289,33 @@ var App = React.createClass({
     directives[index] = payload;
     this.setState({template: tpl});
   },
-  templateBody: function(opts){
+  templateBody: function(payload){
+    var opts = $.extend(true, {}, payload);
+
+    if(opts.directives && opts.directives.length > 0){
+      var dxs = opts.directives;
+      for(var i=0; i<dxs.length; i++){
+        var dx = dxs[i];
+        if(dx.tags && dx.tags.length > 0){
+          dx.tags = dx.tags.split(",");
+        }else {
+          dx.tags = [];
+        }
+
+        if(dx.onlyLast && dx.onlyLast.length > 0){
+          dx.onlyLast = dx.onlyLast.split(",");
+        }else {
+          dx.onlyLast = [];
+        }
+
+        if(dx.notLast && dx.notLast.length > 0){
+          dx.notLast = dx.notLast.split(",");
+        }else {
+          dx.notLast = [];
+        }
+      }
+    }
+    
     return({
       collection: opts.collection,
       name: opts.name,
@@ -409,3 +458,6 @@ var App = React.createClass({
     return(<TemplateRibbon ref={this_ref} level={level} index={index} suppressNav={this.props.suppressNav} initHandler={this.handleCollectionSelected} selectHandler={this.handleRibbonSelected} data={this.state} mCB={mCB} aCB={aCB} sCB={sCB} dCB={dCB} rCB={rCB} addTplCB={addTplCB} addSubTplCB={addSubTplCB} mergeTplCB={mergeTplCB} removeTplCB={removeTplCB} ldirs={ldirs}/>);
   }
 });
+
+/*
+*/

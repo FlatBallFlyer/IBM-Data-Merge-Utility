@@ -125,7 +125,6 @@ var Directives = React.createClass({
     return {name: 'Blah', output: 'Output'};
   },
   handleSave: function(e) {
-    console.debug("handle save..");
   },
   render: function() {
     var lhs = this.props.data.ldirs;

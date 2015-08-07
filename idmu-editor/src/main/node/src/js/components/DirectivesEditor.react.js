@@ -47,20 +47,20 @@ var DirectivesEditor = React.createClass({
   handleSave: function(e) {
     var index = this.props.index;
     var level = this.props.level;
-    var this_ref = this.props.directive.name+"_"+level+"_"+index;
-    var payload = this.refs[this_ref].state;
+    var this_ref = this.props.directive.description+"_"+level+"_"+index;
+    var payload = $.extend(true, {}, this.refs[this_ref].state);
     this.props.dCB(this.props.index,payload);
   },
   editor: function(type_in){
     var type = parseInt(type_in);
     var index = this.props.index;
     var level = this.props.level;
-    var this_ref = this.props.directive.name+"_"+level+"_"+index;
+    var this_ref = this.props.directive.description+"_"+level+"_"+index;
     
    if(type === 0){
      return(<RequireTags ref={this_ref} index={index} level={level} data={this.props.data} directive={this.props.directive}/>);
    }else if(type === 1){
-     return(<ReplaceValue data={this.props.data} directive={this.props.directive}/>);
+     return(<ReplaceValue ref={this_ref} data={this.props.data} directive={this.props.directive}/>);
    }else if(type === 2){
      return(<InsertSubTemplatesFromTagData  ref={this_ref} index={index} level={level} data={this.props.data} directive={this.props.directive}/>);
    }else if(type === 10){
@@ -93,7 +93,7 @@ var DirectivesEditor = React.createClass({
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h3>{this.props.directive.name}</h3>
+              <h3>{this.props.directive.description}</h3>
             </div>
             <div className="modal-body">
               <div className="row">
