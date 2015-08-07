@@ -29,7 +29,7 @@ var TemplateHeader = React.createClass({
     var this_ref = "header_panel_"+this.props.level+"_"+this.props.index;
     if(this.refs[this_ref]) {
       opts = $.extend({},opts,this.refs[this_ref].state);
-    }
+    }    
     return opts;
   },
   handleSave: function(evt) {

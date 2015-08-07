@@ -20,10 +20,12 @@
 
 var DirectiveEditorsMixin = {
   getInitialState: function() {
-    return $.extend(true, {}, this.props.directive);
+    var state = $.extend(true, {}, this.props.directive);
+    return state;
   },
   componentWillReceiveProps: function(nextProps) {
-    this.setState(nextProps.directive);
+    var nextState = nextProps.directive;
+    this.setState(nextState);
   },
   soft_fail: function() {
     var defaultChecked = this.state.softFail === true;
@@ -55,7 +57,7 @@ var DirectiveEditorsMixin = {
   },
   from: function() {
     return(<div className="form-group col-xs-12 col-md-12">
-            <label for="description" className="control-label">From</label>
+            <label for="from" className="control-label">From</label>
             <input  onChange={this.handleTextEditChange} className="form-control" id="from" type="text" value={this.state.from}/>
     </div>);
   },
@@ -94,7 +96,7 @@ var DirectiveEditorsMixin = {
   },
   from_column: function(){
     return(<div className="form-group col-xs-12 col-md-12">
-            <label for="description" className="control-label">From Column</label>
+            <label for="fromColumn" className="control-label">From Column</label>
             <input  onChange={this.handleTextEditChange} className="form-control" id="fromColumn" type="text" value={this.state.fromColumn}/>
     </div>);
   },
