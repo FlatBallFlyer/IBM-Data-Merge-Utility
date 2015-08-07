@@ -195,7 +195,7 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                 }
                 return null;
             } catch (Exception e) {
-                throw new RuntimeException("Error creating template " + template, e);
+                throw new RuntimeException("Error creating template " + template + template.getContent(), e);
             } finally {
                 if (ps != null) ps.close();
             }

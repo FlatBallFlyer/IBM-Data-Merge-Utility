@@ -12,6 +12,7 @@ use strict;
 #-----------------------------------------
 # Declare & Initialize Variables
 my $IMAGES = "/mnt/hgfs/iso/";
+my $INSTALL_IDMU = "yes";
 my $INSTALL_TESTDB = "yes";
 my $INSTALL_TEMPLATEDB = "yes";
 my $TOMCAT_DIR = "/usr/local/tomcat7";
@@ -29,6 +30,7 @@ if ($QUIET eq '') {help();}
 if ($QUIET eq 'n') {
 	$IMAGES = prompt("Install Images path", $IMAGES);
 	$TOMCAT_DIR = prompt("Tomcat home directory", $TOMCAT_DIR);
+	$INSTALL_IDMU = prompt("Install IDMU war", $INSTALL_IDMU);
 	$INSTALL_SYSTEM_TEMPLATES = prompt("Install System Templates", $INSTALL_SYSTEM_TEMPLATES);
 	$INSTALL_TEMPLATEDB = prompt("Install Templates Database Persistence", $INSTALL_SYSTEM_TEMPLATES);
 	$INSTALL_TESTDB = prompt("Install Testing Database and Templates", $INSTALL_TESTDB);
@@ -39,14 +41,16 @@ if ($QUIET eq 'n') {
 
 #------------------------------------------------------------------
 # Install IDMU war and start tomcat
-(-e  $IMAGES . '/ROOT.war') or die "Missing IDMU ROOT.war file";
-print "\nInstalling IDMU and Starting Tomcat";
-
-`${TOMCAT_DIR}/bin/shutdown.sh`;
-`rm -rf ${TOMCAT_DIR}/webapps/ROOT`;
-`cp ${IMAGES}/ROOT.war ${TOMCAT_DIR}/webapps`;
-`${TOMCAT_DIR}/bin/startup.sh`;
-`sleep 3`;
+if ( $INSTALL_IDMU eq "yes" ) {
+	(-e  $IMAGES . '/ROOT.war') or die "Missing IDMU ROOT.war file";
+	print "\nInstalling IDMU and Starting Tomcat";
+	
+	`${TOMCAT_DIR}/bin/shutdown.sh`;
+	`rm -rf ${TOMCAT_DIR}/webapps/ROOT`;
+	`cp ${IMAGES}/ROOT.war ${TOMCAT_DIR}/webapps`;
+	`${TOMCAT_DIR}/bin/startup.sh`;
+	`sleep 3`;
+}
 
 #------------------------------------------------------------------
 # Load Template Database
@@ -56,8 +60,9 @@ if ( $INSTALL_TEMPLATEDB eq "yes" ) {
     `mysql --user=root --password=${MYSQL_PW} < ${TOMCAT_DIR}/webapps/ROOT/WEB-INF/database/IDMU.v3.MYSQL_TEMPLATE.sql`;
 	`${TOMCAT_DIR}/bin/shutdown.sh`;
 	`rm ${TOMCAT_DIR}/webapps/ROOT/WEB-INF/web.xml`;
-	`cp ${TOMCAT_DIR}/webapps/ROOT/WEB-INF/web_db_persist.xml web.xml`; 
+	`cp ${TOMCAT_DIR}/webapps/ROOT/WEB-INF/web_db_persist.xml ${TOMCAT_DIR}/webapps/ROOT/WEB-INF/web.xml`; 
 	`${TOMCAT_DIR}/bin/startup.sh`;
+	sleep 3;
 }
 
 #------------------------------------------------------------------

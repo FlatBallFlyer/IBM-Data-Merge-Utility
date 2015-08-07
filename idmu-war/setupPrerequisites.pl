@@ -71,13 +71,14 @@ if ($MOUNT_YUM eq "yes") {
 }
 
 #------------------------------------------------------------------
-# Install Java 1.8 and Tomcat 7
+# Install Tomcat 7
 if ( $INSTALL_TOMCAT eq "yes" ) { 
 	(-e $IMAGES . '/' . $TOMCAT_TAR . '.tar.gz') or die "Tomcat tar Image $IMAGES/$TOMCAT_TAR not found!";
 
 	print "\nInstalling Tomcat ";
 	`tar -C /tmp -xvf ${IMAGES}/${TOMCAT_TAR}.tar.gz`;
 	`mv /tmp/${TOMCAT_TAR} ${TOMCAT_DIR}`;
+	`${TOMCAT_DIR}/bin/startup.sh`;
 }
 
 #------------------------------------------------------------------
@@ -90,6 +91,7 @@ if ( $INSTALL_MYSQL eq "yes" ) {
 	`systemctl enable mariadb.service 2> /dev/null`;
 }
 
+print "\nDone\n";
 exit 0;
 
 #=============================================================================#
