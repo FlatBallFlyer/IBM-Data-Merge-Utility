@@ -59,6 +59,11 @@ There are 2 servlets:
     	example: http://localhost:9090/idmu/merge?DragonFlyFullName=root.default. 
     	response: HTML representation of merge output
 
+	Delete a merge output archive from the server
+    DELETE /idmu/archive/ArchiveName 
+    	example: http://localhost:9090/idmu/archive/c597b00f-2392-4842-9fc5-c2a4395da55e.tar 
+    	response: status OK or NOT_FOUND
+
 	Get a list of all supported Directives
     GET /idmu/directives 
 		example: http://localhost:9090/idmu/directives
@@ -100,9 +105,20 @@ There are 2 servlets:
 
 	Save a whole bunch of templates
     PUT /idmu/templatePackage/{Templates} 
-    	example: http://localhost:9090/idmu/templates/[Template,Template])
-    	response: status OK or FORBIDDEN
+    	example: http://localhost:9090/idmu/templatePackage/{"Templates":[{Template},{Template}]}
+    	response: status echo's saved tempaltes or FORBIDDEN
 
+	Delete  a whole bunch of templates
+    DELETE /idmu/templatePackage/{collectionName} 
+    	example: http://localhost:9090/idmu/templates/system
+    	response: status OK or FORBIDDEN
+    	
+    Get a server status page
+    GET /idmu/status/ 
+    	example: http://localhost:9090/idmu/status/
+    	response: Status Page
+    	
+    
 ## License
 
 Licensed as Open Source under the Apache License, Version 2.0
