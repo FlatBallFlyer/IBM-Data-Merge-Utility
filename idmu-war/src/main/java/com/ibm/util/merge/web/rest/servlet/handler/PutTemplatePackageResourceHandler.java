@@ -48,7 +48,7 @@ public class PutTemplatePackageResourceHandler implements RequestHandler {
     @Override
     public Result handle(RequestData rd) {
         String potentiallyMultiplePackagesJSON = rd.getRequestBodyString();
-        log.warn("Put Template Package " + potentiallyMultiplePackagesJSON);
+        log.warn("Put Template Package ");
         return new JsonDataResult(tf.saveTemplatesFromJson(potentiallyMultiplePackagesJSON));
     }
 

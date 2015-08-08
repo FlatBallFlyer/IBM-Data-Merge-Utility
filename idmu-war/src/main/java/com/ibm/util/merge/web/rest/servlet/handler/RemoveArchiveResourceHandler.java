@@ -22,15 +22,16 @@ import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
 import com.ibm.util.merge.web.rest.servlet.result.ArchiveResult;
 import com.ibm.util.merge.web.rest.servlet.result.NotFoundTextErrorResult;
+import com.ibm.util.merge.web.rest.servlet.result.OkResult;
 
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Map;
 
-public class FetchArchiveResourceHandler implements RequestHandler {
+public class RemoveArchiveResourceHandler implements RequestHandler {
 
-    private static final Logger log = Logger.getLogger(FetchArchiveResourceHandler.class);
+    private static final Logger log = Logger.getLogger(RemoveArchiveResourceHandler.class);
     private TemplateFactory tf;
 
     @Override
@@ -40,7 +41,7 @@ public class FetchArchiveResourceHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(RequestData rd) {
-        return (rd.isGET()) && rd.pathStartsWith("/fetchArchive/") && rd.getPathParts().size() == 2;
+        return (rd.isDELETE()) && rd.pathStartsWith("/archive/") && rd.getPathParts().size() == 2;
     }
 
     @Override
@@ -48,10 +49,9 @@ public class FetchArchiveResourceHandler implements RequestHandler {
         String archiveName = rd.getPathParts().get(1);
         File archive = new File(tf.getOutputRoot() + File.separator + archiveName);
         if (archive.exists()) {
-	        log.warn("Fetch and Remove archive " +  archiveName);
-	        Result theResult = new ArchiveResult(archive);
+	        log.warn("Remove archive " +  archiveName);
 	        archive.delete();
-	        return theResult;
+	        return new OkResult();
         } else {
         	return new NotFoundTextErrorResult(archiveName);
         }

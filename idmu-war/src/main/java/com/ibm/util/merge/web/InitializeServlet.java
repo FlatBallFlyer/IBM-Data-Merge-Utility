@@ -119,7 +119,7 @@ public class InitializeServlet extends HttpServlet {
 		thelist.add(new GetTemplatePackageResourceHandler());
 		thelist.add(new GetTemplateResourceHandler());
 		thelist.add(new PerformMergeResourceHandler());
-		thelist.add(new FetchArchiveResourceHandler());
+		thelist.add(new RemoveArchiveResourceHandler());
 		thelist.add(new GetStatusResourceHandler());
 		if (!this.secure) {
 			thelist.add(new PutTemplateResourceHandler());

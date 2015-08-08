@@ -31,14 +31,10 @@
     <!--
     <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
     -->
-    <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver"
-              maxActive="900"
-              maxIdle="30"
-              maxWait="10"
-              name="jdbc/tiaDB"
-              password="drowssap"
-              type="javax.sql.DataSource"
-              url="jdbc:mysql://localhost:3306/TIA"
-              username="tia"
-            />
+<!-- 
+<Environment name="jdbc-pools-properties-path" 	value="/ibm/idmu/properties/databasePools.properties" override="false"/>
+<Environment name="merge-output-root" 			value="/ibm/idmu/output/" override="false"/>
+<Environment name="merge-templates-folder" 		value="/ibm/idmu/templates/" override="false"/>
+<Environment name="db-persist" 					value="no" override="false"/>
+ -->
 </Context>
