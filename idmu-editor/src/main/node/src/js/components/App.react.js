@@ -249,7 +249,7 @@ var App = React.createClass({
       }.bind(this)
     });
   },
-  removeItemWithinList(level,index){
+  removeItemWithinList: function(level,index){
     //console.log('moving '+itemId+' to '+listId+':'+newIndex);
     //Probably want to fire an action creator here... but we'll just splice state manually
     var tpl = this.state.template;
