@@ -111,7 +111,11 @@ public abstract class AbstractDirective {
 	}
 
 	public String getDescription() {
-		return description;
+    	if (description.length() > 45) {
+    		return description.substring(0, 45);
+    	} else {
+            return description;
+    	}
 	}
 	public long getIdTemplate() {
 		return idTemplate;

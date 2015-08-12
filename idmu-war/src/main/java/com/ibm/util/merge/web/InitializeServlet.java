@@ -29,6 +29,7 @@ import com.ibm.util.merge.web.rest.servlet.writer.TextResponseWriter;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -41,6 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.io.PrintWriter;
 
 public class InitializeServlet extends HttpServlet {
     /**
@@ -70,6 +72,11 @@ public class InitializeServlet extends HttpServlet {
      */
     @Override
     public void init(ServletConfig cfg) {
+	Logger.getRootLogger().setLevel(Level.INFO);
+	ConsoleAppender console=new ConsoleAppender();
+	console.setWriter(new PrintWriter(System.out));
+	console.setLayout(new PatternLayout("%d{ISO8601} %d %p [%t] %c - %m%n"));
+	Logger.getRootLogger().addAppender(console);
         servletInitParameters = RestServlet.initParametersToMap(cfg);
         applyParameters();
         initializeApp(cfg.getServletContext());

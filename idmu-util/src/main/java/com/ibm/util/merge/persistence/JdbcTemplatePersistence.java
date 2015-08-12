@@ -134,7 +134,8 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                 ps = connection.prepareStatement(query);
                 ps.setString(1, this.template.getCollection());
                 ps.setString(2, this.template.getName());
-                ps.setString(3, this.template.getColumnValue());
+                String columnValue = this.template.getColumnValue(); 
+                ps.setString(3, (columnValue.isEmpty() ? JdbcTemplatePersistence.ORACLE_SUPPORT_COLUMN : columnValue ));
                 ps.execute();
                 rs = ps.getResultSet();
                 out = new ArrayList<AbstractDirective>();
@@ -224,7 +225,8 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                 // set the values for each column by order (starts with 1)
                 ps.setString( 1, directive.getTemplate().getCollection());
                 ps.setString( 2, directive.getTemplate().getName());
-                ps.setString( 3, directive.getTemplate().getColumnValue());
+                String columnValue = directive.getTemplate().getColumnValue(); 
+                ps.setString(3, (columnValue.isEmpty() ? JdbcTemplatePersistence.ORACLE_SUPPORT_COLUMN : columnValue));
                 ps.setInt(	  4, directive.getSequence());
                 ps.setInt(	  5, directive.getType());
                 ps.setString( 6, directive.getDescription());
@@ -269,12 +271,9 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                 ps = connection.prepareStatement("DELETE FROM IDMU_TEMPLATE WHERE COLLECTION = ? AND TEMPLATE_NAME = ? AND COLUMN_VALUE = ?");
                 ps.setString(1, template.getCollection());
                 ps.setString(2, template.getName());
-                ps.setString(3, template.getColumnValue());
+                String columnValue = template.getColumnValue(); 
+                ps.setString(3, (columnValue.isEmpty() ? JdbcTemplatePersistence.ORACLE_SUPPORT_COLUMN : columnValue ));
                 ps.execute();
-//                int updated = ps.getUpdateCount();
-//                if (updated < 1) {
-//                    throw new IllegalArgumentException("Delete didn't update table");
-//                }
                 return null;
             } catch (Exception e) {
                 throw new RuntimeException("Error deleting template " + template, e);
