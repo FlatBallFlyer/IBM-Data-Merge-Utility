@@ -59,7 +59,7 @@ public class FilesystemPersistence implements TemplatePersistence {
         }
         for (File file : templateFolder.listFiles()) {
             log.debug("Inspect potential template file: " + file);
-            if (!file.isDirectory()) {
+            if (!file.isDirectory() && !file.getName().startsWith(".")) {
                 try {
                     String json = new String(Files.readAllBytes(file.toPath()));
                     Template template = jsonProxy.fromJSON(json, Template.class);
