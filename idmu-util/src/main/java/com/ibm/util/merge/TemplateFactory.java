@@ -173,8 +173,6 @@ final public class TemplateFactory {
         }
         // Check for shortName in the cache, since fullName doesn't exist
         if (newTemplate == null && templateCache.isCached(shortName)) {
-            templateCache.cache(fullName, templateCache.get(shortName));
-            log.info("Linked Template: " + shortName + " to " + fullName);
             newTemplate = templateCache.get(fullName).getMergable(seedReplace);
         }
         if (newTemplate == null) {
