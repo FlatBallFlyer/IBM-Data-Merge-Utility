@@ -124,7 +124,7 @@ public class MergeContext {
         parameters.put("TRACE", 		error.getStackTrace().toString());
         Template errTemplate;
 		try {
-			errTemplate = getTemplateFactory().getMergableTemplate("system.errHtml", "", parameters);
+			errTemplate = getTemplateFactory().getMergableTemplate("system.errHtml.", "", parameters);
 	    	message = errTemplate.getMergedOutput(this);
 		} catch (MergeException e) {
             message = "INVALID ERROR TEMPLATE! \n" +

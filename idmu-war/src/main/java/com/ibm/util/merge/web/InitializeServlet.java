@@ -138,42 +138,42 @@ public class InitializeServlet extends HttpServlet {
     private void applySystemParameters() {
         String systemMergeTemplatesFolder = System.getProperty("merge-templates-folder");
         if(systemMergeTemplatesFolder != null){
-            log.info("Found so using passed system property value for merge-templates-folder: " + systemMergeTemplatesFolder);
+            log.warn("Found so using passed system property value for merge-templates-folder: " + systemMergeTemplatesFolder);
             this.warTemplatesPath = systemMergeTemplatesFolder;
         }
         String systemOutputRootDir = System.getProperty("merge-output-root");
         if(systemOutputRootDir != null){
-            log.info("Found so using passed system property value for merge-output-root: " + systemOutputRootDir);
+            log.warn("Found so using passed system property value for merge-output-root: " + systemOutputRootDir);
             this.outputDirPath = new File(systemOutputRootDir);
         }
         String systemPoolsPropertiesPath = System.getProperty("jdbc-pools-properties-path");
         if(systemPoolsPropertiesPath != null){
-            log.info("Found so using passed system property value for jdbc-pools-properties-path: " + systemPoolsPropertiesPath);
+            log.warn("Found so using passed system property value for jdbc-pools-properties-path: " + systemPoolsPropertiesPath);
             this.jdbcPoolsPropertiesPath = systemPoolsPropertiesPath;
         }
         String systemLog4jPropertiesPath = System.getProperty("log4j-init-file");
         if(systemLog4jPropertiesPath != null){
-            log.info("Found so using passed system property value for log4j-init-file: " + systemLog4jPropertiesPath);
+            log.warn("Found so using passed system property value for log4j-init-file: " + systemLog4jPropertiesPath);
             this.log4jPropertiesPath = systemLog4jPropertiesPath;
         }
         String systemTemplatesPersistencePoolName = System.getProperty("jdbc-persistence-templates-poolname");
         if(systemTemplatesPersistencePoolName != null){
-            log.info("Found so using passed system property value for jdbc-persistence-templates-poolname: " + systemTemplatesPersistencePoolName);
+            log.warn("Found so using passed system property value for jdbc-persistence-templates-poolname: " + systemTemplatesPersistencePoolName);
             this.templatesPersistencePoolName = systemTemplatesPersistencePoolName;
         }
         String systemPrettyJson = System.getProperty("pretty-json");
         if(systemPrettyJson != null){
-            log.info("Found so using passed system property value for pretty-json: " + systemPrettyJson);
+            log.warn("Found so using passed system property value for pretty-json: " + systemPrettyJson);
             this.prettyJson = systemPrettyJson.equals("yes"); 
         }
         String systemDbPersist = System.getProperty("db-persist");
         if(systemDbPersist != null){
-            log.info("Found so using passed system property value for db-persist: " + systemDbPersist);
+            log.warn("Found so using passed system property value for db-persist: " + systemDbPersist);
             this.dbPersist = systemDbPersist.equals("yes"); 
         }
         String systemSecure = System.getProperty("secure-server");
         if(systemSecure != null){
-            log.info("Found so using passed system property value for secure-server: " + systemSecure);
+            log.warn("Found so using passed system property value for secure-server: " + systemSecure);
             this.secure = systemSecure.equals("yes"); 
         }
     }
@@ -181,42 +181,42 @@ public class InitializeServlet extends HttpServlet {
     private void applyInitParameters() {
         String mergeTemplatesFolder = servletInitParameters.get("merge-templates-folder");
         if (mergeTemplatesFolder != null) {
-            log.info("Setting from ServletConfig: warTemplatesPath=" + mergeTemplatesFolder);
+            log.warn("Setting from ServletConfig: warTemplatesPath=" + mergeTemplatesFolder);
             warTemplatesPath = mergeTemplatesFolder;
         }
         String outputRootDir = servletInitParameters.get("merge-output-root");
         if (outputRootDir != null) {
-            log.info("Setting from ServletConfig: outputDirPath=" + outputRootDir);
+            log.warn("Setting from ServletConfig: outputDirPath=" + outputRootDir);
             outputDirPath = new File(outputRootDir);
         }
         String databasePoolsPropertiesPath = servletInitParameters.get("jdbc-pools-properties-path");
         if(databasePoolsPropertiesPath != null){
-            log.info("Setting from ServletConfig: databasePoolsPropertiesPath=" + databasePoolsPropertiesPath);
+            log.warn("Setting from ServletConfig: databasePoolsPropertiesPath=" + databasePoolsPropertiesPath);
             this.jdbcPoolsPropertiesPath = databasePoolsPropertiesPath;
         }
         String log4jPropertiesPath = servletInitParameters.get("log4j-init-file");
         if(log4jPropertiesPath != null){
-            log.info("Setting from ServletConfig: log4jPropertiesPath=" + log4jPropertiesPath);
+            log.warn("Setting from ServletConfig: log4jPropertiesPath=" + log4jPropertiesPath);
             this.log4jPropertiesPath = log4jPropertiesPath;
         }
         String templatesPersistencePoolName = servletInitParameters.get("jdbc-persistence-templates-poolname");
         if(templatesPersistencePoolName != null){
-            log.info("Setting from ServletConfig templatesPersistencePoolName=" + templatesPersistencePoolName);
+            log.warn("Setting from ServletConfig templatesPersistencePoolName=" + templatesPersistencePoolName);
             this.templatesPersistencePoolName = templatesPersistencePoolName;
         }
         String prettyJsonParameter = servletInitParameters.get("pretty-json");
         if (prettyJsonParameter != null) {
-            log.info("Setting from ServletConfig: prettyJson=" + prettyJsonParameter);
+            log.warn("Setting from ServletConfig: prettyJson=" + prettyJsonParameter);
             this.prettyJson = prettyJsonParameter.equals("yes");
         }
         String dbPersistParameter = servletInitParameters.get("db-persist");
         if (dbPersistParameter != null) {
-            log.info("Setting from ServletConfig: dbPersist=" + dbPersistParameter);
+            log.warn("Setting from ServletConfig: dbPersist=" + dbPersistParameter);
             this.dbPersist = dbPersistParameter.equals("yes");
         }
         String secureServer = servletInitParameters.get("secure-server");
         if (secureServer != null) {
-            log.info("Setting from ServletConfig: secure-server=" + secureServer);
+            log.warn("Setting from ServletConfig: secure-server=" + secureServer);
             this.secure = secureServer.equals("yes");
         }
     }

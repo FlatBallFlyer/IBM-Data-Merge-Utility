@@ -37,6 +37,7 @@ import java.util.List;
  */
 public class JdbcTemplatePersistence implements TemplatePersistence {
     private Logger log = Logger.getLogger(JdbcTemplatePersistence.class);
+    private static final String ORACLE_SUPPORT_COLUMN = "<null>";
     private PoolManager poolManager;
     private String poolName;
 
@@ -95,7 +96,8 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                     Template t = new Template();
                     t.setCollection(rs.getString("COLLECTION"));
                     t.setName(rs.getString("TEMPLATE_NAME"));
-                    t.setColumnValue(rs.getString("COLUMN_VALUE"));
+                    String columnValue = rs.getString("COLUMN_VALUE"); 
+                    t.setColumnValue((columnValue.equals(JdbcTemplatePersistence.ORACLE_SUPPORT_COLUMN) ? "" : columnValue ));
                     t.setOutputFile(rs.getString("OUTPUT_FILE"));
                     t.setDescription(rs.getString("DESCRIPTION"));
                     t.setContent(rs.getString("CONTENT"));
@@ -185,7 +187,8 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                 // set the values for each column by order (starts with 1)
                 ps.setString(1, template.getCollection());
                 ps.setString(2, template.getName());
-                ps.setString(3, template.getColumnValue());
+                String columnValue = template.getColumnValue(); 
+                ps.setString(3, (columnValue.isEmpty() ? JdbcTemplatePersistence.ORACLE_SUPPORT_COLUMN : columnValue));
                 ps.setString(4, template.getOutput());
                 ps.setString(5, template.getDescription());
                 ps.setString(6, template.getContent());

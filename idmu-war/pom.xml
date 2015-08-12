@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.ibm.idmu</groupId>
     <artifactId>idmu</artifactId>
-    <version>3.1.1</version>
+    <version>3.1.2</version>
   </parent>
   <artifactId>idmu-war</artifactId>
   <packaging>war</packaging>
@@ -15,17 +15,17 @@
 		<dependency>
 			<groupId>com.ibm.idmu</groupId>
 			<artifactId>idmu-editor</artifactId>
-			<version>3.1.1</version>
+			<version>3.1.2</version>
 		</dependency>
 		<dependency>
             <groupId>com.ibm.idmu</groupId>
             <artifactId>idmu-util</artifactId>
-            <version>3.1.1</version>
+            <version>3.1.2</version>
         </dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.35</version>
+			<version>5.1.34</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -117,7 +117,7 @@
 					<dependency>
 						<groupId>mysql</groupId>
 						<artifactId>mysql-connector-java</artifactId>
-						<version>5.1.35</version>
+						<version>5.1.34</version>
 					</dependency>
 				</dependencies>
 			</plugin>
