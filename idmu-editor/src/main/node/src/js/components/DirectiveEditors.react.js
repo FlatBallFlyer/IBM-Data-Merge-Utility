@@ -152,9 +152,22 @@ var DirectiveEditorsMixin = {
     </div>);
   },
   provider_condition: function() {
+    var cxs = [
+      {"label": "Exists", "value": 0},
+      {"label": "Is Blank", "value": 1},
+      {"label": "Is Not Blank", "value": 2},
+      {"label": "Equals", "value": 3}
+    ];
+    var options=cxs.map(function(k,i){
+      return (<option key={i} value={k.value} label={k.label}>{k.label}</option>);
+    });
+
+    var selValue = this.state.provider.condition ?  this.state.provider.condition : 0;
     return(<div className="form-group col-xs-6 col-md-12">
-            <label for="provider.condition" className="control-label">Condition</label>
-            <input  onChange={this.handleTextEditChange} className="form-control" id="provider.condition" type="text" value={this.state.provider.condition}/>
+      <label for="provider.condition" className="control-label">Condition</label>
+      <select id="provider.condition" className="form-control" onChange={this.handleSelectionChange} value={selValue}>
+        {options}
+      </select>      
     </div>);
   },
   provider_static_data: function() {
@@ -608,3 +621,7 @@ var ReplaceValuesFromHTML = React.createClass({
   }
 });
 
+/*
+      <input  onChange={this.handleTextEditChange} className="form-control" id="provider.condition" type="text" value={this.state.provider.condition}/>
+
+*/

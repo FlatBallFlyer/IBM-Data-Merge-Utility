@@ -18,6 +18,11 @@
  * @jsx React.DOM
  */
 var TextEditMixin = {
+  handleSelectionChange: function(event) {
+    var state = $.extend(true, {}, this.state);
+    this.resolve_set(event.target['id'],state,event.target.value);
+    this.setState(state);
+  },
   handleTextEditChange: function(event) {
     var state = $.extend(true, {}, this.state);
     this.resolve_set(event.target['id'],state,event.target.value);
