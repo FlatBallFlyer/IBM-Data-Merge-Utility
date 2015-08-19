@@ -9,7 +9,7 @@ CREATE TABLE  template (
   name VARCHAR(45) NOT NULL DEFAULT '',
   type INT NOT NULL,
   output VARCHAR(45) NULL DEFAULT '',
-  description VARCHAR(45) NULL DEFAULT '',
+  description VARCHAR(250) NULL DEFAULT '',
   content VARCHAR(4000) NULL DEFAULT '',
   PRIMARY KEY (idtemplate)
 );
@@ -22,7 +22,7 @@ CREATE TABLE  directive (
   idtemplate INT NOT NULL,
   idcollection INT NOT NULL,
   type INT NOT NULL,
-  description VARCHAR(45) NULL DEFAULT '',
+  description VARCHAR(250) NULL DEFAULT '',
   jndiSource VARCHAR(16) NULL DEFAULT '',
   selectColumns VARCHAR(1024) NULL DEFAULT '',
   fromTables VARCHAR(1024) NULL DEFAULT '',

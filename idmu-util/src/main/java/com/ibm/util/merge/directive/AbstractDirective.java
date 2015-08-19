@@ -111,8 +111,8 @@ public abstract class AbstractDirective {
 	}
 
 	public String getDescription() {
-    	if (description.length() > 45) {
-    		return description.substring(0, 45);
+    	if (description.length() > 250) {
+    		return description.substring(0, 250);
     	} else {
             return description;
     	}
