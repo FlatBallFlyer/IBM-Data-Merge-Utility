@@ -22,7 +22,6 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="#">User</a></li>
                 <li><a href="#">Admin</a></li>        
-                <li><a href="#">Developer</a></li>
             </ul>
         </div>
     </nav> 
@@ -94,7 +93,11 @@
 <h3><a id="Replace">The Replace Hash</a></h3>
 	<p>The most fundamental function of the merge process is the replacement of merge tags with data values. The replace "From" values are wrapped in {brackets} and processed globally during the merge process. These replace values are processed as a hash, which implies that adding a duplicate "From" value willreplace the "To" value of the existing hash entry with the new value.</p> 
 	<p>Many Directive Options (SQL Statements, Output Filenames, etc.) are processed by the Template Replace Hash before being used during the merge. Options that are processed by the Replace Hash are listed in the documents with this special mark-up.</p>
-  <video class="video" controls><source src="video/cut2.mp4" type="video/mp4"></video>
+  <div class="embed-responsive embed-responsive-16by9">
+    <video autoplay loop class="embed-responsive-item">
+        <source src="video/Cut2.mp4" type="video/mp4">
+    </video>
+  </div>
  <div class="footerLink"><a href="#Top">Back To Top</a></div>
  
 <h3><a id="Inserting">Inserting Sub-Templates</a></h3>
@@ -107,8 +110,11 @@
 	<p>The insertion of sub-templates into a target template is the second core feature of the Merge Utility. The Insert Rows directives work with a potentially multi-row data set, and sub-templates are inserted into the target template, at bookmarks for each row of the result set. Bookmarks take the following form 
     <pre><code>&lt;tkBookmark name="SomeSubTemplate" collection="FromCollection" column="byColumn""/&gt;</code></pre>
 	<p>The collection and name attributes of the bookmark identify the sub-template to insert. The column attribute if present will insert different sub-templates based on the value in the Column specified here. A template can have multiple bookmarks to insert multiple sub-templates for each row of the result set.</p>
-	<video class="video" controls><source src="video/cut5.mp4" type="video/mp4"></video>
-
+  <div class="embed-responsive embed-responsive-16by9">
+    <video autoplay loop class="embed-responsive-item">
+        <source src=" video/Cut5.mp4" type="video/mp4">
+    </video>
+  </div> 
 <h3>Varying the Sub-Template Inserted</h3>
 	<p>When inserting sub-templates, you can vary the sub-template being inserted based on data in the result set. This is often based on a "Type" field in the result set, and relies on a "Collection" of templates with the same name and a specified column value. If a template for the current column value is not found, the "empty" value is used. If no "empty" value exists for the collection the merge will fail with a "Template Not Found" exception. </p>
 <h4>The Insert Subtemplate directives have the following Options</h4>
@@ -117,9 +123,11 @@
 		<li><span class="option">Only Last Tags</span> - Tags that should be empty on all except the last insertion row</li>
 	</ul>
 	<p>When inserting sub-templates various syntax rules often require that the list separator be different than the list terminator. For example a comma separated list terminated with a period. This can be supported in templates by using static replace tags for the separator/terminator, and then identifying those tags in the "Not Last" and "Only Last" fields of the Insert Directive. Tags identified as "Not Last" are replaced with an empty value on the Last Row of the insert. Tags identified as "Only Last" are replaced with an empty value on all except the last row of the insert.</p>
-	<video class="video" controls><source src="video/cut6.mp4" type="video/mp4"></video>
-    <div class="footerLink"><a href="#Top">Back To Top</a></div>    
-
+	  <div align="center" class="embed-responsive embed-responsive-16by9">
+    <video autoplay loop class="embed-responsive-item">
+        <source src=" video/Cut6.mp4" type"=video/mp4">
+    </video>
+  </div>    
 <h3><a id="Reserved">Reserved Words</a></h3>
 	<p>The following are reserved Replace Tags, that have various effects / meanings:</p> 	
 	<ul>
@@ -496,6 +504,6 @@ changes will not be saved.</p>
 <!--javascript-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="js/myscript.js"</script>
+
 </body>
 </html>
