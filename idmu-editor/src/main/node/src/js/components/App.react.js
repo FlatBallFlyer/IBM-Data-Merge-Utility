@@ -371,22 +371,27 @@ var App = React.createClass({
   addSubTemplateToServer: function(opts){
     var result = false;
     var params = this.templateBody(opts);
-    $.ajax({
-      async: false,
-      url: '/idmu/template/',
-      dataType: 'json',
-      contentType: "application/json",
-      method: 'PUT',
-      cache: false,
-      data: JSON.stringify(params),
-      success: function(data) {
-        result = true;
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-        result = false;
-      }.bind(this)
-    });
+
+    if(this.templateExist(params.collection,params.name)){
+      result = true;
+    }else {
+      $.ajax({
+        async: false,
+        url: '/idmu/template/',
+        dataType: 'json',
+        contentType: "application/json",
+        method: 'PUT',
+        cache: false,
+        data: JSON.stringify(params),
+        success: function(data) {
+          result = true;
+        }.bind(this),
+        error: function(xhr, status, err) {
+          console.error(this.props.url, status, err.toString());
+          result = false;
+        }.bind(this)
+      });
+    }
     return result;
   },
   saveTemplateToServer: function(opts,collection) {
