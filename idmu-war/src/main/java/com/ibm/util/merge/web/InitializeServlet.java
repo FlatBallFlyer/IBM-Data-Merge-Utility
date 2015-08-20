@@ -43,7 +43,7 @@ public class InitializeServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = -6542461667547308985L;
 	private Logger log = Logger.getLogger(InitializeServlet.class);
-	private static final String PARAMETER_LOGGING_PROPS 	= "log4j-init-fil";
+	private static final String PARAMETER_LOGGING_PROPS 	= "log4j-init-file";
 	private static final String PARAMETER_SECURE_SERVER 	= "secure-server";
 	private File idmuPropertiesFile;
 	private Properties runtimeProperties = new Properties();
@@ -55,7 +55,7 @@ public class InitializeServlet extends HttpServlet {
     	runtimeProperties.setProperty(PARAMETER_SECURE_SERVER, "no");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_TEMPLATE_DIR, 		"/opt/ibm/idmu/templates");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_OUTPUT_DIR, 		"/opt/ibm/idmu/output");
-    	runtimeProperties.setProperty(TemplateFactory.PARAMETER_POOLS_PROPERTIES, 	"/opt/ibm/idmu/properties");
+    	runtimeProperties.setProperty(TemplateFactory.PARAMETER_POOLS_PROPERTIES, 	"/opt/ibm/idmu/properties/databasePools.properties");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_TEMPLATE_POOL, 		"idmuTemplates");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_DB_PERSIST, 		"no");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_PRETTY_JSON, 		"no");
@@ -70,7 +70,7 @@ public class InitializeServlet extends HttpServlet {
     }
 
     private void initializeApp(ServletContext servletContext) {
-    	getRuntimeProperties();
+    	getRuntimeProperties(servletContext);
 	    PropertyConfigurator.configure(this.runtimeProperties.getProperty(PARAMETER_LOGGING_PROPS));
     	handlerChain.clear();
         handlerChain.addAll(createHandlerInstances());
@@ -83,13 +83,13 @@ public class InitializeServlet extends HttpServlet {
         servletContext.setAttribute("handlerChain", handlerChain);
     }
 
-    private void getRuntimeProperties() {
-        String folder = getServletContext().getInitParameter("IDMU_ROOT");
-        if (folder.isEmpty()) {folder = System.getProperty("IDMU_ROOT");}
-    	if (folder.isEmpty()) {folder = "/opt/ibm/idmu";}
-    	this.idmuPropertiesFile = new File(folder + File.pathSeparator + "properties" + File.pathSeparator + "idmu.properties");
+    private void getRuntimeProperties(ServletContext servletContext) {
+        String folder = System.getProperty("IDMU_ROOT");
+        if (folder == null) folder = servletContext.getInitParameter("IDMU_ROOT");
+    	if (folder == null) folder = "/opt/ibm/idmu";
+    	this.idmuPropertiesFile = new File(folder + File.separator + "properties" + File.separator + "idmu.properties");
     	if (! this.idmuPropertiesFile.exists() ) {
-    		setup(folder);
+    		setup(folder, servletContext);
     	}
     	try {
 			this.runtimeProperties.load(new FileInputStream(this.idmuPropertiesFile));
@@ -98,19 +98,19 @@ public class InitializeServlet extends HttpServlet {
 		}
     }
     
-    private void setup(String folder) {
+    private void setup(String folder, ServletContext servletContext) {
     	ArrayList<String> folders = new ArrayList<String>();
-    	folders.add("templates");
-    	folders.add("packages");
-    	folders.add("output");
-    	folders.add("properties");
-    	folders.add("logs");
     	folders.add("database");
+    	folders.add("logs");
+    	folders.add("output");
+    	folders.add("packages");
+    	folders.add("properties");
+    	folders.add("templates");
     	for (String aFolder : folders) {
-    		File theSource = new File("WEB-INF" + File.pathSeparator + aFolder);
-    		File theTarget = new File(folder + File.pathSeparator + aFolder);
-    		if (!theTarget.exists()) {theTarget.mkdirs();}
+    		File theSource = new File(servletContext.getRealPath("/WEB-INF" + File.separator + aFolder));
+    		File theTarget = new File(folder + File.separator + aFolder);
     		try {
+        		if (!theTarget.exists()) theTarget.mkdirs();
 				FileUtils.copyDirectory(theSource, theTarget);
 			} catch (IOException e) {
 				throw new RuntimeException("SETUP ERROR! - Unable to copy files from " + theSource + " to " + theTarget);
@@ -129,7 +129,7 @@ public class InitializeServlet extends HttpServlet {
 		thelist.add(new PerformMergeResourceHandler());
 		thelist.add(new RemoveArchiveResourceHandler());
 		thelist.add(new GetStatusResourceHandler());
-		if (this.runtimeProperties.get(PARAMETER_SECURE_SERVER).equals("yes")) {
+		if (!this.runtimeProperties.get(PARAMETER_SECURE_SERVER).equals("yes")) {
 			thelist.add(new PutTemplateResourceHandler());
 			thelist.add(new PutTemplatePackageResourceHandler());
 	    	thelist.add(new DelTemplateResourceHandler());

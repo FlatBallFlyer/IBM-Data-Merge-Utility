@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * <p>This class implements the public interface for IDMU.</p> 
@@ -80,12 +81,14 @@ final public class TemplateFactory {
     // Initialization Property Names
     public static final String PARAMETER_TEMPLATE_DIR 		= "merge-templates-folder";
 	public static final String PARAMETER_OUTPUT_DIR 		= "merge-output-root";
-	public static final String PARAMETER_POOLS_PROPERTIES 	= "jdbc-pools-properties-path";
-	public static final String PARAMETER_TEMPLATE_POOL 	= "jdbc-persistence-templates-poolname";
+	public static final String PARAMETER_POOLS_PROPERTIES 	= "jdbc-pools-properties";
+	public static final String PARAMETER_TEMPLATE_POOL 		= "jdbc-persistence-templates-poolname";
 	public static final String PARAMETER_DB_PERSIST 		= "db-persist";
 	public static final String PARAMETER_PRETTY_JSON 		= "pretty-json";
 
 	// Factory Attributes
+	private final String idmu_version = "3.1.2";
+	private final Properties runtimeProperties;
     private final TemplatePersistence persistence;
     private final File outputRoot;
 	private final TemplateCache templateCache;
@@ -104,10 +107,12 @@ final public class TemplateFactory {
         this.persistence = persist;
         this.outputRoot = outputRootDir;
         this.poolManager = manager;
+        this.runtimeProperties = new Properties();
         reset();
     }
 
     public TemplateFactory(Properties runtimeProperties) {
+    	this.runtimeProperties = runtimeProperties;
         this.templateCache = new TemplateCache();
         this.poolManager = new ConnectionPoolManager();
         this.jsonProxy = (runtimeProperties.getProperty(PARAMETER_PRETTY_JSON).equals("yes") ? new PrettyJsonProxy() : new DefaultJsonProxy());
@@ -130,6 +135,7 @@ final public class TemplateFactory {
             		new File(runtimeProperties.getProperty(PARAMETER_TEMPLATE_DIR)), 
             		this.jsonProxy);
         }
+        reset();
     }
     
     /**********************************************************************************
@@ -381,6 +387,10 @@ final public class TemplateFactory {
 		parameterMap.put("TEMPLATES_MERGED", 	new String[]{Double.toString(templatesMerged)});
 		parameterMap.put("LAST_RESET", 			new String[]{this.initialized.toString()});
 		parameterMap.put("TEMPLATES_CACHED", 	new String[]{Integer.toString(this.templateCache.size())});
+		parameterMap.put("IDMU_VERSION", 		new String[]{this.idmu_version});
+		for (Entry<Object, Object> e : this.runtimeProperties.entrySet()) {
+			parameterMap.put((String) e.getKey(), new String[]{(String) e.getValue()});
+		}
 		return this.getMergeOutput(parameterMap);
     }
 
