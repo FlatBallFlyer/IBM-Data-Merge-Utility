@@ -24,7 +24,7 @@ import com.ibm.util.merge.web.rest.servlet.result.JsonDataResult;
 
 import org.apache.log4j.Logger;
 
-import java.util.Map;
+import java.util.Properties;
 
 /**
  * PUT /idmu/templatePackage/{Templates}
@@ -36,7 +36,7 @@ public class PutTemplatePackageResourceHandler implements RequestHandler {
     private TemplateFactory tf;
 
     @Override
-    public void initialize(Map<String, String> initParameters, TemplateFactory templateFactory) {
+    public void initialize(Properties initParameters, TemplateFactory templateFactory) {
         this.tf = templateFactory;
     }
 

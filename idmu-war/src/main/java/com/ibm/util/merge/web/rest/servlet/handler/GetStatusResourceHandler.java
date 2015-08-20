@@ -24,7 +24,7 @@ import com.ibm.util.merge.web.rest.servlet.result.MergeResult;
 
 import org.apache.log4j.Logger;
 
-import java.util.Map;
+import java.util.Properties;
 
 /**
  * GET /idmu/directives
@@ -36,7 +36,7 @@ public class GetStatusResourceHandler implements RequestHandler {
     private TemplateFactory tf;
 
     @Override
-    public void initialize(Map<String, String> initParameters, TemplateFactory templateFactory) {
+    public void initialize(Properties initParameters, TemplateFactory templateFactory) {
         this.tf = templateFactory;
     }
 

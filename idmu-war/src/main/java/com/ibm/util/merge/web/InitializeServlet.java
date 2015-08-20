@@ -27,8 +27,6 @@ import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.handler.*;
 import com.ibm.util.merge.web.rest.servlet.writer.TextResponseWriter;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.*;
 
 import javax.servlet.ServletConfig;
@@ -50,46 +48,20 @@ public class InitializeServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = -6542461667547308985L;
 	private Logger log = Logger.getLogger(InitializeServlet.class);
-    private String warTemplatesPath = "/WEB-INF/templates";
-    private String templatesPersistencePoolName = "idmuTemplates";
-    private Boolean dbPersist = false;
-    private Boolean prettyJson = false;
-    private Boolean secure = false;
-    private String jdbcPoolsPropertiesPath = "/WEB-INF/properties/databasePools.properties";
-    private String log4jPropertiesPath = "/WEB-INF/properties/log4j.properties";
-    private File outputDirPath = new File("/tmp/merge");
     private final List<RequestHandler> handlerChain = new ArrayList<>();
-    private Map<String, String> servletInitParameters;
 
     public InitializeServlet() {
-        if(!outputDirPath.exists()){
-            outputDirPath.mkdirs();
-        }
     }
 
     /**
-     * Initialize Logging, Template and Zip Factory objects
      */
     @Override
     public void init(ServletConfig cfg) {
-	Logger.getRootLogger().setLevel(Level.INFO);
-	ConsoleAppender console=new ConsoleAppender();
-	console.setWriter(new PrintWriter(System.out));
-	console.setLayout(new PatternLayout("%d{ISO8601} %d %p [%t] %c - %m%n"));
-	Logger.getRootLogger().addAppender(console);
-        servletInitParameters = RestServlet.initParametersToMap(cfg);
-        applyParameters();
         initializeApp(cfg.getServletContext());
     }
 
     private void initializeApp(ServletContext servletContext) {
-        handlerChain.clear();
         handlerChain.addAll(createHandlerInstances());
-        String log4jTruePath = jdbcPoolsPropertiesPath.indexOf("/WEB-INF") == 0 ? servletContext.getRealPath(log4jPropertiesPath) : log4jPropertiesPath;
-	    PropertyConfigurator.configure(log4jTruePath);
-        JsonProxy jsonProxy = (this.prettyJson ? new PrettyJsonProxy() : new DefaultJsonProxy());
-        File templatesDirPath = warTemplatesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(warTemplatesPath)) : new File(warTemplatesPath);
-        File poolsPropertiesPath = jdbcPoolsPropertiesPath.indexOf("/WEB-INF") == 0 ? new File(servletContext.getRealPath(jdbcPoolsPropertiesPath)) : new File(jdbcPoolsPropertiesPath);
         ConnectionPoolManager poolManager = new ConnectionPoolManager();
         if(poolsPropertiesPath.exists()){
             PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(poolsPropertiesPath);
@@ -100,9 +72,7 @@ public class InitializeServlet extends HttpServlet {
         }
 
         final TemplatePersistence persist;
-        if(dbPersist){
             JdbcTemplatePersistence jdbcPersistence = new JdbcTemplatePersistence(poolManager);
-            jdbcPersistence.setPoolName(templatesPersistencePoolName);
             persist = jdbcPersistence;
         }else{
             FilesystemPersistence filesystemPersistence = new FilesystemPersistence(templatesDirPath, jsonProxy);
@@ -112,7 +82,6 @@ public class InitializeServlet extends HttpServlet {
         servletContext.setAttribute("TemplateFactory", tf);
         for (RequestHandler handler : handlerChain) {
             log.info("Initializing handler " + handler.getClass().getName());
-            handler.initialize(servletInitParameters, tf);
         }
         servletContext.setAttribute("handlerChain", handlerChain);
     }

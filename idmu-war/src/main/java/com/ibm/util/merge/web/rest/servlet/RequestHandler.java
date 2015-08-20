@@ -18,14 +18,14 @@ package com.ibm.util.merge.web.rest.servlet;
 
 import com.ibm.util.merge.TemplateFactory;
 
-import java.util.Map;
+import java.util.Properties;
 
 /**
  *
  */
 public interface RequestHandler {
 
-    void initialize(Map<String, String> initParameters, TemplateFactory tf);
+    void initialize(Properties runtimeProperties, TemplateFactory tf);
 
     boolean canHandle(RequestData rd);
 

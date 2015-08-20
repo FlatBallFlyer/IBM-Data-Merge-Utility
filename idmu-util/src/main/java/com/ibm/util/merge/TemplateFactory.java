@@ -17,10 +17,15 @@
 package com.ibm.util.merge;
 
 import com.ibm.idmu.api.JsonProxy;
+import com.ibm.idmu.api.PoolManagerConfiguration;
 import com.ibm.util.merge.cache.TemplateCache;
 import com.ibm.util.merge.db.ConnectionPoolManager;
 import com.ibm.util.merge.directive.AbstractDirective;
 import com.ibm.util.merge.directive.Directives;
+import com.ibm.util.merge.json.DefaultJsonProxy;
+import com.ibm.util.merge.json.PrettyJsonProxy;
+import com.ibm.util.merge.persistence.FilesystemPersistence;
+import com.ibm.util.merge.persistence.JdbcTemplatePersistence;
 import com.ibm.util.merge.persistence.TemplatePersistence;
 import com.ibm.util.merge.template.CollectionName;
 import com.ibm.util.merge.template.Template;
@@ -72,7 +77,15 @@ final public class TemplateFactory {
     public static final String DEFAULT_FULLNAME = "system.default.";
     public static final String SYSTEM_STATUS_PAGE = "system.status.";
     
-    // Factory Attributes
+    // Initialization Property Names
+    public static final String PARAMETER_TEMPLATE_DIR 		= "merge-templates-folder";
+	public static final String PARAMETER_OUTPUT_DIR 		= "merge-output-root";
+	public static final String PARAMETER_POOLS_PROPERTIES 	= "jdbc-pools-properties-path";
+	public static final String PARAMETER_TEMPLATE_POOL 	= "jdbc-persistence-templates-poolname";
+	public static final String PARAMETER_DB_PERSIST 		= "db-persist";
+	public static final String PARAMETER_PRETTY_JSON 		= "pretty-json";
+
+	// Factory Attributes
     private final TemplatePersistence persistence;
     private final File outputRoot;
 	private final TemplateCache templateCache;
@@ -94,6 +107,31 @@ final public class TemplateFactory {
         reset();
     }
 
+    public TemplateFactory(Properties runtimeProperties) {
+        this.templateCache = new TemplateCache();
+        this.poolManager = new ConnectionPoolManager();
+        this.jsonProxy = (runtimeProperties.getProperty(PARAMETER_PRETTY_JSON).equals("yes") ? new PrettyJsonProxy() : new DefaultJsonProxy());
+        this.outputRoot = new File(runtimeProperties.getProperty(PARAMETER_OUTPUT_DIR));
+        File poolsPropertiesPath = new File(runtimeProperties.getProperty(PARAMETER_POOLS_PROPERTIES));
+        if(poolsPropertiesPath.exists()){
+            PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(poolsPropertiesPath);
+            poolManager.applyConfig(config);
+        }else{
+            log.error("Could not load databasePools properties file from non-existant path: " + poolsPropertiesPath);
+            log.error("No database config will be applied");
+        }
+
+        if(runtimeProperties.getProperty(PARAMETER_DB_PERSIST).equals("yes")){
+            JdbcTemplatePersistence jdbcPersistence = new JdbcTemplatePersistence(poolManager);
+            jdbcPersistence.setPoolName(runtimeProperties.getProperty(PARAMETER_TEMPLATE_POOL));
+            this.persistence = jdbcPersistence;
+        }else{
+            this.persistence = new FilesystemPersistence(
+            		new File(runtimeProperties.getProperty(PARAMETER_TEMPLATE_DIR)), 
+            		this.jsonProxy);
+        }
+    }
+    
     /**********************************************************************************
      * <p>Call this method Merge a template with it's sub-templates and data.</p>
      * <p>The request parameters list contains the initial replace values for the merge.

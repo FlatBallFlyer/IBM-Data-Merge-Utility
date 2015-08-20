@@ -20,14 +20,13 @@ import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.result.ArchiveResult;
 import com.ibm.util.merge.web.rest.servlet.result.NotFoundTextErrorResult;
 import com.ibm.util.merge.web.rest.servlet.result.OkResult;
 
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.util.Map;
+import java.util.Properties;
 
 public class RemoveArchiveResourceHandler implements RequestHandler {
 
@@ -35,7 +34,7 @@ public class RemoveArchiveResourceHandler implements RequestHandler {
     private TemplateFactory tf;
 
     @Override
-    public void initialize(Map<String, String> initParameters, TemplateFactory templateFactory) {
+    public void initialize(Properties initParameters, TemplateFactory templateFactory) {
         this.tf = templateFactory;
     }
 
