@@ -12,6 +12,12 @@ body {
 	color: #777;
 }
 
+video  {
+    float: right;
+    border: 1px dotted black;
+    margin: 0px 0px 15px 20px;
+}
+
 .navbar-default {
 	padding: 10px 0;
 	background-color: #337ab7;
@@ -52,6 +58,7 @@ h2 {
 }
 
 h3 { 
+	clear:both;	
 	font-family: 'Roboto', sans-serif;
 	font-weight: 400;
 	color: #4178be; 

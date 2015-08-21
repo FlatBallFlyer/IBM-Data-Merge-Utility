@@ -3,10 +3,10 @@
 
 <head>
 	<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>IBM Data Merge Utility</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <link href="/css/style.css" rel="stylesheet"/>
 </head>
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
@@ -15,37 +15,52 @@
                 <span class="glyphicon glyphicon-arrow-down"></span>
                 MENU
            </button>
-        <div class="navbar-header">
-        	<a class="navbar-brand" href="#"><img src="images/IBMlogo.png"></a>
-        </div>                         
-        <div class="collapse navbar-collapse" id="collapse">  
-            <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="/UserGuide.html">User Guide</a></li>        
-                <li><a href="/AdminGuide.html">Admin Guide</a></li>        
-                <li><a href="/idmu/status/">Status</a></li>        
-                <li><a href="/editor/src/html/app.html">Templates</a></li>        
-            </ul>
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#"><img src="images/IBMlogo.png"></a>
+            </div>
+            <div class="collapse navbar-collapse" id="collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="/UserGuide.html">User Guide</a></li>
+                    <li><a href="/AdminGuide.html">Admin Guide</a></li>
+                    <li><a href="/idmu/status/">Status</a></li>
+                    <li><a href="/editor/src/html/app.html">Templates</a></li>
+                </ul>
+            </div>
         </div>
     </nav> 
 <body>    
 <div class="container">    
-<h1><a id="top">IBM Data Merge Utility Version 3.1.2</a></h1>            		
-        <ul class="nav nav-pills nav-stacked">
-            <li><a href="#Licensing"><strong>Licensing</strong></a></li>
-            <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy-IDMU"><strong>Installing</strong></a></li>
-            <li><a href="https://www.youtube.com/watch?v=RY6KAqQorpk"><strong>Introduction video</strong></a></li>
-            <li><a href="http://www.ssgpp.com/dragonfly"><strong>Background</strong></a></li>
-        </ul>                    
+<h1><a id="top">IBM Data Merge Utility Version 3.1.2</a></h1>
+	<p>See the links in the navigation bar at the top of the page for documentation and the Template Editor.</p>
+	<p><em>A few notes about the template editor:</em> The current implementation of the Template Editor is filled with querks and defects. 
+	I'm hoping to have a new editor later this year that is much more functional and intuitive. In the mean time, please see <a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/issues?q=is%3Aopen+is%3Aissue+label%3A%22Template+Editor%22">the editor issues page</a> for the latest on known defects.</p>
+	<p>Here are a few of the more dangerous defects in the current code:</p>
+	<ul>
+		<li>Template content with &lt;a values (such as html anchor tags) are not properly saved. The text from &lt;a to &gt; or the end of 
+		the line is removed from the template. This can be very frustrating when eding html based templates. At this point in time the only
+		work around is to edit the templates directly using a json editor, or the database tool of your choice (if using database persistence)
+		</li>
+		<li>The editor does not report any errors that may occur when saving a template. It is a good idea to re-visit the template after saving
+		changes to make sure they saved correctly. This can be time consuming as the template editor reverts to the first template in the
+		cover flow after a save. 
+		</li>
+	</ul>
+	 
+    <ul class="nav nav-pills nav-stacked">
+        <li><a href="#Licensing"><strong>Licensing</strong></a></li>
+        <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy-IDMU"><strong>Installing</strong></a></li>
+        <li><a href="https://www.youtube.com/watch?v=RY6KAqQorpk"><strong>Introduction video</strong></a></li>
+        <li><a href="http://www.ssgpp.com/dragonfly"><strong>Background</strong></a></li>
+    </ul>                    
 <h3><a id="Licensing">Licensing</a></h3>
         Copyright <div class="glyphicon glyphicon-copyright-mark"></div> 2015, 2015 IBM	<div class="glyphicon glyphicon-registration-mark"></div>
         <p></p>	
-		<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
-    
-		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-
- to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
-    
+		<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance 
+		with the License. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>. 
+		Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an
+		&quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+		the specific language governing permissions and limitations under the License.</p>
 		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 
 </div><!--end of container-->
