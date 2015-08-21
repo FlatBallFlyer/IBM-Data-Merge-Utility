@@ -220,7 +220,7 @@ final public class TemplateFactory {
             newTemplate = templateCache.get(fullName).getMergable(seedReplace);
         }
         if (newTemplate == null) {
-            throw new MergeException("Template Not Found", fullName);
+            throw new MergeException("Template Not Found", fullName + " and " + shortName);
         }
         this.templatesMerged++;
         return newTemplate;
