@@ -30,12 +30,12 @@ import org.apache.log4j.Logger;
 public class MergeException extends Exception {
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = Logger.getLogger(MergeException.class.getName() );
-	private String error;
-	private String context;
-	private Template template;
-	private AbstractDirective directive;
-	private AbstractProvider provider;
-	private String errorFromClass;
+	private final String error;
+	private final String context;
+	private final Template template;
+	private final AbstractDirective directive;
+	private final AbstractProvider provider;
+	private final String errorFromClass;
 	
 	/**
 	 * Constructor
@@ -47,7 +47,10 @@ public class MergeException extends Exception {
 		super(e);
 		error = errorMessage;
 		context = theContext;
-		errorFromClass = "Wrapped: " + e.getClass().getName();
+		errorFromClass = e.getClass().getName();
+		template = null;
+		provider = null;
+		directive = null;
 		logError();
 	}
 	
@@ -59,6 +62,10 @@ public class MergeException extends Exception {
 		super(errorMessage);
 		error = errorMessage;
 		context = theContext;
+		errorFromClass = "";
+		template = null;
+		provider = null;
+		directive = null;
 		logError();
     }
 
@@ -72,6 +79,8 @@ public class MergeException extends Exception {
 		context = theContext;
 		template = errTemplate;
 		errorFromClass = errTemplate.getClass().getName();
+		provider = null;
+		directive = null;
 		logError();
 		logTemplate();
     }
@@ -87,6 +96,7 @@ public class MergeException extends Exception {
 		directive = errDirective;
 		template = directive.getTemplate();
 		errorFromClass = errDirective.getClass().getName();
+		provider = errDirective.getProvider();
 		logError();
 		logTemplate();
 		logDirective();
@@ -115,8 +125,9 @@ public class MergeException extends Exception {
 	 */
 	private void logError() {
 		log.fatal("Merge Exception: \n" +
-				"Message: " + error + "\n" +
-				"Context: " + context + "\n" +
+				"Message: " + this.error + "\n" +
+				"Context: " + this.context + "\n" +
+				"FromClass: " + this.errorFromClass + "\n" +
 				"StackTrace: ", this);
 	}
 	
@@ -156,6 +167,13 @@ public class MergeException extends Exception {
 		}
 	}
 
+	public String getTemplateName() {
+		if (this.template == null) {
+			return "";
+		} else {
+			return this.template.getFullName();
+		}
+	}
 	@Override
 	public String getMessage() {
 		return super.getMessage() + " For: " + context;
@@ -165,16 +183,8 @@ public class MergeException extends Exception {
 		return context;
 	}
 
-	public void setContext(String context) {
-		this.context = context;
-	}
-
 	public String getError() {
 		return error;
-	}
-
-	public void setError(String error) {
-		this.error = error;
 	}
 
 	public String getErrorFromClass() {

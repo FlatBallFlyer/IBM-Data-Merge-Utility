@@ -65,7 +65,7 @@ public class Require extends AbstractDirective {
 	public void executeDirective(MergeContext rtc) throws MergeException {
 		for (String tag : tags) {
 			if (!getTemplate().hasReplaceValue(Template.wrap(tag)) ) {
-				throw new MergeException("Required Tag Not Found in " + getTemplate().getFullName(), tag);
+				throw new MergeException(this, null, "Required Tag Not Found in " + getTemplate().getFullName(), this.getTags());
 			}
 		}
 	}

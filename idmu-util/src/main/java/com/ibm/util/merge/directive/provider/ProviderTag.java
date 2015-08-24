@@ -23,11 +23,14 @@ import com.ibm.util.merge.template.Template;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author flatballflyer
  * Data provider to drive InsertSubsIf directive - Insert sub templates if a non-blank replace value exists in the hash.
  */
 public class ProviderTag extends AbstractProvider {
+    private static final Logger log = Logger.getLogger(ProviderTag.class);
 	public static final int CONDITION_EXISTS = 0;
 	public static final int CONDITION_BLANK = 1;
 	public static final int CONDITION_NONBLANK = 2;
@@ -62,22 +65,26 @@ public class ProviderTag extends AbstractProvider {
 		DataTable table = addNewTable();
 		Template template = getDirective().getTemplate();
 		String theTag = Template.wrap(tag);
+		log.info("Getting Tag Data for " + tag);
 		
 		switch (condition) {
 		case ProviderTag.CONDITION_EXISTS:
 			if (!template.hasReplaceKey(theTag)) {
+				log.info("Tag not found for Exists Condition");
 				return;
 			}
 			break;
 		case ProviderTag.CONDITION_BLANK: 
 			if (!template.hasReplaceKey(theTag) 
 				|| template.hasReplaceValue(theTag)) {
+				log.info("Tag not found or Data found for Blank Condition");
 				return;
 			}   
 			break;
 		case ProviderTag.CONDITION_NONBLANK: 
 			if (!template.hasReplaceKey(theTag) 
 				|| !template.hasReplaceValue(theTag)) {
+				log.info("Tag or Empty Data found for Non-Blank Condition");
 				return;
 			}   
 			break;
@@ -85,6 +92,7 @@ public class ProviderTag extends AbstractProvider {
 			if (!template.hasReplaceKey(theTag) 
 				|| !template.hasReplaceValue(theTag)
 				|| !template.getReplaceValue(theTag).equals(value)) {
+				log.info("Tag not Equals or not found");
 				return;
 			}   
 			break;
@@ -92,6 +100,7 @@ public class ProviderTag extends AbstractProvider {
 		
 		// We have a match, so add data
 		String data = template.getReplaceValue(Template.wrap(tag));
+		log.info("Data Found: " + data);
 		table.addCol(tag);
 		if (isList()) {
 			for (String datum : new ArrayList<>(Arrays.asList(data.split(",")))) {
