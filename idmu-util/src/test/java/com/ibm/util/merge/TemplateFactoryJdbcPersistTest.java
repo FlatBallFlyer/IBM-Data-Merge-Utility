@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import static org.junit.Assert.*;
 
@@ -51,7 +52,7 @@ public class TemplateFactoryJdbcPersistTest {
         JsonProxy jsonProxy = new DefaultJsonProxy();
         JdbcTemplatePersistence jdbcPersistence = new JdbcTemplatePersistence(poolManager);
         jdbcPersistence.setPoolName(templatesPersistencePoolName);
-        testFactory = new TemplateFactory(jdbcPersistence, jsonProxy, outputDirPath, poolManager);
+        testFactory = new TemplateFactory(new Properties());
     }
     
     @Before

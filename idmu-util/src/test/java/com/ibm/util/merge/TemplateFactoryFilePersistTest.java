@@ -43,7 +43,7 @@ public class TemplateFactoryFilePersistTest {
 	private TemplatePersistence filePersist = new FilesystemPersistence(templatesDir, new PrettyJsonProxy());
 	private File outputDir = new File("src/test/resources/testout/");
     ConnectionPoolManager manager = new ConnectionPoolManager();
-    private TemplateFactory testFactory = new TemplateFactory(filePersist, proxy, outputDir, manager);
+    private TemplateFactory testFactory;
     private int count = 61;
     
     @Before
