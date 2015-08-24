@@ -7,6 +7,7 @@
     <title>IBM Data Merge Utility</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
     <link href="/css/style.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
@@ -20,11 +21,13 @@
             </div>
             <div class="collapse navbar-collapse" id="collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="/UserGuide.html">User Guide</a></li>
-                    <li><a href="/AdminGuide.html">Admin Guide</a></li>
-                    <li><a href="/idmu/status/">Status</a></li>
-                    <li><a href="/editor/src/html/app.html">Templates</a></li>
+	                <li class="active"><a href="/">Home</a></li>
+	                <li><a href="/UserGuide.html">User Guide</a></li>        
+	                <li><a href="/AdminGuide.html">Admin Guide</a></li>        
+	                <li><a href="/DevGuide.html">Dev Guide</a></li>        
+	                <li><a href="/Training.html">Training</a></li>        
+	                <li><a href="/idmu/status/">Status</a></li>        
+	                <li><a href="/editor/src/html/app.html">Templates</a></li>        
                 </ul>
             </div>
         </div>
@@ -32,8 +35,29 @@
 <body>    
 <div class="container">    
 <h1><a id="top">IBM Data Merge Utility Version 3.1.2</a></h1>
-	<p>See the links in the navigation bar at the top of the page for documentation and the Template Editor.</p>
-	<p><em>A few notes about the template editor:</em> The current implementation of the Template Editor is filled with querks and defects. 
+	<p><img src="images/dragonfly.jpg" align="right"/>See the links in the navigation bar at the top of the page for documentation and the Template Editor.</p>
+	 
+    <ul class="nav nav-pills nav-stacked">
+        <li><a href="#Licensing"><strong>Licensing</strong></a></li>
+        <li><a href="#Release"><strong>Important Release Notes</strong></a></li>
+        <li><a href="#Packages"><strong>Load Template Packages</strong></a></li>
+        <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy-IDMU"><strong>Installing</strong></a></li>
+        <li><a href="https://www.youtube.com/watch?v=RY6KAqQorpk"><strong>Introduction video</strong></a></li>
+        <li><a href="http://www.ssgpp.com/dragonfly"><strong>Background</strong></a></li>
+    </ul>
+                        
+<h3><a id="Licensing">Licensing</a></h3>
+        Copyright <div class="glyphicon glyphicon-copyright-mark"></div> 2015, 2015 IBM	<div class="glyphicon glyphicon-registration-mark"></div>
+        <p></p>	
+		<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance 
+		with the License. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>. 
+		Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an
+		&quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+		the specific language governing permissions and limitations under the License.</p>
+		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+
+<h3><a id="Release">Release Notes</a></h3>
+	<p><em><b>A few notes about the template editor:</b></em> The current implementation of the Template Editor is filled with querks and defects. 
 	I'm hoping to have a new editor later this year that is much more functional and intuitive. In the mean time, please see <a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/issues?q=is%3Aopen+is%3Aissue+label%3A%22Template+Editor%22">the editor issues page</a> for the latest on known defects.</p>
 	<p>Here are a few of the more dangerous defects in the current code:</p>
 	<ul>
@@ -46,27 +70,48 @@
 		cover flow after a save. 
 		</li>
 	</ul>
-	 
-    <ul class="nav nav-pills nav-stacked">
-        <li><a href="#Licensing"><strong>Licensing</strong></a></li>
-        <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy-IDMU"><strong>Installing</strong></a></li>
-        <li><a href="https://www.youtube.com/watch?v=RY6KAqQorpk"><strong>Introduction video</strong></a></li>
-        <li><a href="http://www.ssgpp.com/dragonfly"><strong>Background</strong></a></li>
-    </ul>                    
-<h3><a id="Licensing">Licensing</a></h3>
-        Copyright <div class="glyphicon glyphicon-copyright-mark"></div> 2015, 2015 IBM	<div class="glyphicon glyphicon-registration-mark"></div>
-        <p></p>	
-		<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance 
-		with the License. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>. 
-		Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an
-		&quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
-		the specific language governing permissions and limitations under the License.</p>
-		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	<p>Here are a few of the more annoying defects in the current code:</p>
+	<ul>
+		<li>After a save the editor will revert to the first template in the cover flow. For this reason it's best to edit sub-templates in 
+		the context of the parent template rather than at the top level as sub-template cover flows tend to have far fewer entries in 
+		them than the top level cover flow which shows all templates in a collection.
+		</li>
+		<li>When editing directives, you will have to click the "back" button and then "Save" in order to save any changes. When you 
+		combine this with the failure to report errors on a save, looping back into the directive editor to verify the change was 
+		saved is a multi-step process.
+		</li>
+		<li>There is currently no way to view or delete a book-mark after the template has been saved. The collection and name values of a bookmark
+		are fairly evident based on the templates in the sub-template cover flow, and you can usually infer the column name if you have additional
+		templates with full names that include a column value. At this point in time the only work around is to manually edit templates with a 
+		json editor or the database tool of your choice
+		</li>
+		<li>The delete or remove template button works WITHOUT A CONFIRMATION so be careful with your mouse around that button.
+		</li>
+	</ul>
+
+<h3><a id="Packages">Load Template Packages</a></h3>
+	<p>You can use the buttons below to load template packages</p>
+	<p><button type="button" onclick="loadPackage('system.json');">System Templates</button></p>
+	<p><button type="button" onclick="loadPackage('test.json');">Testing Templates</button></p>
+	<p><button type="button" onclick="loadPackage('training.json');">Training Templates</button></p>
+	<p><button type="button">Custom Package</button> Package Name: <input type="text" value="package.json"/></p>
 
 </div><!--end of container-->
 <!--javascript-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
+<script>
+function loadPackage(name) {
+	var url = "/idmu/templatePackage/" + name;
+	var ref = $.post(url, function(data) {
+		if (data == "ERROR") {
+			alert("An error occured:" + data);
+		} else {
+			alert("Loaded package " + name);
+		}
+	})
+		.fail(function(data) {alert("rest call failed" + JSON.stringify(data));});
+}
+</script>
 </body>
 </html>

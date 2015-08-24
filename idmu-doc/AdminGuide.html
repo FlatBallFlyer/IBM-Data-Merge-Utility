@@ -22,7 +22,9 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/">Home</a></li>
                 <li><a href="/UserGuide.html">User Guide</a></li>        
-                <li class="active"><a href="#">Admin Guide</a></li>        
+                <li class="active"><a href="/AdminGuide.html">Admin Guide</a></li>        
+                <li><a href="/DevGuide.html">Dev Guide</a></li>        
+                <li><a href="/Training.html">Training</a></li>        
                 <li><a href="/idmu/status/">Status</a></li>        
                 <li><a href="/editor/src/html/app.html">Templates</a></li>        
             </ul>
@@ -33,110 +35,164 @@
 <h1><a id="top">IBM Data Merge Utility Admin Guide</a></h1>            		
         <ul class="nav nav-pills nav-stacked">
             <li><a href="#Licensing"><strong>Licensing</strong></a></li>
-            <li><a href="#Dependencies"><strong>Dependencies</strong></a></li>
-            <li><a href="#Overview"><strong>Overview</strong></a></li>
             <li><a href="#QuickInstall"><strong>Installation Guides</strong></a></li>
-            <li><a href="#EntDepArch"><strong>Enterprise Deployment Architecture</strong></a><li> 
-            <li><a href="#ChangeMgmt"><strong>Change Management</strong></a></li>
-            <li><a href="#SecSer"><strong>Securing the server</strong></a></li>
+            <li><a href="#ConfigOpt"><strong>Configuration Options</strong></a></li>
+            <li><a href="#UseData"><strong>Configuring Database Template Persistence</strong></a></li>
+            <li><a href="#JDBC"><strong>Configuring Your JDBC data source</strong></a></li>
             <li><a href="#HouseLogs"><strong>Housekeeping of Merge Output / Logs</strong></a></li>
-            <li class="dropdown"><a href="#Backup" data-toggle="dropdown"><strong>Backup / Restore Guidelines</strong><span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                   <li><a href="#TempPers">File System Template Persistence</a></li>
-                   <li><a href="#DataPers">Database Template Persistence</a></li>
-                </ul>
-              </li> 
-            <li class="dropdown"><a href="#Config" data-toggle="dropdown"><strong>Configuration Options</strong><span class="caret"></span></a>
-                <ul class="dropdown-menu">               
-                   <li><a href="#ConfigLocal">Configuration Location and Prescience</a></li>
-                   <li><a href="#ConfigOpt">Configuration Options</a></li>
-                   <li><a href="#UseData">Using Database Template Persistence</a></li>
-                   <li><a href="#JDBC">Configuring JDBC Data Sources</a></li>
-                 </ul>             
-            </li>
+            <li><a href="#SecSer"><strong>Securing the server</strong></a></li>
+            <li><a href="#SecSer"><strong>Change Management</strong></a></li>
+            <li><a href="#SecSer"><strong>Backup / Restore Guidelines</strong></a></li>
+            <li><a href="#EntDepArch"><strong>Enterprise Deployment Architecture</strong></a><li> 
         </ul>
    
+<hr style="clear:both;"/>
 <h3><a id="Licensing">Licensing</a></h3>
         Copyright <div class="glyphicon glyphicon-copyright-mark"></div> 2015, 2015 IBM	<div class="glyphicon glyphicon-registration-mark"></div>
         <p></p>	
 		<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
     
 		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-	
-<h3><a id="Dependencies">Dependencies</a></h3>
-	<p>The Java code has the following Open Source dependencies:</p>
-	<ul>
-		<li>Log4j - <a href="http://logging.apache.org/log4j/">http://logging.apache.org/log4j/</a></li>
-		<li>jUnit - <a href="http://junit.org">http://junit.org</a></li>
-		<li>Commons CSV - <a href="https://commons.apache.org/proper/commons-csv/">https://commons.apache.org/proper/commons-csv/</a></li>
-		<li>jSoup - <a href="http://jsoup.org">http://jsoup.org</a></li>
-		<li>gson - <a href="https://code.google.com/p/google-gson/">https://code.google.com/p/google-gson/</a></li>
-		<li>hibernate ORM - <a href="http://hibernate.org/orm/">http://hibernate.org/orm/</a></li>
-	</ul>
-<h4>Maven Build Values</h4>	
-<pre><code>&lt;dependencies&gt;
-	&lt;dependency&gt;
-		&lt;groupId&gt;junit&lt;/groupId&gt;
-		&lt;artifactId&gt;junit&lt;/artifactId&gt;
-		&lt;version&gt;4.11&lt;/version&gt;
-		&lt;scope&gt;test&lt;/scope&gt;
-	&lt;/dependency&gt;
-	&lt;dependency&gt;
-		&lt;groupId&gt;log4j&lt;/groupId&gt;
-		&lt;artifactId&gt;log4j&lt;/artifactId&gt;
-		&lt;version&gt;1.2.17&lt;/version&gt;
-	&lt;/dependency&gt;
-	&lt;dependency&gt;
-		&lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
-		&lt;artifactId&gt;commons-csv&lt;/artifactId&gt;
-		&lt;version&gt;1.1&lt;/version&gt;
-	&lt;/dependency&gt;
-	&lt;dependency&gt;
-		&lt;groupId&gt;org.jsoup&lt;/groupId&gt;
-		&lt;artifactId&gt;jsoup&lt;/artifactId&gt;
-		&lt;version&gt;1.8.2&lt;/version&gt;
-	&lt;/dependency&gt;
-	&lt;dependency&gt;
-		&lt;groupId&gt;com.google.code.gson&lt;/groupId&gt;
-		&lt;artifactId&gt;gson&lt;/artifactId&gt;
-		&lt;version&gt;2.3.1&lt;/version&gt;
-	&lt;/dependency&gt;
-	&lt;dependency&gt;
-		&lt;groupId&gt;org.hibernate&lt;/groupId&gt;
-		&lt;artifactId&gt;hibernate-core&lt;/artifactId&gt;
-		&lt;version&gt;5.0.0.CR1&lt;/version&gt;
-	&lt;/dependency&gt;
-&lt;/dependencies&gt;</code></pre>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
     	
-<h3><a id="Overview">Overview</a></h3>
-<div class="embed-responsive embed-responsive-16by9">
-    <video autoplay loop class="embed-responsive-item">
-        <source src="video/Cut1.mp4" type="video/mp4">
-    </video>
-</div>
-	<p>The IBM Data Merge Utility is an open source general purpose Java utility, exposed as an HTTP service, that uses Templates with your data source to create one or more merge output files. The merge process is driven by a set of directives associated with a template. The two types of directives are Replace and Insert and they drive the replacement of key values in a template, and the insertion of sub-templates. You can download source from GitHub here: <a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility">https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility</a></p>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
-    
+<hr style="clear:both;"/>
 <h3><a id="QuickInstall">Installation Guides</a></h3>
 <p>Current installation guides are maintained in the project GitHub wiki.<br>
   <a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki">https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki</a> <br>
   Specific deployment guides can be found at:<br>
   <ul>
-      <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy-IDMU:-Quick-Deploy">Quick Start</a></li>
       <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy:-Prerequisites">Installing Prerequisites</a> </li>
       <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy-IDMU">Installing IDMU</a></li>
-      <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy:-Testing-Database">Installing the JDBC Test Data Source</a></li>
+      <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy:-Configuration">Post-Install Configuration IDMU</a></li>
+      <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy:-JDBC-Testing">Installing the JDBC Test Data Source</a></li>
       <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy:-JDBC-Data-Source">Configuring your Data Source</a></li>
       <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy:-Docker-Container">Deploying Docker Containers</a></li>
   </ul>
 <div class="footerLink"><a href="#Top">Back To Top</a></div>
 
+<hr style="clear:both;"/>
+<h3><a id="ConfigOpt">Configuration Options</a></h3>
+<p>IDMU stores all of it's configuration data in the idmu.properties file. This file must be located in $IDMU_ROOT/properties and contains
+the configuration options listed below. By default the IDMU_ROOT is /opt/ibm/idmu, but you can set either a context-param or an environemnt variable 
+IDMU_ROOT with an alternate location. If you use an alternate location you should edit the properties file with appropriate and existing 
+directories and configuration files. The default directory structure is:</p>
+<ul>
+	<li>IDMU_ROOT</li>
+	<ul>
+		<li>database - SQL scripts for the Template and Testing Databases</li>
+		<li>logs - Log file directory (configured in log4j.properties)</li>
+		<li>output - The directory where merge output archives are placed see merge-output-root property</li>
+		<li>packages - The directory where system template packages are placed during install</li>
+		<li>properties - The location for the idmu.properties file as well as database pooling and logging properties files</li>
+		<li>templates - The folder used for file system persistence of templates see merge-templates-folder property</li>
+	</ul>
+</ul>
+<p>The following configurations are available in the idmu.properties file.
+<ul>
+  <li><strong>db-persist</strong> Default: no – This parameter is used to configure database persistence. The value &ldquo;yes&rdquo; enables database persistence of templates. 
+  </li>
+  <li><strong>jdbc-pools-properties-path</strong> Default: /opt/ibm/idmu/properties/databasePools.properties – This parameter is used to specify the location of the database connection properties file.  
+  </li>
+  <li><strong>log4j-config</strong> Default: /opt/ibm/idmu/properties/log4j.properties – This parameter is used to configure the path to a log4j properties file. 
+  </li>
+  <li><strong>merge-templates-folder</strong> Default: /opt/ibm/idmu/templates – This parameter specifies the path to the templates folder used by File System Persistence. 
+  </li>
+  <li><strong>merge-output-root</strong> Default: /opt/ibm/idmu/output – This parameter specifies the location where merge archive output is written to. 
+  </li>
+  <li><strong>pretty-json</strong> Default: no – This parameter is used to control &ldquo;pretty&rdquo; json formatting of the REST service returns. A value of &ldquo;yes&rdquo; enables pretty json. 
+  </li>
+  <li><strong>secure-rest-services</strong> Default: no – This parameter is used to disable the template save/delete rest services. This limits the Template Editor functionality to a read-only tool for viewing templates and secures the templates against any changes.
+  </li>
+</ul>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<hr style="clear:both;"/>
+<h3><a id="UseData">Using Database Template Persistence</a></h3>
+<p>By default IDMU uses json files stored in the merge-templates-folder to persiste templates. If you have a large scale deployment or simply prefer a JDBC data source you can configure JDBC database persistence of templates.
+ This configuration makes it much easier to support large scale and highly available configurations. To configure Database Template persistence follow these steps:</p>
+<ul>
+  <li>Run the $IDMU_ROOT/database/IDMU.v3.[vendor]_TEMPLATE.sql script for your platform to create the template database and load the default template. </li>
+  <li>Configure the TemplateDB data source in the $IDMU_ROOT/database/databasePools.properties file. See the properties file for examples. </li>
+  <li>Configure the db-persist runtime property to to &ldquo;yes&rdquo;</li>
+  <li>Re-initilize the Rest Services: curl -X PUT yourHost:port/Initilize</li>
+  <li>Load the System Templates: curl --upload $IDMU_ROOT/packages/system.json yourHost:port/idmu/templatePackage</li>
+</ul>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<hr style="clear:both;"/>
+<h3><a id="JDBC">Configuring JDBC Data Sources</a></h3>
+<p>To configure your database for use in merge processing, follow these steps: </p>
+<ul>
+	<li>Install your jdbc drivers in the J2EE path</li>
+	<li>Configure your database connection information in the /opt/ibm/idmu/properties/databasePools.properties file</li>
+	<li>Re-initilize the Rest Services: curl -X PUT yourHost:port/Initilize</li>
+	<li>You can now use the database pool name specified in the configuration as the Source in your JDBC directives.</li>
+</ul>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+		  	
+<h3><a id="HouseLogs">Housekeeping of Merge Output / Logs</a></h3>
+<p>During operation of the IDMU merge process archive output files are written to /opt/ibm/idmu/output. Proper use of the merge tool will involve using the DELETE idmu/archive rest service to remove an archive after it has been downloaded from the server. Even with this processing it is a good idea to schedule a periodic cleaning of this folder as well as the logs folder.</p>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h3><a id="SecSer">Securing the server</a></h3>
+<p>In a typical IDMU production deployment you will want the tempaltes to be locked down to prevent unintentional or malicous changes. The following steps will provide the most secure environment for production configurations:</p>
+<ul>
+	<li>Configure the secure-rest-services runtime property to yes</li>
+	<li>Re-initilize the Rest Services: <strong>curl -X PUT yourHost:port/Initilize</strong></li>
+	<li>Optionally flag *.json in the templates folder as read only, or grant read-only access to the template database</li>
+</ul>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<hr style="clear:both;"/>
+<h3><a id="ChangeMgmt">Change Management</a></h3>
+<p>The configuration item that is migrated between the development and production environments is a Template Collection. The recommended
+method for moving templates is the idmu/templatePackage rest api. You can also use a persistence layer technique. </p>
+<ul>
+	<li>To use rest services to migrate tempaltes. NOTE: If you have secured the server by enabling the secure-rest-services runtime parameter the upload and delete services are prohibited. </li>
+	<ul>
+		<li>To export a package from a development server: </br>
+		  <strong>curl devhost.com:port/idmu/templatePackage/collections &gt myPackge.json</strong>
+		</li>
+		<li>To remove tempaltes from the target server (if necessary)</br>
+		  <strong>curl -X DELETE prodhost.com:port/idmu/templatePackage/{collection}</strong>
+		</li>
+		<li>To import a package to a production server: </br>
+		  <strong>curl --upload myPackage.json prodhost.com:port/idmu/templatePackage</strong>
+		</li>
+	</ul>
+	<li>File System Persistence migration.</li>
+	<ul>
+		<li>Copy the json files from /opt/ibm/idmu/templates from the source server to the target(s).</li>
+		<li>Reset Template cache on the target server:</br>
+			<strong>curl targetHost:port/idmu/merge?DragonFlyCacheReset</strong>
+		</li>
+	</ul>
+	<li>Database Persistence migration.</li>
+	<ul>
+		<li>Copy the json TEMPLATE and DIRECTIVE data between databases. NOTE: Copy TEMPLATE data first as DIRECTIVES have foreign keys.</li>
+		<li>Reset Template cache on the target server: </br>
+			<strong>curl targetHost:port/idmu/merge?DragonFlyCacheReset</strong>
+		</li>
+	</ul>
+</ul>
+<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<h3><a id="">Backup / Restore guidelines</a></h3>
+<p>Backup and Restoration of the $IDMU_ROOT folder on the server is all that is needed. If using database persistence standard database backup procedures will suffice.
+All templates are cached on the merge server, so after restoring backups you may need to issue a re-initilize or cache reset command</p>
+<ul>
+	<li><strong>curl -X PUT yourHost:port/Initilize</strong></li>
+	<li><strong>curl yourHost:port/idmu/merge?DragonFlyCacheReset</strong></li>
+</ul>
+
+<hr style="clear:both;"/>
 <h3><a id="EntDepArch">Enterprise Deployment Architecture</a></h3>
-<p>Enterprise scale customers will want to deploy IDMU based on two clear use cases. The primary product use case is consumers accessing merge output through the idmu/merge rest api. In the production environment they templates are typically static configuration items that are subject to change control processes. 
-The secondary use case is that of the developer who creates and tests the templates to ensure they are producing the desired output. A typical development deployment will be a single server deployment with data source connections to test data. The template editor will be the primary user interface for this server, allowing template developers to create and test templates.</p>
+<p>Enterprise scale customers will want to deploy IDMU based on two clear use cases. 
+The primary product use case is consumers accessing merge output through the idmu/merge rest api. 
+In the production environment the templates are typically static configuration items that are subject to change control processes. 
+The secondary use case is that of the developer who creates and tests the templates to ensure they are producing the desired output. 
+A typical development deployment will be a single server deployment with data source connections to test data. 
+The template editor will be the primary user interface for this server, allowing template developers to create and test templates.</p>
 <p>A typical production environment will implement a J2EE 3-tier architecture to meet scale and availability requirements. In addition, production environments typically secure the server to prevent any changes to the Templates.</p>
-<p>See also <a href="#SecSer"><strong>Securing the server</strong></a>,  <a href="#ChangeMgmt"><strong>Change Management</strong></a></p><br>
 
 <h4>Large Deploy</h4>
 <img src="images/LargeDeploy.png" class="img-responsive" alt="Large Deploy"><br>
@@ -148,101 +204,10 @@ The secondary use case is that of the developer who creates and tests the templa
 <img src="images/SmallDeploy.png" class="img-responsive" alt="Small Deploy"><br>
 <div class="footerLink"><a href="#Top">Back To Top</a></div>
 
-<h3><a id="ChangeMgmt">Change Management</a></h3>
-<p>The configuration item that is migrated between the development and production environments is a Template Collection. To migrate a collection (or set of collections) between environments, you can utilize the following options:</p>
-<ul>
-  <li>idmu/templatePackage GET and PUT rest calls. <br>
-    HTTP GET http://devhost.com:8080/idmu/templatePackage/collections <br>
-    to get a json package of the templates. You can then use that package with <br>
-    HTTP PUT http://prodhost.com:8080/idmu/templatePackage <br>
-    to put those templates to the new server<br>
-    NOTE: If you have secured the server by enabling the secure-rest-services runtime parameter this call is prohibited. You can disable it temporarily or use one of the Persistence layer methods.</li>
-  <li>File System persistence: Simply copy templates from your development server to the production server. <br>
-    The new templates will go into effect when you issue a cache reset command to the server as in: http://server.com:8080/merge?DragonFlyCachReset</li>
-  <li>Database persistence: Use the following scripts</br>
-	<ul>
-    	<li>Export Templates: TBDM</li>
-  		<li>Import Templates: TBDM</li>
- 		<li> Move Templates: TBDM</li>
- 	</ul> 
-   </li>
-  </ul>
-  The new templates will go into effect when you issue a cache reset command to the server as in: http://server.com:8080/merge?DragonFlyCachReset</p>
-<div class="footerLink"><a href="#Top">Back To Top</a></div>
-
-<h3><a id="SecSer">Securing the server</a></h3>
-<p>Typical IDMU deployments want to secure templates in the Production environment to prevent accidental or malicious changes. The following steps will provide the most secure environment for production configurations:</p>
-<ul>
-  <li>Configure the <a href="#SecRest">secure-rest-services</a> runtime parameter to yes</li>
-  <li>For <a href="#TempPers">file system persistence</a>, flag the templates as read-only</li>
-  <li>For <a href="#DataPers">database persistence</a> grant read-only access to the IDMU JDBC User</li>
-</ul>
-<div class="footerLink"><a href="#Top">Back To Top</a></div>
-
-<h3><a id="HouseLogs">Housekeeping of Merge Output / Logs</a></h3>
-<p>During operation of the IDMU merge process archive output files are written to the directory specified by the <a href="#MerOut">merge-output-root</a> runtime parameter. The design of your use case should download and then remove these files, and there should be a scheduled clean-up job to remove stale archives that were never downloaded. The following configurations can be helpful to accomplish this.</p>
-<ul>
-  <li>Cron cleanup command: <br>
-    TBDM</li>
-  <li>Java Script to fetch and delete a file (Requires HTTP DELETE server support)<br>
-    TBDM</li>
-  <li>Apache Configuration to support HTTP DELETE command<br>
-    TBDM</li>
-</ul>
-<div class="footerLink"><a href="#Top">Back To Top</a></div>
-
-<h3><a id="">Backup / Restore guidelines</a></h3>
-<p>IDMU uses simple file system or database persistence of Templates and your traditional backup procedures should work without problem. All templates are cached at server startup so during normal operation there is no Template I/O to be interrupted.</p>
-
-<h4><a id="TempPers">File System Template Persistence</a></h4>
-<p>Templates located in the folder specified by the <a href="#MerTemp">merge-templates-folder</a> runtime parameter should be backed up after new templates are moved into the environment. Regular backups of this folder is important for development environments. </p>
-
-<h4><a id="DataPers">Database Template Persistence</a></h4>
-<p>Standard database backup process for the IDMU Template database will suffice. Template database I/O in a production environment is typically read only, and only at server startup or in response to a cache reset request. </p>
-<div class="footerLink"><a href="#Top">Back To Top</a></div>
-
-<h3><a id="">Configuration Options</a></h3>
-
-<h4><a id="ConfigLocal">Configuration Location and Prescience</a></h4>
-<p>Functional default values are provided for all configuration parameters. You can override these defaults in three locations.</p>
-<ul>
-  <li>In the web.xml for the application, as init-param values for the Initialize servlet.</li>
-  <li>As command line parameters passed to the JVM on startup.</li>
-</ul>
-
-<h4><a id="ConfigOpt">Configuration Options</a></h4>
-<p>The following configuration options can be specified:</p>
-<ul>
-  <li><a id="DBPers"><strong>db-persist</strong></a> – This parameter is used to configure database persistence. The value &ldquo;yes&rdquo; enables database persistence of templates. 
-  See: Installing a Template Database. The default value used if this parameter is not specified is &ldquo;no&rdquo;.</li>
-  <li><a id="Pools"><strong>jdbc-pools-properties-path</strong></a> – This parameter is used to specify the location of the database connection properties file. The value specified can be WEB-INF based or absolute. 
-  The default used if this parameter is not specified is WEB-INF/properties/databasePools.properties. See: Configuring your data sources.</li>
-  <li><strong>log4j-config</strong> – This parameter is used to configure the path to a log4j properties file. The default used if ths parameter is not specified is WEB-INF/properties/log4j.properties.</li>
-  <li><a id="MerTemp"><strong>merge-templates-folder</strong></a> – This parameter specifies the path to the templates folder used by <a href="#TempPers">File System Persistence</a>. 
-  The value specified can be WEB-INF based or absolute. The java runtime user must have write access to this folder if template editing is enabled. 
-  The default location used if this parameter is not specified is WEB-INF/templates</li>
-  <li><a id="MerOut"><strong>merge-output-root</strong></a> – This parameter specifies the location where merge archive output is written to. This location will typically be accessable via an HTTP service. 
-  Proper housekeeping of this folder is important. The default location used if this parameter is not specified is /tmp/merge</li>
-  <li><strong>pretty-json</strong> – This parameter is used to control &ldquo;pretty&rdquo; json formatting of the REST service returns. A value of &ldquo;yes&rdquo; enables pretty json. The default value used in this parameter is not specified is &ldquo;no&rdquo;. </li>
-  <li><a id="SecRest"><strong>secure-rest-services</strong></a> – This parameter is used to disable the template save/delete rest services. This limits the Template Editor functionality to a read-only tool for viewing templates and secures the templates against any changes. See: securing your server.</li>
-</ul>
-
-<h4><a id="UseData">Using Database Template Persistence</a></h4>
-<p>IDMU supports JDBC database persistence of templates to provide support for a traditional J2EE 3-tier scale and availability architectures. To configure Database Template persistence follow these steps:</p>
-<ul>
-  <li>Run the IDMU.sql sql script for your platform to create the template database and load the System templates. These files can be found at TBDM.</li>
-  <li>Configure the TemplateDB data source in the <a href="#Pools">database pools properties</a> file. </li>
-  <li>Configure the <a href="#DBPers">db-persist runtime parameter</a> to &ldquo;yes&rdquo;</li>
-</ul>
-
-<h4><a id="JDBC">Configuring JDBC Data Sources</a></h4>
-<p>Create or edit the databasePools.properties file specified by the jdbc-pools-properties-path runtime parameter. See the databasePools-example.properties in the WEB-INF/properties folder for details.</p>
-<div class="footerLink"><a href="#Top">Back To Top</a></div>
-		  	
 </div><!--end of container-->
 <!--javascript-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="js/myscript.js"</script>
+<script>src="js/myscript.js"</script>
 </body>
 </html>
