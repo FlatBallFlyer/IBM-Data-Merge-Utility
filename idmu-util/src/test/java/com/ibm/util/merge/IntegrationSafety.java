@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 
@@ -41,10 +42,12 @@ public class IntegrationSafety {
     JsonProxy jsonProxy = new PrettyJsonProxy();
     TemplatePersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
     ConnectionPoolManager manager = new ConnectionPoolManager();
-    TemplateFactory tf 	= new TemplateFactory(persist, jsonProxy, outputDir, manager);
+	Properties props = new Properties();
+    TemplateFactory tf;
 
 	@Before
 	public void setup() throws MergeException, IOException {
+	    tf = new TemplateFactory(props);
 		parameterMap = new HashMap<String, String[]>();
 	}
 
