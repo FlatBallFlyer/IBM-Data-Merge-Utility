@@ -118,13 +118,16 @@ public class MergeContext {
      */
     public String getHtmlErrorMessage(MergeException error) {
         String message = "";
+        String errShortName = "system.errHtml.";
+        String errLongName = errShortName + error.getErrorFromClass();
         HashMap<String, String> parameters = new HashMap<String,String>();
-        parameters.put("MESSAGE",error.getError());
-        parameters.put("CONTEXT", 		error.getContext());
-        parameters.put("TRACE", 		error.getStackTrace().toString());
+        parameters.put(Template.wrap("MESSAGE"),	error.getError());
+        parameters.put(Template.wrap("CONTEXT"), 	error.getContext());
+        parameters.put(Template.wrap("TRACE"), 		error.getStackTrace().toString());
+        parameters.put(Template.wrap("TEMPLATE"),  	error.getTemplateName());
         Template errTemplate;
 		try {
-			errTemplate = getTemplateFactory().getMergableTemplate("system.errHtml.", "", parameters);
+			errTemplate = getTemplateFactory().getMergableTemplate(errLongName, errShortName, parameters);
 	    	message = errTemplate.getMergedOutput(this);
 		} catch (MergeException e) {
             message = "INVALID ERROR TEMPLATE! \n" +

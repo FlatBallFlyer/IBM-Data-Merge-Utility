@@ -106,9 +106,14 @@ There are 2 servlets:
 	Save a whole bunch of templates
     PUT /idmu/templatePackage/{Templates} 
     	example: http://localhost:9090/idmu/templatePackage/{"Templates":[{Template},{Template}]}
-    	response: status echo's saved tempaltes or FORBIDDEN
+    	response: status echo's saved templates or FORBIDDEN
 
-	Delete  a whole bunch of templates
+	Load a package from the package directory.
+    POST /idmu/templatePackage/{package.json} 
+    	example: http://localhost:9090/idmu/templatePackage/system.json
+    	response: status echo's saved templates or NOT FOUND or ERROR
+
+	
     DELETE /idmu/templatePackage/{collectionName} 
     	example: http://localhost:9090/idmu/templates/system
     	response: status OK or FORBIDDEN

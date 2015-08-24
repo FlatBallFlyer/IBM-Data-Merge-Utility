@@ -43,7 +43,7 @@ public class InitializeServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = -6542461667547308985L;
 	private Logger log = Logger.getLogger(InitializeServlet.class);
-	private static final String PARAMETER_LOGGING_PROPS 	= "log4j-init-file";
+	private static final String PARAMETER_LOGGING_PROPS 	= "log4j-init-properties";
 	private static final String PARAMETER_SECURE_SERVER 	= "secure-server";
 	private File idmuPropertiesFile;
 	private Properties runtimeProperties = new Properties();
@@ -55,6 +55,7 @@ public class InitializeServlet extends HttpServlet {
     	runtimeProperties.setProperty(PARAMETER_SECURE_SERVER, "no");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_TEMPLATE_DIR, 		"/opt/ibm/idmu/templates");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_OUTPUT_DIR, 		"/opt/ibm/idmu/output");
+    	runtimeProperties.setProperty(TemplateFactory.PARAMETER_PACKAGE_DIR, 		"/opt/ibm/idmu/packages");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_POOLS_PROPERTIES, 	"/opt/ibm/idmu/properties/databasePools.properties");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_TEMPLATE_POOL, 		"idmuTemplates");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_DB_PERSIST, 		"no");
@@ -129,6 +130,7 @@ public class InitializeServlet extends HttpServlet {
 		thelist.add(new PerformMergeResourceHandler());
 		thelist.add(new RemoveArchiveResourceHandler());
 		thelist.add(new GetStatusResourceHandler());
+		thelist.add(new PostTemplatePackageResourceHandler());
 		if (!this.runtimeProperties.get(PARAMETER_SECURE_SERVER).equals("yes")) {
 			thelist.add(new PutTemplateResourceHandler());
 			thelist.add(new PutTemplatePackageResourceHandler());

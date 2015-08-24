@@ -35,6 +35,8 @@ import com.ibm.util.merge.template.TemplateName;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -44,28 +46,8 @@ import java.util.Map.Entry;
  * <h3>Usage:</h3>
  *  
  * <h4>To Initialize the Factory</h4>
- * <pre>
- * {@code
- * File templateDir    = new File("PATH TO TEMPLATES");
- * File outputDir      = new File("PATH TO OUTPUT DIR");
- * File jdbcProperties = new File("PATH TO DATABASE_PROPS"); 
- * JsonProxy jsonProxy = new PrettyJsonProxy(); // or DefaultJsonProxy()
- * ConnectionPoolManager poolManager = new ConnectionPoolManager();
- * PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(jdbcProperties);
- * TemplatePersistence persist = new FilesystemPersistence(templateDir, jsonProxy);
- * 	or 
- * TemplatePersistence persist = new DatabasePersistence(dataSourceName);
- *     
- * TemplateFactory tf 	= new TemplateFactory(persist, jsonProxy, outputDir, poolManager);
- * }
- * </pre>
  * 
  * <h4>To Use the factory to merge a template.</h4>
- * <pre>
- * {@code
- * String returnValue = tf.getMergeOutput(Map<String, String[]>; requestParameters)
- * }
- * </pre>
  * 
  * @see #getMergeOutput(Map)
  * 
@@ -80,7 +62,8 @@ final public class TemplateFactory {
     
     // Initialization Property Names
     public static final String PARAMETER_TEMPLATE_DIR 		= "merge-templates-folder";
-	public static final String PARAMETER_OUTPUT_DIR 		= "merge-output-root";
+	public static final String PARAMETER_OUTPUT_DIR 		= "merge-output-folder";
+	public static final String PARAMETER_PACKAGE_DIR 		= "merge-package-folder";
 	public static final String PARAMETER_POOLS_PROPERTIES 	= "jdbc-pools-properties";
 	public static final String PARAMETER_TEMPLATE_POOL 		= "jdbc-persistence-templates-poolname";
 	public static final String PARAMETER_DB_PERSIST 		= "db-persist";
@@ -91,6 +74,7 @@ final public class TemplateFactory {
 	private final Properties runtimeProperties;
     private final TemplatePersistence persistence;
     private final File outputRoot;
+    private final File packageFolder;
 	private final TemplateCache templateCache;
     private final JsonProxy jsonProxy;
     private final ConnectionPoolManager poolManager;
@@ -101,22 +85,13 @@ final public class TemplateFactory {
     private Date initialized = null;
     private double templatesMerged = 0;
     
-    public TemplateFactory(TemplatePersistence persist, JsonProxy proxy, File outputRootDir, ConnectionPoolManager manager) {
-        this.templateCache = new TemplateCache();
-        this.jsonProxy = proxy;
-        this.persistence = persist;
-        this.outputRoot = outputRootDir;
-        this.poolManager = manager;
-        this.runtimeProperties = new Properties();
-        reset();
-    }
-
     public TemplateFactory(Properties runtimeProperties) {
     	this.runtimeProperties = runtimeProperties;
         this.templateCache = new TemplateCache();
         this.poolManager = new ConnectionPoolManager();
         this.jsonProxy = (runtimeProperties.getProperty(PARAMETER_PRETTY_JSON).equals("yes") ? new PrettyJsonProxy() : new DefaultJsonProxy());
         this.outputRoot = new File(runtimeProperties.getProperty(PARAMETER_OUTPUT_DIR));
+        this.packageFolder = new File(runtimeProperties.getProperty(PARAMETER_PACKAGE_DIR));
         File poolsPropertiesPath = new File(runtimeProperties.getProperty(PARAMETER_POOLS_PROPERTIES));
         if(poolsPropertiesPath.exists()){
             PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(poolsPropertiesPath);
@@ -217,7 +192,7 @@ final public class TemplateFactory {
         }
         // Check for shortName in the cache, since fullName doesn't exist
         if (newTemplate == null && templateCache.isCached(shortName)) {
-            newTemplate = templateCache.get(fullName).getMergable(seedReplace);
+            newTemplate = templateCache.get(shortName).getMergable(seedReplace);
         }
         if (newTemplate == null) {
             throw new MergeException("Template Not Found", fullName + " and " + shortName);
@@ -311,12 +286,37 @@ final public class TemplateFactory {
     }
     
     /**********************************************************************************
+     * Persist a collection of Templates from the packages folder
+     *
+     * @param File name (in the packages folder)
+     * @return OK or ERROR
+     */
+	public String loadPackage(String fileName) {
+		log.info("Starting loadPackage");
+		File thePackage = new File(this.packageFolder + File.separator + fileName);
+		if (!thePackage.exists()) {
+			log.warn("File not found while trying to load a package: " + fileName);
+			return "ERROR";
+		}
+		String templateJson;
+		try {
+			templateJson = new String(Files.readAllBytes(thePackage.toPath()));
+		} catch (IOException e) {
+			log.error("File IO Exception reading " + fileName, e);
+			return "ERROR";
+		}
+		String result = this.saveTemplatesFromJson(templateJson);
+		return result;
+    }
+
+    /**********************************************************************************
      * Persist a collection of Templates
      *
      * @param json array of template json
      * @return the saved templates json array
      */
 	public String saveTemplatesFromJson(String json) {
+		log.info("Starting saveTemplatesFromJson");
 		TemplateList templates = new TemplateList();
     	templates = jsonProxy.fromJSON(json, templates.getClass());
     	for (Template template : templates.templates) {
@@ -325,7 +325,6 @@ final public class TemplateFactory {
     	}
     	return jsonProxy.toJson(templates);
     }
-
     
     /**********************************************************************************
      * Persist a template, through the template cache
@@ -362,7 +361,7 @@ final public class TemplateFactory {
     /**********************************************************************************
      * Delete a collection of template from Cache and Persistence
      *
-     * @param fullName the template fullname
+     * @param List of collection names
      * @return "OK" or "FORBIDDEN"
      */
     public String deleteCollections(List<String> collections) {
