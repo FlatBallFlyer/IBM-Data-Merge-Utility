@@ -43,10 +43,11 @@ public class InitializeServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = -6542461667547308985L;
 	private Logger log = Logger.getLogger(InitializeServlet.class);
-	private static final String PARAMETER_LOGGING_PROPS 	= "log4j-init-properties";
+	private static final String PARAMETER_LOGGING_PROPS 	= "log4j-properties";
 	private static final String PARAMETER_SECURE_SERVER 	= "secure-server";
 	private File idmuPropertiesFile;
 	private Properties runtimeProperties = new Properties();
+	private String rootFrom = "";
     private final List<RequestHandler> handlerChain = new ArrayList<>();
 
     public InitializeServlet() {
@@ -73,6 +74,7 @@ public class InitializeServlet extends HttpServlet {
     private void initializeApp(ServletContext servletContext) {
     	getRuntimeProperties(servletContext);
 	    PropertyConfigurator.configure(this.runtimeProperties.getProperty(PARAMETER_LOGGING_PROPS));
+	    log.warn("Initilized root from " + this.rootFrom);
     	handlerChain.clear();
         handlerChain.addAll(createHandlerInstances());
         TemplateFactory tf = new TemplateFactory(this.runtimeProperties);
@@ -85,9 +87,16 @@ public class InitializeServlet extends HttpServlet {
     }
 
     private void getRuntimeProperties(ServletContext servletContext) {
+    	this.rootFrom = "System.getProperty";
         String folder = System.getProperty("IDMU_ROOT");
-        if (folder == null) folder = servletContext.getInitParameter("IDMU_ROOT");
-    	if (folder == null) folder = "/opt/ibm/idmu";
+        if (folder == null) {
+        	this.rootFrom = "context.getInitParameter";
+        	folder = servletContext.getInitParameter("IDMU_ROOT");
+        }
+    	if (folder == null) {
+        	this.rootFrom = "default";
+    		folder = "/opt/ibm/idmu";
+    	}
     	this.idmuPropertiesFile = new File(folder + File.separator + "properties" + File.separator + "idmu.properties");
     	if (! this.idmuPropertiesFile.exists() ) {
     		setup(folder, servletContext);

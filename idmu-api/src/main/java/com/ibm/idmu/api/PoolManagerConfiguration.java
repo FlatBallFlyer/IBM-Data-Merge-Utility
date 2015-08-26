@@ -22,6 +22,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  */
@@ -34,6 +36,7 @@ public class PoolManagerConfiguration {
     public static final String POOLCONFIG_POOLNAMES = "poolNames";
     public static final String POOLCONFIG_DEFAULTDRIVER = "defaultDriver";
 	public static final String POOLCONFIG_POOLNAME = "name";
+    private static final Logger log = Logger.getLogger(PoolManagerConfiguration.class);
 	private String defaultJdbcDriver;
     private Map<String, Map<String, String>> poolConfigs;
 
@@ -53,25 +56,25 @@ public class PoolManagerConfiguration {
         Map<String, Map<String, String>> pc = new HashMap<>();
         for (String pn : poolNames) {
 			String parent = pn + ".";
-            String url = props.getProperty(parent + POOLCONFIG_URL);
+            String url = getProperty(props, parent + POOLCONFIG_URL);
             if (url == null) throw new IllegalArgumentException("Illegal pool configuration: pool " + pn + " does not have a jdbc url at " + pn + ".url");
             Map<String, String> cfg = new TreeMap<>();
             pc.put(pn, cfg);
             cfg.put(POOLCONFIG_POOLNAME, pn);
             cfg.put(POOLCONFIG_URL, url);
-            String driver = props.getProperty(parent + POOLCONFIG_DRIVER);
+            String driver = getProperty(props, parent + POOLCONFIG_DRIVER);
             if (driver != null) {
                 cfg.put(POOLCONFIG_DRIVER, driver);
             }
-            String username = props.getProperty(parent + POOLCONFIG_USERNAME);
+            String username = getProperty(props, parent + POOLCONFIG_USERNAME);
             if (username != null) {
                 cfg.put(POOLCONFIG_USERNAME, username);
             }
-            String password = props.getProperty(parent + POOLCONFIG_PASSWORD);
+            String password = getProperty(props, parent + POOLCONFIG_PASSWORD);
             if (password != null) {
                 cfg.put(POOLCONFIG_PASSWORD, password);
             }
-            String propertiesPath = props.getProperty(parent + POOLCONFIG_PROPERTIESPATH);
+            String propertiesPath = getProperty(props, parent + POOLCONFIG_PROPERTIESPATH);
             if (propertiesPath != null) {
                 cfg.put(POOLCONFIG_PROPERTIESPATH, propertiesPath);
             }
@@ -79,6 +82,21 @@ public class PoolManagerConfiguration {
         return new PoolManagerConfiguration(defaultDriver, pc);
     }
 
+    private static String getProperty(Properties props, String key) {
+    	String value = System.getProperty(key);
+    	if (value != null ) {
+    		log.info("Found System property for " + key);
+    	} else {
+    		value = props.getProperty(key);
+    	}
+    	if (value != null) {
+    		log.info("Found Properties File value for " + key);
+    	} else {
+    		log.info("Null value used for " + key);
+    	}
+    	return value;
+    }
+    
     public static Properties loadProperties(File file) {
         FileInputStream fis = null;
         try {

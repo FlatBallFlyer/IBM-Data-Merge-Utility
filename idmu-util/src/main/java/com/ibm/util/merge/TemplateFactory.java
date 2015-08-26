@@ -63,7 +63,7 @@ final public class TemplateFactory {
     // Initialization Property Names
     public static final String PARAMETER_TEMPLATE_DIR 		= "merge-templates-folder";
 	public static final String PARAMETER_OUTPUT_DIR 		= "merge-output-folder";
-	public static final String PARAMETER_PACKAGE_DIR 		= "merge-package-folder";
+	public static final String PARAMETER_PACKAGE_DIR 		= "merge-packages-folder";
 	public static final String PARAMETER_POOLS_PROPERTIES 	= "jdbc-pools-properties";
 	public static final String PARAMETER_TEMPLATE_POOL 		= "jdbc-persistence-templates-poolname";
 	public static final String PARAMETER_DB_PERSIST 		= "db-persist";
@@ -293,9 +293,9 @@ final public class TemplateFactory {
      */
 	public String loadPackage(String fileName) {
 		log.info("Starting loadPackage");
-		File thePackage = new File(this.packageFolder + File.separator + fileName);
+		File thePackage = new File(this.packageFolder + File.separator +  fileName);
 		if (!thePackage.exists()) {
-			log.warn("File not found while trying to load a package: " + fileName);
+			log.warn("File not found while trying to load a package: " + thePackage );
 			return "ERROR";
 		}
 		String templateJson;
