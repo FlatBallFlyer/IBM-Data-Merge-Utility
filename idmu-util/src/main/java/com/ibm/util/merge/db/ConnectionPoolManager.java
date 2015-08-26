@@ -62,7 +62,8 @@ public class ConnectionPoolManager implements PoolManager {
             String name = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_POOLNAME);
             if(name == null) throw new IllegalArgumentException("missing name property for poolconfig");
             String url = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_URL);
-            if(url == null) throw new IllegalArgumentException("missing url property for poolconfig " + name);
+            String jndiname = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_JNDI);
+            if(url == null && jndiname == null) throw new IllegalArgumentException("missing url or jndi property for poolconfig " + name);
             String driver = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_DRIVER);
             if(driver != null && !driver.isEmpty()){
                 try {
@@ -74,7 +75,6 @@ public class ConnectionPoolManager implements PoolManager {
             String propertiesPath = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_PROPERTIESPATH);
             String username = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_USERNAME);
             String password = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_PASSWORD);
-            String jndiname = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_JNDI);
             if (jndiname != null) {
             	createPool(name, jndiname);
             } else if(propertiesPath != null) {

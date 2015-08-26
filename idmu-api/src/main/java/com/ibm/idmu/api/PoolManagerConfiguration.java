@@ -58,18 +58,18 @@ public class PoolManagerConfiguration {
         for (String pn : poolNames) {
 			String parent = pn + ".";
             String url = getProperty(props, parent + POOLCONFIG_URL);
-            if (url == null) throw new IllegalArgumentException("Illegal pool configuration: pool " + pn + " does not have a jdbc url at " + pn + ".url");
+            String jndi = getProperty(props, parent + POOLCONFIG_JNDI);
+            if (url == null && jndi == null) throw new IllegalArgumentException("Illegal pool configuration: pool " + pn + " does not have a jdbc url or jndi name at " + pn + ".url");
             Map<String, String> cfg = new TreeMap<>();
             pc.put(pn, cfg);
             cfg.put(POOLCONFIG_POOLNAME, pn);
             cfg.put(POOLCONFIG_URL, url);
+            if (jndi != null) {
+                cfg.put(POOLCONFIG_JNDI, jndi);
+            }
             String driver = getProperty(props, parent + POOLCONFIG_DRIVER);
             if (driver != null) {
                 cfg.put(POOLCONFIG_DRIVER, driver);
-            }
-            String jndi = getProperty(props, parent + POOLCONFIG_JNDI);
-            if (jndi != null) {
-                cfg.put(POOLCONFIG_JNDI, jndi);
             }
             String username = getProperty(props, parent + POOLCONFIG_USERNAME);
             if (username != null) {
