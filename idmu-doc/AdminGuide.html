@@ -99,14 +99,21 @@
 		<h3>
 			<a id="ConfigOpt">Configuration Options</a>
 		</h3>
-		<p>IDMU stores all of it's configuration data in the
-			idmu.properties file. This file must be located in
+		<p>IDMU stores it's primary configuration data in the idmu.properties file. This file must be located in
 			$IDMU_ROOT/properties and contains the configuration options listed
-			below. By default the IDMU_ROOT is /opt/ibm/idmu, but you can set
-			either a context-param or an environemnt variable IDMU_ROOT with an
-			alternate location. If you use an alternate location you should edit
-			the properties file with appropriate and existing directories and
-			configuration files. The default directory structure is:</p>
+			below. Database connections and log4j logging are configured in two additional property files whose 
+			location is specified in the idmu.properties file. By default the IDMU_ROOT is /opt/ibm/idmu, but you can set an 
+			alternate location in one of the following ways before starting the application.
+			Set a j2ee context Parameter (For Tomcat, place the following value in your context.xml file)
+			<br/><strong>&lt;Parameter name="IDMU_ROOT" value="/usr/local/idmu" override="false" description="IDMU Root Folder"/&gt;</strong><br/>
+			or Specifying the environment variable parameter IDMU_ROOT. For Tomcat you can place this entry in the $CATALINA_HOME/bin/setenv.sh file
+			<br/><strong>export JAVA_OPTS="-DIDMU_ROOT=/usr/local/idmu"</strong><br/></p>
+		<p> If you have changed IDMU_ROOT, after the initial install you will find the idmu folders in the location that you 
+			specified. You will need to edit idmu.properties and log4j.properties files to update the default folder values to 
+			match the new location. After updating these files you will need to re-initialize the system by either restarting the J2EE server
+			or issuing this call from the command line. <strong>curl -X POST localhost:8080/Initialize</strong></p>
+		<p> This is the default directory structure created in IDMU_ROOT, you can specify alternate locations for these directories
+			but it is strongly recommended that you maintain this directory structure for ease of configuration, upgrades and portability.
 		<ul>
 			<li>IDMU_ROOT</li>
 			<ul>
@@ -175,14 +182,13 @@
 				properties file for examples.</li>
 			<li>Configure the db-persist runtime property to to
 				&ldquo;yes&rdquo;</li>
-			<li>Re-initilize the Rest Services: <strong>curl -X PUT
-				yourHost:port/Initilize</strong></li>
+			<li>Re-initilize the Rest Services: <strong>curl -X POST localhost:8080/Initialize</strong></li>
 			<li>Load the System Templates using one of the following methods</li>
 			<ul>
-				<li>From a unix command line: <strong>curl --upload
-					$IDMU_ROOT/packages/system.json yourHost:port/idmu/templatePackage</strong></li>
 				<li>From the IDMU Home Page using the Load Template Package
 					button(s)</li>
+				<li>From a unix command line: <strong>curl --upload
+					$IDMU_ROOT/packages/system.json yourHost:port/idmu/templatePackage</strong></li>
 			</ul>
 		</ul>
 		<div class="footerLink">
@@ -199,11 +205,16 @@
 			<li>Install your jdbc drivers in the J2EE path</li>
 			<li>Configure your database connection information in the
 				/opt/ibm/idmu/properties/databasePools.properties file</li>
-			<li>Re-initilize the Rest Services: <strong>curl -X PUT
-				yourHost:port/Initilize</strong></li>
+			<li>Re-initilize the Rest Services: <strong>curl -X POST localhost:8080/Initialize</strong></li>
 			<li>You can now use the database pool name specified in the
 				configuration as the Source in your JDBC directives.</li>
 		</ul>
+		<p>A special note on providing database pool properties. All database pool names must be identified
+			in the databasePools.properties file in the poolNames property. The connection values for each pool
+			(url, user, password and driver) can be provided in the properties file, or by a environment variable. 
+			<br/><strong>export JAVA_OPTS="-DtestgenDb.username=root -DtestgenDb.password=drowssap"</strong><br/>
+			If present the environment variable values take presedence.</p>
+			
 		<div class="footerLink">
 			<a href="#Top">Back To Top</a>
 		</div>

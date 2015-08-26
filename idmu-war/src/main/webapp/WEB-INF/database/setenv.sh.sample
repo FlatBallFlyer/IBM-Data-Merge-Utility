@@ -1,0 +1,1 @@
+export JAVA_OPTS="-DIDMU_ROOT=/opt/alt/idmu"

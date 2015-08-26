@@ -94,7 +94,7 @@
 	<p><button type="button" onclick="loadPackage('system.json');">System Templates</button></p>
 	<p><button type="button" onclick="loadPackage('test.json');">Testing Templates</button></p>
 	<p><button type="button" onclick="loadPackage('training.json');">Training Templates</button></p>
-	<p><button type="button">Custom Package</button> Package Name: <input type="text" value="package.json"/></p>
+	<p><button type="button" onclick="loadPackage(document.getElementById('package').value);">Custom Package</button> Package Name: <input id="package" type="text" value="package.json"/></p>
 
 </div><!--end of container-->
 <!--javascript-->
