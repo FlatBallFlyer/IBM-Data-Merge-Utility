@@ -74,14 +74,15 @@ public class ConnectionPoolManager implements PoolManager {
             String propertiesPath = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_PROPERTIESPATH);
             String username = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_USERNAME);
             String password = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_PASSWORD);
-            if(propertiesPath != null){
+            String jndiname = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_JNDI);
+            if (jndiname != null) {
+            	createPool(name, jndiname);
+            } else if(propertiesPath != null) {
                 File file = new File(propertiesPath);
                 Properties p = PoolManagerConfiguration.loadProperties(file);
                 createPool(name, url, p);
-            }else if(username != null){
+            } else if(username != null) {
                 createPool(name, url, username, password);
-            }else{
-                createPool(name, url);
             }
         }
     }
@@ -104,9 +105,9 @@ public class ConnectionPoolManager implements PoolManager {
 
 
     @Override
-    public final void createPool(String poolName, String jdbcConnectionUrl) throws PoolManagerException {
+    public final void createPool(String poolName, String jndiDatasource) throws PoolManagerException {
         if(isPoolName(poolName)) throw new IllegalArgumentException("poolName " + poolName + " already exists");
-        JdbcDatabaseConnectionProvider p1 = new JdbcDatabaseConnectionProvider(poolName, jdbcConnectionUrl);
+        JndiDatabaseConnectionProvider p1 = new JndiDatabaseConnectionProvider(poolName, jndiDatasource);
         p1.create();
         connectionProviders.put(poolName, p1);
     }

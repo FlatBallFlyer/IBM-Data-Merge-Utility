@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 public class PoolManagerConfiguration {
     public static final String POOLCONFIG_URL = "url";
     public static final String POOLCONFIG_DRIVER = "driver";
+    public static final String POOLCONFIG_JNDI = "jndi";
     public static final String POOLCONFIG_USERNAME = "username";
     public static final String POOLCONFIG_PASSWORD = "password";
     public static final String POOLCONFIG_PROPERTIESPATH = "propertiesPath";
@@ -65,6 +66,10 @@ public class PoolManagerConfiguration {
             String driver = getProperty(props, parent + POOLCONFIG_DRIVER);
             if (driver != null) {
                 cfg.put(POOLCONFIG_DRIVER, driver);
+            }
+            String jndi = getProperty(props, parent + POOLCONFIG_JNDI);
+            if (jndi != null) {
+                cfg.put(POOLCONFIG_JNDI, jndi);
             }
             String username = getProperty(props, parent + POOLCONFIG_USERNAME);
             if (username != null) {
