@@ -330,18 +330,28 @@ var App = React.createClass({
     var params = this.templateBody(opts);
     var collection = params.collection;
     var name = params.name;
-    var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
+    var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";
+    var url = '/idmu/template/'+collection+"."+name+sfx+"_s/";
     $.ajax({
-      url: '/idmu/template/'+collection+"."+name+sfx+"/",
+      url: url,
       contentType: "application/json",
       method: 'DELETE',
       cache: false,
       success: function(data) {
-        this.setState({selectedCollection: null},function(){
-          this.loadCollectionsFromServer();
-        }.bind(this));
+        if(data !== 'OK'){
+          var msg = "Error occured while deleting the template "+(collection+"."+name+sfx);
+          alert(msg);
+        }else {
+          this.setState({selectedCollection: null},function(){
+            this.loadCollectionsFromServer();
+          }.bind(this));
+        }
       }.bind(this),
       error: function(xhr, status, err) {
+        var netErr = "";
+        netErr = err ? (" - "+err.toString()) : "";
+        var msg = "Error occured while deleting the template "+(collection+"."+name+sfx)+netErr;
+        alert(msg);
         console.error("DELETE:",status, err.toString());
       }.bind(this)
     });
@@ -396,10 +406,9 @@ var App = React.createClass({
   },
   saveTemplateToServer: function(opts,collection) {
     var params = this.templateBody(opts);
-    var name = params.name;
-    var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";    
+    var url = '/idmu/template/';
     $.ajax({
-      url: '/idmu/template/',
+      url: url,
       dataType: 'json',
       contentType: "application/json",
       method: 'PUT',
@@ -409,7 +418,16 @@ var App = React.createClass({
         this.setState({template: data});
       }.bind(this),
       error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
+        var netErr = "";
+        if(xhr.responseText !== 'FORBIDDEN'){
+          netErr = err ? (" - "+err.toString()) : "";
+        }
+        var name = params.name;
+        var sfx = (params.columnValue && params.columnValue.length>0) ? "."+params.columnValue : ".";
+        var tplName = collection+"."+name+sfx;
+        var msg = "Error occured while saving the template "+tplName+netErr;
+        alert(msg);
+        console.error(url, status, netErr);
       }.bind(this)
     });
   },

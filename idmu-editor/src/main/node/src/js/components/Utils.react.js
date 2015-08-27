@@ -22,10 +22,7 @@ var Utils = {
     return(/[\u00A0-\u9999<>\&]/gim);
   },
   prepareContentForSave: function(content_raw){
-    var content = content_raw.replace(/<a(>|.*?[^?]>)/g,"");
-    content = content.replace(/div class=\"tkbookmark\"/g,"tkBookmark");
-    content = content.replace(/><\/div>/g,"/>");
-    return content;
+    return content_raw;
   },
   thisRef: function(level,index,label){
     return(label+"_"+level+"_"+index);
