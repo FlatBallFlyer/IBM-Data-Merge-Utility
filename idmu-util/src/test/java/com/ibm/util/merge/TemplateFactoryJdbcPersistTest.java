@@ -16,10 +16,8 @@
  */
 package com.ibm.util.merge;
 
-import com.ibm.idmu.api.JsonProxy;
 import com.ibm.idmu.api.PoolManagerConfiguration;
 import com.ibm.util.merge.db.ConnectionPoolManager;
-import com.ibm.util.merge.json.DefaultJsonProxy;
 import com.ibm.util.merge.persistence.JdbcTemplatePersistence;
 import com.ibm.util.merge.template.Template;
 
@@ -40,7 +38,6 @@ import static org.junit.Assert.*;
 public class TemplateFactoryJdbcPersistTest {
     private String templatesPersistencePoolName = "idmuTemplates";
     private File poolsPropertiesPath = new File("src/test/resources/properties/databasePools.properties");
-    private File outputDirPath = new File("/src/test/resources/testout");
     private final TemplateFactory testFactory;
 
 
@@ -49,7 +46,6 @@ public class TemplateFactoryJdbcPersistTest {
         ConnectionPoolManager poolManager = new ConnectionPoolManager();
         PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(poolsPropertiesPath);
         poolManager.applyConfig(config);
-        JsonProxy jsonProxy = new DefaultJsonProxy();
         JdbcTemplatePersistence jdbcPersistence = new JdbcTemplatePersistence(poolManager);
         jdbcPersistence.setPoolName(templatesPersistencePoolName);
         testFactory = new TemplateFactory(new Properties());
