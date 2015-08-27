@@ -34,12 +34,14 @@
     </nav> 
 <body>    
 <div class="container">    
-<h1><a id="top">IBM Data Merge Utility Version 3.1.2</a></h1>
+<h1><a id="top">IBM Data Merge Utility Version 3.1.3</a></h1>
 	<p><img src="images/dragonfly.jpg" align="right"/>See the links in the navigation bar at the top of the page for documentation and the Template Editor.</p>
 	 
     <ul class="nav nav-pills nav-stacked">
         <li><a href="#Licensing"><strong>Licensing</strong></a></li>
         <li><a href="#Overview"><strong>Overview</strong></a></li>
+        <li><a href="#Terms"><strong>Terminology Used in the Documentation</strong></a></li>
+		<li><a href="#EditorOverview"><strong>Template Editor Overview</strong></a></li>
         <li><a href="#Release"><strong>Important Release Notes</strong></a></li>
         <li><a href="#Packages"><strong>Load Template Packages</strong></a></li>
         <li><a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/wiki/Deploy-IDMU"><strong>Installing</strong></a></li>
@@ -72,21 +74,76 @@
     	<li>See the User Guide for details on how to create and use templates.</li>
     	<li>See the Admin Guide for information on configuring and maintaing the IDMU Server </li>
 	</ul>
+
+<hr style="clear:both;"/>
+<h3><a id="Terms">Terminology</a></h3>
+<p>The IBM Data Merge Utility documentation uses the following terms:</p>
+	<ul>
+		<li><strong>Template</strong>: The primary object used by IDMU. A template has content, properties and directives. A template has the 
+		following properties: </li>
+		<ul>
+			<li>Template Full Name: Comprised of three parts joined with periods. collection.name.value</li>
+			<ul>
+				<li>Collection: Used to group templates into logical collections</li>
+				<li>Template: A name for the template</li>
+				<li>Value: Used when varying sub-templates based on a data value.</li>
+			</ul>
+			<li>Content: The text that is merged and returned as output</li>
+			<li>Properties: Values such as description and output.</li>
+			<li>Directives: Instructions for retrieving data to be used in the merge.</li>
+		</ul>
+		<li><strong>Replace Hash</strong>: Merge processing performs global search / replace actions based on 
+		a hash of From -> To values called the Replace Hash. From values are {wrapped} in brackets</li>
+		<li><strong>Tag</strong> and <strong>Tag Data</strong>: A single entry in the Replace Hash. During merge processing a {Tag} is 
+		replaced by Tag Data</li>
+		<li><strong>Book mark</strong>: A special location within the template content where sub-templates are inserted.</li>
+		<li><strong>Sub-Template</strong>: A template that is inserted into another template at a book mark. There is no difference between 
+		a template and a sub-template other than the context in which they are used.</li>
+		<li><strong>Data Provider</strong>: The directive component that retrieves data. There are typically multiple directives
+		that use data retrieved by a Data Provider in different ways. IDMU Currently supports three data providers, </li> 
+	</ul>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>
+    
+<hr style="clear:both;"/>
+<h3><a id="EditorOverview">Template Editor Overview</a></h3>
+	<p>A quick introduction to the terms used to describe the user interface components in the template editor.</p>
+
+	<hr style="clear:both;"/>
+	<p><img align="right" src="images/ScreenShot1.png">
+	The Template cover flow is shown at the right, the &lt;&lt; and &gt;&gt; scroll buttons allow you to navigate through a list
+	of templates. 
+	</p>	
 	
+	<hr style="clear:both;"/>
+	<p><img align="right" src="images/ScreenShot2.png">
+	Clicking on the template name will expose or hide the Template Properties pane where you can edit the description and specify
+	an output file for the template.
+	</p>	
+	
+	<hr style="clear:both;"/>
+	<p><img align="right" src="images/ScreenShot3.png">
+	Clicking on the Configure button will expose the Template Directives pane where you can add / edit / delete directives. 
+	</p>	
+	
+	<hr style="clear:both;"/>
+	<p><img align="right" src="images/ScreenShot4.png">
+	Sub-templates are displayed as a cover flow when the sub-template that is inserted is varied based on some data. 
+	You can scroll left / right through the different sub-templates that could be inserted at this point.
+	</p>	
+	
+	<hr style="clear:both;"/>
+	<p><img align="right" src="images/ScreenShot5.png">
+	Sub-templates can be nested to any level. This screen shot shows the test_jdbc.report template, with 
+	a jdbc_customer sub-template (note that this sub-template is "static" and has no left-right scroll indicators).
+	The test_jdbc.customer sub-template contains a test_jdbc.contact sub-template cover flow. The "[missing]" indicates that
+	the "default" sub-template is not present. 
+	</p>	
+	
+<hr style="clear:both;"/>
 <h3><a id="Release">Release Notes</a></h3>
 	<p><em><b>A few notes about the template editor:</b></em> The current implementation of the Template Editor is filled with querks and defects. 
-	I'm hoping to have a new editor later this year that is much more functional and intuitive. In the mean time, please see <a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/issues?q=is%3Aopen+is%3Aissue+label%3A%22Template+Editor%22">the editor issues page</a> for the latest on known defects.</p>
-	<p>Here are a few of the more dangerous defects in the current code:</p>
-	<ul>
-		<li>Template content with &lt;a values (such as html anchor tags) are not properly saved. The text from &lt;a to &gt; or the end of 
-		the line is removed from the template. This can be very frustrating when eding html based templates. At this point in time the only
-		work around is to edit the templates directly using a json editor, or the database tool of your choice (if using database persistence)
-		</li>
-		<li>The editor does not report any errors that may occur when saving a template. It is a good idea to re-visit the template after saving
-		changes to make sure they saved correctly. This can be time consuming as the template editor reverts to the first template in the
-		cover flow after a save. 
-		</li>
-	</ul>
+	I'm hoping to have a new editor later this year that is much more functional and intuitive. In the mean time, please
+	 see <a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/issues?q=is%3Aopen+is%3Aissue+label%3A%22Template+Editor%22">the editor issues page</a> for the latest on known defects.</p>
 	<p>Here are a few of the more annoying defects in the current code:</p>
 	<ul>
 		<li>After a save the editor will revert to the first template in the cover flow. For this reason it's best to edit sub-templates in 
