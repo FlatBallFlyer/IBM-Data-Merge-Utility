@@ -16,18 +16,12 @@
  */
 package com.ibm.util.merge;
 
-import com.ibm.idmu.api.JsonProxy;
 import com.ibm.util.merge.db.ConnectionPoolManager;
-import com.ibm.util.merge.json.DefaultJsonProxy;
-import com.ibm.util.merge.json.PrettyJsonProxy;
-import com.ibm.util.merge.persistence.TemplatePersistence;
-import com.ibm.util.merge.persistence.FilesystemPersistence;
 import com.ibm.util.merge.template.Template;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,12 +31,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 public class TemplateFactoryFilePersistTest {
-	private String templatesFolder = "src/test/resources/templates";
-	private File templatesDir = new File(templatesFolder);
-	private JsonProxy proxy = new DefaultJsonProxy();
-	private TemplatePersistence filePersist = new FilesystemPersistence(templatesDir, new PrettyJsonProxy());
-	private File outputDir = new File("src/test/resources/testout/");
-    ConnectionPoolManager manager = new ConnectionPoolManager();
+	ConnectionPoolManager manager = new ConnectionPoolManager();
     private TemplateFactory testFactory;
     private int count = 61;
     

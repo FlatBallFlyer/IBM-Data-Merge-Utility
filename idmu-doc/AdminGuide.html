@@ -204,16 +204,32 @@
 		<ul>
 			<li>Install your jdbc drivers in the J2EE path</li>
 			<li>Configure your database connection information in the
-				/opt/ibm/idmu/properties/databasePools.properties file</li>
+				$IDMU_ROOT/properties/databasePools.properties file. 
+				See $IDMU_ROOT/properties/databasePools-example.properties for samples.</li>
 			<li>Re-initilize the Rest Services: <strong>curl -X POST localhost:8080/Initialize</strong></li>
 			<li>You can now use the database pool name specified in the
 				configuration as the Source in your JDBC directives.</li>
 		</ul>
 		<p>A special note on providing database pool properties. All database pool names must be identified
 			in the databasePools.properties file in the poolNames property. The connection values for each pool
-			(url, user, password and driver) can be provided in the properties file, or by a environment variable. 
+			(jndi, url, user, password and driver) can be provided in the properties file, or by a environment variable. 
 			<br/><strong>export JAVA_OPTS="-DtestgenDb.username=root -DtestgenDb.password=drowssap"</strong><br/>
 			If present the environment variable values take presedence.</p>
+			<p>If you provide a jndi name, that value takes presedence over other configuration values. The following
+			jndi entry in the connectionPools.properties file <strong>jndi=java:/comp/env/jdbc/testgen</strong> will
+			connect to the database specified by this entry in the context.xml</p>
+			<textarea cols="70" rows="12"><Resource auth="Container" 
+	driverClassName="com.mysql.jdbc.Driver" 
+	maxActive="100" 
+	maxIdle="30" 
+	maxWait="10000" 
+	name="jdbc/testgen" 
+	password="drowssap"
+	type="javax.sql.DataSource" 
+	url="jdbc:mysql://localhost:3306/testgen" 
+	username="root"/>
+</Context>
+			</textarea>
 			
 		<div class="footerLink">
 			<a href="#Top">Back To Top</a>
@@ -223,11 +239,28 @@
 			<a id="HouseLogs">Housekeeping of Merge Output / Logs</a>
 		</h3>
 		<p>During operation of the IDMU merge process archive output files
-			are written to /opt/ibm/idmu/output. Proper use of the merge tool
+			are written to $IDMU_ROOT/output. Proper use of the merge tool
 			will involve using the DELETE idmu/archive rest service to remove an
 			archive after it has been downloaded from the server. Even with this
 			processing it is a good idea to schedule a periodic cleaning of this
-			folder as well as the logs folder.</p>
+			folder as well as the logs folder.
+		</p>
+		<p>To properly call the merge tool from a command line interface follow these steps
+			<ul>
+				<li>Make sure your top level template contains the {DragonFlyOutputFile} value so you know the archive name</li>
+				<li>curl yourhost:port/idmu/merge/DragonFlyFullName=your.template.name > mergeoutput.txt</li>
+				<li>get the Archive File name {DragonOutputFile} out of the mergeoutput.txt</li>
+				<li>wget yourhost:port/pathToOutput/{DragonOutputFile}</li>
+				<li>curl -X DELETE yourhost:port/idmu/archive/{DragonOutputFile}</li>
+			</ul>
+		</p>
+		<p>To do this in one step, create the top level template to return the following script</p>
+		<textarea cols="70" rows="3">wget yourhost:port/pathToOutput/{DragonOutputFile}
+curl -X DELETE yourhost:port/idmu/archive/{DragonOutputFile}</textarea>
+
+		<p>Then you pipe the merge output to a bash shell <strong>curl host:port/idmu/merge?DragonFlyFullName=your.template > bash</strong>
+		</p>
+			
 		<div class="footerLink">
 			<a href="#Top">Back To Top</a>
 		</div>
@@ -236,22 +269,21 @@
 			<a id="SecSer">Securing the server</a>
 		</h3>
 		<p>In a typical IDMU production deployment you will want the
-			tempaltes to be locked down to prevent unintentional or malicous
+			templates to be locked down to prevent unintentional or malicous
 			changes. The following steps will provide the most secure environment
 			for production configurations:</p>
 		<ul>
 			<li>Configure the secure-server runtime property to yes</li>
-			<li>Re-initilize the Rest Services: <strong>curl -X PUT
-					yourHost:port/Initilize</strong></li>
+			<li>Re-initilize the Rest Services: <strong>curl -X POST yourHost:port/Initialize</strong></li>
 		</ul>
 		<p>Note that the secure rest services option does not block the
 			load packages rest service. This makes it convienent to copy new
 			template packages to the packages folder and use the IDMU Home Page -
-			Load Tempalte Packages buttons to deploy new templates to a secure
+			Load Template Packages buttons to deploy new templates to a secure
 			server. This implies that you have proper security configured for the
 			packages folder.</p>
 
-		<p>If you want to disable even the load tempaltes services, flag
+		<p>If you want to disable even the load templates services, flag
 			*.json in the templates folder as read only, or grant read-only
 			access to the template database</p>
 		</ul>
@@ -274,7 +306,7 @@
 						devhost.com:port/idmu/templatePackage/collections &gt
 						myPackge.json</strong>
 				</li>
-				<li>To remove tempaltes from the target server (if necessary)</br> <strong>curl
+				<li>To remove templates from the target server (if necessary)</br> <strong>curl
 						-X DELETE prodhost.com:port/idmu/templatePackage/{collection}</strong>
 				</li>
 				<li>To import a package to a production server: </br> <strong>curl
@@ -304,7 +336,7 @@
 			the merge server, so after restoring backups you may need to issue a
 			re-initilize or cache reset command</p>
 		<ul>
-			<li><strong>curl -X PUT yourHost:port/Initilize</strong></li>
+			<li><strong>curl -X POST yourHost:port/Initialize</strong></li>
 			<li><strong>curl yourHost:port/idmu/merge?DragonFlyCacheReset</strong></li>
 		</ul>
 

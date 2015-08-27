@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 public class PoolManagerConfiguration {
     public static final String POOLCONFIG_URL = "url";
     public static final String POOLCONFIG_DRIVER = "driver";
+    public static final String POOLCONFIG_JNDI = "jndi";
     public static final String POOLCONFIG_USERNAME = "username";
     public static final String POOLCONFIG_PASSWORD = "password";
     public static final String POOLCONFIG_PROPERTIESPATH = "propertiesPath";
@@ -57,11 +58,15 @@ public class PoolManagerConfiguration {
         for (String pn : poolNames) {
 			String parent = pn + ".";
             String url = getProperty(props, parent + POOLCONFIG_URL);
-            if (url == null) throw new IllegalArgumentException("Illegal pool configuration: pool " + pn + " does not have a jdbc url at " + pn + ".url");
+            String jndi = getProperty(props, parent + POOLCONFIG_JNDI);
+            if (url == null && jndi == null) throw new IllegalArgumentException("Illegal pool configuration: pool " + pn + " does not have a jdbc url or jndi name at " + pn + ".url");
             Map<String, String> cfg = new TreeMap<>();
             pc.put(pn, cfg);
             cfg.put(POOLCONFIG_POOLNAME, pn);
             cfg.put(POOLCONFIG_URL, url);
+            if (jndi != null) {
+                cfg.put(POOLCONFIG_JNDI, jndi);
+            }
             String driver = getProperty(props, parent + POOLCONFIG_DRIVER);
             if (driver != null) {
                 cfg.put(POOLCONFIG_DRIVER, driver);

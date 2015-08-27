@@ -62,7 +62,8 @@ public class ConnectionPoolManager implements PoolManager {
             String name = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_POOLNAME);
             if(name == null) throw new IllegalArgumentException("missing name property for poolconfig");
             String url = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_URL);
-            if(url == null) throw new IllegalArgumentException("missing url property for poolconfig " + name);
+            String jndiname = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_JNDI);
+            if(url == null && jndiname == null) throw new IllegalArgumentException("missing url or jndi property for poolconfig " + name);
             String driver = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_DRIVER);
             if(driver != null && !driver.isEmpty()){
                 try {
@@ -74,14 +75,14 @@ public class ConnectionPoolManager implements PoolManager {
             String propertiesPath = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_PROPERTIESPATH);
             String username = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_USERNAME);
             String password = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_PASSWORD);
-            if(propertiesPath != null){
+            if (jndiname != null) {
+            	createPool(name, jndiname);
+            } else if(propertiesPath != null) {
                 File file = new File(propertiesPath);
                 Properties p = PoolManagerConfiguration.loadProperties(file);
                 createPool(name, url, p);
-            }else if(username != null){
+            } else if(username != null) {
                 createPool(name, url, username, password);
-            }else{
-                createPool(name, url);
             }
         }
     }
@@ -104,9 +105,9 @@ public class ConnectionPoolManager implements PoolManager {
 
 
     @Override
-    public final void createPool(String poolName, String jdbcConnectionUrl) throws PoolManagerException {
+    public final void createPool(String poolName, String jndiDatasource) throws PoolManagerException {
         if(isPoolName(poolName)) throw new IllegalArgumentException("poolName " + poolName + " already exists");
-        JdbcDatabaseConnectionProvider p1 = new JdbcDatabaseConnectionProvider(poolName, jdbcConnectionUrl);
+        JndiDatabaseConnectionProvider p1 = new JndiDatabaseConnectionProvider(poolName, jndiDatasource);
         p1.create();
         connectionProviders.put(poolName, p1);
     }
