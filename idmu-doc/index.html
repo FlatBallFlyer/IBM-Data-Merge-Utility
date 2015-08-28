@@ -75,17 +75,16 @@
     	<li>See the Admin Guide for information on configuring and maintaing the IDMU Server </li>
 	</ul>
 
-<hr style="clear:both;"/>
 <h3><a id="Terms">Terminology</a></h3>
 <p>The IBM Data Merge Utility documentation uses the following terms:</p>
 	<ul>
-		<li><strong>Template</strong>: The primary object used by IDMU. A template has content, properties and directives. A template has the 
-		following properties: </li>
+		<li><strong>Template</strong>: The primary object used by IDMU. A template has the 
+		following attributes: </li>
 		<ul>
 			<li>Template Full Name: Comprised of three parts joined with periods. collection.name.value</li>
 			<ul>
 				<li>Collection: Used to group templates into logical collections</li>
-				<li>Template: A name for the template</li>
+				<li>Name: A name for the template</li>
 				<li>Value: Used when varying sub-templates based on a data value.</li>
 			</ul>
 			<li>Content: The text that is merged and returned as output</li>
@@ -100,7 +99,8 @@
 		<li><strong>Sub-Template</strong>: A template that is inserted into another template at a book mark. There is no difference between 
 		a template and a sub-template other than the context in which they are used.</li>
 		<li><strong>Data Provider</strong>: The directive component that retrieves data. There are typically multiple directives
-		that use data retrieved by a Data Provider in different ways. IDMU Currently supports three data providers, </li> 
+		that use data retrieved by a Data Provider in different ways. IDMU Currently supports three data providers, System(Tag) data, JDBC data and CSV data.
+		Planned enhancements will add HTML, JSON, XML and MongoDB to that list.</li> 
 	</ul>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>
     
@@ -169,6 +169,20 @@
 	<p><button type="button" onclick="loadPackage('test.json');">Testing Templates</button></p>
 	<p><button type="button" onclick="loadPackage('training.json');">Training Templates</button></p>
 	<p><button type="button" onclick="loadPackage(document.getElementById('package').value);">Custom Package</button> Package Name: <input id="package" type="text" value="package.json"/></p>
+
+<h3><a id="Credits">Credits</a></h3>
+	<p>Many thanks to everyone who helped make IDMU a reality</p>
+	<ul>
+		<li>Mike Storey: Lead architect / Author / Java Development</li>
+		<li>Paul Kaemmerer: Project Management</li>
+		<li>Bob Wood: General support and encouragement</li>
+		<li>Brad Leonard: Deployment / Container design</li>
+		<li>Darren Hoch: Documentation / Styling</li>
+		<li>Don Whitfield: Design Sounding Board</li>
+		<li>Joe Lemaster: Quality Assurance</li>
+		<li>Jonathan Bosmans: J2EE Architect / Developer</li>
+		<li>Yesh Sriram: Template Editor</li>
+	</ul>
 
 </div><!--end of container-->
 <!--javascript-->

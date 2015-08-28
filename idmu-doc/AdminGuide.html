@@ -104,10 +104,14 @@
 			below. Database connections and log4j logging are configured in two additional property files whose 
 			location is specified in the idmu.properties file. By default the IDMU_ROOT is /opt/ibm/idmu, but you can set an 
 			alternate location in one of the following ways before starting the application.
-			Set a j2ee context Parameter (For Tomcat, place the following value in your context.xml file)
-			<br/><strong>&lt;Parameter name="IDMU_ROOT" value="/usr/local/idmu" override="false" description="IDMU Root Folder"/&gt;</strong><br/>
-			or Specifying the environment variable parameter IDMU_ROOT. For Tomcat you can place this entry in the $CATALINA_HOME/bin/setenv.sh file
-			<br/><strong>export JAVA_OPTS="-DIDMU_ROOT=/usr/local/idmu"</strong><br/></p>
+			</p>
+			<ul>
+				<li>Set a j2ee context Parameter (For Tomcat, place the following value in your context.xml file)</li>
+				<li><strong>&lt;Parameter name="IDMU_ROOT" value="/usr/local/idmu" override="false" description="IDMU Root Folder"/&gt;</strong></li>
+				<li>OR Specify the environment variable parameter IDMU_ROOT. 
+						For Tomcat you can place this entry in the $CATALINA_HOME/bin/setenv.sh file</li>
+				<li><strong>export JAVA_OPTS="-DIDMU_ROOT=/usr/local/idmu"</strong></li>
+			</ul>
 		<p> If you have changed IDMU_ROOT, after the initial install you will find the idmu folders in the location that you 
 			specified. You will need to edit idmu.properties and log4j.properties files to update the default folder values to 
 			match the new location. After updating these files you will need to re-initialize the system by either restarting the J2EE server
@@ -119,10 +123,10 @@
 			<ul>
 				<li>database - SQL scripts for the Template and Testing Databases</li>
 				<li>logs - Log file directory (configured in log4j.properties)</li>
-				<li>output - The directory where merge output archives are placed see merge-output-root property</li>
-				<li>packages - The directory where system template packages are placed during install</li>
+				<li>output - The directory where merge output archives are placed. See merge-output-folder property below</li>
+				<li>packages - The directory where system template packages are placed during install. See merge-package-folder below</li>
 				<li>properties - The location for the idmu.properties file as well as database pooling and logging properties files</li>
-				<li>templates - The folder used for file system persistence of templates see merge-templates-folder property</li>
+				<li>templates - The folder used for file system persistence of templates. See merge-templates-folder below</li>
 			</ul>
 		</ul>
 		<p>The following configurations are available in the
@@ -133,10 +137,10 @@
 				templates folder used by File System Persistence.</li>
 			<li><strong>merge-output-folder</strong> Default:
 				/opt/ibm/idmu/output – This parameter specifies the location where
-				merge archive output is written to.</li>
+				merge archive output is written.</li>
 			<li><strong>merge-package-folder</strong> Default:
-				/opt/ibm/idmu/package – This parameter specifies the location where
-				merge packages are loaded from.</li>
+				/opt/ibm/idmu/package – This parameter specifies the location from which
+				template packages are loaded from.</li>
 			<li><strong>secure-server</strong> Default: no – This parameter
 				is used to disable the template save/delete rest services. This
 				limits the Template Editor functionality to a read-only tool for
@@ -167,20 +171,21 @@
 			<a id="UseData">Using Database Template Persistence</a>
 		</h3>
 		<p>By default IDMU uses json files stored in the
-			merge-templates-folder to persiste templates. If you have a large
+			merge-templates-folder to persist templates. If you have a large
 			scale deployment or simply prefer a JDBC data source you can
 			configure JDBC database persistence of templates. This configuration
 			makes it much easier to support large scale and highly available
 			configurations. To configure Database Template persistence follow
 			these steps:</p>
 		<ul>
-			<li>Run the $IDMU_ROOT/database/IDMU.v3.[vendor]_TEMPLATE.sql
+			<li>Run the $IDMU_ROOT/database/IDMU.v3.[database]_TEMPLATE.sql
 				script for your platform to create the template database and load
-				the default template.</li>
+				the default template. Databases included are MYSQL, ORACLE and DB2. 
+				Refer to the directory: $IDMU_ROOT/database for the available sql script names.</li>
 			<li>Configure the TemplateDB data source in the
 				$IDMU_ROOT/database/databasePools.properties file. See the
 				properties file for examples.</li>
-			<li>Configure the db-persist runtime property to to
+			<li>Configure the db-persist runtime property to
 				&ldquo;yes&rdquo;</li>
 			<li>Re-initilize the Rest Services: <strong>curl -X POST localhost:8080/Initialize</strong></li>
 			<li>Load the System Templates using one of the following methods</li>
@@ -212,10 +217,11 @@
 		</ul>
 		<p>A special note on providing database pool properties. All database pool names must be identified
 			in the databasePools.properties file in the poolNames property. The connection values for each pool
-			(jndi, url, user, password and driver) can be provided in the properties file, or by a environment variable. 
+			(jndi, url, user, password and driver) can be provided in the properties file, 
+			or set using environment variables as in this example. 
 			<br/><strong>export JAVA_OPTS="-DtestgenDb.username=root -DtestgenDb.password=drowssap"</strong><br/>
-			If present the environment variable values take presedence.</p>
-			<p>If you provide a jndi name, that value takes presedence over other configuration values. The following
+			If present the environment variable values take precedence.</p>
+		<p>If you provide a jndi name, that value takes precedence over other configuration values. The following
 			jndi entry in the connectionPools.properties file <strong>jndi=java:/comp/env/jdbc/testgen</strong> will
 			connect to the database specified by this entry in the context.xml</p>
 			<textarea cols="70" rows="12"><Resource auth="Container" 
@@ -248,10 +254,10 @@
 		<p>To properly call the merge tool from a command line interface follow these steps
 			<ul>
 				<li>Make sure your top level template contains the {DragonFlyOutputFile} value so you know the archive name</li>
-				<li>curl yourhost:port/idmu/merge/DragonFlyFullName=your.template.name > mergeoutput.txt</li>
+				<li>Run this command: <strong>curl yourhost:port/idmu/merge/DragonFlyFullName=your.template.name &gt; mergeoutput.txt</strong></li>
 				<li>get the Archive File name {DragonOutputFile} out of the mergeoutput.txt</li>
-				<li>wget yourhost:port/pathToOutput/{DragonOutputFile}</li>
-				<li>curl -X DELETE yourhost:port/idmu/archive/{DragonOutputFile}</li>
+				<li>Run this command: <strong>wget yourhost:port/pathToOutput/{DragonOutputFile}</strong></li>
+				<li>Run this command: <strong>curl -X DELETE yourhost:port/idmu/archive/{DragonOutputFile}<strong></li>
 			</ul>
 		</p>
 		<p>To do this in one step, create the top level template to return the following script</p>
@@ -344,8 +350,8 @@ curl -X DELETE yourhost:port/idmu/archive/{DragonOutputFile}</textarea>
 		<h3>
 			<a id="EntDepArch">Enterprise Deployment Architecture</a>
 		</h3>
-		<p>Enterprise scale customers will want to deploy IDMU based on
-			two clear use cases. The primary product use case is consumers
+		<p>Enterprise scale customers will want to deploy IDMU based on one of
+			two distinct use cases. The primary product use case is consumers
 			accessing merge output through the idmu/merge rest api. In the
 			production environment the templates are typically static
 			configuration items that are subject to change control processes. The
