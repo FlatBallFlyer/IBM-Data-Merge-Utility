@@ -36,6 +36,7 @@
         <ul class="nav nav-pills nav-stacked">
             <li><a href="#Licensing"><strong>Licensing</strong></a></li>
             <li><a href="#Develop"><strong>Setting up your dev environment</strong></a></li>         
+            <li><a href="#Testing"><strong>Regression Testing</strong></a></li>         
         </ul>
      
 <h3><a id="Licensing">Licensing</a></h3>
@@ -47,11 +48,40 @@
 
 <h3><a id="Develop">Development Environment</a></h3>
 		<p>See the readme on the <a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility">main GitHub page</a> for instructions on setting up a development environment.</p>
+
+<h3><a id="Testing">Regression Testing</a></h3>
+	<p>Select the appropriate testing units below and click the "Get Instructions" button for instructions on regression testing.</p>
+	<form>
+		<ul>
+			<li><input type="checkbox" name="option" value="System"> 	System								</li>
+			<li><input type="checkbox" name="option" value="Safety"> 	Safety								</li>
+			<li><input type="checkbox" name="option" value="csvDef">	csv from Default Data				</li>
+			<li><input type="checkbox" name="option" value="csvTag">	csv from Tag Data					</li>
+			<li><input type="checkbox" name="option" value="csvUrl">  	<em>csv from URL Data</em>			</li>
+			<li><input type="checkbox" name="option" value="jdbcMySql"> <em>Jdbc from MySql</em>			</li>
+			<li><input type="checkbox" name="option" value="jdbcDb2">   <em>Jdbc from db2</em>				</li>
+			<li><input type="checkbox" name="option" value="jdbcOracle"> <em>jdbc from Oracle</em>			</li>
+			<li><input type="checkbox" name="option" value="jdbcMulti"> <em>jdbc from Multi-Databases</em>	</li>
+			<li><input type="checkbox" name="option" value="jndiMulti"> <em>jndi from Multi-Databases</em>	</li>
+		</ul>
+	<p><em>Units that require Database Configurations</em></p>
+	<p><button type="button" onclick="getExecutableDoc();">Get Instructions</button></p>
+	</form>
 		
 </div><!--end of container-->
 <!--javascript-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="js/myscript.js"</script>
+<script>
+function getExecutableDoc() {
+	var options = $('input:checkbox:checked').map( function() {
+	    return this.value;
+	}).get().join(",");
+	var url = "/idmu/merge/testing?options=" + options;
+
+	window.location.href = url;
+}
+</script>
+
 </body>
 </html>

@@ -25,10 +25,10 @@ use strict;
 
 #======================================================================
 # initilize local vars
-my $threads=1;
-my $wait=0;
-my $count=50;
-my $url="http://localhost:8080/idmu/merge.html?DragonFlyFullName=jpmc.mon.tar";
+my $threads=-1;
+my $wait=-1;
+my $count=-1;
+my $url="";
 my @dataset=(
 "platform_Linux_VM,zone_NA_EDC1_PROD_vmware,history_minimal,gti_rhp_base,triggerhappy",
 );
@@ -36,22 +36,20 @@ my $size = @dataset;
 
 #======================================================================
 # get command arguments
-my $args = @ARGV;
-if ($args == 0) {
-    $threads = prompt("Concurrent Threads:", $threads);
-    $wait = prompt("Wait (seconds):", $wait);
-    $count = prompt("Merges (per thread):", $count);
-} else {
+	my $args = @ARGV;
     while (my $opt = shift @ARGV) {
+    	if ($opt eq '-u') {$url = shift @ARGV;}
         if ($opt eq '-t') {$threads = shift @ARGV;}
         if ($opt eq '-w') {$wait 	= shift @ARGV;}
         if ($opt eq '-i') {$count 	= shift @ARGV;}
-    }
-}
+	}
+	
+	if ($url eq '') {$url = prompt("URL to Load:", $url);}
+	if ($threads  lt 0) {$threads = prompt("Concurrent Threads:", $threads);}
+    if ($wait lt 0) {$wait = prompt("Wait (seconds):", $wait);}
+    if ($count  lt 0) {$count = prompt("Merges (per thread):", $count);}
 
-system("tput cup 1 1");
-print STDERR "Threads: $threads Iterate: $count Wait: $wait \n";
-my $msWait = $wait*1000;
+	my $msWait = $wait*1000;
 
 #======================================================================
 # Spawn Threads and Generate Load
@@ -65,8 +63,11 @@ for (my $t = 1; $t <= $threads; $t++) {
         usleep ($msWait);
         my $random = int(rand($size));
         my $profileString = $dataset[$random];
-        getMonTar($url, $profileString);
-        print("$t X");
+        
+        # Call the merge 
+        my $response = `curl $url > /dev/null 2> /dev/null`;
+        
+        print(".");
     }
     exit;
     print "THIS LINE NEVER NEVER EXECUTES!\n";
@@ -78,45 +79,10 @@ my $kid;
 do { $kid = waitpid(-1, 0); } while $kid > 0;
 my $end = time;
 my $elapsed = $end - $start;
-my $tps = $threads * $count / $elapsed;
-print("\nStart: $start End: $end Elapsed: $elapsed TPS: $tps \n");
+my $volume = $threads * $count;
+my $tps = $volume / $elapsed;
+print("\nStart: $start End: $end Elapsed: $elapsed Volume: $volume TPS: $tps \n");
 exit 0;
-
-#=============================================================================#
-# Prompt for an input value
-#=============================================================================#
-sub getMonTar {
-    my $url = shift;
-    my $profileString = shift;
-
-	#----------------------------------------
-	# Pares Profile String and call merge
-	# platform_Linux_VM,zone_NA_EDC1_PROD_vmware,history_minimal,gti_rhp_base,triggerhappy
-	my @parts = split($profileString,",");
-	my $platform= shift @parts;;
-	my $zone = shift @parts;
-	my $history = shift @parts;
-	my $profiles = "";
-	my $priority = "";
-	while (my $part = shift @parts) {
-		my $size = @parts;
-		$profiles .= "\"{$part}\",";
-		$priority .= "{++$size},\"{$part}\",";
-	}
-	$profiles = substr($profiles,0,length($profiles)-1);
-	$priority = substr($profiles,0,length($priority)-1);
-	
-    my $cmdLine = "curl {$url}/idmu/merge&DragonFlyFullName=jpmc.mon.tar?ZONE={$zone}?PROFILES={$profiles}?PRIORITY={$priority}?PLATFORM={$platform}";
-	my $catalog = `$cmdLine`;
-	
-	#----------------------------------------
-	# Parse Catalog String and get archive
-	my $archive = "";
-	my $file = "{$url}/archives/{$archive}";
-	my $wget = "wget {$file}; mv $archive mon.tar; curl -X DELETE {$file};";
-	my $response = `$wget`;
-}
-
 
 #=============================================================================#
 # Prompt for an input value
