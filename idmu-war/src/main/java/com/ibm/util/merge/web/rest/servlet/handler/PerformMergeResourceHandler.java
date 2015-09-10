@@ -22,8 +22,10 @@ import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
 import com.ibm.util.merge.web.rest.servlet.result.MergeResult;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Properties;
 
 /**
@@ -42,13 +44,24 @@ public class PerformMergeResourceHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(RequestData rd) {
-        return (rd.isGET()) && rd.pathEquals("/merge");
+        return (rd.isGET()) && rd.pathStartsWith("/merge");
     }
 
     @Override
     public Result handle(RequestData rd) {
     	Long start = System.currentTimeMillis();
-        String result = tf.getMergeOutput(rd.getParameterMap());
+    	HashMap<String, String[]> parameterMap = new HashMap<String, String[]>(rd.getParameterMap());
+    	
+    	// support url shorthand /merge/fullname?parameters - add trailing "." to create full name when needed
+    	if (rd.getPathParts().size() == 2) {
+    		String fullname = rd.getPathParts().get(1);
+    		if (StringUtils.countMatches(fullname, ".") < 1) { fullname += ".";}
+    		if (StringUtils.countMatches(fullname, ".") < 2) { fullname += ".";}
+    		parameterMap.put("DragonFlyFullName", new String[]{fullname});
+    	}
+    	
+    	// Perform the merge
+        String result = tf.getMergeOutput(parameterMap);
         long elapsed = System.currentTimeMillis() - start;
         log.warn(String.format("Merge completed in %d milliseconds", elapsed));
         return new MergeResult(result);

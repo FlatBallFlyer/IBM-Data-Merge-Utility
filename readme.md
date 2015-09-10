@@ -54,7 +54,12 @@ There are 2 servlets:
   Leverages RequestHandlers to handle requests for the active RuntimeContext instance
 
 ## Supported URLs
-	Perform a Merge
+	Perform a Merge (shorthand)
+    GET /idmu/merge/fullName?{requestParameters} 
+    	example: http://localhost:9090/idmu/merge/mytemplate?parameter=value 
+    	response: HTML representation of merge output
+
+	Perform a Merge (long hand)
     GET /idmu/merge?DragonFlyFullName=fullname&{additional requestParameters} 
     	example: http://localhost:9090/idmu/merge?DragonFlyFullName=root.default. 
     	response: HTML representation of merge output
