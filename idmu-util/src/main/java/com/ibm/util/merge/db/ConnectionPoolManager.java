@@ -69,7 +69,7 @@ public class ConnectionPoolManager implements PoolManager {
                 try {
                     loadDriverClass(driver);
                 } catch (ClassNotFoundException e) {
-                    throw new PoolManagerException("Could not load specified driver for pool "+name+"  : " + defaultDriver, e);
+                    throw new PoolManagerException("Could not load specified driver for pool "+name+"  : " + driver, e);
                 }
             }
             String propertiesPath = poolConfig.get(PoolManagerConfiguration.POOLCONFIG_PROPERTIESPATH);

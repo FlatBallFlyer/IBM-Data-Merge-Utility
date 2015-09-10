@@ -175,8 +175,15 @@
 			scale deployment or simply prefer a JDBC data source you can
 			configure JDBC database persistence of templates. This configuration
 			makes it much easier to support large scale and highly available
-			configurations. To configure Database Template persistence follow
-			these steps:</p>
+			configurations. 
+		<p><storng>A note on using JDBC Template Persistence</storng> JDBC Template Persistence can simplify large scale 
+			highly available configurations, however it does impose some limitations on template size that should be considered. 
+			Most databases put a maximum column size limitation of around 4k, limiting the content of any single template. File 
+			system persistence does not implement any such limitations. If you are using database persistence in production, 
+			and using file system persistence in your development environment you may receive errors when trying to load a 
+			package based on data truncation. It may be necessary to go back and review template sizes and possibly break 
+			apart large templates into a collection of smaller sub-templates.</p>
+		<p>To configure Database Template persistence follow these steps:</p>
 		<ul>
 			<li>Run the $IDMU_ROOT/database/IDMU.v3.[database]_TEMPLATE.sql
 				script for your platform to create the template database and load
@@ -302,26 +309,36 @@ curl -X DELETE yourhost:port/idmu/archive/{DragonOutputFile}</textarea>
 			<a id="ChangeMgmt">Change Management</a>
 		</h3>
 		<p>The configuration item that is migrated between the development
-			and production environments is a Template Collection. You can use one
-			of the following techniquest to move templates between servers.</p>
+			and production environments is a Template Package. A template package
+			is just a json file that contains multiple template's. It is easy to 
+			export and inport template template packages, using 
+			one of the methods outlined below.</p>
 		<ul>
 			<li><strong>Unix Command Line</strong> call the idmu/templatePackage rest servuces using curl. 
-						NOTE: These services can not be used on a server with the secure-server parameter set to yes.</li>
+				Rest calls that have a {collections} parameter expect a coma seperated list of collections. 
+			</li>
 			<ul>
-				<li>To export a package from a development server: </br> <strong>curl
-						devhost.com:port/idmu/templatePackage/collections &gt
+				<li>To export a package from a development server: <br/> 
+					<strong>curl devhost.com:port/idmu/templatePackage/{collections} &gt
 						myPackge.json</strong>
 				</li>
-				<li>To remove templates from the target server (if necessary)</br> <strong>curl
-						-X DELETE prodhost.com:port/idmu/templatePackage/{collection}</strong>
+				<li>To load a package from the IDMU_ROOT/packages folder: <br/> 
+					<strong>curl -X POST host.com:port/idmu/templatePackage/{filename}</strong>
 				</li>
-				<li>To import a package to a production server: </br> <strong>curl
+				<li>NOTE following: The DELETE and PUT (--upload) services can not be used on a server with the secure-server parameter set to yes.
+				<li>To remove templates from the target server (if necessary)</br> <strong>curl
+						-X DELETE prodhost.com:port/idmu/templatePackage/{collections}</strong>
+				</li>
+				<li>To install a package to a production server: <br/> <strong>curl
 						--upload myPackage.json prodhost.com:port/idmu/templatePackage</strong>
 				</li>
+				<li>Move packages from one server to another in a single command</li><strong>
+					curl fromServer/idmu/templatePackage/{collections} | curl --upload - toServer/idmu/templatePackage</strong>
 			</ul>
 			<li><strong>Web UI</strong> When your production server is "secured" you can export the package as shown above, 
 						and copy the resulting file to the target servers $IDMU_ROOT/packages folder. You can then use the 
-						Load Template Package button located at the bottom of the IDMU home page to deploy those templates.</li>
+						Load Template Package button located at the bottom of the IDMU home page to specify the package name, 
+						and load the templates.</li>
 			<li><strong>File System Persistence</strong> You can simply copy the json files from $IDMU_ROOT/templates folder on the 
 						source server to the same folder on the target server. Make sure to reset the template cache after copying
 						the files. This can be acomplished with <strong>curl host:port/idmu/merge&DragonFlyCacheReset</strong></li>
