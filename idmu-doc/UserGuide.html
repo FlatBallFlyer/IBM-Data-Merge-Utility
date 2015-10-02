@@ -20,20 +20,26 @@
         </div>                         
         <div class="collapse navbar-collapse" id="collapse">  
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="#">User</a></li>
-                <li><a href="#">Admin</a></li>        
+                <li><a href="/">Home</a></li>
+                <li class="active"><a href="/UserGuide.html">User Guide</a></li>        
+                <li><a href="/AdminGuide.html">Admin Guide</a></li>        
+                <li><a href="/DevGuide.html">Dev Guide</a></li>        
+                <li><a href="/Training.html">Training</a></li>        
+                <li><a href="/idmu/status/">Status</a></li>        
+                <li><a href="/editor/src/html/app.html">Templates</a></li>        
             </ul>
         </div>
     </nav> 
 <body>    
 <div class="container">    
-<h1><a id="top">IBM Data Merge Utility Documentation</a></h1>            		
+<h1><a id="top">IBM Data Merge Utility User Guide</a></h1>            		
         <ul class="nav nav-pills nav-stacked">
             <li><a href="#Licensing"><strong>Licensing</strong></a></li>
             <li><a href="#Request"><strong>Calling the Merge Servlet</strong></a></li>
             <li><a href="#Replace"><strong>The Replace Hash</strong></a></li>
             <li><a href="#Inserting"><strong>Inserting Sub-Templates</strong></a></li>
             <li><a href="#Reserved"><strong>Reserved Words</strong></a></li>
+            <li><a href="#Output"><strong>Output Files</strong></a></li>                  
     		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#Editor"><strong>Template Editor</strong><b class="caret"></b></a>
                 <ul class="dropdown-menu">
                 	<li><a href="#Collect">Collections</a></li>
@@ -46,7 +52,6 @@
                     <li><a href="#InsertSubBook">Inserting Sub-Templates and Bookmarks</a></li>
                  </ul> 
                 </li>  
-              <li><a href="#Output"><strong>Output Files</strong></a></li>                  
               <li><a href="#DirectMatrix"><strong>Directives Matrix</strong></a></li> 
               <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><strong>Directives</strong><b class="caret"></b></a>
                   <ul class="dropdown-menu">
@@ -59,87 +64,129 @@
                     <li><a href="#InsertCsv">Insert Sub-Templates from Csv Rows</a></li>
                     <li><a href="#ReplaceRowCsv">Get Replace Values From Csv Row</a></li>
                     <li><a href="#ReplaceColCsv">Get Replace Values From Csv Column</a></li>
-                    <li><a href="#InsertHtml">Insert Sub-Templates from Html Table Rows</a></li>
-                    <li><a href="#ReplaceRowHtml">Get Replace Values From Html Table Row</a></li>
-                    <li><a href="#ReplaceColHtml">Get Replace Values From Html Table Column</a></li>
-                    <li><a href="#ReplaceMarkupHtml">Get Replace Values From Html Markup</a></li>
                   </ul> 
                  </li>  
     		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><strong>Providers</strong><b class="caret"></b></a>
                 <ul class="dropdown-menu">                 
                     <li><a href="#ProviderJdbc">JDBC Data</a></li>
                     <li><a href="#ProviderCsv">CSV Data</a></li>
-                    <li><a href="#ProviderHtml">HTML Data</a></li>
                     <li><a href="#ProviderTag">Tag Data</a></li>             
                  </ul> 
               </li>
-           </ul>  
-
-<section id="Licensing">                             
-<h3>Licensing</h3>
+           </ul>                    
+<h3><a id="Licensing">Licensing</a></h3>
         Copyright <div class="glyphicon glyphicon-copyright-mark"></div> 2015, 2015 IBM	<div class="glyphicon glyphicon-registration-mark"></div>
         <p></p>	
 		<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
     
 		<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-</section>
 
-<section id="Request">
-<h3>Calling the Merge Servlet</h3>
-<p>The IBM Data Merge Utility is accessed via the Merge Servlet which can be accessed at http://yourServer/Merge.html. Parameters passed on the http request are used to initilize the Replace Hash. The Template collection, name and column value can be provided as parameters. The following default values are used if not provided:</p>
-	<ul><li>collection: "root"</li>
-	<li>name: "default"</li>
-	<li>column: empty</li></ul>
-	<p>The URL: http://www.yourserver.com/Merge.html?collection=MyCollection&amp;name=MyTemplate<br/>
-	will merge the template MyTemplate from the collection MyCollection.</p>
+<hr style="clear:both;"/>
+<h3><a id="Request">Calling the Merge Servlet</a></h3>
+<p>The IBM Data Merge Utility is accessed via the Merge Servlet which can be accessed at http://yourServer/merge Parameters passed on the http request are used to initilize the Replace Hash. The Template full name can be provided in the DragonFlyFullName parameter.</p>
+	<p>The URL: http://www.yourserver.com:8080/idmu/merge?DragonFlyFullName=system.default.<br/>
+	will merge the system default template. Note that the trailing period is required.</p>
+	<p>If the merge generates an archive of additional files, the {DragonFlyOutputFile} tag will contain the archive name. 
+	You can fetch this file using a standard http get of the file, but once the file is downloaded you should call make 
+	a DELETE call to http://yourServer:part/idmu/archive/ARCHIVENAME to remove the archive from the server. 
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>
- </section>
- 
- <section id="Replace"> 
-<h3>The Replace Hash</h3>
-	<p>The most fundamental function of the merge process is the replacement of merge tags with data values. The replace "From" values are wrapped in {brackets} and processed globally during the merge process. These replace values are processed as a hash, which implies that adding a duplicate "From" value willreplace the "To" value of the existing hash entry with the new value.</p> 
-	<p>Many Directive Options (SQL Statements, Output Filenames, etc.) are processed by the Template Replace Hash before being used during the merge. Options that are processed by the Replace Hash are listed in the documents with this special mark-up.</p>
-  <div class="embed-responsive embed-responsive-16by9">
-    <video autoplay loop class="embed-responsive-item">
-        <source src="video/Cut2.mp4" type="video/mp4">
+    
+<hr style="clear:both;"/>
+<h3><a id="Replace">The Replace Hash</a></h3>
+<div>
+	<p>	<video width="50%" controls style="float:right;padding:15px;">
+        	<source src="video/Cut2.mp4" type="video/mp4">
+    	</video>
+		The most fundamental function of the merge process is the replacement of merge tags with data values. 
+		The replace "From" values are wrapped in {brackets} and replaced globally during the merge process. 
+		These replace values are processed as a hash, which implies that adding a duplicate "From" value willreplace 
+		the "To" value of the existing hash entry with the new value. Many Directive Options (SQL Statements, Output Filenames, 
+		etc.) are processed by the Template Replace Hash before being used during the merge. 
+		Options that are processed by the Replace Hash are listed in the documents with <span class="replace">this special mark-up.</span>
+	</p>
+ 	<div class="footerLink"><a href="#Top">Back To Top</a></div>
+</div>
+
+<hr style="clear:both;"/>
+<h3><a id="ReplaceRow">The Replace Row Directives</a></h3>
+<div>
+	<p>	<video width="50%" controls style="float:right;padding:15px;">
+        	<source src="video/Cut3.mp4" type="video/mp4">
+    	</video>
+		<p>The replace row directives expect a single row result set from the data provider, and then place the column names and values onto the replace hash. The column names are wrapped in { } before being added to the hash</p> 
+		<p>The following directives are Replace Row type directives:</p>
+		<ul>
+			<li><a href="#ReplaceRowSql">Replace Row from Sql</a></li>
+			<li><a href="#ReplaceRowCsv">Replace Row from Csv</a></li>
+			<li><a href="#ReplaceRowHtml">Replace Row from Html</a></li>
+		</ul>
+	</p>
+ 	<div class="footerLink"><a href="#Top">Back To Top</a></div>
+</div>
+
+<hr style="clear:both;"/>
+<h3><a id="ReplaceCol">The Replace Column Directives</a></h3>
+<div>
+	<p>	<video width="50%" controls style="float:right;padding:15px;">
+        	<source src="video/Cut4.mp4" type="video/mp4">
+    	</video>
+		<p>The replace column directives expect a multi-row result set from the data provider, and then place the values from the "From" and "To" column specified in the replace hash. From values are always wrapped in { } before being added to the hash.</p>
+		<ul>
+			<li><a href="#ReplaceColSql">Replace Column from Sql</a></li>
+			<li><a href="#ReplaceColCsv">Replace Column from Csv</a></li>
+			<li><a href="#ReplaceColHtml">Replace Column from Html</a></li>
+		</ul>
+		<h4>The Replace Column directives have the following Options</h4>
+		<ul>
+			<li><span class="option">From Column</span> - The column name for "from" values (these are {wrapped} and used as hash keys)</li>
+			<li><span class="option">To Column</span> - The column name for the "to" values</li>
+		</ul>
+	</p>
+ 	<div class="footerLink"><a href="#Top">Back To Top</a></div>
+</div>
+
+<hr style="clear:both;"/>
+<h3><a id="Inserting">Inserting Sub-Templates</a></h3>
+	<p><video width="50%" controls style="float:right;padding:15px;">
+        <source src=" video/Cut5.mp4" type="video/mp4">
     </video>
-  </div>
- <div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>
- 
- <section id="Inserting">
-<h3>Inserting Sub-Templates</h3>
+	The insertion of sub-templates into a target template is the second core feature of the Merge Utility. The Insert Rows directives work with a potentially multi-row data set, and sub-templates are inserted into the target template, at bookmarks for each row of the result set. Bookmarks take the following form 
+    <pre><code>&lt;tkBookmark name="SomeSubTemplate" collection="FromCollection" column="byColumn""/&gt;</code></pre>
+	<p>The collection and name attributes of the bookmark identify the sub-template to insert. The column attribute if present will insert different sub-templates based on the value in the Column specified here. A template can have multiple bookmarks to insert multiple sub-templates for each row of the result set.</p>
+	<p>The following directives will insert sub-templates</p>
 	<ul>
 		<li><a href="#InsertTag">Insert Sub-Templates from Tag</a></li>
 		<li><a href="#InsertSql">Insert Sub-Templates from Sql</a></li>
 		<li><a href="#InsertCsv">Insert Sub-Templates from Csv</a></li>
 		<li><a href="#InsertHtml">Insert Sub-Templates from Html</a></li>
 	</ul>
-	<p>The insertion of sub-templates into a target template is the second core feature of the Merge Utility. The Insert Rows directives work with a potentially multi-row data set, and sub-templates are inserted into the target template, at bookmarks for each row of the result set. Bookmarks take the following form 
-    <pre><code>&lt;tkBookmark name="SomeSubTemplate" collection="FromCollection" column="byColumn""/&gt;</code></pre>
-	<p>The collection and name attributes of the bookmark identify the sub-template to insert. The column attribute if present will insert different sub-templates based on the value in the Column specified here. A template can have multiple bookmarks to insert multiple sub-templates for each row of the result set.</p>
-  <div class="embed-responsive embed-responsive-16by9">
-    <video autoplay loop class="embed-responsive-item">
-        <source src=" video/Cut5.mp4" type="video/mp4">
-    </video>
-  </div> 
-<h3>Varying the Sub-Template Inserted</h3>
-	<p>When inserting sub-templates, you can vary the sub-template being inserted based on data in the result set. This is often based on a "Type" field in the result set, and relies on a "Collection" of templates with the same name and a specified column value. If a template for the current column value is not found, the "empty" value is used. If no "empty" value exists for the collection the merge will fail with a "Template Not Found" exception. </p>
-<h4>The Insert Subtemplate directives have the following Options</h4>
+	<h4>The Insert Subtemplate directives have the following Options</h4>
 	<ul>
 		<li><span class="option">Not Last Tags</span> - Tags that should be empty on the last insertion row</li>
 		<li><span class="option">Only Last Tags</span> - Tags that should be empty on all except the last insertion row</li>
 	</ul>
-	<p>When inserting sub-templates various syntax rules often require that the list separator be different than the list terminator. For example a comma separated list terminated with a period. This can be supported in templates by using static replace tags for the separator/terminator, and then identifying those tags in the "Not Last" and "Only Last" fields of the Insert Directive. Tags identified as "Not Last" are replaced with an empty value on the Last Row of the insert. Tags identified as "Only Last" are replaced with an empty value on all except the last row of the insert.</p>
-	  <div align="center" class="embed-responsive embed-responsive-16by9">
-    <video autoplay loop class="embed-responsive-item">
+ 	<div class="footerLink"><a href="#Top">Back To Top</a></div>
+  
+<hr style="clear:both;"/>
+<h3>Varying the Sub-Template Inserted</h3>
+	<p><video  width="50%" controls style="float:right;padding:15px;">
         <source src=" video/Cut6.mp4" type"=video/mp4">
     </video>
-  </div>  
-  </section>
+	<p>When inserting sub-templates, you can vary the sub-template being inserted based on data in the result set. This is often based on a "Type" field in the result set, and relies on a "Collection" of templates with the same name and a specified column value. If a template for the current column value is not found, the "empty" value is used. If no "empty" value exists for the collection the merge will fail with a "Template Not Found" exception. </p>
+	<p>When inserting sub-templates various syntax rules often require that the list separator be different than the list terminator. For example a comma separated list terminated with a period. This can be supported in templates by using static replace tags for the separator/terminator, and then identifying those tags in the "Not Last" and "Only Last" fields of the Insert Directive. Tags identified as "Not Last" are replaced with an empty value on the Last Row of the insert. Tags identified as "Only Last" are replaced with an empty value on all except the last row of the insert.</p>
   
-  <section id="Reserved">  
-<h3>Reserved Words</h3>
+<hr style="clear:both;"/>
+<h3><a id="Output">Generating Extra Output Files</a></h3>
+	<p>Any sub-template can be saved as an output file instead of being inserted into the target template, by providing an output file name for the Template. 
+	All output files generated in this manner during a merge are added to an archive, and placed in the merge output directory which is specified in the idmu.properties configuration file.</p> 
+	<p>The archive name is provided in the replace tag {DragonFlyeOutputFile} and a GUID is generated for the file name if needed. 
+	If you pass DragonFlyOutputFile as a parameter to the merge you should ensure that the file name provided is unique for the 
+	duration of the merge operation. </p>
+	<p>Once you have downloaded an archive you should make a DELETE rest call (<strong>curl -X DELETE</strong>) to <strong>host:port/idmu/archive/{archivename}</strong> to delete the file from the server</p>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>
+
+<hr style="clear:both;"/>
+<h3><a id="Reserved">Reserved Words</a></h3>
 	<p>The following are reserved Replace Tags, that have various effects / meanings:</p> 	
 	<ul>
 		<li><span class="keyword"><strong>DragonFlyCacheReset</strong></span> - The Data Merge Tool will cache all templates, allowing for very fast response 
@@ -151,33 +198,36 @@
 		<li><span class="keyword"><strong>DragonFlyReplaceValues</strong></span> - The replace tag {DragonFlyReplaceValues} will be replaced with a full 
 			dump of the replace hash, with the From values mangled as {-from} in place of {from}. 
 			This tag can be useful when designing and debugging templates.</li>
-		<li><span class="keyword"><strong>DragonFlyOutputFile</strong></span> - The replace tag {DragonFlyOutputFile} will contain a generated GUID.zip or GUID.tar.gz string. 
+		<li><span class="keyword"><strong>DragonFlyOutputFile</strong></span> - The replace tag {DragonFlyOutputFile} will 
+			contain a generated GUID.zip or GUID.tar string. 
 			This is the file name of any additional generated output, and can frequently be used in a javascript 
-			tag to initiate a download. NOTE: This value can be provided as an input parameter, however database 
-			connection caching is associated with the guid during merge execution, so multiple concurrent merges 
+			tag to initiate a download. NOTE: Multiple concurrent merges 
 			with the same {DragonFlyOutputFile} value will have unpredictable results. If provided on the replace 
-			stack, you should ensure that this value is unique for the duration of the merge execution.</li>
+			stack, you should ensure that this value is unique for the duration of the merge execution. Once you have
+			downloaded the archive, you should make an http DELETE call to yourHost:port/idmu/archive/{archivename} to 
+			minimize the housekeeping needed on the server.</li>
+		<li><span class="keyword"><strong>DragonFlyOutputHash</strong></span> - The replace tag {DragonFlyOutputHash}  
+			will contain a list of the files generated in the output archive along with their md5 checksum values.</li>
+		<li><span class="keyword"><strong>DragonFlyOutputType</strong></span> - output archives are generated as .tar
+			files by default. You can generate .zip files by specifying DragonFlyOutputType=zip</li>
 		<li><span class="keyword"><strong>DragonFlyTemplateStack</strong></span> - This will print out a / separated list of the current template full-names. 
 			This can be useful when developing and debugging templates.</li>
 	</ul>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>
 
-<h3>The Template Editor</h3>
-	<p>The template editor can be accessed at http://yourServer/TemplateEditor.html</p>
-	<p>A wire frame of the proposed Editor is show below, documentation on the editor will be placed here</p>
-	<div class="img-responsive"><img width="635" alt="Editor Wire Frame" src="images/EditorWireFrame.png"></div>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
- </section>
-
-<section id="Collect">    
-<h3>Collections</h3>
+<hr style="clear:both;"/>
+<h3>The Template Editor</a></h3>
+	<p>The template editor can be accessed using the "Templates" link in the navigation bar at the top of this page, 
+	or at http://yourServer:port/editor/src/html/app.html</p>
+    
+<h3><a id="Collect">Collections</a></h3>
 	<p>A collection is a container for organizing templates. You can create multiple containers that have one or many templates assigned to them.</p>
 
 	<p>To access collections, perform the following steps:</p>
 		<ul>
-            <p>1.  Navigate to the IDMU application in your browser.</p>
+            <p>1.  Navigate to the Editor application in your browser.</p>
             <p>2.  Select a collection from the 'Collections' select list.</p>
-            <p>3.  Upon selection of a collection, all the IDMU will display all the available templates in the collection.</p>
+            <p>3.  Upon selection of a collection, the Editor will display all the available templates in the collection.</p>
             <p>4.  You may navigate between the templates by clicking on the Left/Right bars in the template editor.</p>
 		</ul>
         <br><br>
@@ -185,35 +235,31 @@
 	<img src="images/main-controller.png" class="img-responsive" alt="Main Controller">
 <h4>Figure #2 Navigating Between Templates Using Left and Right Arrows</h4>
 	<img src="images/left-right-nav.png" class="img-responsive" alt="Left Right Nav">
- </section>   
 
-<section id="AddTemp">
-<h3>Adding a Template</h3>
-    <p>The template is the core component of the IDMU Template editor. A template provides the ability to create a message, define merge fields, specify directives to drive the retrevial of data, and perform the required inserts of that data. Once the IDMU processes the template, the IDMU can deliver multiple output files from a single merge into a zip or tar archive.</p>
+<h3><a id="AddTemp">Adding a Template</a></h3>
+    <p>The template is the core component of the IDMU Template editor. A template provides the ability to create a message, 
+    define merge fields, specify directives to drive the retrevial of data, and perform the required inserts of that data. 
+    The IDMU server merges this data with the template, and can deliver multiple output files from a single merge into a zip or tar archive.</p>
     
     <p>Perform the following steps to create a template:</p>
         <ul>
            <p>1.  Click on the 'Add' button in the title bar of a template. </p>
-           <p>2.  Upon clicking, the IDMU will launch a dialog box will enabling you to enter the collection, name of template, and columnValue if any.</p>
+           <p>2.  Upon clicking, the Editor will launch a dialog box enabling you to enter the collection, name, and columnValue parts of the tempate name.</p>
            <p>3.  Upon completion of these fields, click on the 'Add' button on the dialog. This will create the new template.</p>
          </ul>
 <h4>Figure #3 - Creating a new template</h4>
 	<img src="images/add-template.png" class="img-responsive" alt="Add Template">
-</section>
 
-<section id="SaveTemp">
-<h3>Saving a Template</h3>
+<h3><a id="SaveTemp">Saving a Template</a></h3>
     <p>You can save a template in any collection. Perform the following steps to save a template:</p>
         <ul>
            <p>1.  Navigate to the collection and template of interest within that collection.</p>
            <p>2.  Click on the 'Save' button on the top right of the title bar of the template.</p>
-         </ul>      
+         </ul>
 <h4>Figure #4 - Saving a template</h4>
 	<img src="images/left-right-nav.png" class="img-responsive" alt="Left Right Nav">
- </section>   
 
-<section id="EditTemp">
-<h3>Editing a Template</h3>
+<h3><a id="EditTemp">Editing a Template</a></h3>
     <p>You can edit the basic template properties like name, output, and description.  Perform the following steps to edit template properties:</p>
         <ul>
            <p>1.  Click on the title of the template from within the collection.</p>
@@ -222,10 +268,8 @@
          </ul>
 <h4>Figure #5 - Edit template properties</h4>
 	<img src="images/template-properties-editor.png" class="img-responsive" alt="Temp Properties Editor">
-</section>
 
-<section id="RemoveTemp">
-<h3>Removing a Template</h3>
+<h3><a id="RemoveTemp">Removing a Template</a></h3>
     <p>You can add or remove templates in any collection. Perform the following steps to remove a template:</p>
         <ul>
            <p>1.  Navigate to the collection and template of interest within that collection.</p>
@@ -233,76 +277,68 @@
          </ul>
 <h4>Figure #6 - Removing a template</h4>
 	<img src="images/left-right-nav.png" class="img-responsive" alt="Left Right Nav">
-</section>
 
-<section id="AddDirect">
-<h3>Adding Directives</h3>
-    <p>The IDMU template editor provides multiple merge directives. For a list of available merge directives, click here [link needed]. Once you have identified the merge directive(s) you want to use, perform the following steps:</p>
+<h3><a id="AddDirect">Adding Directives</a></h3>
+    <p>The IDMU template editor provides multiple merge directives. For a list of available merge directives, see the <a href="#DirectMatrix">Directives Matrix</a> topic. Once you have identified the merge directive(s) you want to use, perform the following steps:</p>
         <ul>
            <p>1.  Locate the template you wish to edit.</p>
            <p>2.  Click on the title of the template, expanding it.</p>
-		   <p>3.  Click on the 'Configure' button next to the directives "Select" list. Upon clicking, the IDMU launches the drag and drop directives panel.</p>
-           <p>4.  You can drag the merge directives from the left hand side list onto the right and side. This action will add the selected directive to the template.</p>
+		   <p>3.  Click on the 'Configure' button next to the directives "Select" list. Upon clicking, the Editor launches the drag and drop directives panel.</p>
+           <p>4.  You can drag the merge directives from the list of "Available" directives on the left to the "Assigned" 
+           directives on the right side. This action will add the selected directive to the template.</p>
            <p>5.  In addition to the drag and drop of the directives, you can also rearrage the order of the directives.</p>
            <p>6.  To remove a directive from the template click on the 'red' X button to the right of the merge directive.</p>
          </ul>
-        <p>*Note* - After adding or changing directives and/or it's properties you must hit the 'Back'
+        <p><strong>*Note* - After adding or changing directives and/or directive properties you must hit the 'Back'
 button on this panel, and then press the 'Save' button on the title bar. Otherwise your
-changes will not be saved.</p>
+changes will not be saved.</strong></p>
 <h4>Figure #7 - Dragging merge directives</h4>
 	<img src="images/drag-drop-directives.png" class="img-responsive" alt="Left Right Nav">
-</section>
 
-<section id="EditDirect">
-<h3>Editing Directives</h3>
+<h3><a id="EditDirect">Editing Directives</a></h3>
     <p>Once you have selected the merge directives for your template, you can edit them to configure the specific data provider information.</p>
     <p>To change the properties of a configured template directive, perform the following:<p>
         <ul>
            <p>1.  Navigate to the directive configuration panel.</p>
            <p>2.  Click on the directive on the lefthand side of the drag and drop list.</p>
-           <p>3.  Upon clicking, the IDMY will launch the property editor for that particular directive type.</p>
+           <p>3.  Upon clicking, the Editor will open the property editor for that particular directive type.</p>
            <p>4.  Make your edits (for example, update a "WHERE" clause) and press the 'Save' button on the dialog editor.</p>
            <p>5.  As noted earlier, click the 'Back' button.</p>
            <p>6.  To complete the edit, click on the "Save" button for the template.</p>
          </ul>
 <h4>Figure #8 - Editing merge directives</h4>
 	<img src="images/directives-editor.png" class="img-responsive" alt="Directives Editor">
- </section>   
 
-<section id="InsertSubBook">
-<h3>Insert Sub-Template and Bookmarks</h3>
-    <p>The IDMU allows you to insert sub-templates into templates. The "Insert Subs" directive works with a "Bookmark" to create, process, and insert a sub-template. The IDMU inserts one sub-template for each row of data returned by the data provider specified in the "Insert Subs" directive. From there, the sub-template inherits the full Replace Hash of its parent template, as well as the replace row values of the current record that is driving the insert. Sub-templates can additionally have their own directives to drive additional processing within their own template.</p>
-    <p>To insert a sub-template you must have configured the template, perform the following:<p>
+<h3><a id="InsertSubBook">Insert Sub-Template and Bookmarks</a></h3>
+    <p>The Editor allows you to insert sub-templates into templates. The "Insert Subs" directive works with a "Bookmark" 
+    to create, process, and insert a sub-template. The Editor inserts one sub-template for each row of data returned by 
+    the data provider specified in the "Insert Subs" directive. From there, the sub-template inherits the full Replace 
+    Hash of its parent template, as well as the replace row values of the current record that is driving the insert. 
+    Sub-templates can additionally have their own directives to drive additional processing within their own template.</p>
+    <p>To insert a sub-template you must have an <a href="#Inserting">Insert directive</a> to fetch the data which drives the process<p>
         <ul>
-           <p>1.  Ensure you have dragged an 'Insert' directive to the left of the template. You will know the "Insert" directive is available because you will see  an 'Insert Template' button will appear below the 'Content' area.</p>
-           <p>2.  After clicking on the 'Insert Template' button, the IDMU will present a dialog to create the collection, template name, and column name (optional) for the sub-template.</p>
-           <p>3.  Additionally, when you click on the 'Insert' button, a the IDMU inserts a new bookmark into the content. The IDMU will then refresh the template screen with the new bookmark, expanding it as a sub-template.</p>
+           <p>1.  Ensure you have added an 'Insert' directive to the template. If an insert directive is present  
+           the 'Insert Template' button just below the 'Content' area is visible.</p>
+           <p>2.  After clicking on the 'Insert Template' button, the Editor will present a dialog to create the book mark. The collection and
+           name values you provide are used to identify the sub-template to be inserted. If you provide a column name value that indicates 
+           that the sub-templates to be inserted will be varied based on the value of that column. </p>
+           <p>3.  When you click on 'ok' to close the dialog, the editor inserts a new bookmark into the content. This is your 
+           last change to edit the bookmark, once you have saved the tempalte the bookmark will be rendered as a 
+           sub-template cover flow. </p>
          </ul>
 <h4>Figure #9 - Creating the sub-template</h4>
 	<img src="images/insert-template-button.png" class="img-responsive" alt="Insert Temp Button">
 <h4>Figure #10 - Creating the bookmark</h4>
 	<img src="images/bookmark-inserter.png" class="img-responsive" alt="Insert Bookmark">    
-</section>
 
-<section id="Output">
-<h3>Generating Extra Output Files</h3>
-	<p>Any sub-template can be saved as an output file instead of being inserted into the target template, by providing an output file name for the Template. All output files generated in this manner during a merge are added to an archive, and placed in the merge output directory which is specified in the web.xml configuration file.</p> 
-	<p>The archive name is provided in the replace tag {DragonFlyeOutputFile} and a GUID is generated for the file name if needed. If you pass DragonFlyOutputFile as a parameter to the merge you should ensure that the file name provided is unique for the duration of the merge operation. Database connections are cached based on this value, and multiple concurrent merges with the same DragonFlyOutputFile name will have unpredictable results.</p>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
- </section>   
-
-<section id="DirectMatrix">
-<h3>Directives Matrix</h3>
-<p>In the following table <strong>Providers</strong> are in <font color="#0099FF">blue</font> and <strong>ProvidersHttp</strong> are in <font color="#66CC99">green</font>:
+<h3><a id="DirectMatrix">Directives Matrix</a></h3>
 <table class="table table-bordered”>  
     <thead>
             <tr class ="active">
                 <th class="text-left">Directives</th>
-                <th class="info">Null</th>
-                <th class="info">Tag</th>
-                <th class="info">Sql</th>
-                <th class="success">Csv</th>
-                <th class="success">Html</th>
+                <th class="info">System(Tag Data)</th>
+                <th class="info">Sql Data</th>
+                <th class="info">Csv Data</th>
             </tr>     
    </thead>
         <tbody>
@@ -311,65 +347,45 @@ changes will not be saved.</p>
                 <td class="info"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
                 <td class="info"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
                 <td class="info"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
-                <td class="success"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
-                <td class="success"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
             </tr>
             <tr> 
                 <td class="text-left">Replace Value</td>
                 <td class="info"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
                 <td class="info"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
                 <td class="info"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
-                <td class="success"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
-                <td class="success"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
             </tr>
             <tr>   
                 <td class="text-left">InsertSubs</td>
-                <td class="info"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
                 <td class="info"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
                 <td class="info"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
-                <td class="success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
-                <td class="success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
+                <td class="info"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
             </tr>
             <tr> 
                 <td class="text-left">ReplaceRow</td>
                 <td class="info"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
-                <td class="info"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
                 <td class="info"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
-                <td class="success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
-                <td class="success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
+                <td class="info"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
             </tr>
             <tr> 
                 <td class="text-left">ReplaceCol</td>
                 <td class="info"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
-                <td class="info"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
                 <td class="info"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
-                <td class="success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
-                <td class="success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
-            </tr>
-            <tr> 
-                <td class="text-left">ReplaceMarkup</td>
-                <td class="info"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
-                <td class="info"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
-                <td class="info"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
-                <td class="success"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
-                <td class="success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
+                <td class="info"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
             </tr>
         </tbody>
     </table>
-  </section>
-
-<section id="Require">  
-<h3>Require Directive</h3>
-	<p>The require directive specifies a comma separated list of tags that should exist in the replace hash. If a required tag is missing the merge process will fail with an exception. If the soft fail indicator is present, the missing values message will be inserted into the template.</p>
+    
+<h3><a id="Require">Require Directive</a></h3>
+	<p>The require directive specifies a comma separated list of tags that should exist in the replace hash. 
+	If a required tag is missing the merge process will fail with an exception. If the system templates are loaded, this failure
+	will result in a web page that prompts the user to provide the required values. </p>
 	<div class="metadata"><h4>The Require directive has the following Options</h4>
 	<ul>
 		<li><span class="option">Tags</span> - The comma separated list of requried Tags</li>
 	</ul>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>
- </section>   
- 
- <section id="ReplaceVal">   	
-<h3>Replace Value Directive</h3>
+    	
+<h3><a id="ReplaceVal">Replace Value Directive</a></h3>
 	<p>The Replace Value directive provides for a simple static from/to value pair. The from value is added as-is to the replace stack. This directive is frequently used in conjunction with the Not-Last and Only-Last options of the Insert Rows directives. </p>
 	<p>For a more flexable way to place static values on the Replace Hash see the Replace from Csv Directives</p>
 	<div class="metadata"><h4>The Replace Value directive has the following Options</h4>
@@ -378,119 +394,53 @@ changes will not be saved.</p>
 		<li><span class="option">To</span> - The value to replace it with</li>
 	</ul></div>
 <div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>
 
-<section id="InsertTag">
-<h3>Insert Sub-Templates from Tag Data Directive</h3>
-	<p>The Insert Sub-Templates If directive combines the functionality of the
+<h3><a id="InsertTag">Insert Sub-Templates from Tag Data Directive</a></h3>
+	<p>The Insert Sub-Templates from Tag Data directive combines the functionality of the
 		<a href="#Inserting">Insert Sub-Templates</a> with the 
 		<a href="#ProviderTag">Tag</a> data provider.</p>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-</section>    
-
-<section id="InsertSql">	
-<h3>Insert Sub-Templates from Sql Rows Directive</h3>
+	
+<h3><a id="InsertSql">Insert Sub-Templates from Sql Rows Directive</a></h3>
 	<p>The Insert Sub-Templates from SQL directive combines the functionality of the
 		<a href="#Inserting">Insert Sub-Templates</a> with the 
 		<a href="#ProviderJdbc">SQL</a> data provider.</p>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>    	
-
-<section id="ReplaceRowSql">	
-<h3>Get Replace Values From Sql Row Directive</h3>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	
+<h3><a id="ReplaceRowSql">Get Replace Values From Sql Row Directive</a></h3>
 	<p>The Replace Row from SQL directive combines the functionality of
 		<a href="#ReplaceRow">Replace Row</a> with the 
 		<a href="#ProviderJdbc">SQL</a> data provider.</p>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>   	
-
-<section id="ReplaceColSql">	
-<h3>Get Replace Values From Sql Column Directive</h3>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	
+<h3><a id="ReplaceColSql">Get Replace Values From Sql Column Directive</a></h3>
 	<p>The Replace Column from SQL directive combines the functionality of
 		<a href="#ReplaceCol">Replace Col</a> with the 
 		<a href="#ProviderJdbc">SQL</a> data provider.</p>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>    	
-
-<section id="InsertCsv">	
-<h3>Insert Sub-Templates from Csv Directive</h3>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	
+<h3><a id="InsertCsv">Insert Sub-Templates from Csv Directive</a></h3>
 	<p>The Insert Sub-Templates from CSV directive combines the functionality of the
 		<a href="#Inserting">Insert Sub-Templates</a> with the 
 		<a href="#ProviderCsv">CSV</a> data provider.</p>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>    	
-
-<section id="ReplaceRowCsv">	
-<h3>Get Replace Values From Csv Row Directive</h3>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	
+<h3><a id="ReplaceRowCsv">Get Replace Values From Csv Row Directive</a></h3>
 	<p>The Replace Row from CSV directive combines the functionality of
 		<a href="#ReplaceRow">Replace Row</a> with the 
 		<a href="#ProviderCsv">CSV</a> data provider.</p>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>    	
-
-<section id="ReplaceColCsv">	
-<h3>Get Replace Values From Csv Column Directive</h3>
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
+	
+<h3><a id="ReplaceColCsv">Get Replace Values From Csv Column Directive</a></h3>
 	<p>The Replace Column from CSV directive combines the functionality of
 		<a href="#ReplaceCol">Replace Col</a> with the 
 		<a href="#ProviderCsv">CSV</a> data provider.</p>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>    	
+	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
 
-<section id="InsertHtml">
-<h3>Insert Sub-Templates from Html Table Rows Directive</h3>
-	<p>The Insert Sub-Templates from HTML directive combines the functionality of the
-		<a href="#Inserting">Insert Sub-Templates</a> with the 
-		<a href="#ProviderHtml">HTML</a> data provider.</p>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>   	
-
-<section id="ReplaceRowHtml">	
-<h3>Get Replace Values From Html Table Row Directive</h3>
-	<p>The Replace Row from HTML directive combines the functionality of
-		<a href="#ReplaceRow">Replace Row</a> with the 
-		<a href="#ProviderHtml">HTML</a> data provider.</p>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>    	
-
-<section id="ReplaceColHtml">	
-<h3>Get Replace Values From Html Table Column Directive</h3>
-	<p>The Replace Column from HTML directive combines the functionality of
-		<a href="#ReplaceCol">Replace Col</a> with the 
-		<a href="#ProviderHtml">HTML</a> data provider.</p>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>    	
-
-<section id="ReplaceMarkupHtml">	
-<h3>Get Replace Values From Html Markup Directive</h3>
-	<p>The Replace Column from HTML directive uses the <a href="#ProviderHtml">HTML</a> data provider.
-		to fetch an HTML document, and then find Replace From/To values based on the following options:</p>
-	<div class="metadata"><h4>The Replace Value directive has the following Options</h4>
-	<ul>
-		<li><span class="option"><strong>Element Selector</strong></span> - CSS Selector to find HTML elements to use</li>
-		<li><span class="option"><strong>From Attribute</strong></span> - Name of the attribute to use as a "From" value</li>
-		<li><span class="option"><strong>To Attribute</strong></span> - Name of the attribute to use as a "To" value</li>
-	</ul></div>
-	<p>By way of example, the following options:</p>
-	<ul>
-		<li><span class="option"><strong>Element Selector</strong></span> - Input</li>
-		<li><span class="option"><strong>From Attribute</strong></span> - ID</li>
-		<li><span class="option"><strong>To Attribute</strong></span> - Empty (content of the selected element)</li>
-	</ul> 
-   <br></br>
-	<p>With this HTML Data</p>
-	<textarea class="form-control" rows="3">HTML Data</textarea>
-   <br></br>
-	<p>will produce the following replace hash</p>
-	<table class="replaceHash">
-		<tr><th>From</th><th>To</th></tr>
-		<tr><td>From</td><td>To</td></tr>
-	</table>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>
-
-<section id="ProviderJdbc">	
-<h3>SQL (JDBC) Data</h3>
-	<p>The SQL (JDBC) Data Providers utilize a JDBC data source configured in the IDMU J2EE Context.xml file, and create a SQL SELECT statement based on the options provided. The components of the select statement are each processed by the Replace Hash before being executed.</p>
+<h3><a id="ProviderJdbc">SQL (JDBC) Data</a></h3>
+	<p>The SQL (JDBC) Data Providers utilize a JDBC data source configured in the IDMU databasePools.properties file, 
+	and create a SQL SELECT statement based on the options provided. The components of the select statement are each 
+	processed by the Replace Hash before being executed.</p>
 	<h4>JDBC Directives</h4>
 	<ul>
 		<li><a href="#InsertSql">Insert Sub-Templates from Sql</a></li>
@@ -499,17 +449,15 @@ changes will not be saved.</p>
 	</ul>
 	<div class="metadata"><h4>Directives that use the JDBC Data Provider have the following options:</h4>
 	<ul>
-		<li><span class="option"><strong>Source</strong></span> - The JDBC Data Source name (from the web.xml descriptor)</li>
+		<li><span class="option"><strong>Source</strong></span> - The JDBC Data Pool name (from the databasePools.properties file)</li>
 		<li><span class="option replaced"><strong><i><font color="#4178be">Select Columns</font></strong></i></span> - The columns to select, * is supported by most JDBC drivers</li>
 		<li><span class="option replaced"><strong><i><font color="#4178be">From Table</font></strong></i></span> - The Tables to select from (Optional)</li>
 		<li><span class="option replaced"><strong><i><font color="#4178be">Where Condition</font></strong></i></span> - The Where condition for the SQL Select Statement (Optional)</li>
 	</ul>
-	<p><strong><i><font color="#4178be">*Replace Hash processed before use</font></strong></i></p></div>
+	<p class="replaced"><strong><i>*Note: these components are each processed by the Replace Hash before being used.</i></strong></p></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-</section>
-
-<section id="ProviderCsv">	
-<h3>CSV Data</h3>
+	
+<h3><a id="ProviderCsv">CSV Data</a></h3>
 	<p>CSV Data Providers fetch their information from either a URL, the data associated with a Replace Tag, or as static data from the directive itself. Once fetched the data is parsed based on the Microsoft Excel CSV formatting standards.</p>
 	<h4>CSV Directives</h4>
 	<ul>
@@ -523,32 +471,10 @@ changes will not be saved.</p>
 		<li><span class="option"><strong>Tag</strong></span> - That Tag that contains data if the URL is not provided or does not return data</li>
 		<li><span class="option"><strong>Static Value</strong></span> - The Static value to be used if the Tag is not in the Replace Hash</li>
 	</ul>
-	<p><strong><i><font color="#4178be">*Replace Hash processed before use</font></strong></i></p></div>
+	<p  class="replaced"><strong><i>*Note: these components are each processed by the Replace Hash before being used.</i></strong></p></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-</section>
-
-<section id="ProviderHtml">	
-<h3>HTML Data</h3>
-	<p>HTML Data Providers fetch their information from either a URL, the data associated with a Replace Tag, or as static data from the directive itself. Once fetched the data is parsed as HTML, and the HTML &lt;table&gt; elements are selected based on the css selector option and parsed for use. Note that all HTML table elements must specify a table row with table header values. If multiple tables match the selector, they are each parsed and processed in the order they are found in the HTML source.</p>
-	<h4>HTML Directives</h4>
-	<ul>
-		<li><a href="#InsertHtml">Insert Sub-Templates from Html Table Rows</a></li>
-		<li><a href="#ReplaceRowHtml">Get Replace Values From Html Table Row</a></li>
-		<li><a href="#ReplaceColHtml">Get Replace Values From Html Table Column</a></li>
-		<li><a href="#ReplaceMarkupHtml">Get Replace Values From Html Markup</a></li>
-	</ul>
-	<div class="metadata"><h4>Directives that use the HTML Data Provider have the following options:</h4>
-	<ul>
-		<li><span class="option replaced"><strong><i><font color="#4178be">URL</font></strong></i></span> - The URL used to retrieve data for the merge</li>
-		<li><span class="option"><strong>Tag</strong></span> - That Tag that contains data if the URL is not provided or does not return data</li>
-		<li><span class="option"><strong>Static Value</strong></span> - The Static value to be used if the Tag is not in the Replace Hash</li>
-	</ul>
-	<p><strong><i><font color="#4178be">*Replace Hash processed before use</font></strong></i></p></div>
-	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-</section>
-
-<section id="ProviderTag">	
-<h3>Tag Data</h3>
+	
+<h3><a id="ProviderTag">Tag Data</a></h3>
 	<p>Tag Data providers utilize data from the Replace Hash (to support the Insert From Tags directive). If the Tag exists and meets the Condition parameter a data table is constructed with a single column that has the Tag Name. If the "Is List" indicator is set, the tag data is treated as a comma seperated list of values and the data table has multiple rows, one for each value. If the "Is List" indicator is not set the data table will have only a single row.</p>
 	<h4>Tag Data Directives</h4>
 	<ul>
@@ -564,12 +490,19 @@ changes will not be saved.</p>
 			a data row should be created for each value, with the Tag as the column name</li>
 	</ul></div>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>
-</section>
 
 </div><!--end of container-->
 <!--javascript-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
+</div>
+	<ul class="nav navbar-nav navbar-right">
+		<li><a href="/">Home</a></li>
+		<li><a href="/editor/src/html/app.html">Templates</a></li>
+		<li><a href="/UserGuide.html">User Guide</a></li>
+		<li class="active"><a href="#">Admin Guide</a></li>
+		<li><a href="/idmu/status/">Status</a></li>
+	</ul>
 </body>
 </html>
