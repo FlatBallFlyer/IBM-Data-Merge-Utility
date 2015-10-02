@@ -66,6 +66,7 @@ final public class TemplateFactory {
 	public static final String PARAMETER_PACKAGE_DIR 		= "merge-packages-folder";
 	public static final String PARAMETER_POOLS_PROPERTIES 	= "jdbc-pools-properties";
 	public static final String PARAMETER_TEMPLATE_POOL 		= "jdbc-persistence-templates-poolname";
+	public static final String PARAMETER_TEMPLATE_SCHEMA 	= "jdbc-persistence-templates-schema";
 	public static final String PARAMETER_DB_PERSIST 		= "db-persist";
 	public static final String PARAMETER_PRETTY_JSON 		= "pretty-json";
 
@@ -104,6 +105,7 @@ final public class TemplateFactory {
         if(runtimeProperties.getProperty(PARAMETER_DB_PERSIST).equals("yes")){
             JdbcTemplatePersistence jdbcPersistence = new JdbcTemplatePersistence(poolManager);
             jdbcPersistence.setPoolName(runtimeProperties.getProperty(PARAMETER_TEMPLATE_POOL));
+            jdbcPersistence.setSchemaName(runtimeProperties.getProperty(PARAMETER_TEMPLATE_SCHEMA));
             this.persistence = jdbcPersistence;
         }else{
             this.persistence = new FilesystemPersistence(
