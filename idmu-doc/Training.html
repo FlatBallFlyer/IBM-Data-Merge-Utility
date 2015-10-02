@@ -45,8 +45,9 @@
             <li><a href="#Lesson9"><strong>Lesson 9. Insert Subs from Tag data</strong></a></li>
         </ol>
    
+<section id="Lesson1">                        
 <hr style="clear:both;"/>
-<h3><a id="Lesson1">Lesson 1 - Introduction - Creating and Copying templates</a></h3>
+<h3><a id="">Lesson 1 - Introduction - Creating and Copying templates</a></h3>
 	<p>See <a href="/">the home page</a> Overviews for information on IDMU and the Template Editor</p>
 	<p><b>Creating a new template</b> To create a new template click on the Add button in the template editor, use the collection "training" and the name "lesson" Leave the Column Value empty for now, we'll deal with that when we get to inserting sub-templates.</p> 
 	<p>After clicking on "ok" you should now have an empty training.lesson. template. NOTE: If you added a template to an existing collection you may not be placed back in your new template automatically as the template cover flow reverts back to the first template in the cover flow after a new or save action.</p>
@@ -77,9 +78,10 @@
     <p>Now change the url to add the NAME parameter as in:  
     http://yourhost:port/merge?DragonFlyFullName=training.lesson1.<b>&amp;NAME=Joe</b> then press enter to get the merge output again. 
 	This time you should get a page back that says Hello Joe, this is pretty basic, but it's the foundation of more advanced processing. </p>
-    
+</section>    
+<section id="Lesson2">                        
 <hr style="clear:both;"/>
-<h3><a id="Lesson2">Lesson 2 - The Require Directive</a></h3>
+<h3><a id="">Lesson 2 - The Require Directive</a></h3>
     <p><image align="right" src="images/requireName.png"/>
     Starting with our template from Lesson 1, let's add a Require Directive to the template to indicate that we should prompt for a NAME value if it is not provided.
     <ul>
@@ -100,8 +102,10 @@
 
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
     	
+</section>    
+<section id="Lesson3">                        
 <hr style="clear:both;"/>
-<h3><a id="Lesson3">Lesson 3 - The Replace Row Directive</a></h3>
+<h3><a id="">Lesson 3 - The Replace Row Directive</a></h3>
 	<p><image align="right" src="images/replaceRow.png"/><b>A note on Directives and Data Sources.</b> We will be using CSV data providers during the training exercise
 	with Static Data. These directives could also be used to retrieve this data from a URL, or from data in a tag. 
 	The corresponding JDBC directives work in exactly the same way, but they allow you to use a SQL Query to select
@@ -131,8 +135,10 @@
     
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
     	
+</section>    
+<section id="Lesson4">                        
 <hr style="clear:both;"/>
-<h3><a id="Lesson4">Lesson 4 - The Replace Column Directive</a></h3>
+<h3><a id="">Lesson 4 - The Replace Column Directive</a></h3>
 	<p>Sometimes we have data in two columns (a From and To column) rather than a single row with column names. The Replace Column
 	directives allow you to use this data as well.</p>
 
@@ -155,8 +161,10 @@
     
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
     	
+</section>    
+<section id="Lesson5">                        
 <hr style="clear:both;"/>
-<h3><a id="Lesson5">Lesson 5 - The Replace Value Directive</a></h3>
+<h3><a id="">Lesson 5 - The Replace Value Directive</a></h3>
 	<p><image align="right" src="images/replaceValue.png"/>The replace value directive may seem pointless at first, but we will see how it can be used in combination with the 
 	Insert Sub-Template directives to facilitate list separator and terminator differences. First, let's add the following
 	to the template.</p>
@@ -181,8 +189,10 @@
     
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
     	
+</section>    
+<section id="Lesson6">                        
 <hr style="clear:both;"/>
-<h3><a id="Lesson6">Lesson 6 - The Insert Subs Directive</a></h3>
+<h3><a id="">Lesson 6 - The Insert Subs Directive</a></h3>
 	<p><image align="right" src="images/insertSubs1.png"/>The insertion of sub-templates is driven by tabular data, and a new sub-template is inserted at a book-mark
 	for each row of data in the data table. Inserting of sub-templates is done when the Insert Directive works with the
 	book-marks during the merge process. </p>
@@ -228,8 +238,10 @@
     This is because we specified the COMA tag as a "Not-Last" tag on the insert directive.</p>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
     	
+</section>    
+<section id="Lesson7">                        
 <hr style="clear:both;"/>
-<h3><a id="Lesson7">Lesson 7 - Insert Subs by Column Value</a></h3>
+<h3><a id="">Lesson 7 - Insert Subs by Column Value</a></h3>
 	<p>Start by navigating to our saved lesson6a template, and saving it back as lesson</p>
 
     <p>Edit the content of the static data on our insert subs directive to contain</p>
@@ -267,8 +279,10 @@ Advanced Template Design,200,11:00AM,Lab,student1,passw0rd</textarea>
 	</p>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
     	
+</section>    
+<section id="Lesson8">                        
 <hr style="clear:both;"/>
-<h3><a id="Lesson8">Lesson 8 - Default Sub-Templates</a></h3>
+<h3><a id="">Lesson 8 - Default Sub-Templates</a></h3>
 	<p>Edit the static data used in Lesson 7 to include the following values
 	</p>
 	<textarea cols="70" rows="6">CLASS,ROOM,TIME,TYPE,ID,PW
@@ -288,8 +302,10 @@ Background,Hotel Lounge,7:00PM,Social,,</textarea>
 
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
     	
+</section>    
+<section id="Lesson9">                        
 <hr style="clear:both;"/>
-<h3><a id="Lesson9">Lesson 9 - Insert Subs from Tag</a></h3>
+<h3><a id="">Lesson 9 - Insert Subs from Tag</a></h3>
 	<p>The insert subs from tag directive allows you to insert sub-templates based on a replace value in the find/replace hash. 
 	Start by creating an empty lesson template, click on Add, and use the training collection and the lesson template name.
 	Note that this erased the existing lesson template (without a warning) - be careful of this when adding new templates.</p>
@@ -337,7 +353,8 @@ Background,Hotel Lounge,7:00PM,Social,,</textarea>
 	<p>Now go back and edit the Insert from Tag directive, and check the "List?" and save and merge the template. This time
 	enter a coma seperated list of values in the OPTIONS field, and note that a sub-template was inserted for each value.</p>
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>	
-    	
+
+</section>    	
 <hr style="clear:both;"/>
 
 </div><!--end of container-->
