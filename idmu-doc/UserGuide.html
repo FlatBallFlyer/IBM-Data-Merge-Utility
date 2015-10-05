@@ -29,6 +29,7 @@
                 <li><a href="/editor/src/html/app.html">Templates</a></li>        
             </ul>
         </div>
+        </div>
     </nav> 
 <body>    
 <div class="container">    
@@ -87,11 +88,17 @@
 <hr style="clear:both;"/>
 <h3><a>Calling the Merge Servlet</a></h3>
 <p>The IBM Data Merge Utility is accessed via the Merge Servlet which can be accessed at http://yourServer/merge Parameters passed on the http request are used to initilize the Replace Hash. The Template full name can be provided in the DragonFlyFullName parameter.</p>
-	<p>The URL: http://www.yourserver.com:8080/idmu/merge?DragonFlyFullName=system.default.<br/>
-	will merge the system default template. Note that the trailing period is required.</p>
+	<p>There are two ways to access merge output.</p>
+	<ul><li>The url <strong>http://www.yourserver.com:port/idmu/merge?DragonFlyFullName=system.default.</strong> will merge the 
+	system default template and return it as a <strong>text</strong> document.
+	</li><li>The url <strong>http://www.yourserver.com:port/idmu/merge/system.default</strong> will merge the 
+	system default template and return it as a <strong>html</strong> document.</li>
+	</ul> 
+	<p>Note that the trailing period is required in the First form, and not in the second.</p>
 	<p>If the merge generates an archive of additional files, the {DragonFlyOutputFile} tag will contain the archive name. 
 	You can fetch this file using a standard http get of the file, but once the file is downloaded you should call make 
-	a DELETE call to http://yourServer:part/idmu/archive/ARCHIVENAME to remove the archive from the server. 
+	a DELETE call to http://yourServer:part/idmu/archive/ARCHIVENAME to remove the archive from the server.</p>
+	<p>See the <a href="AdminGuide#Rest API Documentation in the Administrators Guide for additional details.  
 	<div class="footerLink"><a href="#Top">Back To Top</a></div>
 </section>
 <section  id="Replace">                        
@@ -553,13 +560,5 @@ changes will not be saved.</strong></p>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-</div>
-	<ul class="nav navbar-nav navbar-right">
-		<li><a href="/">Home</a></li>
-		<li><a href="/editor/src/html/app.html">Templates</a></li>
-		<li><a href="/UserGuide.html">User Guide</a></li>
-		<li class="active"><a href="#">Admin Guide</a></li>
-		<li><a href="/idmu/status/">Status</a></li>
-	</ul>
 </body>
 </html>

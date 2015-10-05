@@ -35,7 +35,26 @@
 <h1><a id="top">IBM Data Merge Utility Developer Guide</a></h1>            		
         <ul class="nav nav-pills nav-stacked">
             <li><a href="#Licensing"><strong>Licensing</strong></a></li>
-            <li><a href="#Develop"><strong>Setting up your dev environment</strong></a></li>         
+            <li><a href="#Develop"><strong>Setting up your dev environment</strong></a></li>   
+            <li><a href="#RestApi"><strong>The REST Api</strong></a>
+                <ul class="dropdown-menu">
+                	<li><a href="#DeleteArchive" >Delete Archive</a></li>
+                    <li><a href="#DeletePackage" >Delete Template Packages</a></li>
+                    <li><a href="#DeleteTemplate">Delete Template</a></li>
+                    <li><a href="#GetCollections">Get Collections</a></li>
+                    <li><a href="#GetDirectives" >Get Directives</a></li>
+                    <li><a href="#GetMergeHtml" >Get Merge Output (text/html)</a></li>
+                    <li><a href="#GetMergeText" >Get Merge Output (text/plain)</a></li>
+                    <li><a href="#GetStatus"    >Get Status</a></li>          
+                    <li><a href="#GetNamesColl" >Get Template Names for a Collection</a></li>
+                    <li><a href="#GetNamesName" >Get Template Names for a Collection and Name</a></li>
+                    <li><a href="#GetPackage"   >Get a Template</a></li>
+                    <li><a href="#GetPackage"   >Get a package of templates</a></li>
+                    <li><a href="#LoadPackage"  >Load a package of templates</a></li>
+                    <li><a href="#PutPackage"   >Put a package of templates</a></li>
+                    <li><a href="#PutPackage"   >Put a template</a></li>
+                 </ul> 
+            </li>
             <li><a href="#Testing"><strong>Regression Testing</strong></a></li>         
         </ul>
      
@@ -51,6 +70,229 @@
 <section id="Develop">                        
 <h3><a>Development Environment</a></h3>
 		<p>See the readme on the <a href="https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility">main GitHub page</a> for instructions on setting up a development environment.</p>
+
+</section>
+<section id="RestApi">                        
+<h3><a>REST API</a></h3>
+		<p>The following rest services are supported:</p>
+		<section id="DeleteArchive">                        
+		<h4>Delete Archive</h4>
+		<p>Delete an archive that was generated as part of a merge process</p>
+		<ul>
+			<li>example: Delete host:port/idmu/archive/guid.tar</li>
+			<li>url: host:port/idmu/archive/name where name is an archive name</li>
+			<li>http request: Delete</li>
+			<li>http response: 200<ul>
+			<li>response type: text/plain</li>
+			<li>response content: OK</li>
+			</ul></li>
+			<li>http response: 500<ul>
+			<li>response type: text/plain</li>
+			<li>response content: NOT FOUND</li>
+			</ul></li>
+		</ul>
+		</section>
+		
+		<section id="DeletePackage">                        
+		<h4>Delete Template Package</h4>
+		<p>Delete all the templates in one or more collections</p>
+		<ul>
+			<li>example: Delete host:port/idmu/templatePackage/training,testing</li>
+			<li>url: host:port/idmu/templatePackage/names where names is a comma separated list of package names</li>
+			<li>http request: Delete</li>
+			<li>http response: 200<ul>
+			<li>response type: text/plain</li>
+			<li>response content: OK</li>
+			</ul></li>
+			<li>http response: 500<ul>
+			<li>response type: text/plain</li>
+			<li>response content: Error Message</li>
+			</ul></li>
+		</ul>
+		</section>
+		
+		<section id="DeleteTemplate">                        
+		<h4>Delete Template</h4>
+		<p>Delete a specific template</p>
+		<ul>
+			<li>example: Delete host:port/idmu/template/test..</li>
+			<li>url: host:port/idmu/template/name where name is a template full name (must contain at least 2 periods)</li>
+			<li>http request: Delete</li>
+			<li>http response: 200<ul>
+			<li>response type: text/plain</li>
+			<li>response content: OK</li>
+			</ul></li>
+			<li>http response: 500<ul>
+			<li>response type: text/plain</li>
+			<li>response content: NOT FOUND</li>
+			</ul></li>
+		</ul>
+		</section>
+		
+		<section id="GetCollections">                        
+		<li>Get Template Collections<ul>
+			<li>example: Get host:port/idmu/collections</li>
+			<li>url: host:port/idmu/collections</li>
+			<li>http request: Get</li>
+			<li>http response: 200<ul>
+			<li>response type: text/json</li>
+			<li>response content: An array of Collection Names i.e. [{"collection":"system"},{"collection":"special"},...]</li>
+			</ul></li>
+			<li>http response: 500<ul>
+			<li>response type: text/plain</li>
+			<li>response content: Error Message</li>
+			</ul></li>
+		</ul></li>
+		</section>
+		<section id="GetDirectives">
+		<li>Get Directives<ul>
+			<li>example: Get host:port/idmu/directives</li>
+			<li>url: host:port/idmu/directives</li>
+			<li>http request: Get</li>
+			<li>http response: 200<ul>
+			<li>response type: text/json</li>
+			<li>response content: An array of Directive objects i.e. [{"type": 0,"name": "Require Tags"...},{"type": 1,"name": "Replace Value",...},...]</li>
+			</ul></li>
+		</ul></li>
+		</section>
+		<section id="GetMergeHtml">
+		<li>Get Merge Output (HTML Interface)<ul>
+			<li>example: Get host:port/idmu/merge/test?name=value&amp;list=one,two,three</li>
+			<li>url: host:port/idmu/merge/<em>template</em>&apm;parameters where <em>template</em> is a template name. Note that trailing periods are not needed with this call.</li>
+			<li>http request: Get</li>
+			<li>http response: 200<ul>
+			<li>response type: text/html</li>
+			<li>response content: The merge output</li>
+			</ul></li>
+			<li>http response: 500<ul>
+			<li>response type: text/html</li>
+			<li>response content: The Error Message</li>
+			</ul></li>
+		</ul></li>
+		</section>
+           <section id="GetMergeText">
+		<li>Get Merge Output (Plain Text Interface)<ul>
+			<li>example: Get host:port/idmu/merge?DragonFlyFullName=test..?name=value&amp;list=one,two,three</li>
+			<li>url: host:port/idmu/merge?DragonFlyFullName=name?parameters where name is a template full name. Note that trailing periods are required, a full name should always contain at least 2 periods.</li>
+			<li>http request: Get</li>
+			<li>http response: 200<ul>
+			<li>response type: text/plain</li>
+			<li>response content: The merge output</li>
+			</ul></li>
+			<li>http response: 500<ul>
+			<li>response type: text/plain</li>
+			<li>response content: The Error Message</li>
+			</ul></li>
+		</ul></li>
+		</section>
+		<section id="GetStatus">      
+		<li>Get IDMU System Status<ul>
+			<li>example: Get host:port/idmu/status</li>
+			<li>url: host:port/idmu/status</li>
+			<li>http request: Get</li>
+			<li>http response: 200<ul>
+			<li>response type: text/html</li>
+			<li>response content: The System Status page</li>
+			</ul></li>
+			<li>http response: 500<ul>
+			<li>response type: text/html</li>
+			<li>response content: The Error Message (Missing System Templates)</li>
+			</ul></li>
+		</ul></li>
+		</section>
+		<section id="GetNamesColl">
+		<li>Get Templates in a Collection<ul>
+			<li>example: Get host:port/idmu/templates/root</li>
+			<li>url: host:port/idmu/templates/collection where collection is a collection name</li>
+			<li>http request: Get</li>
+			<li>http response: 200<ul>
+			<li>response type: text/json</li>
+			<li>response content: An array of templates with the provided collection name. i.e. [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]</li>
+			</ul></li>
+		</ul></li>
+		</section>
+		<section id="GetNamesName">
+		<li>Get Templates in a Collection with a specific name<ul>
+			<li>example: Get host:port/idmu/templates/root/options</li>
+			<li>url: host:port/idmu/templates/collection/name where collection is a collection, and name is a collection name</li>
+			<li>http request: Get</li>
+			<li>http response: 200<ul>
+			<li>response type: text/json</li>
+			<li>response content: An array of templates with the provie collection and name. i.e. [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]</li>
+			</ul></li>
+		</ul></li>
+		</section>
+		<section id="GetPackage">
+		<li>Get a Template Package<ul>
+			<li>example: Get host:port/idmu/templatePackage/test,system</li>
+			<li>url: host:port/idmu/templatePackage/names where names is a coma seperated list of collection names</li>
+			<li>http request: Get</li>
+			<li>http response: 200<ul>
+			<li>response type: text/json</li>
+			<li>response content: An array of templates from the collections. i.e. [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]</li>
+			</ul></li>
+		</ul></li>
+		</section>
+		<section id="GetPackage">
+		<li>Get a Template<ul>
+			<li>example: Get host:port/idmu/template/test..</li>
+			<li>url: host:port/idmu/template/name where name is a template full name (trailing periods required)</li>
+			<li>http request: Get</li>
+			<li>http response: 200<ul>
+			<li>response type: text/json</li>
+			<li>response content: A template object. i.e. {"collection":"root","name":"allDirectives","columnValue":""...}</li>
+			</ul></li>
+			<li>http response: 500<ul>
+			<li>response type: text/plain</li>
+			<li>response content: The Error Message (NOT FOUND)</li>
+			</ul></li>
+		</ul></li>
+		</section>
+		<section id="LoadPackage">
+		<li>Load a Template Package<ul>
+			<li>example: Post host:port/idmu/templatePackage/test.json</li>
+			<li>url: host:port/idmu/templatePackage/name where name a file in the idmu packages folder</li>
+			<li>http request: Post</li>
+			<li>http response: 200<ul>
+			<li>response type: text/json</li>
+			<li>response content: An array of the packages saved.</li>
+			</ul></li>
+			<li>http response: 500<ul>
+			<li>response type: text/html</li>
+			<li>response content: The Error Message</li>
+			</ul></li>
+		</ul></li>
+		</section>
+		<section id="PutPackage">
+		<li>Put a Template Package<ul>
+			<li>example: Put host:port/idmu/templatePackage?[Template Array]</li>
+			<li>url: host:port/idmu/templatePackage?[templates] where templates is a json array of template objects.</li>
+			<li>http request: Put</li>
+			<li>http response: 200<ul>
+			<li>response type: text/json</li>
+			<li>response content: The template that was saved</li>
+			</ul></li>
+			<li>http response: 500<ul>
+			<li>response type: text/plain</li>
+			<li>response content: The Error Message</li>
+			</ul></li>
+		</ul></li>
+		</section>
+		<section id="PutTemplate">
+		<li>Put a Template<ul>
+			<li>example: Put host:port/idmu/template?{template}</li>
+			<li>url: host:port/idmu/template?template where template is a JSON template object</li>
+			<li>http request: Pet</li>
+			<li>http response: 200<ul>
+			<li>response type: text/json</li>
+			<li>response content: The template object that was saved. </li>
+			</ul></li>
+			<li>http response: 500<ul>
+			<li>response type: text/plain</li>
+			<li>response content: The Error Message</li>
+			</ul></li>
+		</ul></li>
+		</section>
 
 </section>
 <section id="Testing">                        

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBM Data Merge Utility</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+        	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#collapse">
+            	<span class="sr-only">Toggle navigation</span>
+                <span class="glyphicon glyphicon-arrow-down"></span>
+                MENU
+           </button>
+        <div class="navbar-header">
+        	<a class="navbar-brand" href="#"><img src="images/IBMlogo.png"></a>
+        </div>                         
+        <div class="collapse navbar-collapse" id="collapse">  
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/">Home</a></li>
+                <li><a href="/UserGuide.html">User Guide</a></li>        
+                <li><a href="/AdminGuide.html">Admin Guide</a></li>        
+                <li><a href="/DevGuide.html">Dev Guide</a></li>        
+                <li><a href="/Training.html">Training</a></li>        
+                <li class="active"><a href="/idmu/status/">Status</a></li>        
+                <li><a href="/editor/src/html/app.html">Templates</a></li>        
+            </ul>
+        </div>
+        </div>
+    </nav> 
+<body>
+	<div class="container">
+		<h1>IBM Data Merge Utility System Status</h1>
+		<p>
+		<table class="table">
+			<tr>
+				<th>Runtime Property</th>
+				<th>Value</th>
+			</tr>
+			<tr>
+				<td class="info text-right">Version:</td>
+				<td class="info text-left">{IDMU_VERSION}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Templates Cached</td>
+				<td class="info text-left">{TEMPLATES_CACHED}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Merge Count:</td>
+				<td class="info text-left">{MERGE_COUNT}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Templates Merged:</td>
+				<td class="info text-left">{TEMPLATES_MERGED}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Merge Time:</td>
+				<td class="info text-left">{MERGE_TIME}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Average Response:</td>
+				<td class="info text-left">{MERGE_AVG}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Last Reset:</td>
+				<td class="info text-left">{LAST_RESET}</td>
+			</tr>
+		</table>
+		</p>
+		<h1>IDMU Runtime Configuration</h1>
+		<table class="table">
+			<tr>
+				<th>Configuration Property</th>
+				<th>Value</th>
+			</tr>
+			<tr>
+				<td class="info text-right">Merge Output:</td>
+				<td class="info text-left">{merge-output-folder}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Pretty json:</td>
+				<td class="info text-left">{pretty-json}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Rest PUT/DELETE disabled:</td>
+				<td class="info text-left">{secure-server}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Database Persistence:</td>
+				<td class="info text-left">{db-persist}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Templates Database Pool:</td>
+				<td class="info text-left">{jdbc-persistence-templates-poolname}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Templates Folder:</td>
+				<td class="info text-left">{merge-templates-folder}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Packages Folder:</td>
+				<td class="info text-left">{merge-packages-folder}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Database Properties:</td>
+				<td class="info text-left">{jdbc-pools-properties}</td>
+			</tr>
+			<tr>
+				<td class="info text-right">Log4j Properties:</td>
+				<td class="info text-left">{log4j-properties}</td>
+			</tr>
+		</table>
+	</div>
+	<!--end of container-->
+	<!--javascript-->
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+</html>
