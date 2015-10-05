@@ -61,7 +61,7 @@ public class ProviderCsv extends ProviderHttp {
 		    }
 		    parser.close();
 		} catch (IOException e) {
-			throw new MergeException(e, "CSV Parser Stringreader IO Exception", getFetchedData());
+			throw new MergeException(this, e, "CSV Parser Stringreader IO Exception", getFetchedData());
 		}
 		if (newTable.size() > 0) {
 			getTables().add(newTable);

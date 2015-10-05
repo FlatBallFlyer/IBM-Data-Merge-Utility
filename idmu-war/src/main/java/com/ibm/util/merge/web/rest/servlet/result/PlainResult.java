@@ -21,13 +21,27 @@ import com.ibm.util.merge.web.rest.servlet.Result;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
- * Just set status 200 OK on the response
+ *
  */
-public class OkResult implements Result {
+public class PlainResult implements Result {
+    private final String content;
+
+    public PlainResult(String content) {
+        this.content = content;
+    }
+
     @Override
     public void write(RequestData rd, HttpServletRequest request, HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+        try {
+            response.getWriter().write(content);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

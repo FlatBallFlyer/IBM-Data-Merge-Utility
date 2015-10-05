@@ -57,7 +57,9 @@ final public class TemplateFactory {
     private static final Logger log = Logger.getLogger(TemplateFactory.class.getName());
     public static final String KEY_CACHE_RESET = Template.wrap("DragonFlyCacheReset");
     public static final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
+    public static final String KEY_SHORTNAME = Template.wrap("DragonFlySHortName");
     public static final String DEFAULT_FULLNAME = "system.default.";
+    public static final String DEFAULT_SHORTNAME = "system.default.";
     public static final String SYSTEM_STATUS_PAGE = "system.status.";
     
     // Initialization Property Names
@@ -71,7 +73,7 @@ final public class TemplateFactory {
 	public static final String PARAMETER_PRETTY_JSON 		= "pretty-json";
 
 	// Factory Attributes
-	private final String idmu_version = "3.1.4a";
+	private final String idmu_version = "3.1.4c";
 	private final Properties runtimeProperties;
     private final TemplatePersistence persistence;
     private final File outputRoot;
@@ -136,14 +138,16 @@ final public class TemplateFactory {
      *
      * @param requestParameters a request parameters map of String, String[] i.e. ServletRequest.parameters
      * @return String the Merged Output
+     * @throws MergeException 
      * @see Template
      */
-    public String getMergeOutput(Map<String, String[]> requestParameters) {
+    public String getMergeOutput(Map<String, String[]> requestParameters) throws MergeException {
         double begin = System.currentTimeMillis();
         HashMap<String, String> replace = new HashMap<>();
         
         // Open the "Default" template if if not specified.
-        replace.put(KEY_FULLNAME, DEFAULT_FULLNAME);
+        replace.put(KEY_FULLNAME,  DEFAULT_FULLNAME);
+        replace.put(KEY_SHORTNAME, DEFAULT_SHORTNAME);
         // Iterate parameters, setting replace values
         for (String key : requestParameters.keySet()) {
             String value = requestParameters.get(key)[0];
@@ -157,20 +161,15 @@ final public class TemplateFactory {
 
         // Setup and Merge the template
         MergeContext rtc = new MergeContext(this, replace);
-        String returnValue;
+        String fullName = replace.get(KEY_FULLNAME);
+        String shortName = replace.get(KEY_SHORTNAME);
+        log.info("GET TEMPLATE = " + fullName);
+        Template rootTemplate = getMergableTemplate(fullName, shortName, replace);
+        String returnValue = rootTemplate.getMergedOutput(rtc);
         try {
-            String fullName = replace.get(KEY_FULLNAME);
-            log.info("GET TEMPLATE = " + fullName);
-            Template rootTemplate = getMergableTemplate(fullName, "", replace);
-            returnValue = rootTemplate.getMergedOutput(rtc);
-		} catch (MergeException e) {
-			returnValue = rtc.getHtmlErrorMessage(e);
-		} finally {
-	        try {
-				rtc.finalize();
-			} catch (Exception e) {
-				log.error("Context Finalize Error:" + e.getLocalizedMessage());
-			}
+			rtc.finalize();
+		} catch (Exception e) {
+			log.error("Context Finalize Error:" + e.getLocalizedMessage());
 		}
         this.mergeCount++;
         this.mergeTime += System.currentTimeMillis() - begin;
@@ -197,7 +196,7 @@ final public class TemplateFactory {
             newTemplate = templateCache.get(shortName).getMergable(seedReplace);
         }
         if (newTemplate == null) {
-            throw new MergeException("Template Not Found", fullName + " and " + shortName);
+            throw new MergeException("Template Not Found", fullName + " and " + shortName, seedReplace);
         }
         this.templatesMerged++;
         return newTemplate;
@@ -208,15 +207,11 @@ final public class TemplateFactory {
      *
      * @param fullName the Template Full Name
      * @return String a single template JSON string or "NOT FOUND"
+     * @throws MergeException 
      */
-    public String getTemplateAsJson(String fullName) {
-        Template template;
-		try {
-			template = getMergableTemplate(fullName, "", new HashMap<String,String>());
-	        return jsonProxy.toJson(template);
-		} catch (MergeException e) {
-			return "NOT FOUND";
-		}
+    public String getTemplateAsJson(String fullName) throws MergeException {
+        Template template = getMergableTemplate(fullName, "", new HashMap<String,String>());
+        return jsonProxy.toJson(template);
     }
 
     /**********************************************************************************
@@ -292,20 +287,19 @@ final public class TemplateFactory {
      *
      * @param File name (in the packages folder)
      * @return OK or ERROR
+     * @throws MergeException 
      */
-	public String loadPackage(String fileName) {
+	public String loadPackage(String fileName) throws MergeException {
 		log.info("Starting loadPackage");
 		File thePackage = new File(this.packageFolder + File.separator +  fileName);
 		if (!thePackage.exists()) {
-			log.warn("File not found while trying to load a package: " + thePackage );
-			return "ERROR";
+			throw new MergeException("File not found while trying to load a package", thePackage.getAbsolutePath(), null);
 		}
 		String templateJson;
 		try {
 			templateJson = new String(Files.readAllBytes(thePackage.toPath()));
 		} catch (IOException e) {
-			log.error("File IO Exception reading " + fileName, e);
-			return "ERROR";
+			throw new MergeException(e, "ERROR", "File IO Exception reading " + fileName, null);
 		}
 		String result = this.saveTemplatesFromJson(templateJson);
 		return result;
@@ -333,10 +327,13 @@ final public class TemplateFactory {
      *
      * @param json the template json
      * @return the saved template json string, FORBIDDEN for invalid template name or FAIL if an error occurred.
+     * @throws MergeException 
      */
-    public String saveTemplateFromJson(String json) {
+    public String saveTemplateFromJson(String json) throws MergeException {
         Template template = jsonProxy.fromJSON(json, Template.class);
-        if (template.getFullName().equals("..")) {return "FORBIDDEN";}
+        if (template.getFullName().equals("..")) {
+        	throw new MergeException("FORBIDDEN", "Empty Template Name", null);
+        }
         cache(template);
         persistence.saveTemplate(template.getMergable(new HashMap<String,String>()));
         return jsonProxy.toJson(template);
@@ -347,17 +344,13 @@ final public class TemplateFactory {
      *
      * @param fullName the template fullname
      * @return "OK" or "FORBIDDEN"
+     * @throws MergeException 
      */
-    public String deleteTemplate(String fullName) {
-        Template template;
-		try {
-			template = this.getMergableTemplate(fullName, "", new HashMap<String,String>());
-	        templateCache.evict(template.getFullName());
-	        persistence.deleteTemplate(template);
-	        return "OK";
-		} catch (MergeException e) {
-			return "FORBIDDEN";
-		}
+    public String deleteTemplate(String fullName) throws MergeException {
+        Template template = this.getMergableTemplate(fullName, "", new HashMap<String,String>());
+        templateCache.evict(template.getFullName());
+        persistence.deleteTemplate(template);
+        return "OK";
     }
 
     /**********************************************************************************
@@ -365,8 +358,9 @@ final public class TemplateFactory {
      *
      * @param List of collection names
      * @return "OK" or "FORBIDDEN"
+     * @throws MergeException 
      */
-    public String deleteCollections(List<String> collections) {
+    public String deleteCollections(List<String> collections) throws MergeException {
         TemplateList templates = this.templateCache.getTemplates(collections);
         for (Template template : templates.templates) {
         	this.deleteTemplate(template.getFullName());
@@ -378,8 +372,9 @@ final public class TemplateFactory {
      * Get the TemplateFactory status page
      *
      * @return the HTML Status paged as merged from TemplateFactory.SYSTEM_STATUS_PAGE
+     * @throws MergeException 
      */
-    public String getStatusPage() {
+    public String getStatusPage() throws MergeException {
     	HashMap<String, String[]> parameterMap = new HashMap<String, String[]>();
 		parameterMap.put("DragonFlyFullName", 	new String[]{TemplateFactory.SYSTEM_STATUS_PAGE});
 		parameterMap.put("MERGE_COUNT", 		new String[]{Double.toString(mergeCount)});

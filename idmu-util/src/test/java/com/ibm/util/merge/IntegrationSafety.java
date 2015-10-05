@@ -56,7 +56,7 @@ public class IntegrationSafety {
 	}
 	
 	@Test
-	public void testSafetyInsert() throws NoSuchAlgorithmException, IOException  {
+	public void testSafetyInsert() throws NoSuchAlgorithmException, IOException, MergeException  {
 		parameterMap.put("DragonFlyFullName", 	new String[]{"safety.insert."});
 		String expected = "<html><head></head><body><p>A Merge Execption has occured: Insert Subs Infinite Loop suspected <br/> ";
 		String output = tf.getMergeOutput(parameterMap);

@@ -91,7 +91,7 @@ public class ProviderSql extends AbstractProvider {
 			    }
 			}
 		} catch (SQLException e) {
-			throw new MergeException(e, "Invalid Merge Data", this.getQueryString() );
+			throw new MergeException(this, e, "Invalid Merge Data", this.getQueryString() );
 		} finally {
 			log.info("Sql Dataprovider read " + Integer.toString(table.size()) + " rows");			
 		}

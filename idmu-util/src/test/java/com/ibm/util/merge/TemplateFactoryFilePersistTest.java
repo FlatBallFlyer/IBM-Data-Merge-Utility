@@ -67,7 +67,7 @@ public class TemplateFactoryFilePersistTest {
     }
 
     @Test
-    public void testGetMergeOutput() {
+    public void testGetMergeOutput() throws MergeException {
         Map<String, String[]> parameters = new HashMap<String,String[]>();
         parameters.put(TemplateFactory.KEY_FULLNAME, new String[]{"root.default."});
     	assertEquals("This is the Default Template", testFactory.getMergeOutput(parameters));

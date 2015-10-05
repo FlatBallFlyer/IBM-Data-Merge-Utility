@@ -17,7 +17,6 @@
 package com.ibm.util.merge;
 
 import com.ibm.util.merge.directive.AbstractDirective;
-import com.ibm.util.merge.directive.Require;
 import com.ibm.util.merge.template.Template;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +43,7 @@ public class MergeExceptionTest {
 
 	@Test
 	public void testMergeExceptionStringString() {
-		MergeException e = new MergeException("Error", "Context");
+		MergeException e = new MergeException("Error", "Context", null);
 		assertNotNull(e);
 		assertEquals("Error", e.getError());
 		assertEquals("Context", e.getContext());
@@ -52,7 +51,7 @@ public class MergeExceptionTest {
 
 	@Test
 	public void testMergeExceptionExceptionStringString() {
-		MergeException e = new MergeException(new Exception(), "Error", "Context");
+		MergeException e = new MergeException(new Exception(), "Error", "Context", null);
 		assertNotNull(e);
 		assertEquals("Error", e.getError());
 		assertEquals("Context", e.getContext());
@@ -104,23 +103,4 @@ public class MergeExceptionTest {
 		assertEquals("Context", e.getContext());
 	}
 	
-	@Test
-	public void testGetHtmlErrorMessage() {
-		Require req = new Require();
-		req.setTags("ONE,TWO,THREE");
-		template.addDirective(req);
-		MergeException e = new MergeException(req, null, "Error", "Context");
-		assertNotNull(e);
-		String output = rtc.getHtmlErrorMessage(e);
-		assertEquals("<html><head></head><body><p>A Merge Execption has occured: Error <br/> Context</p></body></html>", output);
-	}
-
-	@Test
-	public void testGetJsonErrorMessage() {
-		MergeException e = new MergeException(directive, null, "Error", "Context");
-		assertNotNull(e);
-		String output = rtc.getJsonErrorMessage(e);
-		assertEquals("{\"message\":\"Error\",\"context\":\"Context\"}", output);
-	}
-
 }

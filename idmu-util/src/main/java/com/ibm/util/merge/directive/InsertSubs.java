@@ -68,7 +68,7 @@ public abstract class InsertSubs extends AbstractDirective {
         log.info("Inserting Subtemplates into: " + getTemplate().getFullName());
         // Depth counter - infinite loop safety mechanism
         if (getTemplate().getStack().split("/").length >= DEPTH_MAX) {
-            throw new MergeException("Insert Subs Infinite Loop suspected", getTemplate().getStack());
+            throw new MergeException(this, null, "Insert Subs Infinite Loop suspected", getTemplate().getStack());
         }
         // Get the table data and iterate the rows
         getProvider().getData(rtc);

@@ -130,21 +130,22 @@ public class InitializeServlet extends HttpServlet {
     
     private ArrayList<RequestHandler> createHandlerInstances() {
     	ArrayList<RequestHandler> thelist = new ArrayList<RequestHandler>();
+		thelist.add(new DelArchiveResourceHandler());
 		thelist.add(new GetCollectionsResourceHandler());
 		thelist.add(new GetDirectivesResourceHandler());
+		thelist.add(new GetMergeOutputHtmlResourceHandler());
+		thelist.add(new GetMergeOutputTextResourceHandler());
+		thelist.add(new GetStatusResourceHandler());
 		thelist.add(new GetTemplateNamesForCollectionResourceHandler());
 		thelist.add(new GetTemplateNamesForNameResourceHandler());
 		thelist.add(new GetTemplatePackageResourceHandler());
 		thelist.add(new GetTemplateResourceHandler());
-		thelist.add(new PerformMergeResourceHandler());
-		thelist.add(new RemoveArchiveResourceHandler());
-		thelist.add(new GetStatusResourceHandler());
 		thelist.add(new PostTemplatePackageResourceHandler());
 		if (!this.runtimeProperties.get(PARAMETER_SECURE_SERVER).equals("yes")) {
+			thelist.add(new DelTemplatePackageResourceHandler());
+	    	thelist.add(new DelTemplateResourceHandler());
 			thelist.add(new PutTemplateResourceHandler());
 			thelist.add(new PutTemplatePackageResourceHandler());
-	    	thelist.add(new DelTemplateResourceHandler());
-			thelist.add(new DelTemplatePackageResourceHandler());
 		}
         return thelist;
     }
@@ -160,6 +161,6 @@ public class InitializeServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         initializeApp(req.getServletContext());
-        new TextResponseWriter(res, "Successfully reinitialized IDMU.").write();
+        new TextResponseWriter(res, "Successfully reinitialized IDMU.\n").write();
     }
 }

@@ -1,0 +1,26 @@
+
+// Standard extensions get all permissions by default
+
+grant codeBase "file:${{java.ext.dirs}}/*" {
+        permission java.security.AllPermission;
+};
+
+// default permissions granted to all domains
+
+grant {
+    // IDMU Security Policies
+    
+    // File access to the IDMU Root folder and sub-folders
+    // If you modify the default IDMU Root, or other folders in the idmu.properties file adjust accordingly.
+	permission java.io.FilePermission "/opt/ibm/idmu/-", "read,write,delete";
+	
+	// The GSON json library requires reflect permissions
+	permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+	
+	// Grant access to the environment variables used by IDMU Configuration
+    permission java.lang.RuntimePermission "getenv.IDMU_ROOT";
+    // Grant access to JDBC Connection pool values - add your own connection pool name to the list
+    permission java.lang.RuntimePermission "getenv.idmuTemplates-";
+    permission java.lang.RuntimePermission "getenv.test-";
+};
+

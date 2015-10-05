@@ -20,7 +20,7 @@ import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.result.JsonDataResult;
+import com.ibm.util.merge.web.rest.servlet.result.JsonResult;
 
 import org.apache.log4j.Logger;
 
@@ -54,7 +54,7 @@ public class GetTemplatePackageResourceHandler implements RequestHandler {
         for (String name : collectionNames.split(",")) {
         	names.add(name);
         }
-    	return new JsonDataResult(tf.getTemplatesJSON(names));
+    	return new JsonResult(tf.getTemplatesJSON(names));
     }
 
 }

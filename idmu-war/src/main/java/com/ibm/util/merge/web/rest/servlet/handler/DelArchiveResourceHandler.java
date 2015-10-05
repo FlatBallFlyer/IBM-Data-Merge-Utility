@@ -20,22 +20,23 @@ import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.result.NotFoundTextErrorResult;
-import com.ibm.util.merge.web.rest.servlet.result.OkResult;
+import com.ibm.util.merge.web.rest.servlet.result.PlainErrorResult;
+import com.ibm.util.merge.web.rest.servlet.result.PlainResult;
 
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Properties;
 
-public class RemoveArchiveResourceHandler implements RequestHandler {
-
-    private static final Logger log = Logger.getLogger(RemoveArchiveResourceHandler.class);
+public class DelArchiveResourceHandler implements RequestHandler {
+    private static final Logger log = Logger.getLogger(DelArchiveResourceHandler.class);
     private TemplateFactory tf;
+    private String errTemplate;
 
     @Override
     public void initialize(Properties initParameters, TemplateFactory templateFactory) {
         this.tf = templateFactory;
+        errTemplate = initParameters.getProperty("idmu.errorTemplate." + this.getClass().toString(), "default");
     }
 
     @Override
@@ -50,9 +51,9 @@ public class RemoveArchiveResourceHandler implements RequestHandler {
         if (archive.exists()) {
 	        log.warn("Remove archive " +  archiveName);
 	        archive.delete();
-	        return new OkResult();
+	        return new PlainResult("OK");
         } else {
-        	return new NotFoundTextErrorResult(archiveName);
+        	return new PlainErrorResult("NOT FOUND", tf, errTemplate);
         }
     }
 

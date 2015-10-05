@@ -16,13 +16,14 @@
  */
 package com.ibm.util.merge.web.rest.servlet.handler;
 
+import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.result.MergeResult;
+import com.ibm.util.merge.web.rest.servlet.result.PlainErrorResult;
+import com.ibm.util.merge.web.rest.servlet.result.PlainResult;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -31,20 +32,20 @@ import java.util.Properties;
 /**
  * GET /idmu/merge?DragonFlyFullName=fullname&{additional requestParameters}
  */
-public class PerformMergeResourceHandler implements RequestHandler {
-
-    private static final Logger log = Logger.getLogger(PerformMergeResourceHandler.class);
-
+public class GetMergeOutputTextResourceHandler implements RequestHandler {
+    private static final Logger log = Logger.getLogger(GetMergeOutputTextResourceHandler.class);
     private TemplateFactory tf;
-
+    private String errTemplate;
+    
     @Override
     public void initialize(Properties initParameters, TemplateFactory templateFactory) {
         this.tf = templateFactory;
+        errTemplate = initParameters.getProperty("idmu.errorTemplate." + this.getClass().toString(), "default");
     }
 
     @Override
     public boolean canHandle(RequestData rd) {
-        return (rd.isGET()) && rd.pathStartsWith("/merge");
+        return (rd.isGET()) && rd.pathStartsWith("/merge") && (rd.getPathParts().size() != 2);
     }
 
     @Override
@@ -52,19 +53,15 @@ public class PerformMergeResourceHandler implements RequestHandler {
     	Long start = System.currentTimeMillis();
     	HashMap<String, String[]> parameterMap = new HashMap<String, String[]>(rd.getParameterMap());
     	
-    	// support url shorthand /merge/fullname?parameters - add trailing "." to create full name when needed
-    	if (rd.getPathParts().size() == 2) {
-    		String fullname = rd.getPathParts().get(1);
-    		if (StringUtils.countMatches(fullname, ".") < 1) { fullname += ".";}
-    		if (StringUtils.countMatches(fullname, ".") < 2) { fullname += ".";}
-    		parameterMap.put("DragonFlyFullName", new String[]{fullname});
-    	}
-    	
     	// Perform the merge
-        String result = tf.getMergeOutput(parameterMap);
-        long elapsed = System.currentTimeMillis() - start;
-        log.warn(String.format("Merge completed in %d milliseconds", elapsed));
-        return new MergeResult(result);
+    	try {
+    		String result = tf.getMergeOutput(parameterMap);
+	        long elapsed = System.currentTimeMillis() - start;
+	        log.warn(String.format("Merge completed in %d milliseconds", elapsed));
+	        return new PlainResult(result);
+    	} catch (MergeException e) {
+    		return new PlainErrorResult(e, tf, errTemplate);
+    	}
     }
 
 }

@@ -62,7 +62,7 @@ public class TemplateFactoryJdbcPersistTest {
     }
 
     @Test
-    public void testGetMergeOutput() {
+    public void testGetMergeOutput() throws MergeException {
         Map<String, String[]> parameters = new HashMap<String,String[]>();
     	assertEquals("This is the Default Template", testFactory.getMergeOutput(parameters));
     }

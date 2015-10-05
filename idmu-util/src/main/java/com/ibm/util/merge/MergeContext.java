@@ -86,7 +86,7 @@ public class MergeContext {
     	
 		ConnectionPoolManager manager = this.templateFactory.getPoolManager();
 		if ( !manager.isPoolName(dataSource) ) {
-			throw new MergeException("DataSource not found in Connection Pool Manager", dataSource);
+			throw new MergeException("DataSource not found in Connection Pool Manager", dataSource, null);
 		}
 
 		connections.put(dataSource, manager.acquireConnection(dataSource));
@@ -111,53 +111,5 @@ public class MergeContext {
 	public void setArchiveChkSums(String archiveChkSums) {
 		this.archiveChkSums = archiveChkSums;
 	}
-
-	/**
-     * @param error
-     * @return
-     */
-    public String getHtmlErrorMessage(MergeException error) {
-        String message = "";
-        String errShortName = "system.errHtml.";
-        String errLongName = errShortName + error.getErrorFromClass();
-        HashMap<String, String> parameters = new HashMap<String,String>();
-        parameters.put(Template.wrap("MESSAGE"),	error.getError());
-        parameters.put(Template.wrap("CONTEXT"), 	error.getContext());
-        parameters.put(Template.wrap("TRACE"), 		error.getStackTrace().toString());
-        parameters.put(Template.wrap("TEMPLATE"),  	error.getTemplateName());
-        Template errTemplate;
-		try {
-			errTemplate = getTemplateFactory().getMergableTemplate(errLongName, errShortName, parameters);
-	    	message = errTemplate.getMergedOutput(this);
-		} catch (MergeException e) {
-            message = "INVALID ERROR TEMPLATE! \n" +
-                    "Message: " + error.getError() + "\n" +
-                    "Context: " + error.getContext() + "\n";
-		}
-        return message;
-    }
-
-    /**
-     * @param error
-     * @param throwable
-     * @return
-     */
-    public String getJsonErrorMessage(MergeException error) {
-        String message;
-        Map<String, String> parameters = new HashMap<String,String>();
-        parameters.put("MESSAGE", 		error.getError());
-        parameters.put("CONTEXT", 		error.getContext());
-        parameters.put("TRACE", 		error.getStackTrace().toString());
-        Template jsonTemplate;
-		try {
-			jsonTemplate = getTemplateFactory().getMergableTemplate("system.errJson.", "", parameters);
-	        message = jsonTemplate.getMergedOutput(this);
-		} catch (MergeException e) {
-            message = "INVALID ERROR TEMPLATE! \n" +
-                    "Message: " + error.getError() + "\n" +
-                    "Context: " + error.getContext() + "\n";
-		}
-        return message;
-    }
 
 }

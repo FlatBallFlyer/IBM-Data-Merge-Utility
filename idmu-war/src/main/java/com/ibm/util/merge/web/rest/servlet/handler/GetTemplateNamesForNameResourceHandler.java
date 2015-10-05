@@ -20,7 +20,7 @@ import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.result.JsonDataResult;
+import com.ibm.util.merge.web.rest.servlet.result.JsonResult;
 
 import org.apache.log4j.Logger;
 
@@ -50,7 +50,7 @@ public class GetTemplateNamesForNameResourceHandler implements RequestHandler {
         String collectionName = rd.getPathParts().get(1);
         String templateName = rd.getPathParts().get(2);
         log.warn("get templates " + collectionName + "." + templateName);
-    	return new JsonDataResult(tf.getTemplateNamesJSON(collectionName, templateName));
+    	return new JsonResult(tf.getTemplateNamesJSON(collectionName, templateName));
     }
 
 }

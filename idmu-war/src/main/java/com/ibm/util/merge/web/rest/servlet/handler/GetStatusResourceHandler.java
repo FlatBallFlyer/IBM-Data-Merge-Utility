@@ -16,11 +16,13 @@
  */
 package com.ibm.util.merge.web.rest.servlet.handler;
 
+import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.result.MergeResult;
+import com.ibm.util.merge.web.rest.servlet.result.HtmlErrorResult;
+import com.ibm.util.merge.web.rest.servlet.result.HtmlResult;
 
 import org.apache.log4j.Logger;
 
@@ -30,25 +32,29 @@ import java.util.Properties;
  * GET /idmu/directives
  */
 public class GetStatusResourceHandler implements RequestHandler {
-
     private static final Logger log = Logger.getLogger(GetStatusResourceHandler.class);
-
     private TemplateFactory tf;
+    private String errTemplate;
 
     @Override
     public void initialize(Properties initParameters, TemplateFactory templateFactory) {
         this.tf = templateFactory;
+        errTemplate = initParameters.getProperty("idmu.errorTemplate." + this.getClass().toString(), "default");
     }
 
     @Override
     public boolean canHandle(RequestData rd) {
-        return (rd.isGET()) && rd.pathStartsWith("/status/");
+        return (rd.isGET()) && rd.pathStartsWith("/status");
     }
 
     @Override
     public Result handle(RequestData rd) {
         log.warn("get status");
-        return new MergeResult(tf.getStatusPage());
+        try {
+			return new HtmlResult(tf.getStatusPage());
+		} catch (MergeException e) {
+			return new HtmlErrorResult(e, tf, errTemplate);
+		}
     }
 
 }

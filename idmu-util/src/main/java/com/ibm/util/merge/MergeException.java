@@ -16,10 +16,13 @@
  */
 package com.ibm.util.merge;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.ibm.util.merge.directive.AbstractDirective;
 import com.ibm.util.merge.directive.provider.AbstractProvider;
-import com.ibm.util.merge.json.PrettyJsonProxy;
 import com.ibm.util.merge.template.Template;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -30,12 +33,14 @@ import org.apache.log4j.Logger;
 public class MergeException extends Exception {
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = Logger.getLogger(MergeException.class.getName() );
-	private final String error;
-	private final String context;
-	private final Template template;
-	private final AbstractDirective directive;
-	private final AbstractProvider provider;
-	private final String errorFromClass;
+	private static final String KEY_ERROR 		= "MESSAGE";
+	private static final String KEY_CONTEXT 	= "CONTEXT";
+	private static final String KEY_TRACE 		= "TRACE";
+	private static final String KEY_TEMPLATE 	= "TEMPLATE";
+	private static final String KEY_CLASS 		= "CLASS";
+	private static final String KEY_QUERY 		= "QUERY";
+	private static final String KEY_SIZE 		= "SIZE";
+	private final HashMap<String,String> state;
 	
 	/**
 	 * Constructor
@@ -43,14 +48,15 @@ public class MergeException extends Exception {
 	 * @param message The exception message
 	 * @param errorCode The error code
 	 */
-	public MergeException(Exception e, String errorMessage, String theContext){
+	public MergeException(Exception e, String errorMessage, String theContext, Map<String,String> replace){
 		super(e);
-		error = errorMessage;
-		context = theContext;
-		errorFromClass = e.getClass().getName();
-		template = null;
-		provider = null;
-		directive = null;
+		state = new HashMap<String,String>();
+		if (replace != null) {state.putAll(replace);}
+		state.put(Template.wrap(KEY_ERROR), errorMessage);
+		state.put(Template.wrap(KEY_CONTEXT), theContext);
+		state.put(Template.wrap(KEY_TRACE), e.getStackTrace().toString());
+		state.put(Template.wrap(KEY_CLASS), e.getClass().getName());
+		state.put(Template.wrap(KEY_TEMPLATE), "");
 		logError();
 	}
 	
@@ -58,14 +64,15 @@ public class MergeException extends Exception {
 	 * @param errorMessage
 	 * @param theContext
 	 */
-	public MergeException(String errorMessage, String theContext){
+	public MergeException(String errorMessage, String theContext, Map<String,String> replace){
 		super(errorMessage);
-		error = errorMessage;
-		context = theContext;
-		errorFromClass = "";
-		template = null;
-		provider = null;
-		directive = null;
+		state = new HashMap<String,String>();
+		if (replace != null) {state.putAll(replace);}
+		state.put(Template.wrap(KEY_ERROR), errorMessage);
+		state.put(Template.wrap(KEY_CONTEXT), theContext);
+		state.put(Template.wrap(KEY_TRACE), this.getStackTrace().toString());
+		state.put(Template.wrap(KEY_CLASS), "");
+		state.put(Template.wrap(KEY_TEMPLATE), "");
 		logError();
     }
 
@@ -75,14 +82,14 @@ public class MergeException extends Exception {
 	 */
 	public MergeException(Template errTemplate, Exception wrapped, String errorMessage, String theContext){
 		super(wrapped);
-		error = errorMessage;
-		context = theContext;
-		template = errTemplate;
-		errorFromClass = errTemplate.getClass().getName();
-		provider = null;
-		directive = null;
+		state = new HashMap<String,String>();
+		if (errTemplate != null) {state.putAll(errTemplate.getReplaceValues());}
+		state.put(Template.wrap(KEY_ERROR), errorMessage);
+		state.put(Template.wrap(KEY_CONTEXT), theContext);
+		state.put(Template.wrap(KEY_TRACE), this.getStackTrace().toString());
+		state.put(Template.wrap(KEY_CLASS), errTemplate.getClass().getName());
+		state.put(Template.wrap(KEY_TEMPLATE), errTemplate.getFullName());
 		logError();
-		logTemplate();
     }
 
 	/**
@@ -91,15 +98,14 @@ public class MergeException extends Exception {
 	 */
 	public MergeException(AbstractDirective errDirective, Exception wrapped, String errorMessage, String theContext){
 		super(wrapped);
-		error = errorMessage;
-		context = theContext;
-		directive = errDirective;
-		template = directive.getTemplate();
-		errorFromClass = errDirective.getClass().getName();
-		provider = errDirective.getProvider();
+		state = new HashMap<String,String>();
+		if (errDirective != null) {state.putAll(errDirective.getTemplate().getReplaceValues());}
+		state.put(Template.wrap(KEY_ERROR), errorMessage);
+		state.put(Template.wrap(KEY_CONTEXT), theContext);
+		state.put(Template.wrap(KEY_CLASS), errDirective.getClass().getName());
+		state.put(Template.wrap(KEY_TRACE), this.getStackTrace().toString());
+		state.put(Template.wrap(KEY_TEMPLATE), errDirective.getTemplate().getFullName());
 		logError();
-		logTemplate();
-		logDirective();
     }
 
 	/**
@@ -108,86 +114,56 @@ public class MergeException extends Exception {
 	 */
 	public MergeException(AbstractProvider errProvider, Exception wrapped, String errorMessage, String theContext){
 		super(wrapped);
-		error = errorMessage;
-		context = theContext;
-		provider = errProvider;
-		directive = provider.getDirective();
-		template = directive.getTemplate();
-		errorFromClass = errProvider.getClass().getName();
+		state = new HashMap<String,String>();
+		if (errProvider != null) {state.putAll(errProvider.getDirective().getTemplate().getReplaceValues());}
+		state.put(Template.wrap(KEY_ERROR	), errorMessage);
+		state.put(Template.wrap(KEY_CONTEXT	), theContext);
+		state.put(Template.wrap(KEY_CLASS	), errProvider.getClass().getName());
+		state.put(Template.wrap(KEY_TRACE	), this.getStackTrace().toString());
+		state.put(Template.wrap(KEY_TEMPLATE), errProvider.getDirective().getTemplate().getFullName() );
+		state.put(Template.wrap(KEY_QUERY	), errProvider.getQueryString());
+		state.put(Template.wrap(KEY_SIZE	), Integer.toString(errProvider.size()));
 		logError();
-		logTemplate();
-		logDirective();
-		logProvider();
     }
 
 	/**
 	 * 
 	 */
 	private void logError() {
-		log.fatal("Merge Exception: \n" +
-				"Message: " + this.error + "\n" +
-				"Context: " + this.context + "\n" +
-				"FromClass: " + this.errorFromClass + "\n" +
-				"StackTrace: ", this);
+		String message = "Merge Exception Occured: \n";
+		for (Map.Entry<String, String> entry : state.entrySet()) {
+            message += "key:" + entry.getKey() + " value:" + entry.getValue() + "\n";
+        }		
+		log.fatal(message);
 	}
+	
 	
 	/**
 	 * 
 	 */
-	private void logTemplate() {
-		if (template != null) {
-			log.fatal("Merge Exception: Template JSON \n" + new PrettyJsonProxy().toJson(template));
-			log.fatal(template.getReplaceValues());
-			log.fatal(template.getBookmarks());
-		}
-	}
-	
 
-	/**
-	 * 
-	 */
-	private void logDirective() {
-		if (directive != null ) {
-			log.fatal("Merge Exception: Exception from Directive: " + Integer.toString(directive.getSequence()) );
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	private void logProvider() {
-		if (provider != null ) {
-			int size = provider.getTables().size();
-			log.fatal("Merge Exception: Exception from Provider: " + Integer.toString(provider.getType()) + "\n" +
-					"Query String: " + provider.getQueryString() + "\n" +
-					"Data Tables: " + Integer.toString(size));
-			if (size > 0) {
-				log.fatal(provider.getTables());
-			}
-		}
+	public HashMap<String, String> getState() {
+		return state;
 	}
 
 	public String getTemplateName() {
-		if (this.template == null) {
-			return "";
-		} else {
-			return this.template.getFullName();
-		}
+		return state.get(KEY_TEMPLATE);
 	}
+
 	@Override
 	public String getMessage() {
-		return super.getMessage() + " For: " + context;
+		return super.getMessage() + " For: " + state.get(KEY_CONTEXT);
 	}
 	
 	public String getContext() {
-		return context;
+		return state.get(KEY_CONTEXT);
 	}
 
 	public String getError() {
-		return error;
+		return state.get(KEY_ERROR);
 	}
 
 	public String getErrorFromClass() {
-		return errorFromClass;
+		return state.get(KEY_CLASS);
 	}
 }

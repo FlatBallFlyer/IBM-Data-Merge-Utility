@@ -54,7 +54,7 @@ public abstract class ReplaceRow extends AbstractDirective {
 		// Make sure we got some data
 		if (getProvider().size() < 1 ) {
 			if (!(isSoftFail() || isSoftFailTemplate())) {
-				throw new MergeException("No Data Found in " + getTemplate().getFullName(), provider.getQueryString());
+				throw new MergeException(this, null, "No Data Found in " + getTemplate().getFullName(), provider.getQueryString());
 			} else {
 				log.warn("Softfail on Empty Resultset - " + provider.getQueryString());
 				return;
@@ -64,7 +64,7 @@ public abstract class ReplaceRow extends AbstractDirective {
 		// Make sure we don't have a multi-table result.
 		if ( provider.size() > 1 ) {
 			if (!(isSoftFail() || isSoftFailTemplate())) {
-				throw new MergeException("Multi-Talbe Empty Result set returned by Directive",provider.getQueryString());
+				throw new MergeException(this, null, "Multi-Talbe Empty Result set returned by Directive",provider.getQueryString());
 			}
 			log.warn("Softfail on Multi-Table Resultset - " + provider.getQueryString());
 		}
@@ -73,7 +73,7 @@ public abstract class ReplaceRow extends AbstractDirective {
 		// Make sure we don't have an empty result set
 		if ( table.size() == 0 ) {
 			if (!(isSoftFail() || isSoftFailTemplate())) {
-				throw new MergeException("Empty Result set returned by Directive",provider.getQueryString());
+				throw new MergeException(this, null, "Empty Result set returned by Directive",provider.getQueryString());
 			} else {
 				log.warn("Softfail on Empty Resultset - " + provider.getQueryString());
 				return;
@@ -83,7 +83,7 @@ public abstract class ReplaceRow extends AbstractDirective {
 		// Make sure we don't have a multi-row result set
 		if ( table.size() > 1 ) {
 			if (!(isSoftFail() || isSoftFailTemplate())) {
-				throw new MergeException("Multiple rows returned when single row expected", provider.getQueryString());
+				throw new MergeException(this, null, "Multiple rows returned when single row expected", provider.getQueryString());
 			}
 			log.warn("Softfail on Multi-Row Resultset - " + provider.getQueryString());
 		}

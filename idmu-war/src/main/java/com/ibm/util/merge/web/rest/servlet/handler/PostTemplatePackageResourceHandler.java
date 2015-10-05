@@ -16,11 +16,13 @@
  */
 package com.ibm.util.merge.web.rest.servlet.handler;
 
+import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.result.JsonDataResult;
+import com.ibm.util.merge.web.rest.servlet.result.HtmlErrorResult;
+import com.ibm.util.merge.web.rest.servlet.result.JsonResult;
 
 import org.apache.log4j.Logger;
 
@@ -30,14 +32,14 @@ import java.util.Properties;
  * POST /idmu/templatePackage/{filename}
  */
 public class PostTemplatePackageResourceHandler implements RequestHandler {
-
     private static final Logger log = Logger.getLogger(PostTemplatePackageResourceHandler.class);
-
     private TemplateFactory tf;
+    private String errTemplate;
 
     @Override
     public void initialize(Properties initParameters, TemplateFactory templateFactory) {
         this.tf = templateFactory;
+        errTemplate = initParameters.getProperty("idmu.errorTemplate." + this.getClass().toString(), "default");
     }
 
     @Override
@@ -49,7 +51,11 @@ public class PostTemplatePackageResourceHandler implements RequestHandler {
     public Result handle(RequestData rd) {
         String packageName = rd.getPathParts().get(1);
         log.warn("Post Template Package " + packageName);
-        return new JsonDataResult(tf.loadPackage(packageName));
+		try {
+	        return new JsonResult(tf.loadPackage(packageName));
+		} catch (MergeException e) {
+	        return new HtmlErrorResult(e, tf, errTemplate);
+		}
     }
 
 }

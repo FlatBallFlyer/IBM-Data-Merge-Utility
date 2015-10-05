@@ -16,11 +16,13 @@
  */
 package com.ibm.util.merge.web.rest.servlet.handler;
 
+import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.result.JsonDataResult;
+import com.ibm.util.merge.web.rest.servlet.result.PlainErrorResult;
+import com.ibm.util.merge.web.rest.servlet.result.JsonResult;
 
 import org.apache.log4j.Logger;
 
@@ -31,14 +33,14 @@ import java.util.Properties;
  * GET /idmu/templatePackage/{collectionName,collectionName...}
  */
 public class DelTemplatePackageResourceHandler implements RequestHandler {
-
     private static final Logger log = Logger.getLogger(DelTemplatePackageResourceHandler.class);
-
     private TemplateFactory tf;
+    private String errTemplate;
 
     @Override
     public void initialize(Properties initParameters, TemplateFactory templateFactory) {
         this.tf = templateFactory;
+        errTemplate = initParameters.getProperty("idmu.errorTemplate." + this.getClass().toString(), "default");
     }
 
     @Override
@@ -54,7 +56,11 @@ public class DelTemplatePackageResourceHandler implements RequestHandler {
         for (String name : collectionNames.split(",")) {
         	names.add(name);
         }
-    	return new JsonDataResult(tf.deleteCollections(names));
+        try {
+        	return new JsonResult(tf.deleteCollections(names));
+        } catch (MergeException e) {
+        	return new PlainErrorResult(e, tf, errTemplate);
+        }
     }
 
 }

@@ -51,7 +51,7 @@ public abstract class Archive {
 		try {
 			message = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
-			throw new MergeException(e, "MD5 Algorithm Exception!", content);
+			throw new MergeException(e, "MD5 Algorithm Exception!", content, null);
 		}
 		message.update(content.toString().getBytes());
 		byte[] digest = message.digest();
