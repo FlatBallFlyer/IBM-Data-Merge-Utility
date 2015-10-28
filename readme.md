@@ -7,7 +7,7 @@ associated with a template.
 
 ## Documentation
 
-See the GitHub project wiki for links to documentation. 
+Install the IDMU tool, the documentation and editor are available from the home page. 
 
 ## Developing
 First clone the project.
@@ -44,91 +44,6 @@ Open a browser to
 - http://localhost:9090/idmu/templates (see REST services section below)
 etc
 
-
-
-## REST services available
-There are 2 servlets:
-- InitializeServlet: /Initialize
-  GET will return a Text status, POST will reinitalize the application
-- RestServlet: /idmu
-  Leverages RequestHandlers to handle requests for the active RuntimeContext instance
-
-## Supported URLs
-	Perform a Merge (shorthand)
-    GET /idmu/merge/fullName?{requestParameters} 
-    	example: http://localhost:9090/idmu/merge/mytemplate?parameter=value 
-    	response: HTML representation of merge output
-
-	Perform a Merge (long hand)
-    GET /idmu/merge?DragonFlyFullName=fullname&{additional requestParameters} 
-    	example: http://localhost:9090/idmu/merge?DragonFlyFullName=root.default. 
-    	response: HTML representation of merge output
-
-	Delete a merge output archive from the server
-    DELETE /idmu/archive/ArchiveName 
-    	example: http://localhost:9090/idmu/archive/c597b00f-2392-4842-9fc5-c2a4395da55e.tar 
-    	response: status OK or NOT_FOUND
-
-	Get a list of all supported Directives
-    GET /idmu/directives 
-		example: http://localhost:9090/idmu/directives
-    	response: [{"type": 0,"name": "Require Tags"},{"type": 1,"name": "Replace Value"},...]
-    	
-	Get a list of all collections
-    GET /idmu/collections 
-    	example: http://localhost:9090/idmu/collections
-    	response: [{"collection":"root"},{"collection":"special"},...]
-    
-	Get a list of all template names in a collection
-    GET /idmu/templates/{collectionName} 
-    	example: http://localhost:9090/idmu/templates/root
-        response: [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]
-
-	Get a list of all template names in a collection with a given name
-    GET /idmu/templates/{collectionName}/{tempalteName}
-    	example: http://localhost:9090/idmu/system/errHtml
-        response: [{"collection":"system","name":"errHtml","columnValue":""},{"collection":"system","name":"errHtml",...}]
-
-	Get a template
-    GET /idmu/template/{templateFullName}
-    	example: http://localhost:9090/idmu/template/root.default.
-	    response: {Template json}
-
-	Save a template
-    PUT /idmu/template/{Template json}
-    	response: status OK or FORBIDDEN
-
-	Delete a template
-    DELETE /idmu/template/{templateFullName} 
-    	example: http://localhost:9090/idmu/template/root.default.
-    	response: status OK or NOT_FOUND
-
-	Get a whole bunch of templates
-    GET /idmu/templatePackage/{collectionName,collectionName...} 
-    	example: http://localhost:9090/idmu/templatePackage/root,system)
-        response: [TemplateJson,TemplateJson...]
-
-	Save a whole bunch of templates
-    PUT /idmu/templatePackage/{Templates} 
-    	example: http://localhost:9090/idmu/templatePackage/{"Templates":[{Template},{Template}]}
-    	response: status echo's saved templates or FORBIDDEN
-
-	Load a package from the package directory.
-    POST /idmu/templatePackage/{package.json} 
-    	example: http://localhost:9090/idmu/templatePackage/system.json
-    	response: status echo's saved templates or NOT FOUND or ERROR
-
-	
-    DELETE /idmu/templatePackage/{collectionName} 
-    	example: http://localhost:9090/idmu/templates/system
-    	response: status OK or FORBIDDEN
-    	
-    Get a server status page
-    GET /idmu/status/ 
-    	example: http://localhost:9090/idmu/status/
-    	response: Status Page
-    	
-    
 ## License
 
 Licensed as Open Source under the Apache License, Version 2.0
