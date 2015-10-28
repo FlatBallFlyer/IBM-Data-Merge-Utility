@@ -38,7 +38,7 @@ public class TarArchive extends Archive {
     	String chksum = super.writeFile(entryName, content, userName, groupName);
     	TarArchiveOutputStream outputStream = (TarArchiveOutputStream) this.getOutputStream();
         TarArchiveEntry entry = new TarArchiveEntry(entryName);
-        entry.setSize(content.length());
+        entry.setSize(content.getBytes().length);
         entry.setNames(userName, groupName);
         outputStream.putArchiveEntry(entry);
         outputStream.write(content.getBytes());
