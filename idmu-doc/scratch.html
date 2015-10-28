@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IBM Data Merge Utility</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
 </head>
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
@@ -16,7 +16,7 @@
                 MENU
            </button>
         <div class="navbar-header">
-        	<a class="navbar-brand" href="#"><img src="images/IBMlogo.png"></a>
+        	<a class="navbar-brand" href="#"><img src="/images/IBMlogo.png"></a>
         </div>                         
         <div class="collapse navbar-collapse" id="collapse">  
             <ul class="nav navbar-nav navbar-right">
@@ -97,8 +97,8 @@
 				<td class="info text-left">{jdbc-persistence-templates-poolname}</td>
 			</tr>
 			<tr>
-				<td class="info text-right">Templates Folder:</td>
-				<td class="info text-left">{merge-templates-folder}</td>
+				<td class="info text-right">Templates Schema:</td>
+				<td class="info text-left">{jdbc-persistence-templates-schema}</td>
 			</tr>
 			<tr>
 				<td class="info text-right">Packages Folder:</td>
@@ -113,6 +113,25 @@
 				<td class="info text-left">{log4j-properties}</td>
 			</tr>
 		</table>
+
+		<h1>Cache Statistics</h1>
+		<table class="table">
+			<tr>
+				<th>Template</th>
+				<th>Content Size</th>
+				<th>Bookmarks</th>
+				<th>Directives</th>
+				<th>Merge Count</th>
+			</tr>
+			<tr>
+				<td class="info text-right">{FULL_NAME}</td>
+				<td class="info text-right">{SIZE}</td>
+				<td class="info text-right">{BOOKMARKS}</td>
+				<td class="info text-right">{DIRECTIVES}</td>
+				<td class="info text-right">{COUNT}</td>
+			</tr>
+		</table>
+
 	</div>
 	<!--end of container-->
 	<!--javascript-->

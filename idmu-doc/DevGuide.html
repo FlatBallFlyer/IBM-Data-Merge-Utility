@@ -35,8 +35,8 @@
 <h1><a id="top">IBM Data Merge Utility Developer Guide</a></h1>            		
         <ul class="nav nav-pills nav-stacked">
             <li><a href="#Licensing"><strong>Licensing</strong></a></li>
-            <li><a href="#Develop"><strong>Setting up your dev environment</strong></a></li>   
-            <li><a href="#RestApi"><strong>The REST Api</strong></a>
+            <li><a href="#Develop"><strong>Setting up your dev environment</strong></a></li>
+			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><strong>Rest API's</strong><b class="caret"></b></a>
                 <ul class="dropdown-menu">
                 	<li><a href="#DeleteArchive" >Delete Archive</a></li>
                     <li><a href="#DeletePackage" >Delete Template Packages</a></li>
@@ -53,8 +53,8 @@
                     <li><a href="#LoadPackage"  >Load a package of templates</a></li>
                     <li><a href="#PutPackage"   >Put a package of templates</a></li>
                     <li><a href="#PutPackage"   >Put a template</a></li>
-                 </ul> 
-            </li>
+                </ul> 
+            </li>  
             <li><a href="#Testing"><strong>Regression Testing</strong></a></li>         
         </ul>
      
@@ -75,6 +75,7 @@
 <section id="RestApi">                        
 <h3><a>REST API</a></h3>
 		<p>The following rest services are supported:</p>
+		
 		<section id="DeleteArchive">                        
 		<h4>Delete Archive</h4>
 		<p>Delete an archive that was generated as part of a merge process</p>
@@ -83,14 +84,16 @@
 			<li>url: host:port/idmu/archive/name where name is an archive name</li>
 			<li>http request: Delete</li>
 			<li>http response: 200<ul>
-			<li>response type: text/plain</li>
-			<li>response content: OK</li>
+				<li>response type: text/plain</li>
+				<li>response content: OK</li>
 			</ul></li>
 			<li>http response: 500<ul>
-			<li>response type: text/plain</li>
-			<li>response content: NOT FOUND</li>
+				<li>response type: text/plain</li>
+				<li>response content: NOT FOUND</li>
+				<li>template override: idmu.errorTemplate.DelArchive</li>
 			</ul></li>
 		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
 		
 		<section id="DeletePackage">                        
@@ -101,14 +104,16 @@
 			<li>url: host:port/idmu/templatePackage/names where names is a comma separated list of package names</li>
 			<li>http request: Delete</li>
 			<li>http response: 200<ul>
-			<li>response type: text/plain</li>
-			<li>response content: OK</li>
+				<li>response type: text/plain</li>
+				<li>response content: OK</li>
 			</ul></li>
 			<li>http response: 500<ul>
-			<li>response type: text/plain</li>
-			<li>response content: Error Message</li>
+				<li>response type: text/plain</li>
+				<li>response content: Error Message</li>
+				<li>template override: idmu.errorTemplate.DelTemplatePackage</li>
 			</ul></li>
 		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
 		
 		<section id="DeleteTemplate">                        
@@ -119,179 +124,226 @@
 			<li>url: host:port/idmu/template/name where name is a template full name (must contain at least 2 periods)</li>
 			<li>http request: Delete</li>
 			<li>http response: 200<ul>
-			<li>response type: text/plain</li>
-			<li>response content: OK</li>
+				<li>response type: text/plain</li>
+				<li>response content: OK</li>
 			</ul></li>
 			<li>http response: 500<ul>
-			<li>response type: text/plain</li>
-			<li>response content: NOT FOUND</li>
+				<li>response type: text/plain</li>
+				<li>response content: NOT FOUND</li>
+				<li>template override: idmu.errorTemplate.DelTemplate</li>
 			</ul></li>
 		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
 		
 		<section id="GetCollections">                        
-		<li>Get Template Collections<ul>
+		<h4>Get Collections</h4>
+		<p>Get Template Collections</p>
+		<ul>
 			<li>example: Get host:port/idmu/collections</li>
 			<li>url: host:port/idmu/collections</li>
 			<li>http request: Get</li>
 			<li>http response: 200<ul>
-			<li>response type: text/json</li>
-			<li>response content: An array of Collection Names i.e. [{"collection":"system"},{"collection":"special"},...]</li>
+				<li>response type: text/json</li>
+				<li>response content: An array of Collection Names i.e. [{"collection":"system"},{"collection":"special"},...]</li>
 			</ul></li>
-			<li>http response: 500<ul>
-			<li>response type: text/plain</li>
-			<li>response content: Error Message</li>
-			</ul></li>
-		</ul></li>
+		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
+		
 		<section id="GetDirectives">
-		<li>Get Directives<ul>
+		<h4>Get Directives</h4>
+		<p>Get Directives</p>
+		<ul>
 			<li>example: Get host:port/idmu/directives</li>
 			<li>url: host:port/idmu/directives</li>
 			<li>http request: Get</li>
 			<li>http response: 200<ul>
-			<li>response type: text/json</li>
-			<li>response content: An array of Directive objects i.e. [{"type": 0,"name": "Require Tags"...},{"type": 1,"name": "Replace Value",...},...]</li>
+				<li>response type: text/json</li>
+				<li>response content: An array of Directive objects i.e. [{"type": 0,"name": "Require Tags"...},{"type": 1,"name": "Replace Value",...},...]</li>
 			</ul></li>
-		</ul></li>
+		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
+		
 		<section id="GetMergeHtml">
-		<li>Get Merge Output (HTML Interface)<ul>
+		<h4>Get Merge Output (HTML)</h4>
+		<p>Get Merge Output (HTML Interface)</p>
+		<ul>
 			<li>example: Get host:port/idmu/merge/test?name=value&amp;list=one,two,three</li>
 			<li>url: host:port/idmu/merge/<em>template</em>&apm;parameters where <em>template</em> is a template name. Note that trailing periods are not needed with this call.</li>
 			<li>http request: Get</li>
 			<li>http response: 200<ul>
-			<li>response type: text/html</li>
-			<li>response content: The merge output</li>
+				<li>response type: text/html</li>
+				<li>response content: The merge output</li>
 			</ul></li>
 			<li>http response: 500<ul>
-			<li>response type: text/html</li>
-			<li>response content: The Error Message</li>
+				<li>response type: text/html</li>
+				<li>response content: The Error Message</li>
+				<li>template override: idmu.errorTemplate.GetMergeOutputHtml</li>
 			</ul></li>
-		</ul></li>
+		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
-           <section id="GetMergeText">
-		<li>Get Merge Output (Plain Text Interface)<ul>
+		
+        <section id="GetMergeText">
+		<h4>Get Merge Output (TEXT)</h4>
+		<p>Get Merge Output (Plain Text Interface)</p>
+		<ul>
 			<li>example: Get host:port/idmu/merge?DragonFlyFullName=test..?name=value&amp;list=one,two,three</li>
 			<li>url: host:port/idmu/merge?DragonFlyFullName=name?parameters where name is a template full name. Note that trailing periods are required, a full name should always contain at least 2 periods.</li>
 			<li>http request: Get</li>
 			<li>http response: 200<ul>
-			<li>response type: text/plain</li>
-			<li>response content: The merge output</li>
+				<li>response type: text/plain</li>
+				<li>response content: The merge output</li>
 			</ul></li>
 			<li>http response: 500<ul>
-			<li>response type: text/plain</li>
-			<li>response content: The Error Message</li>
+				<li>response type: text/plain</li>
+				<li>response content: The Error Message</li>
+				<li>template override: idmu.errorTemplate.GetMergeOutputText</li>
 			</ul></li>
-		</ul></li>
+		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
+		
 		<section id="GetStatus">      
-		<li>Get IDMU System Status<ul>
+		<h4>Get Status</h4>
+		<p>Get IDMU System Status</p>
+		<ul>
 			<li>example: Get host:port/idmu/status</li>
 			<li>url: host:port/idmu/status</li>
 			<li>http request: Get</li>
 			<li>http response: 200<ul>
-			<li>response type: text/html</li>
-			<li>response content: The System Status page</li>
+				<li>response type: text/html</li>
+				<li>response content: The System Status page</li>
 			</ul></li>
 			<li>http response: 500<ul>
-			<li>response type: text/html</li>
-			<li>response content: The Error Message (Missing System Templates)</li>
+				<li>response type: text/html</li>
+				<li>response content: The Error Message (Missing System Templates)</li>
+				<li>template override: idmu.errorTemplate.GetStatus</li>
 			</ul></li>
-		</ul></li>
+		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
+		
 		<section id="GetNamesColl">
-		<li>Get Templates in a Collection<ul>
+		<h4>Get Template Names for Collection</h4>
+		<p>Get Templates in a Collection</p>
+		<ul>
 			<li>example: Get host:port/idmu/templates/root</li>
 			<li>url: host:port/idmu/templates/collection where collection is a collection name</li>
 			<li>http request: Get</li>
 			<li>http response: 200<ul>
-			<li>response type: text/json</li>
-			<li>response content: An array of templates with the provided collection name. i.e. [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]</li>
+				<li>response type: text/json</li>
+				<li>response content: An array of templates with the provided collection name. i.e. [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]</li>
 			</ul></li>
-		</ul></li>
+		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
+		
 		<section id="GetNamesName">
-		<li>Get Templates in a Collection with a specific name<ul>
+		<h4>Get Names for Collection / Name</h4>
+		<p>Get Templates in a Collection with a specific name</p>
+		<ul>
 			<li>example: Get host:port/idmu/templates/root/options</li>
 			<li>url: host:port/idmu/templates/collection/name where collection is a collection, and name is a collection name</li>
 			<li>http request: Get</li>
 			<li>http response: 200<ul>
-			<li>response type: text/json</li>
-			<li>response content: An array of templates with the provie collection and name. i.e. [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]</li>
+				<li>response type: text/json</li>
+				<li>response content: An array of templates with the provie collection and name. i.e. [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]</li>
 			</ul></li>
-		</ul></li>
+		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
+		
 		<section id="GetPackage">
-		<li>Get a Template Package<ul>
+		<h4>Get Package</h4>
+		<p>Get a Template Package</p>
+		<ul>
 			<li>example: Get host:port/idmu/templatePackage/test,system</li>
 			<li>url: host:port/idmu/templatePackage/names where names is a coma seperated list of collection names</li>
 			<li>http request: Get</li>
 			<li>http response: 200<ul>
-			<li>response type: text/json</li>
-			<li>response content: An array of templates from the collections. i.e. [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]</li>
+				<li>response type: text/json</li>
+				<li>response content: An array of templates from the collections. i.e. [{"collection":"root","name":"allDirectives","columnValue":""},{"collection":"root",...}]</li>
 			</ul></li>
-		</ul></li>
+		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
-		<section id="GetPackage">
-		<li>Get a Template<ul>
+		
+		<section id="GetTemplate">
+		<h4>Get Template</h4>
+		<p>Get a Template</p>
+		<ul>
 			<li>example: Get host:port/idmu/template/test..</li>
 			<li>url: host:port/idmu/template/name where name is a template full name (trailing periods required)</li>
 			<li>http request: Get</li>
 			<li>http response: 200<ul>
-			<li>response type: text/json</li>
-			<li>response content: A template object. i.e. {"collection":"root","name":"allDirectives","columnValue":""...}</li>
+				<li>response type: text/json</li>
+				<li>response content: A template object. i.e. {"collection":"root","name":"allDirectives","columnValue":""...}</li>
 			</ul></li>
 			<li>http response: 500<ul>
-			<li>response type: text/plain</li>
-			<li>response content: The Error Message (NOT FOUND)</li>
+				<li>response type: text/plain</li>
+				<li>response content: The Error Message (NOT FOUND)</li>
+				<li>template override: idmu.errorTemplate.GetTemplate</li>
 			</ul></li>
-		</ul></li>
+		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
+		
 		<section id="LoadPackage">
-		<li>Load a Template Package<ul>
+		<h4>Load Package</h4>
+		<p>Load a Template Package</p>
+		<ul>
 			<li>example: Post host:port/idmu/templatePackage/test.json</li>
 			<li>url: host:port/idmu/templatePackage/name where name a file in the idmu packages folder</li>
 			<li>http request: Post</li>
 			<li>http response: 200<ul>
-			<li>response type: text/json</li>
-			<li>response content: An array of the packages saved.</li>
+				<li>response type: text/json</li>
+				<li>response content: An array of the packages saved.</li>
 			</ul></li>
 			<li>http response: 500<ul>
-			<li>response type: text/html</li>
-			<li>response content: The Error Message</li>
+				<li>response type: text/html</li>
+				<li>response content: The Error Message</li>
+				<li>template override: idmu.errorTemplate.PostTemplatePackage</li>
 			</ul></li>
-		</ul></li>
+		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
+		
 		<section id="PutPackage">
-		<li>Put a Template Package<ul>
+		<h4>Put Package</h4>
+		<p>Put a Template Package</p>
+		<ul>
 			<li>example: Put host:port/idmu/templatePackage?[Template Array]</li>
 			<li>url: host:port/idmu/templatePackage?[templates] where templates is a json array of template objects.</li>
 			<li>http request: Put</li>
 			<li>http response: 200<ul>
-			<li>response type: text/json</li>
-			<li>response content: The template that was saved</li>
+				<li>response type: text/json</li>
+				<li>response content: The template that was saved</li>
 			</ul></li>
-			<li>http response: 500<ul>
-			<li>response type: text/plain</li>
-			<li>response content: The Error Message</li>
-			</ul></li>
-		</ul></li>
+		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
+		
 		<section id="PutTemplate">
-		<li>Put a Template<ul>
+		<h4>Put Template</h4>
+		<p>Put a Template</p>
+		<ul>
 			<li>example: Put host:port/idmu/template?{template}</li>
 			<li>url: host:port/idmu/template?template where template is a JSON template object</li>
 			<li>http request: Pet</li>
 			<li>http response: 200<ul>
-			<li>response type: text/json</li>
-			<li>response content: The template object that was saved. </li>
+				<li>response type: text/json</li>
+				<li>response content: The template object that was saved. </li>
 			</ul></li>
 			<li>http response: 500<ul>
-			<li>response type: text/plain</li>
-			<li>response content: The Error Message</li>
+				<li>response type: text/plain</li>
+				<li>response content: The Error Message</li>
+				<li>template override: idmu.errorTemplate.PutTemplate</li>
 			</ul></li>
-		</ul></li>
+		</ul>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
 
 </section>

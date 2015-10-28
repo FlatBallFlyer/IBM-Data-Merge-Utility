@@ -34,7 +34,7 @@
 <body>
 	<div class="container">
 		<h1>
-			<a id="top">IBM Data Merge Utility Admin Guide</a>
+			<a id="top">IBM Data Merge Utility - Admin Guide</a>
 		</h1>
 		<ul class="nav nav-pills nav-stacked">
 			<li><a href="#Licensing"><strong>Licensing</strong></a></li>
@@ -42,10 +42,11 @@
 			<li><a href="#ConfigOpt"><strong>Configuration Options</strong></a></li>
 			<li><a href="#UseData"><strong>Configuring Database Template Persistence</strong></a></li>
 			<li><a href="#JDBC"><strong>Configuring Your JDBC data source</strong></a></li>
+			<li><a href="#Error"><strong>Customizing Error Messages</strong></a></li>
 			<li><a href="#HouseLogs"><strong>Housekeeping of Merge Output / Logs</strong></a></li>
 			<li><a href="#SecSer"><strong>Securing the server</strong></a></li>
-			<li><a href="#SecSer"><strong>Change Management</strong></a></li>
-			<li><a href="#SecSer"><strong>Backup / Restore Guidelines</strong></a></li>
+			<li><a href="#Change"><strong>Change Management</strong></a></li>
+			<li><a href="#Backup"><strong>Backup / Restore Guidelines</strong></a></li>
 			<li><a href="#EntDepArch"><strong>Enterprise Deployment Architecture</strong></a></li>
 		</ul>
 
@@ -193,9 +194,16 @@
 				<li><strong>jdbc-persistence-templates-poolname</strong>
 					Default: idmuTemplates - The connection pool used by Template
 					Database persistence</li>
+				<li><strong>jdbc-persistence-templates-schema</strong>
+					Default: -none- - The schema name used by database template persistence. 
+					Not required if the default schema is used.</li>
 				<li><strong>pretty-json</strong> Default: no – This parameter
 					is used to control &ldquo;pretty&rdquo; json formatting of the REST
 					service returns. A value of &ldquo;yes&rdquo; enables pretty json.</li>
+				<li><strong>idmu.errorTemplate.*</strong> These parameters are used to sepcify
+					alternate error templates to be used by a rest service. The specific property
+					name can be found in the <a href="/DevGuide.html#RestApi">Developers Guide - Rest API</a> documentation.
+					Additional information on using custom error templates can be found under the <a href="#Error">Custom Error Templatese</a> topic</li>
 			</ul>
 			<div class="footerLink">
 				<a href="#Top">Back To Top</a>
@@ -289,18 +297,43 @@
 				will connect to the database specified by this entry in the
 				context.xml
 			</p>
-			<textarea cols="70" rows="12"><resource auth="Container"
-					driverclassname="com.mysql.jdbc.Driver" maxactive="100"
-					maxidle="30" maxwait="10000" name="jdbc/testgen"
-					password="drowssap" type="javax.sql.DataSource"
-					url="jdbc:mysql://localhost:3306/testgen" username="root" />
-<context></context>
-			</textarea>
+			<textarea cols="70" rows="14"><context>
+<resource auth="Container"
+		driverclassname="com.mysql.jdbc.Driver" 
+		maxactive="100"
+		maxidle="30" 
+		maxwait="10000" 
+		username="root" 
+		password="drowssap" 
+		name="jdbc/testgen"
+		type="javax.sql.DataSource"
+		url="jdbc:mysql://localhost:3306/testgen" 
+	/>
+</context></textarea>
 
 			<div class="footerLink">
 				<a href="#Top">Back To Top</a>
 			</div>
 		</section>
+
+		<section id="Error">
+			<h3>Customizing Error Messages</h3>
+			<p>In a purpose built merge environment you may want to customize system error messages.
+			IDMU Error Templates are organized at 3 levels.</p>
+			<ul>
+				<li>The default error template for the Rest services (error.default or error.defaultHtml).</li>
+				<li>An over-ride as specified in the idmu-properties (see <a href="/DevGuide.html#RestApi">Developers Guide - Rest API</a> for details)</li>
+				<li>An additional over-ride based on the java class that threw the error.</li> 
+			</ul>
+			<p>By way of example, the Required Tag directive error page is <em>error.defaultHtml.com.ibm.util.merge.directive.Require</em> (See <a href="/Training.html#Lesson2">Training Lesson 2</a> for more on thise feature) 
+			and if you provided a custom error page for the GetMergeOutputHtml rest service in idmu.properties as <em>idmu.errorTemplate.GetMergeOutputHtml=myHtmlError</em> 
+			the Required Tag exception would attempt to use the <em>error.myHtmlError.com.ibm.util.merge.directive.Require</em> template, and if that template does not exist the
+			<em>error.myHtmlError.</em> template will be used. If that does not exist, a non-template based default error message is used.</p>
+			<div class="footerLink">
+				<a href="#Top">Back To Top</a>
+			</div>
+		</section>
+
 		<section id="HouseLogs">
 			<h3>
 				<a>Housekeeping of Merge Output / Logs</a>
@@ -341,6 +374,7 @@ curl -X DELETE yourhost:port/idmu/archive/{DragonOutputFile}</textarea>
 				<a href="#Top">Back To Top</a>
 			</div>
 		</section>
+
 		<section id="SecSer">
 			<h3>
 				<a>Securing the server</a>
@@ -365,11 +399,17 @@ curl -X DELETE yourhost:port/idmu/archive/{DragonOutputFile}</textarea>
 				*.json in the templates folder as read only, or grant read-only
 				access to the template database</p>
 			<ul></ul>
+			
+			<h4>Security Manager Configuration</h4>
+			<p>A sample security manager java.policy file is provided in the idmu properties folder. 
+			This properties file will need to be customized based on the jdbc database pools properties 
+			file entries you have configured.</p>
+			
 			<div class="footerLink">
 				<a href="#Top">Back To Top</a>
 			</div>
 		</section>
-		<section id="ChangeMgmt">
+		<section id="Change">
 			<hr style="clear: both;" />
 			<h3>
 				<a>Change Management</a>
@@ -383,8 +423,8 @@ curl -X DELETE yourhost:port/idmu/archive/{DragonOutputFile}</textarea>
 				<li><strong>Unix Command Line</strong> call the
 					idmu/templatePackage rest servuces using curl. Rest calls that have
 					a {collections} parameter expect a coma seperated list of
-					collections.</li>
-				<li><ul>
+					collections.
+				<ul>
 					<li>To export a package from a development server: <br /> <strong>curl
 							devhost.com:port/idmu/templatePackage/{collections} &gt;
 							myPackge.json</strong>
@@ -444,6 +484,9 @@ curl -X DELETE yourhost:port/idmu/archive/{DragonOutputFile}</textarea>
 				<li><strong>curl
 						yourHost:port/idmu/merge?DragonFlyCacheReset</strong></li>
 			</ul>
+			<div class="footerLink">
+				<a href="#Top">Back To Top</a>
+			</div>
 		</section>
 		<section id="EntDepArch">
 			<hr style="clear: both;" />
