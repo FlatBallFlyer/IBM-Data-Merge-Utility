@@ -16,14 +16,13 @@
  */
 package com.ibm.util.merge.web.rest.servlet.result;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.TemplateFactory;
 import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.Result;
-import com.ibm.util.merge.web.rest.servlet.writer.TextResponseWriter;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -55,15 +54,21 @@ public class HtmlErrorResult implements Result {
 
         String message;
 		try {
+			this.exception.logError();
 			HashMap<String,String[]> parameters = new HashMap<String,String[]>();
-			parameters.put(TemplateFactory.KEY_FULLNAME,  new String[]{errTemplate + exception.getErrorFromClass()});
-			parameters.put(TemplateFactory.KEY_SHORTNAME, new String[]{errTemplate});
+			parameters.put("DragonFlyFullName",  new String[]{this.errTemplate + exception.getErrorFromClass()});
+			parameters.put("DragonFlyShortName", new String[]{this.errTemplate});
+			parameters.putAll(exception.getParameters());
 			message = this.factory.getMergeOutput(parameters);
 		} catch (MergeException e) {
             message = "INVALID ERROR TEMPLATE! \n" +
                     "Message: " + exception.getError() + "\n" +
                     "Context: " + exception.getContext() + "\n";
 		}
-        new TextResponseWriter(resp, message).write();
+		try {
+			resp.getWriter().write(message);
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+		}
     }
 }

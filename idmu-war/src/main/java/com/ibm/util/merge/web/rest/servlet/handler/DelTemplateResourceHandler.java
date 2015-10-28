@@ -22,7 +22,7 @@ import com.ibm.util.merge.web.rest.servlet.RequestData;
 import com.ibm.util.merge.web.rest.servlet.RequestHandler;
 import com.ibm.util.merge.web.rest.servlet.Result;
 import com.ibm.util.merge.web.rest.servlet.result.PlainErrorResult;
-import com.ibm.util.merge.web.rest.servlet.result.JsonResult;
+import com.ibm.util.merge.web.rest.servlet.result.PlainResult;
 
 import org.apache.log4j.Logger;
 
@@ -39,7 +39,7 @@ public class DelTemplateResourceHandler implements RequestHandler {
     @Override
     public void initialize(Properties initParameters, TemplateFactory templateFactory) {
         this.tf = templateFactory;
-        errTemplate = initParameters.getProperty("idmu.errorTemplate." + this.getClass().toString(), "default");
+        errTemplate = initParameters.getProperty("idmu.errorTemplate.DelTemplate", "default");
     }
 
     @Override
@@ -52,7 +52,7 @@ public class DelTemplateResourceHandler implements RequestHandler {
         String fullname = rd.getPathParts().get(1);
         log.warn("delTemplate for " + fullname);
     	try {
-    		return new JsonResult(tf.deleteTemplate(fullname));
+    		return new PlainResult(tf.deleteTemplate(fullname));
     	} catch (MergeException e) {
     		return new PlainErrorResult(e, tf, errTemplate);
     	}

@@ -36,7 +36,7 @@ public class DelArchiveResourceHandler implements RequestHandler {
     @Override
     public void initialize(Properties initParameters, TemplateFactory templateFactory) {
         this.tf = templateFactory;
-        errTemplate = initParameters.getProperty("idmu.errorTemplate." + this.getClass().toString(), "default");
+        errTemplate = initParameters.getProperty("idmu.errorTemplate.DelArchive", "default");
     }
 
     @Override

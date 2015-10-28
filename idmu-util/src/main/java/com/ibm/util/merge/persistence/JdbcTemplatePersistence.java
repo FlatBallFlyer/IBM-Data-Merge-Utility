@@ -65,7 +65,9 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
     }
 
     public void setPoolName(String poolName) {
-        this.poolName = poolName;
+    	if (poolName != null) {
+            this.poolName = poolName;
+    	}
     }
 
     public String getSchemaName() {
@@ -73,7 +75,9 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
 	}
 
 	public void setSchemaName(String schemaName) {
-		this.schemaName = schemaName;
+		if (schemaName != null) {
+			this.schemaName = schemaName;
+		}
 	}
 
 	private String getTemplateTableName() {

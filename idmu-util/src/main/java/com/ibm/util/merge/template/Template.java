@@ -58,6 +58,7 @@ public class Template {
     private static final Logger log = Logger.getLogger(Template.class.getName());
     // Attributes
     private transient long idtemplate = 0;
+    private transient long mergeCount = 0;
     private String collection = "";
     private String name = "";
     private String columnValue = "";
@@ -93,6 +94,7 @@ public class Template {
      * @throws MergeException - Wrapper of clone not supported exceptions
      */
     public Template getMergable(Map<String, String> seedReplace) {
+    	this.mergeCount++;
     	Template to = new Template();
     	to.setIdtemplate(	this.getIdtemplate());
     	to.setCollection( 	this.getCollection());
@@ -430,7 +432,11 @@ public class Template {
         return directives;
     }
 
-    private void setMerged(boolean b) {
+    public long getMergeCount() {
+		return mergeCount;
+	}
+
+	private void setMerged(boolean b) {
 		this.merged = b;
 		
 	}

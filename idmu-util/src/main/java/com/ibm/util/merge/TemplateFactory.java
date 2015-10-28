@@ -57,7 +57,7 @@ final public class TemplateFactory {
     private static final Logger log = Logger.getLogger(TemplateFactory.class.getName());
     public static final String KEY_CACHE_RESET = Template.wrap("DragonFlyCacheReset");
     public static final String KEY_FULLNAME = Template.wrap("DragonFlyFullName");
-    public static final String KEY_SHORTNAME = Template.wrap("DragonFlySHortName");
+    public static final String KEY_SHORTNAME = Template.wrap("DragonFlyShortName");
     public static final String DEFAULT_FULLNAME = "system.default.";
     public static final String DEFAULT_SHORTNAME = "system.default.";
     public static final String SYSTEM_STATUS_PAGE = "system.status.";
@@ -73,7 +73,7 @@ final public class TemplateFactory {
 	public static final String PARAMETER_PRETTY_JSON 		= "pretty-json";
 
 	// Factory Attributes
-	private final String idmu_version = "3.1.4c";
+	private final String idmu_version = "3.1.4";
 	private final Properties runtimeProperties;
     private final TemplatePersistence persistence;
     private final File outputRoot;
@@ -163,7 +163,7 @@ final public class TemplateFactory {
         MergeContext rtc = new MergeContext(this, replace);
         String fullName = replace.get(KEY_FULLNAME);
         String shortName = replace.get(KEY_SHORTNAME);
-        log.info("GET TEMPLATE = " + fullName);
+        log.info("Merging TEMPLATE fullName " + fullName + " shortName " + shortName);
         Template rootTemplate = getMergableTemplate(fullName, shortName, replace);
         String returnValue = rootTemplate.getMergedOutput(rtc);
         try {
@@ -384,6 +384,7 @@ final public class TemplateFactory {
 		parameterMap.put("LAST_RESET", 			new String[]{this.initialized.toString()});
 		parameterMap.put("TEMPLATES_CACHED", 	new String[]{Integer.toString(this.templateCache.size())});
 		parameterMap.put("IDMU_VERSION", 		new String[]{this.idmu_version});
+		parameterMap.put("CACHE_STATS", 		new String[]{this.templateCache.cacheStatus()});
 		for (Entry<Object, Object> e : this.runtimeProperties.entrySet()) {
 			parameterMap.put((String) e.getKey(), new String[]{(String) e.getValue()});
 		}

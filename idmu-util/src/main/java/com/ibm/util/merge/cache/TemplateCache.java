@@ -93,4 +93,16 @@ public class TemplateCache extends MemoryCache<String, Template> {
         // Return the Set
     	return theTemplates;
     }
+    
+    public String cacheStatus() {
+    	String stats = "FULL_NAME,SIZE,DIRECTIVES,COUNT\n";
+    	Map<String, Template> treeMap = new TreeMap<String, Template>(this.asMap());
+        for (Map.Entry<String, Template> template : treeMap.entrySet()) {
+            stats += template.getValue().getFullName() + "," + 
+            		 template.getValue().getContent().length() + "," + 
+            		 template.getValue().getDirectives().size() + "," +
+            		 template.getValue().getMergeCount() + "\n";
+        }
+    	return stats;
+    }
 }

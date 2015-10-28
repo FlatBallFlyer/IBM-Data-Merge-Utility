@@ -52,11 +52,11 @@ public class MergeException extends Exception {
 		super(e);
 		state = new HashMap<String,String>();
 		if (replace != null) {state.putAll(replace);}
-		state.put(Template.wrap(KEY_ERROR), errorMessage);
-		state.put(Template.wrap(KEY_CONTEXT), theContext);
-		state.put(Template.wrap(KEY_TRACE), e.getStackTrace().toString());
-		state.put(Template.wrap(KEY_CLASS), e.getClass().getName());
-		state.put(Template.wrap(KEY_TEMPLATE), "");
+		state.put(KEY_ERROR, errorMessage);
+		state.put(KEY_CONTEXT, theContext);
+		state.put(KEY_TRACE, e.getStackTrace().toString());
+		state.put(KEY_CLASS, e.getClass().getName());
+		state.put(KEY_TEMPLATE, "");
 		logError();
 	}
 	
@@ -68,11 +68,11 @@ public class MergeException extends Exception {
 		super(errorMessage);
 		state = new HashMap<String,String>();
 		if (replace != null) {state.putAll(replace);}
-		state.put(Template.wrap(KEY_ERROR), errorMessage);
-		state.put(Template.wrap(KEY_CONTEXT), theContext);
-		state.put(Template.wrap(KEY_TRACE), this.getStackTrace().toString());
-		state.put(Template.wrap(KEY_CLASS), "");
-		state.put(Template.wrap(KEY_TEMPLATE), "");
+		state.put(KEY_ERROR, errorMessage);
+		state.put(KEY_CONTEXT, theContext);
+		state.put(KEY_TRACE, this.getStackTrace().toString());
+		state.put(KEY_CLASS, "");
+		state.put(KEY_TEMPLATE, "");
 		logError();
     }
 
@@ -84,11 +84,11 @@ public class MergeException extends Exception {
 		super(wrapped);
 		state = new HashMap<String,String>();
 		if (errTemplate != null) {state.putAll(errTemplate.getReplaceValues());}
-		state.put(Template.wrap(KEY_ERROR), errorMessage);
-		state.put(Template.wrap(KEY_CONTEXT), theContext);
-		state.put(Template.wrap(KEY_TRACE), this.getStackTrace().toString());
-		state.put(Template.wrap(KEY_CLASS), errTemplate.getClass().getName());
-		state.put(Template.wrap(KEY_TEMPLATE), errTemplate.getFullName());
+		state.put(KEY_ERROR, errorMessage);
+		state.put(KEY_CONTEXT, theContext);
+		state.put(KEY_TRACE, this.getStackTrace().toString());
+		state.put(KEY_CLASS, errTemplate.getClass().getName());
+		state.put(KEY_TEMPLATE, errTemplate.getFullName());
 		logError();
     }
 
@@ -100,11 +100,11 @@ public class MergeException extends Exception {
 		super(wrapped);
 		state = new HashMap<String,String>();
 		if (errDirective != null) {state.putAll(errDirective.getTemplate().getReplaceValues());}
-		state.put(Template.wrap(KEY_ERROR), errorMessage);
-		state.put(Template.wrap(KEY_CONTEXT), theContext);
-		state.put(Template.wrap(KEY_CLASS), errDirective.getClass().getName());
-		state.put(Template.wrap(KEY_TRACE), this.getStackTrace().toString());
-		state.put(Template.wrap(KEY_TEMPLATE), errDirective.getTemplate().getFullName());
+		state.put(KEY_ERROR, errorMessage);
+		state.put(KEY_CONTEXT, theContext);
+		state.put(KEY_CLASS, errDirective.getClass().getName());
+		state.put(KEY_TRACE, this.getStackTrace().toString());
+		state.put(KEY_TEMPLATE, errDirective.getTemplate().getFullName());
 		logError();
     }
 
@@ -116,20 +116,20 @@ public class MergeException extends Exception {
 		super(wrapped);
 		state = new HashMap<String,String>();
 		if (errProvider != null) {state.putAll(errProvider.getDirective().getTemplate().getReplaceValues());}
-		state.put(Template.wrap(KEY_ERROR	), errorMessage);
-		state.put(Template.wrap(KEY_CONTEXT	), theContext);
-		state.put(Template.wrap(KEY_CLASS	), errProvider.getClass().getName());
-		state.put(Template.wrap(KEY_TRACE	), this.getStackTrace().toString());
-		state.put(Template.wrap(KEY_TEMPLATE), errProvider.getDirective().getTemplate().getFullName() );
-		state.put(Template.wrap(KEY_QUERY	), errProvider.getQueryString());
-		state.put(Template.wrap(KEY_SIZE	), Integer.toString(errProvider.size()));
+		state.put(KEY_ERROR, 	errorMessage);
+		state.put(KEY_CONTEXT, 	theContext);
+		state.put(KEY_CLASS, 	errProvider.getClass().getName());
+		state.put(KEY_TRACE, 	this.getStackTrace().toString());
+		state.put(KEY_TEMPLATE, errProvider.getDirective().getTemplate().getFullName() );
+		state.put(KEY_QUERY, 	errProvider.getQueryString());
+		state.put(KEY_SIZE,	 	Integer.toString(errProvider.size()));
 		logError();
     }
 
 	/**
 	 * 
 	 */
-	private void logError() {
+	public void logError() {
 		String message = "Merge Exception Occured: \n";
 		for (Map.Entry<String, String> entry : state.entrySet()) {
             message += "key:" + entry.getKey() + " value:" + entry.getValue() + "\n";
@@ -144,6 +144,14 @@ public class MergeException extends Exception {
 
 	public HashMap<String, String> getState() {
 		return state;
+	}
+
+	public HashMap<String, String[]> getParameters() {
+		HashMap<String, String[]> parameters = new HashMap<String,String[]>();
+		for (Map.Entry<String, String> entry : state.entrySet()) {
+			parameters.put(entry.getKey(), new String[]{entry.getValue()});
+        }		
+		return parameters;
 	}
 
 	public String getTemplateName() {
@@ -164,6 +172,6 @@ public class MergeException extends Exception {
 	}
 
 	public String getErrorFromClass() {
-		return state.get(KEY_CLASS);
+		return  state.get(KEY_CLASS);
 	}
 }
