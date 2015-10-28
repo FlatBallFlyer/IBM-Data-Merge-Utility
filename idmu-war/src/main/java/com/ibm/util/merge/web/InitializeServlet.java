@@ -58,6 +58,7 @@ public class InitializeServlet extends HttpServlet {
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_TEMPLATE_DIR, 		"/opt/ibm/idmu/templates");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_OUTPUT_DIR, 		"/opt/ibm/idmu/output");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_PACKAGE_DIR, 		"/opt/ibm/idmu/packages");
+    	runtimeProperties.setProperty(TemplateFactory.PARAMETER_AUTOLOAD_DIR, 		"/opt/ibm/idmu/autoload");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_POOLS_PROPERTIES, 	"/opt/ibm/idmu/properties/databasePools.properties");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_TEMPLATE_POOL, 		"idmuTemplates");
     	runtimeProperties.setProperty(TemplateFactory.PARAMETER_DB_PERSIST, 		"no");
@@ -110,6 +111,7 @@ public class InitializeServlet extends HttpServlet {
     }
     
     private void setup(String folder, ServletContext servletContext) {
+    	log.info("Setting up idmu folders");
     	ArrayList<String> folders = new ArrayList<String>();
     	folders.add("database");
     	folders.add("logs");
@@ -117,12 +119,14 @@ public class InitializeServlet extends HttpServlet {
     	folders.add("packages");
     	folders.add("properties");
     	folders.add("templates");
+    	folders.add("autoload");
     	for (String aFolder : folders) {
     		File theSource = new File(servletContext.getRealPath("/WEB-INF" + File.separator + aFolder));
     		File theTarget = new File(folder + File.separator + aFolder);
     		try {
         		if (!theTarget.exists()) theTarget.mkdirs();
 				FileUtils.copyDirectory(theSource, theTarget);
+				log.info("Copied files to " + theTarget.getAbsolutePath());
 			} catch (IOException e) {
 				throw new RuntimeException("SETUP ERROR! - Unable to copy files from " + theSource + " to " + theTarget + ":" + e.getMessage());
 			}

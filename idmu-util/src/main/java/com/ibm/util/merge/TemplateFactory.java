@@ -66,6 +66,7 @@ final public class TemplateFactory {
     public static final String PARAMETER_TEMPLATE_DIR 		= "merge-templates-folder";
 	public static final String PARAMETER_OUTPUT_DIR 		= "merge-output-folder";
 	public static final String PARAMETER_PACKAGE_DIR 		= "merge-packages-folder";
+	public static final String PARAMETER_AUTOLOAD_DIR 		= "merge-packages-autoload-folder";
 	public static final String PARAMETER_POOLS_PROPERTIES 	= "jdbc-pools-properties";
 	public static final String PARAMETER_TEMPLATE_POOL 		= "jdbc-persistence-templates-poolname";
 	public static final String PARAMETER_TEMPLATE_SCHEMA 	= "jdbc-persistence-templates-schema";
@@ -78,6 +79,7 @@ final public class TemplateFactory {
     private final TemplatePersistence persistence;
     private final File outputRoot;
     private final File packageFolder;
+    private final File autoloadFolder;
 	private final TemplateCache templateCache;
     private final JsonProxy jsonProxy;
     private final ConnectionPoolManager poolManager;
@@ -95,6 +97,7 @@ final public class TemplateFactory {
         this.jsonProxy = (runtimeProperties.getProperty(PARAMETER_PRETTY_JSON).equals("yes") ? new PrettyJsonProxy() : new DefaultJsonProxy());
         this.outputRoot = new File(runtimeProperties.getProperty(PARAMETER_OUTPUT_DIR));
         this.packageFolder = new File(runtimeProperties.getProperty(PARAMETER_PACKAGE_DIR));
+        this.autoloadFolder = new File(runtimeProperties.getProperty(PARAMETER_AUTOLOAD_DIR));
         File poolsPropertiesPath = new File(runtimeProperties.getProperty(PARAMETER_POOLS_PROPERTIES));
         if(poolsPropertiesPath.exists()){
             PoolManagerConfiguration config = PoolManagerConfiguration.fromPropertiesFile(poolsPropertiesPath);
@@ -114,6 +117,7 @@ final public class TemplateFactory {
             		new File(runtimeProperties.getProperty(PARAMETER_TEMPLATE_DIR)), 
             		this.jsonProxy);
         }
+        autoLoadPackages();
         reset();
     }
     
@@ -283,6 +287,36 @@ final public class TemplateFactory {
     }
     
     /**********************************************************************************
+     * Persist a collection of Templates from the packages folder
+     *
+     * @param File name (in the packages folder)
+     * @return OK or ERROR
+     * @throws MergeException 
+     */
+	public void autoLoadPackages() {
+		log.info("Starting AutoloadPackage");
+        if ( this.autoloadFolder.listFiles() == null) {
+            log.warn("Autoload Folder data was not found! " + this.autoloadFolder);
+        } else {
+	        for (File file : this.autoloadFolder.listFiles()) {
+	            log.debug("Inspect potential package file: " + file);
+	            if (!file.isDirectory() && !file.getName().startsWith(".")) {
+	        		String templateJson;
+	        		try {
+	        			templateJson = new String(Files.readAllBytes(file.toPath()));
+	        		} catch (IOException e) {
+	        			log.warn(e.getMessage() + " ERROR - File IO Exception reading " + file.getAbsolutePath());
+	        			continue;
+	        		}
+	        		this.saveTemplatesFromJson(templateJson);
+	                log.info("Loaded templates from " + file.getAbsolutePath());
+	            }
+	        }
+        }
+		return;
+    }
+
+	/**********************************************************************************
      * Persist a collection of Templates from the packages folder
      *
      * @param File name (in the packages folder)

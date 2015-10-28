@@ -177,6 +177,9 @@
 				<li><strong>merge-package-folder</strong> Default:
 					/opt/ibm/idmu/package – This parameter specifies the location from
 					which template packages are loaded from.</li>
+				<li><strong>merge-packages-autoload-folder</strong> Default:
+					/opt/ibm/idmu/autoload – This parameter specifies the location from
+					which template packages are automatically loaded every time the server is initialized.</li>
 				<li><strong>secure-server</strong> Default: no – This parameter
 					is used to disable the template save/delete rest services. This
 					limits the Template Editor functionality to a read-only tool for
@@ -244,18 +247,13 @@
 				<li>Configure the TemplateDB data source in the
 					$IDMU_ROOT/database/databasePools.properties file. See the
 					properties file for examples.</li>
-				<li>Configure the db-persist runtime property to
-					&ldquo;yes&rdquo;</li>
-				<li>Re-initilize the Rest Services: <strong>curl -X
-						POST localhost:8080/Initialize</strong></li>
-				<li>Load the System Templates using one of the following
-					methods</li>
-				<li><ul>
-					<li>From the IDMU Home Page using the Load Template Package
-						button(s)</li>
-					<li>From a unix command line: <strong>curl --upload
-							$IDMU_ROOT/packages/system.json
-							yourHost:port/idmu/templatePackage</strong></li>
+				<li>Configure the jdbc-persistence-templates-poolname runtime property to match the database pool name configured in the databasePools.properties file.</li>
+				<li>If the template tables are in the non-default schema, configure the jdbc-persistence-templates-poolname runtime property with the schema name</li>
+				<li>Configure the db-persist runtime property to &ldquo;yes&rdquo;</li>
+				<li>Re-initilize the Rest Services: <strong>curl -X POST localhost:8080/Initialize</strong></li>
+				<li>Load the System Templates using one of the following methods<ul>
+					<li>From the IDMU Home Page using the Load Template Package button(s)</li>
+					<li>From a unix command line: <strong>curl --upload $IDMU_ROOT/packages/system.json yourHost:port/idmu/templatePackage</strong></li>
 				</ul></li>
 			</ul>
 			<div class="footerLink">
