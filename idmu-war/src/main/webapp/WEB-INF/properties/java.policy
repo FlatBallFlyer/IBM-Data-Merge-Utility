@@ -19,6 +19,7 @@ grant {
 	
 	// Grant access to the environment variables used by IDMU Configuration
     permission java.lang.RuntimePermission "getenv.IDMU_ROOT";
+    
     // Grant access to JDBC Connection pool values - add your own connection pool name to the list
     permission java.lang.RuntimePermission "getenv.idmuTemplates-";
     permission java.lang.RuntimePermission "getenv.test-";
