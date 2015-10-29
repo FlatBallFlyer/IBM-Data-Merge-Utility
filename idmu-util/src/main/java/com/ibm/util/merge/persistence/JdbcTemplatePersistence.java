@@ -36,7 +36,7 @@ import java.util.List;
  *
  */
 public class JdbcTemplatePersistence implements TemplatePersistence {
-    private Logger log = Logger.getLogger(JdbcTemplatePersistence.class);
+    private static final Logger log = Logger.getLogger(JdbcTemplatePersistence.class);
     private static final String ORACLE_SUPPORT_COLUMN = "<null>";
     private PoolManager poolManager;
     private String poolName = "";
@@ -90,11 +90,12 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
 	private String getDirectiveTableName() {
 		String name = this.schemaName;
 		if (!name.isEmpty()) name += ".";
-		name += "IDMU_TEMPLATE";
+		name += "IDMU_DIRECTIVE";
 		return name;
 	}
 
 	public static class LoadTemplatesSqlOperation implements SqlOperation<List<Template>> {
+	    private static final Logger log = Logger.getLogger(LoadTemplatesSqlOperation.class);
         private final PoolManager poolManager;
         private final String poolName;
         private final String templateTable;
@@ -112,9 +113,10 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
             Statement st = null;
             ResultSet rs = null;
             List<Template> out = null;
+            String query = "SELECT * FROM " + this.templateTable;
             try {
                 st = connection.createStatement();
-                rs = st.executeQuery("SELECT * FROM " + this.templateTable );
+                rs = st.executeQuery(query);
                 out = new ArrayList<>();
                 while (rs.next()) {
                     // for each row create a new template instance and set column values
@@ -130,7 +132,8 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                     out.add(t);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("SQL Exception:" + e.getMessage() + " - Query: " + query);
+                throw new RuntimeException("Error Loading Template" + query);
             } finally {
                 if (rs != null) rs.close();
                 if (st != null) st.close();
@@ -140,6 +143,7 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
     }
 
     public static class LoadDirectivesSqlOperation implements SqlOperation<Object> {
+	    private static final Logger log = Logger.getLogger(LoadDirectivesSqlOperation.class);
     	private final Template template;
     	private final String directiveTable;
     	
@@ -155,9 +159,9 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
             ResultSet rs = null;
             List<AbstractDirective> out = null;
             Directives directives = new Directives();
+            String query = "SELECT * FROM " + this.directiveTable + " WHERE COLLECTION = ? AND TEMPLATE_NAME = ? AND COLUMN_VALUE = ? ORDER BY SEQUENCE";
             		
             try {
-                String query = "SELECT * FROM " + this.directiveTable + " WHERE COLLECTION = ? AND TEMPLATE_NAME = ? AND COLUMN_VALUE = ? ORDER BY SEQUENCE";
                 ps = connection.prepareStatement(query);
                 ps.setString(1, this.template.getCollection());
                 ps.setString(2, this.template.getName());
@@ -185,7 +189,8 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                     template.addDirective(d);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("SQL Exception:" + e.getMessage() + " - Query: " + query);
+                throw new RuntimeException("Error Loading Directive" + query);
             } finally {
                 if (rs != null) rs.close();
                 if (st != null) st.close();
@@ -195,6 +200,7 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
     }
 
     public static class SaveNewTemplateSqlOperation implements SqlOperation<Void> {
+	    private static final Logger log = Logger.getLogger(LoadDirectivesSqlOperation.class);
         private final Template template;
         private final PoolManager poolManager;
         private final String poolName;
@@ -212,9 +218,8 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
         @Override
         public Void execute(Connection connection) throws SQLException {
             PreparedStatement ps = null;
+            String query = "INSERT INTO " + this.templateTable + "(COLLECTION, TEMPLATE_NAME, COLUMN_VALUE, OUTPUT_FILE, DESCRIPTION, CONTENT) VALUES (?, ?, ?, ?, ?, ?)";
             try {
-
-                String query = "INSERT INTO " + this.templateTable + "(COLLECTION, TEMPLATE_NAME, COLUMN_VALUE, OUTPUT_FILE, DESCRIPTION, CONTENT) VALUES (?, ?, ?, ?, ?, ?)";
                 ps = connection.prepareStatement(query);
                 // set the values for each column by order (starts with 1)
                 ps.setString(1, template.getCollection());
@@ -230,7 +235,8 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                 }
                 return null;
             } catch (Exception e) {
-                throw new RuntimeException("Error creating template " + template + template.getContent(), e);
+                log.error("SQL Exception:" + e.getMessage() + " - Query: " + query);
+                throw new RuntimeException("Error Saving Template" + query);
             } finally {
                 if (ps != null) ps.close();
             }
@@ -238,6 +244,7 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
     }
 
     public static class SaveNewDirectivesSqlOperation implements SqlOperation<Void> {
+	    private static final Logger log = Logger.getLogger(SaveNewDirectivesSqlOperation.class);
         private final AbstractDirective directive;
         private final String directiveTable;
 
@@ -249,11 +256,11 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
         @Override
         public Void execute(Connection connection) throws SQLException {
             PreparedStatement ps = null;
+            String query = "INSERT INTO " + this.directiveTable + " (COLLECTION, TEMPLATE_NAME, COLUMN_VALUE, SEQUENCE, DIR_TYPE, DESCRIPTION, SOFT_FAIL, "
+            		+ "DIR_1, DIR_2, DIR_3, DIR_4, "
+            		+ "PRO_1, PRO_2, PRO_3, PRO_4) "
+            		+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try {
-                String query = "INSERT INTO " + this.directiveTable + " (COLLECTION, TEMPLATE_NAME, COLUMN_VALUE, SEQUENCE, DIR_TYPE, DESCRIPTION, SOFT_FAIL, "
-                		+ "DIR_1, DIR_2, DIR_3, DIR_4, "
-                		+ "PRO_1, PRO_2, PRO_3, PRO_4) "
-                		+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 ps = connection.prepareStatement(query);
                 // set the values for each column by order (starts with 1)
                 ps.setString( 1, directive.getTemplate().getCollection());
@@ -282,6 +289,7 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                 ps.execute();
                 return null;
             } catch (Exception e) {
+                log.error("SQL Exception:" + e.getMessage() + " - Query: " + query);
                 throw new RuntimeException("Error creating directive " + directive, e);
             } finally {
                 if (ps != null) ps.close();
@@ -290,6 +298,7 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
     }
 
     public static class DeleteTemplateSqlOperation implements SqlOperation<Void> {
+	    private static final Logger log = Logger.getLogger(DeleteTemplateSqlOperation.class);
         private final Template template;
         private final String templateTable;
 
@@ -301,9 +310,10 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
         @Override
         public Void execute(Connection connection) throws SQLException {
             PreparedStatement ps = null;
+            String query = "DELETE FROM " + this.templateTable + " WHERE COLLECTION = ? AND TEMPLATE_NAME = ? AND COLUMN_VALUE = ?";
             try {
                 // delete the correct template
-                ps = connection.prepareStatement("DELETE FROM " + this.templateTable + " WHERE COLLECTION = ? AND TEMPLATE_NAME = ? AND COLUMN_VALUE = ?");
+                ps = connection.prepareStatement(query);
                 ps.setString(1, template.getCollection());
                 ps.setString(2, template.getName());
                 String columnValue = template.getColumnValue(); 
@@ -311,6 +321,7 @@ public class JdbcTemplatePersistence implements TemplatePersistence {
                 ps.execute();
                 return null;
             } catch (Exception e) {
+                log.error("SQL Exception:" + e.getMessage() + " - Query: " + query);
                 throw new RuntimeException("Error deleting template " + template, e);
             } finally {
                 if (ps != null) ps.close();
