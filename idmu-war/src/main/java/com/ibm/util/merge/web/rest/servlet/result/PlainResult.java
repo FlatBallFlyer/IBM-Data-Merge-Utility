@@ -37,6 +37,7 @@ public class PlainResult implements Result {
     public void write(RequestData rd, HttpServletRequest request, HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("text/plain");
+        response.setHeader("Content-Disposition", "attachment");
         response.setCharacterEncoding("UTF-8");
         try {
             response.getWriter().write(content);
