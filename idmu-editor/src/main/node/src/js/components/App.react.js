@@ -64,7 +64,7 @@ var App = React.createClass({
   handleMergeTemplate: function(tpl){
     var colValue = (tpl.columnValue && tpl.columnValue.length>0)?tpl.columnValue : "";
     var templateName = tpl.collection + "." + tpl.name + "." + colValue;
-    var url = '/idmu/merge?DragonFlyFullName='+templateName;
+    var url = '/idmu/merge/'+templateName;
     window.open(url,'IDMU-Merge');
   },
   loadCollectionsFromServer: function() {
