@@ -50,10 +50,13 @@ public class PutTemplateResourceHandler implements RequestHandler {
     @Override
     public Result handle(RequestData rd) {
         String template = new String(rd.getRequestBody());
-        log.warn("putTemplate for " + template);
+        log.warn("Put Template Request");
         try {
-			return new JsonResult(tf.saveTemplateFromJson(template));
+        	JsonResult outcome = new JsonResult(tf.saveTemplateFromJson(template));
+        	log.warn("Put Template Success");
+			return outcome;
 		} catch (MergeException e) {
+			log.error("Put Template Failed:" + e.getMessage());
 			return new PlainErrorResult(e, tf, errTemplate);
 		}
     }
