@@ -36,8 +36,6 @@ public class JsonResponseWriter {
 
     public void write() {
         try {
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
             ServletOutputStream os = response.getOutputStream();
             os.write(new DefaultJsonProxy().toJson(item).getBytes("UTF-8"));
             os.flush();

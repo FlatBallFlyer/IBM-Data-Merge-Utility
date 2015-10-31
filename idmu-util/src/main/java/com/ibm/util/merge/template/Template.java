@@ -49,6 +49,8 @@ public class Template {
     public static final String TAG_SOFTFAIL 	= wrap("DragonFlySoftFail");
     public static final String TAG_OUTPUT_TYPE 	= wrap("DragonFlyOutputType");
     public static final String TAG_SEQUENCE 	= wrap("DragonFlySequence");
+    public static final String TAG_FILENAME 	= wrap("DragonFileName");
+    public static final String TAG_FILETYPE 	= wrap("DragonFileType");
     public static final String BOOKMARK_PATTERN_STRING = "(<tkBookmark.*?/>)";
     public static final Pattern BOOKMARK_PATTERN = Pattern.compile(BOOKMARK_PATTERN_STRING);
     // Factory Constants

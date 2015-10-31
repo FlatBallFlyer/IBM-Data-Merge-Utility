@@ -421,7 +421,18 @@ curl -X DELETE yourhost:port/idmu/archive/{DragonOutputFile}</textarea>
 				<li><strong>Unix Command Line</strong> call the
 					idmu/templatePackage rest servuces using curl. Rest calls that have
 					a {collections} parameter expect a coma seperated list of
-					collections.
+					collections. Two scripts provided in the packages folder can be used
+					to move templates between servers.
+				<ul>
+					<li>promote.sh can be used to move files between any two servers, provided
+					that the target server is not operating in a "Secure" mode. </li>
+					<li>Usage: <code>./promote.sh devhost:8080 prodhost:9090 myApp,myError</code><br/>
+					This command will promote all of the templates in the myApp and error collections from devhost to prodhost.</li>
+					<li>receive.sh can be used on a secure server and must be run from the idmu/packages folder.</li>
+					<li>Usage: <code>./receive.sh devhost:8080 9090 myApp,myError </code><br/>
+					This command will import the myApp and myError collections from the devhost to localhost:9090</li>
+				</ul>
+				<p>Here are the individual rest api's used by the promote and receive scripts</p>
 				<ul>
 					<li>To export a package from a development server: <br /> <strong>curl
 							devhost.com:port/idmu/templatePackage/{collections} &gt;

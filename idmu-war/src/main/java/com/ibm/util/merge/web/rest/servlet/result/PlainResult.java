@@ -26,18 +26,30 @@ import java.io.IOException;
 /**
  *
  */
-public class PlainResult implements Result {
+public class PlainResult implements Result { 
     private final String content;
+    private final String filename;
+    private final String type;
 
     public PlainResult(String content) {
         this.content = content;
+        this.filename = null;
+        this.type = "text/plain";
+    }
+
+    public PlainResult(String content, String type, String filename) {
+        this.content = content;
+        this.type = type;
+        this.filename = filename;
     }
 
     @Override
     public void write(RequestData rd, HttpServletRequest request, HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("text/plain");
-        response.setHeader("Content-Disposition", "attachment");
+        response.setContentType(type);
+        if (filename != null) {
+        	response.setHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
+        }
         response.setCharacterEncoding("UTF-8");
         try {
             response.getWriter().write(content);

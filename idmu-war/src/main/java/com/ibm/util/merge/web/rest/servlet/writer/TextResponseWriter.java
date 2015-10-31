@@ -33,8 +33,6 @@ public class TextResponseWriter {
     }
 
     public void write() {
-        resp.setContentType("text/plain");
-        resp.setCharacterEncoding("UTF-8");
         try {
             PrintWriter w = resp.getWriter();
             w.write(message);

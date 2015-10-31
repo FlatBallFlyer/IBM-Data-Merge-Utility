@@ -36,7 +36,7 @@ public class JsonResult implements Result {
     @Override
     public void write(RequestData rd, HttpServletRequest request, HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("text/json");
+        response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         try {
             response.getWriter().write(content);

@@ -55,10 +55,20 @@ public class GetMergeOutputTextResourceHandler implements RequestHandler {
     	
     	// Perform the merge
     	try {
+    		// Temporary implementation of content type and download file name
+    		// This feature the will be migrated to new Template attributes in v4.X (Requires refactoring of TemplateFactory.getMergeOutput)
+    		String filename = null;
+    		String type = null;
+    		String[] filenames = parameterMap.get("DragonFlyFileName");
+    		if (filenames != null) {filename=filenames[0];}
+    		
+    		String[] types = parameterMap.get("DragonFlyFileType");
+    		if (types != null) {type=types[0];}
+    		
     		String result = tf.getMergeOutput(parameterMap);
 	        long elapsed = System.currentTimeMillis() - start;
 	        log.warn(String.format("Merge completed in %d milliseconds", elapsed));
-	        return new PlainResult(result);
+	        return new PlainResult(result, type, filename);
     	} catch (MergeException e) {
     		return new PlainErrorResult(e, tf, errTemplate);
     	}

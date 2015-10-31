@@ -55,6 +55,13 @@
                     <li><a href="#PutPackage"   >Put a template</a></li>
                 </ul> 
             </li>  
+			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><strong>Sample HTML calling IDMU</strong><b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                	<li><a href="#Simple" >Simple Form with HTML Response</a></li>
+                    <li><a href="#Download" >Form to download merge output</a></li>
+                    <li><a href="#Archive">Form to download archive output</a></li>
+                </ul> 
+            </li>  
             <li><a href="#Testing"><strong>Regression Testing</strong></a></li>         
         </ul>
      
@@ -171,7 +178,7 @@
 		<p>Get Merge Output (HTML Interface)</p>
 		<ul>
 			<li>example: Get host:port/idmu/merge/test?name=value&amp;list=one,two,three</li>
-			<li>url: host:port/idmu/merge/<em>template</em>&apm;parameters where <em>template</em> is a template name. Note that trailing periods are not needed with this call.</li>
+			<li>url: host:port/idmu/merge/<em>template</em>/parameters where <em>template</em> is a template name. Note that trailing periods are not needed with this call.</li>
 			<li>http request: Get</li>
 			<li>http response: 200<ul>
 				<li>response type: text/html</li>
@@ -196,6 +203,8 @@
 			<li>http response: 200<ul>
 				<li>response type: text/plain</li>
 				<li>response content: The merge output</li>
+				<li>NOTE: You can specify an alternate content type in the DragonFlyFileType parameter</li>
+				<li>If a filename is provided in the DragonFlyFileName parameter the http reply header will have a Content-Disposition: attachment;filename={DragonFlyFileName}</li> 
 			</ul></li>
 			<li>http response: 500<ul>
 				<li>response type: text/plain</li>
@@ -345,6 +354,68 @@
 		</ul>
 		<div class="footerLink"><a href="#top">Back To Top</a></div>
 		</section>
+
+		<h3>Sample HTML</h3>
+		<section id="Simple">
+		<h4>Simple Form</h4>
+		<textarea rows="15" cols="132"><html>
+	<head>
+	</head>
+	
+	<body>
+		<form id="merge" method="get" action="/idmu/merge/your.template">
+			<ul>
+				<li>Full Name<input name="FULLNAME"/></li>
+				<li>Short Name<input name="SHORTNAME"/></li>
+			</ul>
+			<button form="merge" type="submit">Get the page</button>
+		</form>
+	</body>
+</html></textarea>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
+		</section>
+
+		<section id="getFile">
+		<h4>Get merge output as a downloaded file</h4>
+		<textarea rows="18" cols="132"><html>
+	<head>
+	</head>
+	
+	<body>
+		<form id="merge" method="get" action="/idmu/merge/your.template">
+			<ul>
+				<li>Full Name<input name="FULLNAME"/></li>
+				<li>Short Name<input name="SHORTNAME"/></li>
+				<li class="hidden">template<input name="DragonFlyFullName"    value="xml.template."  /></li>
+				<li class="hidden">filename<input name="DragonFlyFileName"    value="newfile.xml"    /></li>
+				<li class="hidden">filetype<input name="DragonFlyContentType" value="application/xml"/></li>
+			</ul>
+			<button form="merge" type="submit">Get the page</button>
+		</form>
+	</body>
+</html></textarea>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
+		</section>
+
+		<section id="getArchive">
+		<h4>Get merge Archive output</h4>
+		<p>Use the following in a html content template that generates a archive to download (NEEDS SOME HELP).</p>
+		<textarea rows="25" cols="132"><html>
+	<head>
+	</head>
+	
+	<body onload="getTheFile()">
+	</body>
+	<script>
+	function getTheFile() {
+		//java script to download {DragonFlyOutputFile}
+		//java script to http:delete /idmu/archive/{DragonFlyOutputFile}
+	}
+	</script>
+</html></textarea>
+		<div class="footerLink"><a href="#top">Back To Top</a></div>
+		</section>
+
 
 </section>
 <section id="Testing">                        

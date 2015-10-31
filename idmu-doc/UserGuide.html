@@ -210,6 +210,10 @@
 	<h3><a>Reserved Words</a></h3>
 		<p>The following are reserved Replace Tags, that have various effects / meanings:</p> 	
 		<ul>
+			<li><span class="keyword"><strong>DragonFlyFileName</strong></span> - when calling the merge text api, providing
+				a value for DragonFlyFileName will return a Content-Disposition: attachment;filename="{DragonFlyFileName}" </li>
+			<li><span class="keyword"><strong>DragonFlyFileType</strong></span> - when calling the merge text api, prviding 
+				the value specified in DragonFlyFileType will be used as the http content type of the return</li>
 			<li><span class="keyword"><strong>DragonFlyCacheReset</strong></span> - The Data Merge Tool will cache all templates, allowing for very fast response 
 				times and high throughput rates. Adding the parameter DragonFlyCacheReset with or without a value will
 				clear the template cache before executing the merge. This value is not placed on the Replace Hash</li>
