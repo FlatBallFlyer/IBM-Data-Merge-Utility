@@ -56,8 +56,8 @@ public class PlainErrorResult implements Result {
         String message;
 		try {
 			HashMap<String,String[]> parameters = new HashMap<String,String[]>();
-			parameters.put(TemplateFactory.KEY_FULLNAME,  new String[]{errTemplate + exception.getErrorFromClass()});
-			parameters.put(TemplateFactory.KEY_SHORTNAME, new String[]{errTemplate});
+			parameters.put("DragonFlyFullName",  new String[]{errTemplate + exception.getErrorFromClass()});
+			parameters.put("DragonFlyShortName", new String[]{errTemplate});
 			parameters.putAll(exception.getParameters());
 			message = this.factory.getMergeOutput(parameters);
 		} catch (MergeException e) {
