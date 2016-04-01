@@ -74,7 +74,7 @@ final public class TemplateFactory {
 	public static final String PARAMETER_PRETTY_JSON 		= "pretty-json";
 
 	// Factory Attributes
-	private final String idmu_version = "3.1.4if1";
+	private final String idmu_version = "3.1.4if3";
 	private final Properties runtimeProperties;
     private final TemplatePersistence persistence;
     private final File outputRoot;

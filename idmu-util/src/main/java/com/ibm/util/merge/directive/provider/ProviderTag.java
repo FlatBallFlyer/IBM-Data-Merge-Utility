@@ -20,9 +20,12 @@ import com.ibm.util.merge.MergeContext;
 import com.ibm.util.merge.MergeException;
 import com.ibm.util.merge.template.Template;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.log4j.Logger;
 
 /**
@@ -103,12 +106,17 @@ public class ProviderTag extends AbstractProvider {
 		log.info("Data Found: " + data);
 		table.addCol(tag);
 		if (isList()) {
-			for (String datum : new ArrayList<>(Arrays.asList(data.split(",")))) {
-				if (!datum.isEmpty()) {
+			CSVParser parser;
+			try {
+				parser = new CSVParser(new StringReader(data), CSVFormat.EXCEL.withHeader());
+				for (String colName : parser.getHeaderMap().keySet() ) {
 					ArrayList<String> row = table.addNewRow();
-					row.add(datum);
+					row.add(colName);
 				}
-			}			
+			    parser.close();
+			} catch (IOException e) {
+				throw new MergeException(this, e, "CSV Parser Stringreader IO Exception", data);
+			}
 		} else {
 			ArrayList<String> row = table.addNewRow();
 			row.add(data);
