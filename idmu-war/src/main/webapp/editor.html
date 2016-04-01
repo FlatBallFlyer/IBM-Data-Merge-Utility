@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>IDMU Template Editor</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+	<link href="css/style.css" rel="stylesheet" />
+</head>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#collapse">
+			<span class="sr-only">Toggle navigation</span> <span class="glyphicon glyphicon-arrow-down"></span> MENU
+		</button>
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#"><img src="images/IBMlogo.png"></a>
+		</div>
+		<div class="collapse navbar-collapse" id="collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="/">Home</a></li>
+				<li><a href="/UserGuide.html">User Guide</a></li>
+				<li><a href="/AdminGuide.html">Admin Guide</a></li>
+				<li><a href="/DevGuide.html">Dev Guide</a></li>
+				<li><a href="/Training.html">Training</a></li>
+				<li><a href="/idmu/status/">Status</a></li>
+				<li class="active"><a href="/editor.html">Templates</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<body>
+	<div class="container">
+		<h1>
+			<a id="top">IBM Data Merge Utility Version 3.1.4</a>
+		</h1>
+		<p>
+			<img src="images/dragonfly.jpg" align="right" />See the links in the
+			navigation bar at the top of the page for documentation and the
+			Template Editor.
+		</p>
+
+		<section id="Selectors">
+			<p>
+				Licensed under the Apache License, Version 2.0 (the
+				&quot;License&quot;); you may not use this file except in compliance
+				with the License. You may obtain a copy of the License at <a
+					href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>.
+				Unless required by applicable law or agreed to in writing, software
+				distributed under the License is distributed on an &quot;AS IS&quot;
+				BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+				or implied. See the License for the specific language governing
+				permissions and limitations under the License.
+			</p>
+		</section>
+
+	<div class="col-md-6">
+		<fieldset class="">
+			<div class="container">
+				<label for="collection" align="right">Collection</label>
+				<select name="collection" id="collection" class="ajaxselect" url="/idmu/collections" idcolumn="id" valuecolumn="name"></select>
+			</div>
+			<div class="container">
+				<label for="name" align="right">Collection</label>
+				<select name="name" id="name" class="name" url="/idmu/templates" idcolumn="id" valuecolumn="name"></select>
+			</div>
+
+			<ul>
+				<li class="input">
+					<label class="input" for="1" align="right">Collection</label>
+					<input class="input" id="1" type="text" name="CUSTOMER_LEGAL_NAME" value="--Legal Name--"/>
+				</li>
+				<li class="input">
+					<label class="input" for="100" align="right">Name</label>
+					<input class="input" id="100" type="text" name="SHORT_NAME" value="--Short Name--"/>
+				</li>
+				<li class="input">
+					<label class="input" for="107" align="right">Column Value</label>
+					<input class="input" id="107" type="text" name="PROJECT_NAME" value="--Project--"/>
+				</li>
+				<li class="input">
+					<label class="input" for="101" align="right">Description</label>
+					<input class="input" id="101" type="text" name="DELIVERY_LOCATION" value="--Location--"/>
+				</li>
+				<li class="input">
+					<label class="input" for="102" align="right">Output</label>
+					<input class="input" id="102" type="text" name="DESCRIPTION" value="--Short Description--"/>
+				</li>
+				<li class="input">
+					<label class="input" for="102" align="right">Directives</label>
+					<input class="input" id="102" type="text" name="DESCRIPTION" value="--Short Description--"/>
+				</li>
+			</ul>
+		</fieldset>
+	</div>
+
+	<div id="prieviewModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				    <h4 class="modal-title">Directive</h4>
+				</div>
+	
+				<div id="previewBody" class="modal-body">
+					<div id="paragraphsList">
+					</div>
+				</div>
+	
+				<div id="component-footer" class="modal-footer">
+					<button type="button" class="btn" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>	
+
+
+</body>
+</html>
