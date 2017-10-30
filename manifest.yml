@@ -1,0 +1,10 @@
+applications:
+- path: JavaCloudantApp.war
+  memory: 512M
+  instances: 1
+  domain: mybluemix.net
+  name: idmuv4
+  host: idmuv4
+  disk_quota: 1024M
+  services:
+  - idmuv4-cloudantNoSQLDB
