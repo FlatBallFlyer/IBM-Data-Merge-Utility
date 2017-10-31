@@ -10,7 +10,6 @@ public class ConfigTest {
 	
 	@Test
 	public void testConfigDefault() throws Merge500 {
-		Config config = new Config();
 	}
 
 	@Test
@@ -24,6 +23,7 @@ public class ConfigTest {
 	@Test
 	public void testConfigEnvironment() throws Merge500 {
 		Config config = new Config("");
+		assertEquals("", config.getTempFolder());
 	}
 
 	@Test

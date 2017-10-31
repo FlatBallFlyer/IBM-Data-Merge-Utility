@@ -8,14 +8,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.MergeException;
 
 public class AbstractDataDirectiveTest {
 	private class AbstractDataTest extends AbstractDataDirective {
 		private static final int OPTION_THROW = 1;
 		private static final int OPTION_SKIP = 2;
-		private DataProxyJson proxy = new DataProxyJson();
 		
 		@Override
 		public HashMap<Integer, String> missingOptions() {
