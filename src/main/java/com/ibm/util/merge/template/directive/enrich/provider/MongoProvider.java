@@ -20,125 +20,57 @@ package com.ibm.util.merge.template.directive.enrich.provider;
     ],
 */
 
-import com.google.gson.JsonElement;
-import com.ibm.util.merge.Config;
+import java.util.HashMap;
+
+import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
+import com.ibm.util.merge.data.DataObject;
+import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
-import com.ibm.util.merge.template.directive.enrich.source.AbstractSource;
-import com.ibm.util.merge.template.directive.enrich.source.MongoSource;
+import com.ibm.util.merge.template.directive.ParseData;
 
 public class MongoProvider extends AbstractProvider {
-	private class Credentials { // Assumed to be like this - need to see VCAP_SERVICES for Mongo Service
-		protected String username;
-		protected String password;
-		protected String host;
-		protected String port;
-		protected String url;
-	}
-	private Credentials credentials;
-	private String connection; // TODO Mongo Connection Object
+	private final String connection; // TODO Mongo Connection type
 	
-	public MongoProvider(AbstractSource source) throws MergeException {
-		super(source);
-		this.setType(AbstractProvider.PROVIDER_MONGO);
-	}
+	public MongoProvider(String source, String dbName, Merger context) throws MergeException {
+		super(source, dbName, context);
+		String db_type;
+		String name;
+		String uri_cli;
+		String ca_cert;
+		String deployment_id;
+		String uri;
 
-	@Override
-	public DataElement get(Template template) throws MergeException {
-		MongoSource source = (MongoSource) this.getSource();
-		Content query = new Content(template.getWrapper(), source.getGetCommand(), TagSegment.ENCODE_JSON);
-		query.replace(template.getReplaceStack(), false, Config.MAX_NEST);
-		execute(query.getValue());
-		return null;
-	}
-
-	private void execute(String query) throws MergeException {
-		getConnection();
-		// TODO Get Connection, Execute Mongo Query
-	}
-
-	private String getConnection() throws MergeException {
-		if (null == this.connection) {
-			fetchCredentials();
-			this.connection = "";// TODO Connect to Mongo 
+		// Get Credentials (TODO Assumed same as JDBC)
+		String config = context.getConfig().getEnvironmentString(source);
+		try {
+			DataObject credentials = parser.parse(ParseData.PARSE_JSON, config).getAsObject().get("credentials").getAsObject();
+			db_type = 		credentials.get("db_type").getAsPrimitive();
+			name = 			credentials.get("name").getAsPrimitive();
+			uri_cli = 		credentials.get("uri_cli").getAsPrimitive();
+			ca_cert = 		credentials.get("ca_certificate_base64").getAsPrimitive();
+			deployment_id = credentials.get("deployment_id").getAsPrimitive();
+			uri = 			credentials.get("uri").getAsPrimitive();
+		} catch (MergeException e) {
+			throw new Merge500("Invalid JDBC Provider for:" + source + "value: " + config);
 		}
-		return this.connection;
-	}
-		
-	private void fetchCredentials() throws MergeException {
-		String configString = this.getEnvironmentString();
-		JsonElement newConfig = this.proxy.fromJSON(configString, JsonElement.class);
-		if (null == newConfig) {
-			throw new Merge500("Malformed Mongo Source Credentials found at:" + this.getSource().getEnv() + ":" + configString);
-		}
-		
-		if (newConfig.isJsonObject() && newConfig.getAsJsonObject().has("credentials")) {
-			JsonElement credentials = newConfig.getAsJsonObject().get("credentials");
-			this.setUsername(this.getJsonMemeber(credentials, "username"));
-			this.setPassword(this.getJsonMemeber(credentials, "password"));
-			this.setHost(this.getJsonMemeber(credentials, "host"));
-			this.setPort(this.getJsonMemeber(credentials, "port"));
-			this.setUrl(this.getJsonMemeber(credentials, "url"));
-		} else {
-			throw new Merge500("Config Object missing in environment" + this.getSource().getEnv() + ":" + configString);
-		}
-	}
-	
-	public String getUsername() {
-		return this.credentials.username;
-	}
-	public void setUsername(String username) {
-		this.credentials.username = username;
-	}
-	
-	public String getPassword() {
-		return this.credentials.password;
-	}
-	public void setPassword(String password) {
-		this.credentials.password = password;
-	}
-	
-	public String getHost() {
-		return this.credentials.host;
-	}
-	public void setHost(String host) {
-		this.credentials.host = host;
-	}
-	
-	public String getPort() {
-		return this.credentials.port;
-	}
-	public void setPort(String port) {
-		this.credentials.port = port;
-	}
-	
-	public String getUrl() {
-		return this.credentials.url;
-	}
-	public void setUrl(String url) {
-		this.credentials.url = url;
-	}
 
-	@Override
-	public void put(Template template) throws MergeException {
-		// TODO Auto-generated method stub
+		// TODO - Get Connection
+		this.connection = db_type + name + uri_cli + ca_cert + deployment_id + uri;
 		
 	}
 
 	@Override
-	public void post(Template template) throws MergeException {
-		// TODO Auto-generated method stub
+	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
+		Content query = new Content(wrapper, enrichCommand, TagSegment.ENCODE_SQL);
+		query.replace(replace, false, context.getConfig().getNestLimit());
 		
-	}
-
-	@Override
-	public void delete(Template template) throws MergeException {
-		// TODO Auto-generated method stub
-		
+		String result = connection;  // TODO - Use connection to make Mongo Call
+		return new DataPrimitive(result);
 	}
 
 }

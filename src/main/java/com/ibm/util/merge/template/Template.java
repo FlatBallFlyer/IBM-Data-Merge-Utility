@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
@@ -280,7 +279,7 @@ public class Template {
 	public String getContentDisposition() throws Merge500 {
 		if (DISPOSITION_DOWNLOAD == contentDisposition) {
 			Content fileName = new Content(this.wrapper, this.contentFileName, this.contentEncoding);
-			fileName.replace(replaceStack, false, Config.MAX_NEST);
+			fileName.replace(replaceStack, false, this.context.getConfig().getNestLimit() );
 			return "attachment;filename=\"" + fileName.getValue() + "\"";
 		} else {
 			return "";

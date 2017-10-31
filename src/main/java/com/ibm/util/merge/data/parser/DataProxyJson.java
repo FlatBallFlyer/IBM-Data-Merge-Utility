@@ -22,9 +22,7 @@ import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.gson.DataDeserializer;
 import com.ibm.util.merge.data.parser.gson.DataSerializer;
 import com.ibm.util.merge.data.parser.gson.DirectiveDeserializer;
-import com.ibm.util.merge.data.parser.gson.SourceDeserializer;
 import com.ibm.util.merge.template.directive.AbstractDirective;
-import com.ibm.util.merge.template.directive.enrich.source.AbstractSource;
 
 /**
  *
@@ -56,8 +54,6 @@ public class DataProxyJson {
     protected void registerDefaultAdapters() {
         builder.registerTypeAdapter(AbstractDirective.class, new DirectiveDeserializer());
 //        builder.registerTypeAdapter(AbstractDirective.class, new DirectiveSerializer());
-        builder.registerTypeAdapter(AbstractSource.class, new SourceDeserializer());
-//        builder.registerTypeAdapter(AbstractSource.class, new SourceSerializer());
         builder.registerTypeAdapter(DataElement.class, new DataDeserializer());
         builder.registerTypeAdapter(DataElement.class, new DataSerializer());
 //        builder.registerTypeAdapter(DataPrimitive.class, new DataPrimitiveCreator());        

@@ -19,7 +19,6 @@ package com.ibm.util.merge.template.directive;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
@@ -163,7 +162,8 @@ public class Replace extends AbstractDataDirective {
 		}
 		
 		if (this.processAfter) {
-			template.getMergeContent().replace(template.getReplaceStack(), true, Config.MAX_NEST); // TODO: Soft Fail
+			template.getMergeContent().replace(template.getReplaceStack(), true, this.getTemplate().getContext().getConfig().getNestLimit()); 
+			// TODO: Soft Fail
 		}
 	}
 	

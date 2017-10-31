@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
@@ -224,7 +223,7 @@ public class Insert extends AbstractDataDirective {
 	}
 
 	public void insertAtBookmarks(Merger context, DataElement value, boolean isFirst, boolean isLast) throws MergeException {
-		if (context.getStackSize() > Config.MAX_NEST) {
+		if (context.getStackSize() > context.getConfig().getNestLimit()) {
 			throw new Merge500("template insert recursion safety, merge stack size exceded");
 		}
 

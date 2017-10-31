@@ -20,9 +20,9 @@ import java.util.HashMap;
 
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
+import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.directive.enrich.provider.*;
-import com.ibm.util.merge.template.directive.enrich.source.AbstractSource;
 
 /**
  * The Class EnrichDirective. Sub-classes of this directive are used 
@@ -32,7 +32,7 @@ import com.ibm.util.merge.template.directive.enrich.source.AbstractSource;
  * @author Mike Storey
  * @since: v4.0
  */
-public class Enrich extends AbstractDirective implements DataProvider {
+public class Enrich extends AbstractDirective {
 
 	private static final int TARGET_MISSING_THROW 	= 1;
 	private static final int TARGET_MISSING_IGNORE = 2;
@@ -46,29 +46,35 @@ public class Enrich extends AbstractDirective implements DataProvider {
 	private String targetDataName; 
 	private String targetDataDelimeter;
 	private String enrichSource;
+	private String enrichClass;
+	private String enrichCommand;
 	private int parseAs;
 	private int ifTargetMissing;
-	private transient AbstractSource source;
-	private transient AbstractProvider provider;
+	private transient Parser parser;
 
-	public Enrich() {
+	public Enrich() throws MergeException {
 		super();
+		this.parser = new Parser();
 		this.setType(AbstractDirective.TYPE_ENRICH);
 		this.targetDataName = "";
 		this.targetDataDelimeter = "\"";
 		this.enrichSource = "";
+		this.enrichClass = "";
+		this.enrichCommand = "";
 		this.parseAs = ParseData.PARSE_NONE;
 		this.ifTargetMissing = TARGET_MISSING_IGNORE;
 	}
 
 	@Override
-	public AbstractDirective getMergable() {
+	public AbstractDirective getMergable() throws MergeException {
 		Enrich mergable = new Enrich();
 		this.makeMergable(mergable);
 		mergable.setType(AbstractDirective.TYPE_ENRICH);
 		mergable.setTargetDataName(this.targetDataName);
 		mergable.setTargetDataDelimeter(this.targetDataDelimeter);
 		mergable.setEnrichSource(this.enrichSource);
+		mergable.setEnrichClass(this.enrichClass);
+		mergable.setEnrichCommand(this.enrichCommand);
 		mergable.setParseAs(this.parseAs);
 		mergable.setIfTargetMissing(this.ifTargetMissing);
 		return mergable;
@@ -76,26 +82,14 @@ public class Enrich extends AbstractDirective implements DataProvider {
 	
 	@Override
 	public void execute(Merger context) throws MergeException {
-		DataElement data = this.getProvider().get(getTemplate());
-		context.getMergeData().put(this.targetDataName, this.targetDataDelimeter, data);
+		AbstractProvider provider = context.getProvider(this.enrichClass, this.enrichSource);
+		DataElement value = provider.provide(this.enrichCommand, this.getTemplate().getWrapper(), context, this.template.getReplaceStack());
+		if (this.parseAs != ParseData.PARSE_NONE) {
+			value = parser.parse(this.parseAs, value.getAsPrimitive());
+		}
+		this.getTemplate().getContext().getMergeData().put(this.targetDataName, this.targetDataDelimeter, value);
 	}
 
-	public AbstractProvider getProvider() throws MergeException {
-		if (null == this.provider) {
-			this.provider = this.source.getProvider();
-		}
-		return provider;
-	}
-
-	public AbstractSource getSource() {
-		if (null == this.source) {
-			if (null != this.template) {
-// TODO				this.source = template.getContext().getConfig().getSource(enrichSource);
-			}
-		}
-		return source;
-	}
-	
 	public String getTargetDataName() {
 		return targetDataName;
 	}
@@ -112,10 +106,6 @@ public class Enrich extends AbstractDirective implements DataProvider {
 		this.enrichSource = enrichSource;
 	}
 	
-	public void setSource(AbstractSource source) {
-		this.source = source;
-	}
-
 	public void setIfTargetMissing(int value) {
 		if (this.targetMissingOptions().containsKey(value)) {
 			this.ifTargetMissing = value;
@@ -140,6 +130,22 @@ public class Enrich extends AbstractDirective implements DataProvider {
 
 	public void setParseAs(int parseAs) {
 		this.parseAs = parseAs;
+	}
+
+	public String getEnrichClass() {
+		return enrichClass;
+	}
+
+	public void setEnrichClass(String enrichClass) {
+		this.enrichClass = enrichClass;
+	}
+
+	public String getEnrichCommand() {
+		return enrichCommand;
+	}
+
+	public void setEnrichCommand(String enrichCommand) {
+		this.enrichCommand = enrichCommand;
 	}
 
 }

@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 import com.ibm.util.merge.data.DataManager;
+import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.storage.*;
 import com.ibm.util.merge.template.Template;
@@ -209,5 +210,20 @@ public class Merger {
 	public void clearMergeData() {
 		this.mergeData.clear();
 		
+	}
+
+	public AbstractProvider getProvider(String enrichClass, String enrichSource) throws MergeException {
+		if (this.providers.containsKey(enrichSource)) {
+			return providers.get(enrichSource);
+		}
+		
+		AbstractProvider theProvider;
+		try {
+			theProvider = (AbstractProvider) Class.forName(enrichClass).newInstance();
+		} catch (Exception e) {
+			throw new Merge500(e.getMessage());
+		}
+		
+		return theProvider;
 	}
 }
