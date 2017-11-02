@@ -9,16 +9,23 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 
-public class FileSystemProvider extends AbstractProvider {
+public class FileSystemProvider implements ProviderInterface {
+	private final String source;
+	private final String dbName;
+	private transient final Merger context;
+//	private transient final DataProxyJson proxy = new DataProxyJson();
 	
 	public FileSystemProvider(String source, String dbName, Merger context) throws MergeException {
-		super(source, dbName, context);
+		this.source = source;
+		this.dbName = dbName;
+		this.context = context;
 	}
 
 	@Override
@@ -54,6 +61,21 @@ public class FileSystemProvider extends AbstractProvider {
 			result.add(new DataPrimitive(fileContents.get(file)));
 		}
 		return result;
+	}
+	
+	@Override
+	public String getSource() {
+		return this.source;
+	}
+
+	@Override
+	public String getDbName() {
+		return this.dbName;
+	}
+
+	@Override
+	public Merger getContext() {
+		return this.context;
 	}
 	
 }

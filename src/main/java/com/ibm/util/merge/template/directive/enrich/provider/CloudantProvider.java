@@ -19,41 +19,44 @@ import com.cloudant.client.api.ClientBuilder;
 import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.Database;
 import com.cloudant.client.org.lightcouch.CouchDbException;
-import com.google.gson.JsonElement;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
+import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.Wrapper;
-import com.ibm.util.merge.template.directive.ParseData;
 import com.ibm.util.merge.template.directive.enrich.source.CloudantClientMgr;
-import com.ibm.util.merge.template.directive.enrich.source.CloudantSource;
 
-public class CloudantProvider extends AbstractProvider {
-	private CloudantClient cloudant = null;
-	private Database db = null;
+public class CloudantProvider implements ProviderInterface {
+	private final String source;
+	private final String dbName;
+	private transient final Merger context;
+	private transient final DataProxyJson proxy = new DataProxyJson();
+	private transient CloudantClient cloudant = null;
+	private transient Database db = null;
 	
 	public CloudantProvider(String source, String dbName, Merger context) throws MergeException {
-		super(source, dbName, context);
+		this.source = source;
+		this.dbName = dbName;
+		this.context = context;
 		String configString = "";
 		String username;
 		String password;
-		String host;
-		String port;
-		String url;
+//		String host;
+//		String port;
+//		String url;
 		
 		// Fetch Credentials
 		try {
-			configString = context.getConfig().getEnvironmentString(source);
+			configString = context.getConfig().getEnv(source);
 			DataObject credentials = proxy.fromJSON(configString, DataElement.class).getAsList().get(0).getAsObject().get("credentials").getAsObject();
 			username = 	credentials.get("username").getAsPrimitive();
 			password = 	credentials.get("password").getAsPrimitive();
-			host = 		credentials.get("host").getAsPrimitive();
-			port = 		credentials.get("port").getAsPrimitive();
-			url = 		credentials.get("url").getAsPrimitive();
+//			host = 		credentials.get("host").getAsPrimitive();
+//			port = 		credentials.get("port").getAsPrimitive();
+//			url = 		credentials.get("url").getAsPrimitive();
 		} catch (MergeException e){
 			throw new Merge500("Malformed or Missing Cloudant Source Credentials found for:" + source + " for " + configString);
 		}
@@ -73,13 +76,28 @@ public class CloudantProvider extends AbstractProvider {
 		
 		// Get the database object
 		db = cloudant.database(this.getDbName(), true);
-
 	}
 	
 
 	@Override
 	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) {
 		String result = "";  // TODO - Make Cloudant Call
+		this.db.getClass();
 		return new DataPrimitive(result);
+	}
+
+	@Override
+	public String getSource() {
+		return this.source;
+	}
+
+	@Override
+	public String getDbName() {
+		return this.dbName;
+	}
+
+	@Override
+	public Merger getContext() {
+		return this.context;
 	}
 }

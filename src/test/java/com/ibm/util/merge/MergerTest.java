@@ -14,6 +14,8 @@ import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.storage.Archive;
 import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface;
+import com.ibm.util.merge.template.directive.enrich.provider.StubProvider;
 
 public class MergerTest {
 	private Config config;
@@ -147,7 +149,11 @@ public class MergerTest {
 	@Test
 	public void testGetProviders() throws MergeException {
 		Merger merger = new Merger(cache, config, "system.sample.");
-		assertEquals(1, merger.getProviders().size());
+		assertEquals(0, merger.getProviders().size());
+		ProviderInterface provider = merger.getProvider("com.ibm.util.merge.template.directive.enrich.provider.StubProvider", "TheSource", "TheDB");
+		assertTrue(provider instanceof StubProvider);
+		provider = merger.getProvider("Foo", "TheSource", "TheDb");
+		assertTrue(provider instanceof StubProvider);
 	}
 	
 	@Test

@@ -102,13 +102,13 @@ public class Insert extends AbstractDataDirective {
 			new HashSet<String>(), 
 			new HashSet<String>(), 
 			new HashSet<String>(), 
-			".*",false
+			".*"
 		);
 	}
 	
 	public Insert(String source, String delimeter, int missing, int primitive, int object, int list, 
 			HashSet<String> notFirst, HashSet<String> notLast, HashSet<String> onlyFirst, HashSet<String> onlyLast, 
-			String pattern, Boolean remove) {
+			String pattern) {
 		super(source, delimeter, missing, primitive, object, list);
 		this.setType(AbstractDirective.TYPE_INSERT);
 		this.notFirst = new HashSet<String>(); this.notFirst.addAll(notFirst);
@@ -223,7 +223,7 @@ public class Insert extends AbstractDataDirective {
 	}
 
 	public void insertAtBookmarks(Merger context, DataElement value, boolean isFirst, boolean isLast) throws MergeException {
-		if (context.getStackSize() > context.getConfig().getNestLimit()) {
+		if (context.getStackSize() > context.getConfig().getInsertLimit()) {
 			throw new Merge500("template insert recursion safety, merge stack size exceded");
 		}
 
@@ -236,7 +236,7 @@ public class Insert extends AbstractDataDirective {
 						this.template.getReplaceStack());
 				subTemplate.blankReplace((isFirst ? this.notFirst : this.onlyFirst));
 				subTemplate.blankReplace((isLast ? this.notLast : this.onlyLast));
-				bookmark.insert(subTemplate.getMergeContent());
+				bookmark.insert(subTemplate.getMergedOutput());
 				context.getMergeData().popContext();
 			}
 		}

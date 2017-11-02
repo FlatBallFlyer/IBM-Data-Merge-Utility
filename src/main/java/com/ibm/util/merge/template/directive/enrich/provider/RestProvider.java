@@ -21,30 +21,40 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
+import com.ibm.util.merge.data.parser.DataProxyJson;
+import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
 import com.ibm.util.merge.template.directive.ParseData;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-public class RestProvider extends AbstractProvider {
-	private final String username;
-	private final String password;
-	private final String host;
-	private final String port;
-	private final String url;
+public class RestProvider implements ProviderInterface {
+	private final String source;
+	private final String dbName;
+	private transient final Parser parser;
+	private transient final Merger context;
+	private transient final String username;
+	private transient final String password;
+	private transient final String host;
+	private transient final String port;
+	private transient final String url;
 	
 	public RestProvider(String source, String dbName, Merger context) throws MergeException {
-		super(source, dbName, context);
-
+		this.source = source;
+		this.dbName = dbName;
+		this.context = context;
+		this.parser = new Parser();
+		
 		// Get Credentials
-		String config = context.getConfig().getEnvironmentString(source);
+		String config = context.getConfig().getEnv(source);
 		try {
 			DataObject credentials = parser.parse(ParseData.PARSE_JSON, config).getAsObject().get("credentials").getAsObject();
 			this.username = credentials.get("username").getAsPrimitive();
@@ -98,6 +108,21 @@ public class RestProvider extends AbstractProvider {
 
 	public String getUrl() {
 		return url;
+	}
+
+	@Override
+	public String getSource() {
+		return this.source;
+	}
+
+	@Override
+	public String getDbName() {
+		return this.dbName;
+	}
+
+	@Override
+	public Merger getContext() {
+		return this.context;
 	}
 
 }

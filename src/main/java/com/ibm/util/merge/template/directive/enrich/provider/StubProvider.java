@@ -4,22 +4,27 @@ import java.util.HashMap;
 
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
-import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataPrimitive;
+import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.directive.*;
 
-public class StubProvider extends AbstractProvider {
+public class StubProvider implements ProviderInterface {
+	private final String source;
+	private final String dbName;
+	private transient final Merger context;
+	private transient final DataProxyJson proxy = new DataProxyJson();
 
 	public StubProvider(String source, String dbName, Merger context) throws MergeException {
-		super(source, dbName, context);
+		this.source = source;
+		this.dbName = dbName;
+		this.context = context;
 	}
 
 	@Override
 	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
-		DataList theTemplates = new DataList();
 		Template aTemplate = new Template("system","sample","");
 		aTemplate.addDirective(new Enrich());
 		aTemplate.addDirective(new Insert());
@@ -27,8 +32,22 @@ public class StubProvider extends AbstractProvider {
 		aTemplate.addDirective(new Replace());
 		aTemplate.addDirective(new SaveFile());
 		String templateJson = proxy.toJson(aTemplate);
-		theTemplates.add(new DataPrimitive(templateJson));
-		return theTemplates;
+		return new DataPrimitive(templateJson);
+	}
+
+	@Override
+	public String getSource() {
+		return this.source;
+	}
+
+	@Override
+	public String getDbName() {
+		return this.dbName;
+	}
+
+	@Override
+	public Merger getContext() {
+		return this.context;
 	}
 
 }

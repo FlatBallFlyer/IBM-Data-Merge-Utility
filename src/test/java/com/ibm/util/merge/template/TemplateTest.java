@@ -8,18 +8,15 @@ import java.util.HashSet;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.gson.JsonObject;
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.template.content.TagSegment;
 import com.ibm.util.merge.template.directive.*;
-import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.*;
 
 public class TemplateTest {
 	private Template template;
-	private DataProxyJson proxy = new DataProxyJson();
 	
 	@Before
 	public void setUp() throws Exception {
@@ -117,10 +114,13 @@ public class TemplateTest {
 
 	@Test
 	public void testGetMergedOutput() throws MergeException {
+		Config config = new Config();
+		TemplateCache cache = new TemplateCache(config);
+		Merger merger = new Merger(cache, config, "system.sample.");
 		template.setContent("Some Simple Content");
 		
-		Template mergable = template.getMergable(null);
-		assertEquals("Some Simple Content", mergable.getMergedOutput());
+		Template mergable = template.getMergable(merger);
+		assertEquals("Some Simple Content", mergable.getMergedOutput().getValue());
 		assertTrue(mergable.isMerged());
 		assertTrue(mergable.getDirectives().isEmpty());
 		assertTrue(mergable.getReplaceStack().isEmpty());
@@ -203,13 +203,16 @@ public class TemplateTest {
 
 	@Test
 	public void testSetGetContentDisposition() throws MergeException {
+		Config config = new Config();
+		TemplateCache cache = new TemplateCache(config);
+		Merger merger = new Merger(cache, config, "system.sample.");
 		template.setContentDisposition(Template.DISPOSITION_DOWNLOAD);
 		template.setContentFileName("Foo");
-		assertEquals("attachment;filename=\"Foo\"", template.getContentDisposition());
+		Template mergable = template.getMergable(merger);
+		assertEquals("attachment;filename=\"Foo\"", mergable.getContentDisposition());
 		template.setContentDisposition(Template.DISPOSITION_NORMAL);
-		assertEquals("", template.getContentDisposition());
-		template.setContentDisposition(0);
-		assertEquals("", template.getContentDisposition());
+		mergable = template.getMergable(null);
+		assertEquals("", mergable.getContentDisposition());
 	}
 
 	@Test
@@ -300,8 +303,8 @@ public class TemplateTest {
 		assertTrue(template.getDirectives().get(3) instanceof Replace);
 
 		template.addDirective(new SaveFile());
-		assertEquals(6, template.getDirectives().size());
-		assertTrue(template.getDirectives().get(5) instanceof SaveFile);
+		assertEquals(5, template.getDirectives().size());
+		assertTrue(template.getDirectives().get(4) instanceof SaveFile);
 		
 	}
 
@@ -340,16 +343,6 @@ public class TemplateTest {
 		Merger context = new Merger(cache, config, "system.sample.");
 		template.setContext(context);
 		assertSame(context, template.getContext());
-	}
-	
-	@Test
-	public void testSetOptions() throws MergeException {
-		fail("not yet implemented");
-		JsonObject sampleTemplate = proxy.fromJSON(proxy.toJson(template), JsonObject.class);
-//		template.setOptions(sampleTemplate);
-		assertTrue(sampleTemplate.get("contentType").isJsonObject());
-		assertTrue(sampleTemplate.get("contentDisposition").isJsonObject());
-		assertTrue(sampleTemplate.get("contentEncoding").isJsonObject());
 	}
 	
 }

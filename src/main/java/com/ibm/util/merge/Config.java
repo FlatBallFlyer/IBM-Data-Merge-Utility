@@ -18,7 +18,7 @@ package com.ibm.util.merge;
 
 import java.util.HashMap;
 
-import com.google.gson.JsonElement;
+import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
@@ -32,6 +32,7 @@ import com.ibm.util.merge.exception.MergeException;
  */
 public class Config {
 	private int nestLimit 		= 2;
+	private int insertLimit		= 20;
 	private String tempFolder	= "/opt/ibm/idmu/temp";
 	private HashMap<String, String> envVars;
 
@@ -41,29 +42,32 @@ public class Config {
 		this.setupDefaults();
 	}
 	
-	public Config(String configString) throws Merge500 {
+	public Config(String configString) throws MergeException {
 		this.setupDefaults();
 		if (configString.isEmpty()) {
-			configString = System.getenv("idmu-config");
+			configString = this.getEnv("idmu-config");
 		}
 		Config me = proxy.fromJSON(configString, Config.class);
 		this.nestLimit = me.getNestLimit();
+		this.insertLimit = me.insertLimit;
 		this.tempFolder = me.getTempFolder();
 		this.envVars = me.getEnvVars();
 	}
 	
 	private void setupDefaults() throws Merge500 {
-		tempFolder		= "/opt/ibm/idmu/temp";
-		nestLimit 		= 2;
+		tempFolder	= "/opt/ibm/idmu/temp";
+		nestLimit 	= 2;
+		insertLimit = 20;
+		envVars 	= new HashMap<String,String>();
 	}
 
-	public String getEnvironmentString(String name) throws MergeException {
+	public String getEnv(String name) throws MergeException {
 		if (envVars.containsKey(name)) {
 			return envVars.get(name);
 		}
 		
 		if (name.startsWith("VCAP:")) {
-			return getVcapEntry(name.substring(6));
+			return getVcapEntry(name.substring(5));
 		}
 		
 		String value = System.getenv(name);
@@ -74,24 +78,19 @@ public class Config {
 	}
 	
 	public String getVcapEntry(String serviceName) throws MergeException {
-		String VCAP_SERVICES = System.getenv("VCAP_SERVICES");
+		String VCAP_SERVICES = this.getEnv("VCAP_SERVICES");
+		String value = "";
 		if (null == VCAP_SERVICES) {
 			throw new Merge500("VCAP_SERVICES enviornment variable missing");
 		}
-		JsonElement vcap = proxy.fromJSON(VCAP_SERVICES, JsonElement.class);
-		if (!vcap.isJsonObject()) {
-			throw new Merge500("Malformed VCAP Object:" + VCAP_SERVICES);
+		
+		try {
+			DataElement vcap = proxy.fromJSON(VCAP_SERVICES, DataElement.class);
+			value = proxy.toJson(vcap.getAsObject().get(serviceName).getAsList().get(0).getAsPrimitive());
+		} catch (Exception e) {
+			throw new Merge500("VCAP_SERVICES contains malformed JSON or is missing service " + serviceName);
 		}
-		if (!vcap.getAsJsonObject().has(serviceName)) {
-			throw new Merge500("VCAP Service Not Found:" + serviceName + ":" + VCAP_SERVICES);
-		}
-		if (!vcap.getAsJsonObject().get(serviceName).isJsonArray()) {
-			throw new Merge500("Malformed VCAP Services Object:" + serviceName + ":" + VCAP_SERVICES);
-		}
-		if (vcap.getAsJsonObject().get(serviceName).getAsJsonArray().size() < 1 ) {
-			throw new Merge500("Missing VCAP Services Object:" + serviceName + ":" + VCAP_SERVICES);
-		}
-		return proxy.toJson(vcap.getAsJsonObject().get(serviceName).getAsJsonArray().get(0));
+		return value;
 	}
 	
 	public String getTempFolder() {
@@ -110,12 +109,15 @@ public class Config {
 		this.nestLimit = limit;
 	}
 	
+	public int getInsertLimit() {
+		return insertLimit;
+	}
+
+	public void setInsertLimit(int insertLimit) {
+		this.insertLimit = insertLimit;
+	}
+
 	public HashMap<String, String> getEnvVars() {
 		return envVars;
 	}
-
-	public void setEnvVars(HashMap<String, String> envVars) {
-		this.envVars = envVars;
-	}
-
 }

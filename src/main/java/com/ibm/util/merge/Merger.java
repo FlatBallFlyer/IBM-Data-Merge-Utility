@@ -19,6 +19,7 @@
  */
 package com.ibm.util.merge;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +30,7 @@ import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.storage.*;
 import com.ibm.util.merge.template.Template;
-import com.ibm.util.merge.template.directive.enrich.provider.AbstractProvider;
+import com.ibm.util.merge.template.directive.enrich.provider.*;
 
 /**
  * The Class Merger is the primary interface to IDMU. To use this class
@@ -82,7 +83,7 @@ public class Merger {
 	private Template baseTemplate;
 	private DataManager mergeData;
 	private ArrayList<String> templateStack;
-	HashMap<String,AbstractProvider> providers;
+	HashMap<String,ProviderInterface> providers;
 	private Archive archive;
 	
 	/**
@@ -104,7 +105,7 @@ public class Merger {
 		this.mergeData = new DataManager();
 		this.templateStack = new ArrayList<String>();
 		this.mergeData = new DataManager();
-		this.providers = new HashMap<String, AbstractProvider>();
+		this.providers = new HashMap<String, ProviderInterface>();
 	}
 	
 	/**
@@ -172,6 +173,9 @@ public class Merger {
 				case Archive.ARCHIVE_ZIP :
 					this.archive = new ZipArchive(this);
 					break;
+				case Archive.ARCHIVE_JAR:
+					this.archive = new JarArchive(this);
+					break;
 				}
 			}
 			if (this.mergeData.contians(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_NAME, "-")) {
@@ -199,7 +203,7 @@ public class Merger {
 		return baseTemplate;
 	}
 
-	public HashMap<String, AbstractProvider> getProviders() {
+	public HashMap<String, ProviderInterface> getProviders() {
 		return providers;
 	}
 
@@ -212,18 +216,36 @@ public class Merger {
 		
 	}
 
-	public AbstractProvider getProvider(String enrichClass, String enrichSource) throws MergeException {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public ProviderInterface getProvider(String enrichClass, String enrichSource, String dbName) throws MergeException {
 		if (this.providers.containsKey(enrichSource)) {
 			return providers.get(enrichSource);
 		}
 		
-		AbstractProvider theProvider;
+		ProviderInterface theProvider;
 		try {
-			theProvider = (AbstractProvider) Class.forName(enrichClass).newInstance();
-		} catch (Exception e) {
-			throw new Merge500(e.getMessage());
+			Class[] cArg = new Class[3]; 
+			cArg[0] = String.class;
+			cArg[1] = String.class;
+			cArg[2] = Merger.class;
+			Class clazz = Class.forName(enrichClass);
+			theProvider = (ProviderInterface) clazz.getDeclaredConstructor(cArg).newInstance(enrichSource, dbName, this);
+		} catch (ClassNotFoundException e1) {
+			throw new Merge500("Error finding provider - class not found: " + enrichClass );
+		} catch (InstantiationException e) {
+			throw new Merge500("Error instantiating class: " + enrichClass + " message: " + e.getMessage());
+		} catch (IllegalAccessException e) {
+			throw new Merge500("Error accessing class: " + enrichClass + " message: " + e.getMessage());
+		} catch (IllegalArgumentException e) {
+			throw new Merge500("IllegalArgumentException : " + enrichClass + " message: " + e.getMessage());
+		} catch (InvocationTargetException e) {
+			throw new Merge500("InvocationTargetException: " + enrichClass + " message: " + e.getMessage());
+		} catch (NoSuchMethodException e) {
+			throw new Merge500("NoSuchMethodException: " + enrichClass + " message: " + e.getMessage());
+		} catch (SecurityException e) {
+			throw new Merge500("Error accessing class: " + enrichClass + " message: " + e.getMessage());
 		}
-		
+		providers.put(enrichSource, theProvider);
 		return theProvider;
 	}
 }

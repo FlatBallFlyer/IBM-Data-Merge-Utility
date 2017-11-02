@@ -17,6 +17,7 @@ import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
+import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
@@ -32,12 +33,20 @@ import java.util.HashMap;
 
 import javax.sql.DataSource;
 
-public class JdbcProvider extends AbstractProvider {
-	private final DataSource jdbcSource;
-	private final Connection connection;
+public class JdbcProvider implements ProviderInterface {
+	private final String source;
+	private final String dbName;
+	private final transient Merger context;
+	private final transient DataSource jdbcSource;
+	private final transient Connection connection;
+	private final transient Parser parser;
 	
 	public JdbcProvider(String source, String dbName, Merger context) throws MergeException {
-		super(source, dbName, context);
+		this.source = source;
+		this.dbName = dbName;
+		this.context = context;
+		this.parser = new Parser();
+		
 		String db_type;
 		String name;
 		String uri_cli;
@@ -46,7 +55,7 @@ public class JdbcProvider extends AbstractProvider {
 		String uri;
 
 		// Get Credentials
-		String config = context.getConfig().getEnvironmentString(source);
+		String config = context.getConfig().getEnv(source);
 		try {
 			DataObject credentials = parser.parse(ParseData.PARSE_JSON, config).getAsObject().get("credentials").getAsObject();
 			db_type = 		credentials.get("db_type").getAsPrimitive();
@@ -106,5 +115,19 @@ public class JdbcProvider extends AbstractProvider {
 		return table;
 	}
 
+	@Override
+	public String getSource() {
+		return this.source;
+	}
+
+	@Override
+	public String getDbName() {
+		return this.dbName;
+	}
+
+	@Override
+	public Merger getContext() {
+		return this.context;
+	}
 }
 

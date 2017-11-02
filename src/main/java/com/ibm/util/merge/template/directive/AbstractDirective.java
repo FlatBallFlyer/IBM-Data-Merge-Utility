@@ -68,6 +68,7 @@ public abstract class AbstractDirective {
 	
 	public void makeMergable(AbstractDirective target) {
 		target.setType(this.getType());
+		target.setName(name);
 	}
 	
 	public Template getTemplate() {

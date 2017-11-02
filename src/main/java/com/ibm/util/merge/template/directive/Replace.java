@@ -40,7 +40,6 @@ public class Replace extends AbstractDataDirective {
 	private String fromAttribute;	// used by List
 	private String toAttribute;		// used by List
 	private boolean processAfter;
-	private int repalceRepeat = 1;
 
 	public static final int MISSING_THROW 	= 1;
 	public static final int MISSING_IGNORE = 2;
@@ -91,16 +90,14 @@ public class Replace extends AbstractDataDirective {
 			PRIMITIVE_THROW,
 			OBJECT_THROW,
 			LIST_THROW,
-			true,
-			1
+			true
 		);
 	}
 
-	public Replace(String source, String delimeter, int missing, int primitive, int object, int list, boolean process, int repeat) {
+	public Replace(String source, String delimeter, int missing, int primitive, int object, int list, boolean process) {
 		super(source, delimeter, missing, primitive, object, list);
 		this.type = AbstractDirective.TYPE_REPLACE;
 		this.processAfter 	= process;
-		this.repalceRepeat 	= repeat;
 	}
 
 	@Override
@@ -110,7 +107,6 @@ public class Replace extends AbstractDataDirective {
 		mergable.setFromAttribute(this.fromAttribute);
 		mergable.setToAttribute(this.toAttribute);
 		mergable.setProcessAfter(this.processAfter);
-		mergable.setRepalceRepeat(this.repalceRepeat);
 		return mergable;
 	}
 
@@ -231,14 +227,6 @@ public class Replace extends AbstractDataDirective {
 
 	public void setProcessAfter(boolean processAfter) {
 		this.processAfter = processAfter;
-	}
-
-	public int getRepalceRepeat() {
-		return repalceRepeat;
-	}
-
-	public void setRepalceRepeat(int repalceRepeat) {
-		this.repalceRepeat = repalceRepeat;
 	}
 
 }

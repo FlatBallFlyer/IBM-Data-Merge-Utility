@@ -22,12 +22,19 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-public class JndiProvider extends AbstractProvider {
-	private DataSource jndiSource;
-	private Connection connection;
+public class JndiProvider implements ProviderInterface {
+	private final String source;
+	private final String dbName;
+	private transient final Merger context;
+//	private transient final DataProxyJson proxy = new DataProxyJson();
+	private transient final DataSource jndiSource;
+	private transient final Connection connection;
 	
 	public JndiProvider(String source, String dbName, Merger context) throws MergeException {
-		super(source, dbName, context);
+		this.source = source;
+		this.dbName = dbName;
+		this.context = context;
+
 		// Get Connection
     	try {
 	    	Context initContext = new InitialContext();
@@ -74,5 +81,19 @@ public class JndiProvider extends AbstractProvider {
 		return table;
 	}
 
+	@Override
+	public String getSource() {
+		return this.source;
+	}
+
+	@Override
+	public String getDbName() {
+		return this.dbName;
+	}
+
+	@Override
+	public Merger getContext() {
+		return this.context;
+	}
 }
 

@@ -26,6 +26,7 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
+import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
@@ -33,11 +34,19 @@ import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
 import com.ibm.util.merge.template.directive.ParseData;
 
-public class MongoProvider extends AbstractProvider {
-	private final String connection; // TODO Mongo Connection type
+public class MongoProvider implements ProviderInterface {
+	private final String source;
+	private final String dbName;
+	private transient final Merger context;
+	private transient final Parser parser;
+	private transient final String connection; // TODO Mongo Connection type
 	
 	public MongoProvider(String source, String dbName, Merger context) throws MergeException {
-		super(source, dbName, context);
+		this.source = source;
+		this.dbName = dbName;
+		this.context = context;
+		this.parser = new Parser();
+		
 		String db_type;
 		String name;
 		String uri_cli;
@@ -46,7 +55,7 @@ public class MongoProvider extends AbstractProvider {
 		String uri;
 
 		// Get Credentials (TODO Assumed same as JDBC)
-		String config = context.getConfig().getEnvironmentString(source);
+		String config = context.getConfig().getEnv(source);
 		try {
 			DataObject credentials = parser.parse(ParseData.PARSE_JSON, config).getAsObject().get("credentials").getAsObject();
 			db_type = 		credentials.get("db_type").getAsPrimitive();
@@ -73,4 +82,18 @@ public class MongoProvider extends AbstractProvider {
 		return new DataPrimitive(result);
 	}
 
+	@Override
+	public String getSource() {
+		return this.source;
+	}
+
+	@Override
+	public String getDbName() {
+		return this.dbName;
+	}
+
+	@Override
+	public Merger getContext() {
+		return this.context;
+	}
 }

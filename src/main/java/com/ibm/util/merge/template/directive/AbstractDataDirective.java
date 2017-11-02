@@ -17,7 +17,9 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	public abstract HashMap<Integer, String> listOptions();
 	
 	public AbstractDataDirective() {
-		// TODO Auto-generated constructor stub
+		super();
+		this.dataSource = "";
+		this.dataDelimeter = "";
 	}
 	
 	public AbstractDataDirective(String source, String delimeter, int missing, int primitive, int object, int list) {
@@ -32,6 +34,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	
 	public void makeMergable(AbstractDataDirective mergable) {
 		mergable.setType(this.getType());
+		mergable.setName(name);
 		mergable.setDataSource(this.getDataSource());
 		mergable.setDataDelimeter(this.getDataDelimeter());
 		mergable.setIfSourceMissing(this.getIfSourceMissing());

@@ -8,13 +8,20 @@ import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
+import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 
-public class CacheProvider extends AbstractProvider {
+public class CacheProvider implements ProviderInterface {
+	private final String source;
+	private final String dbName;
+	private transient final Merger context;
+	private transient final DataProxyJson proxy = new DataProxyJson();
 	
 	public CacheProvider(String source, String dbName, Merger context) throws MergeException {
-		super(source, dbName, context);
+		this.source = source;
+		this.dbName = dbName;
+		this.context = context;
 	}
 	
 	@Override
@@ -33,6 +40,21 @@ public class CacheProvider extends AbstractProvider {
 		// DEFERRED: cacheData.put("mergeTime", cache.getMergeTime());
 		// DEFERRED: cacheData.put("averageResposne", cache.getAverageResposne());
 		return cacheData;
+	}
+
+	@Override
+	public String getSource() {
+		return this.source;
+	}
+
+	@Override
+	public String getDbName() {
+		return this.dbName;
+	}
+
+	@Override
+	public Merger getContext() {
+		return this.context;
 	}
 
 }

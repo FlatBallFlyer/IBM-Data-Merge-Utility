@@ -16,8 +16,6 @@
  */
 package com.ibm.util.merge.template.directive;
 
-import java.util.HashMap;
-
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.Parser;
@@ -34,22 +32,13 @@ import com.ibm.util.merge.template.directive.enrich.provider.*;
  */
 public class Enrich extends AbstractDirective {
 
-	private static final int TARGET_MISSING_THROW 	= 1;
-	private static final int TARGET_MISSING_IGNORE = 2;
-	public HashMap<Integer, String> targetMissingOptions() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(TARGET_MISSING_THROW, 		"throw");
-		options.put(TARGET_MISSING_IGNORE, 	"ignore");
-		return options;
-	}
-
 	private String targetDataName; 
 	private String targetDataDelimeter;
-	private String enrichSource;
 	private String enrichClass;
+	private String enrichSource;
+	private String enrichParameter;
 	private String enrichCommand;
 	private int parseAs;
-	private int ifTargetMissing;
 	private transient Parser parser;
 
 	public Enrich() throws MergeException {
@@ -58,11 +47,11 @@ public class Enrich extends AbstractDirective {
 		this.setType(AbstractDirective.TYPE_ENRICH);
 		this.targetDataName = "";
 		this.targetDataDelimeter = "\"";
+		this.enrichClass = "com.ibm.util.merge.template.directive.enrich.provider.StubProvider";
 		this.enrichSource = "";
-		this.enrichClass = "";
+		this.enrichParameter = "";
 		this.enrichCommand = "";
 		this.parseAs = ParseData.PARSE_NONE;
-		this.ifTargetMissing = TARGET_MISSING_IGNORE;
 	}
 
 	@Override
@@ -75,14 +64,14 @@ public class Enrich extends AbstractDirective {
 		mergable.setEnrichSource(this.enrichSource);
 		mergable.setEnrichClass(this.enrichClass);
 		mergable.setEnrichCommand(this.enrichCommand);
+		mergable.setEnrichParameter(this.enrichParameter);
 		mergable.setParseAs(this.parseAs);
-		mergable.setIfTargetMissing(this.ifTargetMissing);
 		return mergable;
 	}
 	
 	@Override
 	public void execute(Merger context) throws MergeException {
-		AbstractProvider provider = context.getProvider(this.enrichClass, this.enrichSource);
+		ProviderInterface provider = context.getProvider(this.enrichClass, this.enrichSource, this.enrichParameter);
 		DataElement value = provider.provide(this.enrichCommand, this.getTemplate().getWrapper(), context, this.template.getReplaceStack());
 		if (this.parseAs != ParseData.PARSE_NONE) {
 			value = parser.parse(this.parseAs, value.getAsPrimitive());
@@ -106,16 +95,6 @@ public class Enrich extends AbstractDirective {
 		this.enrichSource = enrichSource;
 	}
 	
-	public void setIfTargetMissing(int value) {
-		if (this.targetMissingOptions().containsKey(value)) {
-			this.ifTargetMissing = value;
-		}
-	}
-
-	public int getIfTargetMissing() {
-		return this.ifTargetMissing;
-	}
-
 	public String getTargetDataDelimeter() {
 		return this.targetDataDelimeter;
 	}
@@ -146,6 +125,14 @@ public class Enrich extends AbstractDirective {
 
 	public void setEnrichCommand(String enrichCommand) {
 		this.enrichCommand = enrichCommand;
+	}
+
+	public String getEnrichParameter() {
+		return enrichParameter;
+	}
+
+	public void setEnrichParameter(String enrichParameter) {
+		this.enrichParameter = enrichParameter;
 	}
 
 }

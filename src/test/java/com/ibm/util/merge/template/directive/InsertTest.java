@@ -21,8 +21,8 @@ import com.ibm.util.merge.template.directive.Insert;
 public class InsertTest {
 	private Config config;
 	private TemplateCache cache;
-	private String bkm1 = "<idmu-bookmark name=\"bkm1\" group=\"test\" template=\"child\" varyby=\"type\"/>";
-	private String bkm2 = "<idmu-bookmark name=\"bkm2\" group=\"test\" template=\"child\" />";
+	private String bkm1 = "{bookmark=\"bkm1\" group=\"test\" template=\"child\" varyby=\"type\"}";
+	private String bkm2 = "{bookmark=\"bkm2\" group=\"test\" template=\"child\" }";
 	private DataList arrayOfObjects;
 	private DataList arrayOfVaryBy;
 	private DataObject simpleObject;
@@ -84,6 +84,30 @@ public class InsertTest {
 	}
 
 	@Test
+	public void testInsertRecursionLimit() throws MergeException {
+		Template template = new Template("test", "child", "Template Content ", this.bkm2, "{", "}" );
+		Insert directive = new Insert("data.primitive","-",
+				Insert.MISSING_THROW,
+				Insert.PRIMITIVE_INSERT,
+				Insert.OBJECT_THROW,
+				Insert.LIST_THROW,
+				emptyList, emptyList, emptyList, emptyList,
+				".*");
+		template.addDirective(directive);
+		cache.postTemplate(template);
+		config.setInsertLimit(5);
+		
+		try {
+			Merger context = new Merger(cache, config, "test.child.");
+			context.getMergeData().put("data.primitive", "-", new DataPrimitive("Foo"));
+			context.merge();
+		} catch (MergeException e) {
+			return; // Expected
+		}
+		fail("Fail - Recursion Limit - did not throw exception - infinite loop");
+	}
+
+	@Test
 	public void testInsertSourceDelimeterMissingPrimitiveObjectList() {
 		HashSet<String> list = new HashSet<String>();
 		list.add("One"); list.add("two"); list.add("three");
@@ -93,7 +117,7 @@ public class InsertTest {
 				Insert.OBJECT_INSERT_LIST, 
 				Insert.LIST_INSERT,
 				list, list, list, list,
-				"foo", true);
+				"foo");
 		assertEquals(AbstractDirective.TYPE_INSERT, directive.getType());
 		assertEquals("source", directive.getDataSource());
 		assertEquals("delim", directive.getDataDelimeter());
@@ -116,7 +140,7 @@ public class InsertTest {
 			Insert.PRIMITIVE_IGNORE, 
 			Insert.OBJECT_IGNORE,
 			Insert.LIST_IGNORE, 
-			empty, empty, empty, empty, "", false);
+			empty, empty, empty, empty, "");
 		Insert mergable = directive.getMergable();
 		assertNotSame(directive, mergable);
 		assertEquals(directive.getType(), AbstractDirective.TYPE_INSERT);
@@ -141,7 +165,7 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_IGNORE,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", false);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
@@ -162,7 +186,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", false);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, config, "test.missing.ignore");
@@ -179,13 +203,13 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", true);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		cache.postTemplate(new Template("test", "child", "", "Child Content"));
 		Merger context = new Merger(cache, config, "test.missing.ignore");
 		template = context.merge();
-		assertEquals("Child Content", template.getContent());
+		assertEquals("Child Content", template.getMergedOutput().getValue());
 	}
 
 	@Test
@@ -197,7 +221,7 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_IGNORE,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", false);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
@@ -219,7 +243,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", false);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, config, "test.primitive.ignore");
@@ -237,7 +261,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", true);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		
@@ -247,14 +271,14 @@ public class InsertTest {
 				Replace.PRIMITIVE_REPLACE,
 				Replace.OBJECT_THROW,
 				Replace.LIST_THROW,
-				true, 1);
+				true);
 		template.addDirective(replace);
 		cache.postTemplate(template);
 		
 		Merger context = new Merger(cache, config, "test.primitive.insert");
 		context.getMergeData().put("data.primitive", "-", new DataPrimitive("Foo"));
 		template = context.merge();
-		assertEquals("Child - Foo", template.getContent());
+		assertEquals("Child - Foo", template.getMergeContent().getValue());
 	}
 
 	@Test
@@ -266,7 +290,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_IGNORE,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", false);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
@@ -288,7 +312,7 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", false);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, config, "test.object.ignore");
@@ -306,7 +330,7 @@ public class InsertTest {
 				Insert.OBJECT_INSERT_OBJECT,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", true);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		
@@ -316,14 +340,14 @@ public class InsertTest {
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
 				Replace.LIST_THROW,
-				true, 1);
+				true);
 		template.addDirective(replace);
 		cache.postTemplate(template);
 		
 		Merger context = new Merger(cache, config, "test.object.insertObject");
 		context.getMergeData().put("data.object", "-", this.simpleObject);
 		template = context.merge();
-		assertEquals("Child col1, val1 - Child col2, val2 - ", template.getContent());
+		assertEquals("Child col1, val1 - Child col2, val2 - ", template.getMergeContent().getValue());
 	}
 
 	@Test
@@ -335,7 +359,7 @@ public class InsertTest {
 				Insert.OBJECT_INSERT_LIST,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", true);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		
@@ -345,14 +369,14 @@ public class InsertTest {
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
 				Replace.LIST_THROW,
-				true, 1);
+				true);
 		template.addDirective(replace);
 		cache.postTemplate(template);
 		
 		Merger context = new Merger(cache, config, "test.object.insertObject");
 		context.getMergeData().put("data.object", "-", this.simpleObject);
 		template = context.merge();
-		assertEquals("Child val1, val2 - ", template.getContent());
+		assertEquals("Child val1, val2 - ", template.getMergeContent().getValue());
 	}
 
 	@Test
@@ -364,7 +388,7 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", false);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
@@ -386,7 +410,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_IGNORE,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", false);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, config, "test.list.ignore");
@@ -404,7 +428,7 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_INSERT,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", true);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		template = new Template("test", "child", "", "Child Content, ");
@@ -413,7 +437,7 @@ public class InsertTest {
 		Merger context = new Merger(cache, config, "test.parent.");
 		context.getMergeData().put("data.list", "-", this.arrayOfObjects);
 		template = context.merge();
-		assertEquals("Child Content, Child Content, ", template.getContent());
+		assertEquals("Child Content, Child Content, ", template.getMergedOutput().getValue());
 	}
 
 	@Test
@@ -425,7 +449,7 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_INSERT,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", true);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		cache.postTemplate(new Template("test", "child", "T1", "Child T1 Content, "));
@@ -451,7 +475,7 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_INSERT,
 				emptyList, emptyList, emptyList, emptyList,
-				".*", true);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		cache.postTemplate(new Template("test", "child", "T1", "Child T1 Content, "));
@@ -461,7 +485,7 @@ public class InsertTest {
 		Merger context = new Merger(cache, config, "test.parent.");
 		context.getMergeData().put("data.list", "-", this.arrayOfVaryBy);
 		template = context.merge();
-		assertEquals("Child T1 Content, Child T2 Content, Child Default Content, ", template.getContent());
+		assertEquals("Child T1 Content, Child T2 Content, Child Default Content, ", template.getMergedOutput().getValue());
 	}
 
 	@Test
@@ -489,7 +513,7 @@ public class InsertTest {
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
 				Replace.LIST_THROW,
-				true, 1);
+				true);
 		template.addDirective(replace);
 		Insert directive = new Insert("data.list","-",
 				Insert.MISSING_THROW,
@@ -497,7 +521,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_INSERT,
 				notFirst, notLast, onlyFirst, onlyLast,
-				".*", true);
+				".*");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		
@@ -507,7 +531,7 @@ public class InsertTest {
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
 				Replace.LIST_THROW,
-				true, 1);
+				true);
 		template.addDirective(replace);
 		cache.postTemplate(template);
 		
@@ -515,7 +539,7 @@ public class InsertTest {
 		context.getMergeData().put("data.list", "-", this.arrayOfVaryBy);
 		context.getMergeData().put("data.replace", "-", replaceObject);
 		template = context.merge();
-		assertEquals("Child row1val1, row1val2bcfgij - Child row2val1, row2val2abefij - Child row3val1, row3val2adehij - ", template.getContent());
+		assertEquals("Child row1val1, row1val2bcfgij - Child row2val1, row2val2abefij - Child row3val1, row3val2adehij - ", template.getMergeContent().getValue());
 	}
 
 	@Test
@@ -527,7 +551,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_INSERT,
 				emptyList, emptyList, emptyList, emptyList,
-				"bkm1", false);
+				"bkm1");
 		template.addDirective(directive);
 		directive = new Insert("data.primitive","-",
 				Insert.MISSING_THROW,
@@ -535,7 +559,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				"bkm2", true);
+				"bkm2");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		cache.postTemplate(new Template("test", "child", "T1", "Child T1 Content, "));
@@ -546,47 +570,9 @@ public class InsertTest {
 		context.getMergeData().put("data.list", "-", this.arrayOfVaryBy);
 		context.getMergeData().put("data.primitive", "-", new DataPrimitive("Foo"));
 		template = context.merge();
-		assertEquals("Child T1 Content, Child T2 Content, Child Default Content, Child Default Content, ", template.getContent());
+		assertEquals("Child T1 Content, Child T2 Content, Child Default Content, Child Default Content, ", template.getMergedOutput().getValue());
 	}
 
-	@Test
-	public void testNoRemoveAfterMissing() throws MergeException {
-		Template template = new Template("test", "missing", "ignore", this.bkm2, "{", "}" );
-		Insert directive = new Insert("missing","-",
-				Insert.MISSING_INSERT,
-				Insert.PRIMITIVE_THROW,
-				Insert.OBJECT_THROW,
-				Insert.LIST_THROW,
-				emptyList, emptyList, emptyList, emptyList,
-				".*", false);
-		template.addDirective(directive);
-		cache.postTemplate(template);
-		cache.postTemplate(new Template("test", "child", "", "Child Content"));
-		Merger context = new Merger(cache, config, "test.missing.ignore");
-		template = context.merge();
-		assertEquals("Child Content" + this.bkm2, template.getContent());
-	}
-
-	@Test
-	public void testNoRemoveAfter() throws MergeException {
-		Template template = new Template("test", "object", "dirty", this.bkm2, "{", "}" );
-		Insert directive = new Insert("data.object","-",
-				Insert.MISSING_THROW,
-				Insert.PRIMITIVE_THROW,
-				Insert.OBJECT_INSERT_OBJECT,
-				Insert.LIST_THROW,
-				emptyList, emptyList, emptyList, emptyList,
-				".*", false);
-		template.addDirective(directive);
-		cache.postTemplate(template);
-		cache.postTemplate(new Template("test", "child", "", "Child Template-"));
-		
-		Merger context = new Merger(cache, config, "test.object.dirty");
-		context.getMergeData().put("data.object", "-", this.simpleObject);
-		template = context.merge();
-		assertEquals("Child Template-Child Template-" + this.bkm2, template.getContent());
-	}
-	
 	@Test
 	public void testSetGetNotFirst() {
 		HashSet<String> list = new HashSet<String>(); list.add("A"); list.add("B");		
