@@ -3,6 +3,7 @@ package com.ibm.util.merge.template.directive.enrich.provider;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
+import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
@@ -32,22 +33,20 @@ public class FileSystemProvider implements ProviderInterface {
 	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws Merge500 {
 		Content query = new Content(wrapper, enrichCommand, TagSegment.ENCODE_NONE);
 		query.replace(replace, false, context.getConfig().getNestLimit());
-		DataList result = new DataList();
+		DataObject result = new DataObject();
 
 		File templateFolder = new File(this.getSource());
         if (templateFolder.listFiles() == null) {
             throw new Merge500("File System Path Folder was not found:" + templateFolder);
         }
         
-		HashMap<String, String> fileContents = new HashMap<String, String>();
 		String fileSelector = query.getValue();
-
         for (File file : templateFolder.listFiles()) {
             if (!file.isDirectory() && !file.getName().startsWith(".")) {
             	if (file.getName().matches(fileSelector.toString())) {
             		try {
             			String content = new String(Files.readAllBytes(file.toPath()));
-            			fileContents.put(file.getName(), content);
+            			result.put(file.getName(), new DataPrimitive(content));
             		} catch (FileNotFoundException e) {
             			// I Don't Think this can happen!
             		} catch (IOException e) {
@@ -56,10 +55,6 @@ public class FileSystemProvider implements ProviderInterface {
             	}
             }
         }
-
-		for (String file : fileContents.keySet()) {
-			result.add(new DataPrimitive(fileContents.get(file)));
-		}
 		return result;
 	}
 	
