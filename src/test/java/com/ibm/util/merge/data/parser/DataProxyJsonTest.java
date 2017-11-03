@@ -85,4 +85,18 @@ public class DataProxyJsonTest {
 		assertTrue(result.getAsObject().get("description").isPrimitive());
 		assertEquals("a Simple Element", result.getAsObject().get("description").getAsPrimitive());
 	}
+
+	@Test
+	public void testDataElementProxy2() throws Merge500 {
+		DataObject table = new DataObject();
+		table.put("Test", new DataPrimitive(null));
+
+		String json = proxy.toJson(table);
+		DataElement result = proxy.fromJSON(json, DataElement.class);
+		
+		assertTrue(result.isObject());
+		assertTrue(result.getAsObject().containsKey("Test"));
+		assertTrue(result.getAsObject().get("Test").isPrimitive());
+		assertNotNull(result.getAsObject().get("Test").getAsPrimitive());
+	}
 }

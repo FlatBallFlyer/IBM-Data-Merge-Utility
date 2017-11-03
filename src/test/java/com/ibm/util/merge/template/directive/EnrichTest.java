@@ -10,6 +10,7 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
+import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
@@ -46,7 +47,7 @@ public class EnrichTest {
 		assertEquals("", 							enrich.getEnrichSource());
 		assertEquals("", 							enrich.getEnrichParameter());
 		assertEquals("", 							enrich.getEnrichCommand());
-		assertEquals(ParseData.PARSE_NONE, 			enrich.getParseAs());
+		assertEquals(Parser.PARSE_NONE, 			enrich.getParseAs());
 	}
 
 	@Test
@@ -57,7 +58,7 @@ public class EnrichTest {
 		before.setEnrichParameter("somedb");
 		before.setEnrichSource("some source");
 		before.setName("Foo");
-		before.setParseAs(ParseData.PARSE_JSON);
+		before.setParseAs(Parser.PARSE_JSON);
 		before.setTargetDataName("some=name");
 		before.setTargetDataDelimeter("=");
 		Enrich after = (Enrich) before.getMergable();
@@ -83,7 +84,7 @@ public class EnrichTest {
 
 	@Test
 	public void testExecuteParse() throws MergeException {
-		enrich.setParseAs(ParseData.PARSE_JSON);
+		enrich.setParseAs(Parser.PARSE_JSON);
 		cache.postTemplate(template);
 		context = new Merger(cache, config, "test.enrich.");
 		context.merge();
@@ -114,8 +115,8 @@ public class EnrichTest {
 
 	@Test
 	public void testGetSetParseAs() {
-		enrich.setParseAs(ParseData.PARSE_CSV);
-		assertEquals(ParseData.PARSE_CSV, enrich.getParseAs());
+		enrich.setParseAs(Parser.PARSE_CSV);
+		assertEquals(Parser.PARSE_CSV, enrich.getParseAs());
 	}
 
 	@Test

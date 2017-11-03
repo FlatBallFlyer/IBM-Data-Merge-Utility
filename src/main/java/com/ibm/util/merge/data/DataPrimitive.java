@@ -10,7 +10,11 @@ public class DataPrimitive implements DataElement {
 	
 	public DataPrimitive(String value) {
 		super();
-		this.value = value;
+		if (value == null) {
+			this.value = ""; 
+		} else {
+			this.value = value;
+		}
 	}
 	
 	public DataPrimitive(int value) {

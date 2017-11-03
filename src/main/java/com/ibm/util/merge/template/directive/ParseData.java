@@ -32,23 +32,6 @@ import com.ibm.util.merge.exception.MergeException;
  * @since: v4.0
  */
 public class ParseData extends AbstractDataDirective {
-	public static final int PARSE_CSV	 		= 1;
-	public static final int PARSE_HTML	 		= 2;
-	public static final int PARSE_JSON			= 3;
-	public static final int PARSE_NONE	 		= 4;
-	public static final int PARSE_XML_MARKUP	= 5;
-	public static final int PARSE_XML_DATA		= 6;
-	public static final HashMap<Integer, String> PARSE_OPTIONS() {
-		HashMap<Integer, String> values = new HashMap<Integer, String>();
-		values.put(PARSE_CSV, 		"csv");
-		values.put(PARSE_HTML, 		"html");
-		values.put(PARSE_JSON, 		"json");
-		values.put(PARSE_NONE, 		"none");
-		values.put(PARSE_XML_DATA, 	"xml-data");
-		values.put(PARSE_XML_MARKUP, "xml-mark");
-		return values;
-	}
-
 	public static final int SOURCE_MISSING_THROW 	= 1;
 	public static final int SOURCE_MISSING_IGNORE 	= 2;
 	public HashMap<Integer, String> missingOptions() {
@@ -103,7 +86,7 @@ public class ParseData extends AbstractDataDirective {
 		this.dataTarget = "";
 		this.dataTargetDelimiter = "\"";
 		this.staticData = "";
-		this.parseFormat = 	PARSE_CSV;
+		this.parseFormat = 	Parser.PARSE_CSV;
 		this.ifList = 		LIST_THROW;
 		this.ifMissing = 	SOURCE_MISSING_THROW;
 		this.ifObject = 	OBJECT_THROW;
@@ -189,7 +172,7 @@ public class ParseData extends AbstractDataDirective {
 	}
 	
 	public void setParseFormat(int format) {
-		if (PARSE_OPTIONS().containsKey(format)) {
+		if (Parser.PARSE_OPTIONS().containsKey(format)) {
 			this.parseFormat = format;
 		}
 	}

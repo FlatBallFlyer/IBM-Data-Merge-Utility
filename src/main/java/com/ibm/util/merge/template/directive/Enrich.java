@@ -51,7 +51,7 @@ public class Enrich extends AbstractDirective {
 		this.enrichSource = "";
 		this.enrichParameter = "";
 		this.enrichCommand = "";
-		this.parseAs = ParseData.PARSE_NONE;
+		this.parseAs = Parser.PARSE_NONE;
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class Enrich extends AbstractDirective {
 	public void execute(Merger context) throws MergeException {
 		ProviderInterface provider = context.getProvider(this.enrichClass, this.enrichSource, this.enrichParameter);
 		DataElement value = provider.provide(this.enrichCommand, this.getTemplate().getWrapper(), context, this.template.getReplaceStack());
-		if (this.parseAs != ParseData.PARSE_NONE) {
+		if (this.parseAs != Parser.PARSE_NONE) {
 			value = parser.parse(this.parseAs, value.getAsPrimitive());
 		}
 		this.getTemplate().getContext().getMergeData().put(this.targetDataName, this.targetDataDelimeter, value);

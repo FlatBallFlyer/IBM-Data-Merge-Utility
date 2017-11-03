@@ -10,7 +10,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	DataProxyCsvTest.class, 
 	DataProxyHtmlTest.class,
 	DataProxyJsonTest.class, 
-	DataProxyXmlTest.class })
+	DataProxyXmlStrictTest.class })
 public class AllTests {
 
 }

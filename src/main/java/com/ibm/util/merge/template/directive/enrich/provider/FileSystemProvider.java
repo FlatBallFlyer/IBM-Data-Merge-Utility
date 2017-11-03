@@ -2,7 +2,6 @@ package com.ibm.util.merge.template.directive.enrich.provider;
 
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
-import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.Merge500;

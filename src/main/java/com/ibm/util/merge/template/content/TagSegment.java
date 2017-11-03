@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.ibm.util.merge.exception.Merge500;
+// TODO refactor nest-limit from config to tag
 
 public class TagSegment extends Segment {
 	private static final Pattern TAG_PATTERN 		= Pattern.compile("tag.*?=.*?\"(.*?)\"");

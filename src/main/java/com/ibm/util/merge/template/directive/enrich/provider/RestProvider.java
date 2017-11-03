@@ -21,15 +21,12 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
-import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
-import com.ibm.util.merge.template.directive.ParseData;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -56,7 +53,7 @@ public class RestProvider implements ProviderInterface {
 		// Get Credentials
 		String config = context.getConfig().getEnv(source);
 		try {
-			DataObject credentials = parser.parse(ParseData.PARSE_JSON, config).getAsObject().get("credentials").getAsObject();
+			DataObject credentials = parser.parse(Parser.PARSE_JSON, config).getAsObject().get("credentials").getAsObject();
 			this.username = credentials.get("username").getAsPrimitive();
 			this.password = credentials.get("password").getAsPrimitive();
 			this.host = 	credentials.get("uri_cli").getAsPrimitive();

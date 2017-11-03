@@ -23,8 +23,6 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
-import com.ibm.util.merge.template.directive.ParseData;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -57,7 +55,7 @@ public class JdbcProvider implements ProviderInterface {
 		// Get Credentials
 		String config = context.getConfig().getEnv(source);
 		try {
-			DataObject credentials = parser.parse(ParseData.PARSE_JSON, config).getAsObject().get("credentials").getAsObject();
+			DataObject credentials = parser.parse(Parser.PARSE_JSON, config).getAsObject().get("credentials").getAsObject();
 			db_type = 		credentials.get("db_type").getAsPrimitive();
 			name = 			credentials.get("name").getAsPrimitive();
 			uri_cli = 		credentials.get("uri_cli").getAsPrimitive();
