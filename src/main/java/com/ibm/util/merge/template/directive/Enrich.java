@@ -1,6 +1,6 @@
 /*
- * Copyright 2015, 2015 IBM
  * 
+ * Copyright 2015-2017 IBM
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,9 +23,8 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.directive.enrich.provider.*;
 
 /**
- * The Class EnrichDirective. Sub-classes of this directive are used 
- * to retrieve data from a data source and place it into the Data storage
- * area of the merge context.
+ * The Class EnrichDirective is used to retrieve data from a data source 
+ * and place it into the Data storage area of the merge context.
  * 
  * @author Mike Storey
  * @since: v4.0
@@ -41,6 +40,10 @@ public class Enrich extends AbstractDirective {
 	private int parseAs;
 	private transient Parser parser;
 
+	/**
+	 * Instantiate an Erich Directive
+	 * @throws MergeException
+	 */
 	public Enrich() throws MergeException {
 		super();
 		this.parser = new Parser();
@@ -79,58 +82,100 @@ public class Enrich extends AbstractDirective {
 		this.getTemplate().getContext().getMergeData().put(this.targetDataName, this.targetDataDelimeter, value);
 	}
 
+	/**
+	 * @return target data object
+	 */
 	public String getTargetDataName() {
 		return targetDataName;
 	}
 	
+	/**
+	 * @param dataName
+	 */
 	public void setTargetDataName(String dataName) {
 		this.targetDataName = dataName;
 	}
 	
-	public String getEnrichSource() {
-		return enrichSource;
-	}
-
-	public void setEnrichSource(String enrichSource) {
-		this.enrichSource = enrichSource;
-	}
-	
+	/**
+	 * @return target data name delimiter
+	 */
 	public String getTargetDataDelimeter() {
 		return this.targetDataDelimeter;
 	}
 
+	/**
+	 * @param dataDelimeter
+	 */
 	public void setTargetDataDelimeter(String dataDelimeter) {
 		this.targetDataDelimeter = dataDelimeter;
 	}
 
+	/**
+	 * @return enrich source name
+	 */
+	public String getEnrichSource() {
+		return enrichSource;
+	}
+
+	/**
+	 * @param enrichSource
+	 */
+	public void setEnrichSource(String enrichSource) {
+		this.enrichSource = enrichSource;
+	}
+	
+	/**
+	 * @return Parsing format
+	 */
 	public int getParseAs() {
 		return parseAs;
 	}
 
+	/**
+	 * @param parseAs
+	 */
 	public void setParseAs(int parseAs) {
 		this.parseAs = parseAs;
 	}
 
+	/**
+	 * @return Enrichment Provider Class
+	 */
 	public String getEnrichClass() {
 		return enrichClass;
 	}
 
+	/**
+	 * @param enrichClass
+	 */
 	public void setEnrichClass(String enrichClass) {
 		this.enrichClass = enrichClass;
 	}
 
+	/**
+	 * @return Command to execute
+	 */
 	public String getEnrichCommand() {
 		return enrichCommand;
 	}
 
+	/**
+	 * @param enrichCommand
+	 */
 	public void setEnrichCommand(String enrichCommand) {
 		this.enrichCommand = enrichCommand;
 	}
 
+	/**
+	 * @return Parameters for Enrich Command
+	 */
 	public String getEnrichParameter() {
 		return enrichParameter;
 	}
 
+	/**
+	 * @param enrichParameter
+	 */
 	public void setEnrichParameter(String enrichParameter) {
 		this.enrichParameter = enrichParameter;
 	}

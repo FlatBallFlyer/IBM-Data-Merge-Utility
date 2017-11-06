@@ -1,6 +1,6 @@
 /*
- * Copyright 2015, 2015 IBM
  * 
+ * Copyright 2015-2017 IBM
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -31,10 +31,8 @@ import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.content.BookmarkSegment;
 
 /**
- * The Class InsertDirective. Sub-classes of this directive are used 
- * to insert templates at specific bookmarks within a tempalte. 
- * retrieve data from a data source and place it into the Data storage
- * area of the merge context.
+ * The Class InsertDirective is used 
+ * to insert templates at specific bookmarks within a tempalte content. 
  * 
  * @author Mike Storey
  * @since: v4.0
@@ -93,6 +91,9 @@ public class Insert extends AbstractDataDirective {
 	private HashSet<String> onlyLast;
 	private String bookmarkPattern;
 	
+	/**
+	 * Instantiate an Insert Directive with default values 
+	 */
 	public Insert() {
 		this("", "-", Insert.MISSING_THROW,
 			Insert.PRIMITIVE_THROW,
@@ -106,6 +107,20 @@ public class Insert extends AbstractDataDirective {
 		);
 	}
 	
+	/**
+	 * Instantiate a Insert Directive with the provided values
+	 * @param source
+	 * @param delimeter
+	 * @param missing
+	 * @param primitive
+	 * @param object
+	 * @param list
+	 * @param notFirst
+	 * @param notLast
+	 * @param onlyFirst
+	 * @param onlyLast
+	 * @param pattern
+	 */
 	public Insert(String source, String delimeter, int missing, int primitive, int object, int list, 
 			HashSet<String> notFirst, HashSet<String> notLast, HashSet<String> onlyFirst, HashSet<String> onlyLast, 
 			String pattern) {
@@ -191,6 +206,11 @@ public class Insert extends AbstractDataDirective {
 		
 	}
 		
+	/**
+	 * Insert a sub-template for each attribute in a DataObject
+	 * @param context
+	 * @throws MergeException
+	 */
 	private void insertFromObject(Merger context) throws MergeException {
 		int loopcount; int size;
 		DataObject dataObject = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsObject();
@@ -206,6 +226,11 @@ public class Insert extends AbstractDataDirective {
 		}
 	}
 			
+	/**
+	 * Insert a sub-template for each member of a DataList
+	 * @param context
+	 * @throws MergeException
+	 */
 	private void insertFromList(Merger context) throws MergeException {
 		int loopcount; int size;
 		DataList dataList = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsList();
@@ -216,12 +241,25 @@ public class Insert extends AbstractDataDirective {
 		}
 	}
 			
+	/**
+	 * Insert a sub-template based on a primitive value
+	 * @param context
+	 * @throws MergeException
+	 */
 	private void insertFromString(Merger context) throws MergeException {
 		String dataString = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsPrimitive();
 		//  conditional insert?
 		this.insertAtBookmarks(context, new DataPrimitive(dataString), true, true);
 	}
 
+	/**
+	 * Perform sub-template insert at the specified bookmarks.
+	 * @param context
+	 * @param value
+	 * @param isFirst
+	 * @param isLast
+	 * @throws MergeException
+	 */
 	public void insertAtBookmarks(Merger context, DataElement value, boolean isFirst, boolean isLast) throws MergeException {
 		if (context.getStackSize() > context.getConfig().getInsertLimit()) {
 			throw new Merge500("template insert recursion safety, merge stack size exceded");
@@ -245,45 +283,75 @@ public class Insert extends AbstractDataDirective {
 	/*
 	 * Simple Getters / Setters / Enumerator Constants below here
 	 */
+	/**
+	 * @return bookmark name match pattern
+	 */
 	public String getBookmarkPattern() {
 		return bookmarkPattern;
 	}
 
+	/**
+	 * @param bookmarkPattern
+	 */
 	public void setBookmarkPattern(String bookmarkPattern) {
 		this.bookmarkPattern = bookmarkPattern;
 	}
 
+	/**
+	 * @return Tags to be blank on the first insert
+	 */
 	public HashSet<String> getNotFirst() {
 		return notFirst;
 	}
 
+	/**
+	 * @param notFirst
+	 */
 	public void setNotFirst(HashSet<String> notFirst) {
 		this.notFirst.clear();
 		this.notFirst.addAll(notFirst);
 	}
 
+	/**
+	 * @return list of tags to be blank on the last insert
+	 */
 	public HashSet<String> getNotLast() {
 		return notLast;
 	}
 
+	/**
+	 * @param notLast
+	 */
 	public void setNotLast(HashSet<String> notLast) {
 		this.notLast.clear();
 		this.notLast.addAll(notLast);
 	}
 
+	/**
+	 * @return list of tags to be blank on all but first insert
+	 */
 	public HashSet<String> getOnlyFirst() {
 		return onlyFirst;
 	}
 
+	/**
+	 * @param onlyFirst
+	 */
 	public void setOnlyFirst(HashSet<String> onlyFirst) {
 		this.onlyFirst.clear();
 		this.onlyFirst.addAll(onlyFirst);
 	}
 
+	/**
+	 * @return list of tags to be blank on all but last insert
+	 */
 	public HashSet<String> getOnlyLast() {
 		return onlyLast;
 	}
 
+	/**
+	 * @param onlyLast
+	 */
 	public void setOnlyLast(HashSet<String> onlyLast) {
 		this.onlyLast.clear();
 		this.onlyLast.addAll(onlyLast);

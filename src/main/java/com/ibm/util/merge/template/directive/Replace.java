@@ -1,6 +1,6 @@
 /*
- * Copyright 2015, 2015 IBM
  * 
+ * Copyright 2015-2017 IBM
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,9 +29,7 @@ import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 
 /**
- * The Class ReplaceDirective. Sub-Classes of this directive place a series of 
- * values onto the Merge Replace Stack used to replace key values in the template
- * with data from the Merge Context.
+ * The Class ReplaceDirective drives replace processing 
  * 
  * @author Mike Storey
  * @since: v4.0
@@ -83,6 +81,9 @@ public class Replace extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Instantiate a Replace directive with default values
+	 */
 	public Replace() {
 		this (
 			"", "-", 
@@ -94,6 +95,17 @@ public class Replace extends AbstractDataDirective {
 		);
 	}
 
+	/**
+	 * Instantiate a Replace directive with the provided values
+	 * 
+	 * @param source
+	 * @param delimeter
+	 * @param missing
+	 * @param primitive
+	 * @param object
+	 * @param list
+	 * @param process
+	 */
 	public Replace(String source, String delimeter, int missing, int primitive, int object, int list, boolean process) {
 		super(source, delimeter, missing, primitive, object, list);
 		this.type = AbstractDirective.TYPE_REPLACE;
@@ -163,6 +175,11 @@ public class Replace extends AbstractDataDirective {
 		}
 	}
 	
+	/**
+	 * Add replace values from a primitive
+	 * @param context
+	 * @throws MergeException
+	 */
 	private void replaceFromString(Merger context) throws MergeException {
 		String dataString = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsPrimitive();
 		Path dataPath = new Path(this.dataSource, this.dataDelimeter);
@@ -171,6 +188,11 @@ public class Replace extends AbstractDataDirective {
 		this.template.addReplace(from.part, dataString); 
 	}
 	
+	/**
+	 * Add replace values from a list
+	 * @param context
+	 * @throws MergeException
+	 */
 	private void replaceFromList(Merger context) throws MergeException {
 		DataList dataList = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsList();
 		for (DataElement row : dataList) {
@@ -190,6 +212,11 @@ public class Replace extends AbstractDataDirective {
 		}
 	}
 	
+	/**
+	 * Add replace values from a DataObject
+	 * @param context
+	 * @throws MergeException
+	 */
 	private void replaceFromObject(Merger context) throws MergeException {
 		DataObject dataObject = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsObject();
 		for (Entry<String, DataElement> member: dataObject.entrySet()) {
@@ -205,26 +232,44 @@ public class Replace extends AbstractDataDirective {
 		}
 	}
 
+	/**
+	 * @return name of attribute for List To values
+	 */
 	public String getToAttribute() {
 		return toAttribute;
 	}
 
+	/**
+	 * @param toAttribute
+	 */
 	public void setToAttribute(String toAttribute) {
 		this.toAttribute = toAttribute;
 	}
 
+	/**
+	 * @return name of attribute for List From values
+	 */
 	public String getFromAttribute() {
 		return fromAttribute;
 	}
 
+	/**
+	 * @param fromAttribute
+	 */
 	public void setFromAttribute(String fromAttribute) {
 		this.fromAttribute = fromAttribute;
 	}
 
+	/**
+	 * @return process indicator
+	 */
 	public boolean getProcessAfter() {
 		return processAfter;
 	}
 
+	/**
+	 * @param processAfter
+	 */
 	public void setProcessAfter(boolean processAfter) {
 		this.processAfter = processAfter;
 	}

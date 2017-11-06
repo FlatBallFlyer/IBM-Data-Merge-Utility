@@ -1,6 +1,6 @@
 /*
- * Copyright 2015, 2015 IBM
  * 
+ * Copyright 2015-2017 IBM
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,9 +24,7 @@ import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 
 /**
- * The Class ParseDirective. Sub-classes of this directive are used 
- * to parse some data from the Merge Context into a new data item
- * in the merge context data store. 
+ * The Class ParseDirective is used to parse some data into a new data item.
  * 
  * @author Mike Storey
  * @since: v4.0
@@ -80,6 +78,10 @@ public class ParseData extends AbstractDataDirective {
 	private int parseFormat;
 	private transient Parser parser;
 
+	/**
+	 * Instantiate a Parse directive with default values
+	 * @throws MergeException
+	 */
 	public ParseData() throws MergeException {
 		super();
 		this.setType(AbstractDirective.TYPE_PARSE);
@@ -167,36 +169,60 @@ public class ParseData extends AbstractDataDirective {
 		}
 	}
 
+	/**
+	 * @return parse format
+	 */
 	public int getParseFormat() {
 		return this.parseFormat;
 	}
 	
+	/**
+	 * @param format
+	 */
 	public void setParseFormat(int format) {
 		if (Parser.PARSE_OPTIONS().containsKey(format)) {
 			this.parseFormat = format;
 		}
 	}
 
+	/**
+	 * @return data target path
+	 */
 	public String getDataTarget() {
 		return dataTarget;
 	}
 
+	/**
+	 * @param dataTarget
+	 */
 	public void setDataTarget(String dataTarget) {
 		this.dataTarget = dataTarget;
 	}
 
+	/**
+	 * @return data target path delimiter
+	 */
 	public String getDataTargetDelimiter() {
 		return dataTargetDelimiter;
 	}
 
+	/**
+	 * @param dataTargetDelimiter
+	 */
 	public void setDataTargetDelimiter(String dataTargetDelimiter) {
 		this.dataTargetDelimiter = dataTargetDelimiter;
 	}
 
+	/**
+	 * @return Static data for Parsing
+	 */
 	public String getStaticData() {
 		return staticData;
 	}
 
+	/**
+	 * @param staticData
+	 */
 	public void setStaticData(String staticData) {
 		this.staticData = staticData;
 	}

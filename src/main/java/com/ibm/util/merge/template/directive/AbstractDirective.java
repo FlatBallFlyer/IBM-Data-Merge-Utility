@@ -1,6 +1,6 @@
 /*
- * Copyright 2015, 2015 IBM
  * 
+ * Copyright 2015-2017 IBM
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -58,43 +58,80 @@ public abstract class AbstractDirective {
 	protected int type;
 	protected String name = "";
 
-	public abstract void execute(Merger context) throws MergeException;
-	public abstract AbstractDirective getMergable() throws MergeException;
-
+	/**
+	 * Instantiate a Directive 
+	 */
 	public AbstractDirective() {
 		this.gson = new DataProxyJson();
 		this.template = null;
 	}
 	
+	/**
+	 * Get a mergable copy of this directive
+	 * 
+	 * @param target
+	 */
 	public void makeMergable(AbstractDirective target) {
 		target.setType(this.getType());
 		target.setName(name);
 	}
 	
+	/**
+	 * @return the Template (Owner)
+	 */
 	public Template getTemplate() {
 		return template;
 	}
 	
+	/**
+	 * @param template
+	 */
 	public void setTemplate(Template template) {
 		this.template = template;
 	}
 	
+	/**
+	 * @return Directive Name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @return member of DIRECTIVE_TYPES
+	 */
 	public int getType() {
 		return type;
 	}
 	
+	/**
+	 * @param type
+	 */
 	public void setType(int type) {
 		if (DIRECTIVE_TYPES().containsKey(type)) {
 			this.type = type;
 		}
 	}
 	
+	/**
+	 * This is the meat of the Directive 
+	 * 
+	 * @param context
+	 * @throws MergeException
+	 */
+	public abstract void execute(Merger context) throws MergeException;
+
+	/**
+	 * Each directive must implement a clone-like get mergable
+	 * @return
+	 * @throws MergeException
+	 */
+	public abstract AbstractDirective getMergable() throws MergeException;
 }
