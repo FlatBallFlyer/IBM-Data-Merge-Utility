@@ -4,20 +4,56 @@ import java.util.HashMap;
 
 import com.ibm.util.merge.exception.Merge500;
 
+/**
+ * Represents an Object (Map of unique String to Value pairs)
+ * 
+ * @author Mike Storey
+ *
+ */
 public class DataObject extends HashMap<String,DataElement> implements DataElement {
 	private transient DataElement parent = null;
 	private transient String name;
 	private transient int position;
 
 	/**
-	 * 
+	 * extends HashMap<String, DataElement> 
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Instantiates an empty Object data element
+	 */
 	public DataObject() {
 		super();
 	}
 
+
+	@Override
+	public DataElement put(String name, DataElement newElement) {
+		newElement.setName(name);
+		newElement.setParent(this);
+		return super.put(name, newElement);
+	}
+	
+	@Override
+	public DataElement makeArray() throws Merge500 {
+		if (null == parent) throw new Merge500("No Parent!"); 
+		DataList newList = null;
+		if (parent.isList()) {
+			newList = new DataList();
+			parent.getAsList().set(this.position, newList);
+			newList.add(this);
+		}
+		if (parent.isObject()) {
+			newList = new DataList();
+			parent.getAsObject().put(this.name, newList);
+			newList.add(this);
+		}
+		return newList;
+	}
+
+	// Simple getter / setter methods below here
+	
 	@Override
 	public boolean isObject() {
 		return true;
@@ -46,30 +82,6 @@ public class DataObject extends HashMap<String,DataElement> implements DataEleme
 	@Override
 	public DataObject getAsObject() throws Merge500 {
 		return this;
-	}
-
-	@Override
-	public DataElement put(String name, DataElement newElement) {
-		newElement.setName(name);
-		newElement.setParent(this);
-		return super.put(name, newElement);
-	}
-	
-	@Override
-	public DataElement makeArray() throws Merge500 {
-		if (null == parent) throw new Merge500("No Parent!"); 
-		DataList newList = null;
-		if (parent.isList()) {
-			newList = new DataList();
-			parent.getAsList().set(this.position, newList);
-			newList.add(this);
-		}
-		if (parent.isObject()) {
-			newList = new DataList();
-			parent.getAsObject().put(this.name, newList);
-			newList.add(this);
-		}
-		return newList;
 	}
 
 	@Override

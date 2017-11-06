@@ -2,12 +2,23 @@ package com.ibm.util.merge.data;
 
 import com.ibm.util.merge.exception.Merge500;
 
+/**
+ * Represents a primitive (String) Data Element
+ * 
+ * @author Mike Storey
+ *
+ */
 public class DataPrimitive implements DataElement {
 	private transient DataElement parent = null;
 	private transient String name = null;
 	private transient int position = 0;
-	private String value;
+	private final String value;
 	
+	/**
+	 * Construct a new primitive object with Value
+	 * 
+	 * @param value
+	 */
 	public DataPrimitive(String value) {
 		super();
 		if (value == null) {
@@ -17,22 +28,48 @@ public class DataPrimitive implements DataElement {
 		}
 	}
 	
+	/**
+	 * Construct a new primitive object with toString(Value)
+	 * 
+	 * @param value
+	 */
 	public DataPrimitive(int value) {
 		super();
 		this.value = Integer.toString(value);
 	}
 	
+	/**
+	 * Construct a new primitive object with toString(Value)
+	 * 
+	 * @param value
+	 */
 	public DataPrimitive(double value) {
 		super();
 		this.value = Double.toString(value);
 	}
 	
+	/**
+	 * @return the value
+	 */
 	public String get() {
 		return value;
 	}
 
-	public void set(String value) {
-		this.value = value;
+	@Override
+	public DataElement makeArray() throws Merge500 {
+		if (null == parent) throw new Merge500("No Parent!"); 
+		DataList newList = null;
+		if (parent.isList()) {
+			newList = new DataList();
+			parent.getAsList().set(this.position, newList);
+			newList.add(this);
+		} 
+		if (parent.isObject()) {
+			newList = new DataList();
+			parent.getAsObject().put(this.name, newList);
+			newList.add(this);
+		}
+		return newList;
 	}
 
 	@Override
@@ -66,23 +103,6 @@ public class DataPrimitive implements DataElement {
 	}
 
 	@Override
-	public DataElement makeArray() throws Merge500 {
-		if (null == parent) throw new Merge500("No Parent!"); 
-		DataList newList = null;
-		if (parent.isList()) {
-			newList = new DataList();
-			parent.getAsList().set(this.position, newList);
-			newList.add(this);
-		} 
-		if (parent.isObject()) {
-			newList = new DataList();
-			parent.getAsObject().put(this.name, newList);
-			newList.add(this);
-		}
-		return newList;
-	}
-
-	@Override
 	public DataElement getParent() {
 		return parent;
 	}
@@ -90,7 +110,6 @@ public class DataPrimitive implements DataElement {
 	@Override
 	public void setParent(DataElement parent) {
 		this.parent = parent;
-		
 	}
 
 	@Override

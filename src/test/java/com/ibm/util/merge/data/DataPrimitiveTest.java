@@ -31,14 +31,6 @@ public class DataPrimitiveTest {
 	}
 
 	@Test
-	public void testGetSet() {
-		DataPrimitive primitive = new DataPrimitive("");
-		assertEquals("", primitive.get());
-		primitive.set("Foo");
-		assertEquals("Foo", primitive.get());
-	}
-
-	@Test
 	public void testIsObject() {
 		DataPrimitive primitive = new DataPrimitive("");
 		assertFalse(primitive.isObject());

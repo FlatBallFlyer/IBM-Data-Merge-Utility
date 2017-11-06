@@ -4,16 +4,25 @@ import java.util.ArrayList;
 
 import com.ibm.util.merge.exception.Merge500;
 
+/**
+ * The DataList object represents a list of values in the DataManager
+ * 
+ * @author Mike Storey
+ * @since v4.0.0
+ */
 public class DataList extends ArrayList<DataElement> implements DataElement {
 	private transient DataElement parent = null;
 	private transient String name;
 	private transient int position;
 	
 	/**
-	 * 
+	 * extends ArrayList 
 	 */
 	private static final long serialVersionUID = 2L;
 
+	/**
+	 * Instantiate an empty list object
+	 */
 	public DataList() {
 		super();
 	}

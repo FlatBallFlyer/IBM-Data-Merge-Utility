@@ -7,34 +7,30 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 
+/**
+ * The data manager provides a path based interface to the Data Element structure
+ * 
+ * @author Mike Storey
+ *
+ */
 public class DataManager {
 	private DataObject data = new DataObject();;
 	private ArrayList<DataElement> contextStack;
 	
+	/**
+	 * Instantiate a new Data Manager
+	 */
 	public DataManager() {
 		contextStack = new ArrayList<DataElement>();
 	}
 	
-	public int size() {
-		return data.entrySet().size();
-	}
-	
-	public void clear() {
-		this.data = new DataObject();
-	}
-	
-	public void pushContext(DataElement context) {
-		contextStack.add(context);
-	}
-	
-	public void popContext() {
-		contextStack.remove(contextStack.size()-1);
-	}
-	
-	public int contextStackSize() {
-		return contextStack.size();
-	}
-	
+	/**
+	 * Test if Data Manager has an element at the provide address
+	 * 
+	 * @param address
+	 * @param delimiter
+	 * @return
+	 */
 	public boolean contians(String address, String delimiter) {
 		Path path = new Path(address, delimiter);
 		if (address.equals(Merger.IDMU_CONTEXT)) {
@@ -49,6 +45,14 @@ public class DataManager {
 		return true;
 	}
 	
+	/**
+	 * Get a value from the data manager based on the provided address
+	 * 
+	 * @param address
+	 * @param delimiter
+	 * @return
+	 * @throws MergeException
+	 */
 	public DataElement get(String address, String delimiter) throws MergeException {
 		if (address.equals(Merger.IDMU_CONTEXT)) {
 			if (contextStack.isEmpty()) {
@@ -61,6 +65,16 @@ public class DataManager {
 		return element;
 	}
 	
+	/**
+	 * Add a value to the Data Manager. Note that the data manager provides a loss-less
+	 * approach to adding values. If the value already exists as a non-list element it 
+	 * will converted to a list and this value added to that list. 
+	 * 
+	 * @param address
+	 * @param delimiter
+	 * @param value
+	 * @throws MergeException
+	 */
 	public void put(String address, String delimiter, DataElement value) throws MergeException {
 		Path path = new Path(address, delimiter);
 		DataElement entry;
@@ -82,6 +96,14 @@ public class DataManager {
 		}
 	}
 	
+	/**
+	 * Convenience method to add the HTTP Request Parameters to the data manager
+	 * 
+	 * @param address
+	 * @param delimiter
+	 * @param parameterMap
+	 * @throws MergeException
+	 */
 	public void put(String address, String delimiter, Map<String, String[]> parameterMap) throws MergeException {
 		DataObject parameters = new DataObject();
 		for (String parameter : parameterMap.keySet()) {
@@ -94,15 +116,38 @@ public class DataManager {
 		this.put(address, delimiter, parameters);
 	}
 
+	/**
+	 * Convenience method to add a primitive value
+	 * 
+	 * @param address
+	 * @param delimiter
+	 * @param value
+	 * @throws MergeException
+	 */
 	public void put(String address, String delimiter, String value) throws MergeException {
 		DataPrimitive primitiveValue = new DataPrimitive(value);
 		this.put(address, delimiter, primitiveValue);
 	}
 
+	/**
+	 * Convenience method to add a value with the default path separator
+	 * 
+	 * @param path
+	 * @param value
+	 * @throws MergeException
+	 */
 	public void put(Path path, DataElement value) throws MergeException {
 		put(path.getPath(), path.getSeparator(), value);
 	}
 	
+	/**
+	 * Get a value from the data manger from the provided address.
+	 * 
+	 * @param path
+	 * @param to
+	 * @return
+	 * @throws MergeException
+	 */
 	private DataElement getElement(Path path, int to) throws MergeException {
 		DataElement entry = data;
 		while (path.size() > to) {
@@ -120,5 +165,42 @@ public class DataManager {
 		return entry;
 	}
 
+	// Simple getters and setters below here
+	
+	/**
+	 * @return size of base entry set
+	 */
+	public int size() {
+		return data.entrySet().size();
+	}
+	
+	/**
+	 * Clear the data manager
+	 */
+	public void clear() {
+		this.data = new DataObject();
+	}
+	
+	/**
+	 * @param context - the context address to add to the stack
+	 */
+	public void pushContext(DataElement context) {
+		contextStack.add(context);
+	}
+	
+	/**
+	 * remove a context from the stack
+	 */
+	public void popContext() {
+		contextStack.remove(contextStack.size()-1);
+	}
+	
+	/**
+	 * @return context stack size
+	 */
+	public int contextStackSize() {
+		return contextStack.size();
+	}
+	
 }
 

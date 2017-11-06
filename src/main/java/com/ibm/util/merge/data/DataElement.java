@@ -2,6 +2,12 @@ package com.ibm.util.merge.data;
 
 import com.ibm.util.merge.exception.Merge500;
 
+/**
+ * A DataElement is the abstract base for the IDMU Data Object structure.
+ * 
+ * @author Mike Storey
+ *
+ */
 public abstract interface DataElement {
 	DataElement parent = null;
 	String name = null;
