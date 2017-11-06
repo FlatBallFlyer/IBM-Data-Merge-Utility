@@ -1,3 +1,19 @@
+/*
+ * 
+ * Copyright 2015-2017 IBM
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package com.ibm.util.merge.data.parser;
 
 import java.util.HashMap;
@@ -5,6 +21,12 @@ import java.util.HashMap;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.exception.MergeException;
 
+/**
+ * Provides an abstract Parser object for all parsing
+ * 
+ * @author Mike Storey
+ *
+ */
 public class Parser {
 	public static final int PARSE_CSV	= 1;
 	public static final int PARSE_HTML	= 2;
@@ -26,6 +48,11 @@ public class Parser {
 	private DataProxyJson gson;
 	private DataProxyXmlStrict xmlStrict;
 	
+	/**
+	 * Instantiates a Parser
+	 * 
+	 * @throws MergeException
+	 */
 	public Parser() throws MergeException {
 		cson = new DataProxyCsv();
 		hson = new DataProxyHtml();
@@ -33,10 +60,27 @@ public class Parser {
 		xmlStrict = new DataProxyXmlStrict();
 	}
 
+	/**
+	 * Convience parse method that uses all default options
+	 * 
+	 * @param i
+	 * @param data
+	 * @return
+	 * @throws MergeException
+	 */
 	public DataElement parse(int i, String data) throws MergeException {
 		return parse(i, data, "");
 	}
 
+	/**
+	 * Parse a string into a DataElement object
+	 * 
+	 * @param i
+	 * @param data
+	 * @param options
+	 * @return
+	 * @throws MergeException
+	 */
 	public DataElement parse(int i, String data, String options) throws MergeException {
 		DataElement element = null;
 		switch (i) {
