@@ -1,3 +1,19 @@
+/*
+ * 
+ * Copyright 2015-2017 IBM
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package com.ibm.util.merge.template.directive.enrich.provider;
 /*
 "mongoDb": [{
@@ -33,6 +49,12 @@ import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
 
+/**
+ * Implements MongoDb access
+ * 
+ * @author flatballflyer
+ *
+ */
 public class MongoProvider implements ProviderInterface {
 	private final String source;
 	private final String dbName;
@@ -40,6 +62,14 @@ public class MongoProvider implements ProviderInterface {
 	private transient final Parser parser;
 	private transient final String connection; // TODO Mongo Connection type
 	
+	/**
+	 * Instantiate the provider and get the db connection
+	 * 
+	 * @param source
+	 * @param dbName
+	 * @param context
+	 * @throws MergeException
+	 */
 	public MongoProvider(String source, String dbName, Merger context) throws MergeException {
 		this.source = source;
 		this.dbName = dbName;
