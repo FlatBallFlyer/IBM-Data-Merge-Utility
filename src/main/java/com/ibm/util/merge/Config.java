@@ -1,6 +1,6 @@
 /*
  * 
- * Copyright 2015, 2015 IBM
+ * Copyright 2015-2017 IBM
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,24 +24,38 @@ import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 
 /**
- * The Class Config, represents the IDMU Configuration values.
- * @see Class AbstractSource
+ * This is the class that contains IDMU Configuration values and abstracts access
+ * to System Environment variables..
  * 
  * @author Mike Storey
- * @since: v4.0
+ * @since: v4.0.0.B1
  */
 public class Config {
 	private int nestLimit 		= 2;
 	private int insertLimit		= 20;
 	private String tempFolder	= "/opt/ibm/idmu/temp";
+	private static final String version = "4.0.0.B1";
 	private HashMap<String, String> envVars;
 
 	private static final DataProxyJson proxy = new DataProxyJson();
 	
+	/**
+	 * Provide a default configuration
+	 * 
+	 * @throws Merge500
+	 */
 	public Config() throws Merge500 {
 		this.setupDefaults();
 	}
 	
+	/**
+	 * Get a configuration from the provided environment variable name. 
+	 * If an empty string is provided the default "idmu-config" environment
+	 * variable is used. 
+	 * 
+	 * @param configString
+	 * @throws MergeException
+	 */
 	public Config(String configString) throws MergeException {
 		this.setupDefaults();
 		if (configString.isEmpty()) {
@@ -54,6 +68,10 @@ public class Config {
 		this.envVars = me.getEnvVars();
 	}
 	
+	/**
+	 * Initialize Default Values
+	 * @throws Merge500
+	 */
 	private void setupDefaults() throws Merge500 {
 		tempFolder	= "/opt/ibm/idmu/temp";
 		nestLimit 	= 2;
@@ -61,6 +79,17 @@ public class Config {
 		envVars 	= new HashMap<String,String>();
 	}
 
+	/**
+	 * Abstraction of Environment access. Will leverage an entry from the 
+	 * local Environment hashmap property. Environment Variables prefixed with 
+	 * "VCAP:" will be treated as entries in the VCAP_SERVICES environment variable.
+	 * 
+	 * You can provide environment values by adding entries to the envVars hashMap
+	 *  
+	 * @param name
+	 * @return
+	 * @throws MergeException
+	 */
 	public String getEnv(String name) throws MergeException {
 		if (envVars.containsKey(name)) {
 			return envVars.get(name);
@@ -77,7 +106,12 @@ public class Config {
 		return value;
 	}
 	
-	public String getVcapEntry(String serviceName) throws MergeException {
+	/**
+	 * @param serviceName
+	 * @return
+	 * @throws MergeException
+	 */
+	private String getVcapEntry(String serviceName) throws MergeException {
 		String VCAP_SERVICES = this.getEnv("VCAP_SERVICES");
 		String value = "";
 		if (null == VCAP_SERVICES) {
@@ -93,31 +127,77 @@ public class Config {
 		return value;
 	}
 	
+	// Simple Getter/Setter below here
+	
+	/**
+	 * File Folder where archives are created. 
+	 * 
+	 * @return
+	 */
 	public String getTempFolder() {
 		return tempFolder;
 	}
 
+	/**
+	 * File Folder where archives are created. 
+	 * 
+	 * @param tempFolder
+	 */
 	public void setTempFolder(String tempFolder) {
 		this.tempFolder = tempFolder;
 	}
 	
+	/**
+	 * Limit for nested Replace tags
+	 *  
+	 * @return nesting limit
+	 */
 	public int getNestLimit() {
 		return nestLimit;
 	}
 	
+	/**
+	 * Limit for nested Replace tags
+	 *  
+	 * @param limit
+	 */
 	public void setNestLimit(int limit) {
 		this.nestLimit = limit;
 	}
 	
+	/**
+	 * Limit of Sub-Template Insert depth - recursion safety catch
+	 * 
+	 * @return insert limit
+	 */
 	public int getInsertLimit() {
 		return insertLimit;
 	}
 
+	/**
+	 * Limit of Sub-Template Insert depth - recursion safety catch
+	 * 
+	 * @param insertLimit
+	 */
 	public void setInsertLimit(int insertLimit) {
 		this.insertLimit = insertLimit;
 	}
 
+	/**
+	 * HashMap of default environment values - helpful for testing
+	 * 
+	 * @return
+	 */
 	public HashMap<String, String> getEnvVars() {
 		return envVars;
+	}
+
+	/**
+	 * HashMap of default environment values - helpful for testing
+	 * 
+	 * @return
+	 */
+	public static String getVersion() {
+		return version;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015, 2015 IBM
+ * Copyright 2015-2017 IBM
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,8 @@ import com.ibm.util.merge.template.directive.SaveFile;
 
 /**
  * The Class TemplateCache provides a cache of all templates used in the
- * merge process. The /template and /group api's update this cache and may
- * depending on the template persistence mechanism chosen persist them to 
- * a template storage service. 
+ * merge process. The cache has get / put / post / delete method that 
+ * should map to a Rest Interface.
  * 
  * @author Mike Storey
  * @since: v4.0
@@ -82,7 +81,7 @@ public class TemplateCache implements Iterable<String> {
 	}
 	
 	/**
-	 * Gets the mergable.
+	 * Gets a mergable template - getting the default template if the primary template does not exist.
 	 *
 	 * @param id the id
 	 * @param replace the replace
@@ -103,7 +102,7 @@ public class TemplateCache implements Iterable<String> {
 	}
 
 	/**
-	 * Gets the mergable.
+	 * Gets a mergable template
 	 *
 	 * @param id the id
 	 * @param replace the replace
@@ -119,6 +118,14 @@ public class TemplateCache implements Iterable<String> {
 		return template.getMergable(context, replace);
 	}
 
+	/**
+	 * Get a mergable template with an empty replace stack
+	 * 
+	 * @param context
+	 * @param templateShortname
+	 * @return
+	 * @throws MergeException
+	 */
 	public Template getMergable(Merger context, String templateShortname) throws MergeException {
 		return getMergable(context, templateShortname, new HashMap<String,String>());
 	}
@@ -141,7 +148,7 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Post template.
 	 *
-	 * @param templateJson the template json
+	 * @param template the template 
 	 * @return the string
 	 * @throws MergeException 
 	 */
@@ -158,7 +165,7 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Gets the template.
 	 *
-	 * @param templateIdJson the template id json
+	 * @param templateIdJson the template id 
 	 * @return the template
 	 */
 	public String getTemplate(String shortHand) {
@@ -170,7 +177,7 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Gets the template.
 	 *
-	 * @param templateIdJson the template id json
+	 * @param templateId the template id 
 	 * @return the template
 	 */
 	public TemplateList getTemplates(TemplateId id) {
@@ -203,7 +210,7 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Put template.
 	 *
-	 * @param templateJson the template json
+	 * @param template the template 
 	 * @return the string
 	 * @throws Merge404 
 	 */
@@ -220,7 +227,7 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Delete template.
 	 *
-	 * @param templateIdJson the template id json
+	 * @param templateIdJson the template id 
 	 * @return the string
 	 */
 	public String deleteTemplate(String shorthand) throws MergeException {
@@ -232,7 +239,7 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Delete template.
 	 *
-	 * @param templateIdJson the template id json
+	 * @param templateIdJson the template id 
 	 * @return the string
 	 */
 	public String deleteTemplate(TemplateId id) throws MergeException {
@@ -244,7 +251,7 @@ public class TemplateCache implements Iterable<String> {
 	}
 	
 	/**
-	 * Gets the list of group.
+	 * Gets the list of template groups.
 	 *
 	 * @return the group
 	 */
@@ -348,6 +355,62 @@ public class TemplateCache implements Iterable<String> {
 		return "ok";
 	}
 
+	/**
+	 * @return template statistics
+	 */
+	public Stats getStats() {
+		Stats stats = new Stats();
+		for (String name : cache.keySet()) {
+			stats.add(cache.get(name).getStats());
+		}
+		return stats;
+	}
+	
+	/**
+	 * @return number of templates in cache
+	 */
+	public int getSize() {
+		return this.cache.size();
+	}
+
+	/**
+	 * @return the config being used by the cache;
+	 */
+	public Config getConfig() {
+		return config;
+	}
+	
+	/**
+	 * @param key
+	 * @return if cache contains a template
+	 */
+	public boolean contains(String key) {
+		return this.cache.containsKey(key);
+	}
+
+	/**
+	 * @return number of cache hits since instantiation
+	 */
+	public double getCacheHits() {
+		return this.cacheHits;
+	}
+
+	/**
+	 * @return the date/time the cache was initialized
+	 */
+	public Date getInitialized() {
+		return initialized;
+	}
+
+	@Override
+	public Iterator<String> iterator() {
+		return cache.keySet().iterator();
+	}
+
+	/**
+	 * Delete the group
+	 * @param groupName
+	 */
 	private void deleteTheGroup(String groupName) {
 		HashSet<String> names = new HashSet<String>();
 		for (String name : cache.keySet()) {
@@ -361,34 +424,4 @@ public class TemplateCache implements Iterable<String> {
 		}
 	}
 	
-	public Stats getStats() {
-		Stats stats = new Stats();
-		for (String name : cache.keySet()) {
-			stats.add(cache.get(name).getStats());
-		}
-		return stats;
-	}
-	
-	@Override
-	public Iterator<String> iterator() {
-		return cache.keySet().iterator();
-	}
-
-	public int getSize() {
-		return this.cache.size();
-	}
-	public Config getConfig() {
-		return config;
-	}
-	public boolean contains(String key) {
-		return this.cache.containsKey(key);
-	}
-
-	public double getCacheHits() {
-		return this.cacheHits;
-	}
-
-	public Date getInitialized() {
-		return initialized;
-	}
 }

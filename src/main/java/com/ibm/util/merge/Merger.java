@@ -1,5 +1,5 @@
 /*
- * Copyright 2015, 2015 IBM
+ * Copyright 2015-2017 IBM
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */
-/*
- * 
  */
 package com.ibm.util.merge;
 
@@ -33,22 +30,13 @@ import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.directive.enrich.provider.*;
 
 /**
- * The Class Merger is the primary interface to IDMU. To use this class
- * Construct a Template Cache, and a Config object, then instantiate a Merger
- * and perform the merge.
+ * The Class Merger is the primary interface to IDMU. 
  * 
- * Example:
- * 		Config config = new Config();
- * 		TemplateCache cache = new TemplateCache(config);
- * 		Merger merger = new Merger(cache, config, "template.name.");
- * 		merger.merge();
- * 
+ * @see package-info 
  * @author Mike Storey
  * @since: v4.0
  */
 public class Merger {
-	// Version Info
-	public static final String IDMU_VESION			= "4.0.0.0";
 	// Enumeration Constants
 	public static final String DATA_SOURCE			= "DATA_SOURCE";
 	public static final String IDMU_PARAMETERS	 	= "idmuParameters";
@@ -71,13 +59,17 @@ public class Merger {
 		return values;
 	}
 	
-	// Enumeration List 
+	/**
+	 * Enumeration List
+	 * @return
+	 */
 	public static final HashMap<String, HashSet<String>> ENUMS() {
 		HashMap<String, HashSet<String>> myEnums = new HashMap<String, HashSet<String>>(); 
 		myEnums.put(DATA_SOURCE, DATA_SOURCES());
 		return myEnums;
 	}
 
+	// Instance Variables
 	private Config config;
 	private TemplateCache cahce;
 	private Template baseTemplate;
@@ -89,11 +81,10 @@ public class Merger {
 	/**
 	 * Instantiates a new merge context.
 	 *
-	 * @param cache the cache
-	 * @param sources the sources
-	 * @param request the request
-	 * @param id the id
-	 * @throws MergeException 
+	 * @param cache
+	 * @param config
+	 * @param template
+	 * @throws MergeException
 	 */
 	public Merger(
 			TemplateCache cache, 
@@ -109,13 +100,15 @@ public class Merger {
 	}
 	
 	/**
-	 * Instantiates a new merge context.
+	 * Instantiates a new merge context, with initial data values
+	 * Convenience method for merging with HTTP request parameters and payload
 	 *
-	 * @param cache the cache
-	 * @param sources the sources
-	 * @param request the request
-	 * @param id the id
-	 * @throws MergeException 
+	 * @param cache
+	 * @param config
+	 * @param template
+	 * @param parameterMap
+	 * @param requestData
+	 * @throws MergeException
 	 */
 	public Merger(
 			TemplateCache cache, 
@@ -131,7 +124,7 @@ public class Merger {
 	/**
 	 * Gets the merged template.
 	 *
-	 * @return template - with merge completed
+	 * @return template Merged template
 	 * @throws MergeException 
 	 */
 	public Template merge() throws MergeException {
@@ -139,26 +132,23 @@ public class Merger {
 		return this.baseTemplate;
 	}
 	
+	/**
+	 * @param templateName
+	 * @param defaultTemplate
+	 * @param replace
+	 * @return template - Get a mergable template from the cache
+	 * @throws MergeException
+	 */
 	public Template getMergable(String templateName, String defaultTemplate, HashMap<String,String> replace) throws MergeException {
 		Template template = cahce.getMergable(this, templateName, defaultTemplate, replace);
 		this.pushTemplate(template.getId().shorthand());
 		return template;
 	}
 	
-	public int getStackSize() {
-		return templateStack.size();
-	}
-	
-	public void pushTemplate(String name) {
-		templateStack.add(name);
-	}
-	
-	public void popTemplate() {
-		if (templateStack.size() > 0) {
-			templateStack.remove(templateStack.size()-1);
-		}
-	}
-	
+	/**
+	 * @return archive The merge output archive
+	 * @throws MergeException
+	 */
 	public Archive getArchive() throws MergeException {
 		if (null == this.archive) {
 			this.archive = new TarArchive(this);
@@ -187,35 +177,13 @@ public class Merger {
 		return archive;
 	}
 
-	public Config getConfig() {
-		return config;
-	}
-
-	public DataManager getMergeData() {
-		return mergeData;
-	}
-
-	public TemplateCache getCahce() {
-		return cahce;
-	}
-
-	public Template getBaseTemplate() {
-		return baseTemplate;
-	}
-
-	public HashMap<String, ProviderInterface> getProviders() {
-		return providers;
-	}
-
-	public ArrayList<String> getTemplateStack() {
-		return templateStack;
-	}
-
-	public void clearMergeData() {
-		this.mergeData.clear();
-		
-	}
-
+	/**
+	 * @param enrichClass
+	 * @param enrichSource
+	 * @param dbName
+	 * @return provider A Data Provider
+	 * @throws MergeException
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ProviderInterface getProvider(String enrichClass, String enrichSource, String dbName) throws MergeException {
 		if (this.providers.containsKey(enrichSource)) {
@@ -248,4 +216,82 @@ public class Merger {
 		providers.put(enrichSource, theProvider);
 		return theProvider;
 	}
+
+	/**
+	 * @return providers
+	 */
+	public HashMap<String, ProviderInterface> getProviders() {
+		return providers;
+	}
+
+	/**
+	 * @return manager The Data Manager
+	 */
+	public DataManager getMergeData() {
+		return mergeData;
+	}
+
+	/**
+	 * Clear the merge data object
+	 */
+	public void clearMergeData() {
+		this.mergeData.clear();
+		
+	}
+
+	/**
+	 * The templateStack represents the current insert context and the size indicates the level of sub-templates
+	 * @return merging template stack
+	 */
+	public ArrayList<String> getTemplateStack() {
+		return templateStack;
+	}
+
+	/**
+	 * @return Template Stack Size (nested sub-template level)
+	 */
+	public int getStackSize() {
+		return templateStack.size();
+	}
+	
+	/**
+	 * @param name Template Name to push on to insert stack
+	 */
+	public void pushTemplate(String name) {
+		templateStack.add(name);
+	}
+	
+	/**
+	 * remove a template from the stack
+	 */
+	public void popTemplate() {
+		if (templateStack.size() > 0) {
+			templateStack.remove(templateStack.size()-1);
+		}
+	}
+	
+
+	// Simple Getters below here
+	
+	/**
+	 * @return config The current configuration object
+	 */
+	public Config getConfig() {
+		return config;
+	}
+
+	/**
+	 * @return cache The Templace Cache
+	 */
+	public TemplateCache getCahce() {
+		return cahce;
+	}
+
+	/**
+	 * @return template The Base template
+	 */
+	public Template getBaseTemplate() {
+		return baseTemplate;
+	}
+
 }

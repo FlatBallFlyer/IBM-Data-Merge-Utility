@@ -15,6 +15,12 @@
  *
  */
 /**
+ * Usage:
+ * 		Config config = new Config();
+ * 		TemplateCache cache = new TemplateCache(config);
+ * 		Merger merger = new Merger(cache, config, "template.name.");
+ * 		String output = merger.getMergedOutput().getValue();
+ * 
  * @author mikestorey
  *
  */

@@ -29,7 +29,7 @@ public class CacheProvider implements ProviderInterface {
 		TemplateCache cache = context.getCahce();
 		Config config = context.getConfig();
 		DataObject cacheData = new DataObject();
-		cacheData.put("version", 		new DataPrimitive(Merger.IDMU_VESION));
+		cacheData.put("version", 		new DataPrimitive(Config.getVersion()));
 		cacheData.put("runningSince", 	new DataPrimitive(cache.getInitialized().toString()));
 		cacheData.put("CachedTemplates",new DataPrimitive(cache.getSize()));
 		cacheData.put("CacheHits", 		new DataPrimitive(cache.getCacheHits()));
