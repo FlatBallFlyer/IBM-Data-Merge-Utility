@@ -1,3 +1,19 @@
+/*
+ * 
+ * Copyright 2015-2017 IBM
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package com.ibm.util.merge.template.content;
 
 import java.util.regex.Matcher;
@@ -7,6 +23,12 @@ import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 
+/**
+ * Bookmark represents a Bookmark Segment within the Content
+ * 
+ * @author Mike Storey
+ *
+ */
 public class BookmarkSegment extends Segment {
 	private static final Pattern NAME_PATTERN 		= Pattern.compile("bookmark.*?=.*?\"(.*?)\"");
 	private static final Pattern GROUP_PATTERN 		= Pattern.compile("group.*?=.*?\"(.*?)\"");
@@ -18,6 +40,12 @@ public class BookmarkSegment extends Segment {
 	private String templateName = "";
 	private String varyByAttribute = "";
 
+	/**
+	 * Instantiate a Bookmark Object
+	 * 
+	 * @param source
+	 * @throws Merge500
+	 */
 	public BookmarkSegment(String source) throws Merge500 {
 		super();
 		Matcher matcher;
@@ -48,31 +76,13 @@ public class BookmarkSegment extends Segment {
 		} 
 	}
 
-	@Override
-	public String getValue() {
-		return "";
-	}
-
-	public String getBookmarkName() {
-		return bookmarkName;
-	}
-
-	public String getTemplateGroup() {
-		return templateGroup;
-	}
-
-	public String getTemplateName() {
-		return templateName;
-	}
-
-	public String getVaryByAttribute() {
-		return varyByAttribute;
-	}
-
-	public String getDefaultShorthand() {
-		return templateGroup + "." + templateName + ".";
-	}
-	
+	/**
+	 * Get the template to insert 
+	 * 
+	 * @param value
+	 * @return
+	 * @throws MergeException
+	 */
 	public String getTemplateShorthand(DataElement value) throws MergeException {
 		String reply = getDefaultShorthand();
 		if (!this.varyByAttribute.isEmpty()) {
@@ -89,6 +99,46 @@ public class BookmarkSegment extends Segment {
 			}
 		}
 		return reply;
+	}
+	
+	@Override
+	public String getValue() {
+		return "";
+	}
+
+	/**
+	 * @return Bookmark Name
+	 */
+	public String getBookmarkName() {
+		return bookmarkName;
+	}
+
+	/**
+	 * @return Template Group 
+	 */
+	public String getTemplateGroup() {
+		return templateGroup;
+	}
+
+	/**
+	 * @return Template Name
+	 */
+	public String getTemplateName() {
+		return templateName;
+	}
+
+	/**
+	 * @return Template Vary By Attribute
+	 */
+	public String getVaryByAttribute() {
+		return varyByAttribute;
+	}
+
+	/**
+	 * @return Template Group
+	 */
+	public String getDefaultShorthand() {
+		return templateGroup + "." + templateName + ".";
 	}
 	
 }

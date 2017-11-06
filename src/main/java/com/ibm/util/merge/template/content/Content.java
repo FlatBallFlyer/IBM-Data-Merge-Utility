@@ -1,3 +1,19 @@
+/*
+ * 
+ * Copyright 2015-2017 IBM
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package com.ibm.util.merge.template.content;
 
 import java.io.IOException;
@@ -8,6 +24,12 @@ import java.util.HashMap;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.template.Wrapper;
 
+/**
+ * Content represents a parsed string value with replace / insert features
+ * 
+ * @author Mike Storey
+ *
+ */
 public class Content extends Segment {
 	static final String BOOKMARK = "bookmark";
 	
@@ -15,14 +37,39 @@ public class Content extends Segment {
 	private String open;
 	private String close;
 	
+	/**
+	 * Instantiate a content object
+	 * 
+	 * @param wrapper
+	 * @param content
+	 * @param encodeDefault
+	 * @throws Merge500
+	 */
 	public Content(Wrapper wrapper, String content, int encodeDefault) throws Merge500 {
 		initialize(wrapper.front, wrapper.back, content, encodeDefault);
 	}
 	
+	/**
+	 * Instantiate a content object
+	 * 
+	 * @param open
+	 * @param close
+	 * @param content
+	 * @param encodeDefault
+	 * @throws Merge500
+	 */
 	public Content(String open, String close, String content, int encodeDefault) throws Merge500 {
 		initialize(open, close, content, encodeDefault);
 	}
 	
+	/**
+	 * Common initialization - Parse content
+	 * @param open
+	 * @param close
+	 * @param content
+	 * @param encodeDefault
+	 * @throws Merge500
+	 */
 	private void initialize(String open, String close, String content, int encodeDefault) throws Merge500 {
 		this.source = content;
 		this.open = open;
@@ -68,6 +115,12 @@ public class Content extends Segment {
 		return value.toString();
 	}
 	
+	/**
+	 * Write the content to an output stream
+	 * 
+	 * @param stream
+	 * @throws Merge500
+	 */
 	public void streamValue(OutputStream stream) throws Merge500 {
 		Segment seg = this.getFirst();
 		while (seg != this) {
@@ -80,6 +133,14 @@ public class Content extends Segment {
 		}
 	}
 	
+	/**
+	 * Replace all Tag's with values from Replace
+	 * 
+	 * @param replace
+	 * @param softFail
+	 * @param nestLimit
+	 * @throws Merge500
+	 */
 	public void replace(HashMap<String,String> replace, boolean softFail, int nestLimit) throws Merge500 {
 		Segment seg = this.getFirst();
 		while (seg != this) {
@@ -90,6 +151,11 @@ public class Content extends Segment {
 		}
 	}
 
+	/**
+	 * Remove all bookmarks (called prior to inserting sub-template
+	 * 
+	 * @throws Merge500
+	 */
 	public void removeBookmarks() throws Merge500 {
 		Segment seg = this.getFirst();
 		while (seg != this) {
@@ -101,18 +167,10 @@ public class Content extends Segment {
 		}
 	}
 
-	public String getSource() {
-		return source;
-	}
-
-	public String getOpen() {
-		return open;
-	}
-
-	public String getClose() {
-		return close;
-	}
-
+	/**
+	 * Get list of Tag segments
+	 * @return
+	 */
 	public ArrayList<TagSegment> getTags() {
 		ArrayList<TagSegment> tags = new ArrayList<TagSegment>();
 		Segment seg = this.getFirst();
@@ -125,6 +183,10 @@ public class Content extends Segment {
 		return tags;
 	}
 
+	/**
+	 * Get list of Bookmark Segments
+	 * @return
+	 */
 	public ArrayList<BookmarkSegment> getBookmarks() {
 		ArrayList<BookmarkSegment> bookmarks = new ArrayList<BookmarkSegment>();
 		Segment seg = this.getFirst();
@@ -137,6 +199,10 @@ public class Content extends Segment {
 		return bookmarks;
 	}
 
+	/**
+	 * Get list of Text Segments
+	 * @return
+	 */
 	public ArrayList<TextSegment> getTexts() {
 		ArrayList<TextSegment> texts = new ArrayList<TextSegment>();
 		Segment seg = this.getFirst();
@@ -149,10 +215,37 @@ public class Content extends Segment {
 		return texts;
 	}
 
+	/**
+	 * @return Source
+	 */
+	public String getSource() {
+		return source;
+	}
+
+	/**
+	 * @return Opening Wrapper
+	 */
+	public String getOpen() {
+		return open;
+	}
+
+	/**
+	 * @return Closing Wrapper
+	 */
+	public String getClose() {
+		return close;
+	}
+
+	/**
+	 * @return First Element
+	 */
 	public Segment getFirst() {
 		return this.getNext();
 	}
 	
+	/**
+	 * @return Last Element
+	 */
 	public Segment getLast() {
 		return this.getPrevious();
 	}

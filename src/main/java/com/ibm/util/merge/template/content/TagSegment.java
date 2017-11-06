@@ -1,3 +1,19 @@
+/*
+ * 
+ * Copyright 2015-2017 IBM
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package com.ibm.util.merge.template.content;
 
 import java.util.HashMap;
@@ -7,6 +23,12 @@ import java.util.regex.Pattern;
 import com.ibm.util.merge.exception.Merge500;
 // TODO refactor nest-limit from config to tag
 
+/**
+ * Represents a replace tag in Content
+ * 
+ * @author Mike Storey
+ *
+ */
 public class TagSegment extends Segment {
 	private static final Pattern TAG_PATTERN 		= Pattern.compile("tag.*?=.*?\"(.*?)\"");
 	private static final Pattern ENCODE_PATTERN 	= Pattern.compile(" encode.*?=.*?\"(.*?)\"");
@@ -22,6 +44,15 @@ public class TagSegment extends Segment {
 	private boolean parseFirst = false;
 	private String format = "";
 	
+	/**
+	 * Instantiate a new Tag object
+	 * 
+	 * @param open
+	 * @param close
+	 * @param source
+	 * @param defaultEncode
+	 * @throws Merge500
+	 */
 	public TagSegment(String open, String close, String source, Integer defaultEncode) throws Merge500 {
 		super();
 		if (defaultEncode == Segment.ENCODE_DEFAULT) throw new Merge500("Invalid Default Encoding value ");
@@ -65,6 +96,14 @@ public class TagSegment extends Segment {
 		}
 	}
 
+	/**
+	 * Replace the value in the tag segment.
+	 * 
+	 * @param values
+	 * @param softFail
+	 * @param nestLimit
+	 * @throws Merge500
+	 */
 	public void replace(HashMap<String,String> values, boolean softFail, int nestLimit) throws Merge500 {
 		String value;
 		if (values.containsKey(tag)) {
@@ -89,29 +128,44 @@ public class TagSegment extends Segment {
 		}
 	}
 
-	@Override
-	public String getValue() {
-		return open + source + close;
-	}
-
+	/**
+	 * @return the tag
+	 */
 	public String getTag() {
 		return tag;
 	}
 
+	/**
+	 * @return tag encoding
+	 */
 	public int getEncode() {
 		return encode;
 	}
 
+	/**
+	 * @return tag format string
+	 */
 	public String getFormat() {
 		return format;
 	}
 
+	/**
+	 * @return tag parsefirst indicator
+	 */
 	public boolean isParseFirst() {
 		return parseFirst;
 	}
 	
+	/**
+	 * @param parseFirst indicator
+	 */
 	public void setParseFirst(boolean parse) {
 		parseFirst = parse;
+	}
+	
+	@Override
+	public String getValue() {
+		return open + source + close;
 	}
 	
 }
