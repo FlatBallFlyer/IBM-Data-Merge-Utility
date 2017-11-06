@@ -1,6 +1,6 @@
 /*
- * Copyright 2015, 2015 IBM
  * 
+ * Copyright 2015-2017 IBM
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */
-/*
- * 
  */
 package com.ibm.util.merge.template;
 
@@ -81,6 +78,10 @@ public class Template {
 	private transient HashMap<String, String> replaceStack = new HashMap<String,String>();
 	private transient Merger context;
 	
+	/**
+	 * Instantiate a Template with the given ID
+	 * @param id
+	 */
 	public Template(TemplateId id) {
 		this.id = id;
 		this.mergable = false;
@@ -88,19 +89,46 @@ public class Template {
 		this.replaceStack = new HashMap<String,String>();
 	}
 	
+	/**
+	 * Instantiate a Template with the given ID
+	 */
 	public Template() {
 		this(new TemplateId("void","void","void"));
 	}
 	
+	/**
+	 * Instantiate a Template with the given ID
+	 * 
+	 * @param group
+	 * @param name
+	 * @param variant
+	 */
 	public Template(String group, String name, String variant) {
 		this(new TemplateId(group,name,variant));
 	}
 	
+	/**
+	 * Instantiate a Template with the given ID and Content
+	 * 
+	 * @param group
+	 * @param name
+	 * @param variant
+	 * @param content
+	 */
 	public Template(String group, String name, String variant, String content) {
 		this(new TemplateId(group,name,variant));
 		this.setContent(content);
 	}
 	
+	/**
+	 * Instantiate a Template with the given ID, content and wrapper specification
+	 * @param group
+	 * @param name
+	 * @param variant
+	 * @param content
+	 * @param before
+	 * @param after
+	 */
 	public Template(String group, String name, String variant, String content, String before, String after) {
 		this(group,name,variant,content);
 		this.wrapper.front = before;
@@ -108,7 +136,7 @@ public class Template {
 	}
 	
 	/**
-	 * Gets the mergable.
+	 * Gets a mergable copy of this template and an empty replace stack
 	 *
 	 * @param replace the replace
 	 * @return the mergable
@@ -118,6 +146,14 @@ public class Template {
 		return getMergable(context, new HashMap<String,String>());
 	}
 	
+	/**
+	 * Gets a mergable copy of this template
+	 * 
+	 * @param context
+	 * @param replace
+	 * @return
+	 * @throws MergeException
+	 */
 	public Template getMergable(Merger context, HashMap<String,String> replace) throws MergeException {
 		this.stats.hits++;
 		Template mergable = new Template(this.id);
@@ -141,7 +177,7 @@ public class Template {
 	}
 
 	/**
-	 * Gets the merged output.
+	 * Gets the merged output, calling the merge if needed
 	 *
 	 * @param context the context
 	 * @return the merged output
@@ -196,6 +232,11 @@ public class Template {
 		}
 	}
 
+	/**
+	 * Remove the replace value for one or more tags.
+	 * 
+	 * @param tags
+	 */
 	public void blankReplace(HashSet<String> tags) {
 		for (String tag : tags) {
 			this.replaceStack.put(tag, "");
@@ -300,6 +341,9 @@ public class Template {
 		}
 	}
 
+	/**
+	 * @return file name for output archive
+	 */
 	public String getContentFileName() {
 		return contentFileName;
 	}
@@ -424,10 +468,16 @@ public class Template {
 		return mergable;
 	}
 
+	/**
+	 * @return redirect URL
+	 */
 	public String getContentRedirectUrl() {
 		return contentRedirectUrl;
 	}
 
+	/**
+	 * @param contentRedirectUrl
+	 */
 	public void setContentRedirectUrl(String contentRedirectUrl) {
 		// Accessible only before merge
 		if (!this.mergable) {
@@ -435,24 +485,41 @@ public class Template {
 		}
 	}
 
+	/**
+	 * @return
+	 */
 	public String getEncodedRedirectURL() {
 		// TODO Replace Process?
 		return null;
 	}
 	
+	/**
+	 * Initialize cached template stats
+	 */
 	public void initStats() {
 		this.stats = new Stat();
 		this.stats.name = this.getId().shorthand();
 	}
 
+	/**
+	 * @return Statistics.
+	 */
 	public Stat getStats() {
 		return stats;
 	}
 
+	/**
+	 * @return merge context
+	 */
 	public Merger getContext() {
 		return context;
 	}
 
+	/**
+	 * Set merge context 
+	 * 
+	 * @param context
+	 */
 	public void setContext(Merger context) {
 		this.context = context;
 	}

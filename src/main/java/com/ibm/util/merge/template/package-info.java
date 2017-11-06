@@ -1,6 +1,6 @@
 /*
- * Copyright 2015, 2015 IBM
  * 
+ * Copyright 2015-2017 IBM
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,7 +15,9 @@
  *
  */
 /**
- * @author mikestorey
+ * The Template object is the core of IDMU processing.
+ * 
+ * @author Mike Storey
  *
  */
 package com.ibm.util.merge.template;
