@@ -1,5 +1,27 @@
+/*
+ * 
+ * Copyright 2015-2017 IBM
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package com.ibm.util.merge.exception;
 
+/**
+ * Processing Error exception
+ * 
+ * @author Mike Storey
+ *
+ */
 public class Merge500 extends MergeException {
 
 	/**
@@ -9,25 +31,6 @@ public class Merge500 extends MergeException {
 
 	public Merge500(String error) {
 		super(error);
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public String getErrorString() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getStatus() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public String getContentType() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
