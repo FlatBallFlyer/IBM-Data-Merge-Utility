@@ -1,6 +1,6 @@
 /*
- * Copyright 2015, 2015 IBM
  * 
+ * Copyright 2015-2017 IBM
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,7 +15,6 @@
  *
  */
 package com.ibm.util.merge.storage;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +34,16 @@ import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 
+/**
+ * Abstract base class for output archives.
+ * 
+ * @author flatballflyer
+ *
+ */
+/**
+ * @author flatballflyer
+ *
+ */
 public abstract class Archive {
 	public static final String ARCHIVE_TYPE			= "ARCHIVE_TYPE";
 	public static final String ARCHIVE_ZIP			= "zip";
@@ -63,17 +72,37 @@ public abstract class Archive {
 	private String fileName;
     private transient OutputStream outputStream;
 
+	/**
+	 * Instantiate an archive
+	 */
 	public Archive() {
 		this.setFileName(UUID.randomUUID().toString());
 	}
 
+	/**
+	 * Instantiate an Archive for the merge
+	 * @param context
+	 */
 	public Archive(Merger context) {
 		this();
 		this.setContext(context);
 	}
 
+    /**
+     * Open the output stream
+     * @throws MergeException
+     */
     public abstract void openOutputStream() throws MergeException;
     
+    /**
+     * Write a file to the archive
+     * @param entryName
+     * @param content
+     * @param userName
+     * @param groupName
+     * @return
+     * @throws MergeException
+     */
     public String writeFile(String entryName, String content, String userName, String groupName) throws MergeException {
     	if (this.outputStream == null) { 
     		openOutputStream();
@@ -81,6 +110,10 @@ public abstract class Archive {
     	return getCheckSum(content, entryName);
     }
     
+    /**
+     * Close the output stream
+     * @throws MergeException
+     */
     public void closeOutputStream() throws MergeException {
     	if (this.outputStream != null) {
     		try {
@@ -90,6 +123,13 @@ public abstract class Archive {
     	}
     }
 
+    /**
+     * Get CheckSum information for the archive entry
+     * @param content
+     * @param name
+     * @return
+     * @throws MergeException
+     */
     private String getCheckSum(String content, String name) throws MergeException {
     	MessageDigest message;
 		try {
@@ -112,33 +152,59 @@ public abstract class Archive {
 		return md5;
     }
     
+    /**
+     *
+     * @return Archive file 
+     */
     public File getArchiveFile() {
     	File file = new File(File.pathSeparator + this.filePath + File.pathSeparator + this.fileName + "." + this.archiveType);
     	return file;
     }
 
+	/**
+	 * @return Archive Type
+	 */
 	public String getArchiveType() {
 		return archiveType;
 	}
 
+	/**
+	 * Set Archive type
+	 * @param archiveType
+	 */
 	public void setArchiveType(String archiveType) {
 		if (Archive.ARCHIVE_TYPES().contains(archiveType)) {
 			this.archiveType = archiveType;
 		}
 	}
 
+	/**
+	 * @return File Path for output
+	 */
 	public String getFilePath() {
 		return filePath;
 	}
 
+	/**
+	 * Set Output File Path
+	 * @param filePath
+	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
 
+	/**
+	 * @return Output Stream
+	 */
 	public OutputStream getOutputStream() {
 		return outputStream;
 	}
 
+	/**
+	 * Set the Output Stream
+	 * @param outputStream
+	 * @throws MergeException
+	 */
 	public void setOutputStream(OutputStream outputStream) throws MergeException {
 		this.outputStream = outputStream;
 		DataManager data = context.getMergeData();
@@ -147,10 +213,17 @@ public abstract class Archive {
 		data.put(Merger.IDMU_ARCHIVE_FILES, "-", new DataList());
 	}
 
+	/**
+	 * @return File Name
+	 */
 	public String getFileName() {
 		return fileName;
 	}
 
+	/**
+	 * Set the output file name
+	 * @param fileName
+	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}

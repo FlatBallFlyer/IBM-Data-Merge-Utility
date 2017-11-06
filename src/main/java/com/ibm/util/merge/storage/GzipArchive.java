@@ -1,6 +1,6 @@
 /*
- * Copyright 2015, 2015 IBM
  * 
+ * Copyright 2015-2017 IBM
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
 /**
+ * GZIP Archive Type
+ * @author Mike Storey
  *
  */
 public class GzipArchive extends Archive {
