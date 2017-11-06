@@ -16,9 +16,16 @@
  */
 /**
  * Usage:
+ * 		// Get a config object
  * 		Config config = new Config();
+ * 
+ * 		// Create and Load a template cache
  * 		TemplateCache cache = new TemplateCache(config);
+ * 		cache.post(some templates);
+ * 
+ *		// Get a Merger and Merge the template
  * 		Merger merger = new Merger(cache, config, "template.name.");
+ * 
  * 		String output = merger.getMergedOutput().getValue();
  * 
  * @author mikestorey
