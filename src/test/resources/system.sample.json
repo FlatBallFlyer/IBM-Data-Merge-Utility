@@ -1,0 +1,111 @@
+{
+	"templates": 
+	[
+		{
+			"id": 
+			{
+				"group": "system",
+				"name": "sample",
+				"variant": ""
+			},
+
+			"content": "",
+			"contentType": 4,
+			"contentDisposition": 2,
+			"contentEncoding": 1,
+			"contentFileName": "",
+			"contentRedirectUrl": "",
+			"description": "",
+			"wrapper": 
+			{
+				"front": "{",
+				"back": "}"
+			},
+
+			"directives": 
+			[
+				{
+					"targetDataName": "",
+					"targetDataDelimeter": "\"",
+					"enrichClass": "com.ibm.util.merge.template.directive.enrich.provider.StubProvider",
+					"enrichSource": "",
+					"enrichParameter": "",
+					"enrichCommand": "",
+					"parseAs": 4,
+					"type": 1,
+					"name": ""
+				},
+
+				{
+					"notFirst": 
+					[
+						
+					],
+
+					"notLast": 
+					[
+						
+					],
+
+					"onlyFirst": 
+					[
+						
+					],
+
+					"onlyLast": 
+					[
+						
+					],
+
+					"bookmarkPattern": ".*",
+					"dataSource": "",
+					"dataDelimeter": "-",
+					"ifMissing": 1,
+					"ifPrimitive": 1,
+					"ifObject": 1,
+					"ifList": 1,
+					"type": 2,
+					"name": ""
+				},
+
+				{
+					"dataTarget": "",
+					"dataTargetDelimiter": "\"",
+					"staticData": "",
+					"parseFormat": 1,
+					"dataSource": "",
+					"dataDelimeter": "",
+					"ifMissing": 1,
+					"ifPrimitive": 1,
+					"ifObject": 1,
+					"ifList": 1,
+					"type": 3,
+					"name": ""
+				},
+
+				{
+					"processAfter": true,
+					"objectAttrPrimitive": 1,
+					"objectAttrList": 1,
+					"objectAttrObject": 1,
+					"listAttrMissing": 1,
+					"listAttrNotPrimitive": 1,
+					"dataSource": "",
+					"dataDelimeter": "-",
+					"ifMissing": 1,
+					"ifPrimitive": 1,
+					"ifObject": 1,
+					"ifList": 1,
+					"type": 4,
+					"name": ""
+				},
+
+				{
+					"clearAfter": false,
+					"type": 5,
+					"name": ""
+				}
+			]
+		}
+	]
+}

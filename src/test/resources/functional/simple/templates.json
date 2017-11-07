@@ -1,0 +1,31 @@
+{
+	"templates": 
+	[
+		{
+			"id": 
+			{
+				"group": "test",
+				"name": "",
+				"variant": ""
+			},
+
+			"wrapper": 
+			{
+				"front": "<",
+				"back": ">"
+			},
+
+			"description": "Testing Template",
+			"content": "A Very Simple Test",
+			"contentType": 4,
+			"contentDisposition": 2,
+			"contentEncoding": 1,
+			"contentFileName": "",
+			"contentRedirectUrl": "",
+			"directives": 
+			[
+				
+			]
+		}
+	]
+}

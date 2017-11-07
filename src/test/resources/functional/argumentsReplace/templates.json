@@ -1,0 +1,46 @@
+{
+	"templates": 
+	[
+		{
+			"id": 
+			{
+				"group": "test",
+				"name": "",
+				"variant": ""
+			},
+
+			"wrapper": 
+			{
+				"front": "<",
+				"back": ">"
+			},
+
+			"description": "Test Replace from Parameters",
+			"content": "Test Replace <parameter1>",
+			"contentType": 4,
+			"contentDisposition": 2,
+			"contentEncoding": 1,
+			"contentFileName": "",
+			"contentRedirectUrl": "",
+			"directives": 
+			[
+				{
+					"processAfter": true,
+					"objectAttrPrimitive": 3,
+					"objectAttrList": 3,
+					"objectAttrObject": 1,
+					"listAttrMissing": 1,
+					"listAttrNotPrimitive": 1,
+					"dataSource": "idmuParameters",
+					"dataDelimeter": "-",
+					"ifMissing": 1,
+					"ifPrimitive": 1,
+					"ifObject": 3,
+					"ifList": 1,
+					"type": 4,
+					"name": ""
+				}
+			]
+		}
+	]
+}
