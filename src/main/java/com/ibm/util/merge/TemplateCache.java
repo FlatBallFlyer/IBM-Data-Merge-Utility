@@ -16,6 +16,8 @@
  */
 package com.ibm.util.merge;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,7 +64,33 @@ public class TemplateCache implements Iterable<String> {
 		this.config = config;
 		this.cache = new HashMap<String, Template>();
 		this.initialized = new Date();
-		 
+		this.buildDefaultTemplates();
+	}
+	
+	/**
+	 * Instantiates a new template cache and loads default packages
+	 *
+	 * @param persist the persist
+	 * @throws MergeException 
+	 */
+	public TemplateCache(Config config, File templateFolder) throws MergeException {
+		this.config = config;
+		this.cache = new HashMap<String, Template>();
+		this.initialized = new Date();
+		this.buildDefaultTemplates();
+		
+		File[] groups = templateFolder.listFiles();
+		for (File file : groups) {
+			try {
+				this.postGroup(new String(Files.readAllBytes(file.toPath()), "ISO-8859-1"));
+			} catch (Throwable e) {
+				// ignore bad files TODO: Logging
+			}
+		}
+		
+	}
+
+	private void buildDefaultTemplates() throws MergeException {
 		// Build Default Templates
 		Template error403 = new Template("system","error403","","Error - Forbidden");
 		Template error404 = new Template("system","error404","","Error - Not Found");
@@ -77,9 +105,8 @@ public class TemplateCache implements Iterable<String> {
 		postTemplate(error404);
 		postTemplate(error500);
 		postTemplate(sample);
-
 	}
-	
+
 	/**
 	 * Gets a mergable template - getting the default template if the primary template does not exist.
 	 *
