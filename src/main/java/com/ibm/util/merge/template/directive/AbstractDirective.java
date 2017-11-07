@@ -34,22 +34,16 @@ public abstract class AbstractDirective {
 
 	public static final int TYPE_ENRICH 			= 1;
 	public static final int TYPE_INSERT				= 2;
-	public static final int TYPE_REMOVE_BOOKMARKS	= 3;
+	public static final int TYPE_PARSE	 			= 3;
 	public static final int TYPE_REPLACE		 	= 4;
-	public static final int TYPE_REPLACE_PROCESS	= 5;
-	public static final int TYPE_REQUIRE 			= 6;
-	public static final int TYPE_SAVE_FILE 			= 7;
-	public static final int TYPE_PARSE	 			= 8;
+	public static final int TYPE_SAVE_FILE			= 5;
 	public static final HashMap<Integer, String> DIRECTIVE_TYPES() {
 		HashMap<Integer, String> values = new HashMap<Integer, String>();
 		values.put(TYPE_ENRICH, 			"enrich");
 		values.put(TYPE_INSERT, 			"insert");
-		values.put(TYPE_REMOVE_BOOKMARKS, 	"remove-bookmarks");
 		values.put(TYPE_REPLACE, 			"replace");
-		values.put(TYPE_REPLACE_PROCESS,	"replace-process");
-		values.put(TYPE_REQUIRE,			"require");
-		values.put(TYPE_SAVE_FILE,			"save-file");
 		values.put(TYPE_PARSE,				"parse");
+		values.put(TYPE_SAVE_FILE,			"save");
 		return values;
 	}
 

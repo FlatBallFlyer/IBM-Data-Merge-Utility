@@ -16,8 +16,6 @@
  */
 package com.ibm.util.merge.template.directive;
 
-import java.util.HashMap;
-
 
 /**
  * Abstract Directive that provides a set of "Data Source" attributes
@@ -33,10 +31,10 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	protected int ifObject;
 	protected int ifList;
 
-	public abstract HashMap<Integer, String> missingOptions();
-	public abstract HashMap<Integer, String> primitiveOptions();
-	public abstract HashMap<Integer, String> objectOptions();
-	public abstract HashMap<Integer, String> listOptions();
+//	public abstract HashMap<Integer, String> missingOptions();
+//	public abstract HashMap<Integer, String> primitiveOptions();
+//	public abstract HashMap<Integer, String> objectOptions();
+//	public abstract HashMap<Integer, String> listOptions();
 	
 	/**
 	 * Instantiate a Data Directive with Defaults
@@ -99,11 +97,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	/**
 	 * @param value
 	 */
-	public void setIfSourceMissing(int value) {
-		if (this.missingOptions().keySet().contains(value)) {
-			this.ifMissing = value;
-		}
-	}
+	public abstract void setIfSourceMissing(int value);
 
 	/**
 	 * @return Source Missing action
@@ -115,11 +109,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	/**
 	 * @param value
 	 */
-	public void setIfPrimitive(int value) {
-		if (this.primitiveOptions().containsKey(value)) {
-			this.ifPrimitive = value;
-		}
-	}
+	public abstract void setIfPrimitive(int value);
 
 	/**
 	 * @return Primitive Process Indicator
@@ -131,11 +121,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	/**
 	 * @param value
 	 */
-	public void setIfObject(int value) {
-		if (this.objectOptions().containsKey(value)) {
-			this.ifObject = value;
-		}
-	}
+	public abstract void setIfObject(int value);
 
 	/**
 	 * @return Object Process Indicator
@@ -147,11 +133,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	/**
 	 * @param value
 	 */
-	public void setIfList(int value) {
-		if (this.listOptions().containsKey(value)) {
-			this.ifList = value;
-		}
-	}
+	public abstract void setIfList(int value);
 
 	/**
 	 * @return List Process Indicator

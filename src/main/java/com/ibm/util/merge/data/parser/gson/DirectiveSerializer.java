@@ -32,18 +32,11 @@ public class DirectiveSerializer implements JsonSerializer<AbstractDirective> {
 		/* ====================================
 		 * If we need to implement different serialization
 		switch (src.getType()) {
-			case AbstractDirective.TYPE_REPLACE_LIST: 	return context.serialize(src);
-			case AbstractDirective.TYPE_REPLACE_HASH: 	return context.serialize(src);
-			case AbstractDirective.TYPE_REPLACE_VALUE:	return context.serialize(src);
-			case AbstractDirective.TYPE_ENRICH_REST: 	return context.serialize(src);
-			case AbstractDirective.TYPE_ENRICH_CLOUD: 	return context.serialize(src);
-			case AbstractDirective.TYPE_ENRICH_MONGO: 	return context.serialize(src);
-			case AbstractDirective.TYPE_ENRICH_JDBC: 	return context.serialize(src);
-			case AbstractDirective.TYPE_PARSE_JSON: 	return context.serialize(src);
-			case AbstractDirective.TYPE_PARSE_XML:	 	return context.serialize(src);
-			case AbstractDirective.TYPE_PARSE_CSV:	 	return context.serialize(src);
-			case AbstractDirective.TYPE_PARSE_HTML:	 	return context.serialize(src);
-			case AbstractDirective.TYPE_REQUIRE:	 	return context.serialize(src);
+			case AbstractDirective.TYPE_ENRICH: 	return context.serialize(src);
+			case AbstractDirective.TYPE_INSERT: 	return context.serialize(src);
+			case AbstractDirective.TYPE_PARSE: 		return context.serialize(src);
+			case AbstractDirective.TYPE_REPLACE: 	return context.serialize(src);
+			case AbstractDirective.TYPE_SAVE_FILE:	return context.serialize(src);
 			default: return null;
 		}
 		 */
