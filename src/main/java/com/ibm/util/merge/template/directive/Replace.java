@@ -38,10 +38,15 @@ public class Replace extends AbstractDataDirective {
 	private String fromAttribute;	// used by List
 	private String toAttribute;		// used by List
 	private boolean processAfter;
+	private int objectAttrPrimitive;
+	private int objectAttrList;
+	private int objectAttrObject;
+	private int listAttrMissing;
+	private int listAttrNotPrimitive;
 
 	public static final int MISSING_THROW 	= 1;
 	public static final int MISSING_IGNORE = 2;
-	public HashMap<Integer, String> missingOptions() {
+	public static final HashMap<Integer, String> MISSING_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(MISSING_THROW, 		"throw");
 		options.put(MISSING_IGNORE, 	"ignore");
@@ -51,7 +56,7 @@ public class Replace extends AbstractDataDirective {
 	public static final int PRIMITIVE_THROW 	= 1;
 	public static final int PRIMITIVE_IGNORE 	= 2;
 	public static final int PRIMITIVE_REPLACE 	= 3;
-	public HashMap<Integer, String> primitiveOptions() {
+	public static final HashMap<Integer, String> PRIMITIVE_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(PRIMITIVE_THROW, 	"throw");
 		options.put(PRIMITIVE_IGNORE, 	"ignore");
@@ -61,8 +66,8 @@ public class Replace extends AbstractDataDirective {
 
 	public static final int OBJECT_THROW 	= 1;
 	public static final int OBJECT_IGNORE 	= 2;
-	public static final int OBJECT_REPLACE = 3;
-	public HashMap<Integer, String> objectOptions() {
+	public static final int OBJECT_REPLACE 	= 3;
+	public static final HashMap<Integer, String> OBJECT_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(OBJECT_THROW, 	"throw");
 		options.put(OBJECT_IGNORE, 	"ignore");
@@ -70,14 +75,65 @@ public class Replace extends AbstractDataDirective {
 		return options;
 	}
 
-	public static final int LIST_THROW 	= 1;
+	public static final int OBJECT_ATTRIBUTE_PRIMITIVE_THROW	= 1;
+	public static final int OBJECT_ATTRIBUTE_PRIMITIVE_IGNORE 	= 2;
+	public static final int OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE 	= 3;
+	public static final HashMap<Integer, String> OBJECT_ATTRIBUTE_PRIMITIVE_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(OBJECT_ATTRIBUTE_PRIMITIVE_THROW, 	"throw");
+		options.put(OBJECT_ATTRIBUTE_PRIMITIVE_IGNORE, 	"ignore");
+		options.put(OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE, "insertList");
+		return options;
+	}
+
+	public static final int OBJECT_ATTRIBUTE_OBJECT_THROW	= 1;
+	public static final int OBJECT_ATTRIBUTE_OBJECT_IGNORE 	= 2;
+	public static final HashMap<Integer, String> OBJECT_ATTRIBUTE_OBJECT_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(OBJECT_ATTRIBUTE_OBJECT_THROW, 	"throw");
+		options.put(OBJECT_ATTRIBUTE_OBJECT_IGNORE, 	"ignore");
+		return options;
+	}
+
+	public static final int OBJECT_ATTRIBUTE_LIST_THROW 		= 1;
+	public static final int OBJECT_ATTRIBUTE_LIST_IGNORE 		= 2;
+	public static final int OBJECT_ATTRIBUTE_LIST_FIRST 		= 3;
+	public static final int OBJECT_ATTRIBUTE_LIST_LAST 			= 4;
+	public static final HashMap<Integer, String> OBJECT_ATTRIBUTE_LIST_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(OBJECT_ATTRIBUTE_LIST_THROW, 	"throw");
+		options.put(OBJECT_ATTRIBUTE_LIST_IGNORE, 	"ignore");
+		options.put(OBJECT_ATTRIBUTE_LIST_FIRST, 	"use first primitive");
+		options.put(OBJECT_ATTRIBUTE_LIST_LAST, 	"use last primitive");
+		return options;
+	}
+	
+	public static final int LIST_THROW 		= 1;
 	public static final int LIST_IGNORE 	= 2;
 	public static final int LIST_REPLACE 	= 3;
-	public HashMap<Integer, String> listOptions() {
+	public static final HashMap<Integer, String> LIST_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(LIST_THROW, 	"throw");
 		options.put(LIST_IGNORE, 	"ignore");
 		options.put(LIST_REPLACE, 	"replace");
+		return options;
+	}
+
+	public static final int LIST_ATTR_MISSING_THROW 	= 1;
+	public static final int LIST_ATTR_MISSING_IGNORE 	= 2;
+	public static final HashMap<Integer, String> LIST_ATTR_MISSING_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(LIST_ATTR_MISSING_THROW, 	"throw");
+		options.put(LIST_ATTR_MISSING_IGNORE, 	"ignore");
+		return options;
+	}
+
+	public static final int LIST_ATTR_NOT_PRIMITIVE_THROW 	= 1;
+	public static final int LIST_ATTR_NOT_PRIMITIVE_IGNORE 	= 2;
+	public static final HashMap<Integer, String> LIST_ATTR_NOT_PRIMITIVE_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(LIST_ATTR_NOT_PRIMITIVE_THROW, 	"throw");
+		options.put(LIST_ATTR_NOT_PRIMITIVE_IGNORE,	"ignore");
 		return options;
 	}
 
@@ -90,7 +146,12 @@ public class Replace extends AbstractDataDirective {
 			MISSING_THROW,
 			PRIMITIVE_THROW,
 			OBJECT_THROW,
+			OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
+			OBJECT_ATTRIBUTE_LIST_THROW,
+			OBJECT_ATTRIBUTE_OBJECT_THROW,
 			LIST_THROW,
+			LIST_ATTR_MISSING_THROW,
+			LIST_ATTR_NOT_PRIMITIVE_THROW,
 			true
 		);
 	}
@@ -106,10 +167,18 @@ public class Replace extends AbstractDataDirective {
 	 * @param list
 	 * @param process
 	 */
-	public Replace(String source, String delimeter, int missing, int primitive, int object, int list, boolean process) {
+	public Replace(String source, String delimeter, int missing, int primitive, 
+			int object, int objectAttrPrimitive, int objectAttrList, int objectAttrObject, 
+			int list, int listAttrMissing, int listAttrNotPrimitive, boolean process) {
 		super(source, delimeter, missing, primitive, object, list);
 		this.type = AbstractDirective.TYPE_REPLACE;
 		this.processAfter 	= process;
+		this.objectAttrPrimitive = objectAttrPrimitive;
+		this.objectAttrList = objectAttrList;
+		this.objectAttrObject = objectAttrObject;
+		this.listAttrMissing = listAttrMissing;
+		this.listAttrNotPrimitive = listAttrNotPrimitive;
+		
 	}
 
 	@Override
@@ -119,6 +188,14 @@ public class Replace extends AbstractDataDirective {
 		mergable.setFromAttribute(this.fromAttribute);
 		mergable.setToAttribute(this.toAttribute);
 		mergable.setProcessAfter(this.processAfter);
+		mergable.setIfList(this.getIfList());
+		mergable.setIfObject(this.getIfObject());
+		mergable.setIfPrimitive(this.getIfPrimitive());
+		mergable.setObjectAttrList(this.getObjectAttrList());
+		mergable.setObjectAttrObject(this.getObjectAttrObject());
+		mergable.setObjectAttrPrimitive(this.getObjectAttrPrimitive());
+		mergable.setListAttrMissing(this.getListAttrMissing());
+		mergable.setListAttrNotPrimitive(this.getListAttrNotPrimitive());
 		return mergable;
 	}
 
@@ -171,7 +248,6 @@ public class Replace extends AbstractDataDirective {
 		
 		if (this.processAfter) {
 			template.getMergeContent().replace(template.getReplaceStack(), true, this.getTemplate().getContext().getConfig().getNestLimit()); 
-			// TODO: Soft Fail
 		}
 	}
 	
@@ -200,14 +276,28 @@ public class Replace extends AbstractDataDirective {
 				DataObject orow = row.getAsObject();
 				String fromValue = "";
 				String toValue = "";
-				if (orow.containsKey(this.fromAttribute) && 
-						orow.get(this.fromAttribute).isPrimitive() && 
-						orow.containsKey(this.toAttribute) && 
-						orow.get(this.toAttribute).isPrimitive()) {
-					fromValue = row.getAsObject().get(this.fromAttribute).getAsPrimitive();
-					toValue = row.getAsObject().get(this.toAttribute).getAsPrimitive();
-					this.template.addReplace(fromValue, toValue); 
+				if (!orow.containsKey(this.fromAttribute) || 
+					!orow.containsKey(this.toAttribute)) { 
+					switch (this.getListAttrMissing()) {
+					case LIST_ATTR_MISSING_THROW :
+						throw new Merge500("List from/to Attribute Missing " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+					case LIST_ATTR_MISSING_IGNORE :
+						return;
+					}
 				}
+				if (!orow.get(this.fromAttribute).isPrimitive() || 
+					!orow.get(this.toAttribute).isPrimitive()) {
+					switch (this.getListAttrNotPrimitive()) {
+					case LIST_ATTR_NOT_PRIMITIVE_THROW :
+						throw new Merge500("List from/to Attribute Missing " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+					case LIST_ATTR_NOT_PRIMITIVE_IGNORE :
+						return;
+					}
+				}
+				
+				fromValue = row.getAsObject().get(this.fromAttribute).getAsPrimitive();
+				toValue = row.getAsObject().get(this.toAttribute).getAsPrimitive();
+				this.template.addReplace(fromValue, toValue);
 			}
 		}
 	}
@@ -219,15 +309,57 @@ public class Replace extends AbstractDataDirective {
 	 */
 	private void replaceFromObject(Merger context) throws MergeException {
 		DataObject dataObject = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsObject();
+		String from = "";
+		String to = "";
 		for (Entry<String, DataElement> member: dataObject.entrySet()) {
 			if (member.getValue().isPrimitive()) {
-				String from = member.getKey();
-				String to = member.getValue().getAsPrimitive();
-				template.addReplace(from, to);
-			} else if (member.getValue().isList() && member.getValue().getAsList().get(0).isPrimitive()) {
-				String from = member.getKey();
-				String to = member.getValue().getAsList().get(0).getAsPrimitive();
-				template.addReplace(from, to);
+				switch (this.getObjectAttrPrimitive()) {
+				case OBJECT_ATTRIBUTE_PRIMITIVE_THROW :
+					throw new Merge500("Object Attribute is Primitive " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+				case OBJECT_ATTRIBUTE_PRIMITIVE_IGNORE :
+					continue;
+				case OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE :
+					from = member.getKey();
+					to = member.getValue().getAsPrimitive();
+					template.addReplace(from, to);
+				}
+			} else if (member.getValue().isObject()) {
+				switch (this.getObjectAttrObject()) {
+				case OBJECT_ATTRIBUTE_OBJECT_THROW :
+					throw new Merge500("Object Attribute is Object " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+				case OBJECT_ATTRIBUTE_OBJECT_IGNORE :
+					continue;
+				}
+			} else if (member.getValue().isList()) {
+				switch (this.getObjectAttrList()) {
+				case OBJECT_ATTRIBUTE_LIST_THROW :
+					throw new Merge500("Object Attribute is List " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+				case OBJECT_ATTRIBUTE_LIST_IGNORE :
+					continue;
+				case OBJECT_ATTRIBUTE_LIST_FIRST :
+					if (member.getValue().getAsList().size() < 1) {
+						continue; // No First Member
+					}
+					if (!member.getValue().getAsList().get(0).isPrimitive()) {
+						throw new Merge500("Object Attribute List First is not primitive " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+					}
+					from = member.getKey();
+					to = member.getValue().getAsList().get(0).getAsPrimitive();
+					template.addReplace(from, to);
+					continue;
+				case OBJECT_ATTRIBUTE_LIST_LAST :
+					int last = member.getValue().getAsList().size();
+					if (last < 1) {
+						continue; // No Last Member
+					}
+					if (!member.getValue().getAsList().get(last-1).isPrimitive()) {
+						throw new Merge500("Object Attribute List Last is not primitive " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+					}
+					from = member.getKey();
+					to = member.getValue().getAsList().get(last-1).getAsPrimitive();
+					template.addReplace(from, to);
+					continue;
+				}
 			}
 		}
 	}
@@ -240,17 +372,44 @@ public class Replace extends AbstractDataDirective {
 	}
 
 	/**
-	 * @param toAttribute
-	 */
-	public void setToAttribute(String toAttribute) {
-		this.toAttribute = toAttribute;
-	}
-
-	/**
 	 * @return name of attribute for List From values
 	 */
 	public String getFromAttribute() {
 		return fromAttribute;
+	}
+
+	/**
+	 * @return process indicator
+	 */
+	public boolean getProcessAfter() {
+		return processAfter;
+	}
+
+	public int getObjectAttrPrimitive() {
+		return objectAttrPrimitive;
+	}
+	
+	public int getObjectAttrList() {
+		return objectAttrList;
+	}
+
+	public int getObjectAttrObject() {
+		return objectAttrObject;
+	}
+
+	public int getListAttrNotPrimitive() {
+		return listAttrNotPrimitive;
+	}
+
+	public int getListAttrMissing() {
+		return listAttrMissing;
+	}
+
+	/**
+	 * @param toAttribute
+	 */
+	public void setToAttribute(String toAttribute) {
+		this.toAttribute = toAttribute;
 	}
 
 	/**
@@ -261,17 +420,67 @@ public class Replace extends AbstractDataDirective {
 	}
 
 	/**
-	 * @return process indicator
-	 */
-	public boolean getProcessAfter() {
-		return processAfter;
-	}
-
-	/**
 	 * @param processAfter
 	 */
 	public void setProcessAfter(boolean processAfter) {
 		this.processAfter = processAfter;
 	}
 
+	public void setObjectAttrPrimitive(int objectAttrPrimitive) {
+		if (OBJECT_ATTRIBUTE_PRIMITIVE_OPTIONS().keySet().contains(objectAttrPrimitive)) {
+			this.objectAttrPrimitive = objectAttrPrimitive;
+		}
+	}
+
+	public void setObjectAttrList(int objectAttrList) {
+		if (OBJECT_ATTRIBUTE_LIST_OPTIONS().keySet().contains(objectAttrList)) {
+			this.objectAttrList = objectAttrList;
+		}
+	}
+
+	public void setObjectAttrObject(int objectAttrObject) {
+		if (OBJECT_ATTRIBUTE_OBJECT_OPTIONS().keySet().contains(objectAttrObject)) {
+			this.objectAttrObject = objectAttrObject;
+		}
+	}
+
+	public void setListAttrMissing(int listAttrMissing) {
+		if (LIST_ATTR_MISSING_OPTIONS().keySet().contains(listAttrMissing)) {
+			this.listAttrMissing = listAttrMissing;
+		}
+	}
+
+	public void setListAttrNotPrimitive(int listAttrNotPrimitive) {
+		if (LIST_ATTR_NOT_PRIMITIVE_OPTIONS().keySet().contains(listAttrNotPrimitive)) {
+			this.listAttrNotPrimitive = listAttrNotPrimitive;
+		}
+	}
+
+	@Override
+	public void setIfSourceMissing(int value) {
+		if (MISSING_OPTIONS().keySet().contains(value)) {
+			this.ifMissing = value;
+		}
+	}
+
+	@Override
+	public void setIfPrimitive(int value) {
+		if (PRIMITIVE_OPTIONS().keySet().contains(value)) {
+			this.ifPrimitive= value;
+		}
+	}
+
+	@Override
+	public void setIfObject(int value) {
+		if (OBJECT_OPTIONS().keySet().contains(value)) {
+			this.ifObject = value;
+		}
+	}
+
+	@Override
+	public void setIfList(int value) {
+		if (LIST_OPTIONS().keySet().contains(value)) {
+			this.ifList = value;
+		}
+	}
 }

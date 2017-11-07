@@ -227,4 +227,28 @@ public class ParseData extends AbstractDataDirective {
 		this.staticData = staticData;
 	}
 
+	@Override
+	public void setIfSourceMissing(int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setIfPrimitive(int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setIfObject(int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setIfList(int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

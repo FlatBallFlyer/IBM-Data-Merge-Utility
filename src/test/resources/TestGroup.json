@@ -1,0 +1,111 @@
+{
+	"templates": 
+	[
+		{
+			"id": 
+			{
+				"group": "test",
+				"name": "1",
+				"variant": ""
+			},
+
+			"content": "Test1",
+			"contentType": 4,
+			"contentDisposition": 2,
+			"contentEncoding": 1,
+			"contentFileName": "",
+			"contentRedirectUrl": "",
+			"description": "",
+			"wrapper": 
+			{
+				"front": "<",
+				"back": ">"
+			},
+
+			"directives": 
+			[
+				
+			]
+		},
+
+		{
+			"id": 
+			{
+				"group": "test",
+				"name": "2",
+				"variant": ""
+			},
+
+			"content": "test 2",
+			"contentType": 4,
+			"contentDisposition": 2,
+			"contentEncoding": 1,
+			"contentFileName": "",
+			"contentRedirectUrl": "",
+			"description": "",
+			"wrapper": 
+			{
+				"front": "{",
+				"back": "}"
+			},
+
+			"directives": 
+			[
+			]
+		},
+
+		{
+			"id": 
+			{
+				"group": "test",
+				"name": "3",
+				"variant": ""
+			},
+
+			"content": "Test 3",
+			"contentType": 4,
+			"contentDisposition": 2,
+			"contentEncoding": 1,
+			"contentFileName": "",
+			"contentRedirectUrl": "",
+			"description": "",
+			"wrapper": 
+			{
+				"front": "{",
+				"back": "}"
+			},
+
+			"directives": 
+			[
+				
+			]
+		},
+
+		{
+			"id": 
+			{
+				"group": "test",
+				"name": "4",
+				"variant": ""
+			},
+
+			"content": "Test 4",
+			"contentType": 4,
+			"contentDisposition": 2,
+			"contentEncoding": 1,
+			"contentFileName": "",
+			"contentRedirectUrl": "",
+			"description": "",
+			"wrapper": 
+			{
+				"front": "{",
+				"back": "}"
+			},
+
+			"directives": 
+			[
+				
+			]
+		}
+	]
+}

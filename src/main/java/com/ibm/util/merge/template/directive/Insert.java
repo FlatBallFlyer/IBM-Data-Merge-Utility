@@ -357,4 +357,28 @@ public class Insert extends AbstractDataDirective {
 		this.onlyLast.addAll(onlyLast);
 	}
 
+	@Override
+	public void setIfSourceMissing(int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setIfPrimitive(int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setIfObject(int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setIfList(int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
