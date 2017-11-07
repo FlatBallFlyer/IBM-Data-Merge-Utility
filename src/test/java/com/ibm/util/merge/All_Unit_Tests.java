@@ -16,7 +16,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	com.ibm.util.merge.template.directive.enrich.provider.AllUnitTests.class
 })
 
-public class All_IDMU_Tests {
+public class All_Unit_Tests {
 
 }
 

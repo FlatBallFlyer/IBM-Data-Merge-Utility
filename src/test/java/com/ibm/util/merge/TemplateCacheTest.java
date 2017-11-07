@@ -2,6 +2,7 @@ package com.ibm.util.merge;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.util.HashMap;
 
 import org.junit.After;
@@ -40,6 +41,12 @@ public class TemplateCacheTest {
 	@Test
 	public void testTemplateCache() {
 		assertEquals(4, cache.getSize());
+	}
+
+	@Test
+	public void testTemplateCacheFile() throws MergeException {
+		cache = new TemplateCache(config, new File("src/test/resources"));
+		assertEquals(8, cache.getSize());
 	}
 
 	@Test

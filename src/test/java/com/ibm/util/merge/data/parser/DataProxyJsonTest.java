@@ -2,6 +2,8 @@ package com.ibm.util.merge.data.parser;
 
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,6 +42,158 @@ public class DataProxyJsonTest {
 		String templateString = proxy.toJson(sample);
 		Template json = proxy.fromJSON(templateString, Template.class);
 		assertEquals(templateString, proxy.toJson(json));
+	}
+	
+	
+	@Test
+	public void testEnrichDirectiveProxy() throws MergeException {
+		Template sample = new Template("System","Test", "", "SomeContent");
+		Enrich directive = new Enrich();
+		directive.setEnrichClass("SomeNewClass");
+		directive.setEnrichCommand("Command String");
+		directive.setEnrichParameter("SomeParameter");
+		directive.setEnrichSource("ASource");
+		directive.setName("aName");
+		directive.setParseAs(Parser.PARSE_CSV);
+		directive.setTargetDataDelimeter("--");
+		directive.setTargetDataName("aName");
+		sample.addDirective(directive);
+		String templateString = proxy.toJson(sample);
+		Template json = proxy.fromJSON(templateString, Template.class);
+		directive = (Enrich) json.getDirectives().get(0); 
+		assertEquals(templateString, proxy.toJson(json));
+		assertEquals("SomeNewClass", 	directive.getEnrichClass());
+		assertEquals("Command String", 	directive.getEnrichCommand());
+		assertEquals("SomeParameter", 	directive.getEnrichParameter());
+		assertEquals("ASource", 		directive.getEnrichSource());
+		assertEquals("aName", 			directive.getName());
+		assertEquals(Parser.PARSE_CSV, 	directive.getParseAs());
+		assertEquals("--", 				directive.getTargetDataDelimeter());
+		assertEquals("aName", 			directive.getTargetDataName());
+	}
+
+	@Test
+	public void testInsertDirectiveProxy() throws MergeException {
+		HashSet<String> aList = new HashSet<String>();
+		aList.add("a"); aList.add("b"); aList.add("c");
+		Template sample = new Template("System","Test", "", "SomeContent");
+		Insert directive = new Insert();
+		directive.setBookmarkPattern("foo.*");
+		directive.setDataDelimeter("--");
+		directive.setDataSource("aSource");
+		directive.setIfList(Insert.LIST_INSERT);
+		directive.setIfObject(Insert.OBJECT_INSERT_LIST);
+		directive.setIfPrimitive(Insert.PRIMITIVE_INSERT);
+		directive.setIfSourceMissing(Insert.MISSING_INSERT);
+		directive.setName("aName");
+		directive.setNotFirst(aList);
+		directive.setNotLast(aList);
+		directive.setOnlyFirst(aList);
+		directive.setOnlyLast(aList);
+		sample.addDirective(directive);
+		String templateString = proxy.toJson(sample);
+		Template json = proxy.fromJSON(templateString, Template.class);
+		directive = (Insert) json.getDirectives().get(0); 
+		assertEquals(templateString, proxy.toJson(json));
+		assertEquals("foo.*", directive.getBookmarkPattern());
+		assertEquals("--", directive.getDataDelimeter());
+		assertEquals("aSource", 	directive.getDataSource());
+		assertEquals(Insert.LIST_INSERT, 	directive.getIfList());
+		assertEquals(Insert.OBJECT_INSERT_LIST,	directive.getIfObject());
+		assertEquals(Insert.PRIMITIVE_INSERT,	directive.getIfPrimitive());
+		assertEquals(Insert.MISSING_INSERT,	directive.getIfSourceMissing());
+		assertEquals("aName",	directive.getName());
+		assertListEquals(aList,	directive.getNotFirst());
+		assertListEquals(aList,	directive.getNotLast());
+		assertListEquals(aList,	directive.getOnlyFirst());
+		assertListEquals(aList,	directive.getOnlyLast());
+
+	}
+
+	@Test
+	public void testParseDirectiveProxy() throws MergeException {
+		Template sample = new Template("System","Test", "", "SomeContent");
+		ParseData directive = new ParseData();
+		directive.setDataDelimeter("--");
+		directive.setDataSource("aSource");
+		directive.setDataTarget("aTarget");
+		directive.setIfList(ParseData.LIST_PARSE_FIRST);
+		directive.setIfObject(ParseData.OBJECT_IGNORE);
+		directive.setIfPrimitive(ParseData.PRIMITIVE_PARSE);
+		directive.setIfSourceMissing(ParseData.SOURCE_MISSING_IGNORE);
+		directive.setName("aName");
+		directive.setParseFormat(Parser.PARSE_CSV);
+		directive.setStaticData("static");
+		sample.addDirective(directive);
+		String templateString = proxy.toJson(sample);
+		Template json = proxy.fromJSON(templateString, Template.class);
+		directive = (ParseData) json.getDirectives().get(0); 
+		assertEquals(templateString, proxy.toJson(json));
+		assertEquals("--", 							directive.getDataDelimeter());
+		assertEquals("aSource", 					directive.getDataSource());
+		assertEquals("aTarget", 					directive.getDataTarget());
+		assertEquals(ParseData.LIST_PARSE_FIRST, 	directive.getIfList());
+		assertEquals(ParseData.OBJECT_IGNORE, 		directive.getIfObject());
+		assertEquals(ParseData.PRIMITIVE_PARSE, 	directive.getIfPrimitive());
+		assertEquals(ParseData.SOURCE_MISSING_IGNORE, directive.getIfSourceMissing());
+		assertEquals("aName", 						directive.getName());
+		assertEquals(Parser.PARSE_CSV, 				directive.getParseFormat());
+		assertEquals("static", 						directive.getStaticData());
+	}
+
+	@Test
+	public void testReplaceDirectiveProxy() throws MergeException {
+		Template sample = new Template("System","Test", "", "SomeContent");
+		Replace directive = new Replace();
+		directive.setDataDelimeter("==");
+		directive.setDataSource("aSource");
+		directive.setFromAttribute("from");
+		directive.setIfList(Replace.LIST_REPLACE);
+		directive.setIfObject(Replace.OBJECT_REPLACE);
+		directive.setIfPrimitive(Replace.PRIMITIVE_REPLACE);
+		directive.setIfSourceMissing(Replace.MISSING_IGNORE);
+		directive.setName("aName");
+		directive.setProcessAfter(true);
+		directive.setToAttribute("target");
+		sample.addDirective(directive);
+		String templateString = proxy.toJson(sample);
+		Template json = proxy.fromJSON(templateString, Template.class);
+		directive = (Replace) json.getDirectives().get(0); 
+		assertEquals(templateString, proxy.toJson(json));
+		assertEquals("==", 						directive.getDataDelimeter());
+		assertEquals("aSource", 				directive.getDataSource());
+		assertEquals("from", 					directive.getFromAttribute());
+		assertEquals(Replace.LIST_REPLACE, 		directive.getIfList());
+		assertEquals(Replace.OBJECT_REPLACE, 	directive.getIfObject());
+		assertEquals(Replace.PRIMITIVE_REPLACE, directive.getIfPrimitive());
+		assertEquals(Replace.MISSING_IGNORE, 	directive.getIfSourceMissing());
+		assertEquals("aName", 					directive.getName());
+		assertEquals(true, 						directive.getProcessAfter());
+		assertEquals("target", 					directive.getToAttribute());
+	}
+
+	@Test
+	public void testSaveDirectiveProxy() throws MergeException {
+		Template sample = new Template("System","Test", "", "SomeContent");
+		SaveFile directive = new SaveFile();
+		directive.setClearAfter(true);
+		directive.setFilename("aFile");
+		directive.setName("aName");
+		sample.addDirective(directive);
+		String templateString = proxy.toJson(sample);
+		Template json = proxy.fromJSON(templateString, Template.class);
+		directive = (SaveFile) json.getDirectives().get(0); 
+		assertEquals(templateString, proxy.toJson(json));
+		assertEquals(true, 		directive.getClearAfter());
+		assertEquals("aFile", 	directive.getFilename());
+		assertEquals("aName", 	directive.getName());
+	}
+
+	private void assertListEquals(HashSet<String> expected, HashSet<String> values) {
+		assertEquals(expected.size(), values.size());
+		for (String aValue : expected) {
+			assertTrue(values.contains(aValue));
+		}
 	}
 
 	@Test

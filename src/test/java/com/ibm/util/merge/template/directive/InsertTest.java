@@ -270,7 +270,12 @@ public class InsertTest {
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_REPLACE,
 				Replace.OBJECT_THROW,
+				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
+				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
+				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
 				Replace.LIST_THROW,
+				Replace.LIST_ATTR_MISSING_THROW,
+				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true);
 		template.addDirective(replace);
 		cache.postTemplate(template);
@@ -339,7 +344,12 @@ public class InsertTest {
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
+				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
+				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
+				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
 				Replace.LIST_THROW,
+				Replace.LIST_ATTR_MISSING_THROW,
+				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true);
 		template.addDirective(replace);
 		cache.postTemplate(template);
@@ -368,7 +378,12 @@ public class InsertTest {
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
+				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
+				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
+				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
 				Replace.LIST_THROW,
+				Replace.LIST_ATTR_MISSING_THROW,
+				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true);
 		template.addDirective(replace);
 		cache.postTemplate(template);
@@ -512,7 +527,12 @@ public class InsertTest {
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
+				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
+				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
+				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
 				Replace.LIST_THROW,
+				Replace.LIST_ATTR_MISSING_THROW,
+				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true);
 		template.addDirective(replace);
 		Insert directive = new Insert("data.list","-",
@@ -530,7 +550,12 @@ public class InsertTest {
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
+				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
+				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
+				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
 				Replace.LIST_THROW,
+				Replace.LIST_ATTR_MISSING_THROW,
+				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true);
 		template.addDirective(replace);
 		cache.postTemplate(template);
