@@ -1,6 +1,6 @@
 {
 	"tempFolder": "/opt/ibm/idmu/",
-	"loadFolder": "src/test/resources/functional/replaceDefaults",
+	"loadFolder": "src/test/resources/functional/insert",
 	"nestLimit": 3,
 	"insertLimit": 20,
 	"envVars": 

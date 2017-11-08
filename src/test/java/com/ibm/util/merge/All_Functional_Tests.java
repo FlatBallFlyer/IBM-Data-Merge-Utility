@@ -55,7 +55,8 @@ public class All_Functional_Tests {
 		String parms = new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "parameters.json").toPath()), "ISO-8859-1");
 		Parameters parameters = gsonProxy.fromJSON(parms, Parameters.class);
 		config = new Config(new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "config.json").toPath()), "ISO-8859-1"));
-		cache = new TemplateCache(config, folder);
+		String foo = config.getAllOptions();
+		cache = new TemplateCache(config);
 		context = new Merger(cache, config, "test..", parameters.parms, payload);
 		String output = context.merge().getMergeContent().getValue();
 		assertEquals(new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "output.txt").toPath()), "ISO-8859-1"), output);
@@ -118,7 +119,6 @@ public class All_Functional_Tests {
         }
     }
 
-    @SuppressWarnings("unused")
 	private class Parameters {
     	public Map<String, String[]> parms;
     }
