@@ -65,31 +65,30 @@ public class TemplateCache implements Iterable<String> {
 		this.cache = new HashMap<String, Template>();
 		this.initialized = new Date();
 		this.buildDefaultTemplates();
-	}
-	
-	/**
-	 * Instantiates a new template cache and loads default packages
-	 *
-	 * @param persist the persist
-	 * @throws MergeException 
-	 */
-	public TemplateCache(Config config, File templateFolder) throws MergeException {
-		this.config = config;
-		this.cache = new HashMap<String, Template>();
-		this.initialized = new Date();
-		this.buildDefaultTemplates();
 		
-		File[] groups = templateFolder.listFiles();
-		for (File file : groups) {
-			try {
-				this.postGroup(new String(Files.readAllBytes(file.toPath()), "ISO-8859-1"));
-			} catch (Throwable e) {
-				// ignore bad files TODO: Logging
+		if (!config.getLoadFolder().isEmpty()) {
+			File templateFolder = new File(config.getLoadFolder());
+			if (!templateFolder.exists()) {
+				// log folder not found
+				return;
+			}
+			
+			File[] groups = templateFolder.listFiles();
+			if (null == groups) {
+				// log empty folder
+				return;
+			}
+			
+			for (File file : groups) {
+				try {
+					this.postGroup(new String(Files.readAllBytes(file.toPath()), "ISO-8859-1"));
+				} catch (Throwable e) {
+					// fully passive load - ignore all errors
+				}
 			}
 		}
-		
 	}
-
+	
 	private void buildDefaultTemplates() throws MergeException {
 		// Build Default Templates
 		Template error403 = new Template("system","error403","","Error - Forbidden");

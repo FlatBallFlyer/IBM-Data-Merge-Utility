@@ -20,8 +20,15 @@ import java.util.HashMap;
 
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
+import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
+import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.directive.Enrich;
+import com.ibm.util.merge.template.directive.Insert;
+import com.ibm.util.merge.template.directive.ParseData;
+import com.ibm.util.merge.template.directive.Replace;
+import com.ibm.util.merge.template.directive.SaveFile;
 
 /**
  * This is the class that contains IDMU Configuration values and abstracts access
@@ -33,7 +40,8 @@ import com.ibm.util.merge.exception.MergeException;
 public class Config {
 	private int nestLimit 		= 2;
 	private int insertLimit		= 20;
-	private String tempFolder	= "/opt/ibm/idmu/temp";
+	private String tempFolder	= "/opt/ibm/idmu/archives";
+	private String loadFolder	= "/opt/ibm/idmu/templates";
 	private static final String version = "4.0.0.B1";
 	private HashMap<String, String> envVars;
 
@@ -65,6 +73,7 @@ public class Config {
 		this.nestLimit = me.getNestLimit();
 		this.insertLimit = me.insertLimit;
 		this.tempFolder = me.getTempFolder();
+		this.loadFolder = me.getLoadFolder();
 		this.envVars = me.getEnvVars();
 	}
 	
@@ -73,7 +82,9 @@ public class Config {
 	 * @throws Merge500
 	 */
 	private void setupDefaults() throws Merge500 {
-		tempFolder	= "/opt/ibm/idmu/temp";
+		tempFolder	= "/opt/ibm/idmu/archives";
+		tempFolder	= "/opt/ibm/idmu/templates";
+		loadFolder 	= "";
 		nestLimit 	= 2;
 		insertLimit = 20;
 		envVars 	= new HashMap<String,String>();
@@ -199,5 +210,26 @@ public class Config {
 	 */
 	public static String getVersion() {
 		return version;
+	}
+
+	public String getLoadFolder() {
+		return loadFolder;
+	}
+
+	public void setLoadFolder(String loadFolder) {
+		this.loadFolder = loadFolder;
+	}
+	
+	public String getAllOptions() {
+		HashMap<String, HashMap<String, HashMap<Integer, String>>> values = 
+				new HashMap<String, HashMap<String, HashMap<Integer, String>>>();
+		values.put("Template", 	Template.getOptions());
+		values.put("Parser", 	Parser.getOptions());
+		values.put("Enrich", 	Enrich.getOptions());
+		values.put("Insert", 	Insert.getOptions());
+		values.put("Parse", 	ParseData.getOptions());
+		values.put("Replace", 	Replace.getOptions());
+		values.put("Save", 		SaveFile.getOptions());
+		return proxy.toJson(values);
 	}
 }
