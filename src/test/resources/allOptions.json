@@ -1,0 +1,158 @@
+{
+	"Replace": 
+	{
+		"Object-Attr Object": 
+		{
+			"1": "throw",
+			"2": "ignore"
+		},
+
+		"Source Missing": 
+		{
+			"1": "throw",
+			"2": "ignore"
+		},
+
+		"List-Attr Not Primitive": 
+		{
+			"1": "throw",
+			"2": "ignore"
+		},
+
+		"If Primitive": 
+		{
+			"1": "throw",
+			"2": "ignore",
+			"3": "replace"
+		},
+
+		"List-Attr Missing": 
+		{
+			"1": "throw",
+			"2": "ignore"
+		},
+
+		"Object-Attr Primitive": 
+		{
+			"1": "throw",
+			"2": "ignore",
+			"3": "insertList"
+		},
+
+		"If Object": 
+		{
+			"1": "throw",
+			"2": "ignore",
+			"3": "insertList"
+		},
+
+		"Object-Attr List": 
+		{
+			"1": "throw",
+			"2": "ignore",
+			"3": "use first primitive",
+			"4": "use last primitive"
+		}
+	},
+
+	"Enrich": 
+	{
+		
+	},
+
+	"Parser": 
+	{
+		"Parse Formats": 
+		{
+			"1": "csv",
+			"2": "html",
+			"3": "json",
+			"4": "none",
+			"5": "xml"
+		}
+	},
+
+	"Insert": 
+	{
+		"If List": 
+		{
+			"1": "throw",
+			"2": "ignore",
+			"3": "insert"
+		},
+
+		"Source Missing": 
+		{
+			"1": "throw",
+			"2": "ignore",
+			"3": "insert"
+		},
+
+		"If Primitive": 
+		{
+			"1": "throw",
+			"2": "ignore",
+			"3": "insert"
+		},
+
+		"If Object": 
+		{
+			"1": "throw",
+			"2": "ignore",
+			"3": "insertObject",
+			"4": "insertList"
+		}
+	},
+
+	"Template": 
+	{
+		"Content Type": 
+		{
+			"1": "html",
+			"2": "json",
+			"3": "xml",
+			"4": "text"
+		},
+
+		"Content Disposition": 
+		{
+			"1": "download",
+			"2": "normal"
+		}
+	},
+
+	"Parse": 
+	{
+		"If List": 
+		{
+			"1": "throw",
+			"2": "ignore",
+			"3": "parse first primitive",
+			"4": "parse last primitive"
+		},
+
+		"Source Missing": 
+		{
+			"1": "throw",
+			"2": "ignore"
+		},
+
+		"If Primitive": 
+		{
+			"1": "throw",
+			"2": "ignore",
+			"3": "parse"
+		},
+
+		"If Object": 
+		{
+			"1": "throw",
+			"2": "ignore"
+		}
+	},
+
+	"Save": 
+	{
+		
+	}
+}

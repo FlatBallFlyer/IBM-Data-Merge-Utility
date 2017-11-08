@@ -16,6 +16,8 @@
  */
 package com.ibm.util.merge.template.directive;
 
+import java.util.HashMap;
+
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.storage.Archive;
@@ -27,6 +29,11 @@ import com.ibm.util.merge.storage.Archive;
  *
  */
 public class SaveFile extends AbstractDirective {
+	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
+		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		return options;
+	}
+
 	String filename;
 	Boolean clearAfter;
 	

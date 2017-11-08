@@ -137,6 +137,19 @@ public class Replace extends AbstractDataDirective {
 		return options;
 	}
 
+	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
+		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		options.put("Source Missing", 			MISSING_OPTIONS());
+		options.put("If Primitive", 			PRIMITIVE_OPTIONS());
+		options.put("If Object", 				OBJECT_OPTIONS());
+		options.put("Object-Attr Primitive", 	OBJECT_ATTRIBUTE_PRIMITIVE_OPTIONS());
+		options.put("Object-Attr Object", 	 	OBJECT_ATTRIBUTE_OBJECT_OPTIONS());
+		options.put("Object-Attr List", 	 	OBJECT_ATTRIBUTE_LIST_OPTIONS());
+		options.put("List-Attr Missing", 		LIST_ATTR_MISSING_OPTIONS());
+		options.put("List-Attr Not Primitive", 	LIST_ATTR_NOT_PRIMITIVE_OPTIONS());
+		return options;
+	}
+
 	/**
 	 * Instantiate a Replace directive with default values
 	 */

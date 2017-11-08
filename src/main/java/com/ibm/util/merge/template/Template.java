@@ -60,6 +60,13 @@ public class Template {
 		return values;
 	}
 
+	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
+		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		options.put("Content Type", CONTENT_TYPES());
+		options.put("Content Disposition", DISPOSITION_VALUES());
+		return options;
+	}
+	
 	private final TemplateId id;
 	private String content 				= "";
 	private int contentType				= Template.CONTENT_TEXT; 

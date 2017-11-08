@@ -41,7 +41,7 @@ public class Insert extends AbstractDataDirective {
 	public static final int MISSING_THROW 	= 1;
 	public static final int MISSING_IGNORE 	= 2;
 	public static final int MISSING_INSERT 	= 3;
-	public HashMap<Integer, String> missingOptions() {
+	public static final HashMap<Integer, String> MISSING_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(MISSING_THROW, 	"throw");
 		options.put(MISSING_IGNORE, "ignore");
@@ -52,7 +52,7 @@ public class Insert extends AbstractDataDirective {
 	public static final int PRIMITIVE_THROW 	= 1;
 	public static final int PRIMITIVE_IGNORE 	= 2;
 	public static final int PRIMITIVE_INSERT 	= 3;
-	public HashMap<Integer, String> primitiveOptions() {
+	public static final HashMap<Integer, String> PRIMITIVE_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(PRIMITIVE_THROW, 	"throw");
 		options.put(PRIMITIVE_IGNORE, 	"ignore");
@@ -64,7 +64,7 @@ public class Insert extends AbstractDataDirective {
 	public static final int OBJECT_IGNORE 			= 2;
 	public static final int OBJECT_INSERT_OBJECT 	= 3;
 	public static final int OBJECT_INSERT_LIST 	= 4;
-	public HashMap<Integer, String> objectOptions() {
+	public static final HashMap<Integer, String> OBJECT_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(OBJECT_THROW, 			"throw");
 		options.put(OBJECT_IGNORE, 			"ignore");
@@ -73,15 +73,23 @@ public class Insert extends AbstractDataDirective {
 		return options;
 	}
 
-
 	public static final int LIST_THROW 	= 1;
 	public static final int LIST_IGNORE 	= 2;
 	public static final int LIST_INSERT 	= 3;
-	public HashMap<Integer, String> listOptions() {
+	public static final HashMap<Integer, String> LIST_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(LIST_THROW, 	"throw");
 		options.put(LIST_IGNORE, 	"ignore");
 		options.put(LIST_INSERT, 	"insert");
+		return options;
+	}
+
+	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
+		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		options.put("Source Missing", 	MISSING_OPTIONS());
+		options.put("If Primitive", 	PRIMITIVE_OPTIONS());
+		options.put("If Object", 		OBJECT_OPTIONS());
+		options.put("If List", 			LIST_OPTIONS());
 		return options;
 	}
 

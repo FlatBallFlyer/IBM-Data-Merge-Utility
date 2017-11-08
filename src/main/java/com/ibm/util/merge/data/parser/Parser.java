@@ -43,6 +43,12 @@ public class Parser {
 		return values;
 	}
 
+	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
+		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		options.put("Parse Formats", PARSE_OPTIONS());
+		return options;
+	}
+	
 	private DataProxyCsv cson;
 	private DataProxyHtml hson;
 	private DataProxyJson gson;

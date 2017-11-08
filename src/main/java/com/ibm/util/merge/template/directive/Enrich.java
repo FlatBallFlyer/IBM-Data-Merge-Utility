@@ -16,6 +16,8 @@
  */
 package com.ibm.util.merge.template.directive;
 
+import java.util.HashMap;
+
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.Parser;
@@ -30,6 +32,11 @@ import com.ibm.util.merge.template.directive.enrich.provider.*;
  * @since: v4.0
  */
 public class Enrich extends AbstractDirective {
+
+	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
+		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		return options;
+	}
 
 	private String targetDataName; 
 	private String targetDataDelimeter;

@@ -74,6 +74,15 @@ public class ParseData extends AbstractDataDirective {
 		return options;
 	}
 
+	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
+		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		options.put("Source Missing", 	MISSING_OPTIONS());
+		options.put("If Primitive", 	PRIMITIVE_OPTIONS());
+		options.put("If Object", 		OBJECT_OPTIONS());
+		options.put("If List", 			LIST_OPTIONS());
+		return options;
+	}
+
 	private String dataTarget;
 	private String dataTargetDelimiter;
 	private String staticData;
