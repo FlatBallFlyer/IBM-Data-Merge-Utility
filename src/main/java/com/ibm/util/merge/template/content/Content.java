@@ -33,9 +33,14 @@ import com.ibm.util.merge.template.Wrapper;
 public class Content extends Segment {
 	static final String BOOKMARK = "bookmark";
 	
-	private String source;
-	private String open;
-	private String close;
+	private String source = "";
+	private String open = "";
+	private String close = "";
+
+	public Content() {
+		this.setNext(this);
+		this.setPrevious(this);
+	}
 	
 	/**
 	 * Instantiate a content object
@@ -62,6 +67,19 @@ public class Content extends Segment {
 		initialize(open, close, content, encodeDefault);
 	}
 	
+	@Override
+	public Content getMergable() {
+		Content mergable = new Content();
+		mergable.source = this.source;
+		mergable.open = this.open;
+		mergable.close = this.close;
+		Segment segment = this.getFirst();
+		while (segment != this) {
+			mergable.insert(segment.getMergable());
+			segment = segment.getNext();
+		}
+		return mergable;
+	}
 	/**
 	 * Common initialization - Parse content
 	 * @param open

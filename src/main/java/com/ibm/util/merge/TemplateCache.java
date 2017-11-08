@@ -91,15 +91,19 @@ public class TemplateCache implements Iterable<String> {
 	
 	private void buildDefaultTemplates() throws MergeException {
 		// Build Default Templates
-		Template error403 = new Template("system","error403","","Error - Forbidden");
-		Template error404 = new Template("system","error404","","Error - Not Found");
-		Template error500 = new Template("system","error500","","Error - Merge Error");
-		Template sample = new Template("system","sample","");
+		Template error403 = new Template("system","error403","","Error - Forbidden", config);
+		error403.cleanup(config);
+		Template error404 = new Template("system","error404","","Error - Not Found", config);
+		error404.cleanup(config);
+		Template error500 = new Template("system","error500","","Error - Merge Error", config);
+		error500.cleanup(config);
+		Template sample = new Template("system","sample","", config);
 		sample.addDirective(new Enrich());
 		sample.addDirective(new Insert());
 		sample.addDirective(new ParseData());
 		sample.addDirective(new Replace());
 		sample.addDirective(new SaveFile());
+		sample.cleanup(config);
 		postTemplate(error403);
 		postTemplate(error404);
 		postTemplate(error500);
@@ -183,6 +187,7 @@ public class TemplateCache implements Iterable<String> {
 		if (cache.containsKey(name)) {
 			throw new Merge403("Duplicate Found:" + name);
 		}
+		template.cleanup(config);
 		template.initStats();
 		cache.put(name, template);
 		return "ok";
@@ -245,6 +250,7 @@ public class TemplateCache implements Iterable<String> {
 		if (!cache.containsKey(name)) {
 			throw new Merge404("Not Found:" + template.getId().shorthand());
 		}
+		template.cleanup(config);
 		template.initStats();
 		cache.put(name, template);
 		return "ok";

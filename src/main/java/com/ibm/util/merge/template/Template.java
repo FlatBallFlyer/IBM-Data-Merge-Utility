@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
@@ -78,6 +79,7 @@ public class Template {
 	private Wrapper wrapper				= new Wrapper();
 	private List<AbstractDirective> directives = new ArrayList<AbstractDirective>(); 
 	
+	private transient Config config		= null;
 	private transient Boolean merged 	= false;
 	private transient Boolean mergable 	= false;
 	private transient Stat stats 		= new Stat();
@@ -88,19 +90,23 @@ public class Template {
 	/**
 	 * Instantiate a Template with the given ID
 	 * @param id
+	 * @throws MergeException 
 	 */
-	public Template(TemplateId id) {
+	public Template(TemplateId id, Config config) throws MergeException {
 		this.id = id;
+		this.config = config;
 		this.mergable = false;
 		this.merged = false;
+		this.setContent("");
 		this.replaceStack = new HashMap<String,String>();
 	}
 	
 	/**
 	 * Instantiate a Template with the given ID
+	 * @throws MergeException 
 	 */
-	public Template() {
-		this(new TemplateId("void","void","void"));
+	public Template(Config config) throws MergeException {
+		this(new TemplateId("void","void","void"), config);
 	}
 	
 	/**
@@ -109,9 +115,10 @@ public class Template {
 	 * @param group
 	 * @param name
 	 * @param variant
+	 * @throws MergeException 
 	 */
-	public Template(String group, String name, String variant) {
-		this(new TemplateId(group,name,variant));
+	public Template(String group, String name, String variant, Config config) throws MergeException {
+		this(new TemplateId(group,name,variant), config);
 	}
 	
 	/**
@@ -121,9 +128,10 @@ public class Template {
 	 * @param name
 	 * @param variant
 	 * @param content
+	 * @throws MergeException 
 	 */
-	public Template(String group, String name, String variant, String content) {
-		this(new TemplateId(group,name,variant));
+	public Template(String group, String name, String variant, String content, Config config) throws MergeException {
+		this(new TemplateId(group,name,variant), config);
 		this.setContent(content);
 	}
 	
@@ -135,13 +143,29 @@ public class Template {
 	 * @param content
 	 * @param before
 	 * @param after
+	 * @throws MergeException 
 	 */
-	public Template(String group, String name, String variant, String content, String before, String after) {
-		this(group,name,variant,content);
+	public Template(String group, String name, String variant, String content, String before, String after, Config config) throws MergeException {
+		this(group,name,variant,content, config);
 		this.wrapper.front = before;
 		this.wrapper.back = after;
 	}
 	
+	/**
+	 * Parse content, and cleanup directives.
+	 * @throws MergeException 
+	 */
+	public void cleanup(Config config) throws MergeException {
+		this.config = config;
+		this.merged 	= false;
+		this.mergable 	= false;
+		this.stats 		= new Stat();
+		this.replaceStack = new HashMap<String,String>();
+		this.setContent(content);
+		for (AbstractDirective directive : this.directives) {
+			directive.cleanup(config, this);
+		}
+	}
 	/**
 	 * Gets a mergable copy of this template and an empty replace stack
 	 *
@@ -163,20 +187,21 @@ public class Template {
 	 */
 	public Template getMergable(Merger context, HashMap<String,String> replace) throws MergeException {
 		this.stats.hits++;
-		Template mergable = new Template(this.id);
+		Template mergable = new Template(this.id, this.config);
+		mergable.setConfig(this.config);
 		mergable.setContext(context);
-		mergable.setContent(this.content.toString());
 		mergable.setContentDisposition(contentDisposition);
 		mergable.setContentEncoding(contentEncoding);
 		mergable.setContentType(contentType);
 		mergable.setDescription(description);
 		mergable.setContentFileName(contentFileName);
 		mergable.setContentRedirectUrl(contentRedirectUrl);
-		mergable.replaceStack.putAll(replace);
+		mergable.content = this.content;
 		mergable.wrapper = this.wrapper;
 		mergable.mergable = true;
 		mergable.merged = false;
-		mergable.mergeContent = new Content(this.wrapper, this.content, this.contentEncoding);
+		mergable.mergeContent = this.getMergeContent().getMergable();
+		mergable.replaceStack.putAll(replace);
 		for (AbstractDirective directive : this.directives) {
 			mergable.addDirective(directive.getMergable());
 		}
@@ -273,12 +298,14 @@ public class Template {
 	 *
 	 * @param content the new content
 	 * @throws MergeException 
+	 * @throws MergeException 
 	 */
-	public void setContent(String content) {
+	public void setContent(String content) throws MergeException {
 		// Accessible only before merge
 		if (!this.mergable) {
 			this.content = content;
 			stats.size = this.content.length();
+			this.mergeContent = new Content(this.wrapper, this.content, config.getNestLimit() );
 		}
 	}
 	
@@ -451,9 +478,11 @@ public class Template {
 	 * Adds the directive.
 	 *
 	 * @param directive the directive
+	 * @param config 
 	 */
 	public void addDirective(AbstractDirective directive) {
 		directive.setTemplate(this);
+		directive.setConfig(config);
 		directives.add(directive);
 	}
 
@@ -529,6 +558,14 @@ public class Template {
 	 */
 	public void setContext(Merger context) {
 		this.context = context;
+	}
+
+	public Config getConfig() {
+		return config;
+	}
+
+	public void setConfig(Config config) {
+		this.config = config;
 	}
 
 }

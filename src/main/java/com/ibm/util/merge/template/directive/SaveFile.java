@@ -18,9 +18,11 @@ package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.storage.Archive;
+import com.ibm.util.merge.template.Template;
 
 /**
  * The Save File directive is used to write the output of a template to the current merge archive.
@@ -34,8 +36,8 @@ public class SaveFile extends AbstractDirective {
 		return options;
 	}
 
-	String filename;
-	Boolean clearAfter;
+	private String filename = "";
+	private Boolean clearAfter = true;
 	
 	/**
 	 * Instantiate a SaveFile directive with default values
@@ -47,21 +49,26 @@ public class SaveFile extends AbstractDirective {
 	}
 
 	@Override
+	public void cleanup(Config config, Template template) throws MergeException {
+		this.cleanupAbstract(config, template);
+	}
+
+	@Override
+	public AbstractDirective getMergable() throws MergeException {
+		SaveFile mergable = new SaveFile();
+		this.makeMergable(mergable);
+		mergable.setFilename(filename);
+		mergable.setClearAfter(clearAfter);
+		return mergable;
+	}
+
+	@Override
 	public void execute(Merger context) throws MergeException {
 		Archive archive = context.getArchive();
 		archive.writeFile(this.filename, this.template.getContent(), "idmu-user", "idmu-group");
 		if (this.clearAfter) {
 			this.template.clearContent();
 		}
-	}
-
-	@Override
-	public AbstractDirective getMergable() {
-		SaveFile mergable = new SaveFile();
-		this.makeMergable(mergable);
-		mergable.setFilename(filename);
-		mergable.setClearAfter(clearAfter);
-		return mergable;
 	}
 
 	/**
@@ -73,8 +80,9 @@ public class SaveFile extends AbstractDirective {
 
 	/**
 	 * @param filename - the name of the file to be saved
+	 * @throws MergeException 
 	 */
-	public void setFilename(String filename) {
+	public void setFilename(String filename) throws MergeException {
 		this.filename = filename;
 	}
 

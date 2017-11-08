@@ -30,6 +30,7 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -86,8 +87,8 @@ public class RestProvider implements ProviderInterface {
 	}
 
 	@Override
-	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws Merge500 {
-		Content query = new Content(wrapper, enrichCommand, TagSegment.ENCODE_NONE);
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws Merge500 {
+		Content query = new Content(wrapper, command, TagSegment.ENCODE_HTML);
 		query.replace(replace, false, context.getConfig().getNestLimit());
 		String theUrl = "";
 		String fetchedData = "";

@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
@@ -23,6 +24,11 @@ public class AbstractDirectiveTest {
 			AbstractTest mergable = new AbstractTest();
 			this.makeMergable(mergable);
 			return mergable;
+		}
+
+		@Override
+		public void cleanup(Config config, Template template)
+				throws MergeException {
 		}
 
 	}
@@ -48,8 +54,8 @@ public class AbstractDirectiveTest {
 	}
 
 	@Test
-	public void testGetSetTemplate() {
-		Template template = new Template();
+	public void testGetSetTemplate() throws MergeException, MergeException {
+		Template template = new Template(new Config());
 		test.setTemplate(template);
 		assertSame(template, test.getTemplate());
 	}

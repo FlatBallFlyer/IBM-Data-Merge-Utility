@@ -51,8 +51,8 @@ public class FileSystemProvider implements ProviderInterface {
 	}
 
 	@Override
-	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws Merge500 {
-		Content query = new Content(wrapper, enrichCommand, TagSegment.ENCODE_NONE);
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws Merge500 {
+		Content query = new Content(wrapper, command, TagSegment.ENCODE_NONE);
 		query.replace(replace, false, context.getConfig().getNestLimit());
 		DataObject result = new DataObject();
 

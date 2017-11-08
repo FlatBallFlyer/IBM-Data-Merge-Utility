@@ -55,7 +55,7 @@ public class CacheProvider implements ProviderInterface {
 	}
 	
 	@Override
-	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) {
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) {
 		TemplateCache cache = context.getCahce();
 		Config config = context.getConfig();
 		DataObject cacheData = new DataObject();

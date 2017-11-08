@@ -44,6 +44,10 @@ public class TagSegment extends Segment {
 	private boolean parseFirst = false;
 	private String format = "";
 	
+	public TagSegment() {
+		
+	}
+	
 	/**
 	 * Instantiate a new Tag object
 	 * 
@@ -96,6 +100,20 @@ public class TagSegment extends Segment {
 		}
 	}
 
+	@Override
+	public Segment getMergable() {
+		TagSegment mergable = new TagSegment();
+		mergable.tag = this.tag;
+		mergable.open = this.open;
+		mergable.close = this.close;
+		mergable.source = this.source;
+		mergable.encode = this.encode;
+		mergable.defaultEncoding = this.defaultEncoding;
+		mergable.parseFirst = this.parseFirst;
+		mergable.format = this.format;
+		return mergable;
+	}
+	
 	/**
 	 * Replace the value in the tag segment.
 	 * 
@@ -167,5 +185,5 @@ public class TagSegment extends Segment {
 	public String getValue() {
 		return open + source + close;
 	}
-	
+
 }

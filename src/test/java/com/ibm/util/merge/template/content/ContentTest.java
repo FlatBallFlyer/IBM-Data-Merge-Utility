@@ -124,6 +124,52 @@ public class ContentTest {
 	}
 	
 	@Test
+	public void testGetMergable() throws Merge500 {
+		Content test = new Content("{","}","This is a {test} string with {tag=\"multiple\"} tags and a {bookmark=\"foo\" group=\"grp\" template=\"bar\"} bookmark", TagSegment.ENCODE_NONE);
+		assertEquals("This is a {test} string with {tag=\"multiple\"} tags and a  bookmark", test.getValue());
+		Segment seg = test.getFirst();
+		assertEquals("This is a ", seg.getValue());
+		seg = seg.getNext();
+		assertEquals("{test}", seg.getValue());
+		seg = seg.getNext();
+		assertEquals(" string with ", seg.getValue());
+		seg = seg.getNext();
+		assertEquals("{tag=\"multiple\"}", seg.getValue());
+		seg = seg.getNext();
+		assertEquals(" tags and a ", seg.getValue());
+		seg = seg.getNext();
+		assertEquals("", seg.getValue());
+		seg = seg.getNext();
+		assertEquals(" bookmark", seg.getValue());
+		assertEquals(2, test.getTags().size());
+		assertEquals("test", test.getTags().get(0).getTag());
+		assertEquals("multiple", test.getTags().get(1).getTag());
+		assertEquals(1, test.getBookmarks().size());
+		assertEquals("foo", test.getBookmarks().get(0).getBookmarkName());
+		test = test.getMergable();
+		assertEquals("This is a {test} string with {tag=\"multiple\"} tags and a  bookmark", test.getValue());
+		seg = test.getFirst();
+		assertEquals("This is a ", seg.getValue());
+		seg = seg.getNext();
+		assertEquals("{test}", seg.getValue());
+		seg = seg.getNext();
+		assertEquals(" string with ", seg.getValue());
+		seg = seg.getNext();
+		assertEquals("{tag=\"multiple\"}", seg.getValue());
+		seg = seg.getNext();
+		assertEquals(" tags and a ", seg.getValue());
+		seg = seg.getNext();
+		assertEquals("", seg.getValue());
+		seg = seg.getNext();
+		assertEquals(" bookmark", seg.getValue());
+		assertEquals(2, test.getTags().size());
+		assertEquals("test", test.getTags().get(0).getTag());
+		assertEquals("multiple", test.getTags().get(1).getTag());
+		assertEquals(1, test.getBookmarks().size());
+		assertEquals("foo", test.getBookmarks().get(0).getBookmarkName());
+	}
+	
+	@Test
 	public void testContentFail1() {
 		try {
 			@SuppressWarnings("unused")
@@ -190,6 +236,24 @@ public class ContentTest {
 		replace.put("bar", "bam");
 		test.replace(replace, true, 3);
 		assertEquals("this is bam test", test.getValue());
+	}
+
+	@Test
+	public void testReplace5() throws Merge500 {
+		Content test = new Content( "<", ">", "<A><B><C><D><E><F><G><H><I><J>", Segment.ENCODE_NONE);
+		HashMap<String,String> replace = new HashMap<String,String>();
+		replace.put("A", "a");
+		replace.put("B", "b");
+		replace.put("C", "c");
+		replace.put("D", "d");
+		replace.put("E", "e");
+		replace.put("F", "f");
+		replace.put("G", "g");
+		replace.put("H", "h");
+		replace.put("I", "i");
+		replace.put("J", "j");
+		test.replace(replace, true, 3);
+		assertEquals("abcdefghij", test.getValue());
 	}
 
 	@Test

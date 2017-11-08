@@ -83,8 +83,7 @@ public class Config {
 	 */
 	private void setupDefaults() throws Merge500 {
 		tempFolder	= "/opt/ibm/idmu/archives";
-		tempFolder	= "/opt/ibm/idmu/templates";
-		loadFolder 	= "";
+		loadFolder	= "/opt/ibm/idmu/templates";
 		nestLimit 	= 2;
 		insertLimit = 20;
 		envVars 	= new HashMap<String,String>();

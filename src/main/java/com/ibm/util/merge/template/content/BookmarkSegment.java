@@ -40,6 +40,10 @@ public class BookmarkSegment extends Segment {
 	private String templateName = "";
 	private String varyByAttribute = "";
 
+	public BookmarkSegment() {
+		
+	}
+	
 	/**
 	 * Instantiate a Bookmark Object
 	 * 
@@ -74,6 +78,17 @@ public class BookmarkSegment extends Segment {
 		if (matcher.find()) {
 			varyByAttribute = matcher.group(1);
 		} 
+	}
+
+
+	@Override
+	public Segment getMergable() {
+		BookmarkSegment mergable = new BookmarkSegment();
+		mergable.bookmarkName = this.bookmarkName;
+		mergable.templateGroup = this.templateGroup;
+		mergable.templateName = this.templateName;
+		mergable.varyByAttribute = this.varyByAttribute;
+		return mergable;
 	}
 
 	/**

@@ -25,7 +25,7 @@ public class FileSystemProviderTest {
 	public void setUp() throws Exception {
 		config = new Config();
 		cache = new TemplateCache(config);
-		template = new Template("system", "test", "", "Content");
+		template = new Template("system", "test", "", "Content", config);
 		cache.postTemplate(template);
 		context = new Merger(cache, config, "system.test.");
 	}

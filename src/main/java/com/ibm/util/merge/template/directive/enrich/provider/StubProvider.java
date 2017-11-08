@@ -18,6 +18,7 @@ package com.ibm.util.merge.template.directive.enrich.provider;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataPrimitive;
@@ -55,7 +56,8 @@ public class StubProvider implements ProviderInterface {
 
 	@Override
 	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
-		Template aTemplate = new Template("system","sample","");
+		Config config = new Config();
+		Template aTemplate = new Template("system","sample","", config);
 		aTemplate.addDirective(new Enrich());
 		aTemplate.addDirective(new Insert());
 		aTemplate.addDirective(new ParseData());

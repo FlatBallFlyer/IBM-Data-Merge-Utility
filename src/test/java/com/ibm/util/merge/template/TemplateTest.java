@@ -17,10 +17,12 @@ import com.ibm.util.merge.exception.*;
 
 public class TemplateTest {
 	private Template template;
+	private Config config;
 	
 	@Before
 	public void setUp() throws Exception {
-		template = new Template("System","Test","");
+		config = new Config();
+		template = new Template("System","Test","", config);
 		template.setContent("Test Content");
 		template.setDescription("A testing template");
 		template.setContentDisposition(Template.DISPOSITION_DOWNLOAD);
@@ -32,8 +34,8 @@ public class TemplateTest {
 	}
 
 	@Test
-	public void testTemplate() {
-		template = new Template();
+	public void testTemplate() throws MergeException {
+		template = new Template(config);
 		assertEquals("void",template.getId().group);
 		assertEquals("void",template.getId().name);
 		assertEquals("void",template.getId().variant);
@@ -42,8 +44,8 @@ public class TemplateTest {
 	}
 
 	@Test
-	public void testTemplateStringStringString() {
-		template = new Template("System","Test","");
+	public void testTemplateStringStringString() throws MergeException {
+		template = new Template("System","Test","", config);
 		assertEquals("System",template.getId().group);
 		assertEquals("Test",template.getId().name);
 		assertTrue(template.getId().variant.isEmpty());
@@ -52,8 +54,8 @@ public class TemplateTest {
 	}
 
 	@Test
-	public void testTemplateStringStringStringString() {
-		template = new Template("System","Test", "", "SomeContent");
+	public void testTemplateStringStringStringString() throws MergeException {
+		template = new Template("System","Test", "", "SomeContent", config);
 		assertEquals("System",template.getId().group);
 		assertEquals("Test",template.getId().name);
 		assertTrue(template.getId().variant.isEmpty());
@@ -63,8 +65,8 @@ public class TemplateTest {
 	}
 
 	@Test
-	public void testTemplateTemplateId() {
-		template = new Template(new TemplateId("System","Test",""));
+	public void testTemplateTemplateId() throws MergeException {
+		template = new Template(new TemplateId("System","Test",""), config);
 		assertEquals("System",template.getId().group);
 		assertEquals("Test",template.getId().name);
 		assertTrue(template.getId().variant.isEmpty());
@@ -273,9 +275,9 @@ public class TemplateTest {
 	}
 
 	@Test
-	public void testGetId() {
+	public void testGetId() throws MergeException {
 		TemplateId test = new TemplateId("system", "test", "");
-		Template newTemplate = new Template("system", "test", "");
+		Template newTemplate = new Template("system", "test", "", config);
 		TemplateId real = newTemplate.getId();
 		assertEquals(test.group, real.group);
 		assertEquals(test.name, real.name);

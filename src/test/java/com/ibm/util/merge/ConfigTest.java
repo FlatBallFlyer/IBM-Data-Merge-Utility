@@ -11,16 +11,18 @@ public class ConfigTest {
 	@Test
 	public void testConfigDefault() throws MergeException {
 		Config config = new Config();
-		assertEquals("/opt/ibm/idmu/temp", config.getTempFolder());
+		assertEquals("/opt/ibm/idmu/archives", config.getTempFolder());
+		assertEquals("/opt/ibm/idmu/templates", config.getLoadFolder());
 		assertEquals(2, config.getNestLimit());
 	}
 
 	@Test
 	public void testConfigString() throws MergeException {
 		String configString = 
-				"{\"tempFolder\": \"/opt/ibm/idmu/foo\",\"nestLimit\": 99,\"insertLimit\": 88, envVars : {\"test\":\"value\"}}";
+				"{\"tempFolder\": \"/opt/ibm/idmu/foo\",\"loadFolder\": \"/opt/ibm/idmu/bar\",\"nestLimit\": 99,\"insertLimit\": 88, envVars : {\"test\":\"value\"}}";
 		Config config = new Config(configString);
 		assertEquals("/opt/ibm/idmu/foo", config.getTempFolder());
+		assertEquals("/opt/ibm/idmu/bar", config.getLoadFolder());
 		assertEquals(99, config.getNestLimit());
 		assertEquals(88, config.getInsertLimit());
 		assertEquals("value", config.getEnv("test"));

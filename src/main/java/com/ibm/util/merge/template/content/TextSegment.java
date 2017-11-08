@@ -34,6 +34,13 @@ public class TextSegment extends Segment {
 		this.text = text;
 	}
 
+
+	@Override
+	public Segment getMergable() {
+		TextSegment mergable = new TextSegment(this.text);
+		return mergable;
+	}
+
 	/**
 	 * @param format the text using a format string
 	 */

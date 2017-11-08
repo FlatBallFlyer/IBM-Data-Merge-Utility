@@ -18,12 +18,14 @@ package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
+import com.ibm.util.merge.template.Template;
 
 /**
  * The Class ParseDirective is used to parse some data into a new data item.
@@ -107,6 +109,11 @@ public class ParseData extends AbstractDataDirective {
 		this.parser = new Parser();
 	}
 	
+	@Override
+	public void cleanup(Config config, Template template) throws MergeException {
+		this.cleanupAbstract(config, template);
+	}
+
 	@Override
 	public ParseData getMergable() throws MergeException {
 		ParseData mergable = new ParseData();

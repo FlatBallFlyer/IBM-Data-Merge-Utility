@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
@@ -141,6 +142,11 @@ public class Insert extends AbstractDataDirective {
 		this.bookmarkPattern = pattern;
 	}
 	
+	@Override
+	public void cleanup(Config config, Template template) throws MergeException {
+		this.cleanupAbstract(config, template);
+	}
+
 	@Override
 	public Insert getMergable() {
 		Insert mergable = new Insert();
@@ -367,26 +373,22 @@ public class Insert extends AbstractDataDirective {
 
 	@Override
 	public void setIfSourceMissing(int value) {
-		// TODO Auto-generated method stub
-		
+		this.ifMissing = value;
 	}
 
 	@Override
 	public void setIfPrimitive(int value) {
-		// TODO Auto-generated method stub
-		
+		this.ifPrimitive = value;
 	}
 
 	@Override
 	public void setIfObject(int value) {
-		// TODO Auto-generated method stub
-		
+		this.ifObject = value;
 	}
 
 	@Override
 	public void setIfList(int value) {
-		// TODO Auto-generated method stub
-		
+		this.ifList = value;
 	}
 
 }

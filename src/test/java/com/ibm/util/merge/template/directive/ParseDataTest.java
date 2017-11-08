@@ -36,7 +36,7 @@ public class ParseDataTest {
 	public void setUp() throws Exception {
 		config = new Config();
 		cache = new TemplateCache(config);
-		template = new Template("system", "test", "", "test content");
+		template = new Template("system", "test", "", "test content", config);
 		directive = new ParseData();
 		directive.setName("name");
 		directive.setDataSource("test");

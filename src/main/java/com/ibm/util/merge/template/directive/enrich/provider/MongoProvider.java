@@ -103,8 +103,8 @@ public class MongoProvider implements ProviderInterface {
 	}
 
 	@Override
-	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
-		Content query = new Content(wrapper, enrichCommand, TagSegment.ENCODE_SQL);
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
+		Content query = new Content(wrapper, command, TagSegment.ENCODE_JSON);
 		query.replace(replace, false, context.getConfig().getNestLimit());
 		
 		String result = connection;  // TODO - Use connection to make Mongo Call

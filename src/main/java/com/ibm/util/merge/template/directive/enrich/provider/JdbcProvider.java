@@ -27,6 +27,7 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -101,8 +102,8 @@ public class JdbcProvider implements ProviderInterface {
 	}
 	
 	@Override
-	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
-		Content query = new Content(wrapper, enrichCommand, TagSegment.ENCODE_SQL);
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
+		Content query = new Content(wrapper, command, TagSegment.ENCODE_SQL);
 		query.replace(replace, false, context.getConfig().getNestLimit());
 		DataList table = new DataList();
 		ResultSet results;

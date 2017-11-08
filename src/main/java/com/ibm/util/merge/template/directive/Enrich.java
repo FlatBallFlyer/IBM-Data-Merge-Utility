@@ -18,10 +18,12 @@ package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.MergeException;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.directive.enrich.provider.*;
 
 /**
@@ -48,7 +50,7 @@ public class Enrich extends AbstractDirective {
 	private transient Parser parser;
 
 	/**
-	 * Instantiate an Erich Directive
+	 * Instantiate an Enrich Directive
 	 * @throws MergeException
 	 */
 	public Enrich() throws MergeException {
@@ -62,6 +64,11 @@ public class Enrich extends AbstractDirective {
 		this.enrichParameter = "";
 		this.enrichCommand = "";
 		this.parseAs = Parser.PARSE_NONE;
+	}
+
+	@Override
+	public void cleanup(Config config, Template template) throws MergeException {
+		this.cleanupAbstract(config, template);
 	}
 
 	@Override
@@ -168,8 +175,9 @@ public class Enrich extends AbstractDirective {
 
 	/**
 	 * @param enrichCommand
+	 * @throws MergeException 
 	 */
-	public void setEnrichCommand(String enrichCommand) {
+	public void setEnrichCommand(String enrichCommand) throws MergeException {
 		this.enrichCommand = enrichCommand;
 	}
 

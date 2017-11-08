@@ -193,6 +193,7 @@ public abstract class Segment {
 	 * @return the String value of the segment
 	 */
 	abstract public String getValue();
-	
+
+	abstract public Segment getMergable();
 }
 

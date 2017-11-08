@@ -109,7 +109,7 @@ public class CloudantProvider implements ProviderInterface {
 	
 
 	@Override
-	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) {
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) {
 		String result = "";  // TODO - Make Cloudant Call
 		this.db.getClass();
 		return new DataPrimitive(result);

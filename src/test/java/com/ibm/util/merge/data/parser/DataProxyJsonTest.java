@@ -33,7 +33,7 @@ public class DataProxyJsonTest {
 
 	@Test
 	public void testTemplateProxy() throws MergeException {
-		Template sample = new Template("System","Test", "", "SomeContent");
+		Template sample = new Template("System","Test", "", "SomeContent", config);
 		sample.addDirective(new Enrich());
 		sample.addDirective(new Insert());
 		sample.addDirective(new ParseData());
@@ -47,7 +47,7 @@ public class DataProxyJsonTest {
 	
 	@Test
 	public void testEnrichDirectiveProxy() throws MergeException {
-		Template sample = new Template("System","Test", "", "SomeContent");
+		Template sample = new Template("System","Test", "", "SomeContent", config);
 		Enrich directive = new Enrich();
 		directive.setEnrichClass("SomeNewClass");
 		directive.setEnrichCommand("Command String");
@@ -76,7 +76,7 @@ public class DataProxyJsonTest {
 	public void testInsertDirectiveProxy() throws MergeException {
 		HashSet<String> aList = new HashSet<String>();
 		aList.add("a"); aList.add("b"); aList.add("c");
-		Template sample = new Template("System","Test", "", "SomeContent");
+		Template sample = new Template("System","Test", "", "SomeContent", config);
 		Insert directive = new Insert();
 		directive.setBookmarkPattern("foo.*");
 		directive.setDataDelimeter("--");
@@ -112,7 +112,7 @@ public class DataProxyJsonTest {
 
 	@Test
 	public void testParseDirectiveProxy() throws MergeException {
-		Template sample = new Template("System","Test", "", "SomeContent");
+		Template sample = new Template("System","Test", "", "SomeContent", config);
 		ParseData directive = new ParseData();
 		directive.setDataDelimeter("--");
 		directive.setDataSource("aSource");
@@ -143,7 +143,7 @@ public class DataProxyJsonTest {
 
 	@Test
 	public void testReplaceDirectiveProxy() throws MergeException {
-		Template sample = new Template("System","Test", "", "SomeContent");
+		Template sample = new Template("System","Test", "", "SomeContent", config);
 		Replace directive = new Replace();
 		directive.setDataDelimeter("==");
 		directive.setDataSource("aSource");
@@ -174,7 +174,7 @@ public class DataProxyJsonTest {
 
 	@Test
 	public void testSaveDirectiveProxy() throws MergeException {
-		Template sample = new Template("System","Test", "", "SomeContent");
+		Template sample = new Template("System","Test", "", "SomeContent", config);
 		SaveFile directive = new SaveFile();
 		directive.setClearAfter(true);
 		directive.setFilename("aFile");

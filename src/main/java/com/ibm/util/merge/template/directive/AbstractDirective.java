@@ -18,6 +18,7 @@ package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.MergeException;
@@ -29,6 +30,10 @@ import com.ibm.util.merge.template.Template;
  * 
  * @author Mike Storey
  * @since: v4.0
+ */
+/**
+ * @author flatballflyer
+ *
  */
 public abstract class AbstractDirective {
 
@@ -49,6 +54,7 @@ public abstract class AbstractDirective {
 
 	protected transient DataProxyJson gson;
 	protected transient Template template;
+	protected transient Config config;
 	protected int type;
 	protected String name = "";
 
@@ -128,4 +134,27 @@ public abstract class AbstractDirective {
 	 * @throws MergeException
 	 */
 	public abstract AbstractDirective getMergable() throws MergeException;
+
+	/**
+	 * Populate Transient Values
+	 * @param config
+	 * @param template
+	 * @throws MergeException 
+	 */
+	public void cleanupAbstract(Config config, Template template) throws MergeException {
+		this.template = template;
+		this.config = config;
+		this.gson = new DataProxyJson();
+	}
+
+	public abstract void cleanup(Config config, Template template) throws MergeException;
+
+	public Config getConfig() {
+		return config;
+	}
+
+	public void setConfig(Config config) {
+		this.config = config;
+	}
+
 }

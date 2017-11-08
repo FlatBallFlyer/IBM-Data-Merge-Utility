@@ -19,6 +19,7 @@ package com.ibm.util.merge.template.directive;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
@@ -27,6 +28,7 @@ import com.ibm.util.merge.data.Path;
 import com.ibm.util.merge.data.PathPart;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
+import com.ibm.util.merge.template.Template;
 
 /**
  * The Class ReplaceDirective drives replace processing 
@@ -35,15 +37,6 @@ import com.ibm.util.merge.exception.MergeException;
  * @since: v4.0
  */
 public class Replace extends AbstractDataDirective {
-	private String fromAttribute;	// used by List
-	private String toAttribute;		// used by List
-	private boolean processAfter;
-	private int objectAttrPrimitive;
-	private int objectAttrList;
-	private int objectAttrObject;
-	private int listAttrMissing;
-	private int listAttrNotPrimitive;
-
 	public static final int MISSING_THROW 	= 1;
 	public static final int MISSING_IGNORE = 2;
 	public static final HashMap<Integer, String> MISSING_OPTIONS() {
@@ -150,6 +143,15 @@ public class Replace extends AbstractDataDirective {
 		return options;
 	}
 
+	private String fromAttribute;	// used by List
+	private String toAttribute;		// used by List
+	private boolean processAfter;
+	private int objectAttrPrimitive;
+	private int objectAttrList;
+	private int objectAttrObject;
+	private int listAttrMissing;
+	private int listAttrNotPrimitive;
+
 	/**
 	 * Instantiate a Replace directive with default values
 	 */
@@ -192,6 +194,11 @@ public class Replace extends AbstractDataDirective {
 		this.listAttrMissing = listAttrMissing;
 		this.listAttrNotPrimitive = listAttrNotPrimitive;
 		
+	}
+
+	@Override
+	public void cleanup(Config config, Template template) throws MergeException {
+		this.cleanupAbstract(config, template);
 	}
 
 	@Override

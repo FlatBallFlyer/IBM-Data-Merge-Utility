@@ -70,8 +70,8 @@ public class JndiProvider implements ProviderInterface {
 	}
 
 	@Override
-	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
-		Content query = new Content(wrapper, enrichCommand, TagSegment.ENCODE_SQL);
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
+		Content query = new Content(wrapper, command, TagSegment.ENCODE_SQL);
 		query.replace(replace, false, context.getConfig().getNestLimit());
 		DataList table = new DataList();
 		ResultSet results;

@@ -27,7 +27,7 @@ public class EnrichTest {
 		gsonProxy = new DataProxyJson();
 		config = new Config();
 		cache = new TemplateCache(config);
-		template = new Template("test", "enrich", "", "Template Content", "{", "}" );
+		template = new Template("test", "enrich", "", "Template Content", "{", "}", config );
 		enrich = new Enrich();
 		enrich.setTargetDataName("test");
 		enrich.setName("test");
@@ -126,7 +126,7 @@ public class EnrichTest {
 	}
 
 	@Test
-	public void testGetSetEnrichCommand() {
+	public void testGetSetEnrichCommand() throws MergeException {
 		enrich.setEnrichCommand("foo");
 		assertEquals("foo", enrich.getEnrichCommand());
 	}
