@@ -17,8 +17,10 @@
 package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
+
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
+import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
@@ -32,7 +34,7 @@ import com.ibm.util.merge.exception.MergeException;
 public class ParseData extends AbstractDataDirective {
 	public static final int SOURCE_MISSING_THROW 	= 1;
 	public static final int SOURCE_MISSING_IGNORE 	= 2;
-	public HashMap<Integer, String> missingOptions() {
+	public static final HashMap<Integer, String> MISSING_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(SOURCE_MISSING_THROW, 	"throw");
 		options.put(SOURCE_MISSING_IGNORE, 	"ignore");
@@ -42,7 +44,7 @@ public class ParseData extends AbstractDataDirective {
 	public static final int PRIMITIVE_THROW 	= 1;
 	public static final int PRIMITIVE_IGNORE 	= 2;
 	public static final int PRIMITIVE_PARSE 	= 3;
-	public HashMap<Integer, String> primitiveOptions() {
+	public static final HashMap<Integer, String> PRIMITIVE_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(PRIMITIVE_THROW, 	"throw");
 		options.put(PRIMITIVE_IGNORE, 	"ignore");
@@ -52,7 +54,7 @@ public class ParseData extends AbstractDataDirective {
 
 	public static final int OBJECT_THROW 	= 1;
 	public static final int OBJECT_IGNORE 	= 2;
-	public HashMap<Integer, String> objectOptions() {
+	public static final HashMap<Integer, String> OBJECT_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(OBJECT_THROW, 	"throw");
 		options.put(OBJECT_IGNORE, 	"ignore");
@@ -63,7 +65,7 @@ public class ParseData extends AbstractDataDirective {
 	public static final int LIST_IGNORE 		= 2;
 	public static final int LIST_PARSE_FIRST 	= 3;
 	public static final int LIST_PARSE_LAST		= 4;
-	public HashMap<Integer, String> listOptions() {
+	public static final HashMap<Integer, String> LIST_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(LIST_THROW, 	"throw");
 		options.put(LIST_IGNORE, 	"ignore");
@@ -110,16 +112,20 @@ public class ParseData extends AbstractDataDirective {
 
 	@Override
 	public void execute(Merger context) throws MergeException {
-		if (!context.getMergeData().contians(this.dataSource, this.dataDelimeter)) {
-			switch (this.getIfSourceMissing()) {
-			case SOURCE_MISSING_THROW :
-				throw new Merge500("Source Data Missing for " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
-			case SOURCE_MISSING_IGNORE :
-				return;
+		DataElement data;
+		if (!this.staticData.isEmpty()) {
+			data = new DataPrimitive(this.staticData);
+		} else {
+			if (!context.getMergeData().contians(this.dataSource, this.dataDelimeter)) {
+				switch (this.getIfSourceMissing()) {
+				case SOURCE_MISSING_THROW :
+					throw new Merge500("Source Data Missing for " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+				case SOURCE_MISSING_IGNORE :
+					return;
+				}
 			}
+			data = context.getMergeData().get(this.dataSource, this.dataDelimeter);
 		}
-		
-		DataElement data = context.getMergeData().get(this.dataSource, this.dataDelimeter);
 		
 		if (data.isPrimitive()) {
 			switch (this.getIfPrimitive()) {
@@ -128,8 +134,7 @@ public class ParseData extends AbstractDataDirective {
 			case PRIMITIVE_IGNORE :
 				return;
 			case PRIMITIVE_PARSE :
-				String source = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsPrimitive();
-				context.getMergeData().put(this.dataTarget, this.dataDelimeter, parser.parse(parseFormat, source));
+				context.getMergeData().put(this.dataTarget, this.dataTargetDelimiter, parser.parse(parseFormat, data.getAsPrimitive()));
 				return;
 			}
 
@@ -151,7 +156,7 @@ public class ParseData extends AbstractDataDirective {
 				for (DataElement member : data.getAsList()) {
 					if (member.isPrimitive()) {
 						String source = member.getAsPrimitive();
-						context.getMergeData().put(this.dataTarget, this.dataDelimeter, parser.parse(parseFormat, source));
+						context.getMergeData().put(this.dataTarget, this.dataTargetDelimiter, parser.parse(parseFormat, source));
 						return;
 					}
 				}
@@ -229,26 +234,30 @@ public class ParseData extends AbstractDataDirective {
 
 	@Override
 	public void setIfSourceMissing(int value) {
-		// TODO Auto-generated method stub
-		
+		if (MISSING_OPTIONS().keySet().contains(value)) {
+			this.ifMissing = value;
+		}
 	}
 
 	@Override
 	public void setIfPrimitive(int value) {
-		// TODO Auto-generated method stub
-		
+		if (PRIMITIVE_OPTIONS().keySet().contains(value)) {
+			this.ifPrimitive= value;
+		}
 	}
 
 	@Override
 	public void setIfObject(int value) {
-		// TODO Auto-generated method stub
-		
+		if (OBJECT_OPTIONS().keySet().contains(value)) {
+			this.ifObject = value;
+		}
 	}
 
 	@Override
 	public void setIfList(int value) {
-		// TODO Auto-generated method stub
-		
+		if (LIST_OPTIONS().keySet().contains(value)) {
+			this.ifList = value;
+		}
 	}
 
 }

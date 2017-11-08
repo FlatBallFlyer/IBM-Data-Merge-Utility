@@ -155,6 +155,17 @@ public class ParseDataTest {
 	public void testExecutePrimitiveParse() throws MergeException {
 		directive.setIfPrimitive(ParseData.PRIMITIVE_PARSE);
 		directive.setParseFormat(Parser.PARSE_JSON);
+		directive.setStaticData(jsonString1);
+		template = template.getMergable(merger);
+		template.getMergedOutput();
+		DataElement result = merger.getMergeData().get("target", "-");
+		assertTableValue(result);
+	}
+	
+	@Test
+	public void testExecutePrimitiveParseStatic() throws MergeException {
+		directive.setIfPrimitive(ParseData.PRIMITIVE_PARSE);
+		directive.setParseFormat(Parser.PARSE_JSON);
 		template = template.getMergable(merger);
 		merger.getMergeData().put("test", "-", jsonString1);
 		template.getMergedOutput();
@@ -317,7 +328,7 @@ public class ParseDataTest {
 
 	@Test
 	public void testGetSetSourceMissing() {
-		for (int value : directive.missingOptions().keySet()) {
+		for (int value : ParseData.MISSING_OPTIONS().keySet()) {
 			directive.setIfSourceMissing(value);
 			assertEquals(value, directive.getIfSourceMissing());
 		}
@@ -325,7 +336,7 @@ public class ParseDataTest {
 
 	@Test
 	public void testGetSetIfPrimitive() {
-		for (int value : directive.primitiveOptions().keySet()) {
+		for (int value : ParseData.PRIMITIVE_OPTIONS().keySet()) {
 			directive.setIfPrimitive(value);
 			assertEquals(value, directive.getIfPrimitive());
 		}
@@ -333,7 +344,7 @@ public class ParseDataTest {
 
 	@Test
 	public void testGetSetIfObject() {
-		for (int value : directive.objectOptions().keySet()) {
+		for (int value : ParseData.OBJECT_OPTIONS().keySet()) {
 			directive.setIfObject(value);
 			assertEquals(value, directive.getIfObject());
 		}
@@ -341,7 +352,7 @@ public class ParseDataTest {
 
 	@Test
 	public void testGetSetIfList() {
-		for (int value : directive.listOptions().keySet()) {
+		for (int value : ParseData.LIST_OPTIONS().keySet()) {
 			directive.setIfList(value);
 			assertEquals(value, directive.getIfList());
 		}

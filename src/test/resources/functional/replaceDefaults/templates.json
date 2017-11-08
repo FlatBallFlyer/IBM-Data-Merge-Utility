@@ -1,0 +1,77 @@
+{
+	"templates": 
+	[
+		{
+			"id": 
+			{
+				"group": "test",
+				"name": "",
+				"variant": ""
+			},
+
+			"wrapper": 
+			{
+				"front": "<",
+				"back": ">"
+			},
+
+			"description": "Test Replace with Defaults",
+			"content": "Test Replace <parameter1>, <parameter2>, <parameter3>",
+			"contentType": 4,
+			"contentDisposition": 2,
+			"contentEncoding": 1,
+			"contentFileName": "",
+			"contentRedirectUrl": "",
+			"directives": 
+			[
+				{
+					"dataTarget": "defaults",
+					"dataTargetDelimiter": "-",
+					"staticData": "{ \"parameter1\": \"def1\", \"parameter2\": \"def2\", \"parameter3\" : \"def3\" }",
+					"parseFormat": 3,
+					"dataSource": "",
+					"dataDelimeter": "",
+					"ifMissing": 1,
+					"ifPrimitive": 3,
+					"ifObject": 1,
+					"ifList": 1,
+					"type": 3,
+					"name": "Parse Defaults"
+				},
+				{
+					"processAfter": false,
+					"objectAttrPrimitive": 3,
+					"objectAttrList": 1,
+					"objectAttrObject": 1,
+					"listAttrMissing": 1,
+					"listAttrNotPrimitive": 1,
+					"dataSource": "defaults",
+					"dataDelimeter": "-",
+					"ifMissing": 1,
+					"ifPrimitive": 1,
+					"ifObject": 3,
+					"ifList": 1,
+					"type": 4,
+					"name": "Replace Defaults"
+				},
+				{
+					"processAfter": true,
+					"objectAttrPrimitive": 3,
+					"objectAttrList": 3,
+					"objectAttrObject": 1,
+					"listAttrMissing": 1,
+					"listAttrNotPrimitive": 1,
+					"dataSource": "idmuParameters",
+					"dataDelimeter": "-",
+					"ifMissing": 1,
+					"ifPrimitive": 1,
+					"ifObject": 3,
+					"ifList": 1,
+					"type": 4,
+					"name": "Replace Values"
+				}
+				
+			]
+		}
+	]
+}
