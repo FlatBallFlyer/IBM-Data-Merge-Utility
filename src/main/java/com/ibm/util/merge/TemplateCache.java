@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge403;
@@ -46,6 +48,7 @@ import com.ibm.util.merge.template.directive.SaveFile;
  * @since: v4.0
  */
 public class TemplateCache implements Iterable<String> {
+	private static final Logger LOGGER = Logger.getLogger(TemplateCache.class.getName());
 	private final HashMap<String, Template> cache;
 	private final DataProxyJson gsonProxy = new DataProxyJson();
 	private final Config config;
@@ -69,13 +72,13 @@ public class TemplateCache implements Iterable<String> {
 		if (!config.getLoadFolder().isEmpty()) {
 			File templateFolder = new File(config.getLoadFolder());
 			if (!templateFolder.exists()) {
-				// log folder not found
+				LOGGER.log(Level.WARNING, "Template Load Folder not found: " + config.getLoadFolder());
 				return;
 			}
 			
 			File[] groups = templateFolder.listFiles();
 			if (null == groups) {
-				// log empty folder
+				LOGGER.log(Level.WARNING, "Template Load Folder is empty: " + config.getLoadFolder());
 				return;
 			}
 			
@@ -83,7 +86,7 @@ public class TemplateCache implements Iterable<String> {
 				try {
 					this.postGroup(new String(Files.readAllBytes(file.toPath()), "ISO-8859-1"));
 				} catch (Throwable e) {
-					// fully passive load - ignore all errors
+					LOGGER.log(Level.WARNING, "Template Group failed to load: " + file.getAbsolutePath());
 				}
 			}
 		}

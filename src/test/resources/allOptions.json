@@ -104,6 +104,19 @@
 		}
 	},
 
+	"Encoding": 
+	{
+		"Encoding": 
+		{
+			"1": "none",
+			"2": "html",
+			"3": "sql",
+			"4": "json",
+			"5": "xml",
+			"6": "default"
+		}
+	},
+
 	"Template": 
 	{
 		"Content Type": 

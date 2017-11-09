@@ -43,6 +43,16 @@ public abstract class Segment {
 		return values;
 	}
 
+	public static final HashMap<Integer, String> ENCODE_OPTIONS() {
+		HashMap<Integer, String> values = new HashMap<Integer, String>();
+		values.put(ENCODE_NONE, 	"none");
+		values.put(ENCODE_HTML, 	"html");
+		values.put(ENCODE_SQL,	 	"sql");
+		values.put(ENCODE_JSON, 	"json");
+		values.put(ENCODE_XML, 		"xml");
+		values.put(ENCODE_DEFAULT, 	"default");
+		return values;
+	}
 
 	private Segment previous;
 	private Segment next;
@@ -195,5 +205,11 @@ public abstract class Segment {
 	abstract public String getValue();
 
 	abstract public Segment getMergable();
+
+	public static HashMap<String, HashMap<Integer, String>> getOptions() {
+		HashMap<String, HashMap<Integer, String>> options = new HashMap<String, HashMap<Integer, String>>();
+		options.put("Encoding", Segment.ENCODE_OPTIONS());
+		return options;
+	}
 }
 

@@ -4,15 +4,18 @@ import static org.junit.Assert.*;
 
 import org.junit.*;
 
+import com.google.gson.JsonElement;
+import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.MergeException;
 
 public class ConfigTest {
-	
+	private transient static final DataProxyJson proxy = new DataProxyJson();
+
 	@Test
 	public void testConfigDefault() throws MergeException {
 		Config config = new Config();
 		assertEquals("/opt/ibm/idmu/archives", config.getTempFolder());
-		assertEquals("/opt/ibm/idmu/templates", config.getLoadFolder());
+		assertEquals("foo", config.getLoadFolder());
 		assertEquals(2, config.getNestLimit());
 	}
 
@@ -26,6 +29,23 @@ public class ConfigTest {
 		assertEquals(99, config.getNestLimit());
 		assertEquals(88, config.getInsertLimit());
 		assertEquals("value", config.getEnv("test"));
+	}
+
+	@Test
+	public void testConfigOptions() throws MergeException {
+		Config config = new Config();
+		String optString = config.getAllOptions();
+		JsonElement options = proxy.fromJSON(optString, JsonElement.class);
+		assertTrue(options.isJsonObject());
+		assertTrue(options.getAsJsonObject().has("Template"));
+		assertTrue(options.getAsJsonObject().has("Template"));
+		assertTrue(options.getAsJsonObject().has("Encoding"));
+		assertTrue(options.getAsJsonObject().has("Parser"));
+		assertTrue(options.getAsJsonObject().has("Enrich"));
+		assertTrue(options.getAsJsonObject().has("Insert"));
+		assertTrue(options.getAsJsonObject().has("Parse"));
+		assertTrue(options.getAsJsonObject().has("Replace"));
+		assertTrue(options.getAsJsonObject().has("Save"));
 	}
 
 	@Test

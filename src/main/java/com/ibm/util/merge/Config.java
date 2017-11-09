@@ -17,6 +17,9 @@
 package com.ibm.util.merge;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
@@ -24,6 +27,7 @@ import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.content.Segment;
 import com.ibm.util.merge.template.directive.Enrich;
 import com.ibm.util.merge.template.directive.Insert;
 import com.ibm.util.merge.template.directive.ParseData;
@@ -41,11 +45,12 @@ public class Config {
 	private int nestLimit 		= 2;
 	private int insertLimit		= 20;
 	private String tempFolder	= "/opt/ibm/idmu/archives";
-	private String loadFolder	= "/opt/ibm/idmu/templates";
+	private String loadFolder	= "foo";
+	private String logLevel 	= "SEVERE";
 	private static final String version = "4.0.0.B1";
-	private HashMap<String, String> envVars;
+	private HashMap<String, String> envVars = new HashMap<String,String>();
 
-	private static final DataProxyJson proxy = new DataProxyJson();
+	private transient static final DataProxyJson proxy = new DataProxyJson();
 	
 	/**
 	 * Provide a default configuration
@@ -53,7 +58,8 @@ public class Config {
 	 * @throws Merge500
 	 */
 	public Config() throws Merge500 {
-		this.setupDefaults();
+	    Logger rootLogger = LogManager.getLogManager().getLogger("");
+	    rootLogger.setLevel(Level.parse(this.logLevel));
 	}
 	
 	/**
@@ -65,7 +71,6 @@ public class Config {
 	 * @throws MergeException
 	 */
 	public Config(String configString) throws MergeException {
-		this.setupDefaults();
 		if (configString.isEmpty()) {
 			configString = this.getEnv("idmu-config");
 		}
@@ -74,21 +79,12 @@ public class Config {
 		this.insertLimit = me.insertLimit;
 		this.tempFolder = me.getTempFolder();
 		this.loadFolder = me.getLoadFolder();
+		this.logLevel = me.getLogLevel();
 		this.envVars = me.getEnvVars();
+	    Logger rootLogger = LogManager.getLogManager().getLogger("");
+	    rootLogger.setLevel(Level.parse(this.logLevel));
 	}
 	
-	/**
-	 * Initialize Default Values
-	 * @throws Merge500
-	 */
-	private void setupDefaults() throws Merge500 {
-		tempFolder	= "/opt/ibm/idmu/archives";
-		loadFolder	= "/opt/ibm/idmu/templates";
-		nestLimit 	= 2;
-		insertLimit = 20;
-		envVars 	= new HashMap<String,String>();
-	}
-
 	/**
 	 * Abstraction of Environment access. Will leverage an entry from the 
 	 * local Environment hashmap property. Environment Variables prefixed with 
@@ -219,10 +215,19 @@ public class Config {
 		this.loadFolder = loadFolder;
 	}
 	
+	public String getLogLevel() {
+		return this.logLevel;
+	}
+	
+	public void setLogLevel(String level) {
+		this.logLevel = level;
+	}
+
 	public String getAllOptions() {
 		HashMap<String, HashMap<String, HashMap<Integer, String>>> values = 
 				new HashMap<String, HashMap<String, HashMap<Integer, String>>>();
 		values.put("Template", 	Template.getOptions());
+		values.put("Encoding",  Segment.getOptions());
 		values.put("Parser", 	Parser.getOptions());
 		values.put("Enrich", 	Enrich.getOptions());
 		values.put("Insert", 	Insert.getOptions());
@@ -231,4 +236,5 @@ public class Config {
 		values.put("Save", 		SaveFile.getOptions());
 		return proxy.toJson(values);
 	}
+	
 }
