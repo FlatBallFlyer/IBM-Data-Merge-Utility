@@ -1,10 +1,10 @@
 {
-	"tempFolder": "/opt/ibm/idmu/",
-	"loadFolder": "src/test/resources/functional/insert",
-	"nestLimit": 3,
-	"insertLimit": 20,
-	"envVars": 
-	{
-		"test": "value"
-	}
+  "tempFolder" : "/opt/ibm/idmu/archives",
+  "loadFolder" : "src/test/resources/functional/nestedInsert",
+  "logLevel" : "SEVERE",
+  "nestLimit" : 3,
+  "insertLimit" : 20,
+  "envVars" : {
+    "test" : "value"
+  }
 }

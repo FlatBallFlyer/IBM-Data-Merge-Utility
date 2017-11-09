@@ -1,1 +1,6 @@
-Multi-Level Nested Output
+Master Template with Subs 
+ SubTemplate Type A name:row1, type:a, value:value1
+SubTemplate Type A name:row2, type:a, value:value2
+SubTemplate Type B name:row3, type:b, value:value3
+SubTemplate Type B name:row4, type:b, value:value4
+SubTemplate Default name:rowX, type:x, value:valueX

@@ -2,21 +2,10 @@
 	"templates": 
 	[
 		{
-			"id": 
-			{
-				"group": "test",
-				"name": "",
-				"variant": ""
-			},
-
-			"wrapper": 
-			{
-				"front": "<",
-				"back": ">"
-			},
-
-			"description": "Test insert",
-			"content": "Root Template/n<bookmark=\"someValue\" template=\"atempalte\">",
+			"id": {	"group": "test",	"name": "",	"variant": "" },
+			"wrapper": {"front": "<", "back": ">"},
+			"description": "Test insert sub-Template",
+			"content": "Master Template with Subs \n <bookmark=\"subs\" group=\"test\" template=\"sub\" varyby=\"type\">",
 			"contentType": 4,
 			"contentDisposition": 2,
 			"contentEncoding": 1,
@@ -25,20 +14,125 @@
 			"directives": 
 			[
 				{
-					"processAfter": true,
-					"objectAttrPrimitive": 3,
-					"objectAttrList": 3,
-					"objectAttrObject": 1,
-					"listAttrMissing": 1,
-					"listAttrNotPrimitive": 1,
-					"dataSource": "idmuParameters",
+					"name": "Parse Input",
+					"type": 3,
+					"staticData": "",
+					"dataSource": "idmuPayload",
+					"dataDelimeter": "-",
+					"ifMissing": 1,
+					"ifPrimitive": 3,
+					"ifObject": 1,
+					"ifList": 1,
+					"dataTarget": "data",
+					"dataTargetDelimiter": "-",
+					"parseFormat": 3
+				},
+				
+				{
+					"type": 2,
+					"name": "Insert Subtemplates",
+					"dataSource": "data",
+					"dataDelimeter": "-",
+					"ifMissing": 1,
+					"ifPrimitive": 1,
+					"ifObject": 1,
+					"ifList": 3,
+					"bookmarkPattern": ".*",
+					"notFirst":[],
+					"notLast":[],
+					"onlyFirst":[],
+					"onlyLast":[]
+				}
+			]
+		},
+		
+		{
+			"id": {	"group": "test",	"name": "sub",	"variant": "" },
+			"wrapper": {"front": "<","back": ">"},
+			"description": "Test insert default sub-Template",
+			"content": "SubTemplate Default name:<name>, type:<type>, value:<value>\n",
+			"contentType": 4,
+			"contentDisposition": 2,
+			"contentEncoding": 1,
+			"contentFileName": "",
+			"contentRedirectUrl": "",
+			"directives": 
+			[
+				{
+					"name": "replace values",
+					"type": 4,
+					"dataSource": "idmuContext",
 					"dataDelimeter": "-",
 					"ifMissing": 1,
 					"ifPrimitive": 1,
 					"ifObject": 3,
+					"objectAttrPrimitive": 3,
+					"objectAttrList": 1,
+					"objectAttrObject": 1,
 					"ifList": 1,
+					"listAttrMissing": 1,
+					"listAttrNotPrimitive": 1,
+					"processAfter": true
+				}
+			]
+		},
+		{
+			"id": {	"group": "test",	"name": "sub",	"variant": "a" },
+			"wrapper": {"front": "<","back": ">"},
+			"description": "Test insert type-a sub-Template",
+			"content": "SubTemplate Type A name:<name>, type:<type>, value:<value>\n",
+			"contentType": 4,
+			"contentDisposition": 2,
+			"contentEncoding": 1,
+			"contentFileName": "",
+			"contentRedirectUrl": "",
+			"directives": 
+			[
+				{
+					"name": "replace values",
 					"type": 4,
-					"name": ""
+					"dataSource": "idmuContext",
+					"dataDelimeter": "-",
+					"ifMissing": 1,
+					"ifPrimitive": 1,
+					"ifObject": 3,
+					"objectAttrPrimitive": 3,
+					"objectAttrList": 1,
+					"objectAttrObject": 1,
+					"ifList": 1,
+					"listAttrMissing": 1,
+					"listAttrNotPrimitive": 1,
+					"processAfter": true
+				}
+			]
+		},
+		{
+			"id": {	"group": "test",	"name": "sub",	"variant": "b" },
+			"wrapper": {"front": "<","back": ">"},
+			"description": "Test insert type-b sub-Template",
+			"content": "SubTemplate Type B name:<name>, type:<type>, value:<value>\n",
+			"contentType": 4,
+			"contentDisposition": 2,
+			"contentEncoding": 1,
+			"contentFileName": "",
+			"contentRedirectUrl": "",
+			"directives": 
+			[
+				{
+					"name": "replace values",
+					"type": 4,
+					"dataSource": "idmuContext",
+					"dataDelimeter": "-",
+					"ifMissing": 1,
+					"ifPrimitive": 1,
+					"ifObject": 3,
+					"objectAttrPrimitive": 3,
+					"objectAttrList": 1,
+					"objectAttrObject": 1,
+					"ifList": 1,
+					"listAttrMissing": 1,
+					"listAttrNotPrimitive": 1,
+					"processAfter": true
 				}
 			]
 		}

@@ -37,6 +37,10 @@ public class All_Functional_Tests {
 		testTemplate(new File("src/test/resources/functional/replaceDefaults"));
 	}
 	
+	@Test
+	public void ReplaceInsert1() throws Throwable {
+		testTemplate(new File("src/test/resources/functional/nestedInsert"));
+	}
 	
 	/*
 	 * Folder should contain the following files
