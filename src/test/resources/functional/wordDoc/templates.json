@@ -1,0 +1,301 @@
+{
+  "templates" : [
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "{",
+        "back" : "}"
+      },
+      "description" : "Test Word Doc xml creation",
+      "content" : "<doc>\n{bookmark=\"paragraphs\" group=\"test\" template=\"paragraph\" varyby=\"P_STYLE\"}</doc>",
+      "contentType" : 3,
+      "contentDisposition" : 1,
+      "contentEncoding" : 5,
+      "contentFileName" : "aFile.doc",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "Parse Input",
+          "type" : 3,
+          "staticData" : "",
+          "dataSource" : "idmuPayload",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "ifList" : 1,
+          "dataTarget" : "data",
+          "dataTargetDelimiter" : "-",
+          "parseFormat" : 3
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Subtemplates",
+          "dataSource" : "data",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "paragraph",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "{",
+        "back" : "}"
+      },
+      "description" : "Default Paragraphs",
+      "content" : "<w:p><w:pPr><w:pStyle w:val=\"{P_STYLE}\"/></w:pPr><w:r><w:t>{P_CONTENT}</w:t></w:r></w:p>\n",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 5,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "replace values",
+          "type" : 4,
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "paragraph",
+        "variant" : "T"
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Paragraph Table",
+      "content" : "<w:tbl>\n\t<w:tblPr>\n\t\t<w:tblW w:w=\"0\" w:type=\"auto\"/>\n\t\t<w:tblBorders>\n\t\t\t<w:top w:val=\"single\" w:sz=\"4\" wx:bdrwidth=\"10\" w:space=\"0\" w:color=\"auto\"/>\n\t\t\t<w:left w:val=\"single\" w:sz=\"4\" wx:bdrwidth=\"10\" w:space=\"0\" w:color=\"auto\"/>\n\t\t\t<w:bottom w:val=\"single\" w:sz=\"4\" wx:bdrwidth=\"10\" w:space=\"0\" w:color=\"auto\"/>\n\t\t\t<w:right w:val=\"single\" w:sz=\"4\" wx:bdrwidth=\"10\" w:space=\"0\" w:color=\"auto\"/>\n\t\t\t<w:insideH w:val=\"single\" w:sz=\"4\" wx:bdrwidth=\"10\" w:space=\"0\" w:color=\"auto\"/>\n\t\t\t<w:insideV w:val=\"single\" w:sz=\"4\" wx:bdrwidth=\"10\" w:space=\"0\" w:color=\"auto\"/>\n\t\t</w:tblBorders>\n\t</w:tblPr>\n\t<w:tblGrid>\n\t\t<w:gridCol w:w=\"2782\"/>\n\t\t<w:gridCol w:w=\"1370\"/>\n\t\t<w:gridCol w:w=\"1759\"/>\n\t\t<w:gridCol w:w=\"2103\"/>\n\t</w:tblGrid>\n{bookmark collection=\"test\" name=\"tableHeader\"}{bookmark group=\"test\" name=\"tableRows\"}</w:tbl>\n",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 5,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 2,
+          "name" : "Insert Subtemplates",
+          "dataSource" : "data",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "headerRow",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Table Header",
+      "content" : "\t<w:tr>\n\t\t<w:trPr><w:trHeight w:val=\"288\"/></w:trPr>\n<tkBookmark collection=\"aetk\" name=\"tableHeadCol\" column=\"\" />\t</w:tr>\n",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 2,
+          "name" : "Insert Subtemplates",
+          "dataSource" : "data",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "headerCol",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Header Column",
+      "content" : "\t\t<w:tc><w:p>\n\t\t\t<w:pPr><w:pStyle w:val=\"CNTableColumnHead\"/></w:pPr>\n\t\t\t<w:r><w:t>{P_CONTENT}</w:t></w:r>\n\t\t</w:p></w:tc>\n",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "replace values",
+          "type" : 4,
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "tableRows",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Table Row",
+      "content" : "<tkBookmark collection=\"aetk\" name=\"tableRow\" column=\"\" />\n\t\t<w:tc><w:p>\n\t\t\t\t<w:pPr><w:pStyle w:val=\"CNTableColumnHead\"/></w:pPr>\n\t\t\t\t<w:r><w:t>Estimated Number of Hours</w:t></w:r>\n\t\t</w:p></w:tc>\t\t\n",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 2,
+          "name" : "Insert Subtemplates",
+          "dataSource" : "data",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "tableRow",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Table Row",
+      "content" : "\t<w:tr>\n\t\t<w:trPr><w:trHeight w:val=\"288\"/></w:trPr>\n<tkBookmark collection=\"aetk\" name=\"tableCol\" column=\"\" />\n\t</w:tr>\n",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 2,
+          "name" : "Insert Subtemplates",
+          "dataSource" : "data",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "tableCol",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Table Column",
+      "content" : "\t\t<w:tc><w:p>\n\t\t\t<w:pPr><w:pStyle w:val=\"CNParagraph\"/></w:pPr>\n\t\t\t<w:r><w:t>{{P_CONTENT}}</w:t></w:r>\n\t\t</w:p></w:tc>\n",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "replace values",
+          "type" : 4,
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        }
+      ]
+    }
+  ]
+}

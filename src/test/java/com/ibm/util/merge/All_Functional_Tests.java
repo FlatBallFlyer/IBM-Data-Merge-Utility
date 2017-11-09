@@ -42,6 +42,11 @@ public class All_Functional_Tests {
 		testTemplate(new File("src/test/resources/functional/nestedInsert"));
 	}
 	
+	@Test
+	public void wordDoc() throws Throwable {
+		testTemplate(new File("src/test/resources/functional/wordDoc"));
+	}
+	
 	/*
 	 * Folder should contain the following files
 	 * - templates.json - the testing templates, with the root templaet test..

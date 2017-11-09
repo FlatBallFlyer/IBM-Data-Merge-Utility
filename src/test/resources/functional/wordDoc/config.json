@@ -1,0 +1,10 @@
+{
+  "tempFolder" : "/opt/ibm/idmu/archives",
+  "loadFolder" : "src/test/resources/functional/wordDoc",
+  "logLevel" : "SEVERE",
+  "nestLimit" : 3,
+  "insertLimit" : 20,
+  "envVars" : {
+    "test" : "value"
+  }
+}
