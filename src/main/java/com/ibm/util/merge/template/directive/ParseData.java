@@ -18,7 +18,6 @@ package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataPrimitive;

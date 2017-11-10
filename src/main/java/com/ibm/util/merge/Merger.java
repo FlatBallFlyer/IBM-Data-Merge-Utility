@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataManager;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
@@ -127,7 +128,6 @@ public class Merger {
 	 */
 	public Template getMergable(String templateName, String defaultTemplate, HashMap<String,String> replace) throws MergeException {
 		Template template = cahce.getMergable(this, templateName, defaultTemplate, replace);
-		this.pushTemplate(template.getId().shorthand());
 		return template;
 	}
 	
@@ -243,8 +243,9 @@ public class Merger {
 	/**
 	 * @param name Template Name to push on to insert stack
 	 */
-	public void pushTemplate(String name) {
+	public void pushTemplate(String name, DataElement context) {
 		templateStack.add(name);
+		this.mergeData.pushContext(context);
 	}
 	
 	/**
@@ -253,6 +254,7 @@ public class Merger {
 	public void popTemplate() {
 		if (templateStack.size() > 0) {
 			templateStack.remove(templateStack.size()-1);
+			this.mergeData.popContext();
 		}
 	}
 	

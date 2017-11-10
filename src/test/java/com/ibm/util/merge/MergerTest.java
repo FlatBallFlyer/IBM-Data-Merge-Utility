@@ -63,16 +63,17 @@ public class MergerTest {
 		Template template = merger.getMergable("system.error403.",  "", new HashMap<String,String>());
 		assertTrue(template.isMergable());
 		assertEquals("Error - Forbidden", template.getContent());
-		assertEquals(1, merger.getTemplateStack().size());
+		assertEquals(0, merger.getTemplateStack().size());
 	}
 
 	@Test
 	public void testPushPopGetStack() throws MergeException {
 		Merger merger = new Merger(cache, "system.sample.");
+		DataObject object = new DataObject();
 		assertEquals(0, merger.getStackSize());
-		merger.pushTemplate("Foo");
+		merger.pushTemplate("Foo", object);
 		assertEquals(1, merger.getStackSize());
-		merger.pushTemplate("Bar");
+		merger.pushTemplate("Bar", object);
 		assertEquals(2, merger.getStackSize());
 		merger.popTemplate();
 		assertEquals(1, merger.getStackSize());
@@ -151,8 +152,9 @@ public class MergerTest {
 	@Test
 	public void testGetStack() throws MergeException {
 		Merger merger = new Merger(cache, "system.sample.");
+		DataObject object = new DataObject();
 		assertEquals(0, merger.getTemplateStack().size());
-		merger.pushTemplate("Foo");
+		merger.pushTemplate("Foo", object);
 		assertEquals(1, merger.getTemplateStack().size());
 	}
 	@Test

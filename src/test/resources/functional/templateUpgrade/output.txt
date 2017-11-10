@@ -1,0 +1,26 @@
+<doc>
+<w:p><w:pPr><w:pStyle w:val="Heading 1"/></w:pPr><w:r><w:t>Title</w:t></w:r></w:p>
+<w:p><w:pPr><w:pStyle w:val="Normal"/></w:pPr><w:r><w:t>Line 1</w:t></w:r></w:p>
+<w:p><w:pPr><w:pStyle w:val="Normal"/></w:pPr><w:r><w:t>Line2</w:t></w:r></w:p>
+<w:tbl>
+	<w:tblPr>
+		<w:tblW w:w="0" w:type="auto"/>
+		<w:tblBorders>
+			<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+			<w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+			<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+			<w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+			<w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+			<w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+		</w:tblBorders>
+	</w:tblPr>
+	<w:tblGrid>
+		<w:gridCol w:w="2782"/>
+		<w:gridCol w:w="1370"/>
+		<w:gridCol w:w="1759"/>
+		<w:gridCol w:w="2103"/>
+	</w:tblGrid>
+{bookmark collection="test" name="tableHeader"}{bookmark group="test" name="tableRows"}</w:tbl>
+<w:p><w:pPr><w:pStyle w:val="Normal"/></w:pPr><w:r><w:t>line3</w:t></w:r></w:p>
+<w:p><w:pPr><w:pStyle w:val="Normal"/></w:pPr><w:r><w:t>line4</w:t></w:r></w:p>
+</doc>

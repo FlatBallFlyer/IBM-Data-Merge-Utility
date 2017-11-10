@@ -279,17 +279,19 @@ public class Insert extends AbstractDataDirective {
 			throw new Merge500("template insert recursion safety, merge stack size exceded");
 		}
 
-		context.getMergeData().pushContext(value);
 		for (BookmarkSegment bookmark : this.template.getMergeContent().getBookmarks()) {
 			if (bookmark.getBookmarkName().matches(this.bookmarkPattern)) {
 				Template subTemplate = context.getMergable(
 						bookmark.getTemplateShorthand(value), 
 						bookmark.getDefaultShorthand(), 
 						this.template.getReplaceStack());
+				context.pushTemplate(subTemplate.getId().shorthand(), value);
 				subTemplate.blankReplace((isFirst ? this.notFirst : this.onlyFirst));
 				subTemplate.blankReplace((isLast ? this.notLast : this.onlyLast));
 				bookmark.insert(subTemplate.getMergedOutput());
-				context.getMergeData().popContext();
+				int size = context.getStackSize();
+				context.popTemplate();
+				if (!(context.getStackSize() < size)) throw new Merge500("pop didn't work");
 			}
 		}
 	}

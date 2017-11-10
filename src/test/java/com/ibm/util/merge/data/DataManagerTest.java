@@ -45,6 +45,7 @@ public class DataManagerTest {
 		DataManager manager = new DataManager();
 		DataElement one = new DataList();
 		DataElement two = new DataObject();
+		two.getAsObject().put("foo", new DataPrimitive("bar"));
 		assertEquals(0, manager.size());
 		assertEquals(0, manager.contextStackSize());
 		manager.pushContext(one);
@@ -53,6 +54,9 @@ public class DataManagerTest {
 		manager.pushContext(two);
 		assertEquals(2, manager.contextStackSize());
 		assertTrue(manager.get(Merger.IDMU_CONTEXT, "-").isObject());
+		assertTrue(manager.get(Merger.IDMU_CONTEXT, "-").getAsObject().containsKey("foo"));
+		assertEquals("bar", manager.get(Merger.IDMU_CONTEXT, "-").getAsObject().get("foo").getAsPrimitive());
+		assertEquals("bar", manager.get(Merger.IDMU_CONTEXT + "-foo", "-").getAsPrimitive());
 		manager.popContext();
 		assertEquals(1, manager.contextStackSize());
 		assertTrue(manager.get(Merger.IDMU_CONTEXT, "-").isList());
