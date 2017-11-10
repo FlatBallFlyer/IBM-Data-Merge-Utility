@@ -30,10 +30,10 @@ import com.ibm.util.merge.exception.MergeException;
  *
  */
 public class BookmarkSegment extends Segment {
-	private static final Pattern NAME_PATTERN 		= Pattern.compile("bookmark.*?=.*?\"(.*?)\"");
-	private static final Pattern GROUP_PATTERN 		= Pattern.compile("group.*?=.*?\"(.*?)\"");
-	private static final Pattern TEMPLATE_PATTERN 	= Pattern.compile("template.*?=.*?\"(.*?)\"");
-	private static final Pattern VARYBY_PATTERN 	= Pattern.compile("varyby.*?=.*?\"(.*?)\"");
+	private static final Pattern NAME_PATTERN 		= Pattern.compile("bookmark\\W*?=\\W*?\"(.*?)\"");
+	private static final Pattern GROUP_PATTERN 		= Pattern.compile("group\\W*?=\\W*?\"(.*?)\"");
+	private static final Pattern TEMPLATE_PATTERN 	= Pattern.compile("template\\W*?=\\W*?\"(.*?)\"");
+	private static final Pattern VARYBY_PATTERN 	= Pattern.compile("varyby\\W*?=\\W*?\"(.*?)\"");
 
 	private String bookmarkName = "";
 	private String templateGroup = "";

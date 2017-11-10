@@ -67,6 +67,15 @@ public class BookmarkSegmentTest {
 	}
 	
 	@Test
+	public void testBookmarkSegment6() throws Merge500 {
+		BookmarkSegment test = new BookmarkSegment("<bookmark=\"templates\" group=\"test\" template=\"template\">");
+		assertEquals("templates", test.getBookmarkName());
+		assertEquals("test", test.getTemplateGroup());
+		assertEquals("template", test.getTemplateName());
+		assertEquals("", test.getVaryByAttribute());
+	}
+	
+	@Test
 	public void testGetValue() throws Merge500 {
 		BookmarkSegment test = new BookmarkSegment("bookmark=\"name\" group=\"group\" template=\"template\" ");
 		assertEquals("", test.getValue());
