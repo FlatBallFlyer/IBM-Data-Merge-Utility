@@ -79,7 +79,6 @@ public class Template {
 	private Wrapper wrapper				= new Wrapper();
 	private List<AbstractDirective> directives = new ArrayList<AbstractDirective>(); 
 	
-	private transient Config config		= null;
 	private transient Boolean merged 	= false;
 	private transient Boolean mergable 	= false;
 	private transient Stat stats 		= new Stat();
@@ -92,9 +91,8 @@ public class Template {
 	 * @param id
 	 * @throws MergeException 
 	 */
-	public Template(TemplateId id, Config config) throws MergeException {
+	public Template(TemplateId id) throws MergeException {
 		this.id = id;
-		this.config = config;
 		this.mergable = false;
 		this.merged = false;
 		this.setContent("");
@@ -105,8 +103,8 @@ public class Template {
 	 * Instantiate a Template with the given ID
 	 * @throws MergeException 
 	 */
-	public Template(Config config) throws MergeException {
-		this(new TemplateId("void","void","void"), config);
+	public Template() throws MergeException {
+		this(new TemplateId("void","void","void"));
 	}
 	
 	/**
@@ -117,8 +115,8 @@ public class Template {
 	 * @param variant
 	 * @throws MergeException 
 	 */
-	public Template(String group, String name, String variant, Config config) throws MergeException {
-		this(new TemplateId(group,name,variant), config);
+	public Template(String group, String name, String variant) throws MergeException {
+		this(new TemplateId(group,name,variant));
 	}
 	
 	/**
@@ -130,8 +128,8 @@ public class Template {
 	 * @param content
 	 * @throws MergeException 
 	 */
-	public Template(String group, String name, String variant, String content, Config config) throws MergeException {
-		this(new TemplateId(group,name,variant), config);
+	public Template(String group, String name, String variant, String content) throws MergeException {
+		this(new TemplateId(group,name,variant));
 		this.setContent(content);
 	}
 	
@@ -145,8 +143,8 @@ public class Template {
 	 * @param after
 	 * @throws MergeException 
 	 */
-	public Template(String group, String name, String variant, String content, String before, String after, Config config) throws MergeException {
-		this(group,name,variant,content, config);
+	public Template(String group, String name, String variant, String content, String before, String after) throws MergeException {
+		this(group,name,variant,content);
 		this.wrapper.front = before;
 		this.wrapper.back = after;
 	}
@@ -155,15 +153,14 @@ public class Template {
 	 * Parse content, and cleanup directives.
 	 * @throws MergeException 
 	 */
-	public void cleanup(Config config) throws MergeException {
-		this.config = config;
+	public void cleanup() throws MergeException {
 		this.merged 	= false;
 		this.mergable 	= false;
 		this.stats 		= new Stat();
 		this.replaceStack = new HashMap<String,String>();
 		this.setContent(content);
 		for (AbstractDirective directive : this.directives) {
-			directive.cleanup(config, this);
+			directive.cleanup(this);
 		}
 	}
 	/**
@@ -187,8 +184,7 @@ public class Template {
 	 */
 	public Template getMergable(Merger context, HashMap<String,String> replace) throws MergeException {
 		this.stats.hits++;
-		Template mergable = new Template(this.id, this.config);
-		mergable.setConfig(this.config);
+		Template mergable = new Template(this.id);
 		mergable.setContext(context);
 		mergable.setContentDisposition(contentDisposition);
 		mergable.setContentEncoding(contentEncoding);
@@ -354,7 +350,7 @@ public class Template {
 	public String getContentDisposition() throws Merge500 {
 		if (DISPOSITION_DOWNLOAD == contentDisposition) {
 			Content fileName = new Content(this.wrapper, this.contentFileName, this.contentEncoding);
-			fileName.replace(replaceStack, false, this.context.getConfig().getNestLimit() );
+			fileName.replace(replaceStack, false, Config.get().getNestLimit() );
 			return "attachment;filename=\"" + fileName.getValue() + "\"";
 		} else {
 			return "";
@@ -482,7 +478,6 @@ public class Template {
 	 */
 	public void addDirective(AbstractDirective directive) {
 		directive.setTemplate(this);
-		directive.setConfig(config);
 		directives.add(directive);
 	}
 
@@ -558,14 +553,6 @@ public class Template {
 	 */
 	public void setContext(Merger context) {
 		this.context = context;
-	}
-
-	public Config getConfig() {
-		return config;
-	}
-
-	public void setConfig(Config config) {
-		this.config = config;
 	}
 
 }

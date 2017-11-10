@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 
 import org.apache.commons.io.IOUtils;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
@@ -73,7 +74,7 @@ public class RestProvider implements ProviderInterface {
 		this.parser = new Parser();
 		
 		// Get Credentials
-		String config = context.getConfig().getEnv(source);
+		String config = Config.get().getEnv(source);
 		try {
 			DataObject credentials = parser.parse(Parser.PARSE_JSON, config).getAsObject().get("credentials").getAsObject();
 			this.username = credentials.get("username").getAsPrimitive();
@@ -89,7 +90,7 @@ public class RestProvider implements ProviderInterface {
 	@Override
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws Merge500 {
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_HTML);
-		query.replace(replace, false, context.getConfig().getNestLimit());
+		query.replace(replace, false, Config.get().getNestLimit());
 		String theUrl = "";
 		String fetchedData = "";
 

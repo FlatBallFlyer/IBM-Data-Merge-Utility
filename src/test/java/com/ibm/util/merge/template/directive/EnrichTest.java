@@ -16,7 +16,6 @@ import com.ibm.util.merge.template.Template;
 
 public class EnrichTest {
 	DataProxyJson gsonProxy;	
-	Config config;
 	TemplateCache cache;
 	Merger context;
 	Template template;
@@ -25,9 +24,9 @@ public class EnrichTest {
 	@Before
 	public void setUp() throws Exception {
 		gsonProxy = new DataProxyJson();
-		config = new Config();
-		cache = new TemplateCache(config);
-		template = new Template("test", "enrich", "", "Template Content", "{", "}", config );
+		Config.initialize();
+		cache = new TemplateCache();
+		template = new Template("test", "enrich", "", "Template Content", "{", "}");
 		enrich = new Enrich();
 		enrich.setTargetDataName("test");
 		enrich.setName("test");
@@ -76,7 +75,7 @@ public class EnrichTest {
 	@Test
 	public void testExecuteNoParse() throws MergeException {
 		cache.postTemplate(template);
-		context = new Merger(cache, config, "test.enrich.");
+		context = new Merger(cache, "test.enrich.");
 		context.merge();
 		Template test = gsonProxy.fromJSON(context.getMergeData().get("test", "\"").getAsPrimitive(), Template.class);
 		assertTrue(test instanceof Template);
@@ -86,7 +85,7 @@ public class EnrichTest {
 	public void testExecuteParse() throws MergeException {
 		enrich.setParseAs(Parser.PARSE_JSON);
 		cache.postTemplate(template);
-		context = new Merger(cache, config, "test.enrich.");
+		context = new Merger(cache, "test.enrich.");
 		context.merge();
 		DataElement output = context.getMergeData().get("test", "\"");
 		assertTrue(output.isObject());

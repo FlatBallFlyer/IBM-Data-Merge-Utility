@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
@@ -40,7 +39,7 @@ public class AbstractDataDirectiveTest {
 		}
 
 		@Override
-		public void cleanup(Config config, Template template)
+		public void cleanup(Template template)
 				throws MergeException {
 		}
 

@@ -17,12 +17,11 @@ import com.ibm.util.merge.exception.*;
 
 public class TemplateTest {
 	private Template template;
-	private Config config;
 	
 	@Before
 	public void setUp() throws Exception {
-		config = new Config();
-		template = new Template("System","Test","", config);
+		Config.initialize();
+		template = new Template("System","Test","");
 		template.setContent("Test Content");
 		template.setDescription("A testing template");
 		template.setContentDisposition(Template.DISPOSITION_DOWNLOAD);
@@ -35,7 +34,7 @@ public class TemplateTest {
 
 	@Test
 	public void testTemplate() throws MergeException {
-		template = new Template(config);
+		template = new Template();
 		assertEquals("void",template.getId().group);
 		assertEquals("void",template.getId().name);
 		assertEquals("void",template.getId().variant);
@@ -45,7 +44,7 @@ public class TemplateTest {
 
 	@Test
 	public void testTemplateStringStringString() throws MergeException {
-		template = new Template("System","Test","", config);
+		template = new Template("System","Test","");
 		assertEquals("System",template.getId().group);
 		assertEquals("Test",template.getId().name);
 		assertTrue(template.getId().variant.isEmpty());
@@ -55,7 +54,7 @@ public class TemplateTest {
 
 	@Test
 	public void testTemplateStringStringStringString() throws MergeException {
-		template = new Template("System","Test", "", "SomeContent", config);
+		template = new Template("System","Test", "", "SomeContent");
 		assertEquals("System",template.getId().group);
 		assertEquals("Test",template.getId().name);
 		assertTrue(template.getId().variant.isEmpty());
@@ -66,7 +65,7 @@ public class TemplateTest {
 
 	@Test
 	public void testTemplateTemplateId() throws MergeException {
-		template = new Template(new TemplateId("System","Test",""), config);
+		template = new Template(new TemplateId("System","Test",""));
 		assertEquals("System",template.getId().group);
 		assertEquals("Test",template.getId().name);
 		assertTrue(template.getId().variant.isEmpty());
@@ -117,8 +116,8 @@ public class TemplateTest {
 	@Test
 	public void testGetMergedOutput() throws MergeException {
 		Config config = new Config();
-		TemplateCache cache = new TemplateCache(config);
-		Merger merger = new Merger(cache, config, "system.sample.");
+		TemplateCache cache = new TemplateCache();
+		Merger merger = new Merger(cache, "system.sample.");
 		template.setContent("Some Simple Content");
 		
 		Template mergable = template.getMergable(merger);
@@ -206,8 +205,8 @@ public class TemplateTest {
 	@Test
 	public void testSetGetContentDisposition() throws MergeException {
 		Config config = new Config();
-		TemplateCache cache = new TemplateCache(config);
-		Merger merger = new Merger(cache, config, "system.sample.");
+		TemplateCache cache = new TemplateCache();
+		Merger merger = new Merger(cache, "system.sample.");
 		template.setContentDisposition(Template.DISPOSITION_DOWNLOAD);
 		template.setContentFileName("Foo");
 		Template mergable = template.getMergable(merger);
@@ -277,7 +276,7 @@ public class TemplateTest {
 	@Test
 	public void testGetId() throws MergeException {
 		TemplateId test = new TemplateId("system", "test", "");
-		Template newTemplate = new Template("system", "test", "", config);
+		Template newTemplate = new Template("system", "test", "");
 		TemplateId real = newTemplate.getId();
 		assertEquals(test.group, real.group);
 		assertEquals(test.name, real.name);
@@ -341,8 +340,8 @@ public class TemplateTest {
 	public void testGetSetContext() throws MergeException {
 		assertEquals(null, template.getContext());
 		Config config = new Config();
-		TemplateCache cache = new TemplateCache(config);
-		Merger context = new Merger(cache, config, "system.sample.");
+		TemplateCache cache = new TemplateCache();
+		Merger context = new Merger(cache, "system.sample.");
 		template.setContext(context);
 		assertSame(context, template.getContext());
 	}

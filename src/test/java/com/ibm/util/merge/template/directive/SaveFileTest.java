@@ -16,7 +16,6 @@ import com.ibm.util.merge.template.directive.AbstractDirective;
 import com.ibm.util.merge.template.directive.SaveFile;
 
 public class SaveFileTest {
-	private Config config;
 	private TemplateCache cache;
 	private Merger merger;
 	private Template template;
@@ -24,9 +23,9 @@ public class SaveFileTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		config = new Config();
-		cache = new TemplateCache(config);
-		merger = new Merger(cache, config, "system.sample.");
+		Config.initialize();
+		cache = new TemplateCache();
+		merger = new Merger(cache, "system.sample.");
 		directive = new SaveFile();
 	}
 
@@ -42,8 +41,8 @@ public class SaveFileTest {
 	
 	@Test
 	public void testExecute() throws MergeException {
-		config.setTempFolder("");
-		template = new Template("save", "test", "", "Some Simple Content", config);
+		Config.get().setTempFolder("");
+		template = new Template("save", "test", "", "Some Simple Content");
 		directive.setFilename("testMember.txt");
 		directive.setClearAfter(true);
 		template.addDirective(directive);
@@ -58,8 +57,8 @@ public class SaveFileTest {
 
 	@Test
 	public void testExecuteNoClear() throws MergeException {
-		config.setTempFolder("");
-		template = new Template("save", "test", "", "Some Simple Content", config);
+		Config.get().setTempFolder("");
+		template = new Template("save", "test", "", "Some Simple Content");
 		directive.setFilename("testMember.txt");
 		directive.setClearAfter(false);
 		template.addDirective(directive);

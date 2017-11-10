@@ -20,7 +20,6 @@ import com.ibm.util.merge.template.directive.AbstractDirective;
 import com.ibm.util.merge.template.directive.ParseData;
 
 public class ParseDataTest {
-	private Config config;
 	private TemplateCache cache;
 	private Merger merger;
 	private Template template;
@@ -34,9 +33,9 @@ public class ParseDataTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		config = new Config();
-		cache = new TemplateCache(config);
-		template = new Template("system", "test", "", "test content", config);
+		Config.initialize();
+		cache = new TemplateCache();
+		template = new Template("system", "test", "", "test content");
 		directive = new ParseData();
 		directive.setName("name");
 		directive.setDataSource("test");
@@ -45,7 +44,7 @@ public class ParseDataTest {
 		directive.setDataDelimeter("-");
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		merger = new Merger(cache, config, "system.test.");
+		merger = new Merger(cache, "system.test.");
 		
 		sourceObject = new DataObject();
 		sourceObject.put("Attr1", new DataPrimitive(jsonString1));

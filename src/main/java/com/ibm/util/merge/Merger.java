@@ -59,18 +59,7 @@ public class Merger {
 		return values;
 	}
 	
-	/**
-	 * Enumeration List
-	 * @return
-	 */
-	public static final HashMap<String, HashSet<String>> ENUMS() {
-		HashMap<String, HashSet<String>> myEnums = new HashMap<String, HashSet<String>>(); 
-		myEnums.put(DATA_SOURCE, DATA_SOURCES());
-		return myEnums;
-	}
-
 	// Instance Variables
-	private Config config;
 	private TemplateCache cahce;
 	private Template baseTemplate;
 	private DataManager mergeData;
@@ -88,10 +77,8 @@ public class Merger {
 	 */
 	public Merger(
 			TemplateCache cache, 
-			Config config,
 			String template) throws MergeException {
 		this.cahce = cache;
-		this.config = config;
 		this.baseTemplate = cache.getMergable(this, template, new HashMap<String,String>());
 		this.mergeData = new DataManager();
 		this.templateStack = new ArrayList<String>();
@@ -112,11 +99,10 @@ public class Merger {
 	 */
 	public Merger(
 			TemplateCache cache, 
-			Config config,
 			String template, 
 			Map<String,String[]> parameterMap,
 			String requestData) throws MergeException {
-		this(cache,config,template);
+		this(cache,template);
 		mergeData.put(Merger.IDMU_PARAMETERS, "-", parameterMap);
 		mergeData.put(Merger.IDMU_PAYLOAD, 	  "-", requestData);
 	}
@@ -171,7 +157,7 @@ public class Merger {
 			if (this.mergeData.contians(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_NAME, "-")) {
 				this.archive.setFileName(mergeData.get(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_NAME + "-[0]", "-").getAsPrimitive());
 			}
-			this.archive.setFilePath(config.getTempFolder());
+			this.archive.setFilePath(Config.get().getTempFolder());
 			return this.archive;
 		}
 		return archive;
@@ -274,14 +260,7 @@ public class Merger {
 	// Simple Getters below here
 	
 	/**
-	 * @return config The current configuration object
-	 */
-	public Config getConfig() {
-		return config;
-	}
-
-	/**
-	 * @return cache The Templace Cache
+	 * @return cache The Template Cache
 	 */
 	public TemplateCache getCahce() {
 		return cahce;

@@ -12,16 +12,15 @@ import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.exception.MergeException;
 
 public class GzipArchiveTest {
-	private Config config;
 	private TemplateCache cache;
 	private Merger context;
 	private GzipArchive archive;
 	
 	@Before
 	public void setUp() throws Exception {
-		config = new Config();
-		cache = new TemplateCache(config);
-		context = new Merger(cache, config, "system.sample.");
+		Config.initialize();
+		cache = new TemplateCache();
+		context = new Merger(cache, "system.sample.");
 		archive = new GzipArchive(context);
 	}
 

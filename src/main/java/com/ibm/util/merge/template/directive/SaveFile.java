@@ -18,7 +18,6 @@ package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.storage.Archive;
@@ -49,8 +48,8 @@ public class SaveFile extends AbstractDirective {
 	}
 
 	@Override
-	public void cleanup(Config config, Template template) throws MergeException {
-		this.cleanupAbstract(config, template);
+	public void cleanup(Template template) throws MergeException {
+		this.cleanupAbstract(template);
 	}
 
 	@Override

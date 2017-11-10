@@ -16,6 +16,7 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
@@ -53,7 +54,7 @@ public class FileSystemProvider implements ProviderInterface {
 	@Override
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws Merge500 {
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_NONE);
-		query.replace(replace, false, context.getConfig().getNestLimit());
+		query.replace(replace, false, Config.get().getNestLimit());
 		DataObject result = new DataObject();
 
 		File templateFolder = new File(this.getSource());

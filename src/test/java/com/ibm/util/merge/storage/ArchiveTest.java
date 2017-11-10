@@ -42,16 +42,15 @@ public class ArchiveTest {
 	    }
 		
 	}
-	private Config config;
 	private TemplateCache cache;
 	private Merger context;
 	Archive archive;
 	
 	@Before
 	public void setUp() throws Exception {
-		config = new Config();
-		cache = new TemplateCache(config);
-		context = new Merger(cache, config, "system.error500.");
+		Config.initialize();
+		cache = new TemplateCache();
+		context = new Merger(cache, "system.error500.");
 		archive = new AbstractTest(context);
 	}
 

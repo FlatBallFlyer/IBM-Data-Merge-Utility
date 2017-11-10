@@ -13,16 +13,15 @@ import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.exception.MergeException;
 
 public class ZipArchiveTest {
-	private Config config;
 	private TemplateCache cache;
 	private Merger context;
 	private ZipArchive archive;
 
 	@Before
 	public void setUp() throws Exception {
-		config = new Config();
-		cache = new TemplateCache(config);
-		context = new Merger(cache, config, "system.sample.");
+		Config.initialize();
+		cache = new TemplateCache();
+		context = new Merger(cache, "system.sample.");
 		archive = new ZipArchive(context);
 	}
 

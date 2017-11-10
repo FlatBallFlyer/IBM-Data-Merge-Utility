@@ -110,8 +110,8 @@ public class ParseData extends AbstractDataDirective {
 	}
 	
 	@Override
-	public void cleanup(Config config, Template template) throws MergeException {
-		this.cleanupAbstract(config, template);
+	public void cleanup(Template template) throws MergeException {
+		this.cleanupAbstract(template);
 	}
 
 	@Override

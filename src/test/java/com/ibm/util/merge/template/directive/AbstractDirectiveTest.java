@@ -27,7 +27,7 @@ public class AbstractDirectiveTest {
 		}
 
 		@Override
-		public void cleanup(Config config, Template template)
+		public void cleanup(Template template)
 				throws MergeException {
 		}
 
@@ -36,6 +36,7 @@ public class AbstractDirectiveTest {
 
 	@Before
 	public void setUp() throws Exception {
+		Config.initialize();
 		 test = new AbstractTest();
 	}
 
@@ -55,7 +56,7 @@ public class AbstractDirectiveTest {
 
 	@Test
 	public void testGetSetTemplate() throws MergeException, MergeException {
-		Template template = new Template(new Config());
+		Template template = new Template();
 		test.setTemplate(template);
 		assertSame(template, test.getTemplate());
 	}

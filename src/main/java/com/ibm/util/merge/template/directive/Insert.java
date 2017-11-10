@@ -143,8 +143,8 @@ public class Insert extends AbstractDataDirective {
 	}
 	
 	@Override
-	public void cleanup(Config config, Template template) throws MergeException {
-		this.cleanupAbstract(config, template);
+	public void cleanup(Template template) throws MergeException {
+		this.cleanupAbstract(template);
 	}
 
 	@Override
@@ -275,7 +275,7 @@ public class Insert extends AbstractDataDirective {
 	 * @throws MergeException
 	 */
 	public void insertAtBookmarks(Merger context, DataElement value, boolean isFirst, boolean isLast) throws MergeException {
-		if (context.getStackSize() > context.getConfig().getInsertLimit()) {
+		if (context.getStackSize() > Config.get().getInsertLimit()) {
 			throw new Merge500("template insert recursion safety, merge stack size exceded");
 		}
 

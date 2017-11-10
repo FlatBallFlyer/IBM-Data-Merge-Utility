@@ -16,18 +16,17 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
 public class FileSystemProviderTest {
-	private Config config;
 	private TemplateCache cache;
 	private Template template;
 	private Merger context;
 	
 	@Before
 	public void setUp() throws Exception {
-		config = new Config();
-		cache = new TemplateCache(config);
-		template = new Template("system", "test", "", "Content", config);
+		Config.initialize();
+		cache = new TemplateCache();
+		template = new Template("system", "test", "", "Content");
 		cache.postTemplate(template);
-		context = new Merger(cache, config, "system.test.");
+		context = new Merger(cache, "system.test.");
 	}
 
 	@Test

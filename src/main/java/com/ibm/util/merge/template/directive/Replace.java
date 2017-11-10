@@ -213,8 +213,8 @@ public class Replace extends AbstractDataDirective {
 	}
 
 	@Override
-	public void cleanup(Config config, Template template) throws MergeException {
-		this.cleanupAbstract(config, template);
+	public void cleanup(Template template) throws MergeException {
+		this.cleanupAbstract(template);
 	}
 
 	@Override
@@ -314,7 +314,7 @@ public class Replace extends AbstractDataDirective {
 		}
 		
 		if (this.processAfter) {
-			template.getMergeContent().replace(template.getReplaceStack(), this.processRequire, this.getTemplate().getContext().getConfig().getNestLimit()); 
+			template.getMergeContent().replace(template.getReplaceStack(), this.processRequire, Config.get().getNestLimit()); 
 		}
 	}
 	

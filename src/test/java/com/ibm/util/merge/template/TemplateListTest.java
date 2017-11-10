@@ -11,19 +11,17 @@ public class TemplateListTest {
 	
 	@Test
 	public void testAdd() throws MergeException {
-		Config config = new Config();
 		TemplateList list = new TemplateList();
 		assertEquals(0, list.size());
-		list.add(new Template(config));
+		list.add(new Template());
 		assertEquals(1, list.size());
 	}
 
 	@Test
 	public void testGet() throws MergeException {
-		Config config = new Config();
 		TemplateList list = new TemplateList();
 		assertEquals(0, list.size());
-		Template newTemplate = new Template(config);
+		Template newTemplate = new Template();
 		list.add(newTemplate);
 		assertEquals(1, list.size());
 		Template again = list.get(0);

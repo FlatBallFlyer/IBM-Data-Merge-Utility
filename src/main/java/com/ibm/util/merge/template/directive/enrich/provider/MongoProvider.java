@@ -38,6 +38,7 @@ package com.ibm.util.merge.template.directive.enrich.provider;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
@@ -84,7 +85,7 @@ public class MongoProvider implements ProviderInterface {
 		String uri;
 
 		// Get Credentials (TODO Assumed same as JDBC)
-		String config = context.getConfig().getEnv(source);
+		String config = Config.get().getEnv(source);
 		try {
 			DataObject credentials = parser.parse(Parser.PARSE_JSON, config).getAsObject().get("credentials").getAsObject();
 			db_type = 		credentials.get("db_type").getAsPrimitive();
@@ -105,7 +106,7 @@ public class MongoProvider implements ProviderInterface {
 	@Override
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_JSON);
-		query.replace(replace, false, context.getConfig().getNestLimit());
+		query.replace(replace, false, Config.get().getNestLimit());
 		
 		String result = connection;  // TODO - Use connection to make Mongo Call
 		return new DataPrimitive(result);

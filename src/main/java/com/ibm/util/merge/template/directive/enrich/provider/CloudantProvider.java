@@ -22,6 +22,7 @@ import com.cloudant.client.api.ClientBuilder;
 import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.Database;
 import com.cloudant.client.org.lightcouch.CouchDbException;
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
@@ -79,7 +80,7 @@ public class CloudantProvider implements ProviderInterface {
 		
 		// Fetch Credentials
 		try {
-			configString = context.getConfig().getEnv(source);
+			configString = Config.get().getEnv(source);
 			DataObject credentials = proxy.fromJSON(configString, DataElement.class).getAsList().get(0).getAsObject().get("credentials").getAsObject();
 			username = 	credentials.get("username").getAsPrimitive();
 			password = 	credentials.get("password").getAsPrimitive();

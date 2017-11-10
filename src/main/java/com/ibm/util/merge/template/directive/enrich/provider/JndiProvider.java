@@ -16,6 +16,7 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
@@ -72,7 +73,7 @@ public class JndiProvider implements ProviderInterface {
 	@Override
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_SQL);
-		query.replace(replace, false, context.getConfig().getNestLimit());
+		query.replace(replace, false, Config.get().getNestLimit());
 		DataList table = new DataList();
 		ResultSet results;
 

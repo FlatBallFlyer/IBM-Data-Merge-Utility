@@ -16,7 +16,6 @@ import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.TemplateList;
 
 public class TemplateCacheTest {
-	private Config config;
 	private TemplateCache cache;
 	private Merger context;
 	private HashMap<String,String> replace;
@@ -24,9 +23,9 @@ public class TemplateCacheTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		config = new Config();
-		cache = new TemplateCache(config);
-		context = new Merger(cache, config, "system.sample.");
+		Config.initialize();
+		cache = new TemplateCache();
+		context = new Merger(cache, "system.sample.");
 
 		replace = new HashMap<String,String>();
 		replace .put("foo", "bar");
@@ -44,14 +43,9 @@ public class TemplateCacheTest {
 
 	@Test
 	public void testTemplateCacheFile() throws MergeException {
-		config.setLoadFolder("src/test/resources");
-		cache = new TemplateCache(config);
+		Config.get().setLoadFolder("src/test/resources");
+		cache = new TemplateCache();
 		assertEquals(8, cache.getSize());
-	}
-
-	@Test
-	public void testGetConfig() {
-		assertSame(config, cache.getConfig());
 	}
 
 	@Test
@@ -105,7 +99,7 @@ public class TemplateCacheTest {
 
 	@Test
 	public void testPostGetPutDeleteTemplate() throws MergeException {
-		Template newTemplate = new Template("new","test","", config);
+		Template newTemplate = new Template("new","test","");
 		assertEquals(4, cache.getSize());
 		cache.postTemplate(newTemplate);
 		assertEquals(5, cache.getSize());
@@ -119,7 +113,7 @@ public class TemplateCacheTest {
 
 	@Test
 	public void testPostTemplateExisting() throws MergeException {
-		Template newTemplate = new Template("new","test","", config);
+		Template newTemplate = new Template("new","test","");
 		try {
 			cache.postTemplate(newTemplate);
 			cache.postTemplate(newTemplate);
@@ -209,11 +203,11 @@ public class TemplateCacheTest {
 
 	@Test
 	public void testPutTemplateString() throws MergeException {
-		cache.postTemplate(new Template("test","putpost","", "Very Simple Test", config));
+		cache.postTemplate(new Template("test","putpost","", "Very Simple Test"));
 		Template template = cache.getMergable(context, "test.putpost.");
 		assertEquals("Very Simple Test", template.getContent().toString());
 		
-		template = new Template("test","putpost","","Something New", config);
+		template = new Template("test","putpost","","Something New");
 		assertEquals("Something New", template.getContent().toString());
 		cache.putTemplate(gson.toJson(template));
 		template = cache.getMergable(context, "test.putpost.", replace);
@@ -222,7 +216,7 @@ public class TemplateCacheTest {
 
 	@Test
 	public void testPutTemplateStringNotFound() throws MergeException {
-		Template newTemplate = new Template("test","new","", config);
+		Template newTemplate = new Template("test","new","");
 		try {
 			cache.putTemplate(newTemplate);
 		} catch (MergeException e) {
@@ -257,17 +251,17 @@ public class TemplateCacheTest {
 
 	@Test
 	public void testGetGroupListAll() throws MergeException {
-		cache.postTemplate(new Template("test","one","","content", config));
+		cache.postTemplate(new Template("test","one","","content"));
 		String list = cache.getGroup("");
 		assertEquals("[\"system\",\"test\"]", list);
 	}
 
 	@Test
 	public void testPostGroup() throws MergeException {
-		cache.postTemplate(new Template("test","one","","content", config));
-		cache.postTemplate(new Template("test","two","","content", config));
-		cache.postTemplate(new Template("test","foo","","content", config));
-		cache.postTemplate(new Template("test","bar","","content", config));
+		cache.postTemplate(new Template("test","one","","content"));
+		cache.postTemplate(new Template("test","two","","content"));
+		cache.postTemplate(new Template("test","foo","","content"));
+		cache.postTemplate(new Template("test","bar","","content"));
 		assertEquals(8, cache.getSize());
 		String test = cache.getGroup("test");
 		cache.deleteGroup("test");
@@ -286,10 +280,10 @@ public class TemplateCacheTest {
 	@Test
 	public void testPutGroup() throws MergeException {
 		assertEquals(4, cache.getSize());
-		cache.postTemplate(new Template("test","one","","content", config));
-		cache.postTemplate(new Template("test","two","","content", config));
-		cache.postTemplate(new Template("test","foo","","content", config));
-		cache.postTemplate(new Template("test","bar","","content", config));
+		cache.postTemplate(new Template("test","one","","content"));
+		cache.postTemplate(new Template("test","two","","content"));
+		cache.postTemplate(new Template("test","foo","","content"));
+		cache.postTemplate(new Template("test","bar","","content"));
 		assertEquals(8, cache.getSize());
 
 		String list = cache.getGroup("test");
@@ -301,7 +295,7 @@ public class TemplateCacheTest {
 
 	@Test
 	public void testGetStats() throws MergeException {
-		cache.postTemplate(new Template("test","stats","", config));
+		cache.postTemplate(new Template("test","stats",""));
 		cache.getMergable(context, "test.stats.", replace);
 		cache.getMergable(context, "test.stats.", replace);
 		cache.getMergable(context, "test.stats.", replace);
@@ -317,10 +311,10 @@ public class TemplateCacheTest {
 
 	@Test
 	public void testDeleteGroup() throws MergeException {
-		cache.postTemplate(new Template("test","one","","content", config));
-		cache.postTemplate(new Template("test","two","","content", config));
-		cache.postTemplate(new Template("test","foo","","content", config));
-		cache.postTemplate(new Template("test","bar","","content", config));
+		cache.postTemplate(new Template("test","one","","content"));
+		cache.postTemplate(new Template("test","two","","content"));
+		cache.postTemplate(new Template("test","foo","","content"));
+		cache.postTemplate(new Template("test","bar","","content"));
 		assertEquals(8, cache.getSize());
 		cache.deleteGroup("test");
 		assertEquals(4, cache.getSize());

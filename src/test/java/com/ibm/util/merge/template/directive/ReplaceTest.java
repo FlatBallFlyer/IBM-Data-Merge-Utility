@@ -17,13 +17,12 @@ import com.ibm.util.merge.template.content.TagSegment;
 import com.ibm.util.merge.template.directive.Replace;
 
 public class ReplaceTest {
-	private Config config;
 	private TemplateCache cache;
 	
 	@Before
 	public void setUp() throws Exception {
-		config = new Config();
-		cache = new TemplateCache(config);
+		Config.initialize();
+		cache = new TemplateCache();
 	}
 
 	@Test
@@ -107,7 +106,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testExecuteMissingThrow() throws MergeException {
-		Template template = new Template("test", "missing", "throw", "<foo> - <one>", "<", ">", config );
+		Template template = new Template("test", "missing", "throw", "<foo> - <one>", "<", ">" );
 		Replace directive = new Replace("missing","-",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_IGNORE,
@@ -122,7 +121,7 @@ public class ReplaceTest {
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
-			Merger context = new Merger(cache, config, "test.missing.throw");
+			Merger context = new Merger(cache, "test.missing.throw");
 			context.merge();
 		} catch (MergeException e) {
 			return; // Expected
@@ -132,7 +131,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testExecuteMissingSkip() throws MergeException {
-		Template template = new Template("test", "replace", "missing", "<foo> - <one>", "<", ">", config);
+		Template template = new Template("test", "replace", "missing", "<foo> - <one>", "<", ">");
 		Replace directive = new Replace("missing","-",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
@@ -146,14 +145,14 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.replace.missing");
+		Merger context = new Merger(cache, "test.replace.missing");
 		template = context.merge();
 		assertEquals("<foo> - <one>", template.getContent());
 	}
 
 	@Test
 	public void testExecutePrimitiveThrow() throws MergeException {
-		Template template = new Template("test", "primitive", "throw", "<foo> - <one>", "<", ">", config);
+		Template template = new Template("test", "primitive", "throw", "<foo> - <one>", "<", ">");
 		Replace directive = new Replace("data.primitive", "-",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_THROW,
@@ -168,7 +167,7 @@ public class ReplaceTest {
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
-			Merger context = new Merger(cache, config, "test.primitive.throw");
+			Merger context = new Merger(cache, "test.primitive.throw");
 			DataPrimitive primitive = new DataPrimitive("test");
 			context.getMergeData().put("data.primitive", "-", primitive);
 			context.merge();
@@ -180,7 +179,7 @@ public class ReplaceTest {
 
 	@Test
 	public void testExecutePrimitiveIgnore() throws MergeException {
-		Template template = new Template("test", "primitive", "ignore", "<data.primitive> - <one>", "<", ">", config);
+		Template template = new Template("test", "primitive", "ignore", "<data.primitive> - <one>", "<", ">");
 		Replace directive = new Replace("data.primitive", "-",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_IGNORE,
@@ -194,7 +193,7 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.primitive.ignore");
+		Merger context = new Merger(cache, "test.primitive.ignore");
 		DataPrimitive primitive = new DataPrimitive("test");
 		context.getMergeData().put("data.primitive", "-", primitive);
 		template = context.merge();
@@ -203,7 +202,7 @@ public class ReplaceTest {
 
 	@Test
 	public void testExecutePrimitiveReplace() throws MergeException {
-		Template template = new Template("test", "replace", "primitive", "<foo>", "<", ">", config);
+		Template template = new Template("test", "replace", "primitive", "<foo>", "<", ">");
 		Replace directive = new Replace("data.object-foo", "-",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_REPLACE,
@@ -217,7 +216,7 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.replace.primitive");
+		Merger context = new Merger(cache, "test.replace.primitive");
 		DataObject object = new DataObject();
 		object.put("foo", new DataPrimitive("bar"));
 		object.put("one", new DataPrimitive("two"));
@@ -228,7 +227,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testExecutePrimitiveJson() throws MergeException {
-		Template template = new Template("test", "replace", "primitive", "<data>", "<", ">", config);
+		Template template = new Template("test", "replace", "primitive", "<data>", "<", ">");
 		template.setContentEncoding(TagSegment.ENCODE_NONE);
 		Replace directive = new Replace("data", "-",
 				Replace.MISSING_THROW,
@@ -243,7 +242,7 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.replace.primitive");
+		Merger context = new Merger(cache, "test.replace.primitive");
 		DataPrimitive primitive = new DataPrimitive("bar");
 		context.getMergeData().put("data", "-", primitive);
 		template = context.merge();
@@ -252,7 +251,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testExecuteObjectThrow() throws MergeException {
-		Template template = new Template("test", "object", "throw", "<foo> - <one>", "<", ">", config);
+		Template template = new Template("test", "object", "throw", "<foo> - <one>", "<", ">");
 		Replace directive = new Replace("data.object", "-",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
@@ -267,7 +266,7 @@ public class ReplaceTest {
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
-			Merger context = new Merger(cache, config, "test.primitive.throw");
+			Merger context = new Merger(cache, "test.primitive.throw");
 			DataObject object = new DataObject();
 			object.put("foo", new DataPrimitive("bar"));
 			object.put("one", new DataPrimitive("two"));
@@ -281,7 +280,7 @@ public class ReplaceTest {
 
 	@Test
 	public void testExecuteObjectIgnore() throws MergeException {
-		Template template = new Template("test", "replace", "missing", "<foo> - <one>", "<", ">", config);
+		Template template = new Template("test", "replace", "missing", "<foo> - <one>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -295,7 +294,7 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.replace.missing");
+		Merger context = new Merger(cache, "test.replace.missing");
 		DataObject object = new DataObject();
 		object.put("foo", new DataPrimitive("bar"));
 		object.put("one", new DataPrimitive("two"));
@@ -306,7 +305,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testReplaceObjectList() throws MergeException {
-		Template template = new Template("test", "object", "json", "<foo>", "<", ">", config);
+		Template template = new Template("test", "object", "json", "<foo>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -322,7 +321,7 @@ public class ReplaceTest {
 		directive.setToAttribute("to");
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.object.json");
+		Merger context = new Merger(cache, "test.object.json");
 		DataObject obj = new DataObject();
 		obj.put("from", new DataPrimitive("foo"));
 		obj.put("to", new DataPrimitive("bar"));
@@ -333,7 +332,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testReplaceObjectJson() throws MergeException {
-		Template template = new Template("test", "object", "json", "<data.object>", "<", ">", config);
+		Template template = new Template("test", "object", "json", "<data.object>", "<", ">");
 		Replace directive = new Replace("data.object", "-",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
@@ -347,7 +346,7 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.object.json");
+		Merger context = new Merger(cache, "test.object.json");
 		DataObject object = new DataObject();
 		object.put("foo", new DataPrimitive("bar"));
 		object.put("one", new DataPrimitive("two"));
@@ -370,7 +369,7 @@ public class ReplaceTest {
 		replaceObject.put("I", new DataPrimitive("i"));
 		replaceObject.put("J", new DataPrimitive("j"));
 
-		Template template = new Template("test", "object", "replace", "<A><B><C><D><E><F><G><H><I><J>", "<", ">", config);
+		Template template = new Template("test", "object", "replace", "<A><B><C><D><E><F><G><H><I><J>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -385,7 +384,7 @@ public class ReplaceTest {
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
-			Merger context = new Merger(cache, config, "test.object.replace");
+			Merger context = new Merger(cache, "test.object.replace");
 			context.getMergeData().put("data.object", "-", replaceObject);
 			context.merge();
 		} catch (MergeException e) {
@@ -407,7 +406,7 @@ public class ReplaceTest {
 		replaceObject.put("I", new DataPrimitive("i"));
 		replaceObject.put("J", new DataPrimitive("j"));
 
-		Template template = new Template("test", "object", "replace", "<A><B><C><D><E><F><G><H><I><J>", "<", ">", config);
+		Template template = new Template("test", "object", "replace", "<A><B><C><D><E><F><G><H><I><J>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -421,7 +420,7 @@ public class ReplaceTest {
 				true, false);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.object.replace");
+		Merger context = new Merger(cache, "test.object.replace");
 		context.getMergeData().put("data.object", "-", replaceObject);
 		template = context.merge();
 		assertEquals("<A><B><C><D><E><F><G><H><I><J>", template.getMergedOutput().getValue());
@@ -441,7 +440,7 @@ public class ReplaceTest {
 		replaceObject.put("I", new DataPrimitive("i"));
 		replaceObject.put("J", new DataPrimitive("j"));
 
-		Template template = new Template("test", "object", "replace", "<A><B><C><D><E><F><G><H><I><J>", "<", ">", config);
+		Template template = new Template("test", "object", "replace", "<A><B><C><D><E><F><G><H><I><J>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -454,9 +453,9 @@ public class ReplaceTest {
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
 		template.addDirective(directive);
-		template.cleanup(config);
+		template.cleanup();
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.object.replace");
+		Merger context = new Merger(cache, "test.object.replace");
 		context.getMergeData().put("data.object", "-", replaceObject);
 		template = context.merge();
 		assertEquals("abcdefghij", template.getMergedOutput().getValue());
@@ -475,7 +474,7 @@ public class ReplaceTest {
 		DataObject aObject = new DataObject();
 		replaceObject.put("C", aObject);
 
-		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">", config);
+		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -489,7 +488,7 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.object.replace");
+		Merger context = new Merger(cache, "test.object.replace");
 		context.getMergeData().put("data.object", "-", replaceObject);
 		try {
 			context.merge();
@@ -512,7 +511,7 @@ public class ReplaceTest {
 		DataObject aObject = new DataObject();
 		replaceObject.put("C", aObject);
 
-		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">", config);
+		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -526,7 +525,7 @@ public class ReplaceTest {
 				true, false);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.object.replace");
+		Merger context = new Merger(cache, "test.object.replace");
 		context.getMergeData().put("data.object", "-", replaceObject);
 		template = context.merge();
 		assertEquals("aC<C>", template.getMergedOutput().getValue());
@@ -545,7 +544,7 @@ public class ReplaceTest {
 		aList = new DataList();
 		replaceObject.put("C", aList);
 
-		Template template = new Template("test", "object", "replace", "<A><B><C><D><E><F><G><H><I><J>", "<", ">", config);
+		Template template = new Template("test", "object", "replace", "<A><B><C><D><E><F><G><H><I><J>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -559,7 +558,7 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.object.replace");
+		Merger context = new Merger(cache, "test.object.replace");
 		context.getMergeData().put("data.object", "-", replaceObject);
 		try {
 			template = context.merge();
@@ -582,7 +581,7 @@ public class ReplaceTest {
 		aList = new DataList();
 		replaceObject.put("C", aList);
 
-		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">", config);
+		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -596,7 +595,7 @@ public class ReplaceTest {
 				true, false);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.object.replace");
+		Merger context = new Merger(cache, "test.object.replace");
 		context.getMergeData().put("data.object", "-", replaceObject);
 		template = context.merge();
 		assertEquals("<A><B><C>", template.getMergedOutput().getValue());
@@ -615,7 +614,7 @@ public class ReplaceTest {
 		aList = new DataList();
 		replaceObject.put("C", aList);
 
-		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">", config);
+		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -629,7 +628,7 @@ public class ReplaceTest {
 				true, false);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.object.replace");
+		Merger context = new Merger(cache, "test.object.replace");
 		context.getMergeData().put("data.object", "-", replaceObject);
 		template = context.merge();
 		assertEquals("aC<C>", template.getMergedOutput().getValue());
@@ -648,7 +647,7 @@ public class ReplaceTest {
 		aList = new DataList();
 		replaceObject.put("C", aList);
 
-		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">", config);
+		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -662,7 +661,7 @@ public class ReplaceTest {
 				true, false);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.object.replace");
+		Merger context = new Merger(cache, "test.object.replace");
 		context.getMergeData().put("data.object", "-", replaceObject);
 		template = context.merge();
 		assertEquals("bC<C>", template.getMergedOutput().getValue());
@@ -670,7 +669,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testExecuteListThrow() throws MergeException {
-		Template template = new Template("test", "replace", "missing", "content", "<", ">", config);
+		Template template = new Template("test", "replace", "missing", "content", "<", ">");
 		Replace directive = new Replace("data.list", "-", 
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
@@ -685,7 +684,7 @@ public class ReplaceTest {
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
-			Merger context = new Merger(cache, config, "test.primitive.throw");
+			Merger context = new Merger(cache, "test.primitive.throw");
 			DataList list = new DataList();
 			context.getMergeData().put("data.list", "-", list);
 			template = context.merge();
@@ -698,7 +697,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testExecuteListIgnore() throws MergeException {
-		Template template = new Template("test", "list", "ignore", "<foo> - <one>", "<", ">", config);
+		Template template = new Template("test", "list", "ignore", "<foo> - <one>", "<", ">");
 		Replace directive = new Replace("data.list", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -712,7 +711,7 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.list.ignore");
+		Merger context = new Merger(cache, "test.list.ignore");
 		DataList list = new DataList();
 		DataObject obj = new DataObject();
 		obj.put("from", new DataPrimitive("foo"));
@@ -728,7 +727,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testExecuteListReplace() throws MergeException {
-		Template template = new Template("test", "replace", "list", "<foo> - <one>", "<", ">", config);
+		Template template = new Template("test", "replace", "list", "<foo> - <one>", "<", ">");
 		Replace directive = new Replace("data.list", "-", 
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
@@ -744,7 +743,7 @@ public class ReplaceTest {
 		directive.setToAttribute("to");
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.replace.list");
+		Merger context = new Merger(cache, "test.replace.list");
 		DataList list = new DataList();
 		DataObject obj = new DataObject();
 		obj.put("from", new DataPrimitive("foo"));
@@ -771,7 +770,7 @@ public class ReplaceTest {
 		list.add(replaceObj1);
 		list.add(replaceObj2);
 
-		Template template = new Template("test", "list", "first", "<A><B><C><D>", "<", ">", config);
+		Template template = new Template("test", "list", "first", "<A><B><C><D>", "<", ">");
 		Replace directive = new Replace("data.list", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -785,7 +784,7 @@ public class ReplaceTest {
 				true, false);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.list.first");
+		Merger context = new Merger(cache, "test.list.first");
 		context.getMergeData().put("data.list", "-", list);
 		template = context.merge();
 		assertEquals("ab<C><D>", template.getMergedOutput().getValue());
@@ -803,7 +802,7 @@ public class ReplaceTest {
 		list.add(replaceObj1);
 		list.add(replaceObj2);
 
-		Template template = new Template("test", "list", "first", "<A><B><C><D>", "<", ">", config);
+		Template template = new Template("test", "list", "first", "<A><B><C><D>", "<", ">");
 		Replace directive = new Replace("data.list", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -817,7 +816,7 @@ public class ReplaceTest {
 				true, false);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.list.first");
+		Merger context = new Merger(cache, "test.list.first");
 		context.getMergeData().put("data.list", "-", list);
 		template = context.merge();
 		assertEquals("<A><B>cd", template.getMergedOutput().getValue());
@@ -835,7 +834,7 @@ public class ReplaceTest {
 		list.add(replaceObj1);
 		list.add(replaceObj2);
 
-		Template template = new Template("test", "list", "json", "<data.list>", "<", ">", config);
+		Template template = new Template("test", "list", "json", "<data.list>", "<", ">");
 		Replace directive = new Replace("data.list", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -849,7 +848,7 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.list.json");
+		Merger context = new Merger(cache, "test.list.json");
 		context.getMergeData().put("data.list", "-", list);
 		template = context.merge();
 		assertEquals("[{\"A\":\"a\",\"B\":\"b\"},{\"D\":\"d\",\"C\":\"c\"}]", template.getMergedOutput().getValue());
@@ -857,7 +856,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testExecuteNoProcess() throws MergeException {
-		Template template = new Template("test", "object", "replace", "<foo> - <one> - <three>", "<", ">", config);
+		Template template = new Template("test", "object", "replace", "<foo> - <one> - <three>", "<", ">");
 		Replace directive = new Replace("data.default", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -883,7 +882,7 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.object.replace");
+		Merger context = new Merger(cache, "test.object.replace");
 		DataObject object = new DataObject();
 		object.put("foo", new DataPrimitive("bar"));
 		object.put("one", new DataPrimitive("two"));
@@ -899,7 +898,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testExecuteRepeatTwo() throws MergeException {
-		Template template = new Template("test", "repeat", "", "<foo parseFirst>", "<", ">", config);
+		Template template = new Template("test", "repeat", "", "<foo parseFirst>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -913,21 +912,21 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		config.setNestLimit(4);
-		Merger context = new Merger(cache, config, "test.repeat.");
+		Config.get().setNestLimit(4);
+		Merger context = new Merger(cache, "test.repeat.");
 		DataObject object = new DataObject();
 		object.put("foo", new DataPrimitive("<two parseFirst>"));
 		object.put("fooone", new DataPrimitive("<bar parseFirst>"));
 		object.put("two", new DataPrimitive("rab"));
 		context.getMergeData().put("data.object", "-", object);
 		template = context.merge();
-		assertEquals(4, template.getContext().getConfig().getNestLimit());
+		assertEquals(4, Config.get().getNestLimit());
 		assertEquals("rab", template.getMergedOutput().getValue());
 	}
 	
 	@Test // Parameter Object
 	public void testExecuteObjectOfStringList() throws MergeException {
-		Template template = new Template("test", "replace", "parameters", "<foo> - <one>", "<", ">", config);
+		Template template = new Template("test", "replace", "parameters", "<foo> - <one>", "<", ">");
 		Replace directive = new Replace("data.object", "-", 
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
@@ -941,7 +940,7 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.replace.parameters");
+		Merger context = new Merger(cache, "test.replace.parameters");
 		DataObject object = new DataObject();
 		DataList array = new DataList();
 		array.add(new DataPrimitive("bar"));
@@ -957,7 +956,7 @@ public class ReplaceTest {
 
 	@Test
 	public void testExecuteRequire() throws MergeException {
-		Template template = new Template("test", "replace", "require", "<foo>", "<", ">", config);
+		Template template = new Template("test", "replace", "require", "<foo>", "<", ">");
 		Replace directive = new Replace("data", "-",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_REPLACE,
@@ -971,7 +970,7 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Merger context = new Merger(cache, config, "test.replace.require");
+		Merger context = new Merger(cache, "test.replace.require");
 		context.getMergeData().put("data", "-", new DataPrimitive("foo"));
 		try {
 			String answer = context.merge().getMergeContent().getValue();
