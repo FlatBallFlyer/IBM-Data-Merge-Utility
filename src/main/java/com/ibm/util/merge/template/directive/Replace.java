@@ -26,6 +26,7 @@ import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.Path;
 import com.ibm.util.merge.data.PathPart;
+import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
@@ -49,22 +50,28 @@ public class Replace extends AbstractDataDirective {
 	public static final int PRIMITIVE_THROW 	= 1;
 	public static final int PRIMITIVE_IGNORE 	= 2;
 	public static final int PRIMITIVE_REPLACE 	= 3;
+	public static final int PRIMITIVE_JSON	 	= 4;
 	public static final HashMap<Integer, String> PRIMITIVE_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(PRIMITIVE_THROW, 	"throw");
 		options.put(PRIMITIVE_IGNORE, 	"ignore");
 		options.put(PRIMITIVE_REPLACE, 	"replace");
+		options.put(PRIMITIVE_JSON, 	"replace with JSON");
 		return options;
 	}
 
 	public static final int OBJECT_THROW 	= 1;
 	public static final int OBJECT_IGNORE 	= 2;
 	public static final int OBJECT_REPLACE 	= 3;
+	public static final int OBJECT_REPLACE_LIST = 4;
+	public static final int OBJECT_REPLACE_JSON = 5;
 	public static final HashMap<Integer, String> OBJECT_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(OBJECT_THROW, 	"throw");
 		options.put(OBJECT_IGNORE, 	"ignore");
-		options.put(OBJECT_REPLACE, "insertList");
+		options.put(OBJECT_REPLACE, "replace object");
+		options.put(OBJECT_REPLACE_LIST, "replace as list");
+		options.put(OBJECT_REPLACE_JSON, 	"replace with JSON");
 		return options;
 	}
 
@@ -104,11 +111,17 @@ public class Replace extends AbstractDataDirective {
 	public static final int LIST_THROW 		= 1;
 	public static final int LIST_IGNORE 	= 2;
 	public static final int LIST_REPLACE 	= 3;
+	public static final int LIST_FIRST 		= 4;
+	public static final int LIST_LAST 		= 5;
+	public static final int LIST_JSON 		= 6;
 	public static final HashMap<Integer, String> LIST_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(LIST_THROW, 	"throw");
 		options.put(LIST_IGNORE, 	"ignore");
 		options.put(LIST_REPLACE, 	"replace");
+		options.put(LIST_FIRST, 	"use first only");
+		options.put(LIST_LAST,	 	"use last only");
+		options.put(LIST_JSON,	 	"replace with json");
 		return options;
 	}
 
@@ -146,11 +159,13 @@ public class Replace extends AbstractDataDirective {
 	private String fromAttribute;	// used by List
 	private String toAttribute;		// used by List
 	private boolean processAfter;
+	private boolean processRequire;
 	private int objectAttrPrimitive;
 	private int objectAttrList;
 	private int objectAttrObject;
 	private int listAttrMissing;
 	private int listAttrNotPrimitive;
+	private transient DataProxyJson proxy = new DataProxyJson();
 
 	/**
 	 * Instantiate a Replace directive with default values
@@ -167,6 +182,7 @@ public class Replace extends AbstractDataDirective {
 			LIST_THROW,
 			LIST_ATTR_MISSING_THROW,
 			LIST_ATTR_NOT_PRIMITIVE_THROW,
+			true,
 			true
 		);
 	}
@@ -184,7 +200,7 @@ public class Replace extends AbstractDataDirective {
 	 */
 	public Replace(String source, String delimeter, int missing, int primitive, 
 			int object, int objectAttrPrimitive, int objectAttrList, int objectAttrObject, 
-			int list, int listAttrMissing, int listAttrNotPrimitive, boolean process) {
+			int list, int listAttrMissing, int listAttrNotPrimitive, boolean process, boolean require) {
 		super(source, delimeter, missing, primitive, object, list);
 		this.type = AbstractDirective.TYPE_REPLACE;
 		this.processAfter 	= process;
@@ -193,7 +209,7 @@ public class Replace extends AbstractDataDirective {
 		this.objectAttrObject = objectAttrObject;
 		this.listAttrMissing = listAttrMissing;
 		this.listAttrNotPrimitive = listAttrNotPrimitive;
-		
+		this.processRequire = require;
 	}
 
 	@Override
@@ -208,6 +224,7 @@ public class Replace extends AbstractDataDirective {
 		mergable.setFromAttribute(this.fromAttribute);
 		mergable.setToAttribute(this.toAttribute);
 		mergable.setProcessAfter(this.processAfter);
+		mergable.setProcessRequire(this.processRequire);
 		mergable.setIfList(this.getIfList());
 		mergable.setIfObject(this.getIfObject());
 		mergable.setIfPrimitive(this.getIfPrimitive());
@@ -239,7 +256,10 @@ public class Replace extends AbstractDataDirective {
 			case PRIMITIVE_IGNORE :
 				return;
 			case PRIMITIVE_REPLACE :
-				this.replaceFromString(context);
+				this.replaceFromString(data.getAsPrimitive());
+				break;
+			case PRIMITIVE_JSON:
+				this.replaceFromString(proxy.toJson(data.getAsPrimitive()));
 				break;
 			}
 
@@ -250,7 +270,15 @@ public class Replace extends AbstractDataDirective {
 			case OBJECT_IGNORE :
 				return;
 			case OBJECT_REPLACE:
-				this.replaceFromObject(context);
+				this.replaceFromObject(data.getAsObject());
+				break;
+			case OBJECT_REPLACE_LIST:
+				DataList list = new DataList();
+				list.add(data);
+				this.replaceFromList(list);
+				break;
+			case OBJECT_REPLACE_JSON:
+				this.replaceFromString(proxy.toJson(data));
 				break;
 			}
 		
@@ -261,13 +289,32 @@ public class Replace extends AbstractDataDirective {
 			case LIST_IGNORE :
 				return;
 			case LIST_REPLACE :
-				this.replaceFromList(context);
+				this.replaceFromList(data.getAsList());
+				break;
+			case LIST_FIRST:
+				DataElement listFirst = data.getAsList().get(0);
+				if (listFirst.isPrimitive()) {
+					this.replaceFromString(listFirst.getAsPrimitive());
+				} else if (listFirst.isObject()) {
+					this.replaceFromObject(listFirst.getAsObject());
+				}
+				break;
+			case LIST_LAST:
+				DataElement listLast = data.getAsList().get(data.getAsList().size()-1);
+				if (listLast.isPrimitive()) {
+					this.replaceFromString(listLast.getAsPrimitive());
+				} else if (listLast.isObject()) {
+					this.replaceFromObject(listLast.getAsObject());
+				}
+				break;
+			case LIST_JSON:
+				this.replaceFromString(proxy.toJson(data));
 				break;
 			}
 		}
 		
 		if (this.processAfter) {
-			template.getMergeContent().replace(template.getReplaceStack(), true, this.getTemplate().getContext().getConfig().getNestLimit()); 
+			template.getMergeContent().replace(template.getReplaceStack(), this.processRequire, this.getTemplate().getContext().getConfig().getNestLimit()); 
 		}
 	}
 	
@@ -276,8 +323,8 @@ public class Replace extends AbstractDataDirective {
 	 * @param context
 	 * @throws MergeException
 	 */
-	private void replaceFromString(Merger context) throws MergeException {
-		String dataString = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsPrimitive();
+	private void replaceFromString(String dataString) throws MergeException {
+//		String dataString = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsPrimitive();
 		Path dataPath = new Path(this.dataSource, this.dataDelimeter);
 		PathPart from = dataPath.remove();
 		while (from.isList) from = dataPath.remove(); 
@@ -289,8 +336,8 @@ public class Replace extends AbstractDataDirective {
 	 * @param context
 	 * @throws MergeException
 	 */
-	private void replaceFromList(Merger context) throws MergeException {
-		DataList dataList = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsList();
+	private void replaceFromList(DataList dataList) throws MergeException {
+//		DataList dataList = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsList();
 		for (DataElement row : dataList) {
 			if (row.isObject()) {
 				DataObject orow = row.getAsObject();
@@ -327,8 +374,8 @@ public class Replace extends AbstractDataDirective {
 	 * @param context
 	 * @throws MergeException
 	 */
-	private void replaceFromObject(Merger context) throws MergeException {
-		DataObject dataObject = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsObject();
+	private void replaceFromObject(DataObject dataObject) throws MergeException {
+//		DataObject dataObject = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsObject();
 		String from = "";
 		String to = "";
 		for (Entry<String, DataElement> member: dataObject.entrySet()) {
@@ -474,6 +521,14 @@ public class Replace extends AbstractDataDirective {
 		if (LIST_ATTR_NOT_PRIMITIVE_OPTIONS().keySet().contains(listAttrNotPrimitive)) {
 			this.listAttrNotPrimitive = listAttrNotPrimitive;
 		}
+	}
+
+	public boolean getProcessRequire() {
+		return processRequire;
+	}
+
+	public void setProcessRequire(boolean processRequire) {
+		this.processRequire = processRequire;
 	}
 
 	@Override

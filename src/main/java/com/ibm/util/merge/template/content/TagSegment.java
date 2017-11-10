@@ -122,12 +122,12 @@ public class TagSegment extends Segment {
 	 * @param nestLimit
 	 * @throws Merge500
 	 */
-	public void replace(HashMap<String,String> values, boolean softFail, int nestLimit) throws Merge500 {
+	public void replace(HashMap<String,String> values, boolean require, int nestLimit) throws Merge500 {
 		String value;
 		if (values.containsKey(tag)) {
 			value = values.get(tag);
 		} else {
-			if (!softFail) throw new Merge500("Tag Not Found: " + tag);
+			if (require) throw new Merge500("Tag Not Found: " + tag);
 			return;
 		}
 		
@@ -137,7 +137,7 @@ public class TagSegment extends Segment {
 			for (TextSegment seg : newContent.getTexts()) {
 				seg.encode(encode);
 			}
-			newContent.replace(values, softFail, --nestLimit);
+			newContent.replace(values, require, --nestLimit);
 			this.replaceWith(newContent);
 		} else {
 			TextSegment newSeg = new TextSegment(value);

@@ -305,7 +305,7 @@ public class Template {
 		if (!this.mergable) {
 			this.content = content;
 			stats.size = this.content.length();
-			this.mergeContent = new Content(this.wrapper, this.content, config.getNestLimit() );
+			this.mergeContent = new Content(this.wrapper, this.content, this.getContentEncoding() );
 		}
 	}
 	

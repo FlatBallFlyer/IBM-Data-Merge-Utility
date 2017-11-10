@@ -106,7 +106,7 @@ public class TagSegmentTest {
 		TagSegment test = new TagSegment("{","}","foo", Segment.ENCODE_NONE);
 		HashMap<String,String> replace = new HashMap<String,String>();
 		replace.put("fam", "bar");
-		test.replace(replace, true, 3);
+		test.replace(replace, false, 3);
 		assertEquals("{foo}", test.getValue());
 		assertNull(test.getPrevious());
 		assertNull(test.getNext());
@@ -118,7 +118,7 @@ public class TagSegmentTest {
 		HashMap<String,String> replace = new HashMap<String,String>();
 		replace.put("fam", "bar");
 		try {
-			test.replace(replace, false, 3);
+			test.replace(replace, true, 3);
 		} catch (Merge500 e) {
 			assertEquals("Tag Not Found: foo", e.getMessage());
 			return;

@@ -159,11 +159,11 @@ public class Content extends Segment {
 	 * @param nestLimit
 	 * @throws Merge500
 	 */
-	public void replace(HashMap<String,String> replace, boolean softFail, int nestLimit) throws Merge500 {
+	public void replace(HashMap<String,String> replace, boolean require, int nestLimit) throws Merge500 {
 		Segment seg = this.getFirst();
 		while (seg != this) {
 			if (seg instanceof TagSegment) {
-				((TagSegment) seg).replace(replace, softFail, nestLimit);
+				((TagSegment) seg).replace(replace, require, nestLimit);
 			}
 			seg = seg.getNext();
 		}
