@@ -165,7 +165,14 @@ public class DataManager {
 	 * @throws MergeException
 	 */
 	private DataElement getElement(Path path, int to) throws MergeException {
-		DataElement entry = data;
+		DataElement entry = null;
+		if (path.get(0).part.equals(Merger.IDMU_CONTEXT)) {
+			entry = this.contextStack.get(this.contextStackSize()-1);
+			path.remove(0);
+		} else {
+			entry = this.data;
+		}
+	
 		while (path.size() > to) {
 			PathPart part = path.pop();
 			if (part.isList) {

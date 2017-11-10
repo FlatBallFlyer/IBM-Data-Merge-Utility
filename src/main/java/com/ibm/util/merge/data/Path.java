@@ -123,6 +123,15 @@ public class Path {
 	}
 	
 	/**
+	 * @return and remove the indicated member of the parts 
+	 */
+	public PathPart remove(int index) {
+		if (parts.size() > index ) {
+			return parts.remove(index);
+		} else return null;
+	}
+	
+	/**
 	 * @return path separator
 	 */
 	public String getSeparator() {

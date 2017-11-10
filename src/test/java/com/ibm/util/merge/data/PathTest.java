@@ -203,6 +203,29 @@ public class PathTest {
 	}
 	
 	@Test
+	public void testRemoveInt() {
+		Path test = new Path("Foo", "-");
+		assertEquals(1, test.size());
+		assertEquals("Foo", test.get(0).asString());
+		assertEquals("Foo", test.getPath());
+		test.add("bar");
+		assertEquals(2, test.size());
+		assertEquals("Foo-bar", test.getPath());
+		test.add("[3]");
+		assertEquals(3, test.size());
+		assertEquals("Foo-bar-[3]", test.getPath());
+		PathPart off = test.remove();
+		assertEquals(2, test.size());
+		assertEquals("[3]", off.asString());
+		assertEquals("Foo-bar", test.getPath());
+		off = test.remove(0);
+		assertEquals(1, test.size());
+		assertEquals("bar", test.getPath());
+		off = test.remove();
+		assertEquals(0, test.size());
+	}
+	
+	@Test
 	public void testPush() {
 		Path test = new Path("value","-");
 		assertEquals(1, test.size());
