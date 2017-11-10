@@ -17,7 +17,6 @@ import org.junit.Test;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 
 public class All_Functional_Tests {
-	private Config config;
 	private TemplateCache cache;
 	private Merger context;
 	private final DataProxyJson gsonProxy = new DataProxyJson();
@@ -47,6 +46,11 @@ public class All_Functional_Tests {
 		testTemplate(new File("src/test/resources/functional/wordDoc"));
 	}
 	
+	@Test
+	public void templateUpgrade() throws Throwable {
+		testTemplate(new File("src/test/resources/functional/templateUpgrade"));
+	}
+	
 	/*
 	 * Folder should contain the following files
 	 * - templates.json - the testing templates, with the root templaet test..
@@ -63,9 +67,9 @@ public class All_Functional_Tests {
 		String payload = new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "payload.txt").toPath()), "ISO-8859-1");
 		String parms = new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "parameters.json").toPath()), "ISO-8859-1");
 		Parameters parameters = gsonProxy.fromJSON(parms, Parameters.class);
-		config = new Config(new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "config.json").toPath()), "ISO-8859-1"));
-		cache = new TemplateCache(config);
-		context = new Merger(cache, config, "test..", parameters.parms, payload);
+		Config.load(new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "config.json").toPath()), "ISO-8859-1"));
+		cache = new TemplateCache();
+		context = new Merger(cache, "test..", parameters.parms, payload);
 		String output = context.merge().getMergeContent().getValue();
 		assertEquals(new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "output.txt").toPath()), "ISO-8859-1"), output);
 		
