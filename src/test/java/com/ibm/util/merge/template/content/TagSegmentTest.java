@@ -120,7 +120,7 @@ public class TagSegmentTest {
 		try {
 			test.replace(replace, true, 3);
 		} catch (Merge500 e) {
-			assertEquals("Tag Not Found: foo", e.getMessage());
+			assertEquals("Tag Not Found: foo in {fam=bar}", e.getMessage());
 			return;
 		}
 		fail("Exception not thrown");
