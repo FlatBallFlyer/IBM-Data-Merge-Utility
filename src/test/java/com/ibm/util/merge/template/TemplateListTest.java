@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.exception.MergeException;
 
 public class TemplateListTest {

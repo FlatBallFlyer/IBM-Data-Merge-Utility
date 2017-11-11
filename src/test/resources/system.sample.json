@@ -25,38 +25,20 @@
 			"directives": 
 			[
 				{
+					"type": 1,
+					"name": "Enrich",
 					"targetDataName": "",
-					"targetDataDelimeter": "\"",
+					"targetDataDelimeter": "-",
 					"enrichClass": "com.ibm.util.merge.template.directive.enrich.provider.StubProvider",
 					"enrichSource": "",
 					"enrichParameter": "",
 					"enrichCommand": "",
-					"parseAs": 4,
-					"type": 1,
-					"name": ""
+					"parseAs": 4
 				},
 
 				{
-					"notFirst": 
-					[
-						
-					],
-
-					"notLast": 
-					[
-						
-					],
-
-					"onlyFirst": 
-					[
-						
-					],
-
-					"onlyLast": 
-					[
-						
-					],
-
+					"type": 2,
+					"name": "Insert",
 					"bookmarkPattern": ".*",
 					"dataSource": "",
 					"dataDelimeter": "-",
@@ -64,8 +46,10 @@
 					"ifPrimitive": 1,
 					"ifObject": 1,
 					"ifList": 1,
-					"type": 2,
-					"name": ""
+					"notFirst":[],
+					"notLast":[],
+					"onlyFirst":[],
+					"onlyLast":[]
 				},
 
 				{

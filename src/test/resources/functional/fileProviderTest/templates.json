@@ -1,0 +1,53 @@
+{
+  "templates" : [
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Template Upgrade Transformation",
+      "content" : "{\n\t\"templates\": \n\t[\n<bookmark=\"templates\" group=\"test\" template=\"template\">\n\t]\n}",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "Parse Input",
+          "type" : 3,
+          "staticData" : "",
+          "dataSource" : "idmuPayload",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "ifList" : 1,
+          "dataTarget" : "templates",
+          "dataTargetDelimiter" : "-",
+          "parseFormat" : 3
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Subtemplates",
+          "dataSource" : "templates-templates",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    }
+  ]
+}

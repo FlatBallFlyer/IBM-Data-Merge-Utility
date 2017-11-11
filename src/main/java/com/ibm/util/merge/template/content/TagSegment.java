@@ -127,7 +127,7 @@ public class TagSegment extends Segment {
 		if (values.containsKey(tag)) {
 			value = values.get(tag);
 		} else {
-			if (require) throw new Merge500("Tag Not Found: " + tag);
+			if (require) throw new Merge500("Tag Not Found: " + tag + " in " + values.toString());
 			return;
 		}
 		

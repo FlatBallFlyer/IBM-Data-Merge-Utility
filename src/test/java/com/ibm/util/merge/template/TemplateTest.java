@@ -115,7 +115,6 @@ public class TemplateTest {
 
 	@Test
 	public void testGetMergedOutput() throws MergeException {
-		Config config = new Config();
 		TemplateCache cache = new TemplateCache();
 		Merger merger = new Merger(cache, "system.sample.");
 		template.setContent("Some Simple Content");
@@ -204,7 +203,6 @@ public class TemplateTest {
 
 	@Test
 	public void testSetGetContentDisposition() throws MergeException {
-		Config config = new Config();
 		TemplateCache cache = new TemplateCache();
 		Merger merger = new Merger(cache, "system.sample.");
 		template.setContentDisposition(Template.DISPOSITION_DOWNLOAD);
@@ -339,7 +337,6 @@ public class TemplateTest {
 	@Test
 	public void testGetSetContext() throws MergeException {
 		assertEquals(null, template.getContext());
-		Config config = new Config();
 		TemplateCache cache = new TemplateCache();
 		Merger context = new Merger(cache, "system.sample.");
 		template.setContext(context);
