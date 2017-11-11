@@ -53,18 +53,18 @@
 				},
 
 				{
-					"dataTarget": "",
-					"dataTargetDelimiter": "\"",
-					"staticData": "",
-					"parseFormat": 1,
+					"type": 3,
+					"name": "Parse",
 					"dataSource": "",
 					"dataDelimeter": "",
 					"ifMissing": 1,
 					"ifPrimitive": 1,
 					"ifObject": 1,
 					"ifList": 1,
-					"type": 3,
-					"name": ""
+					"dataTarget": "",
+					"dataTargetDelimiter": "\"",
+					"staticData": "",
+					"parseFormat": 1
 				},
 
 				{

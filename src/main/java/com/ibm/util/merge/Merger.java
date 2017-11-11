@@ -172,8 +172,9 @@ public class Merger {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ProviderInterface getProvider(String enrichClass, String enrichSource, String dbName) throws MergeException {
-		if (this.providers.containsKey(enrichSource)) {
-			return providers.get(enrichSource);
+		String key = enrichSource.concat(dbName);
+		if (this.providers.containsKey(key)) {
+			return providers.get(key);
 		}
 		
 		ProviderInterface theProvider;
@@ -199,7 +200,7 @@ public class Merger {
 		} catch (SecurityException e) {
 			throw new Merge500("Error accessing class: " + enrichClass + " message: " + e.getMessage());
 		}
-		providers.put(enrichSource, theProvider);
+		providers.put(key, theProvider);
 		return theProvider;
 	}
 

@@ -31,9 +31,9 @@ public class FileSystemProviderTest {
 
 	@Test
 	public void testFileSystemProvider() throws MergeException {
-		FileSystemProvider provider = new FileSystemProvider("/opt/ibm/idmu", "db", context);
-		assertEquals("/opt/ibm/idmu", provider.getSource());
-		assertEquals("db", provider.getDbName());
+		FileSystemProvider provider = new FileSystemProvider("aFolder", "/opt/ibm/idmu", context);
+		assertEquals("aFolder", provider.getSource());
+		assertEquals("/opt/ibm/idmu", provider.getDbName());
 		assertSame(context, provider.getContext());
 	}
 
@@ -44,7 +44,7 @@ public class FileSystemProviderTest {
 		assertTrue(folder.exists());
 		
 		// Test the Provider
-		FileSystemProvider provider = new FileSystemProvider("src/test/resources/http", "db", context);
+		FileSystemProvider provider = new FileSystemProvider("db", "src/test/resources/http", context);
 		DataElement result = provider.provide(".*", template.getWrapper(), context, template.getReplaceStack());
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("simple.csv"));

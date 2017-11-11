@@ -57,7 +57,7 @@ public class FileSystemProvider implements ProviderInterface {
 		query.replace(replace, false, Config.get().getNestLimit());
 		DataObject result = new DataObject();
 
-		File templateFolder = new File(this.getSource());
+		File templateFolder = new File(this.getDbName());
         if (templateFolder.listFiles() == null) {
             throw new Merge500("File System Path Folder was not found:" + templateFolder);
         }

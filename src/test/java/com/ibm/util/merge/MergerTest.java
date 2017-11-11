@@ -150,10 +150,11 @@ public class MergerTest {
 	public void testGetProviders() throws MergeException {
 		Merger merger = new Merger(cache, "system.sample.");
 		assertEquals(0, merger.getProviders().size());
-		ProviderInterface provider = merger.getProvider("com.ibm.util.merge.template.directive.enrich.provider.StubProvider", "TheSource", "TheDB");
-		assertTrue(provider instanceof StubProvider);
-		provider = merger.getProvider("Foo", "TheSource", "TheDb");
-		assertTrue(provider instanceof StubProvider);
+		ProviderInterface provider1 = merger.getProvider("com.ibm.util.merge.template.directive.enrich.provider.StubProvider", "TheSource", "TheDb");
+		assertTrue(provider1 instanceof StubProvider);
+		ProviderInterface provider2 = merger.getProvider("Foo", "TheSource", "TheDb");
+		assertTrue(provider2 instanceof StubProvider);
+		assertEquals(provider1, provider2);
 	}
 	
 	@Test

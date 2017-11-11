@@ -10,8 +10,8 @@
         "front" : "<",
         "back" : ">"
       },
-      "description" : "Template Upgrade Transformation",
-      "content" : "{\n\t\"templates\": \n\t[\n<bookmark=\"templates\" group=\"test\" template=\"template\">\n\t]\n}",
+      "description" : "File Provider Test",
+      "content" : "Companies\n<bookmark=\"company\" group=\"test\" template=\"company\">\n\nAll Employees\n<bookmark=\"employees\" group=\"test\" template=\"allEmployees\">\n\nAll Owners\n<bookmark=\"owners\" group=\"test\" template=\"allOwners\">\n\nEnd Report",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -19,35 +19,275 @@
       "contentRedirectUrl" : "",
       "directives" : [
         {
-          "name" : "Parse Input",
+          "type" : 1,
+          "name" : "Get Company.json",
+          "targetDataName" : "files",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
+          "enrichSource" : "files",
+          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichCommand" : "company.json",
+          "parseAs" : 4
+        },
+        {
+          "type" : 1,
+          "name" : "Get Owners",
+          "targetDataName" : "owners",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
+          "enrichSource" : "files",
+          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichCommand" : "owner.*xml",
+          "parseAs" : 4
+        },
+        {
+          "type" : 1,
+          "name" : "Enrich from File - all Employees",
+          "targetDataName" : "employees",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
+          "enrichSource" : "files",
+          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichCommand" : "employee.*csv",
+          "parseAs" : 4
+        },
+        {
           "type" : 3,
-          "staticData" : "",
-          "dataSource" : "idmuPayload",
+          "name" : "Parse",
+          "dataSource" : "files-company.json",
           "dataDelimeter" : "-",
           "ifMissing" : 1,
           "ifPrimitive" : 3,
           "ifObject" : 1,
           "ifList" : 1,
-          "dataTarget" : "templates",
+          "dataTarget" : "company",
           "dataTargetDelimiter" : "-",
+          "staticData" : "",
           "parseFormat" : 3
         },
         {
           "type" : 2,
-          "name" : "Insert Subtemplates",
-          "dataSource" : "templates-templates",
+          "name" : "Insert by Company Report Lines",
+          "dataSource" : "company",
           "dataDelimeter" : "-",
           "ifMissing" : 1,
           "ifPrimitive" : 1,
           "ifObject" : 1,
           "ifList" : 3,
-          "bookmarkPattern" : ".*",
+          "bookmarkPattern" : "company",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        },
+        {
+          "type" : 2,
+          "name" : "Insert All Employees",
+          "dataSource" : "employees",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "employees",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Onwer",
+          "dataSource" : "owners",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "owners",
           "notFirst" : [],
           "notLast" : [],
           "onlyFirst" : [],
           "onlyLast" : []
         }
       ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "company",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "File Provider Test",
+      "content" : "Company <company>\nEmployees:\n<bookmark=\"eployees\" group=\"test\" template=\"employees\">\nOwners:\n<bookmark=\"owners\" group=\"test\" template=\"owners\">\n==========",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 2,
+          "name" : "Insert Employees",
+          "dataSource" : "idmuContext-eployees",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "employees",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Owners",
+          "dataSource" : "idmuContext-owners",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "owners",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "employees",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Employees",
+      "content" : "<bookmark=\"eployee\" group=\"test\" template=\"employee\">",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 2,
+          "name" : "Insert Employee",
+          "dataSource" : "idmuContext-eployees",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "employees",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "owners",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Owners",
+      "content" : "<bookmark=\"owner\" group=\"test\" template=\"owner\">\n==========",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 2,
+          "name" : "Insert Owner",
+          "dataSource" : "idmuContext-owners",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "owner",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "owner",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Owner",
+      "content" : "Owner",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : []
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "employee",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Employee",
+      "content" : "Employee",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : []
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "anEmployee",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "a Single Employee from Context",
+      "content" : "Name: <name> Title: <title> Manager:<manager>\n",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : []
     }
   ]
 }
