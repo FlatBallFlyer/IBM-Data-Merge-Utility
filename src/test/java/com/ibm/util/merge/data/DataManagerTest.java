@@ -147,12 +147,9 @@ public class DataManagerTest {
 		newObject2.put("one", new DataPrimitive("ValueA"));
 		newObject2.put("two", new DataPrimitive("ValueB"));
 		manager.put("test", "-", newObject2);
-		assertTrue(manager.get("test", "-").isList());
-		assertEquals(2, manager.get("test", "-").getAsList().size());
-		assertEquals("Value1", manager.get("test-[0]-one", "-").getAsPrimitive());
-		assertEquals("Value2", manager.get("test-[0]-two", "-").getAsPrimitive());
-		assertEquals("ValueA", manager.get("test-[1]-one", "-").getAsPrimitive());
-		assertEquals("ValueB", manager.get("test-[1]-two", "-").getAsPrimitive());
+		assertTrue(manager.get("test", "-").isObject());
+		assertEquals("ValueA", manager.get("test-one", "-").getAsPrimitive());
+		assertEquals("ValueB", manager.get("test-two", "-").getAsPrimitive());
 	}
 	
 	@Test
@@ -160,8 +157,8 @@ public class DataManagerTest {
 		DataManager manager = new DataManager();
 		DataList newArray = new DataList();
 		manager.put("test", "-", newArray);
-		manager.put("test", "-", "Value1");
-		manager.put("test", "-", "Value2");
+		manager.put("test-[0]", "-", "Value1");
+		manager.put("test-[1]", "-", "Value2");
 		assertTrue(manager.contians("test", "-"));
 		assertTrue(manager.get("test", "-").isList());
 		assertEquals(2,manager.get("test", "-").getAsList().size());
@@ -169,28 +166,6 @@ public class DataManagerTest {
 		assertTrue(manager.contians("test-[1]", "-"));
 		assertEquals("Value1", manager.get("test-[0]", "-").getAsPrimitive());
 		assertEquals("Value2", manager.get("test-[1]", "-").getAsPrimitive());
-	}
-	
-	@Test
-	public void testPutListOfList() throws MergeException {
-		DataManager manager = new DataManager();
-		DataList newArray = new DataList();
-		manager.put("test", "-", newArray);
-		manager.put("test", "-", new DataList());
-		manager.put("test", "-", new DataList());
-		assertTrue(manager.contians("test", "-"));
-		assertTrue(manager.get("test", "-").isList());
-		assertEquals(2, manager.get("test", "-").getAsList().size());
-		assertTrue(manager.contians("test-[0]", "-"));
-		assertTrue(manager.contians("test-[1]", "-"));
-		assertTrue(manager.get("test-[0]", "-").isList());
-		assertEquals(0,manager.get("test-[0]", "-").getAsList().size());
-		assertTrue(manager.get("test-[1]", "-").isList());
-		assertEquals(0,manager.get("test-[1]", "-").getAsList().size());
-		manager.put("test-[1]", "-", "TestValue1-1");
-		manager.put("test-[1]", "-", "TestValue1-2");
-		assertEquals("TestValue1-1", manager.get("test-[1]-[0]", "-").getAsPrimitive());
-		assertEquals("TestValue1-2", manager.get("test-[1]-[1]", "-").getAsPrimitive());
 	}
 	
 	@Test
@@ -203,36 +178,8 @@ public class DataManagerTest {
 		manager.put("test", "-", "TestValue3");
 		manager.put("test", "-", "TestValue3");
 		assertTrue(manager.contians("test", "-"));
-		assertTrue(manager.get("test", "-").isList());
-		assertEquals(4, manager.get("test",  "-").getAsList().size());
-		assertEquals("TestValue", manager.get("test-[0]", "-").getAsPrimitive());
-		assertEquals("TestValue2", manager.get("test-[1]", "-").getAsPrimitive());
-		assertEquals("TestValue3", manager.get("test-[2]", "-").getAsPrimitive());
-	}
-
-	@Test
-	public void testPutStringOver() throws MergeException {
-		DataManager manager = new DataManager();
-		manager.put("test", "-", new DataObject());
-		assertTrue(manager.contians("test", "-"));
-		assertTrue(manager.get("test", "-").isObject());
-		assertTrue(manager.get("test", "-").getAsObject().entrySet().isEmpty());
-		
-		manager.put("test", "-", new DataPrimitive("Foo"));
-		assertTrue(manager.contians("test", "-"));
-		assertTrue(manager.get("test", "-").isList());
-		assertTrue(manager.get("test-[0]", "-").isObject());
-		assertTrue(manager.get("test-[1]", "-").isPrimitive());
-		assertEquals("Foo", manager.get("test-[1]", "-").getAsPrimitive());
-
-		manager.put("test", "-", new DataPrimitive("Bar"));
-		assertTrue(manager.contians("test", "-"));
-		assertTrue(manager.get("test", "-").isList());
-		assertTrue(manager.get("test-[0]", "-").isObject());
-		assertTrue(manager.get("test-[1]", "-").isPrimitive());
-		assertTrue(manager.get("test-[2]", "-").isPrimitive());
-		assertEquals("Foo", manager.get("test-[1]", "-").getAsPrimitive());
-		assertEquals("Bar", manager.get("test-[2]", "-").getAsPrimitive());
+		assertTrue(manager.get("test", "-").isPrimitive());
+		assertEquals("TestValue3", manager.get("test", "-").getAsPrimitive());
 	}
 
 }

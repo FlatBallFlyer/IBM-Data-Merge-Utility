@@ -94,11 +94,6 @@ public class DataManager {
 	public void put(String address, String delimiter, DataElement value) throws MergeException {
 		Path path = new Path(address, delimiter);
 		DataElement entry;
-		if (this.contians(address, delimiter)) {
-			entry = getElement(path, 0);
-			entry = entry.makeArray();
-			entry.getAsList().add(value);
-		} else {
 			entry = getElement(path, 1);
 			PathPart part = path.pop();
 			if (entry.isObject()) {
@@ -109,7 +104,6 @@ public class DataManager {
 				entry = entry.makeArray();
 				entry.getAsList().add(value);
 			}
-		}
 	}
 	
 	/**

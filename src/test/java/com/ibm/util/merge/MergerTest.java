@@ -96,9 +96,14 @@ public class MergerTest {
 		for (String type : Archive.ARCHIVE_TYPES()) {
 			Config.get().setTempFolder("test");
 			Merger merger = new Merger(cache, "system.sample.");
-			merger.getMergeData().put(Merger.IDMU_PARAMETERS, "-", new DataObject());
-			merger.getMergeData().put(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_TYPE, "-", new DataList());
-			merger.getMergeData().put(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_TYPE, "-", new DataPrimitive(type));
+			DataObject parameters = new DataObject();
+			DataList values = new DataList();
+			values.add(new DataPrimitive("Overide"));
+			parameters.put(Merger.IDMU_ARCHIVE_NAME, values);
+			values = new DataList();
+			values.add(new DataPrimitive(type));
+			parameters.put(Merger.IDMU_ARCHIVE_TYPE, values);
+			merger.getMergeData().put(Merger.IDMU_PARAMETERS, "-", parameters);
 			Archive archive = merger.getArchive();
 			assertEquals("test", archive.getFilePath());
 			assertEquals(type, archive.getArchiveType());
@@ -110,9 +115,11 @@ public class MergerTest {
 	public void testGetArchiveName() throws MergeException {
 		Config.get().setTempFolder("test");
 		Merger merger = new Merger(cache, "system.sample.");
-		merger.getMergeData().put(Merger.IDMU_PARAMETERS, "-" , new DataObject());
-		merger.getMergeData().put(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_NAME, "-", new DataList());
-		merger.getMergeData().put(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_NAME, "-", new DataPrimitive("Overide"));
+		DataObject parameters = new DataObject();
+		DataList values = new DataList();
+		values.add(new DataPrimitive("Overide"));
+		parameters.put(Merger.IDMU_ARCHIVE_NAME, values);
+		merger.getMergeData().put(Merger.IDMU_PARAMETERS, "-", parameters);
 		Archive archive = merger.getArchive();
 		assertEquals("test", archive.getFilePath());
 		assertEquals(Archive.ARCHIVE_TAR, archive.getArchiveType());

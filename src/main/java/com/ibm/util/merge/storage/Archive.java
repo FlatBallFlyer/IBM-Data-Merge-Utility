@@ -144,11 +144,16 @@ public abstract class Archive {
 			checkSum.append(String.format("%02x", b & 0xff));
 		}
 		String md5 = checkSum.toString();
+		
+		// Add entry to archive files data entry
+		if (!this.context.getMergeData().contians(Merger.IDMU_ARCHIVE_FILES, "-")) {
+			this.context.getMergeData().put(Merger.IDMU_ARCHIVE_FILES, "-", new DataList());
+		}
     	DataObject entry = new DataObject();
     	entry.put("name", new DataPrimitive(name));
     	entry.put("size", new DataPrimitive(content.getBytes().length));
     	entry.put("MD5",  new DataPrimitive(md5));
-    	this.context.getMergeData().put(Merger.IDMU_ARCHIVE_FILES, "-", entry);
+    	this.context.getMergeData().get(Merger.IDMU_ARCHIVE_FILES, "-").getAsList().add(entry);
 		return md5;
     }
     
