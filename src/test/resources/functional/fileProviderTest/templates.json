@@ -101,7 +101,7 @@
         {
           "type" : 4,
           "name" : "Setup Coma-Replace",
-          "dataSource" : "idmuContext",
+          "dataSource" : ",",
           "dataDelimeter" : "-",
           "ifMissing" : 1,
           "ifPrimitive" : 1,

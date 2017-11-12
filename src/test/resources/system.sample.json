@@ -1,10 +1,10 @@
 {
 	"id": {
-		"group": "System",
-		"name": "Test",
+		"group": "system",
+		"name": "sample",
 		"variant": ""
 	},
-	"content": "SomeContent",
+	"content": "",
 	"contentType": 4,
 	"contentDisposition": 2,
 	"contentEncoding": 1,
@@ -20,7 +20,7 @@
 			"type": 1,
 			"name": "Enrich",
 			"targetDataName": "",
-			"targetDataDelimeter": "-",
+			"targetDataDelimeter": "\"",
 			"enrichClass": "com.ibm.util.merge.template.directive.enrich.provider.StubProvider",
 			"enrichSource": "",
 			"enrichParameter": "",
@@ -64,6 +64,7 @@
 			"dataSource": "",
 			"dataDelimeter": "-",
 			"ifMissing": 1,
+			"toValue": "",
 			"ifPrimitive": 1,
 			"ifObject": 1,
 			"objectAttrPrimitive": 1,
