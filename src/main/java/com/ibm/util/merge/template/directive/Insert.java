@@ -74,14 +74,18 @@ public class Insert extends AbstractDataDirective {
 		return options;
 	}
 
-	public static final int LIST_THROW 	= 1;
-	public static final int LIST_IGNORE 	= 2;
-	public static final int LIST_INSERT 	= 3;
+	public static final int LIST_THROW 			= 1;
+	public static final int LIST_IGNORE 		= 2;
+	public static final int LIST_INSERT 		= 3;
+	public static final int LIST_INSERT_FIRST 	= 4;
+	public static final int LIST_INSERT_LAST 	= 5;
 	public static final HashMap<Integer, String> LIST_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(LIST_THROW, 	"throw");
-		options.put(LIST_IGNORE, 	"ignore");
-		options.put(LIST_INSERT, 	"insert");
+		options.put(LIST_THROW, 		"throw");
+		options.put(LIST_IGNORE, 		"ignore");
+		options.put(LIST_INSERT, 		"insert");
+		options.put(LIST_INSERT_FIRST, 	"insert first member");
+		options.put(LIST_INSERT_LAST, 	"insert last member");
 		return options;
 	}
 
@@ -180,7 +184,7 @@ public class Insert extends AbstractDataDirective {
 		}
 		
 		DataElement data = context.getMergeData().get(this.dataSource, this.dataDelimeter);
-		
+		DataList 	list;
 		if (data.isPrimitive()) {
 			switch (this.getIfPrimitive()) {
 			case PRIMITIVE_THROW :
@@ -188,7 +192,7 @@ public class Insert extends AbstractDataDirective {
 			case PRIMITIVE_IGNORE :
 				return;
 			case PRIMITIVE_INSERT :
-				this.insertFromString(context);
+				this.insertFromPrimitive(context, (DataPrimitive) data);
 				return;
 			}
 
@@ -199,7 +203,7 @@ public class Insert extends AbstractDataDirective {
 			case OBJECT_IGNORE :
 				return;
 			case OBJECT_INSERT_OBJECT :
-				this.insertFromObject(context);
+				this.insertFromObject(context, data.getAsObject());
 				break;
 			case OBJECT_INSERT_LIST :
 				this.insertAtBookmarks(context, data, true, true);
@@ -212,8 +216,20 @@ public class Insert extends AbstractDataDirective {
 				throw new Merge500("List Data found for " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
 			case LIST_IGNORE :
 				return;
+			case LIST_INSERT_FIRST :
+				list = new DataList();
+				if (data.getAsList().size() > 0) {
+					list.add(data.getAsList().get(0));
+				}
+				data = list;
+			case LIST_INSERT_LAST :
+				list = new DataList();
+				if (data.getAsList().size() > 0) {
+					list.add(data.getAsList().get(data.getAsList().size()-1));
+				}
+				data = list;
 			case LIST_INSERT :
-				this.insertFromList(context);
+				this.insertFromList(context, data.getAsList());
 				break;
 			}
 		}
@@ -225,9 +241,8 @@ public class Insert extends AbstractDataDirective {
 	 * @param context
 	 * @throws MergeException
 	 */
-	private void insertFromObject(Merger context) throws MergeException {
+	private void insertFromObject(Merger context, DataObject dataObject) throws MergeException {
 		int loopcount; int size;
-		DataObject dataObject = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsObject();
 		loopcount = 1; size = dataObject.entrySet().size();
 		for (Entry<String, DataElement> member: dataObject.entrySet()) {
 			if (member.getValue().isPrimitive()) {
@@ -245,9 +260,8 @@ public class Insert extends AbstractDataDirective {
 	 * @param context
 	 * @throws MergeException
 	 */
-	private void insertFromList(Merger context) throws MergeException {
+	private void insertFromList(Merger context, DataList dataList) throws MergeException {
 		int loopcount; int size;
-		DataList dataList = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsList();
 		loopcount = 1; size = dataList.size();
 		for (DataElement value : dataList) {
 			this.insertAtBookmarks(context, value, (loopcount==1), (loopcount==size));
@@ -260,8 +274,8 @@ public class Insert extends AbstractDataDirective {
 	 * @param context
 	 * @throws MergeException
 	 */
-	private void insertFromString(Merger context) throws MergeException {
-		String dataString = context.getMergeData().get(this.dataSource, this.dataDelimeter).getAsPrimitive();
+	private void insertFromPrimitive(Merger context, DataPrimitive from) throws MergeException {
+		String dataString = from.getAsPrimitive();
 		//  conditional insert?
 		this.insertAtBookmarks(context, new DataPrimitive(dataString), true, true);
 	}

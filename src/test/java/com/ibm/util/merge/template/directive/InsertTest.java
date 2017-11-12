@@ -108,6 +108,72 @@ public class InsertTest {
 	}
 
 	@Test
+	public void testInsertListFirst() throws MergeException {
+		Template template = new Template("test", "parent", "", this.bkm2, "{", "}");
+		Insert directive = new Insert("data.list","-",
+				Insert.MISSING_IGNORE,
+				Insert.PRIMITIVE_IGNORE,
+				Insert.OBJECT_IGNORE,
+				Insert.LIST_INSERT_FIRST,
+				emptyList, emptyList, emptyList, emptyList,
+				".*");
+		template.addDirective(directive);
+		cache.postTemplate(template);
+		template = new Template("test", "child", "", "Child Content {col1} {col2}");
+		Replace replace = new Replace("idmuContext", "-", 
+						Replace.MISSING_THROW,
+						Replace.PRIMITIVE_THROW,
+						Replace.OBJECT_REPLACE, 
+						Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
+						Replace.OBJECT_ATTRIBUTE_LIST_THROW,
+						Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
+						Replace.LIST_THROW,
+						Replace.LIST_ATTR_MISSING_THROW,
+						Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
+						true, true);
+		template.addDirective(replace);
+		cache.postTemplate(template);
+		
+		Merger context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.list", "-", this.arrayOfObjects);
+		template = context.merge();
+		assertEquals("Child Content row1val1 row1val2", template.getMergedOutput().getValue());
+	}
+	
+	@Test
+	public void testInsertListLast() throws MergeException {
+		Template template = new Template("test", "parent", "", this.bkm2, "{", "}");
+		Insert directive = new Insert("data.list","-",
+				Insert.MISSING_IGNORE,
+				Insert.PRIMITIVE_IGNORE,
+				Insert.OBJECT_IGNORE,
+				Insert.LIST_INSERT_LAST,
+				emptyList, emptyList, emptyList, emptyList,
+				".*");
+		template.addDirective(directive);
+		cache.postTemplate(template);
+		template = new Template("test", "child", "", "Child Content {col1} {col2}");
+		Replace replace = new Replace("idmuContext", "-", 
+						Replace.MISSING_THROW,
+						Replace.PRIMITIVE_THROW,
+						Replace.OBJECT_REPLACE, 
+						Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
+						Replace.OBJECT_ATTRIBUTE_LIST_THROW,
+						Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
+						Replace.LIST_THROW,
+						Replace.LIST_ATTR_MISSING_THROW,
+						Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
+						true, true);
+		template.addDirective(replace);
+		cache.postTemplate(template);
+		
+		Merger context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.list", "-", this.arrayOfObjects);
+		template = context.merge();
+		assertEquals("Child Content row2val1 row2val2", template.getMergedOutput().getValue());
+	}
+	
+	@Test
 	public void testInsertSourceDelimeterMissingPrimitiveObjectList() {
 		HashSet<String> list = new HashSet<String>();
 		list.add("One"); list.add("two"); list.add("three");
