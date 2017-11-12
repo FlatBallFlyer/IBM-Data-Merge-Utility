@@ -18,23 +18,10 @@ package com.ibm.util.merge.template.directive.enrich.provider;
 
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.data.DataElement;
-import com.ibm.util.merge.data.DataList;
-import com.ibm.util.merge.data.DataObject;
-import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.Wrapper;
-import com.ibm.util.merge.template.content.Content;
-import com.ibm.util.merge.template.content.TagSegment;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.HashMap;
-
 import javax.sql.DataSource;
 
 /**
@@ -53,7 +40,7 @@ import javax.sql.DataSource;
  * @author Mike Storey
  *
  */
-public class JdbcProvider implements ProviderInterface {
+public class JdbcProvider extends SqlProvider implements ProviderInterface {
 	private final DataProxyJson proxy = new DataProxyJson();
 	private static final ProviderMeta meta = new ProviderMeta(
 			"Option Name",
@@ -71,19 +58,12 @@ public class JdbcProvider implements ProviderInterface {
 		public String uri;
 	}
 
-	protected final String source;
-	protected final String dbName;
-	protected final transient Merger context;
-	protected transient DataSource jdbcSource = null;
-	protected transient Connection connection = null;
-	
 	public JdbcProvider(String source, String dbName, Merger context) throws MergeException {
-		this.source = source;
-		this.dbName = dbName;
-		this.context = context;
+		super(source, dbName, context);
 	}
 	
-	private void connect() throws MergeException {
+	@Override
+	protected void connect() throws MergeException {
 		// Get Credentials
 		Credentials creds;
 		try {
@@ -102,58 +82,6 @@ public class JdbcProvider implements ProviderInterface {
 		}
 	}
 	
-	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
-		if (this.connection == null) {
-			connect();
-		}
-		
-		Content query = new Content(wrapper, command, TagSegment.ENCODE_SQL);
-		query.replace(replace, false, Config.get().getNestLimit());
-		DataList table = new DataList();
-		ResultSet results;
-
-		// Execute Command
-		try {
-			results = this.connection.
-					prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).
-					executeQuery();
-		} catch (SQLException e) {
-			throw new Merge500("Invalid SQL Query " + query );
-		}
-
-		// Build result table.
-		try {
-			ResultSetMetaData meta = results.getMetaData();
-			while (results.next()) {
-				DataObject row = new DataObject();
-				for (int column = 1; column <= meta.getColumnCount(); column++) {
-					row.put(meta.getColumnName(column), new DataPrimitive(results.getString(column)));
-				}
-				table.add(row);
-			}
-			results.close();
-		} catch (SQLException e) {
-			throw new Merge500("SQL Exception processing results" + query );
-		}
-		return table;
-	}
-
-	@Override
-	public String getSource() {
-		return this.source;
-	}
-
-	@Override
-	public String getDbName() {
-		return this.dbName;
-	}
-
-	@Override
-	public Merger getContext() {
-		return this.context;
-	}
-
 	@Override
 	public ProviderMeta getMetaInfo() {
 		return JdbcProvider.meta;

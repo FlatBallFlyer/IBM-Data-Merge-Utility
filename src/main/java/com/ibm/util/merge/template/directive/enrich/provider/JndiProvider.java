@@ -17,14 +17,9 @@
 package com.ibm.util.merge.template.directive.enrich.provider;
 
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.Wrapper;
-
 import java.sql.SQLException;
-import java.util.HashMap;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -36,7 +31,7 @@ import javax.sql.DataSource;
  * @author flatballflyer
  *
  */
-public class JndiProvider extends JdbcProvider implements ProviderInterface {
+public class JndiProvider extends SqlProvider implements ProviderInterface {
 	private static final ProviderMeta meta = new ProviderMeta(
 			"Option Name",
 			"Credentials", 
@@ -59,7 +54,8 @@ public class JndiProvider extends JdbcProvider implements ProviderInterface {
 		super(source, dbName, context);
 	}
 
-	private void connect() throws Merge500 {
+	@Override
+	protected void connect() throws Merge500 {
     	try {
 	    	Context initContext = new InitialContext();
 	    	this.jndiSource = (DataSource) initContext.lookup(this.getSource());
@@ -71,29 +67,6 @@ public class JndiProvider extends JdbcProvider implements ProviderInterface {
 	    }
 	}
 	
-	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
-		if (this.connection == null) {
-			connect();
-		}
-		return super.provide(command, wrapper, context, replace, parseAs);
-	}	
-
-	@Override
-	public String getSource() {
-		return this.source;
-	}
-
-	@Override
-	public String getDbName() {
-		return this.dbName;
-	}
-
-	@Override
-	public Merger getContext() {
-		return this.context;
-	}
-
 	@Override
 	public ProviderMeta getMetaInfo() {
 		return JndiProvider.meta;
