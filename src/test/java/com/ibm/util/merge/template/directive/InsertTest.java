@@ -120,7 +120,7 @@ public class InsertTest {
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		template = new Template("test", "child", "", "Child Content {col1} {col2}");
-		Replace replace = new Replace("idmuContext", "-", 
+		Replace replace = new Replace("idmuContext", "-", "",
 						Replace.MISSING_THROW,
 						Replace.PRIMITIVE_THROW,
 						Replace.OBJECT_REPLACE, 
@@ -153,7 +153,7 @@ public class InsertTest {
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		template = new Template("test", "child", "", "Child Content {col1} {col2}");
-		Replace replace = new Replace("idmuContext", "-", 
+		Replace replace = new Replace("idmuContext", "-",  "",
 						Replace.MISSING_THROW,
 						Replace.PRIMITIVE_THROW,
 						Replace.OBJECT_REPLACE, 
@@ -334,7 +334,7 @@ public class InsertTest {
 		cache.postTemplate(template);
 		
 		template = new Template("test", "child", "", "Child - {idmuContext}");
-		Replace replace = new Replace("idmuContext", "-", 
+		Replace replace = new Replace("idmuContext", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_REPLACE,
 				Replace.OBJECT_THROW,
@@ -411,7 +411,7 @@ public class InsertTest {
 		cache.postTemplate(template);
 		
 		template = new Template("test", "child", "", "Child {attribute}, {value} - ");
-		Replace replace = new Replace("idmuContext", "-", 
+		Replace replace = new Replace("idmuContext", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -446,7 +446,7 @@ public class InsertTest {
 		cache.postTemplate(template);
 		
 		template = new Template("test", "child", "", "Child {col1}, {col2} - ");
-		Replace replace = new Replace("idmuContext", "-", 
+		Replace replace = new Replace("idmuContext", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -698,7 +698,7 @@ public class InsertTest {
 		cache.postTemplate(template);
 		
 		template = new Template("test", "col", "", "<col>{value}</col>");
-		Replace replace = new Replace("idmuContext", "-", 
+		Replace replace = new Replace("idmuContext", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -788,7 +788,7 @@ public class InsertTest {
 		HashSet<String> onlyLast  = new HashSet<String>(); onlyLast.add( "D");  onlyLast.add("H");
 		
 		Template template = new Template("test", "list", "notfirstlast", this.bkm2, "{", "}");
-		Replace replace = new Replace("data.replace", "-",
+		Replace replace = new Replace("data.replace", "-", "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -812,7 +812,7 @@ public class InsertTest {
 		cache.postTemplate(template);
 		
 		template = new Template("test", "child", "", "Child {col1}, {col2}{A}{B}{C}{D}{E}{F}{G}{H}{I}{J} - ");
-		replace = new Replace("idmuContext", "-", 
+		replace = new Replace("idmuContext", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,

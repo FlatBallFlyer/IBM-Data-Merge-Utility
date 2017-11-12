@@ -46,7 +46,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testReplaceWithParms() {
-		Replace replace = new Replace("source", "P",
+		Replace replace = new Replace("source", "P", "",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
 				Replace.OBJECT_IGNORE,
@@ -76,7 +76,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testGetMergable() {
-		Replace replace = new Replace("source", "P",
+		Replace replace = new Replace("source", "P", "",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
 				Replace.OBJECT_IGNORE,
@@ -107,7 +107,7 @@ public class ReplaceTest {
 	@Test
 	public void testExecuteMissingThrow() throws MergeException {
 		Template template = new Template("test", "missing", "throw", "<foo> - <one>", "<", ">" );
-		Replace directive = new Replace("missing","-",
+		Replace directive = new Replace("missing","-", "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_IGNORE,
 				Replace.OBJECT_IGNORE,
@@ -132,7 +132,7 @@ public class ReplaceTest {
 	@Test
 	public void testExecuteMissingSkip() throws MergeException {
 		Template template = new Template("test", "replace", "missing", "<foo> - <one>", "<", ">");
-		Replace directive = new Replace("missing","-",
+		Replace directive = new Replace("missing","-", "",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
 				Replace.OBJECT_IGNORE, 
@@ -151,9 +151,30 @@ public class ReplaceTest {
 	}
 
 	@Test
+	public void testExecuteMissingReplace() throws MergeException {
+		Template template = new Template("test", "replace", "missing", "<missing>", "<", ">");
+		Replace directive = new Replace("missing","-", "newValue",
+				Replace.MISSING_REPLACE,
+				Replace.PRIMITIVE_IGNORE,
+				Replace.OBJECT_IGNORE, 
+				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
+				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
+				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
+				Replace.LIST_IGNORE,
+				Replace.LIST_ATTR_MISSING_THROW,
+				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
+				true, true);
+		template.addDirective(directive);
+		cache.postTemplate(template);
+		Merger context = new Merger(cache, "test.replace.missing");
+		template = context.merge();
+		assertEquals("newValue", template.getMergeContent().getValue());
+	}
+
+	@Test
 	public void testExecutePrimitiveThrow() throws MergeException {
 		Template template = new Template("test", "primitive", "throw", "<foo> - <one>", "<", ">");
-		Replace directive = new Replace("data.primitive", "-",
+		Replace directive = new Replace("data.primitive", "-", "",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_IGNORE, 
@@ -180,7 +201,7 @@ public class ReplaceTest {
 	@Test
 	public void testExecutePrimitiveIgnore() throws MergeException {
 		Template template = new Template("test", "primitive", "ignore", "<data.primitive> - <one>", "<", ">");
-		Replace directive = new Replace("data.primitive", "-",
+		Replace directive = new Replace("data.primitive", "-", "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_IGNORE,
 				Replace.OBJECT_THROW,
@@ -203,7 +224,7 @@ public class ReplaceTest {
 	@Test
 	public void testExecutePrimitiveReplace() throws MergeException {
 		Template template = new Template("test", "replace", "primitive", "<foo>", "<", ">");
-		Replace directive = new Replace("data.object-foo", "-",
+		Replace directive = new Replace("data.object-foo", "-", "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_REPLACE,
 				Replace.OBJECT_THROW,
@@ -229,7 +250,7 @@ public class ReplaceTest {
 	public void testExecutePrimitiveJson() throws MergeException {
 		Template template = new Template("test", "replace", "primitive", "<data>", "<", ">");
 		template.setContentEncoding(TagSegment.ENCODE_NONE);
-		Replace directive = new Replace("data", "-",
+		Replace directive = new Replace("data", "-", "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_JSON,
 				Replace.OBJECT_THROW,
@@ -252,7 +273,7 @@ public class ReplaceTest {
 	@Test
 	public void testExecuteObjectThrow() throws MergeException {
 		Template template = new Template("test", "object", "throw", "<foo> - <one>", "<", ">");
-		Replace directive = new Replace("data.object", "-",
+		Replace directive = new Replace("data.object", "-", "",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
 				Replace.OBJECT_THROW,
@@ -281,7 +302,7 @@ public class ReplaceTest {
 	@Test
 	public void testExecuteObjectIgnore() throws MergeException {
 		Template template = new Template("test", "replace", "missing", "<foo> - <one>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_IGNORE,
@@ -306,7 +327,7 @@ public class ReplaceTest {
 	@Test
 	public void testReplaceObjectList() throws MergeException {
 		Template template = new Template("test", "object", "json", "<foo>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE_LIST,
@@ -333,7 +354,7 @@ public class ReplaceTest {
 	@Test
 	public void testReplaceObjectJson() throws MergeException {
 		Template template = new Template("test", "object", "json", "<data.object>", "<", ">");
-		Replace directive = new Replace("data.object", "-",
+		Replace directive = new Replace("data.object", "-", "",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
 				Replace.OBJECT_REPLACE_JSON,
@@ -370,7 +391,7 @@ public class ReplaceTest {
 		replaceObject.put("J", new DataPrimitive("j"));
 
 		Template template = new Template("test", "object", "replace", "<A><B><C><D><E><F><G><H><I><J>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -407,7 +428,7 @@ public class ReplaceTest {
 		replaceObject.put("J", new DataPrimitive("j"));
 
 		Template template = new Template("test", "object", "replace", "<A><B><C><D><E><F><G><H><I><J>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -441,7 +462,7 @@ public class ReplaceTest {
 		replaceObject.put("J", new DataPrimitive("j"));
 
 		Template template = new Template("test", "object", "replace", "<A><B><C><D><E><F><G><H><I><J>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -475,7 +496,7 @@ public class ReplaceTest {
 		replaceObject.put("C", aObject);
 
 		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -512,7 +533,7 @@ public class ReplaceTest {
 		replaceObject.put("C", aObject);
 
 		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -545,7 +566,7 @@ public class ReplaceTest {
 		replaceObject.put("C", aList);
 
 		Template template = new Template("test", "object", "replace", "<A><B><C><D><E><F><G><H><I><J>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -582,7 +603,7 @@ public class ReplaceTest {
 		replaceObject.put("C", aList);
 
 		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -615,7 +636,7 @@ public class ReplaceTest {
 		replaceObject.put("C", aList);
 
 		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -648,7 +669,7 @@ public class ReplaceTest {
 		replaceObject.put("C", aList);
 
 		Template template = new Template("test", "object", "replace", "<A><B><C>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -670,7 +691,7 @@ public class ReplaceTest {
 	@Test
 	public void testExecuteListThrow() throws MergeException {
 		Template template = new Template("test", "replace", "missing", "content", "<", ">");
-		Replace directive = new Replace("data.list", "-", 
+		Replace directive = new Replace("data.list", "-",  "",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
 				Replace.OBJECT_IGNORE,
@@ -698,7 +719,7 @@ public class ReplaceTest {
 	@Test
 	public void testExecuteListIgnore() throws MergeException {
 		Template template = new Template("test", "list", "ignore", "<foo> - <one>", "<", ">");
-		Replace directive = new Replace("data.list", "-", 
+		Replace directive = new Replace("data.list", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_THROW,
@@ -728,7 +749,7 @@ public class ReplaceTest {
 	@Test
 	public void testExecuteListReplace() throws MergeException {
 		Template template = new Template("test", "replace", "list", "<foo> - <one>", "<", ">");
-		Replace directive = new Replace("data.list", "-", 
+		Replace directive = new Replace("data.list", "-",  "",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
 				Replace.OBJECT_IGNORE,
@@ -771,7 +792,7 @@ public class ReplaceTest {
 		list.add(replaceObj2);
 
 		Template template = new Template("test", "list", "first", "<A><B><C><D>", "<", ">");
-		Replace directive = new Replace("data.list", "-", 
+		Replace directive = new Replace("data.list", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_THROW,
@@ -803,7 +824,7 @@ public class ReplaceTest {
 		list.add(replaceObj2);
 
 		Template template = new Template("test", "list", "first", "<A><B><C><D>", "<", ">");
-		Replace directive = new Replace("data.list", "-", 
+		Replace directive = new Replace("data.list", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_THROW,
@@ -835,7 +856,7 @@ public class ReplaceTest {
 		list.add(replaceObj2);
 
 		Template template = new Template("test", "list", "json", "<data.list>", "<", ">");
-		Replace directive = new Replace("data.list", "-", 
+		Replace directive = new Replace("data.list", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_THROW,
@@ -857,7 +878,7 @@ public class ReplaceTest {
 	@Test
 	public void testExecuteNoProcess() throws MergeException {
 		Template template = new Template("test", "object", "replace", "<foo> - <one> - <three>", "<", ">");
-		Replace directive = new Replace("data.default", "-", 
+		Replace directive = new Replace("data.default", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -869,7 +890,7 @@ public class ReplaceTest {
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				false, false);
 		template.addDirective(directive);
-		directive = new Replace("data.object", "-", 
+		directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -899,7 +920,7 @@ public class ReplaceTest {
 	@Test
 	public void testExecuteRepeatTwo() throws MergeException {
 		Template template = new Template("test", "repeat", "", "<foo parseFirst>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -927,7 +948,7 @@ public class ReplaceTest {
 	@Test // Parameter Object
 	public void testExecuteObjectOfStringList() throws MergeException {
 		Template template = new Template("test", "replace", "parameters", "<foo> - <one>", "<", ">");
-		Replace directive = new Replace("data.object", "-", 
+		Replace directive = new Replace("data.object", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -957,7 +978,7 @@ public class ReplaceTest {
 	@Test
 	public void testExecuteRequire() throws MergeException {
 		Template template = new Template("test", "replace", "require", "<foo>", "<", ">");
-		Replace directive = new Replace("data", "-",
+		Replace directive = new Replace("data", "-", "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_REPLACE,
 				Replace.OBJECT_THROW,

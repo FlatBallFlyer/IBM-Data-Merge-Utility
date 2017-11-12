@@ -11,7 +11,7 @@
         "back" : ">"
       },
       "description" : "File Provider Test",
-      "content" : "[<bookmark=\"company\" group=\"test\" template=\"company\">\n]\n<bookmark=\"employees\" group=\"test\" template=\"allEmployees\">\n<bookmark=\"owners\" group=\"test\" template=\"allOwners\">\n",
+      "content" : "[<bookmark=\"company\" group=\"test\" template=\"company\">\n]\n<bookmark=\"employees.file\" group=\"test\" template=\"allEmployees\">\n<bookmark=\"owners.file\" group=\"test\" template=\"allOwners\">\n",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -75,7 +75,7 @@
         "back" : ">"
       },
       "description" : "A Company Record, inserts Employee, Customer and Owner",
-      "content" : "{\n\t\"company\" : \"<companies>\",\n\t\"owners\" : \"<owners>\",\n\t\"customers\" : \"<customers>\"\n}",
+      "content" : "{\n\t\"company\" : \"<company>\",\n\t\"owners\" : \"<bookmark=\"owners\" group=\"test\" template=\"allEmployees\">\",\n\t\"employees\" : \"<bookmark=\"employees\" group=\"test\" template=\"allEmployees\">\",\n\t\"customers\" : \"<bookmark=\"customers\" group=\"test\" template=\"allEmployees\">\",\n}",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -85,6 +85,22 @@
         {
           "type" : 4,
           "name" : "Replace",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 4,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
+        {
+          "type" : 4,
+          "name" : "Setup Coma-Replace",
           "dataSource" : "idmuContext",
           "dataDelimeter" : "-",
           "ifMissing" : 1,
@@ -156,7 +172,7 @@
         "back" : ">"
       },
       "description" : "Owner",
-      "content" : "{\"owner\":\"<owner>\",\n \"???\":\"<???>\",\n\"???\":\"<???>\"\n}",
+      "content" : "<bookmark=\"anOwner\" group=\"test\" template=\"anOwner\">",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -174,7 +190,7 @@
         "front" : "<",
         "back" : ">"
       },
-      "description" : "a Single Employee from Context",
+      "description" : "{\"type\":\"owner, \"name\":\"<name>\", \"age\":\"<age>\"}",
       "content" : "Employee <employee>\n",
       "contentType" : 2,
       "contentDisposition" : 2,
@@ -193,7 +209,7 @@
           "objectAttrPrimitive" : 3,
           "objectAttrList" : 1,
           "objectAttrObject" : 1,
-          "ifList" : 1,
+          "ifList" : 4,
           "listAttrMissing" : 1,
           "listAttrNotPrimitive" : 1,
           "processAfter" : true
@@ -257,7 +273,7 @@
         "back" : ">"
       },
       "description" : "Employee <employee>",
-      "content" : "",
+      "content" : "{\"type\":\"employee, \"name\":\"<name>\", \"title\":\"<title>\", \"manager\":\"<manager>\"}",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -312,7 +328,7 @@
         "back" : ">"
       },
       "description" : "Customer from Context",
-      "content" : "Customer",
+      "content" : "{\"type\":\"owner, \"name\":\"<name>\", \"address\":\"<address>\", \"age\":\"<age>\", \"bookpage\":\"<bookPage>\"},",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,

@@ -8,6 +8,16 @@
 				"2": "ignore"
 			},
 
+			"If List": 
+			{
+				"1": "throw",
+				"2": "ignore",
+				"3": "replace",
+				"4": "use first only",
+				"5": "use last only",
+				"6": "replace with json"
+			},
+
 			"Source Missing": 
 			{
 				"1": "throw",
