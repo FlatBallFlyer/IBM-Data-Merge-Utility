@@ -53,11 +53,30 @@ public class Insert extends AbstractDataDirective {
 	public static final int PRIMITIVE_THROW 	= 1;
 	public static final int PRIMITIVE_IGNORE 	= 2;
 	public static final int PRIMITIVE_INSERT 	= 3;
+	public static final int PRIMITIVE_INSERT_IF	= 4;
 	public static final HashMap<Integer, String> PRIMITIVE_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(PRIMITIVE_THROW, 	"throw");
 		options.put(PRIMITIVE_IGNORE, 	"ignore");
 		options.put(PRIMITIVE_INSERT, 	"insert");
+		options.put(PRIMITIVE_INSERT_IF, "insert if");
+		return options;
+	}
+
+	public static final int INSERT_IF_STRING_EQUALS = 1;
+	public static final int INSERT_IF_STRING_GT		= 2;
+	public static final int INSERT_IF_STRING_LT		= 3;
+	public static final int INSERT_IF_VALUE_EQUALS 	= 4;
+	public static final int INSERT_IF_VALUE_GT		= 5;
+	public static final int INSERT_IF_VALUE_LT		= 6;
+	public static final HashMap<Integer, String> INSERT_IF_OPERATORS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(INSERT_IF_STRING_EQUALS,	"string equals");
+		options.put(INSERT_IF_STRING_GT, 		"string >");
+		options.put(INSERT_IF_STRING_LT, 		"string <");
+		options.put(INSERT_IF_VALUE_EQUALS, 	"value =");
+		options.put(INSERT_IF_VALUE_GT, 		"value >");
+		options.put(INSERT_IF_VALUE_LT, 		"value <");
 		return options;
 	}
 
@@ -95,6 +114,7 @@ public class Insert extends AbstractDataDirective {
 		options.put("If Primitive", 	PRIMITIVE_OPTIONS());
 		options.put("If Object", 		OBJECT_OPTIONS());
 		options.put("If List", 			LIST_OPTIONS());
+		options.put("Insert If operators", INSERT_IF_OPERATORS());
 		return options;
 	}
 
@@ -103,6 +123,8 @@ public class Insert extends AbstractDataDirective {
 	private HashSet<String> onlyFirst;
 	private HashSet<String> onlyLast;
 	private String bookmarkPattern;
+	private int ifOperator;
+	private String ifValue;
 	
 	/**
 	 * Instantiate an Insert Directive with default values 
@@ -116,7 +138,9 @@ public class Insert extends AbstractDataDirective {
 			new HashSet<String>(), 
 			new HashSet<String>(), 
 			new HashSet<String>(), 
-			".*"
+			".*",
+			Insert.INSERT_IF_STRING_EQUALS,
+			""
 		);
 	}
 	
@@ -136,7 +160,7 @@ public class Insert extends AbstractDataDirective {
 	 */
 	public Insert(String source, String delimeter, int missing, int primitive, int object, int list, 
 			HashSet<String> notFirst, HashSet<String> notLast, HashSet<String> onlyFirst, HashSet<String> onlyLast, 
-			String pattern) {
+			String pattern, int ifOperator, String ifValue) {
 		super(source, delimeter, missing, primitive, object, list);
 		this.setType(AbstractDirective.TYPE_INSERT);
 		this.notFirst = new HashSet<String>(); this.notFirst.addAll(notFirst);
@@ -144,6 +168,8 @@ public class Insert extends AbstractDataDirective {
 		this.onlyFirst = new HashSet<String>();this.onlyFirst.addAll(onlyFirst);
 		this.onlyLast = new HashSet<String>(); this.onlyLast.addAll(onlyLast);
 		this.bookmarkPattern = pattern;
+		this.ifOperator = ifOperator;
+		this.ifValue = ifValue;
 	}
 	
 	@Override
@@ -166,6 +192,8 @@ public class Insert extends AbstractDataDirective {
 		mergable.setIfList(this.getIfList());
 		mergable.setIfObject(this.getIfObject());
 		mergable.setIfPrimitive(this.getIfPrimitive());
+		mergable.setIfOperator(this.ifOperator);
+		mergable.setIfValue(this.ifValue);
 		return mergable;
 	}
 	
@@ -192,6 +220,50 @@ public class Insert extends AbstractDataDirective {
 			case PRIMITIVE_IGNORE :
 				return;
 			case PRIMITIVE_INSERT :
+				this.insertFromPrimitive(context, (DataPrimitive) data);
+				return;
+			case PRIMITIVE_INSERT_IF :
+				Double dbl = new Double(0); 
+				Double cmp = new Double(0);
+				String value = data.getAsPrimitive();
+				try {
+					cmp = Double.valueOf(this.ifValue);
+					dbl = Double.valueOf(value);
+				} catch (Throwable e) {
+					// ok
+				}
+				switch (this.getIfOperator()) {
+				case INSERT_IF_STRING_EQUALS :
+					if (value.equals(this.ifValue)) {
+						this.insertFromPrimitive(context, (DataPrimitive) data);
+					} 
+					return;
+				case INSERT_IF_STRING_GT : 
+					if (this.ifValue.compareTo(value) > 0) {
+						this.insertFromPrimitive(context, (DataPrimitive) data);
+					}
+					return;
+				case INSERT_IF_STRING_LT : 
+					if (this.ifValue.compareTo(value) < 0) {
+						this.insertFromPrimitive(context, (DataPrimitive) data);
+					}
+					return;
+				case INSERT_IF_VALUE_EQUALS : 
+					if (dbl.equals(cmp)) {
+						this.insertFromPrimitive(context, (DataPrimitive) data);
+					}
+					return;
+				case INSERT_IF_VALUE_GT : 
+					if (dbl.compareTo(cmp) < 0) {
+						this.insertFromPrimitive(context, (DataPrimitive) data);
+					}
+					return;
+				case INSERT_IF_VALUE_LT : 
+					if (dbl.compareTo(cmp) > 0) {
+						this.insertFromPrimitive(context, (DataPrimitive) data);
+					}
+					return;
+				}
 				this.insertFromPrimitive(context, (DataPrimitive) data);
 				return;
 			}
@@ -405,6 +477,22 @@ public class Insert extends AbstractDataDirective {
 	@Override
 	public void setIfList(int value) {
 		this.ifList = value;
+	}
+
+	public int getIfOperator() {
+		return ifOperator;
+	}
+
+	public String getIfValue() {
+		return ifValue;
+	}
+
+	public void setIfOperator(int ifOperator) {
+		this.ifOperator = ifOperator;
+	}
+
+	public void setIfValue(String ifValue) {
+		this.ifValue = ifValue;
 	}
 
 }

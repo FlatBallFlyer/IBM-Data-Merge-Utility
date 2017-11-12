@@ -92,7 +92,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		Config.get().setInsertLimit(5);
@@ -116,7 +116,7 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_INSERT_FIRST,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		template = new Template("test", "child", "", "Child Content {col1} {col2}");
@@ -149,7 +149,7 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_INSERT_LAST,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		template = new Template("test", "child", "", "Child Content {col1} {col2}");
@@ -183,7 +183,7 @@ public class InsertTest {
 				Insert.OBJECT_INSERT_LIST, 
 				Insert.LIST_INSERT,
 				list, list, list, list,
-				"foo");
+				"foo",Insert.INSERT_IF_STRING_EQUALS,"");
 		assertEquals(AbstractDirective.TYPE_INSERT, directive.getType());
 		assertEquals("source", directive.getDataSource());
 		assertEquals("delim", directive.getDataDelimeter());
@@ -206,7 +206,9 @@ public class InsertTest {
 			Insert.PRIMITIVE_IGNORE, 
 			Insert.OBJECT_IGNORE,
 			Insert.LIST_IGNORE, 
-			empty, empty, empty, empty, "");
+			empty, empty, empty, empty,
+			".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		Insert mergable = directive.getMergable();
 		assertNotSame(directive, mergable);
 		assertEquals(directive.getType(), AbstractDirective.TYPE_INSERT);
@@ -231,7 +233,7 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_IGNORE,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
@@ -252,7 +254,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, "test.missing.ignore");
@@ -269,7 +271,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		cache.postTemplate(new Template("test", "child", "", "Child Content"));
@@ -287,7 +289,7 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_IGNORE,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
@@ -309,7 +311,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, "test.primitive.ignore");
@@ -327,7 +329,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		
@@ -361,7 +363,8 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_IGNORE,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
@@ -383,7 +386,8 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, "test.object.ignore");
@@ -401,7 +405,8 @@ public class InsertTest {
 				Insert.OBJECT_INSERT_OBJECT,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		
@@ -435,7 +440,8 @@ public class InsertTest {
 				Insert.OBJECT_INSERT_LIST,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		
@@ -469,7 +475,8 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		try {
@@ -491,7 +498,8 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_IGNORE,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, "test.list.ignore");
@@ -509,7 +517,8 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_INSERT,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		template = new Template("test", "child", "", "Child Content, ");
@@ -522,6 +531,100 @@ public class InsertTest {
 	}
 
 	@Test
+	public void testListInsertIf() throws MergeException {
+		Template template = new Template("test", "parent", "", this.bkm2, "{", "}");
+		Insert directive = new Insert("data.primitive","-",
+				Insert.MISSING_IGNORE,
+				Insert.PRIMITIVE_INSERT_IF,
+				Insert.OBJECT_IGNORE,
+				Insert.LIST_THROW,
+				emptyList, emptyList, emptyList, emptyList,
+				".*",
+				Insert.INSERT_IF_STRING_EQUALS,"bar");
+
+		template.addDirective(directive);
+		cache.postTemplate(template);
+		template = new Template("test", "child", "", "Inserted!");
+		cache.postTemplate(template);
+		
+		Merger context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("bar"));
+		template = context.merge();
+		assertEquals("Inserted!", template.getMergedOutput().getValue());
+
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("foo"));
+		template = context.merge();
+		assertEquals("", template.getMergedOutput().getValue());
+		
+		directive.setIfOperator(Insert.INSERT_IF_STRING_LT);
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("foo"));
+		template = context.merge();
+		assertEquals("Inserted!", template.getMergedOutput().getValue());
+
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("bam"));
+		template = context.merge();
+		assertEquals("", template.getMergedOutput().getValue());
+
+		directive.setIfOperator(Insert.INSERT_IF_STRING_GT);
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("foo"));
+		template = context.merge();
+		assertEquals("", template.getMergedOutput().getValue());
+
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("bam"));
+		template = context.merge();
+		assertEquals("Inserted!", template.getMergedOutput().getValue());
+		
+		directive.setIfValue("200.25");
+		directive.setIfOperator(Insert.INSERT_IF_VALUE_EQUALS);
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("200.14"));
+		template = context.merge();
+		assertEquals("", template.getMergedOutput().getValue());
+
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("200.25"));
+		template = context.merge();
+		assertEquals("Inserted!", template.getMergedOutput().getValue());
+		
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("00200.25"));
+		template = context.merge();
+		assertEquals("Inserted!", template.getMergedOutput().getValue());
+		
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("  0200.25000"));
+		template = context.merge();
+		assertEquals("Inserted!", template.getMergedOutput().getValue());
+
+		directive.setIfOperator(Insert.INSERT_IF_VALUE_GT);
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("200.14"));
+		template = context.merge();
+		assertEquals("Inserted!", template.getMergedOutput().getValue());
+
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("201.14"));
+		template = context.merge();
+		assertEquals("", template.getMergedOutput().getValue());
+
+		directive.setIfOperator(Insert.INSERT_IF_VALUE_LT);
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("200.14"));
+		template = context.merge();
+		assertEquals("", template.getMergedOutput().getValue());
+
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("201.14"));
+		template = context.merge();
+		assertEquals("Inserted!", template.getMergedOutput().getValue());
+	}
+
+	@Test
 	public void testListInsertNested() throws MergeException {
 		Template template = new Template("test", "parent", "", "Root-" + this.bkm2, "{", "}");
 		Insert directive = new Insert("data.list","-",
@@ -530,7 +633,8 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_INSERT,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		template = new Template("test", "child", "", "Child " + this.bkm3 + "Content, ");
@@ -554,7 +658,8 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_INSERT,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 
@@ -565,7 +670,8 @@ public class InsertTest {
 				Insert.OBJECT_INSERT_OBJECT,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		
@@ -599,7 +705,8 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_INSERT,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		cache.postTemplate(new Template("test", "child", "T1", "Child T1 Content, "));
@@ -625,7 +732,8 @@ public class InsertTest {
 				Insert.OBJECT_IGNORE,
 				Insert.LIST_INSERT,
 				emptyList, emptyList, emptyList, emptyList,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		cache.postTemplate(new Template("test", "child", "T1", "Child T1 Content, "));
@@ -676,7 +784,8 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_INSERT,
 				notFirst, notLast, onlyFirst, onlyLast,
-				".*");
+				".*",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		
@@ -711,7 +820,8 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_INSERT,
 				emptyList, emptyList, emptyList, emptyList,
-				"bkm1");
+				"bkm1",Insert.INSERT_IF_STRING_EQUALS,"");
+
 		template.addDirective(directive);
 		directive = new Insert("data.primitive","-",
 				Insert.MISSING_THROW,
@@ -719,7 +829,7 @@ public class InsertTest {
 				Insert.OBJECT_THROW,
 				Insert.LIST_THROW,
 				emptyList, emptyList, emptyList, emptyList,
-				"bkm2");
+				"bkm2",Insert.INSERT_IF_STRING_EQUALS,"");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		cache.postTemplate(new Template("test", "child", "T1", "Child T1 Content, "));
