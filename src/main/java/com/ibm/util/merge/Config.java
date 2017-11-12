@@ -44,4 +44,12 @@ public class Config {
 		return Config.get().initialize(name);
 	}
 	
+	public static void registerDefaultProviders() throws MergeException {
+		Config.get().registerDefaultProviders();
+	}
+
+	public static void registerProviders(String[] providers) throws MergeException {
+		Config.get().registerProviders(providers);
+	}
+
 }

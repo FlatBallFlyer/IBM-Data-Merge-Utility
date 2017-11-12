@@ -16,6 +16,7 @@
  */
 package com.ibm.util.merge;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -33,6 +34,8 @@ import com.ibm.util.merge.template.directive.Insert;
 import com.ibm.util.merge.template.directive.ParseData;
 import com.ibm.util.merge.template.directive.Replace;
 import com.ibm.util.merge.template.directive.SaveFile;
+import com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface;
+import com.ibm.util.merge.template.directive.enrich.provider.ProviderMeta;
 
 /**
  * This is the class that contains IDMU Configuration values and abstracts access
@@ -42,14 +45,24 @@ import com.ibm.util.merge.template.directive.SaveFile;
  * @since: v4.0.0.B1
  */
 public class Configuration {
+	private final String version = "4.0.0.B1";
 	private int nestLimit 		= 2;
 	private int insertLimit		= 20;
 	private String tempFolder	= "/opt/ibm/idmu/archives";
 	private String loadFolder	= "foo";
 	private String logLevel 	= "SEVERE";
-	private final String version = "4.0.0.B1";
+	private HashMap<String, Class<ProviderInterface>> providers = new HashMap<String, Class<ProviderInterface>>();
 	private HashMap<String, String> envVars = new HashMap<String,String>();
-
+	private String[] defaultProviders = {
+			"com.ibm.util.merge.template.directive.enrich.provider.CacheProvider",
+			"com.ibm.util.merge.template.directive.enrich.provider.CloudantProvider",
+			"com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
+			"com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider",
+			"com.ibm.util.merge.template.directive.enrich.provider.JndiProvider",
+			"com.ibm.util.merge.template.directive.enrich.provider.MongoProvider",
+			"com.ibm.util.merge.template.directive.enrich.provider.RestProvider",
+			"com.ibm.util.merge.template.directive.enrich.provider.StubProvider"
+			};
 	private transient static final DataProxyJson proxy = new DataProxyJson();
 	
 	/**
@@ -81,6 +94,7 @@ public class Configuration {
 		this.loadFolder = me.getLoadFolder();
 		this.logLevel = me.getLogLevel();
 		this.envVars = me.getEnvVars();
+		this.providers = new HashMap<String, Class<ProviderInterface>>();
 	    Logger rootLogger = LogManager.getLogManager().getLogger("");
 	    rootLogger.setLevel(Level.parse(this.logLevel));
 	    return this;
@@ -132,6 +146,61 @@ public class Configuration {
 			throw new Merge500("VCAP_SERVICES contains malformed JSON or is missing service " + serviceName);
 		}
 		return value;
+	}
+	
+	
+	// Provider Management
+	public ProviderInterface getProviderInstance(String className, String source, String option, Merger context) throws MergeException {
+		if (!this.providers.containsKey(className)) {
+			throw new Merge500("Provider not found, did you register it?");
+		}
+		
+		ProviderInterface theProvider;
+		try {
+			@SuppressWarnings("rawtypes")
+			Class[] cArg = new Class[3]; 
+			cArg[0] = String.class;
+			cArg[1] = String.class;
+			cArg[2] = Merger.class;
+			theProvider = (ProviderInterface) this.providers.get(className).getDeclaredConstructor(cArg).newInstance(source, option, context);
+		} catch (InstantiationException e) {
+			throw new Merge500("Error instantiating class: " + className + " message: " + e.getMessage());
+		} catch (IllegalAccessException e) {
+			throw new Merge500("Error accessing class: " + className + " message: " + e.getMessage());
+		} catch (IllegalArgumentException e) {
+			throw new Merge500("IllegalArgumentException : " + className + " message: " + e.getMessage());
+		} catch (InvocationTargetException e) {
+			throw new Merge500("InvocationTargetException: " + className + " message: " + e.getMessage());
+		} catch (NoSuchMethodException e) {
+			throw new Merge500("NoSuchMethodException: " + className + " message: " + e.getMessage());
+		} catch (SecurityException e) {
+			throw new Merge500("Error accessing class: " + className + " message: " + e.getMessage());
+		}
+		
+		return theProvider;
+	}
+	
+	public void registerDefaultProviders() throws MergeException {
+		for (String provider : this.defaultProviders) {
+			registerProvider(provider);
+		}
+	}
+
+	public void registerProviders(String[] providers) throws MergeException {
+		for (String provider : providers) {
+			registerProvider(provider);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void registerProvider(String className) throws MergeException {
+		Class<ProviderInterface> clazz;
+		try {
+			clazz = (Class<ProviderInterface>) Class.forName(className);
+			this.providers.put(className, clazz);
+		} catch (ClassNotFoundException e) {
+			throw new Merge500("Class Not Found exception: " + className + " message: " + e.getMessage());
+		}
 	}
 	
 	// Simple Getter/Setter below here
@@ -223,19 +292,28 @@ public class Configuration {
 	public void setLogLevel(String level) {
 		this.logLevel = level;
 	}
+	
+	public String getAllOptions() throws MergeException {
+		HashMap<String, HashMap<String, HashMap<Integer, String>>> selectValues;
+		HashMap<String, ProviderMeta> providerList;
 
-	public String getAllOptions() {
-		HashMap<String, HashMap<String, HashMap<Integer, String>>> values = 
-				new HashMap<String, HashMap<String, HashMap<Integer, String>>>();
-		values.put("Template", 	Template.getOptions());
-		values.put("Encoding",  Segment.getOptions());
-		values.put("Parser", 	Parser.getOptions());
-		values.put("Enrich", 	Enrich.getOptions());
-		values.put("Insert", 	Insert.getOptions());
-		values.put("Parse", 	ParseData.getOptions());
-		values.put("Replace", 	Replace.getOptions());
-		values.put("Save", 		SaveFile.getOptions());
-		return proxy.toJson(values);
+		selectValues = new HashMap<String, HashMap<String, HashMap<Integer, String>>>();
+		providerList = new HashMap<String, ProviderMeta>();
+		
+		selectValues.put("Template", 	Template.getOptions());
+		selectValues.put("Encoding",  Segment.getOptions());
+		selectValues.put("Parser", 	Parser.getOptions());
+		selectValues.put("Enrich", 	Enrich.getOptions());
+		selectValues.put("Insert", 	Insert.getOptions());
+		selectValues.put("Parse", 	ParseData.getOptions());
+		selectValues.put("Replace", 	Replace.getOptions());
+		selectValues.put("Save", 		SaveFile.getOptions());
+		
+		for (String provider : this.providers.keySet()) {
+			providerList.put(provider, this.getProviderInstance(provider, "", "", null).getMetaInfo());
+		}
+		String value = "[".concat(proxy.toJson(selectValues)).concat(",").concat(proxy.toJson(providerList)).concat("]");
+		return value;
 	}
 	
 }

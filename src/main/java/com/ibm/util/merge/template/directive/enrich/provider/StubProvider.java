@@ -22,6 +22,7 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.data.parser.DataProxyJson;
+import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.Wrapper;
@@ -34,10 +35,17 @@ import com.ibm.util.merge.template.directive.*;
  *
  */
 public class StubProvider implements ProviderInterface {
+	private final DataProxyJson proxy = new DataProxyJson();
+	private static final ProviderMeta meta = new ProviderMeta(
+			"Option Name",
+			"Credentials", 
+			"Command Help",
+			"Parse Help",
+			"Return Help");
+	
 	private final String source;
 	private final String dbName;
 	private transient final Merger context;
-	private transient final DataProxyJson proxy = new DataProxyJson();
 
 	/**
 	 * Instantiate the provider
@@ -54,15 +62,20 @@ public class StubProvider implements ProviderInterface {
 	}
 
 	@Override
-	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
+	public DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
 		Template aTemplate = new Template("system","sample","");
 		aTemplate.addDirective(new Enrich());
 		aTemplate.addDirective(new Insert());
 		aTemplate.addDirective(new ParseData());
 		aTemplate.addDirective(new Replace());
 		aTemplate.addDirective(new SaveFile());
+		
 		String templateJson = proxy.toJson(aTemplate);
-		return new DataPrimitive(templateJson);
+		if (parseAs == Parser.PARSE_JSON) {
+			return proxy.fromJSON(templateJson, DataElement.class);
+		} else {
+			return new DataPrimitive(templateJson);
+		}
 	}
 
 	@Override
@@ -80,4 +93,9 @@ public class StubProvider implements ProviderInterface {
 		return this.context;
 	}
 
+	@Override
+	public ProviderMeta getMetaInfo() {
+		return StubProvider.meta;
+	}
+	
 }

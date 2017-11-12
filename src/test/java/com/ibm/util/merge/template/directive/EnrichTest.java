@@ -25,6 +25,7 @@ public class EnrichTest {
 	public void setUp() throws Exception {
 		gsonProxy = new DataProxyJson();
 		Config.initialize();
+		Config.registerDefaultProviders();
 		cache = new TemplateCache();
 		template = new Template("test", "enrich", "", "Template Content", "{", "}");
 		enrich = new Enrich();

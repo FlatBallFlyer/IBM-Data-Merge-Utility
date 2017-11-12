@@ -46,7 +46,6 @@ public class Enrich extends AbstractDirective {
 	private String enrichParameter;
 	private String enrichCommand;
 	private int parseAs;
-	private transient Parser parser;
 
 	/**
 	 * Instantiate an Enrich Directive
@@ -54,7 +53,6 @@ public class Enrich extends AbstractDirective {
 	 */
 	public Enrich() throws MergeException {
 		super();
-		this.parser = new Parser();
 		this.setType(AbstractDirective.TYPE_ENRICH);
 		this.targetDataName = "";
 		this.targetDataDelimeter = "\"";
@@ -88,10 +86,7 @@ public class Enrich extends AbstractDirective {
 	@Override
 	public void execute(Merger context) throws MergeException {
 		ProviderInterface provider = context.getProvider(this.enrichClass, this.enrichSource, this.enrichParameter);
-		DataElement value = provider.provide(this.enrichCommand, this.getTemplate().getWrapper(), context, this.template.getReplaceStack());
-		if (this.parseAs != Parser.PARSE_NONE) {
-			value = parser.parse(this.parseAs, value.getAsPrimitive());
-		}
+		DataElement value = provider.provide(this.enrichCommand, this.getTemplate().getWrapper(), context, this.template.getReplaceStack(), this.parseAs);
 		this.getTemplate().getContext().getMergeData().put(this.targetDataName, this.targetDataDelimeter, value);
 	}
 

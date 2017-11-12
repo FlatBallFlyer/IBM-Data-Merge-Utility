@@ -25,40 +25,42 @@ import com.cloudant.client.org.lightcouch.CouchDbException;
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
-import com.ibm.util.merge.data.DataObject;
-import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.data.parser.DataProxyJson;
+import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.directive.enrich.source.CloudantClientMgr;
 
 /**
- * Implements Cloudant Database support. Environment Variable for credentials 
- * will be 
- * 
- * "SOURCE_NAME": [
- *         {
- *             "credentials": {
- *                 "username": "",
- *                 "password": "",
- *                 "host": "",
- *                 "port": ,
- *                 "url": ""
- *             }
- *         }
- *     ],
- * 
- * @author flatballflyer
+ * Implements Cloudant Database support. Environment Variable for credentials
+ *  
+ * @author Mike Storey
  *
  */
 public class CloudantProvider implements ProviderInterface {
+	private final DataProxyJson proxy = new DataProxyJson();
+	private static final ProviderMeta meta = new ProviderMeta(
+			"Option Name",
+			"Credentials", 
+			"Command Help",
+			"Parse Help",
+			"Return Help");
+	
+	class Credentials {
+		public String username;
+		public String password;
+		public String host;
+		public String port;
+		public String url;
+	}
+
 	private final String source;
 	private final String dbName;
-	private transient final Merger context;
-	private transient final DataProxyJson proxy = new DataProxyJson();
 	private transient CloudantClient cloudant = null;
 	private transient Database db = null;
+	private transient final Parser parser = new Parser();
+	private transient final Merger context;
 	
 	/**
 	 * Instantiate the provider and get the database connection
@@ -71,33 +73,23 @@ public class CloudantProvider implements ProviderInterface {
 		this.source = source;
 		this.dbName = dbName;
 		this.context = context;
-		String configString = "";
-		String username;
-		String password;
-//		String host;
-//		String port;
-//		String url;
-		
-		// Fetch Credentials
+	}
+	
+	private void connect() throws MergeException {
+		Credentials creds;
 		try {
-			configString = Config.get().getEnv(source);
-			DataObject credentials = proxy.fromJSON(configString, DataElement.class).getAsList().get(0).getAsObject().get("credentials").getAsObject();
-			username = 	credentials.get("username").getAsPrimitive();
-			password = 	credentials.get("password").getAsPrimitive();
-//			host = 		credentials.get("host").getAsPrimitive();
-//			port = 		credentials.get("port").getAsPrimitive();
-//			url = 		credentials.get("url").getAsPrimitive();
-		} catch (MergeException e){
-			throw new Merge500("Malformed or Missing Cloudant Source Credentials found for:" + source + " for " + configString);
+			creds = proxy.fromJSON(Config.get().getEnv(source), Credentials.class);
+		} catch (MergeException e) {
+			throw new Merge500("Malformed or Missing Cloudant Source Credentials found for:" + source );
 		}
 		
 		// Get the connection
 		synchronized (CloudantClientMgr.class) {
 			try {
 				this.cloudant = ClientBuilder
-						.account(username)
-						.username(username)
-						.password(password)
+						.account(creds.username)
+						.username(creds.username)
+						.password(creds.password)
 						.build();
 			} catch (CouchDbException e) {
 				throw new Merge500("Unable to connect to Cloudant repository" + e.getMessage());
@@ -108,12 +100,20 @@ public class CloudantProvider implements ProviderInterface {
 		db = cloudant.database(this.getDbName(), true);
 	}
 	
-
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) {
-		String result = "";  // TODO - Make Cloudant Call
-		this.db.getClass();
-		return new DataPrimitive(result);
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
+		if (this.cloudant == null) {
+			this.connect();
+		}
+		
+		DataElement result = null;  
+		
+		String results = db.toString(); // TODO - Make Cloudant Call
+		
+		if (parseAs != Parser.PARSE_NONE) {
+			result = parser.parse(parseAs, results);
+		}
+		return result;
 	}
 
 	@Override
@@ -130,4 +130,10 @@ public class CloudantProvider implements ProviderInterface {
 	public Merger getContext() {
 		return this.context;
 	}
+
+	@Override
+	public ProviderMeta getMetaInfo() {
+		return CloudantProvider.meta;
+	}
+	
 }

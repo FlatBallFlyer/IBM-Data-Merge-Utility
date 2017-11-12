@@ -16,7 +16,6 @@
  */
 package com.ibm.util.merge;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +23,6 @@ import java.util.Map;
 
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataManager;
-import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.storage.*;
 import com.ibm.util.merge.template.Template;
@@ -170,38 +168,12 @@ public class Merger {
 	 * @return provider A Data Provider
 	 * @throws MergeException
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ProviderInterface getProvider(String enrichClass, String enrichSource, String dbName) throws MergeException {
 		String key = enrichSource.concat(dbName);
-		if (this.providers.containsKey(key)) {
-			return providers.get(key);
+		if (!this.providers.containsKey(key)) {
+			providers.put(key,  Config.get().getProviderInstance(enrichClass, enrichSource, dbName, this));
 		}
-		
-		ProviderInterface theProvider;
-		try {
-			Class[] cArg = new Class[3]; 
-			cArg[0] = String.class;
-			cArg[1] = String.class;
-			cArg[2] = Merger.class;
-			Class clazz = Class.forName(enrichClass);
-			theProvider = (ProviderInterface) clazz.getDeclaredConstructor(cArg).newInstance(enrichSource, dbName, this);
-		} catch (ClassNotFoundException e1) {
-			throw new Merge500("Error finding provider - class not found: " + enrichClass );
-		} catch (InstantiationException e) {
-			throw new Merge500("Error instantiating class: " + enrichClass + " message: " + e.getMessage());
-		} catch (IllegalAccessException e) {
-			throw new Merge500("Error accessing class: " + enrichClass + " message: " + e.getMessage());
-		} catch (IllegalArgumentException e) {
-			throw new Merge500("IllegalArgumentException : " + enrichClass + " message: " + e.getMessage());
-		} catch (InvocationTargetException e) {
-			throw new Merge500("InvocationTargetException: " + enrichClass + " message: " + e.getMessage());
-		} catch (NoSuchMethodException e) {
-			throw new Merge500("NoSuchMethodException: " + enrichClass + " message: " + e.getMessage());
-		} catch (SecurityException e) {
-			throw new Merge500("Error accessing class: " + enrichClass + " message: " + e.getMessage());
-		}
-		providers.put(key, theProvider);
-		return theProvider;
+		return providers.get(key);
 	}
 
 	/**

@@ -9,6 +9,7 @@ import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.data.DataElement;
+import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
@@ -37,7 +38,7 @@ public class StubProviderTest {
 	@Test
 	public void testProvide() throws MergeException {
 		StubProvider provider = new StubProvider("source", "db", context);
-		DataElement result = provider.provide("", template.getWrapper(), context, template.getReplaceStack());
+		DataElement result = provider.provide("", template.getWrapper(), context, template.getReplaceStack(), Parser.PARSE_NONE);
 		assertTrue(result.isPrimitive());
 	}
 	

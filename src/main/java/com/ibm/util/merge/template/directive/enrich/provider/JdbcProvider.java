@@ -22,7 +22,7 @@ import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
-import com.ibm.util.merge.data.parser.Parser;
+import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
@@ -54,56 +54,60 @@ import javax.sql.DataSource;
  *
  */
 public class JdbcProvider implements ProviderInterface {
-	private final String source;
-	private final String dbName;
-	private final transient Merger context;
-	private final transient DataSource jdbcSource;
-	private final transient Connection connection;
-	private final transient Parser parser;
+	private final DataProxyJson proxy = new DataProxyJson();
+	private static final ProviderMeta meta = new ProviderMeta(
+			"Option Name",
+			"Credentials", 
+			"Command Help",
+			"Parse Help",
+			"Return Help");
+	
+	class Credentials {
+		public String db_type;
+		public String name;
+		public String uri_cli;
+		public String ca_cert;
+		public String deployment_id;
+		public String uri;
+	}
+
+	protected final String source;
+	protected final String dbName;
+	protected final transient Merger context;
+	protected transient DataSource jdbcSource = null;
+	protected transient Connection connection = null;
 	
 	public JdbcProvider(String source, String dbName, Merger context) throws MergeException {
 		this.source = source;
 		this.dbName = dbName;
 		this.context = context;
-		this.parser = new Parser();
-		
-		String db_type;
-		String name;
-		String uri_cli;
-		String ca_cert;
-		String deployment_id;
-		String uri;
-
+	}
+	
+	private void connect() throws MergeException {
 		// Get Credentials
-		String config = Config.get().getEnv(source);
+		Credentials creds;
 		try {
-			DataObject credentials = parser.parse(Parser.PARSE_JSON, config).getAsObject().get("credentials").getAsObject();
-			db_type = 		credentials.get("db_type").getAsPrimitive();
-			name = 			credentials.get("name").getAsPrimitive();
-			uri_cli = 		credentials.get("uri_cli").getAsPrimitive();
-			ca_cert = 		credentials.get("ca_certificate_base64").getAsPrimitive();
-			deployment_id = 	credentials.get("deployment_id").getAsPrimitive();
-			uri = 			credentials.get("uri").getAsPrimitive();
+			creds = proxy.fromJSON(Config.get().getEnv(source), Credentials.class);
 		} catch (MergeException e) {
-			throw new Merge500("Invalid JDBC Provider for:" + source + "value: " + config);
+			throw new Merge500("Invalid JDBC Provider for:" + this.source);
 		}
 
-		// TODO - Get Connection
+		// Get Connection
 		try {
-			jdbcSource = (DataSource) foo(db_type, name, uri_cli, ca_cert, deployment_id, uri);
+			// TODO - Get the JDBC Data source
+			jdbcSource = (DataSource) creds;
 			connection = jdbcSource.getConnection();
 		} catch (SQLException e) {
 			throw new Merge500("SQL Exception connection to data source:" + source);
 		}
 	}
-
-	// TODO Remove when Get Connection comes from JDBC
-	DataSource foo (String a, String b, String c, String d, String e, String f) {
-		return null;
-	}
 	
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
+		if (this.connection == null) {
+			connect();
+		}
+		
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_SQL);
 		query.replace(replace, false, Config.get().getNestLimit());
 		DataList table = new DataList();
@@ -148,6 +152,11 @@ public class JdbcProvider implements ProviderInterface {
 	@Override
 	public Merger getContext() {
 		return this.context;
+	}
+
+	@Override
+	public ProviderMeta getMetaInfo() {
+		return JdbcProvider.meta;
 	}
 }
 

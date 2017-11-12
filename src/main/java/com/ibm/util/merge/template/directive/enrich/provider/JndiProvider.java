@@ -16,21 +16,12 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
-import com.ibm.util.merge.data.DataList;
-import com.ibm.util.merge.data.DataObject;
-import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
-import com.ibm.util.merge.template.content.Content;
-import com.ibm.util.merge.template.content.TagSegment;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -45,20 +36,30 @@ import javax.sql.DataSource;
  * @author flatballflyer
  *
  */
-public class JndiProvider implements ProviderInterface {
-	private final String source;
-	private final String dbName;
-	private transient final Merger context;
-//	private transient final DataProxyJson proxy = new DataProxyJson();
-	private transient final DataSource jndiSource;
-	private transient final Connection connection;
+public class JndiProvider extends JdbcProvider implements ProviderInterface {
+	private static final ProviderMeta meta = new ProviderMeta(
+			"Option Name",
+			"Credentials", 
+			"Command Help",
+			"Parse Help",
+			"Return Help");
+	
+	class Credentials {
+		public String db_type;
+		public String name;
+		public String uri_cli;
+		public String ca_cert;
+		public String deployment_id;
+		public String uri;
+	}
+
+	private transient DataSource jndiSource = null;
 	
 	public JndiProvider(String source, String dbName, Merger context) throws MergeException {
-		this.source = source;
-		this.dbName = dbName;
-		this.context = context;
+		super(source, dbName, context);
+	}
 
-		// Get Connection
+	private void connect() throws Merge500 {
     	try {
 	    	Context initContext = new InitialContext();
 	    	this.jndiSource = (DataSource) initContext.lookup(this.getSource());
@@ -66,43 +67,17 @@ public class JndiProvider implements ProviderInterface {
 	    } catch (NamingException e) {
 	    	throw new Merge500("Naming Exception: " + this.getSource());
 	    } catch (SQLException e) {
-	    	throw new Merge500("Error acquiring connection for " + source + ":" + e.getMessage());
+	    	throw new Merge500("Error acquiring connection for " + this.source + ":" + e.getMessage());
 	    }
 	}
-
+	
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
-		Content query = new Content(wrapper, command, TagSegment.ENCODE_SQL);
-		query.replace(replace, false, Config.get().getNestLimit());
-		DataList table = new DataList();
-		ResultSet results;
-
-		// Execute Command
-		try {
-			results = this.connection.
-					prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).
-					executeQuery();
-		} catch (SQLException e) {
-			throw new Merge500("Invalid SQL Query " + query );
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
+		if (this.connection == null) {
+			connect();
 		}
-
-		// Build result table.
-		try {
-			ResultSetMetaData meta = results.getMetaData();
-			while (results.next()) {
-				DataObject row = new DataObject();
-				for (int column = 1; column <= meta.getColumnCount(); column++) {
-					row.put(meta.getColumnName(column), new DataPrimitive(results.getString(column)));
-				}
-				table.add(row);
-			}
-			results.close();
-		} catch (SQLException e) {
-			throw new Merge500("SQL Exception processing results" + query );
-		}
-
-		return table;
-	}
+		return super.provide(command, wrapper, context, replace, parseAs);
+	}	
 
 	@Override
 	public String getSource() {
@@ -117,6 +92,11 @@ public class JndiProvider implements ProviderInterface {
 	@Override
 	public Merger getContext() {
 		return this.context;
+	}
+
+	@Override
+	public ProviderMeta getMetaInfo() {
+		return JndiProvider.meta;
 	}
 }
 

@@ -21,6 +21,7 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
+import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
@@ -43,7 +44,7 @@ public class FileSystemProvider implements ProviderInterface {
 	private final String source;
 	private final String dbName;
 	private transient final Merger context;
-//	private transient final DataProxyJson proxy = new DataProxyJson();
+	private transient Parser parser = new Parser();
 	
 	public FileSystemProvider(String source, String dbName, Merger context) throws MergeException {
 		this.source = source;
@@ -52,7 +53,7 @@ public class FileSystemProvider implements ProviderInterface {
 	}
 
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws Merge500 {
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_NONE);
 		query.replace(replace, false, Config.get().getNestLimit());
 		DataObject result = new DataObject();
@@ -77,6 +78,13 @@ public class FileSystemProvider implements ProviderInterface {
             	}
             }
         }
+        
+		if (parseAs != Parser.PARSE_NONE) {
+			for (String fileName : result.keySet()) {
+				result.put(fileName, parser.parse(parseAs, result.get(fileName).getAsPrimitive()));
+			}
+		}
+
 		return result;
 	}
 	
@@ -93,6 +101,16 @@ public class FileSystemProvider implements ProviderInterface {
 	@Override
 	public Merger getContext() {
 		return this.context;
+	}
+
+	@Override
+	public ProviderMeta getMetaInfo() {
+		return new ProviderMeta(
+				"Directory to read files from",
+				"No further configuration needed",
+				"A Java RegEx file selector",
+				"file content is parsed in the return object",
+				"returns an object of <String, Primitive> if not parsed, and String, Element if parsed");
 	}
 	
 }

@@ -41,7 +41,7 @@ public interface ProviderInterface {
 	 * @return
 	 * @throws MergeException
 	 */
-	public abstract DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException;
+	public abstract DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException;
 
 	/**
 	 * @return Source Name
@@ -57,5 +57,7 @@ public interface ProviderInterface {
 	 * @return Context
 	 */
 	public abstract Merger getContext();
+	
+	public abstract ProviderMeta getMetaInfo();
 
 }

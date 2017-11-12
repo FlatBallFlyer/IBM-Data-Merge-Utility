@@ -55,7 +55,7 @@ public class CacheProvider implements ProviderInterface {
 	}
 	
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
 		TemplateCache cache = context.getCahce();
 		DataObject cacheData = new DataObject();
 		cacheData.put("version", 		new DataPrimitive(Config.get().getVersion()));
@@ -86,4 +86,15 @@ public class CacheProvider implements ProviderInterface {
 		return this.context;
 	}
 
+	@Override
+	public ProviderMeta getMetaInfo() {
+		return new ProviderMeta(
+				"No Options are Supported",
+				"No further configuration needed",
+				"No Command is needed",
+				"No Parsing is supported",
+				"returns an object of <String, Primitive> with cache statistics");
+	}
+	
+	
 }

@@ -15,34 +15,13 @@
  *
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
-/*
-"mongoDb": [{
-	"credentials": {
-		"username": "some-user-name",
-		"password": "some-password"
-    }
-}]
-
-"SOURCE_NAME": [
-        {
-            "credentials": {
-                "username": "",
-                "password": "",
-                "host": "",
-                "port": ,
-                "url": ""
-            }
-        }
-    ],
-*/
 
 import java.util.HashMap;
 
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
-import com.ibm.util.merge.data.DataObject;
-import com.ibm.util.merge.data.DataPrimitive;
+import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
@@ -53,15 +32,32 @@ import com.ibm.util.merge.template.content.TagSegment;
 /**
  * Implements MongoDb access
  * 
- * @author flatballflyer
+ * @author Mike Storey
  *
  */
 public class MongoProvider implements ProviderInterface {
+	private final DataProxyJson proxy = new DataProxyJson();
+	private static final ProviderMeta meta = new ProviderMeta(
+			"Option Name",
+			"Credentials", 
+			"Command Help",
+			"Parse Help",
+			"Return Help");
+	
+	class Credentials {
+		public String db_type;
+		public String name;
+		public String uri_cli;
+		public String ca_cert;
+		public String deployment_id;
+		public String uri; 
+	}
+
 	private final String source;
 	private final String dbName;
 	private transient final Merger context;
-	private transient final Parser parser;
-	private transient final String connection; // TODO Mongo Connection type
+	private transient String connection = null; // TODO Mongo Connection type
+	private transient final Parser parser = new Parser();
 	
 	/**
 	 * Instantiate the provider and get the db connection
@@ -75,41 +71,36 @@ public class MongoProvider implements ProviderInterface {
 		this.source = source;
 		this.dbName = dbName;
 		this.context = context;
-		this.parser = new Parser();
-		
-		String db_type;
-		String name;
-		String uri_cli;
-		String ca_cert;
-		String deployment_id;
-		String uri;
-
-		// Get Credentials (TODO Assumed same as JDBC)
-		String config = Config.get().getEnv(source);
+	}
+	
+	private void connect() throws Merge500 {
+		Credentials creds;
 		try {
-			DataObject credentials = parser.parse(Parser.PARSE_JSON, config).getAsObject().get("credentials").getAsObject();
-			db_type = 		credentials.get("db_type").getAsPrimitive();
-			name = 			credentials.get("name").getAsPrimitive();
-			uri_cli = 		credentials.get("uri_cli").getAsPrimitive();
-			ca_cert = 		credentials.get("ca_certificate_base64").getAsPrimitive();
-			deployment_id = credentials.get("deployment_id").getAsPrimitive();
-			uri = 			credentials.get("uri").getAsPrimitive();
+			creds = proxy.fromJSON(Config.get().getEnv(source), Credentials.class);
 		} catch (MergeException e) {
-			throw new Merge500("Invalid JDBC Provider for:" + source + "value: " + config);
+			throw new Merge500("Invalid Mongo Provider for:" + source);
 		}
 
-		// TODO - Get Connection
-		this.connection = db_type + name + uri_cli + ca_cert + deployment_id + uri;
-		
+		// TODO - Get Mongo Connection
+		this.connection = creds.db_type + creds.name + creds.uri_cli + creds.ca_cert + creds.deployment_id + creds.uri;
 	}
 
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace) throws MergeException {
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
+		if (connection == null) {
+			this.connect();
+		}
+		
+		DataElement result = null;
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_JSON);
 		query.replace(replace, false, Config.get().getNestLimit());
 		
-		String result = connection;  // TODO - Use connection to make Mongo Call
-		return new DataPrimitive(result);
+		String results = ""; // TODO - Make Mongo Call
+		
+		if (parseAs != Parser.PARSE_NONE) {
+			result = parser.parse(parseAs, results);
+		}
+		return result;
 	}
 
 	@Override
@@ -125,5 +116,10 @@ public class MongoProvider implements ProviderInterface {
 	@Override
 	public Merger getContext() {
 		return this.context;
+	}
+
+	@Override
+	public ProviderMeta getMetaInfo() {
+		return MongoProvider.meta;
 	}
 }
