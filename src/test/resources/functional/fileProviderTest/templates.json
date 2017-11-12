@@ -11,7 +11,7 @@
         "back" : ">"
       },
       "description" : "File Provider Test",
-      "content" : "Companies\n<bookmark=\"company\" group=\"test\" template=\"company\">\n\nAll Employees\n<bookmark=\"employees\" group=\"test\" template=\"allEmployees\">\n\nAll Owners\n<bookmark=\"owners\" group=\"test\" template=\"allOwners\">\n\nEnd Report",
+      "content" : "[<bookmark=\"company\" group=\"test\" template=\"company\">\n]\n<bookmark=\"employees\" group=\"test\" template=\"allEmployees\">\n<bookmark=\"owners\" group=\"test\" template=\"allOwners\">\n",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -19,42 +19,9 @@
       "contentRedirectUrl" : "",
       "directives" : [
         {
-          "type" : 1,
-          "name" : "Get Company.json",
-          "targetDataName" : "files",
-          "targetDataDelimeter" : "-",
-          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
-          "enrichSource" : "files",
-          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
-          "enrichCommand" : "company.json",
-          "parseAs" : 4
-        },
-        {
-          "type" : 1,
-          "name" : "Get Owners",
-          "targetDataName" : "owners",
-          "targetDataDelimeter" : "-",
-          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
-          "enrichSource" : "files",
-          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
-          "enrichCommand" : "owner.*xml",
-          "parseAs" : 4
-        },
-        {
-          "type" : 1,
-          "name" : "Enrich from File - all Employees",
-          "targetDataName" : "employees",
-          "targetDataDelimeter" : "-",
-          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
-          "enrichSource" : "files",
-          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
-          "enrichCommand" : "employee.*csv",
-          "parseAs" : 4
-        },
-        {
           "type" : 3,
-          "name" : "Parse",
-          "dataSource" : "files-company.json",
+          "name" : "Parse Payload to company",
+          "dataSource" : "idmuPayload",
           "dataDelimeter" : "-",
           "ifMissing" : 1,
           "ifPrimitive" : 3,
@@ -67,7 +34,7 @@
         },
         {
           "type" : 2,
-          "name" : "Insert by Company Report Lines",
+          "name" : "Insert company records",
           "dataSource" : "company",
           "dataDelimeter" : "-",
           "ifMissing" : 1,
@@ -82,29 +49,14 @@
         },
         {
           "type" : 2,
-          "name" : "Insert All Employees",
-          "dataSource" : "employees",
+          "name" : "insert (save) Archives",
+          "dataSource" : "Missing",
           "dataDelimeter" : "-",
-          "ifMissing" : 1,
+          "ifMissing" : 3,
           "ifPrimitive" : 1,
           "ifObject" : 1,
-          "ifList" : 3,
-          "bookmarkPattern" : "employees",
-          "notFirst" : [],
-          "notLast" : [],
-          "onlyFirst" : [],
-          "onlyLast" : []
-        },
-        {
-          "type" : 2,
-          "name" : "Insert Onwer",
-          "dataSource" : "owners",
-          "dataDelimeter" : "-",
-          "ifMissing" : 1,
-          "ifPrimitive" : 1,
-          "ifObject" : 1,
-          "ifList" : 3,
-          "bookmarkPattern" : "owners",
+          "ifList" : 1,
+          "bookmarkPattern" : "*.file",
           "notFirst" : [],
           "notLast" : [],
           "onlyFirst" : [],
@@ -122,14 +74,30 @@
         "front" : "<",
         "back" : ">"
       },
-      "description" : "File Provider Test",
-      "content" : "Company <company>\nEmployees:\n<bookmark=\"eployees\" group=\"test\" template=\"employees\">\nOwners:\n<bookmark=\"owners\" group=\"test\" template=\"owners\">\n==========",
+      "description" : "A Company Record, inserts Employee, Customer and Owner",
+      "content" : "{\n\t\"company\" : \"<companies>\",\n\t\"owners\" : \"<owners>\",\n\t\"customers\" : \"<customers>\"\n}",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
       "contentFileName" : "",
       "contentRedirectUrl" : "",
       "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 4,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
         {
           "type" : 2,
           "name" : "Insert Employees",
@@ -159,72 +127,17 @@
           "notLast" : [],
           "onlyFirst" : [],
           "onlyLast" : []
-        }
-      ]
-    },
-    {
-      "id" : {
-        "group" : "test",
-        "name" : "employees",
-        "variant" : ""
-      },
-      "wrapper" : {
-        "front" : "<",
-        "back" : ">"
-      },
-      "description" : "Employees",
-      "content" : "<bookmark=\"eployee\" group=\"test\" template=\"employee\">",
-      "contentType" : 2,
-      "contentDisposition" : 2,
-      "contentEncoding" : 4,
-      "contentFileName" : "",
-      "contentRedirectUrl" : "",
-      "directives" : [
+        },
         {
           "type" : 2,
-          "name" : "Insert Employee",
-          "dataSource" : "idmuContext-eployees",
+          "name" : "Insert Customers",
+          "dataSource" : "idmuContext-customers",
           "dataDelimeter" : "-",
           "ifMissing" : 1,
           "ifPrimitive" : 1,
           "ifObject" : 1,
           "ifList" : 3,
-          "bookmarkPattern" : "employees",
-          "notFirst" : [],
-          "notLast" : [],
-          "onlyFirst" : [],
-          "onlyLast" : []
-        }
-      ]
-    },
-    {
-      "id" : {
-        "group" : "test",
-        "name" : "owners",
-        "variant" : ""
-      },
-      "wrapper" : {
-        "front" : "<",
-        "back" : ">"
-      },
-      "description" : "Owners",
-      "content" : "<bookmark=\"owner\" group=\"test\" template=\"owner\">\n==========",
-      "contentType" : 2,
-      "contentDisposition" : 2,
-      "contentEncoding" : 4,
-      "contentFileName" : "",
-      "contentRedirectUrl" : "",
-      "directives" : [
-        {
-          "type" : 2,
-          "name" : "Insert Owner",
-          "dataSource" : "idmuContext-owners",
-          "dataDelimeter" : "-",
-          "ifMissing" : 1,
-          "ifPrimitive" : 1,
-          "ifObject" : 1,
-          "ifList" : 3,
-          "bookmarkPattern" : "owner",
+          "bookmarkPattern" : "customers",
           "notFirst" : [],
           "notLast" : [],
           "onlyFirst" : [],
@@ -243,13 +156,49 @@
         "back" : ">"
       },
       "description" : "Owner",
-      "content" : "Owner",
+      "content" : "{\"owner\":\"<owner>\",\n \"???\":\"<???>\",\n\"???\":\"<???>\"\n}",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
       "contentFileName" : "",
       "contentRedirectUrl" : "",
       "directives" : []
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "anOwner",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "a Single Employee from Context",
+      "content" : "Employee <employee>\n",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        }
+      ]
     },
     {
       "id" : {
@@ -262,13 +211,40 @@
         "back" : ">"
       },
       "description" : "Employee",
-      "content" : "Employee",
+      "content" : "<bookmark=\"employee\" group=\"test\" template=\"anEmployee\">",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
       "contentFileName" : "",
       "contentRedirectUrl" : "",
-      "directives" : []
+      "directives" : [
+        {
+          "type" : 1,
+          "name" : "Enrich from File - get Employee",
+          "targetDataName" : "employee",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
+          "enrichSource" : "testFiles",
+          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichCommand" : "employee.*csv",
+          "parseAs" : 4
+        },
+        {
+          "type" : 2,
+          "name" : "Insert anEmployee",
+          "dataSource" : "employee",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "ifList" : 1,
+          "bookmarkPattern" : "employee",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
     },
     {
       "id" : {
@@ -280,14 +256,178 @@
         "front" : "<",
         "back" : ">"
       },
+      "description" : "Employee <employee>",
+      "content" : "",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 4,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "customer",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
       "description" : "a Single Employee from Context",
-      "content" : "Name: <name> Title: <title> Manager:<manager>\n",
+      "content" : "{\"customer\":\"<customer>\",\n \"???\":\"<???>\",\n\"???\":\"<???>\"\n}",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
       "contentFileName" : "",
       "contentRedirectUrl" : "",
       "directives" : []
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "aCustomer",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Customer from Context",
+      "content" : "Customer",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "allEmployees",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Employee <employee>",
+      "content" : "<bookmark=\"employee\" group=\"test\" template=\"anEmployee\">",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 1,
+          "name" : "Enrich from File - all Employees",
+          "targetDataName" : "employees",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
+          "enrichSource" : "files",
+          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichCommand" : "employee.*csv",
+          "parseAs" : 4
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Employee Records",
+          "dataSource" : "employees",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "employee",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "allOwners",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "",
+      "content" : "<bookmark=\"owner\" group=\"test\" template=\"anOwner\">",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 1,
+          "name" : "Enrich from File - all Owners",
+          "targetDataName" : "owners",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
+          "enrichSource" : "files",
+          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichCommand" : "owner.*json",
+          "parseAs" : 4
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Owner Records",
+          "dataSource" : "owners",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "owner",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
     }
   ]
 }
