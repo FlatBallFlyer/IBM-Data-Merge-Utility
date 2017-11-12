@@ -63,15 +63,19 @@ public class Insert extends AbstractDataDirective {
 		return options;
 	}
 
-	public static final int INSERT_IF_STRING_EQUALS = 1;
-	public static final int INSERT_IF_STRING_GT		= 2;
-	public static final int INSERT_IF_STRING_LT		= 3;
-	public static final int INSERT_IF_VALUE_EQUALS 	= 4;
-	public static final int INSERT_IF_VALUE_GT		= 5;
-	public static final int INSERT_IF_VALUE_LT		= 6;
+	public static final int INSERT_IF_STRING_EQUALS 	= 1;
+	public static final int INSERT_IF_STRING_EMPTY 		= 2;
+	public static final int INSERT_IF_STRING_NOT_EMPTY 	= 3;
+	public static final int INSERT_IF_STRING_GT			= 4;
+	public static final int INSERT_IF_STRING_LT			= 5;
+	public static final int INSERT_IF_VALUE_EQUALS 		= 6;
+	public static final int INSERT_IF_VALUE_GT			= 7;
+	public static final int INSERT_IF_VALUE_LT			= 8;
 	public static final HashMap<Integer, String> INSERT_IF_OPERATORS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(INSERT_IF_STRING_EQUALS,	"string equals");
+		options.put(INSERT_IF_STRING_EMPTY, 	"string is empty");
+		options.put(INSERT_IF_STRING_NOT_EMPTY, "string not empty");
 		options.put(INSERT_IF_STRING_GT, 		"string >");
 		options.put(INSERT_IF_STRING_LT, 		"string <");
 		options.put(INSERT_IF_VALUE_EQUALS, 	"value =");
@@ -235,6 +239,16 @@ public class Insert extends AbstractDataDirective {
 				switch (this.getIfOperator()) {
 				case INSERT_IF_STRING_EQUALS :
 					if (value.equals(this.ifValue)) {
+						this.insertFromPrimitive(context, (DataPrimitive) data);
+					} 
+					return;
+				case INSERT_IF_STRING_EMPTY:
+					if (value.isEmpty()) {
+						this.insertFromPrimitive(context, (DataPrimitive) data);
+					} 
+					return;
+				case INSERT_IF_STRING_NOT_EMPTY :
+					if (!value.isEmpty()) {
 						this.insertFromPrimitive(context, (DataPrimitive) data);
 					} 
 					return;

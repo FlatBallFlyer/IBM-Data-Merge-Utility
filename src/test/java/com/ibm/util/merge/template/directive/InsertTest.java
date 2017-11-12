@@ -579,6 +579,28 @@ public class InsertTest {
 		template = context.merge();
 		assertEquals("Inserted!", template.getMergedOutput().getValue());
 		
+		directive.setIfOperator(Insert.INSERT_IF_STRING_EMPTY);
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("foo"));
+		template = context.merge();
+		assertEquals("", template.getMergedOutput().getValue());
+
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive(""));
+		template = context.merge();
+		assertEquals("Inserted!", template.getMergedOutput().getValue());
+
+		directive.setIfOperator(Insert.INSERT_IF_STRING_NOT_EMPTY);
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive("foo"));
+		template = context.merge();
+		assertEquals("Inserted!", template.getMergedOutput().getValue());
+
+		context = new Merger(cache, "test.parent.");
+		context.getMergeData().put("data.primitive", "-", new DataPrimitive(""));
+		template = context.merge();
+		assertEquals("", template.getMergedOutput().getValue());
+
 		directive.setIfValue("200.25");
 		directive.setIfOperator(Insert.INSERT_IF_VALUE_EQUALS);
 		context = new Merger(cache, "test.parent.");
