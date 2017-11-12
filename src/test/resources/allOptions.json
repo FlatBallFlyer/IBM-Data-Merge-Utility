@@ -1,171 +1,195 @@
-{
-	"Replace": 
+[
 	{
-		"Object-Attr Object": 
+		"Replace": 
 		{
-			"1": "throw",
-			"2": "ignore"
+			"Object-Attr Object": 
+			{
+				"1": "throw",
+				"2": "ignore"
+			},
+
+			"Source Missing": 
+			{
+				"1": "throw",
+				"2": "ignore"
+			},
+
+			"List-Attr Not Primitive": 
+			{
+				"1": "throw",
+				"2": "ignore"
+			},
+
+			"If Primitive": 
+			{
+				"1": "throw",
+				"2": "ignore",
+				"3": "replace",
+				"4": "replace with JSON"
+			},
+
+			"List-Attr Missing": 
+			{
+				"1": "throw",
+				"2": "ignore"
+			},
+
+			"Object-Attr Primitive": 
+			{
+				"1": "throw",
+				"2": "ignore",
+				"3": "insertList"
+			},
+
+			"If Object": 
+			{
+				"1": "throw",
+				"2": "ignore",
+				"3": "replace object",
+				"4": "replace as list",
+				"5": "replace with JSON"
+			},
+
+			"Object-Attr List": 
+			{
+				"1": "throw",
+				"2": "ignore",
+				"3": "use first primitive",
+				"4": "use last primitive"
+			}
 		},
 
-		"Source Missing": 
+		"Enrich": 
 		{
-			"1": "throw",
-			"2": "ignore"
+			
 		},
 
-		"List-Attr Not Primitive": 
+		"Parser": 
 		{
-			"1": "throw",
-			"2": "ignore"
+			"Parse Formats": 
+			{
+				"1": "csv",
+				"2": "html",
+				"3": "json",
+				"4": "none",
+				"5": "xml"
+			}
 		},
 
-		"If Primitive": 
+		"Insert": 
 		{
-			"1": "throw",
-			"2": "ignore",
-			"3": "replace"
+			"If List": 
+			{
+				"1": "throw",
+				"2": "ignore",
+				"3": "insert",
+				"4": "insert first member",
+				"5": "insert last member"
+			},
+
+			"Source Missing": 
+			{
+				"1": "throw",
+				"2": "ignore",
+				"3": "insert"
+			},
+
+			"If Primitive": 
+			{
+				"1": "throw",
+				"2": "ignore",
+				"3": "insert",
+				"4": "insert if"
+			},
+
+			"If Object": 
+			{
+				"1": "throw",
+				"2": "ignore",
+				"3": "insertObject",
+				"4": "insertList"
+			},
+
+			"Insert If operators": 
+			{
+				"1": "string equals",
+				"2": "string is empty",
+				"3": "string not empty",
+				"4": "string \u003e",
+				"5": "string \u003c",
+				"6": "value \u003d",
+				"7": "value \u003e",
+				"8": "value \u003c"
+			}
 		},
 
-		"List-Attr Missing": 
-		{
-			"1": "throw",
-			"2": "ignore"
-		},
-
-		"Object-Attr Primitive": 
-		{
-			"1": "throw",
-			"2": "ignore",
-			"3": "insertList"
-		},
-
-		"If Object": 
-		{
-			"1": "throw",
-			"2": "ignore",
-			"3": "insertList"
-		},
-
-		"Object-Attr List": 
-		{
-			"1": "throw",
-			"2": "ignore",
-			"3": "use first primitive",
-			"4": "use last primitive"
-		}
-	},
-
-	"Enrich": 
-	{
-		
-	},
-
-	"Parser": 
-	{
-		"Parse Formats": 
-		{
-			"1": "csv",
-			"2": "html",
-			"3": "json",
-			"4": "none",
-			"5": "xml"
-		}
-	},
-
-	"Insert": 
-	{
-		"If List": 
-		{
-			"1": "throw",
-			"2": "ignore",
-			"3": "insert"
-		},
-
-		"Source Missing": 
-		{
-			"1": "throw",
-			"2": "ignore",
-			"3": "insert"
-		},
-
-		"If Primitive": 
-		{
-			"1": "throw",
-			"2": "ignore",
-			"3": "insert"
-		},
-
-		"If Object": 
-		{
-			"1": "throw",
-			"2": "ignore",
-			"3": "insertObject",
-			"4": "insertList"
-		}
-	},
-
-	"Encoding": 
-	{
 		"Encoding": 
 		{
-			"1": "none",
-			"2": "html",
-			"3": "sql",
-			"4": "json",
-			"5": "xml",
-			"6": "default"
+			"Encoding": 
+			{
+				"1": "none",
+				"2": "html",
+				"3": "sql",
+				"4": "json",
+				"5": "xml",
+				"6": "default"
+			}
+		},
+
+		"Template": 
+		{
+			"Content Type": 
+			{
+				"1": "html",
+				"2": "json",
+				"3": "xml",
+				"4": "text"
+			},
+
+			"Content Disposition": 
+			{
+				"1": "download",
+				"2": "normal"
+			}
+		},
+
+		"Parse": 
+		{
+			"If List": 
+			{
+				"1": "throw",
+				"2": "ignore",
+				"3": "parse first primitive",
+				"4": "parse last primitive"
+			},
+
+			"Source Missing": 
+			{
+				"1": "throw",
+				"2": "ignore"
+			},
+
+			"If Primitive": 
+			{
+				"1": "throw",
+				"2": "ignore",
+				"3": "parse"
+			},
+
+			"If Object": 
+			{
+				"1": "throw",
+				"2": "ignore"
+			}
+		},
+
+		"Save": 
+		{
+			
 		}
 	},
 
-	"Template": 
-	{
-		"Content Type": 
-		{
-			"1": "html",
-			"2": "json",
-			"3": "xml",
-			"4": "text"
-		},
-
-		"Content Disposition": 
-		{
-			"1": "download",
-			"2": "normal"
-		}
-	},
-
-	"Parse": 
-	{
-		"If List": 
-		{
-			"1": "throw",
-			"2": "ignore",
-			"3": "parse first primitive",
-			"4": "parse last primitive"
-		},
-
-		"Source Missing": 
-		{
-			"1": "throw",
-			"2": "ignore"
-		},
-
-		"If Primitive": 
-		{
-			"1": "throw",
-			"2": "ignore",
-			"3": "parse"
-		},
-
-		"If Object": 
-		{
-			"1": "throw",
-			"2": "ignore"
-		}
-	},
-
-	"Save": 
 	{
 		
 	}
-}
+]
