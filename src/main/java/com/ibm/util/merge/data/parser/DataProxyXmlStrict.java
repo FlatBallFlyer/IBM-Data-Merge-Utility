@@ -75,6 +75,7 @@ public class DataProxyXmlStrict {
 		}
 		DataObject theDoc = new DataObject();
 		theDoc.put("name", new DataPrimitive(doc.getDocumentElement().getNodeName()));
+		
 		DataList list = new DataList();
 		theDoc.put("members", list);
 		addNodes(doc.getDocumentElement().getChildNodes(), list);
@@ -93,19 +94,19 @@ public class DataProxyXmlStrict {
 			DataObject object = new DataObject();
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				object.put("name", new DataPrimitive(node.getNodeName()));
+				DataObject attrs = new DataObject();
 				if (node.hasAttributes()) {
-					DataObject attrs = new DataObject();
 					for (int attr = 0; attr < node.getAttributes().getLength(); attr++) {
 						Node attribute = node.getAttributes().item(attr);
 						attrs.put(attribute.getNodeName(),	new DataPrimitive(attribute.getNodeValue()));
 					}
-					object.put("attrs", attrs);
 				}
+				object.put("attrs", attrs);
+				DataList list = new DataList();
 				if (node.hasChildNodes()) {
-					DataList list = new DataList();
-					object.put("members", list);
 					addNodes(node.getChildNodes(), list);
 				}
+				object.put("members", list);
 				to.add(object);
 			}
 			

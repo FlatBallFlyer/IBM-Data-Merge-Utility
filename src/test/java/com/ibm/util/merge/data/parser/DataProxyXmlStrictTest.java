@@ -157,4 +157,15 @@ public class DataProxyXmlStrictTest {
         assertEquals("r3c3", manager.get("test-members-[4]-members-[1]-members-[0]","-").getAsPrimitive());
 	}
 
+	@Test
+	public void testFromXml5() throws MergeException {
+		String xmlString = "<root><owner name=\"Owner One\" age=\"22\"></owner></root>";
+		DataElement element = proxy.fromXML(xmlString);
+		assertTrue(element.isObject());
+		assertEquals(2, element.getAsObject().keySet().size());
+		assertTrue(element.getAsObject().containsKey("members"));
+		assertTrue(element.getAsObject().get("members").isList());
+		assertTrue(element.getAsObject().get("members").getAsList().get(0).getAsObject().containsKey("attrs"));
+		assertTrue(element.getAsObject().get("members").getAsList().get(0).getAsObject().get("attrs").getAsObject().containsKey("age"));
+	}
 }
