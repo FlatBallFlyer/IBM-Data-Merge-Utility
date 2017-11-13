@@ -249,7 +249,7 @@
           "targetDataDelimeter" : "-",
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
           "enrichSource" : "testFiles",
-          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichParameter" : "src/test/resources/functional/datafiles/",
           "enrichCommand" : "owner\\.<idmuContext>\\.xml",
           "parseAs" : 5
         },
@@ -280,7 +280,7 @@
         "front" : "<",
         "back" : ">"
       },
-      "description" : "anOwner  This is \"a test\" String with NewLine\n Tab\t Slash\\",
+      "description" : "anOwner",
       "content" : "\n\t\t{\"owner\":\"<idmuContext>\", \"type\":\"owner\", \"name\":\"<name>\", \"age\":\"<age>\"}<,>",
       "contentType" : 2,
       "contentDisposition" : 2,
@@ -349,7 +349,7 @@
           "targetDataDelimeter" : "-",
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
           "enrichSource" : "testFiles",
-          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichParameter" : "src/test/resources/functional/datafiles/",
           "enrichCommand" : "employee\\.<idmuContext>\\.csv",
           "parseAs" : 1
         },
@@ -448,7 +448,7 @@
           "targetDataDelimeter" : "-",
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
           "enrichSource" : "testFiles",
-          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichParameter" : "src/test/resources/functional/datafiles/",
           "enrichCommand" : "customer\\.<idmuContext>\\.json",
           "parseAs" : 3
         },
@@ -547,7 +547,7 @@
           "targetDataDelimeter" : "-",
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
           "enrichSource" : "files",
-          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichParameter" : "src/test/resources/functional/datafiles/",
           "enrichCommand" : "employee.*csv",
           "parseAs" : 1
         },
@@ -612,7 +612,7 @@
           "targetDataDelimeter" : "-",
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
           "enrichSource" : "files",
-          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichParameter" : "src/test/resources/functional/datafiles/",
           "enrichCommand" : "owner.*xml",
           "parseAs" : 5
         },
