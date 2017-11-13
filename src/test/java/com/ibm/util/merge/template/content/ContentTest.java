@@ -299,6 +299,12 @@ public class ContentTest {
 	}
 
 	@Test
+	public void testGetBookmarks2() throws Merge500 {
+		Content test = new Content("<",">","\t{\n\t\t\"company\" : \"<company>\",\n\t\t\"owners\" : \"<bookmark=\"owners\" group=\"test\" template=\"owner\">\",\n\t\t\"employees\" : \"<bookmark=\"employees\" group=\"test\" template=\"employee\">\",\n\t\t\"customers\" : \"<bookmark=\"customers\" group=\"test\" template=\"customer\">\",\n\t}", TagSegment.ENCODE_NONE);
+		assertEquals(3, test.getBookmarks().size());
+	}
+	
+	@Test
 	public void testRemoveBookmarks() throws Merge500 {
 		Content test = new Content("{","}","{bookmark=\"foo\" group=\"grp\" template=\"temp\"}{bookmark=\"foo\" group=\"grp\" template=\"temp\"}{bookmark=\"foo\" group=\"grp\" template=\"temp\"}", TagSegment.ENCODE_NONE);
 		assertEquals(3, test.getBookmarks().size());

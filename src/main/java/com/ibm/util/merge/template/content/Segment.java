@@ -86,12 +86,17 @@ public abstract class Segment {
 		for (BookmarkSegment seg : newSeg.getBookmarks()) {
 			seg.remove();
 		}
+		if (newSeg.getFirst() == newSeg || newSeg.getLast() == newSeg ) {
+			return; // Empty Content
+		}
 		newSeg.getFirst().setPrevious(this.previous);
 		newSeg.getLast().setNext(this);
 		if (this.previous != null) {
 			this.previous.setNext(newSeg.getFirst());
 		}
 		this.previous = newSeg.getLast();
+		newSeg.setNext(newSeg);
+		newSeg.setPrevious(newSeg);
 	}
 	
 	/**

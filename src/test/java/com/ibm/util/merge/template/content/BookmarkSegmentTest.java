@@ -76,6 +76,26 @@ public class BookmarkSegmentTest {
 	}
 	
 	@Test
+	public void testBookmarkInsert() throws MergeException {
+		Content test = new Content("<",">","Start <bookmark=\"owners\" group=\"test\" template=\"owner\"> <bookmark=\"employees\" group=\"test\" template=\"employee\"> <bookmark=\"customers\" group=\"test\" template=\"customer\"> end", TagSegment.ENCODE_NONE);
+		assertEquals(3, test.getBookmarks().size());
+		Content insertValue = new Content("<",">","Foo<bookmark=\"owners\" group=\"test\" template=\"owner\">", TagSegment.ENCODE_NONE);
+		BookmarkSegment bkm = test.getBookmarks().get(0);
+		bkm.insert(insertValue);
+		assertEquals("Start Foo   end", test.getValue());
+
+		assertEquals("", insertValue.getValue());
+		bkm = test.getBookmarks().get(1);
+		bkm.insert(insertValue);
+		assertEquals("Start Foo   end", test.getValue());
+
+		insertValue = new Content("<",">","Foo<bookmark=\"owners\" group=\"test\" template=\"owner\">", TagSegment.ENCODE_NONE);
+		bkm = test.getBookmarks().get(2);
+		bkm.insert(insertValue);
+		assertEquals("Start Foo  Foo end", test.getValue());
+	}
+
+	@Test
 	public void testGetValue() throws Merge500 {
 		BookmarkSegment test = new BookmarkSegment("bookmark=\"name\" group=\"group\" template=\"template\" ");
 		assertEquals("", test.getValue());
