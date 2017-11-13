@@ -28,7 +28,7 @@ import com.ibm.util.merge.exception.MergeException;
 public class Config {
 	private static Configuration config = null;
 	
-	public static Configuration initialize() throws Merge500 {
+	public static Configuration initialize() throws MergeException {
 		config = new Configuration();
 		return config;
 	}

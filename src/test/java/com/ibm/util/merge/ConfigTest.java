@@ -2,18 +2,20 @@ package com.ibm.util.merge;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+
 import org.junit.*;
 
 import com.google.gson.JsonElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
-import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
+import com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface;
 
 public class ConfigTest {
 	private transient static final DataProxyJson proxy = new DataProxyJson();
 
 	@Before
-	public void setUp() throws Merge500 {
+	public void setUp() throws MergeException {
 		Config.initialize();
 	}
 	
@@ -22,9 +24,9 @@ public class ConfigTest {
 		Configuration config = Config.get();
 		Configuration config2 = Config.get();
 		assertSame(config, config2);
-		assertEquals("/opt/ibm/idmu/archives", config.getTempFolder());
 		assertEquals("foo", config.getLoadFolder());
 		assertEquals(2, config.getNestLimit());
+		assertEquals("/opt/ibm/idmu/archives", config.getTempFolder());
 	}
 
 	@Test
@@ -65,6 +67,39 @@ public class ConfigTest {
 		assertTrue(options.getAsJsonObject().has("Save"));
 	}
 
+	@Test
+	public void testDefaultProviders() throws MergeException {
+		Config.registerDefaultProviders();
+		HashMap<String, Class<ProviderInterface>> providers = Config.get().getProviders(); 
+		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.CacheProvider"));
+		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.CloudantProvider"));
+		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider"));
+		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider"));
+		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.JndiProvider"));
+		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.MongoProvider"));
+		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.RestProvider"));
+		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.StubProvider"));
+	}
+	
+	@Test
+	public void testCustomProviders() throws MergeException {
+		String configString = "{ \"tempFolder\" : \"/opt/ibm/idmu/archives\", " +
+			" \"loadFolder\" : \"src/test/resources/functional/fileProviderTest\"," +
+			" \"logLevel\" : \"SEVERE\"," +
+			" \"nestLimit\" : 3," +
+			" \"insertLimit\" : 20," +
+			" \"defaultProviders\" : [" +
+			"	\"com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider\"" +  
+			" ]," +
+			" \"envVars\" : {" +
+			" \"test\" : \"value\"" +
+			" }" +
+			"}";
+		Config.load(configString);
+		assertEquals(1, Config.get().getProviders().size());
+		assertTrue(Config.get().getProviders().containsKey("com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider"));
+	}
+	
 	@Test
 	public void testGetSetTempFolder() throws MergeException {
 		Configuration config = Config.get();

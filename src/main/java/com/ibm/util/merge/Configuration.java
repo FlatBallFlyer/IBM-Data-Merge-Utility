@@ -95,6 +95,10 @@ public class Configuration {
 		this.logLevel = me.getLogLevel();
 		this.envVars = me.getEnvVars();
 		this.providers = new HashMap<String, Class<ProviderInterface>>();
+		if (null != me.defaultProviders) {
+			this.defaultProviders = me.defaultProviders;
+		}
+		this.registerDefaultProviders();
 	    Logger rootLogger = LogManager.getLogManager().getLogger("");
 	    rootLogger.setLevel(Level.parse(this.logLevel));
 	    return this;
@@ -181,6 +185,7 @@ public class Configuration {
 	}
 	
 	public void registerDefaultProviders() throws MergeException {
+		providers = new HashMap<String, Class<ProviderInterface>>();
 		for (String provider : this.defaultProviders) {
 			registerProvider(provider);
 		}
@@ -291,6 +296,10 @@ public class Configuration {
 	
 	public void setLogLevel(String level) {
 		this.logLevel = level;
+	}
+	
+	public HashMap<String, Class<ProviderInterface>> getProviders() {
+		return this.providers;
 	}
 	
 	public String getAllOptions() throws MergeException {
