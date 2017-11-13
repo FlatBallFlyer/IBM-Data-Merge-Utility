@@ -331,13 +331,11 @@ public class Insert extends AbstractDataDirective {
 		int loopcount; int size;
 		loopcount = 1; size = dataObject.entrySet().size();
 		for (Entry<String, DataElement> member: dataObject.entrySet()) {
-			if (member.getValue().isPrimitive()) {
-				DataObject row = new DataObject();
-				row.put("attribute",new DataPrimitive(member.getKey()));
-				row.put("value", 	new DataPrimitive(member.getValue().getAsPrimitive()));
-				this.insertAtBookmarks(context, row, (loopcount==1), (loopcount==size));
-				loopcount++;
-			}
+			DataObject row = new DataObject();
+			row.put("attribute",new DataPrimitive(member.getKey()));
+			row.put("value", 	member.getValue());
+			this.insertAtBookmarks(context, row, (loopcount==1), (loopcount==size));
+			loopcount++;
 		}
 	}
 			
