@@ -42,9 +42,9 @@ public class TextSegmentTest {
 
 	@Test
 	public void testEncodeJson() throws Merge500 {
-		TextSegment segment = new TextSegment("This is <a test> String with Ampersand& NewLine/n Tab/t Slash//");
+		TextSegment segment = new TextSegment("This is \"a test\" String with NewLine\n Tab	 Slash\\");
 		segment.encode(Segment.ENCODE_JSON);
-		assertEquals("This is <a test> String with Ampersand& NewLine/n Tab/t Slash//", segment.getValue());
+		assertEquals("This is \\\"a test\\\" String with NewLine\\n Tab\\t Slash\\\\", segment.getValue());
 	}
 
 	@Test

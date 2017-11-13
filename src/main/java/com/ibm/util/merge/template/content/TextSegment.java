@@ -69,6 +69,7 @@ public class TextSegment extends Segment {
 			break;
     	case ENCODE_JSON:
     		encodeJson();
+    		break;
     	case ENCODE_SQL:
     		encodeSqlString();
     		break;
@@ -113,21 +114,20 @@ public class TextSegment extends Segment {
             char c = this.text.charAt(i);
             switch (c) {
             case '\\': 
-                sBuilder.append('\\');
-                sBuilder.append('\\');
+                sBuilder.append("\\\\");
                 break;
             case '\t':
-                sBuilder.append('\\');
-                sBuilder.append('t');
+                sBuilder.append("\\t");
                 break;
             case '\n':
-                sBuilder.append('\\');
-                sBuilder.append('n');
+                sBuilder.append("\\n");
                 break;
             case '"':
-                sBuilder.append('\\');
-                sBuilder.append('\"');
+                sBuilder.append("\\\"");
                 break;
+//            case '\'':
+//                sBuilder.append("\\\'");
+//                break;
             default:
                 sBuilder.append(c);
             }
