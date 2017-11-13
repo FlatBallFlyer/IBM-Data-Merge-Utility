@@ -2,7 +2,7 @@
 	{
 		"company":"Fred's Fried Chicken",
 		"employees":["001","002","003","004"],
-		"owners":["two,three"],
+		"owners":["two","three"],
 		"customers":["010","009","008","001"]
 	},
 	{

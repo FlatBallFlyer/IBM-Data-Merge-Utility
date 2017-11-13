@@ -11,13 +11,30 @@
         "back" : ">"
       },
       "description" : "File Provider Test",
-      "content" : "[<bookmark=\"company\" group=\"test\" template=\"company\">\n]\n<bookmark=\"employees.file\" group=\"test\" template=\"allEmployees\">\n<bookmark=\"owners.file\" group=\"test\" template=\"allOwners\">\n",
+      "content" : "[{\"companies\":[\n\t<bookmark=\"company\" group=\"test\" template=\"company\">\n\t]\n},\n<bookmark=\"employees.file\" group=\"test\" template=\"allEmployees\">,\n<bookmark=\"owners.file\" group=\"test\" template=\"allOwners\">\n]",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
       "contentFileName" : "",
       "contentRedirectUrl" : "",
       "directives" : [
+        {
+          "type" : 4,
+          "name" : "Setup Coma-Replace",
+          "dataSource" : ",",
+          "dataDelimeter" : "-",
+          "ifMissing" : 3,
+          "toValue" : ",",
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
         {
           "type" : 3,
           "name" : "Parse Payload to company",
@@ -43,7 +60,9 @@
           "ifList" : 3,
           "bookmarkPattern" : "company",
           "notFirst" : [],
-          "notLast" : [],
+          "notLast" : [
+            ","
+          ],
           "onlyFirst" : [],
           "onlyLast" : []
         },
@@ -56,9 +75,11 @@
           "ifPrimitive" : 1,
           "ifObject" : 1,
           "ifList" : 1,
-          "bookmarkPattern" : "*.file",
+          "bookmarkPattern" : ".*file",
           "notFirst" : [],
-          "notLast" : [],
+          "notLast" : [
+            ","
+          ],
           "onlyFirst" : [],
           "onlyLast" : []
         }
@@ -75,13 +96,48 @@
         "back" : ">"
       },
       "description" : "A Company Record, inserts Employee, Customer and Owner",
-      "content" : "{\n\t\"company\" : \"<company>\",\n\t\"owners\" : \"<bookmark=\"owners\" group=\"test\" template=\"allEmployees\">\",\n\t\"employees\" : \"<bookmark=\"employees\" group=\"test\" template=\"allEmployees\">\",\n\t\"customers\" : \"<bookmark=\"customers\" group=\"test\" template=\"allEmployees\">\",\n}",
+      "content" : "{\n\t\"company\" : \"<company>\",\n\t\"owners\" : [<bookmark=\"owners\" group=\"test\" template=\"owner\"> \n\t\t\t],\n\t\"employees\" : [<bookmark=\"employees\" group=\"test\" template=\"employee\"> \n\t\t\t],\n\t\"customers\" : [<bookmark=\"customers\" group=\"test\" template=\"customer\">\n\t\t\t]\n\t}<,>",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
       "contentFileName" : "",
       "contentRedirectUrl" : "",
       "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace First - clean up my coma",
+          "dataSource" : "missing",
+          "dataDelimeter" : "-",
+          "ifMissing" : 3,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        },
+        {
+          "type" : 4,
+          "name" : "Setup Coma-Replace",
+          "dataSource" : ",",
+          "dataDelimeter" : "-",
+          "ifMissing" : 3,
+          "toValue" : ",",
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false,
+          "processRequire" : false
+        },
         {
           "type" : 4,
           "name" : "Replace",
@@ -91,25 +147,9 @@
           "ifPrimitive" : 1,
           "ifObject" : 3,
           "objectAttrPrimitive" : 3,
-          "objectAttrList" : 1,
-          "objectAttrObject" : 1,
-          "ifList" : 4,
-          "listAttrMissing" : 1,
-          "listAttrNotPrimitive" : 1,
-          "processAfter" : true
-        },
-        {
-          "type" : 4,
-          "name" : "Setup Coma-Replace",
-          "dataSource" : ",",
-          "dataDelimeter" : "-",
-          "ifMissing" : 1,
-          "ifPrimitive" : 1,
-          "ifObject" : 3,
-          "objectAttrPrimitive" : 3,
-          "objectAttrList" : 1,
-          "objectAttrObject" : 1,
-          "ifList" : 4,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "ifList" : 1,
           "listAttrMissing" : 1,
           "listAttrNotPrimitive" : 1,
           "processAfter" : true
@@ -117,7 +157,7 @@
         {
           "type" : 2,
           "name" : "Insert Employees",
-          "dataSource" : "idmuContext-eployees",
+          "dataSource" : "idmuContext-employees",
           "dataDelimeter" : "-",
           "ifMissing" : 1,
           "ifPrimitive" : 1,
@@ -125,7 +165,9 @@
           "ifList" : 3,
           "bookmarkPattern" : "employees",
           "notFirst" : [],
-          "notLast" : [],
+          "notLast" : [
+            ","
+          ],
           "onlyFirst" : [],
           "onlyLast" : []
         },
@@ -140,7 +182,9 @@
           "ifList" : 3,
           "bookmarkPattern" : "owners",
           "notFirst" : [],
-          "notLast" : [],
+          "notLast" : [
+            ","
+          ],
           "onlyFirst" : [],
           "onlyLast" : []
         },
@@ -155,7 +199,9 @@
           "ifList" : 3,
           "bookmarkPattern" : "customers",
           "notFirst" : [],
-          "notLast" : [],
+          "notLast" : [
+            ","
+          ],
           "onlyFirst" : [],
           "onlyLast" : []
         }
@@ -172,13 +218,57 @@
         "back" : ">"
       },
       "description" : "Owner",
-      "content" : "<bookmark=\"anOwner\" group=\"test\" template=\"anOwner\">",
+      "content" : "<bookmark=\"owner\" group=\"test\" template=\"anOwner\">",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
       "contentFileName" : "",
       "contentRedirectUrl" : "",
-      "directives" : []
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace to get Owner Number",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : "false"
+        },
+        {
+          "type" : 1,
+          "name" : "Enrich from File - get Owner XML",
+          "targetDataName" : "owner",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
+          "enrichSource" : "testFiles",
+          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichCommand" : "owner\\.<idmuContext>\\.xml",
+          "parseAs" : 5
+        },
+        {
+          "type" : 2,
+          "name" : "Insert anOwner",
+          "dataSource" : "owner",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "ifList" : 1,
+          "bookmarkPattern" : "owner",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
     },
     {
       "id" : {
@@ -190,8 +280,8 @@
         "front" : "<",
         "back" : ">"
       },
-      "description" : "{\"type\":\"owner, \"name\":\"<name>\", \"age\":\"<age>\"}",
-      "content" : "Employee <employee>\n",
+      "description" : "anOwner  This is \"a test\" String with NewLine\n Tab\t Slash\\",
+      "content" : "\n\t\t{\"owner\":\"<idmuContext>\", \"type\":\"owner\", \"name\":\"<name>\", \"age\":\"<age>\"}<,>",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -201,7 +291,7 @@
         {
           "type" : 4,
           "name" : "Replace",
-          "dataSource" : "idmuContext",
+          "dataSource" : "idmuContext-value-members-[0]-attrs",
           "dataDelimeter" : "-",
           "ifMissing" : 1,
           "ifPrimitive" : 1,
@@ -209,10 +299,11 @@
           "objectAttrPrimitive" : 3,
           "objectAttrList" : 1,
           "objectAttrObject" : 1,
-          "ifList" : 4,
+          "ifList" : 1,
           "listAttrMissing" : 1,
           "listAttrNotPrimitive" : 1,
-          "processAfter" : true
+          "processAfter" : true,
+          "processRequire" : false
         }
       ]
     },
@@ -235,6 +326,23 @@
       "contentRedirectUrl" : "",
       "directives" : [
         {
+          "type" : 4,
+          "name" : "Replace",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire\nprocessRequire" : false
+        },
+        {
           "type" : 1,
           "name" : "Enrich from File - get Employee",
           "targetDataName" : "employee",
@@ -242,8 +350,8 @@
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
           "enrichSource" : "testFiles",
           "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
-          "enrichCommand" : "employee.*csv",
-          "parseAs" : 4
+          "enrichCommand" : "employee\\.<idmuContext>\\.csv",
+          "parseAs" : 1
         },
         {
           "type" : 2,
@@ -272,18 +380,18 @@
         "front" : "<",
         "back" : ">"
       },
-      "description" : "Employee <employee>",
-      "content" : "{\"type\":\"employee, \"name\":\"<name>\", \"title\":\"<title>\", \"manager\":\"<manager>\"}",
+      "description" : "anEmployee",
+      "content" : "\n\t\t{\"employee\":\"<idmuContext>\",\"type\":\"employee\", \"name\":\"<name>\", \"title\":\"< title>\", \"manager\":\"< manager>\"}<,>",
       "contentType" : 2,
       "contentDisposition" : 2,
-      "contentEncoding" : 4,
+      "contentEncoding" : 1,
       "contentFileName" : "",
       "contentRedirectUrl" : "",
       "directives" : [
         {
           "type" : 4,
-          "name" : "Replace",
-          "dataSource" : "idmuContext",
+          "name" : "Replace idmuContext",
+          "dataSource" : "idmuContext-value-[0]",
           "dataDelimeter" : "-",
           "ifMissing" : 1,
           "ifPrimitive" : 1,
@@ -291,10 +399,11 @@
           "objectAttrPrimitive" : 3,
           "objectAttrList" : 1,
           "objectAttrObject" : 1,
-          "ifList" : 4,
+          "ifList" : 1,
           "listAttrMissing" : 1,
           "listAttrNotPrimitive" : 1,
-          "processAfter" : true
+          "processAfter" : true,
+          "processRequire" : false
         }
       ]
     },
@@ -308,14 +417,57 @@
         "front" : "<",
         "back" : ">"
       },
-      "description" : "a Single Employee from Context",
-      "content" : "{\"customer\":\"<customer>\",\n \"???\":\"<???>\",\n\"???\":\"<???>\"\n}",
+      "description" : "Customer",
+      "content" : "<bookmark=\"customer\" group=\"test\" template=\"aCustomer\">",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
       "contentFileName" : "",
       "contentRedirectUrl" : "",
-      "directives" : []
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
+        {
+          "type" : 1,
+          "name" : "Enrich from File - get Customer",
+          "targetDataName" : "customer",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
+          "enrichSource" : "testFiles",
+          "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
+          "enrichCommand" : "customer\\.<idmuContext>\\.json",
+          "parseAs" : 3
+        },
+        {
+          "type" : 2,
+          "name" : "Insert aCustomer",
+          "dataSource" : "customer",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "ifList" : 1,
+          "bookmarkPattern" : "customer",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
     },
     {
       "id" : {
@@ -328,7 +480,7 @@
         "back" : ">"
       },
       "description" : "Customer from Context",
-      "content" : "{\"type\":\"owner, \"name\":\"<name>\", \"address\":\"<address>\", \"age\":\"<age>\", \"bookpage\":\"<bookPage>\"},",
+      "content" : "\n\t\t{\"customer\": \"<idmuContext>\", \"type\":\"customer\", \"name\":\"<name>\", \"address\":\"<address>\", \"age\":\"<age>\", \"bookpage\":\"<bookPage>\"}<,>",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -338,7 +490,7 @@
         {
           "type" : 4,
           "name" : "Replace",
-          "dataSource" : "idmuContext",
+          "dataSource" : "idmuContext-value",
           "dataDelimeter" : "-",
           "ifMissing" : 1,
           "ifPrimitive" : 1,
@@ -363,14 +515,31 @@
         "front" : "<",
         "back" : ">"
       },
-      "description" : "Employee <employee>",
-      "content" : "<bookmark=\"employee\" group=\"test\" template=\"anEmployee\">",
+      "description" : "All Employees",
+      "content" : "{\"employees\":[<bookmark=\"employee\" group=\"test\" template=\"anEmployee\">\n\t]\n}",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
       "contentFileName" : "",
       "contentRedirectUrl" : "",
       "directives" : [
+        {
+          "type" : 4,
+          "name" : "Setup Coma-Replace",
+          "dataSource" : ",",
+          "dataDelimeter" : "-",
+          "ifMissing" : 3,
+          "toValue" : ",",
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
         {
           "type" : 1,
           "name" : "Enrich from File - all Employees",
@@ -380,7 +549,7 @@
           "enrichSource" : "files",
           "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
           "enrichCommand" : "employee.*csv",
-          "parseAs" : 4
+          "parseAs" : 1
         },
         {
           "type" : 2,
@@ -389,11 +558,13 @@
           "dataDelimeter" : "-",
           "ifMissing" : 1,
           "ifPrimitive" : 1,
-          "ifObject" : 1,
-          "ifList" : 3,
+          "ifObject" : 3,
+          "ifList" : 1,
           "bookmarkPattern" : "employee",
           "notFirst" : [],
-          "notLast" : [],
+          "notLast" : [
+            ","
+          ],
           "onlyFirst" : [],
           "onlyLast" : []
         }
@@ -410,13 +581,30 @@
         "back" : ">"
       },
       "description" : "",
-      "content" : "<bookmark=\"owner\" group=\"test\" template=\"anOwner\">",
+      "content" : "{\"owners\":[<bookmark=\"owner\" group=\"test\" template=\"anOwner\">\n\t]\n}",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
       "contentFileName" : "",
       "contentRedirectUrl" : "",
       "directives" : [
+        {
+          "type" : 4,
+          "name" : "Setup Coma-Replace",
+          "dataSource" : ",",
+          "dataDelimeter" : "-",
+          "ifMissing" : 3,
+          "toValue" : ",",
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
         {
           "type" : 1,
           "name" : "Enrich from File - all Owners",
@@ -425,8 +613,8 @@
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
           "enrichSource" : "files",
           "enrichParameter" : "src/test/resources/functional/fileProviderTest/files/",
-          "enrichCommand" : "owner.*json",
-          "parseAs" : 4
+          "enrichCommand" : "owner.*xml",
+          "parseAs" : 5
         },
         {
           "type" : 2,
@@ -435,11 +623,13 @@
           "dataDelimeter" : "-",
           "ifMissing" : 1,
           "ifPrimitive" : 1,
-          "ifObject" : 1,
-          "ifList" : 3,
+          "ifObject" : 3,
+          "ifList" : 1,
           "bookmarkPattern" : "owner",
           "notFirst" : [],
-          "notLast" : [],
+          "notLast" : [
+            ","
+          ],
           "onlyFirst" : [],
           "onlyLast" : []
         }
