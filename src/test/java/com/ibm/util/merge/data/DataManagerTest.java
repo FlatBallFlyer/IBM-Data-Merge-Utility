@@ -66,12 +66,15 @@ public class DataManagerTest {
 	public void testContainsContext() throws MergeException {
 		DataManager manager = new DataManager();
 		DataElement one = new DataList();
+		one.getAsList().add(new DataPrimitive("Foo"));
 		assertEquals(0, manager.size());
 		assertEquals(0, manager.contextStackSize());
 		assertFalse(manager.contians(Merger.IDMU_CONTEXT, "-"));
 		manager.pushContext(one);
 		assertEquals(1, manager.contextStackSize());
 		assertTrue(manager.contians(Merger.IDMU_CONTEXT, "-"));
+		assertTrue(manager.contians("idmuContext-[0]", "-"));
+		assertEquals("Foo", manager.get("idmuContext-[0]", "-").getAsPrimitive());
 	}
 
 	@Test
