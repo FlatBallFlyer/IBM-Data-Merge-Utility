@@ -81,7 +81,8 @@ public class FileSystemProvider implements ProviderInterface {
         
 		if (parseAs != Parser.PARSE_NONE) {
 			for (String fileName : result.keySet()) {
-				result.put(fileName, parser.parse(parseAs, result.get(fileName).getAsPrimitive()));
+				DataElement element = parser.parse(parseAs, result.get(fileName).getAsPrimitive()); 
+				result.put(fileName, element);
 			}
 		}
 
