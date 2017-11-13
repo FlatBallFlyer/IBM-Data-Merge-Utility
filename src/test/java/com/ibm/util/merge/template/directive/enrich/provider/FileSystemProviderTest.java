@@ -56,5 +56,19 @@ public class FileSystemProviderTest {
 		
 	}
 
+	@Test
+	public void testProvideParseAsCsv() throws MergeException, IOException {
+		// Create some files to provide
+		File folder = new File("src/test/resources/http");
+		assertTrue(folder.exists());
+		
+		// Test the Provider
+		FileSystemProvider provider = new FileSystemProvider("db", "src/test/resources/http", context);
+		DataElement result = provider.provide("simple.csv", template.getWrapper(), context, template.getReplaceStack(), Parser.PARSE_CSV);
+		assertTrue(result.isObject());
+		assertTrue(result.getAsObject().containsKey("simple.csv"));
+		assertTrue(result.getAsObject().get("simple.csv").isList());
+		assertEquals("r1c1", result.getAsObject().get("simple.csv").getAsList().get(0).getAsObject().get("col1").getAsPrimitive());
+	}
 
 }
