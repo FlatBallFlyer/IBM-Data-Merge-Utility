@@ -1,0 +1,20 @@
+[
+	{
+		"company":"Fred's Fried Chicken",
+		"employees":["001","002","003","004"],
+		"owners":["two","three"],
+		"customers":["010","009","008","001"]
+	},
+	{
+		"company":"Barry's Burgers",
+		"employees":["001","005","006","007"],
+		"owners":["one"],
+		"customers":["001","002","003","004"]
+	},
+	{
+		"company":"GasUp",
+		"employees":["008","002","009","010"],
+		"owners":["two"],
+		"customers":["001","002","003","004","005","006","007","008","009","010"]
+	}
+]

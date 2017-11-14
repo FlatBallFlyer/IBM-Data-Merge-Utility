@@ -56,6 +56,11 @@ public class All_Functional_Tests {
 		testTemplate(new File("src/test/resources/functional/fileProviderTest"));
 	}
 	
+	@Test
+	public void fileProviderOptimized() throws Throwable {
+		testTemplate(new File("src/test/resources/functional/fileProviderTestOptimized"));
+	}
+	
 	/*
 	 * Folder should contain the following files
 	 * - templates.json - the testing templates, with the root templaet test..
