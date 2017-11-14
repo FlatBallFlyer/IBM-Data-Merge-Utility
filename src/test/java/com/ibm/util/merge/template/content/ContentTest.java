@@ -19,21 +19,22 @@ public class ContentTest {
 	}
 
 	@Test
-	public void testContentParseTime() throws MergeException {
+	public void testContentParseVsMergableTime() throws MergeException {
 		Content test = new Content("{","}", complex, TagSegment.ENCODE_NONE);
-		for (int x = 1; x < 1000000; x++) {
+		Long startParse = System.currentTimeMillis();
+		for (int x = 1; x < 10000; x++) {
 			test = new Content("{","}", complex, TagSegment.ENCODE_NONE);
-			assertEquals(complex, test.getValue());
 		}
-	}
-	
-	@Test
-	public void testContentMergableTime() throws MergeException {
-		Content test = new Content("{","}", complex, TagSegment.ENCODE_NONE);
-		for (int x = 1; x < 1000000; x++) {
+		assertEquals(complex, test.getValue());
+		Long endParse = System.currentTimeMillis();
+		
+		test = new Content("{","}", complex, TagSegment.ENCODE_NONE);
+		Long startMergable = System.currentTimeMillis();
+		for (int x = 1; x < 10000; x++) {
 			test = test.getMergable();
-			assertEquals(complex, test.getValue());
 		}
+		Long endMergable = System.currentTimeMillis();
+		assertTrue((endMergable-startMergable) < (endParse-startParse));
 	}
 	
 	@Test
