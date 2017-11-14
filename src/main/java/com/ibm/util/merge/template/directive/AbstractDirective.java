@@ -52,9 +52,9 @@ public abstract class AbstractDirective {
 	}
 
 	protected transient DataProxyJson gson;
-	protected transient Template template;
-	protected int type;
-	protected String name = "";
+	private transient Template template;
+	private int type;
+	private String name = "";
 
 	/**
 	 * Instantiate a Directive 

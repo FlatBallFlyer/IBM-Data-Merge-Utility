@@ -134,7 +134,7 @@ public class ParseData extends AbstractDataDirective {
 			if (!context.getMergeData().contians(this.dataSource, this.dataDelimeter)) {
 				switch (this.getIfSourceMissing()) {
 				case SOURCE_MISSING_THROW :
-					throw new Merge500("Source Data Missing for " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+					throw new Merge500("Source Data Missing for " + this.dataSource + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 				case SOURCE_MISSING_IGNORE :
 					return;
 				}
@@ -145,7 +145,7 @@ public class ParseData extends AbstractDataDirective {
 		if (data.isPrimitive()) {
 			switch (this.getIfPrimitive()) {
 			case PRIMITIVE_THROW :
-				throw new Merge500("Primitive Data found for " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+				throw new Merge500("Primitive Data found for " + this.dataSource + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case PRIMITIVE_IGNORE :
 				return;
 			case PRIMITIVE_PARSE :
@@ -156,7 +156,7 @@ public class ParseData extends AbstractDataDirective {
 		} else if (data.isObject()) {
 			switch (this.getIfObject()) {
 			case OBJECT_THROW :
-				throw new Merge500("Object Data found for " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+				throw new Merge500("Object Data found for " + this.dataSource + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case OBJECT_IGNORE :
 				return;
 			}
@@ -164,7 +164,7 @@ public class ParseData extends AbstractDataDirective {
 		} else if (data.isList()) {
 			switch (this.getIfList()) {
 			case LIST_THROW :
-				throw new Merge500("List Data found for " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+				throw new Merge500("List Data found for " + this.dataSource + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case LIST_IGNORE :
 				return;
 			case LIST_PARSE_FIRST :

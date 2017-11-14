@@ -203,10 +203,10 @@ public class Insert extends AbstractDataDirective {
 	
 	@Override
 	public void execute(Merger context) throws MergeException {
-		if (!context.getMergeData().contians(this.dataSource, this.dataDelimeter)) {
+		if (!context.getMergeData().contians(this.getDataSource(), this.dataDelimeter)) {
 			switch (this.getIfSourceMissing()) {
 			case MISSING_THROW :
-				throw new Merge500("Source Data Missing for " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+				throw new Merge500("Source Data Missing for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case MISSING_IGNORE :
 				return;
 			case MISSING_INSERT:
@@ -215,12 +215,12 @@ public class Insert extends AbstractDataDirective {
 			}
 		}
 		
-		DataElement data = context.getMergeData().get(this.dataSource, this.dataDelimeter);
+		DataElement data = context.getMergeData().get(this.getDataSource(), this.dataDelimeter);
 		DataList 	list;
 		if (data.isPrimitive()) {
 			switch (this.getIfPrimitive()) {
 			case PRIMITIVE_THROW :
-				throw new Merge500("Primitive Data found for " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+				throw new Merge500("Primitive Data found for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case PRIMITIVE_IGNORE :
 				return;
 			case PRIMITIVE_INSERT :
@@ -285,7 +285,7 @@ public class Insert extends AbstractDataDirective {
 		} else if (data.isObject()) {
 			switch (this.getIfObject()) {
 			case OBJECT_THROW :
-				throw new Merge500("Object Data found for " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+				throw new Merge500("Object Data found for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case OBJECT_IGNORE :
 				return;
 			case OBJECT_INSERT_OBJECT :
@@ -299,7 +299,7 @@ public class Insert extends AbstractDataDirective {
 		} else if (data.isList()) {
 			switch (this.getIfList()) {
 			case LIST_THROW :
-				throw new Merge500("List Data found for " + this.dataSource + " in " + this.template.getDescription() + " at " + this.getName());
+				throw new Merge500("List Data found for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case LIST_IGNORE :
 				return;
 			case LIST_INSERT_FIRST :
@@ -377,12 +377,12 @@ public class Insert extends AbstractDataDirective {
 			throw new Merge500("template insert recursion safety, merge stack size exceded");
 		}
 
-		for (BookmarkSegment bookmark : this.template.getMergeContent().getBookmarks()) {
+		for (BookmarkSegment bookmark : this.getTemplate().getMergeContent().getBookmarks()) {
 			if (bookmark.getBookmarkName().matches(this.bookmarkPattern)) {
 				Template subTemplate = context.getMergable(
 						bookmark.getTemplateShorthand(value), 
 						bookmark.getDefaultShorthand(), 
-						this.template.getReplaceStack());
+						this.getTemplate().getReplaceStack());
 				context.pushTemplate(subTemplate.getId().shorthand(), value);
 				subTemplate.blankReplace((isFirst ? this.notFirst : this.onlyFirst));
 				subTemplate.blankReplace((isLast ? this.notLast : this.onlyLast));

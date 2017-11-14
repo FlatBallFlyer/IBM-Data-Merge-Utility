@@ -26,6 +26,7 @@ package com.ibm.util.merge.template.directive;
 public abstract class AbstractDataDirective extends AbstractDirective {
 	protected String dataSource;
 	protected String dataDelimeter;
+	protected boolean sourceHasTags;
 	protected int ifMissing;
 	protected int ifPrimitive;
 	protected int ifObject;
@@ -43,6 +44,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 		super();
 		this.dataSource = "";
 		this.dataDelimeter = "";
+		this.sourceHasTags = false;
 	}
 	
 	/**
@@ -71,7 +73,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	 */
 	public void makeMergable(AbstractDataDirective mergable) {
 		mergable.setType(this.getType());
-		mergable.setName(name);
+		mergable.setName(this.getName());
 		mergable.setDataSource(this.getDataSource());
 		mergable.setDataDelimeter(this.getDataDelimeter());
 		mergable.setIfSourceMissing(this.getIfSourceMissing());

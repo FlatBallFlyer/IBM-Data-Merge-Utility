@@ -64,9 +64,9 @@ public class SaveFile extends AbstractDirective {
 	@Override
 	public void execute(Merger context) throws MergeException {
 		Archive archive = context.getArchive();
-		archive.writeFile(this.filename, this.template.getContent(), "idmu-user", "idmu-group");
+		archive.writeFile(this.filename, this.getTemplate().getContent(), "idmu-user", "idmu-group");
 		if (this.clearAfter) {
-			this.template.clearContent();
+			this.getTemplate().clearContent();
 		}
 	}
 
