@@ -9,13 +9,33 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.exception.Merge500;
+import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 public class ContentTest {
-
+	String complex = "[{\"companies\":[\n\t<bookmark=\"company\" group=\"test\" template=\"company\">\n\t]\n},\n<bookmark=\"employees.file\" group=\"test\" template=\"allEmployees\">,\n<bookmark=\"owners.file\" group=\"test\" template=\"allOwners\">\n]";
+	
 	@Before
 	public void setUp() throws Exception {
 	}
 
+	@Test
+	public void testContentParseTime() throws MergeException {
+		Content test = new Content("{","}", complex, TagSegment.ENCODE_NONE);
+		for (int x = 1; x < 100000; x++) {
+			test = test.getMergable();
+			assertEquals(complex, test.getValue());
+		}
+	}
+	
+	@Test
+	public void testContentMergableTime() throws MergeException {
+		Content test = new Content("{","}", complex, TagSegment.ENCODE_NONE);
+		for (int x = 1; x < 100000; x++) {
+			test = test.getMergable();
+			assertEquals(complex, test.getValue());
+		}
+	}
+	
 	@Test
 	public void testContent() throws Merge500 {
 		Wrapper wrapper = new Wrapper("{","}");
@@ -75,7 +95,7 @@ public class ContentTest {
 		assertEquals(1, test.getBookmarks().size());
 		assertEquals("foo", test.getBookmarks().get(0).getBookmarkName());
 	}
-	
+
 	@Test
 	public void testContent6() throws Merge500 {
 		Content test = new Content("{","}","{test}", TagSegment.ENCODE_NONE);
