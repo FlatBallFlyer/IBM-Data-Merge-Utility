@@ -134,7 +134,7 @@ public class Insert extends AbstractDataDirective {
 	 * Instantiate an Insert Directive with default values 
 	 */
 	public Insert() {
-		this("", "-", Insert.MISSING_THROW,
+		this("", "-", false, Insert.MISSING_THROW,
 			Insert.PRIMITIVE_THROW,
 			Insert.OBJECT_THROW,
 			Insert.LIST_THROW,
@@ -162,10 +162,10 @@ public class Insert extends AbstractDataDirective {
 	 * @param onlyLast
 	 * @param pattern
 	 */
-	public Insert(String source, String delimeter, int missing, int primitive, int object, int list, 
+	public Insert(String source, String delimeter, boolean hasTags, int missing, int primitive, int object, int list, 
 			HashSet<String> notFirst, HashSet<String> notLast, HashSet<String> onlyFirst, HashSet<String> onlyLast, 
 			String pattern, int ifOperator, String ifValue) {
-		super(source, delimeter, missing, primitive, object, list);
+		super(source, delimeter, hasTags, missing, primitive, object, list);
 		this.setType(AbstractDirective.TYPE_INSERT);
 		this.notFirst = new HashSet<String>(); this.notFirst.addAll(notFirst);
 		this.notLast = 	new HashSet<String>(); this.notLast.addAll(notLast);
@@ -187,7 +187,7 @@ public class Insert extends AbstractDataDirective {
 		this.makeMergable(mergable);
 		mergable.setType(TYPE_INSERT);
 		mergable.setBookmarkPattern(bookmarkPattern);
-		mergable.setDataSource(dataSource);
+		mergable.setDataSource(this.getRawDataSource());
 		mergable.setNotFirst(notFirst);
 		mergable.setNotLast(notLast);
 		mergable.setOnlyFirst(onlyFirst);
@@ -203,7 +203,7 @@ public class Insert extends AbstractDataDirective {
 	
 	@Override
 	public void execute(Merger context) throws MergeException {
-		if (!context.getMergeData().contians(this.getDataSource(), this.dataDelimeter)) {
+		if (!context.getMergeData().contians(this.getDataSource(), this.getDataDelimeter())) {
 			switch (this.getIfSourceMissing()) {
 			case MISSING_THROW :
 				throw new Merge500("Source Data Missing for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
@@ -215,7 +215,7 @@ public class Insert extends AbstractDataDirective {
 			}
 		}
 		
-		DataElement data = context.getMergeData().get(this.getDataSource(), this.dataDelimeter);
+		DataElement data = context.getMergeData().get(this.getDataSource(), this.getDataDelimeter());
 		DataList 	list;
 		if (data.isPrimitive()) {
 			switch (this.getIfPrimitive()) {
@@ -473,22 +473,30 @@ public class Insert extends AbstractDataDirective {
 
 	@Override
 	public void setIfSourceMissing(int value) {
-		this.ifMissing = value;
+		if (Insert.MISSING_OPTIONS().keySet().contains(new Integer(value))) {
+			super.setIfSourceMissing(value);
+		}
 	}
 
 	@Override
 	public void setIfPrimitive(int value) {
-		this.ifPrimitive = value;
+		if (Insert.PRIMITIVE_OPTIONS().keySet().contains(new Integer(value))) {
+			super.setIfPrimitive(value);
+		}
 	}
 
 	@Override
 	public void setIfObject(int value) {
-		this.ifObject = value;
+		if (Insert.OBJECT_OPTIONS().keySet().contains(new Integer(value))) {
+			super.setIfObject(value);
+		}
 	}
 
 	@Override
 	public void setIfList(int value) {
-		this.ifList = value;
+		if (Insert.LIST_OPTIONS().keySet().contains(new Integer(value))) {
+			super.setIfList(value);
+		}
 	}
 
 	public int getIfOperator() {

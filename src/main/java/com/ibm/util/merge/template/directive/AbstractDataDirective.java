@@ -24,19 +24,14 @@ package com.ibm.util.merge.template.directive;
  *
  */
 public abstract class AbstractDataDirective extends AbstractDirective {
-	protected String dataSource;
-	protected String dataDelimeter;
-	protected boolean sourceHasTags;
-	protected int ifMissing;
-	protected int ifPrimitive;
-	protected int ifObject;
-	protected int ifList;
+	private String dataSource;
+	private String dataDelimeter;
+	private boolean sourceHasTags;
+	private int ifMissing;
+	private int ifPrimitive;
+	private int ifObject;
+	private int ifList;
 
-//	public abstract HashMap<Integer, String> missingOptions();
-//	public abstract HashMap<Integer, String> primitiveOptions();
-//	public abstract HashMap<Integer, String> objectOptions();
-//	public abstract HashMap<Integer, String> listOptions();
-	
 	/**
 	 * Instantiate a Data Directive with Defaults
 	 */
@@ -44,7 +39,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 		super();
 		this.dataSource = "";
 		this.dataDelimeter = "";
-		this.sourceHasTags = false;
+		this.setSourceHasTags(false);
 	}
 	
 	/**
@@ -56,10 +51,11 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	 * @param object
 	 * @param list
 	 */
-	public AbstractDataDirective(String source, String delimeter, int missing, int primitive, int object, int list) {
+	public AbstractDataDirective(String source, String delimeter, boolean hasTags, int missing, int primitive, int object, int list) {
 		super();
 		this.dataSource = source;
 		this.dataDelimeter = delimeter;
+		this.sourceHasTags = hasTags;
 		this.ifMissing = missing;
 		this.ifPrimitive = primitive;
 		this.ifObject = object;
@@ -76,12 +72,20 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 		mergable.setName(this.getName());
 		mergable.setDataSource(this.getDataSource());
 		mergable.setDataDelimeter(this.getDataDelimeter());
+		mergable.setSourceHasTags(this.getSourceHasTags());
 		mergable.setIfSourceMissing(this.getIfSourceMissing());
 		mergable.setIfList(this.getIfList());
 		mergable.setIfObject(this.getIfObject());
 		mergable.setIfPrimitive(this.getIfPrimitive());
 	}
 
+	/**
+	 * @return data source name
+	 */
+	public String getRawDataSource() {
+		return dataSource;
+	}
+	
 	/**
 	 * @return data source name
 	 */
@@ -99,7 +103,9 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	/**
 	 * @param value
 	 */
-	public abstract void setIfSourceMissing(int value);
+	public void setIfSourceMissing(int value) {
+		this.ifMissing = value;
+	}
 
 	/**
 	 * @return Source Missing action
@@ -111,7 +117,9 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	/**
 	 * @param value
 	 */
-	public abstract void setIfPrimitive(int value);
+	public void setIfPrimitive(int value) {
+		this.ifPrimitive = value;
+	}
 
 	/**
 	 * @return Primitive Process Indicator
@@ -123,7 +131,9 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	/**
 	 * @param value
 	 */
-	public abstract void setIfObject(int value);
+	public void setIfObject(int value) {
+		this.ifObject = value;
+	}
 
 	/**
 	 * @return Object Process Indicator
@@ -135,7 +145,9 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	/**
 	 * @param value
 	 */
-	public abstract void setIfList(int value);
+	public void setIfList(int value) {
+		this.ifList = value;
+	}
 
 	/**
 	 * @return List Process Indicator
@@ -156,6 +168,14 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	public void setDataDelimeter(String dataDelimeter) {
 		this.dataDelimeter = dataDelimeter;
 		
+	}
+
+	public boolean getSourceHasTags() {
+		return sourceHasTags;
+	}
+
+	public void setSourceHasTags(boolean sourceHasTags) {
+		this.sourceHasTags = sourceHasTags;
 	}
 
 }

@@ -101,10 +101,10 @@ public class ParseData extends AbstractDataDirective {
 		this.dataTargetDelimiter = "\"";
 		this.staticData = "";
 		this.parseFormat = 	Parser.PARSE_CSV;
-		this.ifList = 		LIST_THROW;
-		this.ifMissing = 	SOURCE_MISSING_THROW;
-		this.ifObject = 	OBJECT_THROW;
-		this.ifPrimitive = 	PRIMITIVE_THROW;
+		this.setIfList(LIST_THROW);
+		this.setIfSourceMissing(SOURCE_MISSING_THROW);
+		this.setIfObject(OBJECT_THROW);
+		this.setIfPrimitive(PRIMITIVE_THROW);
 		this.parser = new Parser();
 	}
 	
@@ -131,21 +131,21 @@ public class ParseData extends AbstractDataDirective {
 		if (!this.staticData.isEmpty()) {
 			data = new DataPrimitive(this.staticData);
 		} else {
-			if (!context.getMergeData().contians(this.dataSource, this.dataDelimeter)) {
+			if (!context.getMergeData().contians(this.getDataSource(), this.getDataDelimeter())) {
 				switch (this.getIfSourceMissing()) {
 				case SOURCE_MISSING_THROW :
-					throw new Merge500("Source Data Missing for " + this.dataSource + " in " + this.getTemplate().getDescription() + " at " + this.getName());
+					throw new Merge500("Source Data Missing for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 				case SOURCE_MISSING_IGNORE :
 					return;
 				}
 			}
-			data = context.getMergeData().get(this.dataSource, this.dataDelimeter);
+			data = context.getMergeData().get(this.getDataSource(), this.getDataDelimeter());
 		}
 		
 		if (data.isPrimitive()) {
 			switch (this.getIfPrimitive()) {
 			case PRIMITIVE_THROW :
-				throw new Merge500("Primitive Data found for " + this.dataSource + " in " + this.getTemplate().getDescription() + " at " + this.getName());
+				throw new Merge500("Primitive Data found for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case PRIMITIVE_IGNORE :
 				return;
 			case PRIMITIVE_PARSE :
@@ -156,7 +156,7 @@ public class ParseData extends AbstractDataDirective {
 		} else if (data.isObject()) {
 			switch (this.getIfObject()) {
 			case OBJECT_THROW :
-				throw new Merge500("Object Data found for " + this.dataSource + " in " + this.getTemplate().getDescription() + " at " + this.getName());
+				throw new Merge500("Object Data found for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case OBJECT_IGNORE :
 				return;
 			}
@@ -164,7 +164,7 @@ public class ParseData extends AbstractDataDirective {
 		} else if (data.isList()) {
 			switch (this.getIfList()) {
 			case LIST_THROW :
-				throw new Merge500("List Data found for " + this.dataSource + " in " + this.getTemplate().getDescription() + " at " + this.getName());
+				throw new Merge500("List Data found for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case LIST_IGNORE :
 				return;
 			case LIST_PARSE_FIRST :
@@ -180,7 +180,7 @@ public class ParseData extends AbstractDataDirective {
 				for (int i = data.getAsList().size()-1 ; i >= 0; i--) {
 					if (data.getAsList().get(i).isPrimitive()) {
 						String source = data.getAsList().get(i).getAsPrimitive();
-						context.getMergeData().put(this.dataTarget, this.dataDelimeter, parser.parse(parseFormat, source));
+						context.getMergeData().put(this.dataTarget, this.getDataDelimeter(), parser.parse(parseFormat, source));
 						return;
 					}
 				}
@@ -250,28 +250,28 @@ public class ParseData extends AbstractDataDirective {
 	@Override
 	public void setIfSourceMissing(int value) {
 		if (MISSING_OPTIONS().keySet().contains(value)) {
-			this.ifMissing = value;
+			super.setIfSourceMissing(value);
 		}
 	}
 
 	@Override
 	public void setIfPrimitive(int value) {
 		if (PRIMITIVE_OPTIONS().keySet().contains(value)) {
-			this.ifPrimitive= value;
+			super.setIfPrimitive(value);
 		}
 	}
 
 	@Override
 	public void setIfObject(int value) {
 		if (OBJECT_OPTIONS().keySet().contains(value)) {
-			this.ifObject = value;
+			super.setIfObject(value);
 		}
 	}
 
 	@Override
 	public void setIfList(int value) {
 		if (LIST_OPTIONS().keySet().contains(value)) {
-			this.ifList = value;
+			super.setIfList(value);
 		}
 	}
 
