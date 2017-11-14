@@ -1,0 +1,187 @@
+{
+  "definitions" : {
+		"Encoding": {
+			"type" : "object",
+			"title" : "Encoding Options",
+			"description" : "Options for Encode As template values",
+			"properties" : {
+				"Encoding" : {
+					"type" : "object",
+					"title" : "Encode Options",
+					"description" : "Encode Options"
+				}
+			}
+		},
+			
+		"Parser" : {
+			"type" : "object",
+			"title" : "Parser Options",
+			"description" : "Options for Parse As template values",
+			"properties" : {
+				"Parse Formats": {
+					"type" : "object",
+					"title" : "Parse As Options",
+					"description" : "Parse As Options"
+				}
+			}
+		},
+	
+		"Template": {
+			"type" : "object",
+			"title" : "Template",
+			"description" : "Template Options",
+			"properties" : {
+				"Content Type": {
+					"type":"object",
+					"title" : "Content Type",
+					"description" : "Template Content Type options"
+				},
+				"Content Disposition": {
+					"type":"object",
+					"title" : "Content Disposition Options",
+					"description" : "Content Disposition Options"
+				}
+			}
+		},
+		
+		"Enrich": {
+			"type" : "object",
+			"title" : "Enrich Options",
+			"description" : "Options for Enrich Directive"
+		},
+		
+		"Insert": {
+			"type" : "object",
+			"title" : "Enrich Options",
+			"description" : "Options for Enrich Directive",
+			"properties" : {
+				"If List": { 
+					"type": "object", 
+					"title" : "If List Options",
+					"description" : "If List Options for Enrich Directive"
+				},
+				"Source Missing": { 
+					"type": "object",
+					"title" : "If Object Options",
+					"description" : "If Object Options for Enrich Directive"
+				},
+				"If Primitive": {  
+					"type": "object" ,
+					"title" : "If Primitive Options",
+					"description" : "If Primitive Options for Enrich Directive"
+				},
+				"If Object": { 
+					"type": "object",
+					"title" : "If Object Options",
+					"description" : "If Object Options for Enrich Directive"
+				},
+				"Insert If operators": { 
+					"type": "object",
+					"title" : "If Value Operators",
+					"description" : "If Value Operator values"
+				}
+		},
+	
+		"Parse": {
+			"type" : "object",
+			"title" : "Parse Options",
+			"description" : "Options for Parse Directive",
+			"properties" : {
+				"Source Missing": {
+						"type": "object",
+						"title" : "Source Missing Options",
+						"description" : "Source Missing Options for Parse Directive"
+				},
+				"If List": {
+						"type": "object",
+						"title" : "If List Options",
+						"description" : "If List Options for Parse Directive"
+				},
+				"If Primitive": {
+						"type": "object",
+						"title" : "If Primitive Options",
+						"description" : "If Primitive Options for Parse Directive"
+				},
+				"If Object": {
+						"type": "object",
+						"title" : "If Object Options",
+						"description" : "If Object Options for Parse Directive"
+				}
+			}
+		},	
+		
+		"Replace": {
+			"type" : "object",
+			"title" : "Replace Options",
+			"description" : "Options for Replace Directive",
+			"properties" : {
+				"Source Missing": {
+						"type": "object",
+						"title" : "If Source Missing Options",
+						"description" : "If Source Missing Options for Replace Directive"
+				},
+				"If Primitive": {
+						"type": "object",
+						"title" : "If Primitive Options",
+						"description" : "If Primitive Options for Replace Directive"
+				},
+				"If List": {
+						"type": "object",
+						"title" : "If List Options",
+						"description" : "If List Options for Replace Directive"
+				},
+				"List-Attr Not Primitive": {
+						"type": "object",
+						"title" : "If List-Attr Not Primitive Options",
+						"description" : "If List-Attr Not Primitive Options for Replace Directive"
+				},
+				"List-Attr Missing": {
+						"type": "object",
+						"title" : "If List-Attr Missing Options",
+						"description" : "If List-Attr Missing Options for Replace Directive"
+				},
+				"If Object": {
+						"type": "object",
+						"title" : "If Object Options",
+						"description" : "If Object Options for Replace Directive"
+				},
+				"Object-Attr Object": {
+						"type": "object",
+						"title" : "Object-Attr Object Options",
+						"description" : "Object-Attr Object Options for Replace Directive"
+				},
+				"Object-Attr Primitive": {
+						"type": "object",
+						"title" : "Object-Attr Primitive Options",
+						"description" : "Object-Attr Primitive Options for Replace Directive"
+				},
+				"Object-Attr List": {
+						"type": "object",
+						"title" : "Object-Attr List Options",
+						"description" : "Object-Attr List Options for Replace Directive"
+				}
+			}
+		},
+		
+		"Save": {
+			"type" : "object",
+			"title" : "Parse Options",
+			"description" : "Options for Parse Directive"
+		}
+	},
+	
+  "$schema" : "http://json-schema.org/draft-06/schema#",
+  "$id" : "http://example.com/example.json",
+  "type" : "object",
+  "properties" : {
+  		"Encoding" :	{ "$ref" : "#/definitions/Encoding" },
+        "Parser" : 		{ "$ref" : "#/definitions/Parser" },
+    	"Template": 	{ "$ref" : "#/definitions/Template"},
+		"Enrich": 		{ "$ref" : "#/definitions/Enrich"},
+		"Insert": 		{ "$ref" : "#/definitions/Insert"},
+		"Parse": 		{ "$ref" : "#/definitions/Parse"},
+		"Replace": 		{ "$ref" : "#/definitions/Replace"},
+		"Save": 		{ "$ref" : "#/definitions/Save"}
+    }
+  }
+}
