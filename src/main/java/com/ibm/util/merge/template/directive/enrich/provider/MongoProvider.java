@@ -19,7 +19,6 @@ package com.ibm.util.merge.template.directive.enrich.provider;
 import java.util.HashMap;
 
 import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
@@ -98,7 +97,7 @@ public class MongoProvider implements ProviderInterface {
 		
 		String results = ""; // TODO - Make Mongo Call
 		
-		if (parseAs != Configuration.PARSE_NONE) {
+		if (parseAs != Config.PARSE_NONE) {
 			result = parser.parse(parseAs, results);
 		}
 		return result;

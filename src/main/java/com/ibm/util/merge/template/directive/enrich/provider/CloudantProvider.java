@@ -23,7 +23,6 @@ import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.Database;
 import com.cloudant.client.org.lightcouch.CouchDbException;
 import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
@@ -111,7 +110,7 @@ public class CloudantProvider implements ProviderInterface {
 		
 		String results = db.toString(); // TODO - Make Cloudant Call
 		
-		if (parseAs != Configuration.PARSE_NONE) {
+		if (parseAs != Config.PARSE_NONE) {
 			result = parser.parse(parseAs, results);
 		}
 		return result;

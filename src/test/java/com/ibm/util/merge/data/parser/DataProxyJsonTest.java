@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
@@ -53,7 +52,7 @@ public class DataProxyJsonTest {
 		directive.setEnrichParameter("SomeParameter");
 		directive.setEnrichSource("ASource");
 		directive.setName("aName");
-		directive.setParseAs(Configuration.PARSE_CSV);
+		directive.setParseAs(Config.PARSE_CSV);
 		directive.setTargetDataDelimeter("--");
 		directive.setTargetDataName("aName");
 		sample.addDirective(directive);
@@ -66,7 +65,7 @@ public class DataProxyJsonTest {
 		assertEquals("SomeParameter", 	directive.getEnrichParameter());
 		assertEquals("ASource", 		directive.getEnrichSource());
 		assertEquals("aName", 			directive.getName());
-		assertEquals(Configuration.PARSE_CSV, 	directive.getParseAs());
+		assertEquals(Config.PARSE_CSV, 	directive.getParseAs());
 		assertEquals("--", 				directive.getTargetDataDelimeter());
 		assertEquals("aName", 			directive.getTargetDataName());
 	}
@@ -121,7 +120,7 @@ public class DataProxyJsonTest {
 		directive.setIfPrimitive(ParseData.PRIMITIVE_PARSE);
 		directive.setIfSourceMissing(ParseData.SOURCE_MISSING_IGNORE);
 		directive.setName("aName");
-		directive.setParseFormat(Configuration.PARSE_CSV);
+		directive.setParseFormat(Config.PARSE_CSV);
 		directive.setStaticData("static");
 		sample.addDirective(directive);
 		String templateString = proxy.toString(sample);
@@ -136,7 +135,7 @@ public class DataProxyJsonTest {
 		assertEquals(ParseData.PRIMITIVE_PARSE, 	directive.getIfPrimitive());
 		assertEquals(ParseData.SOURCE_MISSING_IGNORE, directive.getIfSourceMissing());
 		assertEquals("aName", 						directive.getName());
-		assertEquals(Configuration.PARSE_CSV, 				directive.getParseFormat());
+		assertEquals(Config.PARSE_CSV, 				directive.getParseFormat());
 		assertEquals("static", 						directive.getStaticData());
 	}
 

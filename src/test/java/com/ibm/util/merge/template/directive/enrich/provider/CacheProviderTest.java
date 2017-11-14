@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.data.DataElement;
@@ -38,7 +37,7 @@ public class CacheProviderTest {
 	@Test
 	public void testProvide() throws MergeException {
 		CacheProvider provider = new CacheProvider("source", "db", context);
-		DataElement result = provider.provide("", template.getWrapper(), context, template.getReplaceStack(), Configuration.PARSE_NONE);
+		DataElement result = provider.provide("", template.getWrapper(), context, template.getReplaceStack(), Config.PARSE_NONE);
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("version"));
 		assertTrue(result.getAsObject().containsKey("runningSince"));

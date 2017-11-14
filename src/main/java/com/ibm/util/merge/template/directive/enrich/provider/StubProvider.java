@@ -18,7 +18,7 @@ package com.ibm.util.merge.template.directive.enrich.provider;
 
 import java.util.HashMap;
 
-import com.ibm.util.merge.Configuration;
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataPrimitive;
@@ -71,7 +71,7 @@ public class StubProvider implements ProviderInterface {
 		aTemplate.addDirective(new SaveFile());
 		
 		String templateJson = proxy.toString(aTemplate);
-		if (parseAs == Configuration.PARSE_JSON) {
+		if (parseAs == Config.PARSE_JSON) {
 			return proxy.fromString(templateJson, DataElement.class);
 		} else {
 			return new DataPrimitive(templateJson);

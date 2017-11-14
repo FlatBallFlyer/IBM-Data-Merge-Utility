@@ -21,8 +21,8 @@ public class ConfigTest {
 	
 	@Test
 	public void testGet() throws MergeException {
-		Configuration config = Config.get();
-		Configuration config2 = Config.get();
+		Config config = Config.get();
+		Config config2 = Config.get();
 		assertSame(config, config2);
 		assertEquals("foo", config.getLoadFolder());
 		assertEquals(2, config.getNestLimit());
@@ -31,7 +31,7 @@ public class ConfigTest {
 
 	@Test
 	public void testConfigDefault() throws MergeException {
-		Configuration config = Config.get();
+		Config config = Config.get();
 		assertEquals("/opt/ibm/idmu/archives", config.getTempFolder());
 		assertEquals("foo", config.getLoadFolder());
 		assertEquals(2, config.getNestLimit());
@@ -41,7 +41,7 @@ public class ConfigTest {
 	public void testConfigString() throws MergeException {
 		String configString = 
 				"{\"tempFolder\": \"/opt/ibm/idmu/foo\",\"loadFolder\": \"/opt/ibm/idmu/bar\",\"nestLimit\": 99,\"insertLimit\": 88, envVars : {\"test\":\"value\"}}";
-		Configuration config = Config.load(configString);
+		Config config = Config.load(configString);
 		assertEquals("/opt/ibm/idmu/foo", config.getTempFolder());
 		assertEquals("/opt/ibm/idmu/bar", config.getLoadFolder());
 		assertEquals(99, config.getNestLimit());
@@ -69,7 +69,7 @@ public class ConfigTest {
 
 	@Test
 	public void testDefaultProviders() throws MergeException {
-		Config.registerDefaultProviders();
+		Config.initialize();
 		HashMap<String, Class<ProviderInterface>> providers = Config.get().getProviders(); 
 		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.CacheProvider"));
 		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.CloudantProvider"));
@@ -102,14 +102,14 @@ public class ConfigTest {
 	
 	@Test
 	public void testGetSetTempFolder() throws MergeException {
-		Configuration config = Config.get();
+		Config config = Config.get();
 		config.setTempFolder("Foo");
 		assertEquals("Foo", config.getTempFolder());
 	}
 
 	@Test
 	public void testGetSetNestLimit() throws MergeException {
-		Configuration config = Config.get();
+		Config config = Config.get();
 		assertEquals(2, config.getNestLimit());
 		config.setNestLimit(44);
 		assertEquals(44, config.getNestLimit());
@@ -117,7 +117,7 @@ public class ConfigTest {
 
 	@Test
 	public void testGetSetInsertLimit() throws MergeException {
-		Configuration config = Config.get();
+		Config config = Config.get();
 		assertEquals(20, config.getInsertLimit());
 		config.setInsertLimit(44);
 		assertEquals(44, config.getInsertLimit());
@@ -125,21 +125,21 @@ public class ConfigTest {
 
 	@Test
 	public void testGetEnv1() throws MergeException {
-		Configuration config = Config.get();
+		Config config = Config.get();
 		config.getEnvVars().put("Test", "Foo");
 		assertEquals("Foo", config.getEnv("Test"));
 	}
 
 	@Test
 	public void testGetEnv2() throws MergeException {
-		Configuration config = Config.get();
+		Config config = Config.get();
 		config.getEnvVars().put("VCAP_SERVICES", "{\"SERVICE_NAME\":[\"Some Service JSON\"]}");
 		assertEquals("\"Some Service JSON\"", config.getEnv("VCAP:SERVICE_NAME"));
 	}
 
 	@Test
 	public void testGetEnv3() throws MergeException {
-		Configuration config = Config.get();
+		Config config = Config.get();
 		try {
 			config.getEnv("Foo");
 		} catch (MergeException e) {
@@ -151,7 +151,7 @@ public class ConfigTest {
 
 	@Test
 	public void testGetEnv4() throws MergeException {
-		Configuration config = Config.get();
+		Config config = Config.get();
 		config.getEnvVars().put("VCAP_SERVICES", "{\"SERVICE_NAME\":[\"Some Service JSON\"]}");
 		try {
 			config.getEnv("VCAP:FOO");
@@ -164,7 +164,7 @@ public class ConfigTest {
 
 	@Test
 	public void testGetEnv5() throws MergeException {
-		Configuration config = Config.get();
+		Config config = Config.get();
 		config.getEnvVars().put("VCAP_SERVICES", "{\"SERVICE_NAME\":\"Some Service JSON\"}");
 		try {
 			config.getEnv("VCAP:SERVICE_NAME");

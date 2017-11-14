@@ -19,7 +19,6 @@ package com.ibm.util.merge.template.directive;
 import java.util.HashMap;
 
 import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataPrimitive;
@@ -100,7 +99,7 @@ public class ParseData extends AbstractDataDirective {
 		this.dataTarget = "";
 		this.dataTargetDelimiter = "\"";
 		this.staticData = "";
-		this.parseFormat = 	Configuration.PARSE_CSV;
+		this.parseFormat = 	Config.PARSE_CSV;
 		this.setIfList(LIST_THROW);
 		this.setIfSourceMissing(SOURCE_MISSING_THROW);
 		this.setIfObject(OBJECT_THROW);
@@ -199,7 +198,7 @@ public class ParseData extends AbstractDataDirective {
 	 * @param format
 	 */
 	public void setParseFormat(int format) {
-		if (Configuration.PARSE_OPTIONS().containsKey(format)) {
+		if (Config.PARSE_OPTIONS().containsKey(format)) {
 			this.parseFormat = format;
 		}
 	}

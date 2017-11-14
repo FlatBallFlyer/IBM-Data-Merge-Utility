@@ -18,7 +18,7 @@ package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
 
-import com.ibm.util.merge.Configuration;
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.exception.MergeException;
@@ -60,7 +60,7 @@ public class Enrich extends AbstractDirective {
 		this.enrichSource = "";
 		this.enrichParameter = "";
 		this.enrichCommand = "";
-		this.parseAs = Configuration.PARSE_NONE;
+		this.parseAs = Config.PARSE_NONE;
 	}
 
 	@Override

@@ -17,7 +17,6 @@
 package com.ibm.util.merge.template.directive.enrich.provider;
 
 import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
@@ -78,7 +77,7 @@ public class FileSystemProvider implements ProviderInterface {
             }
         }
         
-		if (parseAs != Configuration.PARSE_NONE) {
+		if (parseAs != Config.PARSE_NONE) {
 			for (String fileName : result.keySet()) {
 				DataElement element = Config.parse(parseAs, result.get(fileName).getAsPrimitive()); 
 				result.put(fileName, element);

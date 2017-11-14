@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.data.DataElement;
@@ -25,7 +24,6 @@ public class EnrichTest {
 	public void setUp() throws Exception {
 		gsonProxy = new DataProxyJson();
 		Config.initialize();
-		Config.registerDefaultProviders();
 		cache = new TemplateCache();
 		template = new Template("test", "enrich", "", "Template Content", "{", "}");
 		enrich = new Enrich();
@@ -47,7 +45,7 @@ public class EnrichTest {
 		assertEquals("", 							enrich.getEnrichSource());
 		assertEquals("", 							enrich.getEnrichParameter());
 		assertEquals("", 							enrich.getEnrichCommand());
-		assertEquals(Configuration.PARSE_NONE, 			enrich.getParseAs());
+		assertEquals(Config.PARSE_NONE, 			enrich.getParseAs());
 	}
 
 	@Test
@@ -58,7 +56,7 @@ public class EnrichTest {
 		before.setEnrichParameter("somedb");
 		before.setEnrichSource("some source");
 		before.setName("Foo");
-		before.setParseAs(Configuration.PARSE_JSON);
+		before.setParseAs(Config.PARSE_JSON);
 		before.setTargetDataName("some=name");
 		before.setTargetDataDelimeter("=");
 		Enrich after = (Enrich) before.getMergable();
@@ -84,7 +82,7 @@ public class EnrichTest {
 
 	@Test
 	public void testExecuteParse() throws MergeException {
-		enrich.setParseAs(Configuration.PARSE_JSON);
+		enrich.setParseAs(Config.PARSE_JSON);
 		cache.postTemplate(template);
 		context = new Merger(cache, "test.enrich.");
 		context.merge();
@@ -115,8 +113,8 @@ public class EnrichTest {
 
 	@Test
 	public void testGetSetParseAs() {
-		enrich.setParseAs(Configuration.PARSE_CSV);
-		assertEquals(Configuration.PARSE_CSV, enrich.getParseAs());
+		enrich.setParseAs(Config.PARSE_CSV);
+		assertEquals(Config.PARSE_CSV, enrich.getParseAs());
 	}
 
 	@Test

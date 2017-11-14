@@ -148,7 +148,7 @@ public class MergerTest {
 	
 	@Test
 	public void testGetProviders() throws MergeException {
-		Config.registerDefaultProviders();
+		Config.initialize();
 		Merger merger = new Merger(cache, "system.sample.");
 		assertEquals(0, merger.getProviders().size());
 		ProviderInterface provider1 = merger.getProvider("com.ibm.util.merge.template.directive.enrich.provider.StubProvider", "TheSource", "TheDb");
