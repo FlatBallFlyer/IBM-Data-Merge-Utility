@@ -19,6 +19,7 @@ public class TarArchiveTest {
 	@Before
 	public void setUp() throws Exception {
 		Config.initialize();
+		Config.get().setTempFolder("src/test/resources/temp");
 		cache = new TemplateCache();
 		context = new Merger(cache, "system.sample.");
 		archive = new TarArchive(context);
@@ -34,6 +35,7 @@ public class TarArchiveTest {
 	@Test
 	public void testOpenOutputStream() throws MergeException {
 		assertNull(archive.getOutputStream());
+		archive.setFilePath("src/test/resources/temp");
 		archive.openOutputStream();
 		assertTrue(archive.getOutputStream() instanceof TarArchiveOutputStream);
 		assertNotEquals(null, archive.getOutputStream());
@@ -46,6 +48,7 @@ public class TarArchiveTest {
 	@Test
 	public void testWriteFile() throws MergeException {
 		assertNull(archive.getOutputStream());
+		archive.setFilePath("src/test/resources/temp");
 		archive.writeFile("entry", "content", "user", "group");
 		assertNotNull(archive.getOutputStream());
 		archive.closeOutputStream();

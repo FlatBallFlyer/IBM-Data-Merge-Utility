@@ -41,7 +41,7 @@ public class SaveFileTest {
 	
 	@Test
 	public void testExecute() throws MergeException {
-		Config.get().setTempFolder("");
+		Config.get().setTempFolder("src/test/resources/temp");
 		template = new Template("save", "test", "", "Some Simple Content");
 		directive.setFilename("testMember.txt");
 		directive.setClearAfter(true);
@@ -57,7 +57,7 @@ public class SaveFileTest {
 
 	@Test
 	public void testExecuteNoClear() throws MergeException {
-		Config.get().setTempFolder("");
+		Config.get().setTempFolder("src/test/resources/temp");
 		template = new Template("save", "test", "", "Some Simple Content");
 		directive.setFilename("testMember.txt");
 		directive.setClearAfter(false);

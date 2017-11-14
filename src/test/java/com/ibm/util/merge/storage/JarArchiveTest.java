@@ -34,6 +34,7 @@ public class JarArchiveTest {
 	@Test
 	public void testOpenOutputStream() throws MergeException {
 		assertNull(archive.getOutputStream());
+		archive.setFilePath("src/test/resources/temp");
 		archive.openOutputStream();
 		assertTrue(archive.getOutputStream() instanceof JarArchiveOutputStream);
 		assertNotEquals(null, archive.getOutputStream());
@@ -46,6 +47,7 @@ public class JarArchiveTest {
 	@Test
 	public void testWriteFile() throws MergeException {
 		assertNull(archive.getOutputStream());
+		archive.setFilePath("src/test/resources/temp");
 		archive.writeFile("entry", "content", "user", "group");
 		assertNotNull(archive.getOutputStream());
 		archive.closeOutputStream();

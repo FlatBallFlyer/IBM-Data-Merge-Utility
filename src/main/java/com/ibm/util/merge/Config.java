@@ -75,6 +75,10 @@ public class Config {
 	public static int insertLimit() throws Merge500 {
 		return Config.get().getInsertLimit();
 	}
+	
+	public static String getTemplateFolder() throws Merge500 {
+		return Config.get().getTempFolder();
+	}
 
 	public static final int PARSE_NONE	= 4;
 	public static final int PARSE_CSV	= 1;

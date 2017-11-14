@@ -567,6 +567,12 @@
           ],
           "onlyFirst" : [],
           "onlyLast" : []
+        },
+        {
+          "type" : 5,
+          "name" : "Save Employees File",
+          "filename" : "employees.json",
+          "clearAfter" : false
         }
       ]
     },
@@ -632,6 +638,12 @@
           ],
           "onlyFirst" : [],
           "onlyLast" : []
+        },
+        {
+          "type" : 5,
+          "name" : "Save Owners File",
+          "filename" : "owners.json",
+          "clearAfter" : false
         }
       ]
     }

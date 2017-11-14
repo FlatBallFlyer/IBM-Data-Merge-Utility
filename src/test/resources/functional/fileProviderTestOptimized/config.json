@@ -1,5 +1,5 @@
 {
-  "tempFolder" : "/opt/ibm/idmu/archives",
+  "tempFolder" : "src/test/resources/temp",
   "loadFolder" : "src/test/resources/functional/fileProviderTest",
   "logLevel" : "SEVERE",
   "nestLimit" : 3,

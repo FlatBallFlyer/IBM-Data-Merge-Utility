@@ -84,8 +84,11 @@ public class All_Functional_Tests {
 		assertEquals(new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "output.txt").toPath()), "ISO-8859-1"), output);
 		
 		File archive = new File(folder.getPath() + File.separator + "archive.zip");
-		if (archive.exists()) {
+		File generated = new File(context.getArchive().getArchiveFile().getAbsolutePath()); 
+		if (generated.exists()) {
+			assertTrue(archive.exists());
 			assertArchiveEquals(archive.getAbsolutePath(), context.getArchive().getArchiveFile().getAbsolutePath());
+			generated.delete();
 		}
 	}
 	

@@ -37,11 +37,7 @@ import com.ibm.util.merge.exception.MergeException;
 /**
  * Abstract base class for output archives.
  * 
- * @author flatballflyer
- *
- */
-/**
- * @author flatballflyer
+ * @author Mike Storey
  *
  */
 public abstract class Archive {
@@ -160,9 +156,10 @@ public abstract class Archive {
     /**
      *
      * @return Archive file 
+     * @throws MergeException 
      */
-    public File getArchiveFile() {
-    	File file = new File(File.pathSeparator + this.filePath + File.pathSeparator + this.fileName + "." + this.archiveType);
+    public File getArchiveFile() throws MergeException {
+    	File file = new File(this.filePath + "/" + this.fileName + "." + this.archiveType);
     	return file;
     }
 

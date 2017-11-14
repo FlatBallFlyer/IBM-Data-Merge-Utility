@@ -114,6 +114,7 @@ public class Merger {
 	 */
 	public Template merge() throws MergeException {
 		this.baseTemplate.getMergedOutput();
+		if (this.archive != null) {	this.archive.closeOutputStream();}
 		return this.baseTemplate;
 	}
 	
@@ -152,11 +153,10 @@ public class Merger {
 					break;
 				}
 			}
+			this.archive.setFilePath(Config.getTemplateFolder());
 			if (this.mergeData.contians(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_NAME, "-")) {
 				this.archive.setFileName(mergeData.get(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_NAME + "-[0]", "-").getAsPrimitive());
 			}
-			this.archive.setFilePath(Config.get().getTempFolder());
-			return this.archive;
 		}
 		return archive;
 	}

@@ -33,6 +33,7 @@ public class GzipArchiveTest {
 	@Test
 	public void testOpenOutputStream() throws MergeException {
 		assertNull(archive.getOutputStream());
+		archive.setFilePath("src/test/resources/temp");
 		archive.openOutputStream();
 		assertTrue(archive.getOutputStream() instanceof TarArchiveOutputStream);
 		archive.closeOutputStream();
@@ -44,6 +45,7 @@ public class GzipArchiveTest {
 	@Test
 	public void testWriteFile() throws MergeException {
 		assertNull(archive.getOutputStream());
+		archive.setFilePath("src/test/resources/temp");
 		archive.writeFile("entry", "content", "user", "group");
 		assertNotNull(archive.getOutputStream());
 		archive.closeOutputStream();
