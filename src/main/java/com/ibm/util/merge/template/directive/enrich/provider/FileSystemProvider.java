@@ -17,11 +17,11 @@
 package com.ibm.util.merge.template.directive.enrich.provider;
 
 import com.ibm.util.merge.Config;
+import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
-import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
@@ -44,7 +44,6 @@ public class FileSystemProvider implements ProviderInterface {
 	private final String source;
 	private final String dbName;
 	private transient final Merger context;
-	private transient Parser parser = new Parser();
 	
 	public FileSystemProvider(String source, String dbName, Merger context) throws MergeException {
 		this.source = source;
@@ -79,9 +78,9 @@ public class FileSystemProvider implements ProviderInterface {
             }
         }
         
-		if (parseAs != Parser.PARSE_NONE) {
+		if (parseAs != Configuration.PARSE_NONE) {
 			for (String fileName : result.keySet()) {
-				DataElement element = parser.parse(parseAs, result.get(fileName).getAsPrimitive()); 
+				DataElement element = Config.parse(parseAs, result.get(fileName).getAsPrimitive()); 
 				result.put(fileName, element);
 			}
 		}

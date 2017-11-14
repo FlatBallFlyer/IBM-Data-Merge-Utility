@@ -16,6 +16,7 @@
  */
 package com.ibm.util.merge;
 
+import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 
@@ -30,6 +31,8 @@ public class Config {
 	
 	public static Configuration initialize() throws MergeException {
 		config = new Configuration();
+		config.registerDefaultProviders();
+		config.registerDefaultProxies();
 		return config;
 	}
 
@@ -50,6 +53,18 @@ public class Config {
 
 	public static void registerProviders(String[] providers) throws MergeException {
 		Config.get().registerProviders(providers);
+	}
+
+	public static void registerDefaultParsers() throws MergeException {
+		Config.get().registerDefaultProxies();
+	}
+
+	public static void registerParsers(String[] parsers) throws MergeException {
+		Config.get().registerProxies(parsers);
+	}
+	
+	public static DataElement parse(int parseAs, String value) throws Merge500, MergeException {
+		return Config.get().parse(parseAs, value);
 	}
 
 }

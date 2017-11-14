@@ -19,6 +19,7 @@ package com.ibm.util.merge.template.directive.enrich.provider;
 import java.util.HashMap;
 
 import com.ibm.util.merge.Config;
+import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
@@ -76,7 +77,7 @@ public class MongoProvider implements ProviderInterface {
 	private void connect() throws Merge500 {
 		Credentials creds;
 		try {
-			creds = proxy.fromJSON(Config.get().getEnv(source), Credentials.class);
+			creds = proxy.fromString(Config.get().getEnv(source), Credentials.class);
 		} catch (MergeException e) {
 			throw new Merge500("Invalid Mongo Provider for:" + source);
 		}
@@ -97,7 +98,7 @@ public class MongoProvider implements ProviderInterface {
 		
 		String results = ""; // TODO - Make Mongo Call
 		
-		if (parseAs != Parser.PARSE_NONE) {
+		if (parseAs != Configuration.PARSE_NONE) {
 			result = parser.parse(parseAs, results);
 		}
 		return result;

@@ -64,7 +64,7 @@ public class CacheProvider implements ProviderInterface {
 		cacheData.put("CacheHits", 		new DataPrimitive(cache.getCacheHits()));
 		cacheData.put("TempFolder", 	new DataPrimitive(Config.get().getTempFolder()));
 		cacheData.put("MaxRecursion", 	new DataPrimitive(Config.get().getNestLimit()));
-		cacheData.put("Statistics", 	proxy.fromJSON(proxy.toJson(cache.getStats()), DataObject.class));
+		cacheData.put("Statistics", 	proxy.fromString(proxy.toString(cache.getStats()), DataObject.class));
 		// DEFERRED: cacheData.put("totalMergeCount", cache.getTotalMergeCount());
 		// DEFERRED: cacheData.put("mergeTime", cache.getMergeTime());
 		// DEFERRED: cacheData.put("averageResposne", cache.getAverageResposne());

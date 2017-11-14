@@ -8,11 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.Config;
+import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
-import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
@@ -38,9 +38,9 @@ public class DataProxyJsonTest {
 		sample.addDirective(new ParseData());
 		sample.addDirective(new Replace());
 		sample.addDirective(new SaveFile());
-		String templateString = proxy.toJson(sample);
-		Template json = proxy.fromJSON(templateString, Template.class);
-		assertEquals(templateString, proxy.toJson(json));
+		String templateString = proxy.toString(sample);
+		Template json = proxy.fromString(templateString, Template.class);
+		assertEquals(templateString, proxy.toString(json));
 	}
 	
 	
@@ -53,20 +53,20 @@ public class DataProxyJsonTest {
 		directive.setEnrichParameter("SomeParameter");
 		directive.setEnrichSource("ASource");
 		directive.setName("aName");
-		directive.setParseAs(Parser.PARSE_CSV);
+		directive.setParseAs(Configuration.PARSE_CSV);
 		directive.setTargetDataDelimeter("--");
 		directive.setTargetDataName("aName");
 		sample.addDirective(directive);
-		String templateString = proxy.toJson(sample);
-		Template json = proxy.fromJSON(templateString, Template.class);
+		String templateString = proxy.toString(sample);
+		Template json = proxy.fromString(templateString, Template.class);
 		directive = (Enrich) json.getDirectives().get(0); 
-		assertEquals(templateString, proxy.toJson(json));
+		assertEquals(templateString, proxy.toString(json));
 		assertEquals("SomeNewClass", 	directive.getEnrichClass());
 		assertEquals("Command String", 	directive.getEnrichCommand());
 		assertEquals("SomeParameter", 	directive.getEnrichParameter());
 		assertEquals("ASource", 		directive.getEnrichSource());
 		assertEquals("aName", 			directive.getName());
-		assertEquals(Parser.PARSE_CSV, 	directive.getParseAs());
+		assertEquals(Configuration.PARSE_CSV, 	directive.getParseAs());
 		assertEquals("--", 				directive.getTargetDataDelimeter());
 		assertEquals("aName", 			directive.getTargetDataName());
 	}
@@ -90,10 +90,10 @@ public class DataProxyJsonTest {
 		directive.setOnlyFirst(aList);
 		directive.setOnlyLast(aList);
 		sample.addDirective(directive);
-		String templateString = proxy.toJson(sample);
-		Template json = proxy.fromJSON(templateString, Template.class);
+		String templateString = proxy.toString(sample);
+		Template json = proxy.fromString(templateString, Template.class);
 		directive = (Insert) json.getDirectives().get(0); 
-		assertEquals(templateString, proxy.toJson(json));
+		assertEquals(templateString, proxy.toString(json));
 		assertEquals("foo.*", directive.getBookmarkPattern());
 		assertEquals("--", directive.getDataDelimeter());
 		assertEquals("aSource", 	directive.getDataSource());
@@ -121,13 +121,13 @@ public class DataProxyJsonTest {
 		directive.setIfPrimitive(ParseData.PRIMITIVE_PARSE);
 		directive.setIfSourceMissing(ParseData.SOURCE_MISSING_IGNORE);
 		directive.setName("aName");
-		directive.setParseFormat(Parser.PARSE_CSV);
+		directive.setParseFormat(Configuration.PARSE_CSV);
 		directive.setStaticData("static");
 		sample.addDirective(directive);
-		String templateString = proxy.toJson(sample);
-		Template json = proxy.fromJSON(templateString, Template.class);
+		String templateString = proxy.toString(sample);
+		Template json = proxy.fromString(templateString, Template.class);
 		directive = (ParseData) json.getDirectives().get(0); 
-		assertEquals(templateString, proxy.toJson(json));
+		assertEquals(templateString, proxy.toString(json));
 		assertEquals("--", 							directive.getDataDelimeter());
 		assertEquals("aSource", 					directive.getDataSource());
 		assertEquals("aTarget", 					directive.getDataTarget());
@@ -136,7 +136,7 @@ public class DataProxyJsonTest {
 		assertEquals(ParseData.PRIMITIVE_PARSE, 	directive.getIfPrimitive());
 		assertEquals(ParseData.SOURCE_MISSING_IGNORE, directive.getIfSourceMissing());
 		assertEquals("aName", 						directive.getName());
-		assertEquals(Parser.PARSE_CSV, 				directive.getParseFormat());
+		assertEquals(Configuration.PARSE_CSV, 				directive.getParseFormat());
 		assertEquals("static", 						directive.getStaticData());
 	}
 
@@ -155,10 +155,10 @@ public class DataProxyJsonTest {
 		directive.setProcessAfter(true);
 		directive.setToAttribute("target");
 		sample.addDirective(directive);
-		String templateString = proxy.toJson(sample);
-		Template json = proxy.fromJSON(templateString, Template.class);
+		String templateString = proxy.toString(sample);
+		Template json = proxy.fromString(templateString, Template.class);
 		directive = (Replace) json.getDirectives().get(0); 
-		assertEquals(templateString, proxy.toJson(json));
+		assertEquals(templateString, proxy.toString(json));
 		assertEquals("==", 						directive.getDataDelimeter());
 		assertEquals("aSource", 				directive.getDataSource());
 		assertEquals("from", 					directive.getFromAttribute());
@@ -179,10 +179,10 @@ public class DataProxyJsonTest {
 		directive.setFilename("aFile");
 		directive.setName("aName");
 		sample.addDirective(directive);
-		String templateString = proxy.toJson(sample);
-		Template json = proxy.fromJSON(templateString, Template.class);
+		String templateString = proxy.toString(sample);
+		Template json = proxy.fromString(templateString, Template.class);
 		directive = (SaveFile) json.getDirectives().get(0); 
-		assertEquals(templateString, proxy.toJson(json));
+		assertEquals(templateString, proxy.toString(json));
 		assertEquals(true, 		directive.getClearAfter());
 		assertEquals("aFile", 	directive.getFilename());
 		assertEquals("aName", 	directive.getName());
@@ -210,9 +210,9 @@ public class DataProxyJsonTest {
 		base.put("aList", list);
 		base.put("description", new DataPrimitive("a Simple Element"));
 		
-		String json = proxy.toJson(base);
-		DataElement result = proxy.fromJSON(json, DataElement.class);
-		assertEquals(json, proxy.toJson(result));
+		String json = proxy.toString(base);
+		DataElement result = proxy.fromString(json, DataElement.class);
+		assertEquals(json, proxy.toString(result));
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("id"));
 		assertTrue(result.getAsObject().get("id").isObject());
@@ -244,8 +244,8 @@ public class DataProxyJsonTest {
 		DataObject table = new DataObject();
 		table.put("Test", new DataPrimitive(null));
 
-		String json = proxy.toJson(table);
-		DataElement result = proxy.fromJSON(json, DataElement.class);
+		String json = proxy.toString(table);
+		DataElement result = proxy.fromString(json, DataElement.class);
 		
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("Test"));

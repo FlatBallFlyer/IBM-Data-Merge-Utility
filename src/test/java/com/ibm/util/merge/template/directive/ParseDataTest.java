@@ -6,13 +6,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.Config;
+import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
-import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
@@ -83,7 +83,7 @@ public class ParseDataTest {
 		assertEquals("-", directive.getDataDelimeter());
 		assertEquals("target", directive.getDataTarget());
 		assertEquals("\"", directive.getDataTargetDelimiter());
-		assertEquals(Parser.PARSE_CSV, directive.getParseFormat());
+		assertEquals(Configuration.PARSE_CSV, directive.getParseFormat());
 		assertEquals(ParseData.LIST_THROW, directive.getIfList());
 		assertEquals(ParseData.OBJECT_THROW, directive.getIfObject());
 		assertEquals(ParseData.PRIMITIVE_THROW, directive.getIfPrimitive());
@@ -152,8 +152,9 @@ public class ParseDataTest {
 	
 	@Test
 	public void testExecutePrimitiveParse() throws MergeException {
+		Config.initialize();
 		directive.setIfPrimitive(ParseData.PRIMITIVE_PARSE);
-		directive.setParseFormat(Parser.PARSE_JSON);
+		directive.setParseFormat(Configuration.PARSE_JSON);
 		directive.setStaticData(jsonString1);
 		template = template.getMergable(merger);
 		template.getMergedOutput();
@@ -164,7 +165,7 @@ public class ParseDataTest {
 	@Test
 	public void testExecutePrimitiveParseStatic() throws MergeException {
 		directive.setIfPrimitive(ParseData.PRIMITIVE_PARSE);
-		directive.setParseFormat(Parser.PARSE_JSON);
+		directive.setParseFormat(Configuration.PARSE_JSON);
 		template = template.getMergable(merger);
 		merger.getMergeData().put("test", "-", jsonString1);
 		template.getMergedOutput();
@@ -219,7 +220,7 @@ public class ParseDataTest {
 	@Test
 	public void testExecuteListParseFirst1() throws MergeException {
 		directive.setIfList(ParseData.LIST_PARSE_FIRST);
-		directive.setParseFormat(Parser.PARSE_JSON);
+		directive.setParseFormat(Configuration.PARSE_JSON);
 		template = template.getMergable(merger);
 		merger.getMergeData().put("test", "-", sourceList1);
 		template.getMergedOutput();
@@ -230,7 +231,7 @@ public class ParseDataTest {
 	@Test
 	public void testExecuteListParseFirst2() throws MergeException {
 		directive.setIfList(ParseData.LIST_PARSE_FIRST);
-		directive.setParseFormat(Parser.PARSE_JSON);
+		directive.setParseFormat(Configuration.PARSE_JSON);
 		template = template.getMergable(merger);
 		merger.getMergeData().put("test", "-", sourceList2);
 		template.getMergedOutput();
@@ -241,7 +242,7 @@ public class ParseDataTest {
 	@Test
 	public void testExecuteListParseFirst3() throws MergeException {
 		directive.setIfList(ParseData.LIST_PARSE_FIRST);
-		directive.setParseFormat(Parser.PARSE_JSON);
+		directive.setParseFormat(Configuration.PARSE_JSON);
 		template = template.getMergable(merger);
 		merger.getMergeData().put("test", "-", sourceList3);
 		try {
@@ -255,7 +256,7 @@ public class ParseDataTest {
 	@Test
 	public void testExecuteListParseLast1() throws MergeException {
 		directive.setIfList(ParseData.LIST_PARSE_LAST);
-		directive.setParseFormat(Parser.PARSE_JSON);
+		directive.setParseFormat(Configuration.PARSE_JSON);
 		template = template.getMergable(merger);
 		merger.getMergeData().put("test", "-", sourceList1);
 		template.getMergedOutput();
@@ -266,7 +267,7 @@ public class ParseDataTest {
 	@Test
 	public void testExecuteListParseLast2() throws MergeException {
 		directive.setIfList(ParseData.LIST_PARSE_LAST);
-		directive.setParseFormat(Parser.PARSE_JSON);
+		directive.setParseFormat(Configuration.PARSE_JSON);
 		template = template.getMergable(merger);
 		merger.getMergeData().put("test", "-", sourceList2);
 		template.getMergedOutput();
@@ -277,7 +278,7 @@ public class ParseDataTest {
 	@Test
 	public void testExecuteListParseLast3() throws MergeException {
 		directive.setIfList(ParseData.LIST_PARSE_LAST);
-		directive.setParseFormat(Parser.PARSE_JSON);
+		directive.setParseFormat(Configuration.PARSE_JSON);
 		template = template.getMergable(merger);
 		merger.getMergeData().put("test", "-", sourceList3);
 		try {
@@ -371,14 +372,14 @@ public class ParseDataTest {
 
 	@Test
 	public void testGetSetParseFormat() {
-		for (int format : Parser.PARSE_OPTIONS().keySet()) {
+		for (int format : Configuration.PARSE_OPTIONS().keySet()) {
 			directive.setParseFormat(format);
 			assertEquals(format, directive.getParseFormat());
 		}
-		directive.setParseFormat(Parser.PARSE_CSV);
-		assertEquals(Parser.PARSE_CSV, directive.getParseFormat());
+		directive.setParseFormat(Configuration.PARSE_CSV);
+		assertEquals(Configuration.PARSE_CSV, directive.getParseFormat());
 		directive.setParseFormat(99);
-		assertEquals(Parser.PARSE_CSV, directive.getParseFormat());
+		assertEquals(Configuration.PARSE_CSV, directive.getParseFormat());
 	}
 
 }

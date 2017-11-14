@@ -25,7 +25,7 @@ public class DataProxyCsvTest {
 
 	@Test
 	public void testFromCsv() throws MergeException {
-		DataElement csvTable = cson.fromCsv("col1,col2,col3\nr1c1,r1c2,r1c3\nr2c1,r2c2,r2c3");
+		DataElement csvTable = cson.fromString("col1,col2,col3\nr1c1,r1c2,r1c3\nr2c1,r2c2,r2c3");
 		assertTrue(csvTable.isList());
 		DataObject row = csvTable.getAsList().get(0).getAsObject(); 
 		assertTrue(row.isObject());

@@ -45,13 +45,17 @@ import com.ibm.util.merge.exception.MergeException;
  * @author Mike Storey
  *
  */
-public class DataProxyXmlStrict {
-	// TODO - Refactor to always Object with name, attrs, members
+public class DataProxyXmlStrict implements ParserProxyInterface {
 	
 	/**
 	 * Instantiate a proxy
 	 */
 	public DataProxyXmlStrict() {
+	}
+
+	@Override
+	public Integer getKey() {
+		return 5;
 	}
 
     /**
@@ -61,7 +65,7 @@ public class DataProxyXmlStrict {
      * @return
      * @throws MergeException
      */
-    public DataElement fromXML(String xmlString) throws MergeException {
+    public DataElement fromString(String xmlString) throws MergeException {
         Document doc = null;
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

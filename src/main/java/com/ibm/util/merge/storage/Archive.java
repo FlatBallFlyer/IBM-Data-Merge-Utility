@@ -213,7 +213,7 @@ public abstract class Archive {
 	public void setOutputStream(OutputStream outputStream) throws MergeException {
 		this.outputStream = outputStream;
 		DataManager data = context.getMergeData();
-		data.put(Merger.IDMU_ARCHIVE, "-", 			gson.fromJSON(gson.toJson(this), DataObject.class));
+		data.put(Merger.IDMU_ARCHIVE, "-", 			gson.fromString(gson.toString(this), DataObject.class));
 		data.put(Merger.IDMU_ARCHIVE_OUTPUT, "-", new DataPrimitive(this.getArchiveFile().getPath()));
 		data.put(Merger.IDMU_ARCHIVE_FILES, "-", new DataList());
 	}

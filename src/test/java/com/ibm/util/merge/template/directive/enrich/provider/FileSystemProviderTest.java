@@ -9,10 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.Config;
+import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.data.DataElement;
-import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
@@ -46,7 +46,7 @@ public class FileSystemProviderTest {
 		
 		// Test the Provider
 		FileSystemProvider provider = new FileSystemProvider("db", "src/test/resources/http", context);
-		DataElement result = provider.provide(".*", template.getWrapper(), context, template.getReplaceStack(), Parser.PARSE_NONE);
+		DataElement result = provider.provide(".*", template.getWrapper(), context, template.getReplaceStack(), Configuration.PARSE_NONE);
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("simple.csv"));
 		assertEquals("col1,col2,col3\nr1c1,r1c2,r1c3\nr2c1,r2c2,r2c3\n", result.getAsObject().get("simple.csv").getAsPrimitive());
@@ -64,7 +64,7 @@ public class FileSystemProviderTest {
 		
 		// Test the Provider
 		FileSystemProvider provider = new FileSystemProvider("db", "src/test/resources/http", context);
-		DataElement result = provider.provide("simple.csv", template.getWrapper(), context, template.getReplaceStack(), Parser.PARSE_CSV);
+		DataElement result = provider.provide("simple.csv", template.getWrapper(), context, template.getReplaceStack(), Configuration.PARSE_CSV);
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("simple.csv"));
 		assertTrue(result.getAsObject().get("simple.csv").isList());

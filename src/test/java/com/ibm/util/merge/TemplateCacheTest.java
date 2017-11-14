@@ -166,7 +166,7 @@ public class TemplateCacheTest {
 	@Test
 	public void testGetTemplate() throws MergeException {
 		String template = cache.getTemplate("system.error404.");
-		TemplateList list = gson.fromJSON(template, TemplateList.class);
+		TemplateList list = gson.fromString(template, TemplateList.class);
 		assertEquals(1,list.size());
 		assertEquals("system", list.get(0).getId().group);
 		assertEquals("error404",  list.get(0).getId().name);
@@ -176,28 +176,28 @@ public class TemplateCacheTest {
 	@Test
 	public void testGetTemplatesAll() throws MergeException {
 		String templates = cache.getTemplate("");
-		TemplateList list = gson.fromJSON(templates, TemplateList.class);
+		TemplateList list = gson.fromString(templates, TemplateList.class);
 		assertEquals(4, list.size());
 	}
 
 	@Test
 	public void testGetTemplatesTwo() throws MergeException {
 		String templates = cache.getTemplate("system");
-		TemplateList list = gson.fromJSON(templates, TemplateList.class);
+		TemplateList list = gson.fromString(templates, TemplateList.class);
 		assertEquals(4, list.size());
 	}
 
 	@Test
 	public void testGetTemplatesThree() {
 		String templates = cache.getTemplate("system.sample");
-		TemplateList list = gson.fromJSON(templates, TemplateList.class);
+		TemplateList list = gson.fromString(templates, TemplateList.class);
 		assertEquals(1, list.size());
 	}
 
 	@Test
 	public void testGetTemplatesFour() {
 		String templates = cache.getTemplate("system.sample.");
-		TemplateList list = gson.fromJSON(templates, TemplateList.class);
+		TemplateList list = gson.fromString(templates, TemplateList.class);
 		assertEquals(1, list.size());
 	}
 
@@ -209,7 +209,7 @@ public class TemplateCacheTest {
 		
 		template = new Template("test","putpost","","Something New");
 		assertEquals("Something New", template.getContent().toString());
-		cache.putTemplate(gson.toJson(template));
+		cache.putTemplate(gson.toString(template));
 		template = cache.getMergable(context, "test.putpost.", replace);
 		assertEquals("Something New", template.getContent().toString());
 	}
@@ -245,7 +245,7 @@ public class TemplateCacheTest {
 	@Test
 	public void testGetGroupListGroup() {
 		String list = cache.getGroup("system");
-		TemplateList templates = gson.fromJSON(list, TemplateList.class);
+		TemplateList templates = gson.fromString(list, TemplateList.class);
 		assertEquals(4, templates.size());
 	}
 
@@ -273,7 +273,7 @@ public class TemplateCacheTest {
 	@Test
 	public void testGetGroup() {
 		String list = cache.getGroup("system");
-		TemplateList templates = gson.fromJSON(list, TemplateList.class);
+		TemplateList templates = gson.fromString(list, TemplateList.class);
 		assertEquals(4, templates.size());
 	}
 
@@ -287,9 +287,9 @@ public class TemplateCacheTest {
 		assertEquals(8, cache.getSize());
 
 		String list = cache.getGroup("test");
-		TemplateList templates = gson.fromJSON(list, TemplateList.class);
+		TemplateList templates = gson.fromString(list, TemplateList.class);
 		templates.remove(1);
-		cache.putGroup(gson.toJson(templates));
+		cache.putGroup(gson.toString(templates));
 		assertEquals(7, cache.getSize());
 	}
 

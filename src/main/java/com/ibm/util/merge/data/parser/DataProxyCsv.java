@@ -38,12 +38,17 @@ import com.ibm.util.merge.exception.MergeException;
  * @author Mike Storey
  *
  */
-public class DataProxyCsv {
+public class DataProxyCsv implements ParserProxyInterface {
 
 	/**
 	 * Instantiate a proxy 
 	 */
 	public DataProxyCsv() {
+	}
+
+	@Override
+	public Integer getKey() {
+		return 1;
 	}
 
     /**
@@ -53,7 +58,8 @@ public class DataProxyCsv {
      * @return the parsed List
      * @throws MergeException
      */
-    public DataElement fromCsv(String data) throws MergeException {
+	@Override
+    public DataElement fromString(String data) throws MergeException {
 		DataList list = new DataList();
 		String sourceCsv = data;
 		CSVParser parser;

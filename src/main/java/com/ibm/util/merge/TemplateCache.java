@@ -165,7 +165,7 @@ public class TemplateCache implements Iterable<String> {
 	 */
 	public String postTemplate(String templateJson) throws MergeException {
 		Template template;
-		template = gsonProxy.fromJSON(templateJson, Template.class);
+		template = gsonProxy.fromString(templateJson, Template.class);
 		if (null == template) {
 			throw new Merge403("Invalid Json");
 		}
@@ -199,7 +199,7 @@ public class TemplateCache implements Iterable<String> {
 	public String getTemplate(String shortHand) {
 		TemplateId id = new TemplateId(shortHand);
 		TemplateList templates = getTemplates(id);
-		return gsonProxy.toJson(templates);
+		return gsonProxy.toString(templates);
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class TemplateCache implements Iterable<String> {
 	 * @throws MergeException 
 	 */
 	public String putTemplate(String templateJson) throws MergeException {
-		Template template = gsonProxy.fromJSON(templateJson, Template.class);
+		Template template = gsonProxy.fromString(templateJson, Template.class);
 		if (null == template) {
 			throw new Merge403("Invalid Json");
 		}
@@ -300,7 +300,7 @@ public class TemplateCache implements Iterable<String> {
 	 * @throws MergeException 
 	 */
 	public String postGroup(String groupJson) throws MergeException {
-		TemplateList templates = gsonProxy.fromJSON(groupJson, TemplateList.class);
+		TemplateList templates = gsonProxy.fromString(groupJson, TemplateList.class);
 		if (null == templates) {
 			throw new Merge403("Invalid Json");
 		}
@@ -327,7 +327,7 @@ public class TemplateCache implements Iterable<String> {
 	 */
 	public String getGroup(String groupName) {
 		if (groupName.isEmpty()) {
-			return this.gsonProxy.toJson(getGroupList());
+			return this.gsonProxy.toString(getGroupList());
 		} 
 		TemplateList group = new TemplateList();
 		for (Template template : cache.values()) {
@@ -335,7 +335,7 @@ public class TemplateCache implements Iterable<String> {
 				group.add(template);
 			}
 		}
-		return gsonProxy.toJson(group);
+		return gsonProxy.toString(group);
 	}
 
 	/**
@@ -346,7 +346,7 @@ public class TemplateCache implements Iterable<String> {
 	 * @throws MergeException 
 	 */
 	public String putGroup(String groupJson) throws MergeException {
-		TemplateList templates = gsonProxy.fromJSON(groupJson, TemplateList.class);
+		TemplateList templates = gsonProxy.fromString(groupJson, TemplateList.class);
 		if (null == templates) {
 			throw new Merge403("Invalid Json");
 		}

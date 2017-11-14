@@ -30,7 +30,7 @@ public class DataProxyXmlStrictTest {
 	}
 
 	@Test
-	public void testFromXml1() throws IOException, MergeException {
+	public void testfromString1() throws IOException, MergeException {
 		String xmlString = 
 				"<?xml version = \"1.0\"?>" +
 				"<table>" +
@@ -39,7 +39,7 @@ public class DataProxyXmlStrictTest {
 				"	<row id=\"r3\" col1=\"r3c1\" col2=\"r3c2\" col3=\"r3c3\" > </row>" +
 				"</table>";
 		
-		DataElement element = proxy.fromXML(xmlString);
+		DataElement element = proxy.fromString(xmlString);
 		manager.put("test", "-", element);
 		assertTrue(manager.contians("test", "-"));
 		assertEquals("table",manager.get("test-name", "-").getAsPrimitive());
@@ -59,7 +59,7 @@ public class DataProxyXmlStrictTest {
 	}
 
 	@Test
-	public void testFromXml2() throws IOException, MergeException {
+	public void testfromString2() throws IOException, MergeException {
 		String xmlString = 
 				"<table>" +
 				"	<row><id>r1</id><col1>r1c1</col1><col2>r1c2</col2><col3>r1c3</col3></row>" +
@@ -67,7 +67,7 @@ public class DataProxyXmlStrictTest {
 				"	<row><id>r3</id><col1>r3c1</col1><col2>r3c2</col2><col3>r3c3</col3></row>" +
 				"</table>";
 		
-		DataElement element = proxy.fromXML(xmlString);
+		DataElement element = proxy.fromString(xmlString);
 		manager.put("test", "-", element);
 		assertEquals("table",manager.get("test-name", "-").getAsPrimitive());
 		assertEquals("row",  manager.get("test-members-[0]-name", "-").getAsPrimitive());
@@ -87,7 +87,7 @@ public class DataProxyXmlStrictTest {
 	}
 	
 	@Test
-	public void testFromXml3() throws IOException, MergeException {
+	public void testfromString3() throws IOException, MergeException {
 		String xmlString = 
 				"<table>" +
 				"	<row id=\"r1\" col1=\"r1c1\"><col2>r1c2</col2><col3>r1c3</col3>" +
@@ -99,7 +99,7 @@ public class DataProxyXmlStrictTest {
 				"	<row id=\"r3\" col1=\"r3c1\"><col2>r3c2</col2><col3>r3c3</col3></row>" +
 				"</table>";
 		
-		DataElement element = proxy.fromXML(xmlString);
+		DataElement element = proxy.fromString(xmlString);
 		manager.put("test", "-", element);
 		assertTrue(manager.contians("test", "-"));
 		assertEquals("table",manager.get("test-name", "-").getAsPrimitive());
@@ -128,7 +128,7 @@ public class DataProxyXmlStrictTest {
 	}
 
 	@Test
-	public void testFromXml4() throws IOException, MergeException {
+	public void testfromString4() throws IOException, MergeException {
 		String xmlString = 
 				"<table>" +
 				"	<row id=\"r1\" col1=\"r1c1\"><col2>r1c2</col2><col3>r1c3</col3></row>" +
@@ -138,7 +138,7 @@ public class DataProxyXmlStrictTest {
 				"	<row id=\"r3\" col1=\"r3c1\"><col2>r3c2</col2><col3>r3c3</col3></row>" +
 				"</table>";
 		
-		DataElement element = proxy.fromXML(xmlString);
+		DataElement element = proxy.fromString(xmlString);
 		manager.put("test", "-", element);
 		assertEquals("row",  manager.get("test-members-[0]-name", "-").getAsPrimitive());
         assertEquals("r1",   manager.get("test-members-[0]-attrs-id","-").getAsPrimitive());
@@ -158,9 +158,9 @@ public class DataProxyXmlStrictTest {
 	}
 
 	@Test
-	public void testFromXml5() throws MergeException {
+	public void testfromString5() throws MergeException {
 		String xmlString = "<root><owner name=\"Owner One\" age=\"22\"></owner></root>";
-		DataElement element = proxy.fromXML(xmlString);
+		DataElement element = proxy.fromString(xmlString);
 		assertTrue(element.isObject());
 		assertEquals(2, element.getAsObject().keySet().size());
 		assertTrue(element.getAsObject().containsKey("members"));

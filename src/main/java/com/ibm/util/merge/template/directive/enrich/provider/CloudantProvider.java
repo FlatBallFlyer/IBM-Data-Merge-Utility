@@ -23,6 +23,7 @@ import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.Database;
 import com.cloudant.client.org.lightcouch.CouchDbException;
 import com.ibm.util.merge.Config;
+import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
@@ -78,7 +79,7 @@ public class CloudantProvider implements ProviderInterface {
 	private void connect() throws MergeException {
 		Credentials creds;
 		try {
-			creds = proxy.fromJSON(Config.get().getEnv(source), Credentials.class);
+			creds = proxy.fromString(Config.get().getEnv(source), Credentials.class);
 		} catch (MergeException e) {
 			throw new Merge500("Malformed or Missing Cloudant Source Credentials found for:" + source );
 		}
@@ -110,7 +111,7 @@ public class CloudantProvider implements ProviderInterface {
 		
 		String results = db.toString(); // TODO - Make Cloudant Call
 		
-		if (parseAs != Parser.PARSE_NONE) {
+		if (parseAs != Configuration.PARSE_NONE) {
 			result = parser.parse(parseAs, results);
 		}
 		return result;

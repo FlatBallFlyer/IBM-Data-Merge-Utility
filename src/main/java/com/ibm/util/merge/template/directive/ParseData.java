@@ -18,10 +18,11 @@ package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.Config;
+import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataPrimitive;
-import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
@@ -88,7 +89,6 @@ public class ParseData extends AbstractDataDirective {
 	private String dataTargetDelimiter;
 	private String staticData;
 	private int parseFormat;
-	private transient Parser parser;
 
 	/**
 	 * Instantiate a Parse directive with default values
@@ -100,12 +100,11 @@ public class ParseData extends AbstractDataDirective {
 		this.dataTarget = "";
 		this.dataTargetDelimiter = "\"";
 		this.staticData = "";
-		this.parseFormat = 	Parser.PARSE_CSV;
+		this.parseFormat = 	Configuration.PARSE_CSV;
 		this.setIfList(LIST_THROW);
 		this.setIfSourceMissing(SOURCE_MISSING_THROW);
 		this.setIfObject(OBJECT_THROW);
 		this.setIfPrimitive(PRIMITIVE_THROW);
-		this.parser = new Parser();
 	}
 	
 	@Override
@@ -149,7 +148,7 @@ public class ParseData extends AbstractDataDirective {
 			case PRIMITIVE_IGNORE :
 				return;
 			case PRIMITIVE_PARSE :
-				context.getMergeData().put(this.dataTarget, this.dataTargetDelimiter, parser.parse(parseFormat, data.getAsPrimitive()));
+				context.getMergeData().put(this.dataTarget, this.dataTargetDelimiter, Config.parse(parseFormat, data.getAsPrimitive()));
 				return;
 			}
 
@@ -171,7 +170,7 @@ public class ParseData extends AbstractDataDirective {
 				for (DataElement member : data.getAsList()) {
 					if (member.isPrimitive()) {
 						String source = member.getAsPrimitive();
-						context.getMergeData().put(this.dataTarget, this.dataTargetDelimiter, parser.parse(parseFormat, source));
+						context.getMergeData().put(this.dataTarget, this.dataTargetDelimiter, Config.parse(parseFormat, source));
 						return;
 					}
 				}
@@ -180,7 +179,7 @@ public class ParseData extends AbstractDataDirective {
 				for (int i = data.getAsList().size()-1 ; i >= 0; i--) {
 					if (data.getAsList().get(i).isPrimitive()) {
 						String source = data.getAsList().get(i).getAsPrimitive();
-						context.getMergeData().put(this.dataTarget, this.getDataDelimeter(), parser.parse(parseFormat, source));
+						context.getMergeData().put(this.dataTarget, this.getDataDelimeter(), Config.parse(parseFormat, source));
 						return;
 					}
 				}
@@ -200,7 +199,7 @@ public class ParseData extends AbstractDataDirective {
 	 * @param format
 	 */
 	public void setParseFormat(int format) {
-		if (Parser.PARSE_OPTIONS().containsKey(format)) {
+		if (Configuration.PARSE_OPTIONS().containsKey(format)) {
 			this.parseFormat = format;
 		}
 	}

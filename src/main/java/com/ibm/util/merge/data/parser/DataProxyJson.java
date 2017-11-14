@@ -30,7 +30,7 @@ import com.ibm.util.merge.template.directive.AbstractDirective;
  * @author Mike Storey
  *
  */
-public class DataProxyJson {
+public class DataProxyJson implements ParserProxyInterface {
 
     protected GsonBuilder builder;
 
@@ -50,6 +50,11 @@ public class DataProxyJson {
         this.builder = builder;
     }
 
+	@Override
+	public Integer getKey() {
+		return new Integer(3);
+	}
+
     /**
      * Parse the JSON Data into an object
      * 
@@ -57,20 +62,19 @@ public class DataProxyJson {
      * @param type
      * @return
      */
-    public <T> T fromJSON(String jsonString, Class<T> type) {
+    public <T> T fromString(String jsonString, Class<T> type) {
         Gson gson = builder.create();
         return gson.fromJson(jsonString, type);
     }
 
-    /**
-     * Serialize the object to a JSON String
-     * @param content
-     * @return
-     */
-    public String toJson(Object content) {
-
+    public DataElement fromString(String value) {
         Gson gson = builder.create();
-        return gson.toJson(content);
+    	return gson.fromJson(value, DataElement.class);
+    }
+    
+    public String toString(Object src) {
+        Gson gson = builder.create();
+        return gson.toJson(src);
     }
 
     /**

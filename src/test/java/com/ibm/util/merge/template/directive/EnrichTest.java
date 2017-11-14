@@ -6,11 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.Config;
+import com.ibm.util.merge.Configuration;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
-import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
@@ -47,7 +47,7 @@ public class EnrichTest {
 		assertEquals("", 							enrich.getEnrichSource());
 		assertEquals("", 							enrich.getEnrichParameter());
 		assertEquals("", 							enrich.getEnrichCommand());
-		assertEquals(Parser.PARSE_NONE, 			enrich.getParseAs());
+		assertEquals(Configuration.PARSE_NONE, 			enrich.getParseAs());
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class EnrichTest {
 		before.setEnrichParameter("somedb");
 		before.setEnrichSource("some source");
 		before.setName("Foo");
-		before.setParseAs(Parser.PARSE_JSON);
+		before.setParseAs(Configuration.PARSE_JSON);
 		before.setTargetDataName("some=name");
 		before.setTargetDataDelimeter("=");
 		Enrich after = (Enrich) before.getMergable();
@@ -78,13 +78,13 @@ public class EnrichTest {
 		cache.postTemplate(template);
 		context = new Merger(cache, "test.enrich.");
 		context.merge();
-		Template test = gsonProxy.fromJSON(context.getMergeData().get("test", "\"").getAsPrimitive(), Template.class);
+		Template test = gsonProxy.fromString(context.getMergeData().get("test", "\"").getAsPrimitive(), Template.class);
 		assertTrue(test instanceof Template);
 	}
 
 	@Test
 	public void testExecuteParse() throws MergeException {
-		enrich.setParseAs(Parser.PARSE_JSON);
+		enrich.setParseAs(Configuration.PARSE_JSON);
 		cache.postTemplate(template);
 		context = new Merger(cache, "test.enrich.");
 		context.merge();
@@ -115,8 +115,8 @@ public class EnrichTest {
 
 	@Test
 	public void testGetSetParseAs() {
-		enrich.setParseAs(Parser.PARSE_CSV);
-		assertEquals(Parser.PARSE_CSV, enrich.getParseAs());
+		enrich.setParseAs(Configuration.PARSE_CSV);
+		assertEquals(Configuration.PARSE_CSV, enrich.getParseAs());
 	}
 
 	@Test

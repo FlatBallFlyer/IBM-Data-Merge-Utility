@@ -273,7 +273,7 @@ public class Replace extends AbstractDataDirective {
 				this.replaceFromString(data.getAsPrimitive());
 				break;
 			case PRIMITIVE_JSON:
-				this.replaceFromString(proxy.toJson(data.getAsPrimitive()));
+				this.replaceFromString(proxy.toString(data.getAsPrimitive()));
 				break;
 			}
 
@@ -292,7 +292,7 @@ public class Replace extends AbstractDataDirective {
 				this.replaceFromList(list);
 				break;
 			case OBJECT_REPLACE_JSON:
-				this.replaceFromString(proxy.toJson(data));
+				this.replaceFromString(proxy.toString(data));
 				break;
 			}
 		
@@ -326,7 +326,7 @@ public class Replace extends AbstractDataDirective {
 				}
 				break;
 			case LIST_JSON:
-				this.replaceFromString(proxy.toJson(data));
+				this.replaceFromString(proxy.toString(data));
 				break;
 			}
 		}

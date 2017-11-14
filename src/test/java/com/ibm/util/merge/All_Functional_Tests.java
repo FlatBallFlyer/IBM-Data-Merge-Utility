@@ -76,7 +76,7 @@ public class All_Functional_Tests {
 		assertTrue(folder.isDirectory());
 		String payload = new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "payload.txt").toPath()), "ISO-8859-1");
 		String parms = new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "parameters.json").toPath()), "ISO-8859-1");
-		Parameters parameters = gsonProxy.fromJSON(parms, Parameters.class);
+		Parameters parameters = gsonProxy.fromString(parms, Parameters.class);
 		Config.load(new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "config.json").toPath()), "ISO-8859-1"));
 		cache = new TemplateCache();
 		context = new Merger(cache, "test..", parameters.parms, payload);
