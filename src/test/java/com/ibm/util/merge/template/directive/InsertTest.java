@@ -67,7 +67,7 @@ public class InsertTest {
 	}
 
 	@Test
-	public void testInsert() {
+	public void testInsert() throws MergeException {
 		Insert directive = new Insert();
 		assertEquals(AbstractDirective.TYPE_INSERT, directive.getType());
 		assertEquals("", directive.getDataSource());
@@ -127,7 +127,7 @@ public class InsertTest {
 						Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 						Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 						Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-						Replace.LIST_THROW,
+						Replace.LIST_THROW, "", "",
 						Replace.LIST_ATTR_MISSING_THROW,
 						Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 						true, true);
@@ -160,7 +160,7 @@ public class InsertTest {
 						Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 						Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 						Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-						Replace.LIST_THROW,
+						Replace.LIST_THROW, "", "", 
 						Replace.LIST_ATTR_MISSING_THROW,
 						Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 						true, true);
@@ -174,7 +174,7 @@ public class InsertTest {
 	}
 	
 	@Test
-	public void testInsertSourceDelimeterMissingPrimitiveObjectList() {
+	public void testInsertSourceDelimeterMissingPrimitiveObjectList() throws MergeException {
 		HashSet<String> list = new HashSet<String>();
 		list.add("One"); list.add("two"); list.add("three");
 		Insert directive = new Insert("source", "delim", false, 
@@ -199,7 +199,7 @@ public class InsertTest {
 	}
 
 	@Test
-	public void testGetMergable() {
+	public void testGetMergable() throws MergeException {
 		HashSet<String> empty = new HashSet<String>();
 		Insert directive = new Insert("","-",false, 
 			Insert.MISSING_IGNORE, 
@@ -344,7 +344,7 @@ public class InsertTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "", 
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
@@ -421,7 +421,7 @@ public class InsertTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "", 
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
@@ -456,7 +456,7 @@ public class InsertTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "", 
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
@@ -708,7 +708,7 @@ public class InsertTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "", 
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
@@ -798,7 +798,7 @@ public class InsertTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "", 
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
@@ -822,7 +822,7 @@ public class InsertTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "", 
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);

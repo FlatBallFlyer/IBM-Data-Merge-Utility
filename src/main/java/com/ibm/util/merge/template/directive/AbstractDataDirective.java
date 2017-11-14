@@ -16,6 +16,10 @@
  */
 package com.ibm.util.merge.template.directive;
 
+import com.ibm.util.merge.Config;
+import com.ibm.util.merge.exception.MergeException;
+import com.ibm.util.merge.template.content.Content;
+
 
 /**
  * Abstract Directive that provides a set of "Data Source" attributes
@@ -70,7 +74,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	public void makeMergable(AbstractDataDirective mergable) {
 		mergable.setType(this.getType());
 		mergable.setName(this.getName());
-		mergable.setDataSource(this.getDataSource());
+		mergable.setDataSource(this.getRawDataSource());
 		mergable.setDataDelimeter(this.getDataDelimeter());
 		mergable.setSourceHasTags(this.getSourceHasTags());
 		mergable.setIfSourceMissing(this.getIfSourceMissing());
@@ -88,9 +92,16 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	
 	/**
 	 * @return data source name
+	 * @throws MergeException 
 	 */
-	public String getDataSource() {
-		return dataSource;
+	public String getDataSource() throws MergeException {
+		String source = this.dataSource;
+		if (this.sourceHasTags) {
+			Content content = new Content(this.getTemplate().getWrapper(), source, this.getTemplate().getContentEncoding());;
+			content.replace(this.getTemplate().getReplaceStack(), true, Config.get().getNestLimit());
+			source = content.getValue();
+		}
+		return source;
 	}
 	
 	/**

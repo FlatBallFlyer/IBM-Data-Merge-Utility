@@ -314,7 +314,7 @@ public class ParseDataTest {
 	}
 
 	@Test
-	public void testGetSetDataSource() {
+	public void testGetSetDataSource() throws MergeException {
 		directive.setDataSource("Foo");
 		assertEquals("Foo", directive.getDataSource());
 	}

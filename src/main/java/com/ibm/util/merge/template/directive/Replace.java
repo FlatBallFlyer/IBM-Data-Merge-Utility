@@ -183,7 +183,7 @@ public class Replace extends AbstractDataDirective {
 			OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 			OBJECT_ATTRIBUTE_LIST_THROW,
 			OBJECT_ATTRIBUTE_OBJECT_THROW,
-			LIST_THROW,
+			LIST_THROW, "", "",
 			LIST_ATTR_MISSING_THROW,
 			LIST_ATTR_NOT_PRIMITIVE_THROW,
 			true,
@@ -204,9 +204,11 @@ public class Replace extends AbstractDataDirective {
 	 */
 	public Replace(String source, String delimeter, boolean hasTags, String to, int missing, int primitive, 
 			int object, int objectAttrPrimitive, int objectAttrList, int objectAttrObject, 
-			int list, int listAttrMissing, int listAttrNotPrimitive, boolean process, boolean require) {
+			int list, String fromAttr, String toAttr, int listAttrMissing, int listAttrNotPrimitive, boolean process, boolean require) {
 		super(source, delimeter, hasTags, missing, primitive, object, list);
 		this.setType(AbstractDirective.TYPE_REPLACE);
+		this.fromAttribute = fromAttr;
+		this.toAttribute = toAttr;
 		this.processAfter 	= process;
 		this.objectAttrPrimitive = objectAttrPrimitive;
 		this.objectAttrList = objectAttrList;

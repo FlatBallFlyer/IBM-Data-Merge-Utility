@@ -26,7 +26,7 @@ public class ReplaceTest {
 	}
 
 	@Test
-	public void testReplace() {
+	public void testReplace() throws MergeException {
 		Replace replace = new Replace();
 		assertEquals(AbstractDirective.TYPE_REPLACE, replace.getType());
 		assertEquals("", replace.getDataSource());
@@ -45,7 +45,7 @@ public class ReplaceTest {
 	}
 	
 	@Test
-	public void testReplaceWithParms() {
+	public void testReplaceWithParms() throws MergeException {
 		Replace replace = new Replace("source", "P", false, "",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
@@ -53,7 +53,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_IGNORE,
+				Replace.LIST_IGNORE, "", "", 
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				false, false);
@@ -75,7 +75,7 @@ public class ReplaceTest {
 	}
 	
 	@Test
-	public void testGetMergable() {
+	public void testGetMergable() throws MergeException {
 		Replace replace = new Replace("source", "P", false, "",
 				Replace.MISSING_IGNORE,
 				Replace.PRIMITIVE_IGNORE,
@@ -83,7 +83,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_IGNORE,
+				Replace.LIST_IGNORE, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				false, true);
@@ -114,7 +114,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_IGNORE,
+				Replace.LIST_IGNORE, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -139,7 +139,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_IGNORE,
+				Replace.LIST_IGNORE, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -160,7 +160,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_IGNORE,
+				Replace.LIST_IGNORE, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -181,7 +181,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_IGNORE,
+				Replace.LIST_IGNORE, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -208,7 +208,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -231,7 +231,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -257,7 +257,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -280,7 +280,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_IGNORE,
+				Replace.LIST_IGNORE, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -309,7 +309,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -334,7 +334,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -361,7 +361,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_IGNORE,
+				Replace.LIST_IGNORE, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -398,7 +398,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -435,7 +435,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_IGNORE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
@@ -469,7 +469,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -503,7 +503,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -540,7 +540,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_IGNORE,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
@@ -573,7 +573,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -608,9 +608,9 @@ public class ReplaceTest {
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
-				Replace.OBJECT_ATTRIBUTE_LIST_IGNORE,
+				Replace.OBJECT_ATTRIBUTE_LIST_IGNORE, 
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
@@ -643,7 +643,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
@@ -676,7 +676,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_LAST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
@@ -698,7 +698,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -726,7 +726,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_IGNORE,
+				Replace.LIST_IGNORE, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -756,12 +756,10 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_REPLACE,
+				Replace.LIST_REPLACE, "from", "to",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
-		directive.setFromAttribute("from");
-		directive.setToAttribute("to");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, "test.replace.list");
@@ -799,7 +797,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_FIRST,
+				Replace.LIST_FIRST, "from", "to",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
@@ -831,7 +829,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_LAST,
+				Replace.LIST_LAST, "from", "to", 
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
@@ -863,7 +861,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_JSON,
+				Replace.LIST_JSON, "", "", 
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -885,7 +883,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				false, false);
@@ -897,7 +895,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -927,7 +925,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_THROW,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -955,7 +953,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -985,7 +983,7 @@ public class ReplaceTest {
 				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
 				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
-				Replace.LIST_THROW,
+				Replace.LIST_THROW, "", "",
 				Replace.LIST_ATTR_MISSING_THROW,
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
@@ -1003,7 +1001,7 @@ public class ReplaceTest {
 	}
 	
 	@Test
-	public void testGetSetDataSource() {
+	public void testGetSetDataSource() throws MergeException {
 		Replace directive = new Replace();
 		directive.setDataSource("foo");
 		assertEquals("foo",directive.getDataSource());

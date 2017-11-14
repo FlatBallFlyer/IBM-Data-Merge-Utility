@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.Merger;
+import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
@@ -24,18 +25,22 @@ public class AbstractDataDirectiveTest {
 
 		@Override
 		public void setIfSourceMissing(int value) {
+			super.setIfSourceMissing(value);
 		}
 
 		@Override
 		public void setIfPrimitive(int value) {
+			super.setIfPrimitive(value);
 		}
 
 		@Override
 		public void setIfObject(int value) {
+			super.setIfObject(value);
 		}
 
 		@Override
 		public void setIfList(int value) {
+			super.setIfList(value);
 		}
 
 		@Override
@@ -61,8 +66,9 @@ public class AbstractDataDirectiveTest {
 	public void testGetMergable() {
 		AbstractDataTest mergable = (AbstractDataTest) test.getMergable();
 		assertNotSame(mergable, test);
-		assertEquals(test.getDataSource(), 		mergable.getDataSource());
+		assertEquals(test.getRawDataSource(), 	mergable.getRawDataSource());
 		assertEquals(test.getDataDelimeter(), 	mergable.getDataDelimeter());
+		assertEquals(test.getSourceHasTags(), 	mergable.getSourceHasTags());
 		assertEquals(test.getIfList(), 			mergable.getIfList());
 		assertEquals(test.getIfObject(), 		mergable.getIfObject());
 		assertEquals(test.getIfPrimitive(), 	mergable.getIfPrimitive());
@@ -70,9 +76,24 @@ public class AbstractDataDirectiveTest {
 	}
 
 	@Test
-	public void testSetGetDataSource() {
+	public void testSetGetDataSource() throws MergeException {
 		test.setDataSource("Foo");
 		assertEquals("Foo", test.getDataSource());
+	}
+
+	@Test
+	public void testSetGetDataSourceTag() throws MergeException {
+		TemplateCache cache = new TemplateCache();
+		Template template = new Template("test","","","Content","<",">");
+		test.setDataSource("some-<key>-bar");
+		test.setSourceHasTags(true);
+		template.addDirective(test);
+		cache.postTemplate(template);
+		Merger context = new Merger(cache, "test..");
+		template = context.getBaseTemplate();
+		template.addReplace("key","foo");
+		test = (AbstractDataTest) template.getDirectives().get(0);
+		assertEquals("some-foo-bar", test.getDataSource());
 	}
 
 	@Test
