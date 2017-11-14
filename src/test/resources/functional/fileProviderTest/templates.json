@@ -96,7 +96,7 @@
         "back" : ">"
       },
       "description" : "A Company Record, inserts Employee, Customer and Owner",
-      "content" : "{\n\t\"company\" : \"<company>\",\n\t\"owners\" : [<bookmark=\"owners\" group=\"test\" template=\"owner\"> \n\t\t\t],\n\t\"employees\" : [<bookmark=\"employees\" group=\"test\" template=\"employee\"> \n\t\t\t],\n\t\"customers\" : [<bookmark=\"customers\" group=\"test\" template=\"customer\">\n\t\t\t]\n\t}<,>",
+      "content" : "{\n\t\"company\" : \"<company>\",\n\t\"owners\" : [<bookmark=\"owners\" group=\"test\" template=\"owner\"> \n\t\t\t],\n\t\"employees\" : {<bookmark=\"employees\" group=\"test\" template=\"employee\"> \n\t\t\t},\n\t\"customers\" : {<bookmark=\"customers\" group=\"test\" template=\"customer\">\n\t\t\t}\n\t}<,>",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -281,7 +281,7 @@
         "back" : ">"
       },
       "description" : "anOwner",
-      "content" : "\n\t\t{\"owner\":\"<idmuContext>\", \"type\":\"owner\", \"name\":\"<name>\", \"age\":\"<age>\"}<,>",
+      "content" : "\n\t\t{\"owner\": {\"type\":\"owner\", \"name\":\"<name>\", \"age\":\"<age>\"}}<,>",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -294,7 +294,7 @@
           "dataSource" : "idmuContext-value-members-[0]-attrs",
           "dataDelimeter" : "-",
           "ifMissing" : 1,
-          "ifPrimitive" : 1,
+          "ifPrimitive" : 3,
           "ifObject" : 3,
           "objectAttrPrimitive" : 3,
           "objectAttrList" : 1,
@@ -381,7 +381,7 @@
         "back" : ">"
       },
       "description" : "anEmployee",
-      "content" : "\n\t\t{\"employee\":\"<idmuContext>\",\"type\":\"employee\", \"name\":\"<name>\", \"title\":\"< title>\", \"manager\":\"< manager>\"}<,>",
+      "content" : "\n\t\t{\"employee\": {\"type\":\"employee\", \"name\":\"<name>\", \"title\":\"< title>\", \"manager\":\"< manager>\"}}<,>",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 1,
