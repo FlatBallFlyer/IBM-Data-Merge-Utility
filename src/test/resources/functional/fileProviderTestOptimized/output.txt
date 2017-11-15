@@ -60,7 +60,7 @@
 	}
 	]
 },
-{"employees":{
+{"employees":[
 		{"employee": {"type":"employee", "name":"Noah", "title":" Coder", "manager":" Mike"}},
 		{"employee": {"type":"employee", "name":"Mason", "title":" CFO", "manager":" Fred"}},
 		{"employee": {"type":"employee", "name":"Liam", "title":" Coder", "manager":" Mike"}},
@@ -71,7 +71,7 @@
 		{"employee": {"type":"employee", "name":"Mike", "title":" CTO", "manager":" Fred"}},
 		{"employee": {"type":"employee", "name":"Fred", "title":" CEO", "manager":" Board"}},
 		{"employee": {"type":"employee", "name":"Alexander", "title":" Manager", "manager":" James"}}
-	}
+	]
 },
 {"owners":[
 		{"owner": {"type":"owner", "name":"Owner Two", "age":"82"}},

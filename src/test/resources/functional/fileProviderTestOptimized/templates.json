@@ -427,7 +427,7 @@
         "back" : ">"
       },
       "description" : "All Employees",
-      "content" : "{\"employees\":{<bookmark=\"employee\" group=\"test\" template=\"aEmployee\">\n\t}\n}",
+      "content" : "{\"employees\":[<bookmark=\"employee\" group=\"test\" template=\"aEmployee\">\n\t]\n}",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -473,6 +473,12 @@
           "onlyLast" : [],
           "ifOperator" : 1,
           "ifValue" : ""
+        },
+        {
+          "type" : 5,
+          "name" : "Save Employees File",
+          "filename" : "employees.json",
+          "clearAfter" : false
         }
       ]
     },
@@ -573,6 +579,12 @@
           "onlyLast" : [],
           "ifOperator" : 1,
           "ifValue" : ""
+        },
+        {
+          "type" : 5,
+          "name" : "Save Owners File",
+          "filename" : "owners.json",
+          "clearAfter" : false
         }
       ]
     },
