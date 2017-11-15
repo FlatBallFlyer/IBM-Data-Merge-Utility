@@ -96,7 +96,10 @@ public class All_Functional_Tests {
 		assertEquals(new String(Files.readAllBytes(new File(folder.getPath() + File.separator + "output.txt").toPath()), "ISO-8859-1"), output);
 		
 		File archive = new File(folder.getPath() + File.separator + "archive.zip");
-		File generated = new File(context.getArchive().getArchiveFile().getAbsolutePath()); 
+		File generated = new File(context.getArchive().getArchiveFile().getAbsolutePath());
+		if (archive.exists() && !generated.exists()) {
+			fail("Merge did not generate expected archive!");
+		}
 		if (generated.exists()) {
 			assertTrue(archive.exists());
 			assertArchiveEquals(archive.getAbsolutePath(), context.getArchive().getArchiveFile().getAbsolutePath());
