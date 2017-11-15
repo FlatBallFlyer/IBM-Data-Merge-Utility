@@ -40,28 +40,6 @@
           "processRequire" : true
         },
         {
-          "type" : 1,
-          "name" : "Enrich from File - all Employees",
-          "targetDataName" : "employees",
-          "targetDataDelimeter" : "-",
-          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
-          "enrichSource" : "files",
-          "enrichParameter" : "src/test/resources/functional/datafiles/",
-          "enrichCommand" : "employee.*csv",
-          "parseAs" : 1
-        },
-        {
-          "type" : 1,
-          "name" : "Enrich from File - all Owners",
-          "targetDataName" : "owners",
-          "targetDataDelimeter" : "-",
-          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
-          "enrichSource" : "files",
-          "enrichParameter" : "src/test/resources/functional/datafiles/",
-          "enrichCommand" : "owner.*xml",
-          "parseAs" : 5
-        },
-        {
           "type" : 3,
           "name" : "Parse Payload to company",
           "dataSource" : "idmuPayload",
@@ -75,6 +53,17 @@
           "dataTargetDelimiter" : "-",
           "staticData" : "",
           "parseFormat" : 3
+        },
+        {
+          "type" : 1,
+          "name" : "Enrich from File - all Data",
+          "targetDataName" : "files",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
+          "enrichSource" : "files",
+          "enrichParameter" : "src/test/resources/functional/datafiles/",
+          "enrichCommand" : "allData.json",
+          "parseAs" : 3
         },
         {
           "type" : 2,
@@ -128,7 +117,7 @@
         "back" : ">"
       },
       "description" : "A Company Record, inserts Employee, Customer and Owner",
-      "content" : "{\n\t\"company\" : \"<company>\",\n\t\"owners\" : [<bookmark=\"owners\" group=\"test\" template=\"anOwner\"> \n\t\t\t],\n\t\"employees\" : [<bookmark=\"employees\" group=\"test\" template=\"anEmployee\"> \n\t\t\t],\n\t\"customers\" : [<bookmark=\"customers\" group=\"test\" template=\"aCustomer\">\n\t\t\t]\n\t}<,>",
+      "content" : "{\n\t\"company\" : \"<company>\",\n\t\"owners\" : [<bookmark=\"owners\" group=\"test\" template=\"anOwner\"> \n\t\t\t],\n\t\"employees\" : {<bookmark=\"employees\" group=\"test\" template=\"anEmployee\"> \n\t\t\t},\n\t\"customers\" : {<bookmark=\"customers\" group=\"test\" template=\"aCustomer\">\n\t\t\t}\n\t}<,>",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -178,7 +167,7 @@
         },
         {
           "type" : 4,
-          "name" : "Replace",
+          "name" : "Replace Company info from Context",
           "dataSource" : "idmuContext",
           "dataDelimeter" : "-",
           "sourceHasTags" : false,
@@ -268,7 +257,7 @@
         "back" : ">"
       },
       "description" : "anOwner",
-      "content" : "\n\t\t{\"owner\":\"<idmuContext>\", \"type\":\"owner\", \"name\":\"<name>\", \"age\":\"<age>\"}<,>",
+      "content" : "\n\t\t{\"owner\": {\"type\":\"owner\", \"name\":\"<name>\", \"age\":\"<age>\"}}<,>",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -277,10 +266,28 @@
       "directives" : [
         {
           "type" : 4,
-          "name" : "Replace",
-          "dataSource" : "owners-<idmuContext>-value-members-[0]-attrs",
+          "name" : "Replace to get Context",
+          "dataSource" : "idmuContext",
           "dataDelimeter" : "-",
           "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false,
+          "processRequire" : false
+        },
+        {
+          "type" : 4,
+          "name" : "Replace",
+          "dataSource" : "files-allData.json-Data-theOwners-<idmuContext>",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : true,
           "ifMissing" : 1,
           "ifPrimitive" : 1,
           "ifObject" : 3,
@@ -306,7 +313,7 @@
         "back" : ">"
       },
       "description" : "anEmployee",
-      "content" : "\n\t\t{\"employee\":\"<idmuContext>\",\"type\":\"employee\", \"name\":\"<name>\", \"title\":\"< title>\", \"manager\":\"< manager>\"}<,>",
+      "content" : "\n\t\t{\"employee\": {\"type\":\"employee\", \"name\":\"<name>\", \"title\":\"<title>\", \"manager\":\"<manager>\"}}<,>",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 1,
@@ -315,10 +322,28 @@
       "directives" : [
         {
           "type" : 4,
-          "name" : "Replace idmuContext",
-          "dataSource" : "employee-<idmuContext>-value-[0]",
+          "name" : "Replace to get Context",
+          "dataSource" : "idmuContext",
           "dataDelimeter" : "-",
           "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false,
+          "processRequire" : false
+        },
+        {
+          "type" : 4,
+          "name" : "Get Employe Tags",
+          "dataSource" : "files-allData.json-Data-theEmployees-<idmuContext>",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : true,
           "ifMissing" : 1,
           "ifPrimitive" : 1,
           "ifObject" : 3,
@@ -346,7 +371,7 @@
         "back" : ">"
       },
       "description" : "Customer from Context",
-      "content" : "\n\t\t{\"customer\": \"<idmuContext>\", \"type\":\"customer\", \"name\":\"<name>\", \"address\":\"<address>\", \"age\":\"<age>\", \"bookpage\":\"<bookPage>\"}<,>",
+      "content" : "\n\t\t{\"customer\": \"<idmuContext>\", \"type\":\"customer\", \"name\":\"<name>\", \"address\":\"<address>\", \"age\":\"<age>\", \"bookpage\":\"<bookpage>\"}<,>",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -355,10 +380,28 @@
       "directives" : [
         {
           "type" : 4,
-          "name" : "Replace",
-          "dataSource" : "customer-<idmuContext>-value",
+          "name" : "Replace to get Context",
+          "dataSource" : "idmuContext",
           "dataDelimeter" : "-",
           "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false,
+          "processRequire" : false
+        },
+        {
+          "type" : 4,
+          "name" : "Replace",
+          "dataSource" : "files-allData.json-Data-theCustomers-<idmuContext>",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : true,
           "ifMissing" : 1,
           "ifPrimitive" : 1,
           "ifObject" : 3,
@@ -366,11 +409,10 @@
           "objectAttrList" : 1,
           "objectAttrObject" : 1,
           "ifList" : 1,
-          "fromAttribute" : "",
-          "toAttribute" : "",
           "listAttrMissing" : 1,
           "listAttrNotPrimitive" : 1,
-          "processAfter" : true
+          "processAfter" : true,
+          "processRequire" : true
         }
       ]
     },
@@ -385,7 +427,7 @@
         "back" : ">"
       },
       "description" : "All Employees",
-      "content" : "{\"employees\":[<bookmark=\"employee\" group=\"test\" template=\"anEmployee\">\n\t]\n}",
+      "content" : "{\"employees\":{<bookmark=\"employee\" group=\"test\" template=\"aEmployee\">\n\t}\n}",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -415,10 +457,10 @@
         {
           "type" : 2,
           "name" : "Insert Employee Records",
-          "dataSource" : "employees",
+          "dataSource" : "files-allData.json-Data-theEmployees",
           "dataDelimeter" : "-",
           "sourceHasTags" : false,
-          "ifMissing" : 1,
+          "ifMissing" : 2,
           "ifPrimitive" : 1,
           "ifObject" : 3,
           "ifList" : 1,
@@ -437,6 +479,46 @@
     {
       "id" : {
         "group" : "test",
+        "name" : "aEmployee",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "aEmployee",
+      "content" : "\n\t\t{\"employee\": {\"type\":\"employee\", \"name\":\"<name>\", \"title\":\"<title>\", \"manager\":\"<manager>\"}}<,>",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Get Employe Tags",
+          "dataSource" : "idmuContext-value",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
         "name" : "allOwners",
         "variant" : ""
       },
@@ -445,7 +527,7 @@
         "back" : ">"
       },
       "description" : "",
-      "content" : "{\"owners\":[<bookmark=\"owner\" group=\"test\" template=\"anOwner\">\n\t]\n}",
+      "content" : "{\"owners\":[<bookmark=\"owner\" group=\"test\" template=\"aOwner\">\n\t]\n}",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -475,10 +557,10 @@
         {
           "type" : 2,
           "name" : "Insert Owner Records",
-          "dataSource" : "owners",
+          "dataSource" : "files-allData.json-Data-theOwners",
           "dataDelimeter" : "-",
           "sourceHasTags" : false,
-          "ifMissing" : 1,
+          "ifMissing" : 2,
           "ifPrimitive" : 1,
           "ifObject" : 3,
           "ifList" : 1,
@@ -491,6 +573,44 @@
           "onlyLast" : [],
           "ifOperator" : 1,
           "ifValue" : ""
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "aOwner",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "aOwner",
+      "content" : "\n\t\t{\"owner\": {\"type\":\"owner\", \"name\":\"<name>\", \"age\":\"<age>\"}}<,>",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace",
+          "dataSource" : "idmuContext-value",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
         }
       ]
     }

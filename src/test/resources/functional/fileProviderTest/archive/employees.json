@@ -1,0 +1,83 @@
+{
+  "Data" : {
+    "theOwners" : {
+      "one" : {
+        "type" : "owner",
+        "name" : "Owner One",
+        "age" : "22"
+      },
+      "two" : {
+        "type" : "owner",
+        "name" : "Owner Two",
+        "age" : "82"
+      },
+      "three" : {
+        "type" : "owner",
+        "name" : "Owner Three",
+        "age" : "52"
+      }
+    },
+    "theEmployees" : {
+      "001" : {
+        "type" : "employee",
+        "name" : "Mike",
+        "title" : " CTO",
+        "manager" : " Fred"
+      },
+      "002" : {
+        "type" : "employee",
+        "name" : "Fred",
+        "title" : " CEO",
+        "manager" : " Board"
+      },
+      "003" : {
+        "type" : "employee",
+        "name" : "Alexander",
+        "title" : " Manager",
+        "manager" : " James"
+      },
+      "004" : {
+        "type" : "employee",
+        "name" : "James",
+        "title" : " COO",
+        "manager" : " Fred"
+      },
+      "005" : {
+        "type" : "employee",
+        "name" : "Ethan",
+        "title" : " CIO",
+        "manager" : " Fred"
+      },
+      "006" : {
+        "type" : "employee",
+        "name" : "William",
+        "title" : " Bookeeper",
+        "manager" : " Mason"
+      },
+      "007" : {
+        "type" : "employee",
+        "name" : "Jacob",
+        "title" : " Accountant",
+        "manager" : " Mason"
+      },
+      "008" : {
+        "type" : "employee",
+        "name" : "Mason",
+        "title" : " CFO",
+        "manager" : " Fred"
+      },
+      "009" : {
+        "type" : "employee",
+        "name" : "Liam",
+        "title" : " Coder",
+        "manager" : " Mike"
+      },
+      "010" : {
+        "type" : "employee",
+        "name" : "Noah",
+        "title" : " Coder",
+        "manager" : " Mike"
+      }
+    }
+  }
+}

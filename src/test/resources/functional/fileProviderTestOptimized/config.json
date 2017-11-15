@@ -1,6 +1,6 @@
 {
   "tempFolder" : "src/test/resources/temp",
-  "loadFolder" : "src/test/resources/functional/fileProviderTest",
+  "loadFolder" : "src/test/resources/functional/fileProviderTestOptimized",
   "logLevel" : "SEVERE",
   "nestLimit" : 3,
   "insertLimit" : 20,

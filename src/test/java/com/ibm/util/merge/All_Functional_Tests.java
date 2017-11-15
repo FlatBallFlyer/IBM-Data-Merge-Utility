@@ -61,6 +61,18 @@ public class All_Functional_Tests {
 		testTemplate(new File("src/test/resources/functional/fileProviderTestOptimized"));
 	}
 	
+	@Test
+	public void testOptimized() throws Throwable {
+		Long startFile = System.currentTimeMillis();
+		testTemplate(new File("src/test/resources/functional/fileProviderTest"));
+		Long endFile = System.currentTimeMillis();
+
+		Long startOpt = System.currentTimeMillis();
+		testTemplate(new File("src/test/resources/functional/fileProviderTestOptimized"));
+		Long endOpt = System.currentTimeMillis();
+		
+		assertTrue((endOpt-startOpt) < (endFile-startFile));
+	}
 	/*
 	 * Folder should contain the following files
 	 * - templates.json - the testing templates, with the root templaet test..
