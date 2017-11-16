@@ -2,14 +2,11 @@ package com.ibm.util.merge;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
-
 import org.junit.*;
 
 import com.google.gson.JsonElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface;
 
 public class ConfigTest {
 	private transient static final DataProxyJson proxy = new DataProxyJson();
@@ -57,19 +54,6 @@ public class ConfigTest {
 	}
 
 	@Test
-	public void testDefaultProviders() throws MergeException {
-		HashMap<String, Class<ProviderInterface>> providers = Config.providers(); 
-		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.CacheProvider"));
-		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.CloudantProvider"));
-		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider"));
-		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider"));
-		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.JndiProvider"));
-		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.MongoProvider"));
-		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.RestProvider"));
-		assertTrue(providers.containsKey("com.ibm.util.merge.template.directive.enrich.provider.StubProvider"));
-	}
-	
-	@Test
 	public void testCustomProviders() throws MergeException {
 		String configString = "{ \"tempFolder\" : \"/opt/ibm/idmu/archives\", " +
 			" \"loadFolder\" : \"src/test/resources/functional/fileProviderTest\"," +
@@ -84,51 +68,47 @@ public class ConfigTest {
 			" }" +
 			"}";
 		Config.load(configString);
-		assertEquals(1, Config.providers().size());
-		assertTrue(Config.providers().containsKey("com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider"));
+		assertTrue(Config.hasProvider("com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider"));
 	}
 	
 	@Test
-	public void testGetSetTempFolder() throws MergeException {
-		Config config = new Config();
-		config.setTempFolder("Foo");
-		assertEquals("Foo", config.getTempFolder());
+	public void testGetTempFolder() throws MergeException {
+		assertEquals("/opt/ibm/idmu/archives", Config.tempFolder());
+		String configString = 
+				"{\"tempFolder\": \"Bar\"}";
+		Config.load(configString);
+		assertEquals("Bar", Config.tempFolder());
 	}
 
 	@Test
-	public void testGetSetNestLimit() throws MergeException {
-		Config config = new Config();
+	public void testGetNestLimit() throws MergeException {
 		assertEquals(2, Config.nestLimit());
-		config.setNestLimit(44);
-		assertEquals(44, config.getNestLimit());
+		Config.load("{\"nestLimit\": \"44\"}");
+		assertEquals(44, Config.nestLimit());
 	}
 
 	@Test
 	public void testGetSetInsertLimit() throws MergeException {
-		Config config = new Config();
-		assertEquals(20, config.getInsertLimit());
-		config.setInsertLimit(44);
-		assertEquals(44, config.getInsertLimit());
+		assertEquals(20, Config.insertLimit());
+		Config.load("{\"nestLimit\": 44}");
+		assertEquals(44, Config.nestLimit());
 	}
 
 	@Test
 	public void testGetEnv1() throws MergeException {
-		Config config = new Config();
-		config.getEnvVars().put("Test", "Foo");
-		assertEquals("Foo", config.getEnv("Test"));
+		Config.load("{\"envVars\":{\"Test\":[\"Foo\"]}}");
+		assertEquals("Foo", Config.env("Test"));
 	}
 
 	@Test
 	public void testGetEnv2() throws MergeException {
-		Config config = new Config();
-		config.getEnvVars().put("VCAP_SERVICES", "{\"SERVICE_NAME\":[\"Some Service JSON\"]}");
-		assertEquals("\"Some Service JSON\"", config.getEnv("VCAP:SERVICE_NAME"));
+		Config.load("{\"envVars\":{\"VCAP_SERVICES\":\"{\\\"SERVICE_NAME\\\":[\\\"Some Service JSON\\\"]}\"}}");
+		assertEquals("\"Some Service JSON\"", Config.env("VCAP:SERVICE_NAME"));
 	}
 
 	@Test
 	public void testGetEnv4() throws MergeException {
-		Config config = new Config();
-		config.getEnvVars().put("VCAP_SERVICES", "{\"SERVICE_NAME\":[\"Some Service JSON\"]}");
+		Config.load("{\"envVars\":{\"VCAP_SERVICES\":\"{\\\"SERVICE_NAME\\\":[\\\"Some Service JSON\\\"]}\"}}");
 		try {
 			Config.env("VCAP:FOO");
 		} catch (MergeException e) {
@@ -140,8 +120,7 @@ public class ConfigTest {
 
 	@Test
 	public void testGetEnv5() throws MergeException {
-		Config config = new Config();
-		config.getEnvVars().put("VCAP_SERVICES", "{\"SERVICE_NAME\":\"Some Service JSON\"}");
+		Config.load("{\"envVars\":{\"VCAP_SERVICES\":\"{\\\"SERVCE_NAME\\\":[\\\"Some Service JSON\\\"]}\"}}");
 		try {
 			Config.env("VCAP:SERVICE_NAME");
 		} catch (MergeException e) {

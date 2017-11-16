@@ -155,6 +155,15 @@ public class Config {
 	}
 
 	/**
+	 * @param key The provider to lookup
+	 * @return if the provider is registered
+	 * @throws MergeException
+	 */
+	public static boolean hasProvider(String key) throws MergeException{
+		return Config.get().providers.containsKey(key);
+	}
+	
+	/**
 	 * @param className The provider class name
 	 * @param source The source name
 	 * @param option The source option
@@ -184,17 +193,8 @@ public class Config {
 		return Config.get().getAllOptions();
 	}
 
-	/**
-	 * @return The Providers hashmap
-	 * @throws MergeException on Processing Errors
-	 */
-	public static HashMap<String, Class<ProviderInterface>> providers() throws MergeException {
-		return Config.get().getProviders();
-	}
-	
-
 	/* *********************************************************
-	 * End of Static Convenience accessor's, Normal Non-Static Object Attributes and Methods
+	 * End of Static Convenience accessor's, Normal Instance Attributes and Methods below
 	 */
 	/**
 	 * The IDMU Version
@@ -261,7 +261,7 @@ public class Config {
 	 * 
 	 * @throws MergeException on Processing Errors
 	 */
-	public Config() throws MergeException {
+	private Config() throws MergeException {
 		this.proxies = new HashMap<Integer, ParserProxyInterface>();
 		this.providers = new HashMap<String, Class<ProviderInterface>>();
 		String configString = "";
@@ -281,7 +281,7 @@ public class Config {
 	 * @param configString The configuration JSON
 	 * @throws MergeException on Processing Errors
 	 */
-	public Config(String configString) throws MergeException {
+	private Config(String configString) throws MergeException {
 		this.proxies = new HashMap<Integer, ParserProxyInterface>();
 		this.providers = new HashMap<String, Class<ProviderInterface>>();
 	    Logger rootLogger = LogManager.getLogManager().getLogger("");
@@ -295,7 +295,7 @@ public class Config {
 	 * @param configFile The configuration file
 	 * @throws MergeException on Processing Errors
 	 */
-	public Config(File configFile) throws MergeException {
+	private Config(File configFile) throws MergeException {
 		this.proxies = new HashMap<Integer, ParserProxyInterface>();
 		this.providers = new HashMap<String, Class<ProviderInterface>>();
 		String configString;
@@ -317,7 +317,7 @@ public class Config {
 	 * @param url The URL to fetch a config from
 	 * @throws MergeException on Processing Errors
 	 */
-	public Config(URL url) throws MergeException {
+	private Config(URL url) throws MergeException {
 		this.proxies = new HashMap<Integer, ParserProxyInterface>();
 		this.providers = new HashMap<String, Class<ProviderInterface>>();
 		String configString = ""; // TODO HTTP Get of ConfigString
@@ -332,7 +332,7 @@ public class Config {
 	 * @param configString The configuration JSON
 	 * @throws MergeException on Processing Errors
 	 */
-	public void loadConfig(String configString) throws MergeException {
+	private void loadConfig(String configString) throws MergeException {
 		if (null != configString) {
 			JsonElement ele = proxy.fromString(configString, JsonElement.class);
 			if (null != ele && ele.isJsonObject()) {
@@ -400,7 +400,7 @@ public class Config {
 	 * @return The environment value
 	 * @throws MergeException on Processing Errors
 	 */
-	public String getEnv(String name) throws MergeException {
+	private String getEnv(String name) throws MergeException {
 		if (envVars.containsKey(name)) {
 			return envVars.get(name);
 		}
@@ -438,29 +438,15 @@ public class Config {
 	}
 	
 	// Parser Management
-	public ParserProxyInterface getProxyInstance(int parseAs) throws MergeException {
-		Integer proxy = new Integer(parseAs);
-		if (!this.proxies.containsKey(proxy)) {
-			throw new Merge500("Provider not found, did you register it?");
-		}
-		return this.proxies.get(proxy);
-	}
-
-	public void registerDefaultProxies() throws MergeException {
+	private void registerDefaultProxies() throws MergeException {
 		proxies = new HashMap<Integer, ParserProxyInterface>();
 		for (String proxy : this.defaultParsers) {
 			registerProxy(proxy);
 		}
 	}
 
-	public void registerProxies(String[] proxies) throws MergeException {
-		for (String proxy : proxies) {
-			registerProxy(proxy);
-		}
-	}
-	
 	@SuppressWarnings("unchecked")
-	public void registerProxy(String className) throws MergeException {
+	private void registerProxy(String className) throws MergeException {
 		Class<ParserProxyInterface> clazz;
 		ParserProxyInterface theProxy;
 		try {
@@ -476,7 +462,7 @@ public class Config {
 		}
 	}
 	
-	public DataElement parseString(int parseAs, String value) throws MergeException {
+	private DataElement parseString(int parseAs, String value) throws MergeException {
 		Integer key = new Integer(parseAs);
 		if (parseAs == Config.PARSE_NONE) {
 			throw new Merge500("Parse Type is None!");
@@ -492,7 +478,7 @@ public class Config {
 	}
 	
 	// Provider Management
-	public ProviderInterface getProviderInstance(String className, String source, String option, Merger context) throws MergeException {
+	private ProviderInterface getProviderInstance(String className, String source, String option, Merger context) throws MergeException {
 		if (!this.providers.containsKey(className)) {
 			throw new Merge500("Provider not found, did you register it?");
 		}
@@ -522,21 +508,15 @@ public class Config {
 		return theProvider;
 	}
 	
-	public void registerDefaultProviders() throws MergeException {
+	private void registerDefaultProviders() throws MergeException {
 		providers = new HashMap<String, Class<ProviderInterface>>();
 		for (String provider : this.defaultProviders) {
 			registerProvider(provider);
 		}
 	}
 
-	public void registerProviders(String[] providers) throws MergeException {
-		for (String provider : providers) {
-			registerProvider(provider);
-		}
-	}
-	
 	@SuppressWarnings("unchecked")
-	public void registerProvider(String className) throws MergeException {
+	private void registerProvider(String className) throws MergeException {
 		Class<ProviderInterface> clazz;
 		try {
 			clazz = (Class<ProviderInterface>) Class.forName(className);
@@ -546,34 +526,18 @@ public class Config {
 		}
 	}
 	
-	// Simple Getter/Setter below here
-	
+//	// Simple Getters below here
+//	
 	public String getTempFolder() {
 		return tempFolder;
 	}
 
-	public void setTempFolder(String tempFolder) {
-		this.tempFolder = tempFolder;
-	}
-	
 	public int getNestLimit() {
 		return nestLimit;
 	}
 	
-	public void setNestLimit(int limit) {
-		this.nestLimit = limit;
-	}
-	
 	public int getInsertLimit() {
 		return insertLimit;
-	}
-
-	public void setInsertLimit(int insertLimit) {
-		this.insertLimit = insertLimit;
-	}
-
-	public HashMap<String, String> getEnvVars() {
-		return envVars;
 	}
 
 	public String getVersion() {
@@ -584,22 +548,6 @@ public class Config {
 		return loadFolder;
 	}
 
-	public void setLoadFolder(String loadFolder) {
-		this.loadFolder = loadFolder;
-	}
-	
-	public String getLogLevel() {
-		return this.logLevel;
-	}
-	
-	public void setLogLevel(String level) {
-		this.logLevel = level;
-	}
-	
-	public HashMap<String, Class<ProviderInterface>> getProviders() {
-		return this.providers;
-	}
-	
 	/*
 	 * Constants and Options
 	 */
