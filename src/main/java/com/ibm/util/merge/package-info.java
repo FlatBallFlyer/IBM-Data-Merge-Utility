@@ -16,19 +16,23 @@
  */
 /**
  * Usage:
- * 		// Get a config object
- * 		Config config = new Config();
+ *  // Optionally initialize a configuration
+ *  Config.load(String, File or URL)
+ *  
+ *  // Create a template cache
+ *  TemplateCache cache = new TemplateCache();
+ *  
+ *  // Get a Merger for your template
+ *  Merger merger = new Merger(cache, "some.template.name");
+ *  
+ *  // Merge the template and get the output content
+ *  Template template = merger.merge();
+ *  
+ *  // Process the output
+ *  template.getMergedOutput().getValue() - as a string
+ *  template.getMergedOutput().streamOutput(stream) - as an output stream
  * 
- * 		// Create and Load a template cache
- * 		TemplateCache cache = new TemplateCache(config);
- * 		cache.post(some templates);
- * 
- *		// Get a Merger and Merge the template
- * 		Merger merger = new Merger(cache, config, "template.name.");
- * 
- * 		String output = merger.getMergedOutput().getValue();
- * 
- * @author mikestorey
+ * @author Mike Storey
  *
  */
 package com.ibm.util.merge;

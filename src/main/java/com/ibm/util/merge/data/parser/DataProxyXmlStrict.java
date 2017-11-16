@@ -61,9 +61,9 @@ public class DataProxyXmlStrict implements ParserProxyInterface {
     /**
      * Parse the XML content into a Data Element
      * 
-     * @param xmlString
-     * @return
-     * @throws MergeException
+     * @param xmlString the String to parse
+     * @return the parsed object
+     * @throws MergeException on processing errors
      */
     public DataElement fromString(String xmlString) throws MergeException {
         Document doc = null;

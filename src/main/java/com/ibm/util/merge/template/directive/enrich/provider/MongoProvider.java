@@ -22,7 +22,6 @@ import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
-import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
@@ -57,15 +56,14 @@ public class MongoProvider implements ProviderInterface {
 	private final String dbName;
 	private transient final Merger context;
 	private transient String connection = null; // TODO Mongo Connection type
-	private transient final Parser parser = new Parser();
 	
 	/**
 	 * Instantiate the provider and get the db connection
 	 * 
-	 * @param source
-	 * @param dbName
-	 * @param context
-	 * @throws MergeException
+	 * @param source The Data Source
+	 * @param dbName The DB Name
+	 * @param context The Merge Context
+	 * @throws MergeException  on processing errors
 	 */
 	public MongoProvider(String source, String dbName, Merger context) throws MergeException {
 		this.source = source;
@@ -98,7 +96,7 @@ public class MongoProvider implements ProviderInterface {
 		String results = ""; // TODO - Make Mongo Call
 		
 		if (parseAs != Config.PARSE_NONE) {
-			result = parser.parse(parseAs, results);
+			result = Config.parse(parseAs, results);
 		}
 		return result;
 	}

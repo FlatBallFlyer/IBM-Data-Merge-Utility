@@ -43,9 +43,9 @@ public class DataManager {
 	/**
 	 * Test if Data Manager has an element at the provide address
 	 * 
-	 * @param address
-	 * @param delimiter
-	 * @return
+	 * @param address The address to lookup
+	 * @param delimiter The delimiter used in the address
+	 * @return true if the manager contains the element
 	 */
 	public boolean contians(String address, String delimiter) {
 		Path path = new Path(address, delimiter);
@@ -64,10 +64,10 @@ public class DataManager {
 	/**
 	 * Get a value from the data manager based on the provided address
 	 * 
-	 * @param address
-	 * @param delimiter
-	 * @return
-	 * @throws MergeException
+	 * @param address The address to lookup
+	 * @param delimiter The delimiter used in the address
+	 * @return the data element
+	 * @throws MergeException when no context exists
 	 */
 	public DataElement get(String address, String delimiter) throws MergeException {
 		if (address.equals(Merger.IDMU_CONTEXT)) {
@@ -86,10 +86,10 @@ public class DataManager {
 	 * approach to adding values. If the value already exists as a non-list element it 
 	 * will converted to a list and this value added to that list. 
 	 * 
-	 * @param address
-	 * @param delimiter
-	 * @param value
-	 * @throws MergeException
+	 * @param address The address to put
+	 * @param delimiter The delimiter used in the address
+	 * @param value The data to put in the manager
+	 * @throws MergeException on processing errors
 	 */
 	public void put(String address, String delimiter, DataElement value) throws MergeException {
 		Path path = new Path(address, delimiter);
@@ -109,10 +109,10 @@ public class DataManager {
 	/**
 	 * Convenience method to add the HTTP Request Parameters to the data manager
 	 * 
-	 * @param address
-	 * @param delimiter
-	 * @param parameterMap
-	 * @throws MergeException
+	 * @param address The address where the object is to be put
+	 * @param delimiter The delimiter used in the address
+	 * @param parameterMap A HTTP Request Parameters object (Map of String,String[])
+	 * @throws MergeException on processing errors
 	 */
 	public void put(String address, String delimiter, Map<String, String[]> parameterMap) throws MergeException {
 		DataObject parameters = new DataObject();
@@ -129,10 +129,10 @@ public class DataManager {
 	/**
 	 * Convenience method to add a primitive value
 	 * 
-	 * @param address
-	 * @param delimiter
-	 * @param value
-	 * @throws MergeException
+	 * @param address The address where the object is to be put
+	 * @param delimiter The delimiter used in the address
+	 * @param value The value to put
+	 * @throws MergeException when errors occur
 	 */
 	public void put(String address, String delimiter, String value) throws MergeException {
 		DataPrimitive primitiveValue = new DataPrimitive(value);
@@ -142,9 +142,9 @@ public class DataManager {
 	/**
 	 * Convenience method to add a value with the default path separator
 	 * 
-	 * @param path
-	 * @param value
-	 * @throws MergeException
+	 * @param path Path to use
+	 * @param value Value to put
+	 * @throws MergeException on processing errors
 	 */
 	public void put(Path path, DataElement value) throws MergeException {
 		put(path.getPath(), path.getSeparator(), value);
@@ -153,10 +153,10 @@ public class DataManager {
 	/**
 	 * Get a value from the data manger from the provided address.
 	 * 
-	 * @param path
-	 * @param to
-	 * @return
-	 * @throws MergeException
+	 * @param path The path to the data requested
+	 * @param to Limit the search to the first N path parts
+	 * @return the element requested
+	 * @throws MergeException on processing errors
 	 */
 	private DataElement getElement(Path path, int to) throws MergeException {
 		DataElement entry = null;

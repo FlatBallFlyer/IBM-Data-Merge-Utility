@@ -42,7 +42,8 @@ import com.ibm.util.merge.template.directive.SaveFile;
 /**
  * The Class TemplateCache provides a cache of all templates used in the
  * merge process. The cache has get / put / post / delete method that 
- * should map to a Rest Interface.
+ * should map to a Rest Interface. Initial templates are loaded from the
+ * configured Config.loadFolder if it exists. 
  * 
  * @author Mike Storey
  * @since: v4.0
@@ -59,8 +60,7 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Instantiates a new template cache.
 	 *
-	 * @param persist the persist
-	 * @throws MergeException 
+	 * @throws MergeException  on processing errors
 	 */
 	public TemplateCache() throws MergeException {
 		this.cache = new HashMap<String, Template>();
@@ -90,6 +90,10 @@ public class TemplateCache implements Iterable<String> {
 		}
 	}
 	
+	/**
+	 * Build the system default templates (exception handling)
+	 * @throws MergeException  on processing errors
+	 */
 	private void buildDefaultTemplates() throws MergeException {
 		// Build Default Templates
 		Template error403 = new Template("system","error403","","Error - Forbidden");
@@ -110,10 +114,12 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Gets a mergable template - getting the default template if the primary template does not exist.
 	 *
-	 * @param id the id
-	 * @param replace the replace
-	 * @return the mergable
-	 * @throws MergeException 
+	 * @param context The Merge Context
+	 * @param templateShortname The Template Name
+	 * @param templateDefault The Default template to use if Name not found
+	 * @param replace The initial replace stack to be added to the template
+	 * @return the Mergable template
+	 * @throws MergeException on processing errors
 	 */
 	public Template getMergable(Merger context, String templateShortname, String templateDefault, HashMap<String,String> replace) throws MergeException {
 		if (cache.containsKey(templateShortname)) {
@@ -131,10 +137,11 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Gets a mergable template
 	 *
-	 * @param id the id
-	 * @param replace the replace
-	 * @return the mergable
-	 * @throws MergeException 
+	 * @param context The Merge Context
+	 * @param templateShortname Template Name
+	 * @param replace Replace Stack to initialize
+	 * @return the Mergable template
+	 * @throws MergeException on processing errors
 	 */
 	public Template getMergable(Merger context, String templateShortname, HashMap<String,String> replace) throws MergeException {
 		if (!cache.containsKey(templateShortname)) {
@@ -148,10 +155,10 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Get a mergable template with an empty replace stack
 	 * 
-	 * @param context
-	 * @param templateShortname
-	 * @return
-	 * @throws MergeException
+	 * @param context The Merge Context
+	 * @param templateShortname The template name
+	 * @return The Mergable template
+	 * @throws MergeException on processing errors
 	 */
 	public Template getMergable(Merger context, String templateShortname) throws MergeException {
 		return getMergable(context, templateShortname, new HashMap<String,String>());
@@ -162,6 +169,7 @@ public class TemplateCache implements Iterable<String> {
 	 *
 	 * @param templateJson the template json
 	 * @return the string
+	 * @throws MergeException on processing errors
 	 */
 	public String postTemplate(String templateJson) throws MergeException {
 		Template template;
@@ -177,7 +185,7 @@ public class TemplateCache implements Iterable<String> {
 	 *
 	 * @param template the template 
 	 * @return the string
-	 * @throws MergeException 
+	 * @throws MergeException  on processing errors
 	 */
 	public String postTemplate(Template template) throws MergeException {
 		String name = template.getId().shorthand();
@@ -192,7 +200,7 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Gets the template.
 	 *
-	 * @param templateIdJson the template id 
+	 * @param shortHand the Template Name
 	 * @return the template
 	 */
 	public String getTemplate(String shortHand) {
@@ -204,8 +212,8 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Gets the template.
 	 *
-	 * @param templateId the template id 
-	 * @return the template
+	 * @param id the template id 
+	 * @return the template List
 	 */
 	public TemplateList getTemplates(TemplateId id) {
 		TemplateList templates = new TemplateList();
@@ -224,7 +232,7 @@ public class TemplateCache implements Iterable<String> {
 	 *
 	 * @param templateJson the template json
 	 * @return the string
-	 * @throws MergeException 
+	 * @throws MergeException  on processing errors
 	 */
 	public String putTemplate(String templateJson) throws MergeException {
 		Template template = gsonProxy.fromString(templateJson, Template.class);
@@ -239,7 +247,7 @@ public class TemplateCache implements Iterable<String> {
 	 *
 	 * @param template the template 
 	 * @return the string
-	 * @throws Merge404 
+	 * @throws MergeException when template not found in cache
 	 */
 	public String putTemplate(Template template) throws MergeException {
 		String name = template.getId().shorthand();
@@ -254,8 +262,9 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Delete template.
 	 *
-	 * @param templateIdJson the template id 
+	 * @param shorthand the template id 
 	 * @return the string
+	 * @throws MergeException  on processing errors
 	 */
 	public String deleteTemplate(String shorthand) throws MergeException {
 		TemplateId id = new TemplateId(shorthand);
@@ -266,8 +275,9 @@ public class TemplateCache implements Iterable<String> {
 	/**
 	 * Delete template.
 	 *
-	 * @param templateIdJson the template id 
-	 * @return the string
+	 * @param id The template id 
+	 * @return The success message
+	 * @throws MergeException  on processing errors
 	 */
 	public String deleteTemplate(TemplateId id) throws MergeException {
 		if (!cache.containsKey(id.shorthand())) {
@@ -295,7 +305,7 @@ public class TemplateCache implements Iterable<String> {
 	 *
 	 * @param groupJson the group json
 	 * @return the string
-	 * @throws MergeException 
+	 * @throws MergeException  on processing errors
 	 */
 	public String postGroup(String groupJson) throws MergeException {
 		TemplateList templates = gsonProxy.fromString(groupJson, TemplateList.class);
@@ -341,7 +351,7 @@ public class TemplateCache implements Iterable<String> {
 	 *
 	 * @param groupJson the group json
 	 * @return the string
-	 * @throws MergeException 
+	 * @throws MergeException  on processing errors
 	 */
 	public String putGroup(String groupJson) throws MergeException {
 		TemplateList templates = gsonProxy.fromString(groupJson, TemplateList.class);
@@ -367,7 +377,7 @@ public class TemplateCache implements Iterable<String> {
 	 *
 	 * @param groupName the group name
 	 * @return the string
-	 * @throws MergeException 
+	 * @throws MergeException  on processing errors
 	 */
 	public String deleteGroup(String groupName) throws MergeException {
 		if (groupName.equals("system")) {
@@ -401,7 +411,7 @@ public class TemplateCache implements Iterable<String> {
 	}
 
 	/**
-	 * @param key
+	 * @param key Template ID
 	 * @return if cache contains a template
 	 */
 	public boolean contains(String key) {

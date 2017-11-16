@@ -73,13 +73,23 @@ public class Replace extends AbstractDataDirective {
 	/**
 	 * Instantiate a Replace directive with the provided values
 	 * 
-	 * @param source
-	 * @param delimeter
-	 * @param missing
-	 * @param primitive
-	 * @param object
-	 * @param list
-	 * @param process
+	 * @param source The Data Source
+	 * @param delimeter The Delimiter used in Source
+	 * @param hasTags Indicates the data source has replace tags
+	 * @param missing The If Missing option
+	 * @param primitive The If Primitive option
+	 * @param to The replace To value for If Primitive operator
+	 * @param object The If Object option
+	 * @param objectAttrPrimitive Object Attr Primitive option
+	 * @param objectAttrList Object Attr List option
+	 * @param objectAttrObject Object Attr Object option
+	 * @param list The If List option
+	 * @param fromAttr The list from attribute
+	 * @param toAttr The list to attribute
+	 * @param listAttrMissing Attr missing option
+	 * @param listAttrNotPrimitive Attr not primitive option
+	 * @param process Process after indicator
+	 * @param require The require all tags indicator
 	 */
 	public Replace(String source, String delimeter, boolean hasTags, String to, int missing, int primitive, 
 			int object, int objectAttrPrimitive, int objectAttrList, int objectAttrObject, 
@@ -374,21 +384,21 @@ public class Replace extends AbstractDataDirective {
 	}
 
 	/**
-	 * @param toAttribute
+	 * @param toAttribute The attribute that has To values
 	 */
 	public void setToAttribute(String toAttribute) {
 		this.toAttribute = toAttribute;
 	}
 
 	/**
-	 * @param fromAttribute
+	 * @param fromAttribute The attribute that has From values
 	 */
 	public void setFromAttribute(String fromAttribute) {
 		this.fromAttribute = fromAttribute;
 	}
 
 	/**
-	 * @param processAfter
+	 * @param processAfter Process Replace Stack after adding values
 	 */
 	public void setProcessAfter(boolean processAfter) {
 		this.processAfter = processAfter;

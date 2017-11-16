@@ -43,10 +43,10 @@ public class CacheProvider implements ProviderInterface {
 	
 	/**
 	 * Instantiate a Cache Provider
-	 * @param source
-	 * @param dbName
-	 * @param context
-	 * @throws MergeException
+	 * @param source The source name (ignored)
+	 * @param dbName The dbName (ignored)
+	 * @param context The Merge Context
+	 * @throws MergeException Never
 	 */
 	public CacheProvider(String source, String dbName, Merger context) throws MergeException {
 		this.source = source;

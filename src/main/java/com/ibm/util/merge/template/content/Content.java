@@ -45,10 +45,10 @@ public class Content extends Segment {
 	/**
 	 * Instantiate a content object
 	 * 
-	 * @param wrapper
-	 * @param content
-	 * @param encodeDefault
-	 * @throws Merge500
+	 * @param wrapper Content wrapper used
+	 * @param content Content to parse
+	 * @param encodeDefault Encoding default
+	 * @throws Merge500 on processing errors
 	 */
 	public Content(Wrapper wrapper, String content, int encodeDefault) throws Merge500 {
 		initialize(wrapper.front, wrapper.back, content, encodeDefault);
@@ -57,11 +57,11 @@ public class Content extends Segment {
 	/**
 	 * Instantiate a content object
 	 * 
-	 * @param open
-	 * @param close
-	 * @param content
-	 * @param encodeDefault
-	 * @throws Merge500
+	 * @param open The open wrapper
+	 * @param close The close wrapper
+	 * @param content The content to parse
+	 * @param encodeDefault The encoding default
+	 * @throws Merge500 on processing errors
 	 */
 	public Content(String open, String close, String content, int encodeDefault) throws Merge500 {
 		initialize(open, close, content, encodeDefault);
@@ -82,11 +82,11 @@ public class Content extends Segment {
 	}
 	/**
 	 * Common initialization - Parse content
-	 * @param open
-	 * @param close
-	 * @param content
-	 * @param encodeDefault
-	 * @throws Merge500
+	 * @param open The open wrapper
+	 * @param close The close wrapper
+	 * @param content The content to parse
+	 * @param encodeDefault The encoding default
+	 * @throws Merge500 on processing errors
 	 */
 	private void initialize(String open, String close, String content, int encodeDefault) throws Merge500 {
 		this.source = content;
@@ -136,8 +136,8 @@ public class Content extends Segment {
 	/**
 	 * Write the content to an output stream
 	 * 
-	 * @param stream
-	 * @throws Merge500
+	 * @param stream The stream to write to
+	 * @throws Merge500 on processing errors
 	 */
 	public void streamValue(OutputStream stream) throws Merge500 {
 		Segment seg = this.getFirst();
@@ -154,10 +154,10 @@ public class Content extends Segment {
 	/**
 	 * Replace all Tag's with values from Replace
 	 * 
-	 * @param replace
-	 * @param softFail
-	 * @param nestLimit
-	 * @throws Merge500
+	 * @param replace From/To values for replace
+	 * @param require Require all tags
+	 * @param nestLimit Tag Replace nesting limit
+	 * @throws Merge500 on processing errors
 	 */
 	public void replace(HashMap<String,String> replace, boolean require, int nestLimit) throws Merge500 {
 		Segment seg = this.getFirst();
@@ -172,7 +172,7 @@ public class Content extends Segment {
 	/**
 	 * Remove all bookmarks (called prior to inserting sub-template
 	 * 
-	 * @throws Merge500
+	 * @throws Merge500 on Processing Errors
 	 */
 	public void removeBookmarks() throws Merge500 {
 		Segment seg = this.getFirst();
@@ -187,7 +187,7 @@ public class Content extends Segment {
 
 	/**
 	 * Get list of Tag segments
-	 * @return
+	 * @return Tag List
 	 */
 	public ArrayList<TagSegment> getTags() {
 		ArrayList<TagSegment> tags = new ArrayList<TagSegment>();
@@ -203,7 +203,7 @@ public class Content extends Segment {
 
 	/**
 	 * Get list of Bookmark Segments
-	 * @return
+	 * @return Bookmark List
 	 */
 	public ArrayList<BookmarkSegment> getBookmarks() {
 		ArrayList<BookmarkSegment> bookmarks = new ArrayList<BookmarkSegment>();
@@ -219,7 +219,7 @@ public class Content extends Segment {
 
 	/**
 	 * Get list of Text Segments
-	 * @return
+	 * @return Segment List
 	 */
 	public ArrayList<TextSegment> getTexts() {
 		ArrayList<TextSegment> texts = new ArrayList<TextSegment>();

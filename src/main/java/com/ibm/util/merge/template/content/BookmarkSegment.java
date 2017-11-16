@@ -47,8 +47,8 @@ public class BookmarkSegment extends Segment {
 	/**
 	 * Instantiate a Bookmark Object
 	 * 
-	 * @param source
-	 * @throws Merge500
+	 * @param source The text to be parsed
+	 * @throws Merge500 on processing errors
 	 */
 	public BookmarkSegment(String source) throws Merge500 {
 		super();
@@ -94,9 +94,9 @@ public class BookmarkSegment extends Segment {
 	/**
 	 * Get the template to insert 
 	 * 
-	 * @param value
-	 * @return
-	 * @throws MergeException
+	 * @param value Current data context
+	 * @return the Template Shorthand to insert
+	 * @throws MergeException on processing errors
 	 */
 	public String getTemplateShorthand(DataElement value) throws MergeException {
 		String reply = getDefaultShorthand();

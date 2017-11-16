@@ -66,7 +66,7 @@ public abstract class Segment {
 	/**
 	 * Insert a Segment ahead of this
 	 * 
-	 * @param newSeg
+	 * @param newSeg The segment to insert
 	 */
 	public void insert(Segment newSeg) {
 		newSeg.next = this;
@@ -80,7 +80,7 @@ public abstract class Segment {
 	/**
 	 * Insert Content ahead of this
 	 * 
-	 * @param newSeg
+	 * @param newSeg The Content to insert
 	 */
 	public void insert(Content newSeg) {
 		for (BookmarkSegment seg : newSeg.getBookmarks()) {
@@ -102,7 +102,7 @@ public abstract class Segment {
 	/**
 	 * Append a segment after this
 	 * 
-	 * @param newSeg
+	 * @param newSeg The segment to append
 	 */
 	public void append(Segment newSeg) {
 		newSeg.next = this.next;
@@ -116,7 +116,7 @@ public abstract class Segment {
 	/**
 	 * Append content after this
 	 * 
-	 * @param newSeg
+	 * @param newSeg The Content to append
 	 */
 	public void append(Content newSeg) {
 		for (BookmarkSegment seg : newSeg.getBookmarks()) {
@@ -143,7 +143,7 @@ public abstract class Segment {
 	/**
 	 * Replace with new Segment
 	 * 
-	 * @param 
+	 * @param newSeg The segment to take my place
 	 */
 	public void replaceWith(Segment newSeg) {
 		if (null != this.getPrevious()) {
@@ -159,7 +159,7 @@ public abstract class Segment {
 	/**
 	 * Replace with provided segment
 	 * 
-	 * @param newContent
+	 * @param newContent the new Content
 	 */
 	public void replaceWith(Content newContent) {
 		if (null != this.getPrevious()) this.getPrevious().setNext(newContent.getFirst());
@@ -185,7 +185,7 @@ public abstract class Segment {
 	/**
 	 * Set previous segment
 	 * 
-	 * @param previous
+	 * @param previous The previous segment in the list
 	 */
 	public void setPrevious(Segment previous) {
 		if (previous != null) {
@@ -196,7 +196,7 @@ public abstract class Segment {
 	/**
 	 * Set next segment
 	 * 
-	 * @param next
+	 * @param next The next segment in the list
 	 */
 	public void setNext(Segment next) {
 		if (next != null) {

@@ -49,12 +49,13 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	
 	/**
 	 * Instantiate a Data Directive with provided values
-	 * @param source
-	 * @param delimeter
-	 * @param missing
-	 * @param primitive
-	 * @param object
-	 * @param list
+	 * @param source The Source name
+	 * @param delimeter The source delimiter
+	 * @param missing The ifMissing option
+	 * @param hasTags Indicates the Source Name has Replace Tags in it
+	 * @param primitive The ifPrimitive option
+	 * @param object The ifObject option
+	 * @param list The ifList option
 	 */
 	public AbstractDataDirective(String source, String delimeter, boolean hasTags, int missing, int primitive, int object, int list) {
 		super();
@@ -69,8 +70,8 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	
 	/**
 	 * Populate Transient Values and validate enumerations
-	 * @param template
-	 * @throws MergeException 
+	 * @param template the Template to connect to
+	 * @throws MergeException on failed validations
 	 */
 	public void cachePrepare(Template template) throws MergeException {
 		super.cachePrepare(template);
@@ -80,7 +81,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	/**
 	 * Create a mergable clone of the object
 	 * 
-	 * @param mergable
+	 * @param mergable The directive to make mergable
 	 */
 	public void makeMergable(AbstractDataDirective mergable) {
 		mergable.setType(this.getType());
@@ -96,7 +97,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 
 	/**
 	 * @return data source name
-	 * @throws MergeException 
+	 * @throws MergeException when source not found
 	 */
 	public String getDataSource() throws MergeException {
 		String source = this.dataSource;
@@ -119,14 +120,14 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	 * Simple Setter/Getter code below here
 	 */
 	/**
-	 * @param dataSource
+	 * @param dataSource The data source name
 	 */
 	public void setDataSource(String dataSource) {
 		this.dataSource = dataSource;
 	}
 
 	/**
-	 * @param value
+	 * @param value Source is Missing
 	 */
 	public void setIfSourceMissing(int value) {
 		this.ifMissing = value;
@@ -140,7 +141,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	}
 
 	/**
-	 * @param value
+	 * @param value New if Primitive option
 	 */
 	public void setIfPrimitive(int value) {
 		this.ifPrimitive = value;
@@ -154,7 +155,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	}
 
 	/**
-	 * @param value
+	 * @param value New if Object option
 	 */
 	public void setIfObject(int value) {
 		this.ifObject = value;
@@ -168,7 +169,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	}
 
 	/**
-	 * @param value
+	 * @param value New if List option
 	 */
 	public void setIfList(int value) {
 		this.ifList = value;
@@ -182,23 +183,29 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	}
 
 	/**
-	 * @return
+	 * @return the Delimiter
 	 */
 	public String getDataDelimeter() {
 		return this.dataDelimeter;
 	}
 	/**
-	 * @param dataDelimeter
+	 * @param dataDelimeter The data delimiter
 	 */
 	public void setDataDelimeter(String dataDelimeter) {
 		this.dataDelimeter = dataDelimeter;
 		
 	}
 
+	/**
+	 * @return the Has Tags inidcator
+	 */
 	public boolean getSourceHasTags() {
 		return sourceHasTags;
 	}
 
+	/**
+	 * @param sourceHasTags The has tags indicator
+	 */
 	public void setSourceHasTags(boolean sourceHasTags) {
 		this.sourceHasTags = sourceHasTags;
 	}

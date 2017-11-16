@@ -32,8 +32,8 @@ public class Path {
 	/**
 	 * Instantiate a new Path from value/delimiter pair
 	 * 
-	 * @param path
-	 * @param separator
+	 * @param path The path to parse
+	 * @param separator The path delimiter
 	 */
 	public Path(String path, String separator) {
 		this.current = "";
@@ -48,7 +48,7 @@ public class Path {
 	/**
 	 * Clone a path
 	 * 
-	 * @param from
+	 * @param from A Path to copy 
 	 */
 	public Path(Path from) {
 		this.current = from.current;
@@ -70,7 +70,7 @@ public class Path {
 	/**
 	 * Add a path part
 	 * 
-	 * @param part
+	 * @param part The path part to push
 	 */
 	public void push(PathPart part) {
 		this.parts.add(0, part);
@@ -84,7 +84,7 @@ public class Path {
 	}
 
 	/**
-	 * @param index
+	 * @param index The index to get
 	 * @return the path part
 	 */
 	public PathPart get(int index) {
@@ -107,7 +107,7 @@ public class Path {
  
 	/**
 	 * Add a path part
-	 * @param part
+	 * @param part The path part to add
 	 */
 	public void add(String part) {
 		parts.add(new PathPart(part));
@@ -123,6 +123,7 @@ public class Path {
 	}
 	
 	/**
+	 * @param index The element to remove
 	 * @return and remove the indicated member of the parts 
 	 */
 	public PathPart remove(int index) {

@@ -67,7 +67,7 @@ public abstract class AbstractDirective {
 	/**
 	 * Get a mergable copy of this directive
 	 * 
-	 * @param target
+	 * @param target The directive to make mergable
 	 */
 	public void makeMergable(AbstractDirective target) {
 		target.setType(this.getType());
@@ -82,7 +82,7 @@ public abstract class AbstractDirective {
 	}
 	
 	/**
-	 * @param template
+	 * @param template The template to bind to
 	 */
 	public void setTemplate(Template template) {
 		this.template = template;
@@ -96,7 +96,7 @@ public abstract class AbstractDirective {
 	}
 
 	/**
-	 * @param name
+	 * @param name The directive name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -110,7 +110,7 @@ public abstract class AbstractDirective {
 	}
 	
 	/**
-	 * @param type
+	 * @param type The directive type
 	 */
 	public void setType(int type) {
 		if (DIRECTIVE_TYPES().containsKey(type)) {
@@ -121,22 +121,22 @@ public abstract class AbstractDirective {
 	/**
 	 * This is the meat of the Directive 
 	 * 
-	 * @param context
-	 * @throws MergeException
+	 * @param context The context to execute within
+	 * @throws MergeException on processing errors
 	 */
 	public abstract void execute(Merger context) throws MergeException;
 
 	/**
 	 * Each directive must implement a clone-like get mergable
-	 * @return
-	 * @throws MergeException
+	 * @return the Mergable directive
+	 * @throws MergeException on processing errors
 	 */
 	public abstract AbstractDirective getMergable() throws MergeException;
 
 	/**
 	 * Populate Transient Values and validate enumerations
-	 * @param template
-	 * @throws MergeException 
+	 * @param template The template to bind to
+	 * @throws MergeException when enumirators fail to validate
 	 */
 	public void cachePrepare(Template template) throws MergeException {
 		// TODO Validate Enums

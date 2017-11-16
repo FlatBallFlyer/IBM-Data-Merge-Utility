@@ -34,12 +34,13 @@ public interface ProviderInterface {
 	/**
 	 * The meat of a provider - go get the data and put it in the DataManager
 	 * 
-	 * @param enrichCommand
-	 * @param wrapper
-	 * @param context
-	 * @param replace
-	 * @return
-	 * @throws MergeException
+	 * @param enrichCommand The command to be executed to fetch data
+	 * @param wrapper The wrapper used for tags in the command
+	 * @param context The merge context
+	 * @param replace The replace stack 
+	 * @param parseAs The parse format used if parsing fetched data
+	 * @return the DataElement that was fetched
+	 * @throws MergeException when processing errors occur
 	 */
 	public abstract DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException;
 

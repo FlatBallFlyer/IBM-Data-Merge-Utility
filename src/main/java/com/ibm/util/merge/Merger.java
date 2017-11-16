@@ -29,9 +29,8 @@ import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.directive.enrich.provider.*;
 
 /**
- * The Class Merger is the primary interface to IDMU. 
+ * The Class Merger is the primary interface to IDMU. Usage as follows
  * 
- * @see package-info 
  * @author Mike Storey
  * @since: v4.0
  */
@@ -69,10 +68,9 @@ public class Merger {
 	/**
 	 * Instantiates a new merge context.
 	 *
-	 * @param cache
-	 * @param config
-	 * @param template
-	 * @throws MergeException
+	 * @param cache The cache to use when merging
+	 * @param template The root template to merge
+	 * @throws MergeException on processing errors
 	 */
 	public Merger(
 			TemplateCache cache, 
@@ -89,12 +87,11 @@ public class Merger {
 	 * Instantiates a new merge context, with initial data values
 	 * Convenience method for merging with HTTP request parameters and payload
 	 *
-	 * @param cache
-	 * @param config
-	 * @param template
-	 * @param parameterMap
-	 * @param requestData
-	 * @throws MergeException
+	 * @param cache The cache to use
+	 * @param template The template name
+	 * @param parameterMap A Parameter map to load in merge data
+	 * @param requestData A request payload to load in merge data
+	 * @throws MergeException on processing errors
 	 */
 	public Merger(
 			TemplateCache cache, 
@@ -110,7 +107,7 @@ public class Merger {
 	 * Gets the merged template.
 	 *
 	 * @return template Merged template
-	 * @throws MergeException 
+	 * @throws MergeException on processing errors
 	 */
 	public Template merge() throws MergeException {
 		this.baseTemplate.getMergedOutput();
@@ -119,11 +116,11 @@ public class Merger {
 	}
 	
 	/**
-	 * @param templateName
-	 * @param defaultTemplate
-	 * @param replace
+	 * @param templateName The Template to get
+	 * @param defaultTemplate The Default template to get if Template not found
+	 * @param replace The replace list to initialize
 	 * @return template - Get a mergable template from the cache
-	 * @throws MergeException
+	 * @throws MergeException on processing errors
 	 */
 	public Template getMergable(String templateName, String defaultTemplate, HashMap<String,String> replace) throws MergeException {
 		Template template = cahce.getMergable(this, templateName, defaultTemplate, replace);
@@ -132,7 +129,7 @@ public class Merger {
 	
 	/**
 	 * @return archive The merge output archive
-	 * @throws MergeException
+	 * @throws MergeException on processing errors
 	 */
 	public Archive getArchive() throws MergeException {
 		if (null == this.archive) {
@@ -162,11 +159,11 @@ public class Merger {
 	}
 
 	/**
-	 * @param enrichClass
-	 * @param enrichSource
-	 * @param dbName
+	 * @param enrichClass The provider class name
+	 * @param enrichSource The provider source name
+	 * @param dbName The provider database name (or option name)
 	 * @return provider A Data Provider
-	 * @throws MergeException
+	 * @throws MergeException on processing errors
 	 */
 	public ProviderInterface getProvider(String enrichClass, String enrichSource, String dbName) throws MergeException {
 		String key = enrichSource.concat(dbName);
@@ -215,6 +212,7 @@ public class Merger {
 	
 	/**
 	 * @param name Template Name to push on to insert stack
+	 * @param context The merge context
 	 */
 	public void pushTemplate(String name, DataElement context) {
 		templateStack.add(name);

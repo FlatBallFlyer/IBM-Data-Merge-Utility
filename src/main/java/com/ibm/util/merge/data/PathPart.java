@@ -34,9 +34,9 @@ public class PathPart {
 	/**
 	 * Instantiates a path part
 	 * 
-	 * @param part
-	 * @param index
-	 * @param list
+	 * @param part The part name
+	 * @param index The index of the part
+	 * @param list List Indicator for part
 	 */
 	public PathPart(String part, int index, boolean list) {
 		this.part = part;
@@ -47,7 +47,7 @@ public class PathPart {
 	/**
 	 * Instantiates a path part
 	 * 
-	 * @param raw
+	 * @param raw The string to parse
 	 */
 	public PathPart(String raw) {
         Matcher m = PART_PATTERN.matcher(raw);

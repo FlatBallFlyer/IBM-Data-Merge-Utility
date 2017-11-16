@@ -105,8 +105,8 @@ public class Template {
 	
 	/**
 	 * Instantiate a Template with the given ID
-	 * @param id
-	 * @throws MergeException 
+	 * @param id The Template ID
+	 * @throws MergeException  on processing errors
 	 */
 	public Template(TemplateId id) throws MergeException {
 		this.id = id;
@@ -118,7 +118,7 @@ public class Template {
 	
 	/**
 	 * Instantiate a Template with the given ID
-	 * @throws MergeException 
+	 * @throws MergeException  on processing errors
 	 */
 	public Template() throws MergeException {
 		this(new TemplateId("void","void","void"));
@@ -127,10 +127,10 @@ public class Template {
 	/**
 	 * Instantiate a Template with the given ID
 	 * 
-	 * @param group
-	 * @param name
-	 * @param variant
-	 * @throws MergeException 
+	 * @param group The template group
+	 * @param name The template name
+	 * @param variant The template variant
+	 * @throws MergeException  on processing errors
 	 */
 	public Template(String group, String name, String variant) throws MergeException {
 		this(new TemplateId(group,name,variant));
@@ -139,11 +139,11 @@ public class Template {
 	/**
 	 * Instantiate a Template with the given ID and Content
 	 * 
-	 * @param group
-	 * @param name
-	 * @param variant
-	 * @param content
-	 * @throws MergeException 
+	 * @param group The template group
+	 * @param name The template name
+	 * @param variant The template variant
+	 * @param content The template content
+	 * @throws MergeException  on processing errors
 	 */
 	public Template(String group, String name, String variant, String content) throws MergeException {
 		this(new TemplateId(group,name,variant));
@@ -152,13 +152,13 @@ public class Template {
 	
 	/**
 	 * Instantiate a Template with the given ID, content and wrapper specification
-	 * @param group
-	 * @param name
-	 * @param variant
-	 * @param content
-	 * @param before
-	 * @param after
-	 * @throws MergeException 
+	 * @param group The template Group
+	 * @param name The template Name
+	 * @param variant The template Variant
+	 * @param content The template content
+	 * @param before The wrapper open string
+	 * @param after The wrapper close string 
+	 * @throws MergeException  on processing errors
 	 */
 	public Template(String group, String name, String variant, String content, String before, String after) throws MergeException {
 		this(group,name,variant,content);
@@ -168,7 +168,7 @@ public class Template {
 	
 	/**
 	 * Validate all ordinal values, populate transient values.
-	 * @throws MergeException 
+	 * @throws MergeException on processing errors
 	 */
 	public void cachePrepare() throws MergeException {
 		// TODO Validate Enums
@@ -187,21 +187,21 @@ public class Template {
 	/**
 	 * Gets a mergable copy of this template and an empty replace stack
 	 *
-	 * @param replace the replace
+	 * @param context The merge context
 	 * @return the mergable
-	 * @throws MergeException 
+	 * @throws MergeException  on processing errors
 	 */
 	public Template getMergable(Merger context) throws MergeException {
 		return getMergable(context, new HashMap<String,String>());
 	}
 	
 	/**
-	 * Gets a mergable copy of this template
+	 * Gets a mergable copy of this template (Clone like action)
 	 * 
-	 * @param context
-	 * @param replace
-	 * @return
-	 * @throws MergeException
+	 * @param context The Merge Context
+	 * @param replace The repalce stack
+	 * @return The mergable template
+	 * @throws MergeException on processing errors
 	 */
 	public Template getMergable(Merger context, HashMap<String,String> replace) throws MergeException {
 		this.stats.hits++;
@@ -228,8 +228,8 @@ public class Template {
 	/**
 	 * Gets the merged output, calling the merge if needed
 	 *
-	 * @param context the context
 	 * @return the merged output
+	 * @throws MergeException  on processing errors
 	 */
 	public Content getMergedOutput() throws MergeException {
 		if (this.mergable) {
@@ -260,7 +260,8 @@ public class Template {
 	/**
 	 * Adds a from/to pair to the replace stack.
 	 *
-	 * @return 
+	 * @param from From Value
+	 * @param to To Value
 	 */
 	public void addReplace(String from, String to) {
 		// Accessible during merge
@@ -271,8 +272,7 @@ public class Template {
 	
 	/**
 	 * Adds a from/to pair to the replace stack.
-	 *
-	 * @return 
+	 * @param values The values to add
 	 */
 	public void addReplace(HashMap<String,String> values) {
 		// Accessible during merge
@@ -284,7 +284,7 @@ public class Template {
 	/**
 	 * Remove the replace value for one or more tags.
 	 * 
-	 * @param tags
+	 * @param tags Tags to set to ""
 	 */
 	public void blankReplace(HashSet<String> tags) {
 		for (String tag : tags) {
@@ -314,8 +314,7 @@ public class Template {
 	 * Sets the content.
 	 *
 	 * @param content the new content
-	 * @throws MergeException 
-	 * @throws MergeException 
+	 * @throws MergeException  on processing errors
 	 */
 	public void setContent(String content) throws MergeException {
 		// Accessible only before merge
@@ -328,8 +327,6 @@ public class Template {
 	
 	/**
 	 * Clears the content.
-	 *
-	 * @throws MergeException 
 	 */
 	public void clearContent() {
 		// Accessible only during merge
@@ -366,7 +363,7 @@ public class Template {
 	 * Gets the content disposition.
 	 *
 	 * @return the content disposition
-	 * @throws MergeException 
+	 * @throws MergeException  on processing errors
 	 */
 	public String getContentDisposition() throws MergeException {
 		if (DISPOSITION_DOWNLOAD == contentDisposition) {
@@ -462,7 +459,8 @@ public class Template {
 	/**
 	 * Sets the wrapper.
 	 *
-	 * @param wrapper the new wrapper
+	 * @param front the Front wrapper
+	 * @param back The back wrapper
 	 */
 	public void setWrapper(String front, String back) {
 		// Accessible only before merge
@@ -495,7 +493,6 @@ public class Template {
 	 * Adds the directive.
 	 *
 	 * @param directive the directive
-	 * @param config 
 	 */
 	public void addDirective(AbstractDirective directive) {
 		directive.setTemplate(this);
@@ -528,7 +525,7 @@ public class Template {
 	}
 
 	/**
-	 * @param contentRedirectUrl
+	 * @param contentRedirectUrl The redirect URL
 	 */
 	public void setContentRedirectUrl(String contentRedirectUrl) {
 		// Accessible only before merge
@@ -538,7 +535,7 @@ public class Template {
 	}
 
 	/**
-	 * @return
+	 * @return The redirect URL
 	 */
 	public String getEncodedRedirectURL() {
 		// TODO Replace Process?
@@ -562,7 +559,7 @@ public class Template {
 	/**
 	 * Set merge context 
 	 * 
-	 * @param context
+	 * @param context The merge context
 	 */
 	public void setContext(Merger context) {
 		this.context = context;

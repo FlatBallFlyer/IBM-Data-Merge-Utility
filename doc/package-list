@@ -1,0 +1,10 @@
+com.ibm.util.merge
+com.ibm.util.merge.data
+com.ibm.util.merge.data.parser
+com.ibm.util.merge.data.parser.gson
+com.ibm.util.merge.exception
+com.ibm.util.merge.storage
+com.ibm.util.merge.template
+com.ibm.util.merge.template.content
+com.ibm.util.merge.template.directive
+com.ibm.util.merge.template.directive.enrich.provider

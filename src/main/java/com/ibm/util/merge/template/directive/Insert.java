@@ -68,17 +68,20 @@ public class Insert extends AbstractDataDirective {
 	
 	/**
 	 * Instantiate a Insert Directive with the provided values
-	 * @param source
-	 * @param delimeter
-	 * @param missing
-	 * @param primitive
-	 * @param object
-	 * @param list
-	 * @param notFirst
-	 * @param notLast
-	 * @param onlyFirst
-	 * @param onlyLast
-	 * @param pattern
+	 * @param source The Data Source
+	 * @param delimeter The Source path delimiter
+	 * @param hasTags Indicates source name has replace tags
+	 * @param missing The If Missing option
+	 * @param primitive The if Primitive option
+	 * @param object The if Object option
+	 * @param list The if List option
+	 * @param notFirst The Not First tags
+	 * @param notLast The Not Last tags
+	 * @param onlyFirst The only first tags
+	 * @param onlyLast The only last tags
+	 * @param pattern the bookmark pattern to match
+	 * @param ifOperator The if primitive comparison operator option
+	 * @param ifValue The if primitive comparison value
 	 */
 	public Insert(String source, String delimeter, boolean hasTags, int missing, int primitive, int object, int list, 
 			HashSet<String> notFirst, HashSet<String> notLast, HashSet<String> onlyFirst, HashSet<String> onlyLast, 
@@ -285,11 +288,11 @@ public class Insert extends AbstractDataDirective {
 
 	/**
 	 * Perform sub-template insert at the specified bookmarks.
-	 * @param context
-	 * @param value
-	 * @param isFirst
-	 * @param isLast
-	 * @throws MergeException
+	 * @param context The Merge Context
+	 * @param value The new data context for the merge
+	 * @param isFirst First member indicator
+	 * @param isLast Last member indicator
+	 * @throws MergeException on processing errors
 	 */
 	public void insertAtBookmarks(Merger context, DataElement value, boolean isFirst, boolean isLast) throws MergeException {
 		if (context.getStackSize() > Config.insertLimit()) {
@@ -324,7 +327,7 @@ public class Insert extends AbstractDataDirective {
 	}
 
 	/**
-	 * @param bookmarkPattern
+	 * @param bookmarkPattern The bookmark pattern
 	 */
 	public void setBookmarkPattern(String bookmarkPattern) {
 		this.bookmarkPattern = bookmarkPattern;
@@ -338,7 +341,7 @@ public class Insert extends AbstractDataDirective {
 	}
 
 	/**
-	 * @param notFirst
+	 * @param notFirst Not First tag list
 	 */
 	public void setNotFirst(HashSet<String> notFirst) {
 		this.notFirst.clear();
@@ -353,7 +356,7 @@ public class Insert extends AbstractDataDirective {
 	}
 
 	/**
-	 * @param notLast
+	 * @param notLast Not Last tag list
 	 */
 	public void setNotLast(HashSet<String> notLast) {
 		this.notLast.clear();
@@ -368,7 +371,7 @@ public class Insert extends AbstractDataDirective {
 	}
 
 	/**
-	 * @param onlyFirst
+	 * @param onlyFirst Only First tag list
 	 */
 	public void setOnlyFirst(HashSet<String> onlyFirst) {
 		this.onlyFirst.clear();
@@ -383,7 +386,7 @@ public class Insert extends AbstractDataDirective {
 	}
 
 	/**
-	 * @param onlyLast
+	 * @param onlyLast Tag List
 	 */
 	public void setOnlyLast(HashSet<String> onlyLast) {
 		this.onlyLast.clear();

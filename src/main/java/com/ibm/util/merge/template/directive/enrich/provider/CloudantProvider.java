@@ -26,11 +26,9 @@ import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
-import com.ibm.util.merge.data.parser.Parser;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
-import com.ibm.util.merge.template.directive.enrich.source.CloudantClientMgr;
 
 /**
  * Implements Cloudant Database support. Environment Variable for credentials
@@ -59,15 +57,14 @@ public class CloudantProvider implements ProviderInterface {
 	private final String dbName;
 	private transient CloudantClient cloudant = null;
 	private transient Database db = null;
-	private transient final Parser parser = new Parser();
 	private transient final Merger context;
 	
 	/**
 	 * Instantiate the provider and get the database connection
-	 * @param source
-	 * @param dbName
-	 * @param context
-	 * @throws MergeException
+	 * @param source The Source Name
+	 * @param dbName The DB Name
+	 * @param context The Merge Context
+	 * @throws MergeException on processing errors
 	 */
 	public CloudantProvider(String source, String dbName, Merger context) throws MergeException {
 		this.source = source;
@@ -84,17 +81,15 @@ public class CloudantProvider implements ProviderInterface {
 		}
 		
 		// Get the connection
-		synchronized (CloudantClientMgr.class) {
-			try {
-				this.cloudant = ClientBuilder
-						.account(creds.username)
-						.username(creds.username)
-						.password(creds.password)
-						.build();
-			} catch (CouchDbException e) {
-				throw new Merge500("Unable to connect to Cloudant repository" + e.getMessage());
-			}
-		} // end synchronized
+		try {
+			this.cloudant = ClientBuilder
+					.account(creds.username)
+					.username(creds.username)
+					.password(creds.password)
+					.build();
+		} catch (CouchDbException e) {
+			throw new Merge500("Unable to connect to Cloudant repository" + e.getMessage());
+		}
 		
 		// Get the database object
 		db = cloudant.database(this.getDbName(), true);
@@ -111,7 +106,7 @@ public class CloudantProvider implements ProviderInterface {
 		String results = db.toString(); // TODO - Make Cloudant Call
 		
 		if (parseAs != Config.PARSE_NONE) {
-			result = parser.parse(parseAs, results);
+			result = Config.parse(parseAs, results);
 		}
 		return result;
 	}

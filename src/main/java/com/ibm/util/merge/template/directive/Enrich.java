@@ -49,7 +49,7 @@ public class Enrich extends AbstractDirective {
 
 	/**
 	 * Instantiate an Enrich Directive
-	 * @throws MergeException
+	 * @throws MergeException on processing errors
 	 */
 	public Enrich() throws MergeException {
 		super();
@@ -99,7 +99,7 @@ public class Enrich extends AbstractDirective {
 	}
 	
 	/**
-	 * @param dataName
+	 * @param dataName The target data name
 	 */
 	public void setTargetDataName(String dataName) {
 		this.targetDataName = dataName;
@@ -113,7 +113,7 @@ public class Enrich extends AbstractDirective {
 	}
 
 	/**
-	 * @param dataDelimeter
+	 * @param dataDelimeter The path delimiter
 	 */
 	public void setTargetDataDelimeter(String dataDelimeter) {
 		this.targetDataDelimeter = dataDelimeter;
@@ -127,7 +127,7 @@ public class Enrich extends AbstractDirective {
 	}
 
 	/**
-	 * @param enrichSource
+	 * @param enrichSource The Source Name
 	 */
 	public void setEnrichSource(String enrichSource) {
 		this.enrichSource = enrichSource;
@@ -141,7 +141,7 @@ public class Enrich extends AbstractDirective {
 	}
 
 	/**
-	 * @param parseAs
+	 * @param parseAs The ParseAs option
 	 */
 	public void setParseAs(int parseAs) {
 		this.parseAs = parseAs;
@@ -155,7 +155,7 @@ public class Enrich extends AbstractDirective {
 	}
 
 	/**
-	 * @param enrichClass
+	 * @param enrichClass The enrichment provider class name
 	 */
 	public void setEnrichClass(String enrichClass) {
 		this.enrichClass = enrichClass;
@@ -169,8 +169,8 @@ public class Enrich extends AbstractDirective {
 	}
 
 	/**
-	 * @param enrichCommand
-	 * @throws MergeException 
+	 * @param enrichCommand The command to execute
+	 * @throws MergeException on processing errors
 	 */
 	public void setEnrichCommand(String enrichCommand) throws MergeException {
 		this.enrichCommand = enrichCommand;
@@ -184,7 +184,7 @@ public class Enrich extends AbstractDirective {
 	}
 
 	/**
-	 * @param enrichParameter
+	 * @param enrichParameter The Provider parameter
 	 */
 	public void setEnrichParameter(String enrichParameter) {
 		this.enrichParameter = enrichParameter;

@@ -33,7 +33,7 @@ public class DataPrimitive implements DataElement {
 	/**
 	 * Construct a new primitive object with Value
 	 * 
-	 * @param value
+	 * @param value The string to initialize with
 	 */
 	public DataPrimitive(String value) {
 		super();
@@ -47,7 +47,7 @@ public class DataPrimitive implements DataElement {
 	/**
 	 * Construct a new primitive object with toString(Value)
 	 * 
-	 * @param value
+	 * @param value The value to initialize with
 	 */
 	public DataPrimitive(int value) {
 		super();
@@ -57,7 +57,7 @@ public class DataPrimitive implements DataElement {
 	/**
 	 * Construct a new primitive object with toString(Value)
 	 * 
-	 * @param value
+	 * @param value The value to assign
 	 */
 	public DataPrimitive(double value) {
 		super();

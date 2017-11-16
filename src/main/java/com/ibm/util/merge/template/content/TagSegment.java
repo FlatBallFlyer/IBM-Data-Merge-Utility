@@ -51,11 +51,11 @@ public class TagSegment extends Segment {
 	/**
 	 * Instantiate a new Tag object
 	 * 
-	 * @param open
-	 * @param close
-	 * @param source
-	 * @param defaultEncode
-	 * @throws Merge500
+	 * @param open The open Wrapper
+	 * @param close The close Wrapper
+	 * @param source The Source String to parse
+	 * @param defaultEncode The default encoding to configure
+	 * @throws Merge500 on processing errors
 	 */
 	public TagSegment(String open, String close, String source, Integer defaultEncode) throws Merge500 {
 		super();
@@ -117,10 +117,10 @@ public class TagSegment extends Segment {
 	/**
 	 * Replace the value in the tag segment.
 	 * 
-	 * @param values
-	 * @param softFail
-	 * @param nestLimit
-	 * @throws Merge500
+	 * @param values The From/To Values
+	 * @param require Require all values indicator
+	 * @param nestLimit The nesting limit for replace tags
+	 * @throws Merge500 on processing errors
 	 */
 	public void replace(HashMap<String,String> values, boolean require, int nestLimit) throws Merge500 {
 		String value;
@@ -175,7 +175,7 @@ public class TagSegment extends Segment {
 	}
 	
 	/**
-	 * @param parseFirst indicator
+	 * @param parse parseFirst indicator
 	 */
 	public void setParseFirst(boolean parse) {
 		parseFirst = parse;

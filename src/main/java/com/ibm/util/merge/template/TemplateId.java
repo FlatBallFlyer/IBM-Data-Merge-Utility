@@ -53,7 +53,7 @@ public class TemplateId {
 	/**
 	 * Instantiates a new template id.
 	 *
-	 * @param jsonString
+	 * @param shorthand The temlpate ID Json Value
 	 */
 	public TemplateId(String shorthand) {
 		String[] list = shorthand.split("\\.");
@@ -69,7 +69,7 @@ public class TemplateId {
 
 	/**
 	 * Get the template shorthand name of group.name.variant
-	 *
+	 * @return Template Short name
 	 */
 	public String shorthand() {
 		return group.concat(".").concat(name).concat(".").concat(variant);

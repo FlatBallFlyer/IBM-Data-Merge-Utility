@@ -77,7 +77,7 @@ public abstract class Archive {
 
 	/**
 	 * Instantiate an Archive for the merge
-	 * @param context
+	 * @param context The merge context
 	 */
 	public Archive(Merger context) {
 		this();
@@ -86,18 +86,18 @@ public abstract class Archive {
 
     /**
      * Open the output stream
-     * @throws MergeException
+     * @throws MergeException on processing errors
      */
     public abstract void openOutputStream() throws MergeException;
     
     /**
      * Write a file to the archive
-     * @param entryName
-     * @param content
-     * @param userName
-     * @param groupName
-     * @return
-     * @throws MergeException
+     * @param entryName The file name to use
+     * @param content The content to write
+     * @param userName The user name for the file
+     * @param groupName The group name for the file
+     * @return The Checksum value
+     * @throws MergeException on processing errors
      */
     public String writeFile(String entryName, String content, String userName, String groupName) throws MergeException {
     	if (this.outputStream == null) { 
@@ -108,7 +108,7 @@ public abstract class Archive {
     
     /**
      * Close the output stream
-     * @throws MergeException
+     * @throws MergeException on processing errors
      */
     public void closeOutputStream() throws MergeException {
     	if (this.outputStream != null) {
@@ -121,10 +121,10 @@ public abstract class Archive {
 
     /**
      * Get CheckSum information for the archive entry
-     * @param content
-     * @param name
-     * @return
-     * @throws MergeException
+     * @param content The content being checked
+     * @param name The name of the digest entry
+     * @return The checksum string
+     * @throws MergeException on processing errors
      */
     private String getCheckSum(String content, String name) throws MergeException {
     	MessageDigest message;
@@ -154,9 +154,8 @@ public abstract class Archive {
     }
     
     /**
-     *
      * @return Archive file 
-     * @throws MergeException 
+     * @throws MergeException on processing errors
      */
     public File getArchiveFile() throws MergeException {
     	File file = new File(this.filePath + "/" + this.fileName + "." + this.archiveType);
@@ -172,7 +171,7 @@ public abstract class Archive {
 
 	/**
 	 * Set Archive type
-	 * @param archiveType
+	 * @param archiveType The archive type
 	 */
 	public void setArchiveType(String archiveType) {
 		if (Archive.ARCHIVE_TYPES().contains(archiveType)) {
@@ -189,7 +188,7 @@ public abstract class Archive {
 
 	/**
 	 * Set Output File Path
-	 * @param filePath
+	 * @param filePath The file path for output files
 	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
@@ -204,8 +203,8 @@ public abstract class Archive {
 
 	/**
 	 * Set the Output Stream
-	 * @param outputStream
-	 * @throws MergeException
+	 * @param outputStream The output stream 
+	 * @throws MergeException on processing errors
 	 */
 	public void setOutputStream(OutputStream outputStream) throws MergeException {
 		this.outputStream = outputStream;
@@ -224,7 +223,7 @@ public abstract class Archive {
 
 	/**
 	 * Set the output file name
-	 * @param fileName
+	 * @param fileName The File Name
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;

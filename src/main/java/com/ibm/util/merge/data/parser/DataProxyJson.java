@@ -44,7 +44,7 @@ public class DataProxyJson implements ParserProxyInterface {
 
     /**
      * Instantiate a proxy with a BUilder
-     * @param builder
+     * @param builder GsonBuilder to use in parsing
      */
     public DataProxyJson(GsonBuilder builder) {
         this.builder = builder;
@@ -58,9 +58,10 @@ public class DataProxyJson implements ParserProxyInterface {
     /**
      * Parse the JSON Data into an object
      * 
-     * @param jsonString
-     * @param type
-     * @return
+     * @param jsonString The string to parse
+     * @param type The class to parse into
+     * @param <T> The class Type to parse into
+     * @return The instantiated object
      */
     public <T> T fromString(String jsonString, Class<T> type) {
         Gson gson = builder.create();

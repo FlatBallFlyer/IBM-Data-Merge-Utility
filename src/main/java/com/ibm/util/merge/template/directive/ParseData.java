@@ -91,7 +91,7 @@ public class ParseData extends AbstractDataDirective {
 
 	/**
 	 * Instantiate a Parse directive with default values
-	 * @throws MergeException
+	 * @throws MergeException on processing errors
 	 */
 	public ParseData() throws MergeException {
 		super();
@@ -196,7 +196,7 @@ public class ParseData extends AbstractDataDirective {
 	}
 	
 	/**
-	 * @param format
+	 * @param format The parse format option
 	 */
 	public void setParseFormat(int format) {
 		if (Config.PARSE_OPTIONS().containsKey(format)) {
@@ -212,7 +212,7 @@ public class ParseData extends AbstractDataDirective {
 	}
 
 	/**
-	 * @param dataTarget
+	 * @param dataTarget The Target Data address
 	 */
 	public void setDataTarget(String dataTarget) {
 		this.dataTarget = dataTarget;
@@ -226,7 +226,7 @@ public class ParseData extends AbstractDataDirective {
 	}
 
 	/**
-	 * @param dataTargetDelimiter
+	 * @param dataTargetDelimiter The target address delimiter
 	 */
 	public void setDataTargetDelimiter(String dataTargetDelimiter) {
 		this.dataTargetDelimiter = dataTargetDelimiter;
@@ -240,7 +240,7 @@ public class ParseData extends AbstractDataDirective {
 	}
 
 	/**
-	 * @param staticData
+	 * @param staticData The static data
 	 */
 	public void setStaticData(String staticData) {
 		this.staticData = staticData;

@@ -50,10 +50,10 @@ public class StubProvider implements ProviderInterface {
 	/**
 	 * Instantiate the provider
 	 * 
-	 * @param source
-	 * @param dbName
-	 * @param context
-	 * @throws MergeException
+	 * @param source The provider source name
+	 * @param dbName The DB Name
+	 * @param context The Merge Context
+	 * @throws MergeException on processing errors
 	 */
 	public StubProvider(String source, String dbName, Merger context) throws MergeException {
 		this.source = source;

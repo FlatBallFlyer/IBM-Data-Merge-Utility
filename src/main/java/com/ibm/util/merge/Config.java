@@ -51,20 +51,21 @@ import com.ibm.util.merge.template.directive.enrich.provider.ProviderMeta;
  * You can optionally load a configuration with one of 
  * the provided load functions.
  *
- * Implemented as a singleton with static convience methods
+ * Implemented as a singleton with static convenience methods
+ * 
  * @author Mike Storey
  * @since: v4.0.0.B1
  */
 public class Config {
-	/*
-	 * Singleton Code and convience accessors
+	/* ******************************************************************************************************
+	 * Singleton Code 
 	 */
 	private static Config config = null;
 	
 	/**
 	 * Singleton Constructor
-	 * @return
-	 * @throws MergeException
+	 * @return the singleton config
+	 * @throws MergeException on Processing Errors
 	 */
 	private static Config get() throws MergeException {
 		if (null == config) {
@@ -74,157 +75,157 @@ public class Config {
 	}
 
 	/**
-	 * @param configuration
-	 * @return
-	 * @throws MergeException
+	 * @throws MergeException on Processing Errors
 	 */
 	public static void initialize() throws MergeException {
 		config = new Config();
 	}
 	
 	/**
-	 * @param configuration
-	 * @return
-	 * @throws MergeException
+	 * @param configuration The JSON Config object to load
+	 * @throws MergeException on Processing Errors
 	 */
-	public static Config load(String configuration) throws MergeException {
+	public static void load(String configuration) throws MergeException {
 		config = new Config(configuration);
-		return config;
 	}
 	
 	/**
-	 * @param configFile
-	 * @return
-	 * @throws MergeException
+	 * @param configFile The JSON Configuration file
+	 * @throws MergeException on Processing Errors
 	 */
-	public static Config load(File configFile) throws MergeException {
+	public static void load(File configFile) throws MergeException {
 		config = new Config(configFile);
-		return config;
 	}
 	
 	/**
-	 * @param configUrl
-	 * @return
-	 * @throws MergeException
+	 * @param configUrl The URL to fetch a configuration from
+	 * @throws MergeException on Processing Errors
 	 */
-	public static Config load(URL configUrl) throws MergeException {
+	public static void load(URL configUrl) throws MergeException {
 		config = new Config(configUrl);
-		return config;
 	}
 	
 	/**
-	 * @return
-	 * @throws MergeException
+	 * @return The nesting limit for Replace Tags
+	 * @throws MergeException on Processing Errors
 	 */
 	public static int nestLimit() throws MergeException {
 		return Config.get().getNestLimit();
 	}
 
 	/**
-	 * @return
-	 * @throws MergeException
+	 * @return The insert limit for template depth
+	 * @throws MergeException on Processing Errors
 	 */
 	public static int insertLimit() throws MergeException {
 		return Config.get().getInsertLimit();
 	}
 	
 	/**
-	 * @return
-	 * @throws MergeException
+	 * @return The temporary folder where archives are created
+	 * @throws MergeException on Processing Errors
 	 */
 	public static String tempFolder() throws MergeException {
 		return Config.get().getTempFolder();
 	}
 
 	/**
-	 * @return
-	 * @throws MergeException
+	 * @return The template load folder where templates are located
+	 * @throws MergeException on Processing Errors
 	 */
 	public static String loadFolder() throws MergeException {
 		return Config.get().getLoadFolder();
 	}
 
 	/**
-	 * @return
-	 * @throws MergeException
+	 * @param varName The variable to get
+	 * @return The environment value
+	 * @throws MergeException on Processing Errors
 	 */
 	public static String env(String varName) throws MergeException {
 		return Config.get().getEnv(varName);
 	}
 
 	/**
-	 * @return
-	 * @throws MergeException
+	 * @return The IDMU Version
+	 * @throws MergeException on Processing Errors
 	 */
 	public static String version() throws MergeException {
 		return Config.get().getVersion();
 	}
 
 	/**
-	 * @param className
-	 * @param source
-	 * @param option
-	 * @param context
-	 * @return
-	 * @throws MergeException
+	 * @param className The provider class name
+	 * @param source The source name
+	 * @param option The source option
+	 * @param context The merge Context
+	 * @return A enrich provider instance
+	 * @throws MergeException on Processing Errors
 	 */
 	public static ProviderInterface providerInstance(String className, String source, String option, Merger context) throws MergeException {
 		return Config.get().getProviderInstance(className, source, option, context);
 	}
 	
 	/**
-	 * @param parseAs
-	 * @param value
-	 * @return
-	 * @throws Merge500
-	 * @throws MergeException
+	 * @param parseAs the parse format
+	 * @param value the value to parse
+	 * @return the parsed data element
+	 * @throws MergeException on Processing Errors
 	 */
-	public static DataElement parse(int parseAs, String value) throws Merge500, MergeException {
+	public static DataElement parse(int parseAs, String value) throws MergeException {
 		return Config.get().parseString(parseAs, value);
 	}
 	
+	/**
+	 * @return The options json
+	 * @throws MergeException on Processing Errors
+	 */
 	public static String allOptions() throws MergeException {
 		return Config.get().getAllOptions();
 	}
 
+	/**
+	 * @return The Providers hashmap
+	 * @throws MergeException on Processing Errors
+	 */
 	public static HashMap<String, Class<ProviderInterface>> providers() throws MergeException {
 		return Config.get().getProviders();
 	}
 	
 
-	/*
-	 * Normal Non-Static Object Attributes and Methods
+	/* *********************************************************
+	 * End of Static Convenience accessor's, Normal Non-Static Object Attributes and Methods
 	 */
 	/**
-	 * 
+	 * The IDMU Version
 	 */
 	private final String version = "4.0.0.B1";
 	/**
-	 * 
+	 * The limit of nesting on Replace Tags
 	 */
 	private int nestLimit 		= 2;
 	/**
-	 * 
+	 * The limit on the number of nested sub-template inserts
 	 */
 	private int insertLimit		= 20;
 	/**
-	 * 
+	 * The folder where archives are created
 	 */
 	private String tempFolder	= "/opt/ibm/idmu/archives";
 	/**
-	 * 
+	 * The template load folder
 	 */
 	private String loadFolder	= "foo";
 	/**
-	 * 
+	 * The logging level
 	 */
 	private String logLevel 	= "SEVERE";
 	/**
-	 * 
+	 * Environment Variables used to over-ride values in the system environment
 	 */
 	private HashMap<String, String> envVars = new HashMap<String,String>();
 	/**
-	 * 
+	 * The list of Enrichment Providers that can be used
 	 */
 	private String[] defaultProviders = {
 			"com.ibm.util.merge.template.directive.enrich.provider.CacheProvider",
@@ -237,7 +238,7 @@ public class Config {
 			"com.ibm.util.merge.template.directive.enrich.provider.StubProvider"
 	};
 	/**
-	 * 
+	 * The list of Parsers that can be used
 	 */
 	private String[] defaultParsers = {
 			"com.ibm.util.merge.data.parser.DataProxyCsv",
@@ -258,7 +259,7 @@ public class Config {
 	 * If the config environment variable does not exist, all defaults
 	 * are provided.
 	 * 
-	 * @throws MergeException
+	 * @throws MergeException on Processing Errors
 	 */
 	public Config() throws MergeException {
 		this.proxies = new HashMap<Integer, ParserProxyInterface>();
@@ -277,8 +278,8 @@ public class Config {
 	/**
 	 * Get a configuration from the provided environment variable name. 
 	 * 
-	 * @param configString
-	 * @throws MergeException
+	 * @param configString The configuration JSON
+	 * @throws MergeException on Processing Errors
 	 */
 	public Config(String configString) throws MergeException {
 		this.proxies = new HashMap<Integer, ParserProxyInterface>();
@@ -291,8 +292,8 @@ public class Config {
 	/**
 	 * Read a configuration from a config file
 	 * 
-	 * @param configFile
-	 * @throws MergeException
+	 * @param configFile The configuration file
+	 * @throws MergeException on Processing Errors
 	 */
 	public Config(File configFile) throws MergeException {
 		this.proxies = new HashMap<Integer, ParserProxyInterface>();
@@ -313,8 +314,8 @@ public class Config {
 	/**
 	 * Read a configuration from an anonymous http source
 	 * 
-	 * @param url
-	 * @throws MergeException
+	 * @param url The URL to fetch a config from
+	 * @throws MergeException on Processing Errors
 	 */
 	public Config(URL url) throws MergeException {
 		this.proxies = new HashMap<Integer, ParserProxyInterface>();
@@ -328,8 +329,8 @@ public class Config {
 	/**
 	 * Load the configuration provided
 	 * 
-	 * @param configString
-	 * @throws MergeException
+	 * @param configString The configuration JSON
+	 * @throws MergeException on Processing Errors
 	 */
 	public void loadConfig(String configString) throws MergeException {
 		if (null != configString) {
@@ -395,9 +396,9 @@ public class Config {
 	 * 
 	 * You can provide environment values by adding entries to the envVars hashMap
 	 *  
-	 * @param name
-	 * @return
-	 * @throws MergeException
+	 * @param name The environment variable
+	 * @return The environment value
+	 * @throws MergeException on Processing Errors
 	 */
 	public String getEnv(String name) throws MergeException {
 		if (envVars.containsKey(name)) {
@@ -418,7 +419,7 @@ public class Config {
 	/**
 	 * @param serviceName
 	 * @return
-	 * @throws MergeException
+	 * @throws MergeException on Processing Errors
 	 */
 	private String getVcapEntry(String serviceName) throws MergeException {
 		String VCAP_SERVICES = this.getEnv("VCAP_SERVICES");

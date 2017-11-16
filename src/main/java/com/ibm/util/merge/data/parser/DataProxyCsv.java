@@ -54,9 +54,9 @@ public class DataProxyCsv implements ParserProxyInterface {
     /**
      * Parse the CSV data into a DataList object with DataObject members
      * 
-     * @param data
+     * @param data Data to Parse
      * @return the parsed List
-     * @throws MergeException
+     * @throws MergeException on processing errors
      */
 	@Override
     public DataElement fromString(String data) throws MergeException {

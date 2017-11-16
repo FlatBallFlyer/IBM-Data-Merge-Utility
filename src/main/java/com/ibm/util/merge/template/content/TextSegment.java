@@ -27,7 +27,7 @@ public class TextSegment extends Segment {
 	
 	/**
 	 * Instantiate a text object
-	 * @param text
+	 * @param text Text for the segment
 	 */
 	public TextSegment(String text) {
 		super();
@@ -59,7 +59,7 @@ public class TextSegment extends Segment {
 	 * @return the string
 	 */
 	/**
-	 * @param encoding
+	 * @param encoding The encoding option
 	 */
 	public void encode(int encoding) {
 		switch (encoding) {

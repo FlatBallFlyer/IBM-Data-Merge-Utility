@@ -71,7 +71,7 @@ public class SaveFile extends AbstractDirective {
 	}
 
 	/**
-	 * @return
+	 * @return the File Name
 	 */
 	public String getFilename() {
 		return filename;
@@ -79,7 +79,7 @@ public class SaveFile extends AbstractDirective {
 
 	/**
 	 * @param filename - the name of the file to be saved
-	 * @throws MergeException 
+	 * @throws MergeException  on processing errors
 	 */
 	public void setFilename(String filename) throws MergeException {
 		this.filename = filename;
@@ -93,7 +93,7 @@ public class SaveFile extends AbstractDirective {
 	}
 
 	/**
-	 * @param clearAfter 
+	 * @param clearAfter Clear Content after Saving indicator
 	 */
 	public void setClearAfter(Boolean clearAfter) {
 		this.clearAfter = clearAfter;
