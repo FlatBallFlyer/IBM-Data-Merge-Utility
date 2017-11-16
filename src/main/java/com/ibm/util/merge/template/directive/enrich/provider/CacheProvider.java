@@ -58,12 +58,12 @@ public class CacheProvider implements ProviderInterface {
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
 		TemplateCache cache = context.getCahce();
 		DataObject cacheData = new DataObject();
-		cacheData.put("version", 		new DataPrimitive(Config.get().getVersion()));
+		cacheData.put("version", 		new DataPrimitive(Config.version()));
 		cacheData.put("runningSince", 	new DataPrimitive(cache.getInitialized().toString()));
 		cacheData.put("CachedTemplates",new DataPrimitive(cache.getSize()));
 		cacheData.put("CacheHits", 		new DataPrimitive(cache.getCacheHits()));
-		cacheData.put("TempFolder", 	new DataPrimitive(Config.get().getTempFolder()));
-		cacheData.put("MaxRecursion", 	new DataPrimitive(Config.get().getNestLimit()));
+		cacheData.put("TempFolder", 	new DataPrimitive(Config.tempFolder()));
+		cacheData.put("MaxRecursion", 	new DataPrimitive(Config.nestLimit()));
 		cacheData.put("Statistics", 	proxy.fromString(proxy.toString(cache.getStats()), DataObject.class));
 		// DEFERRED: cacheData.put("totalMergeCount", cache.getTotalMergeCount());
 		// DEFERRED: cacheData.put("mergeTime", cache.getMergeTime());

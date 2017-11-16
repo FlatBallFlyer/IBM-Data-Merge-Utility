@@ -67,7 +67,7 @@ public class JdbcProvider extends SqlProvider implements ProviderInterface {
 		// Get Credentials
 		Credentials creds;
 		try {
-			creds = proxy.fromString(Config.get().getEnv(source), Credentials.class);
+			creds = proxy.fromString(Config.env(source), Credentials.class);
 		} catch (MergeException e) {
 			throw new Merge500("Invalid JDBC Provider for:" + this.source);
 		}

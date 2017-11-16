@@ -64,8 +64,9 @@ public class Enrich extends AbstractDirective {
 	}
 
 	@Override
-	public void cleanup(Template template) throws MergeException {
-		this.cleanupAbstract(template);
+	public void cachePrepare(Template template) throws MergeException {
+		// TODO Validate Enums
+		super.cachePrepare(template);
 	}
 
 	@Override

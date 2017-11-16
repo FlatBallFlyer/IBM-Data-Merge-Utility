@@ -43,7 +43,7 @@ public class TemplateCacheTest {
 
 	@Test
 	public void testTemplateCacheFile() throws MergeException {
-		Config.get().setLoadFolder("src/test/resources");
+		Config.load("{\"loadFolder\":\"src/test/resources\"}");
 		cache = new TemplateCache();
 		assertEquals(8, cache.getSize());
 	}

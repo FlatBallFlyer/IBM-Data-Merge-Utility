@@ -85,6 +85,7 @@ public class InsertTest {
 
 	@Test
 	public void testInsertRecursionLimit() throws MergeException {
+		Config.load("{\"nestLimit\":\"5\"}");
 		Template template = new Template("test", "child", "Template Content ", this.bkm2, "{", "}" );
 		Insert directive = new Insert("data.primitive","-",false,
 				Insert.MISSING_THROW,
@@ -95,7 +96,6 @@ public class InsertTest {
 				".*",Insert.INSERT_IF_STRING_EQUALS,"");
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Config.get().setInsertLimit(5);
 		
 		try {
 			Merger context = new Merger(cache, "test.child.");

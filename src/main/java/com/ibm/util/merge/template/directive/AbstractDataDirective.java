@@ -18,6 +18,7 @@ package com.ibm.util.merge.template.directive;
 
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.exception.MergeException;
+import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.content.Content;
 
 
@@ -67,6 +68,16 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	}
 	
 	/**
+	 * Populate Transient Values and validate enumerations
+	 * @param template
+	 * @throws MergeException 
+	 */
+	public void cachePrepare(Template template) throws MergeException {
+		super.cachePrepare(template);
+		// TODO Validate Enums
+	}
+
+	/**
 	 * Create a mergable clone of the object
 	 * 
 	 * @param mergable
@@ -85,25 +96,28 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 
 	/**
 	 * @return data source name
-	 */
-	public String getRawDataSource() {
-		return dataSource;
-	}
-	
-	/**
-	 * @return data source name
 	 * @throws MergeException 
 	 */
 	public String getDataSource() throws MergeException {
 		String source = this.dataSource;
 		if (this.sourceHasTags) {
 			Content content = new Content(this.getTemplate().getWrapper(), source, this.getTemplate().getContentEncoding());;
-			content.replace(this.getTemplate().getReplaceStack(), true, Config.get().getNestLimit());
+			content.replace(this.getTemplate().getReplaceStack(), true, Config.nestLimit());
 			source = content.getValue();
 		}
 		return source;
 	}
 	
+	/**
+	 * @return data source name
+	 */
+	public String getRawDataSource() {
+		return dataSource;
+	}
+	
+	/*
+	 * Simple Setter/Getter code below here
+	 */
 	/**
 	 * @param dataSource
 	 */

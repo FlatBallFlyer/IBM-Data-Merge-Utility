@@ -34,51 +34,68 @@ import com.ibm.util.merge.template.directive.AbstractDirective;
  * The Class Template - represents a Template with a collection of 
  * merge directives, and provides the core "Merge" functionality.
  * 
+ * The template is a state-full object that goes through a three phase life
+ * - Raw templates are constructed, or parsed from JSON and as such can
+ *   have invalid values for some attributes. 
+ * - Cached templates have been validated and had transient values initialized. 
+ *   The cache put/post methods utilize the cachePrepare() method to transform
+ *   a "Raw" template into a Cached template.
+ * - Mergable templates are a clone of a cached template. Only in this state can a 
+ *   template be "merged". The Merger getMergable method is used to get templates
+ *   for merging.
+ * 
  * @author Mike Storey
  * @since: v4.0
  */
 public class Template {
 
-	public static final int CONTENT_HTML 	= 1;
-	public static final int CONTENT_JSON 	= 2;
-	public static final int CONTENT_XML 	= 3;
-	public static final int CONTENT_TEXT 	= 4;
-	public static final HashMap<Integer, String> CONTENT_TYPES() {
-		HashMap<Integer, String> values = new HashMap<Integer, String>();
-		values.put(CONTENT_HTML, 	"html");
-		values.put(CONTENT_JSON, 	"json");
-		values.put(CONTENT_XML, 	"xml");
-		values.put(CONTENT_TEXT,	"text");
-		return values;
-	}
-
-	public static final int DISPOSITION_DOWNLOAD 	= 1;
-	public static final int DISPOSITION_NORMAL	 	= 2;
-	public static final HashMap<Integer, String> DISPOSITION_VALUES() {
-		HashMap<Integer, String> values = new HashMap<Integer, String>();
-		values.put(DISPOSITION_DOWNLOAD, 	"download");
-		values.put(DISPOSITION_NORMAL, 		"normal");
-		return values;
-	}
-
-	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
-		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
-		options.put("Content Type", CONTENT_TYPES());
-		options.put("Content Disposition", DISPOSITION_VALUES());
-		return options;
-	}
-	
+	/**
+	 * The unique Template ID
+	 */
 	private final TemplateId id;
+	/**
+	 * The content of the template. Template content consist of text, with any number 
+	 * of Replace Tag or Book-mark segments that are identified by the template.wrapper.  
+	 * Note that the wrapper characters can not appear anywhere in the template 
+	 * content except to identify a Tag or Book-mark.
+	 */
 	private String content 				= "";
-	private int contentType				= Template.CONTENT_TEXT; 
-	private int contentDisposition		= Template.DISPOSITION_NORMAL;
-	private int contentEncoding			= TagSegment.ENCODE_NONE;
-	private String contentFileName		= "";
-	private String contentRedirectUrl	= "";
-	private String description			= "";
+	/**
+	 * The wrapper used in the content
+	 */
 	private Wrapper wrapper				= new Wrapper();
+	/**
+	 * Content Type - provided for rest content type reply
+	 */
+	private int contentType				= Template.CONTENT_TEXT; 
+	/**
+	 * Content Disposition - provided for rest "Download" dispositions
+	 */
+	private int contentDisposition		= Template.DISPOSITION_NORMAL;
+	/**
+	 * Content Encoding - drives default data encoding
+	 */
+	private int contentEncoding			= TagSegment.ENCODE_NONE;
+	/**
+	 * A file name for Download Content Dispositions
+	 */
+	private String contentFileName		= "";
+	/**
+	 * A redirect URL - Provided for Rest implementations
+	 */
+	private String contentRedirectUrl	= "";
+	/**
+	 * A short description of the template - used in exception handling and logging 
+	 */
+	private String description			= "";
+	/**
+	 * The directives to execute during a merge
+	 */
 	private List<AbstractDirective> directives = new ArrayList<AbstractDirective>(); 
 	
+	/*
+	 * Transient values - initialized in cachePrepare, copied in getMergavble
+	 */
 	private transient Boolean merged 	= false;
 	private transient Boolean mergable 	= false;
 	private transient Stat stats 		= new Stat();
@@ -150,19 +167,23 @@ public class Template {
 	}
 	
 	/**
-	 * Parse content, and cleanup directives.
+	 * Validate all ordinal values, populate transient values.
 	 * @throws MergeException 
 	 */
-	public void cleanup() throws MergeException {
+	public void cachePrepare() throws MergeException {
+		// TODO Validate Enums
+		this.stats = new Stat();
+		this.stats.name = this.getId().shorthand();
+		this.stats.size = this.content.length();
 		this.merged 	= false;
 		this.mergable 	= false;
-		this.stats 		= new Stat();
 		this.replaceStack = new HashMap<String,String>();
 		this.setContent(content);
 		for (AbstractDirective directive : this.directives) {
-			directive.cleanup(this);
+			directive.cachePrepare(this);
 		}
 	}
+	
 	/**
 	 * Gets a mergable copy of this template and an empty replace stack
 	 *
@@ -345,12 +366,12 @@ public class Template {
 	 * Gets the content disposition.
 	 *
 	 * @return the content disposition
-	 * @throws Merge500 
+	 * @throws MergeException 
 	 */
-	public String getContentDisposition() throws Merge500 {
+	public String getContentDisposition() throws MergeException {
 		if (DISPOSITION_DOWNLOAD == contentDisposition) {
 			Content fileName = new Content(this.wrapper, this.contentFileName, this.contentEncoding);
-			fileName.replace(replaceStack, false, Config.get().getNestLimit() );
+			fileName.replace(replaceStack, false, Config.nestLimit() );
 			return "attachment;filename=\"" + fileName.getValue() + "\"";
 		} else {
 			return "";
@@ -525,14 +546,6 @@ public class Template {
 	}
 	
 	/**
-	 * Initialize cached template stats
-	 */
-	public void initStats() {
-		this.stats = new Stat();
-		this.stats.name = this.getId().shorthand();
-	}
-
-	/**
 	 * @return Statistics.
 	 */
 	public Stat getStats() {
@@ -555,4 +568,41 @@ public class Template {
 		this.context = context;
 	}
 
+	/*
+	 * Class Constants and getOptions()
+	 */
+	public static final int CONTENT_HTML 	= 1;
+	public static final int CONTENT_JSON 	= 2;
+	public static final int CONTENT_XML 	= 3;
+	public static final int CONTENT_TEXT 	= 4;
+	public static final HashMap<Integer, String> CONTENT_TYPES() {
+		HashMap<Integer, String> values = new HashMap<Integer, String>();
+		values.put(CONTENT_HTML, 	"html");
+		values.put(CONTENT_JSON, 	"json");
+		values.put(CONTENT_XML, 	"xml");
+		values.put(CONTENT_TEXT,	"text");
+		return values;
+	}
+
+	public static final int DISPOSITION_DOWNLOAD 	= 1;
+	public static final int DISPOSITION_NORMAL	 	= 2;
+	public static final int DISPOSITION_ARCHIVE	 	= 3;
+	public static final HashMap<Integer, String> DISPOSITION_VALUES() {
+		HashMap<Integer, String> values = new HashMap<Integer, String>();
+		values.put(DISPOSITION_DOWNLOAD, 	"download");
+		values.put(DISPOSITION_ARCHIVE, 	"download archive");
+		values.put(DISPOSITION_NORMAL, 		"normal");
+		return values;
+	}
+
+	/**
+	 * @return option values and descriptions for the Tempalte Class
+	 */
+	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
+		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		options.put("Content Type", CONTENT_TYPES());
+		options.put("Content Disposition", DISPOSITION_VALUES());
+		return options;
+	}
+	
 }

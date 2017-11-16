@@ -326,11 +326,15 @@ public class TemplateTest {
 	}
 
 	@Test
-	public void testStats() {
-		template.initStats();
+	public void cachePrepare() throws MergeException {
+		template.cachePrepare();
+		// TODO test primitive validation 
+		// TODO test transient population
+		
+		// Test template stats
 		assertEquals("System.Test.", template.getStats().name);
 		assertEquals(0, template.getStats().hits);
-		assertEquals(0, template.getStats().size);
+		assertEquals(12, template.getStats().size);
 		assertEquals(0, template.getStats().time);
 	}
 	

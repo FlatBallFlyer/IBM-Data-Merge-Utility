@@ -76,7 +76,7 @@ public class MongoProvider implements ProviderInterface {
 	private void connect() throws Merge500 {
 		Credentials creds;
 		try {
-			creds = proxy.fromString(Config.get().getEnv(source), Credentials.class);
+			creds = proxy.fromString(Config.env(source), Credentials.class);
 		} catch (MergeException e) {
 			throw new Merge500("Invalid Mongo Provider for:" + source);
 		}
@@ -93,7 +93,7 @@ public class MongoProvider implements ProviderInterface {
 		
 		DataElement result = null;
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_JSON);
-		query.replace(replace, false, Config.get().getNestLimit());
+		query.replace(replace, false, Config.nestLimit());
 		
 		String results = ""; // TODO - Make Mongo Call
 		

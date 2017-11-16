@@ -2,6 +2,12 @@
 
 Overview
 
-### Deploying on BlueMix
+### What Is IDMU
+The IBM Data Merge Utility is a Java Utility that provides transformation and enrichment services through a simple template based process. The use of templates makes this transformation tool uniquely well suited to creating Scripts, Code or other complex documents. It is also very well suited to doing JSON microservice transformations. While this utility does not expose a Rest API it is designed with that in mind. 
 
-1. ...... TODO
+### See Also
+  IDMU-CLI Project
+  IDMU-API Project
+  JavaDoc
+  Template Users Guide
+  

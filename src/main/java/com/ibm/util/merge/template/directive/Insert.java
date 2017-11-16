@@ -39,88 +39,6 @@ import com.ibm.util.merge.template.content.BookmarkSegment;
  * @since: v4.0
  */
 public class Insert extends AbstractDataDirective {
-	public static final int MISSING_THROW 	= 1;
-	public static final int MISSING_IGNORE 	= 2;
-	public static final int MISSING_INSERT 	= 3;
-	public static final HashMap<Integer, String> MISSING_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(MISSING_THROW, 	"throw");
-		options.put(MISSING_IGNORE, "ignore");
-		options.put(MISSING_INSERT, "insert");
-		return options;
-	}
-	
-	public static final int PRIMITIVE_THROW 	= 1;
-	public static final int PRIMITIVE_IGNORE 	= 2;
-	public static final int PRIMITIVE_INSERT 	= 3;
-	public static final int PRIMITIVE_INSERT_IF	= 4;
-	public static final HashMap<Integer, String> PRIMITIVE_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(PRIMITIVE_THROW, 	"throw");
-		options.put(PRIMITIVE_IGNORE, 	"ignore");
-		options.put(PRIMITIVE_INSERT, 	"insert");
-		options.put(PRIMITIVE_INSERT_IF, "insert if");
-		return options;
-	}
-
-	public static final int INSERT_IF_STRING_EQUALS 	= 1;
-	public static final int INSERT_IF_STRING_EMPTY 		= 2;
-	public static final int INSERT_IF_STRING_NOT_EMPTY 	= 3;
-	public static final int INSERT_IF_STRING_GT			= 4;
-	public static final int INSERT_IF_STRING_LT			= 5;
-	public static final int INSERT_IF_VALUE_EQUALS 		= 6;
-	public static final int INSERT_IF_VALUE_GT			= 7;
-	public static final int INSERT_IF_VALUE_LT			= 8;
-	public static final HashMap<Integer, String> INSERT_IF_OPERATORS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(INSERT_IF_STRING_EQUALS,	"string equals");
-		options.put(INSERT_IF_STRING_EMPTY, 	"string is empty");
-		options.put(INSERT_IF_STRING_NOT_EMPTY, "string not empty");
-		options.put(INSERT_IF_STRING_GT, 		"string >");
-		options.put(INSERT_IF_STRING_LT, 		"string <");
-		options.put(INSERT_IF_VALUE_EQUALS, 	"value =");
-		options.put(INSERT_IF_VALUE_GT, 		"value >");
-		options.put(INSERT_IF_VALUE_LT, 		"value <");
-		return options;
-	}
-
-	public static final int OBJECT_THROW 			= 1;
-	public static final int OBJECT_IGNORE 			= 2;
-	public static final int OBJECT_INSERT_OBJECT 	= 3;
-	public static final int OBJECT_INSERT_LIST 	= 4;
-	public static final HashMap<Integer, String> OBJECT_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(OBJECT_THROW, 			"throw");
-		options.put(OBJECT_IGNORE, 			"ignore");
-		options.put(OBJECT_INSERT_OBJECT, 	"insertObject");
-		options.put(OBJECT_INSERT_LIST, 	"insertList");
-		return options;
-	}
-
-	public static final int LIST_THROW 			= 1;
-	public static final int LIST_IGNORE 		= 2;
-	public static final int LIST_INSERT 		= 3;
-	public static final int LIST_INSERT_FIRST 	= 4;
-	public static final int LIST_INSERT_LAST 	= 5;
-	public static final HashMap<Integer, String> LIST_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(LIST_THROW, 		"throw");
-		options.put(LIST_IGNORE, 		"ignore");
-		options.put(LIST_INSERT, 		"insert");
-		options.put(LIST_INSERT_FIRST, 	"insert first member");
-		options.put(LIST_INSERT_LAST, 	"insert last member");
-		return options;
-	}
-
-	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
-		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
-		options.put("Source Missing", 	MISSING_OPTIONS());
-		options.put("If Primitive", 	PRIMITIVE_OPTIONS());
-		options.put("If Object", 		OBJECT_OPTIONS());
-		options.put("If List", 			LIST_OPTIONS());
-		options.put("Insert If operators", INSERT_IF_OPERATORS());
-		return options;
-	}
 
 	private HashSet<String> notFirst;
 	private HashSet<String> notLast;
@@ -177,8 +95,9 @@ public class Insert extends AbstractDataDirective {
 	}
 	
 	@Override
-	public void cleanup(Template template) throws MergeException {
-		this.cleanupAbstract(template);
+	public void cachePrepare(Template template) throws MergeException {
+		// TODO Validate Enums
+		super.cachePrepare(template);
 	}
 
 	@Override
@@ -373,7 +292,7 @@ public class Insert extends AbstractDataDirective {
 	 * @throws MergeException
 	 */
 	public void insertAtBookmarks(Merger context, DataElement value, boolean isFirst, boolean isLast) throws MergeException {
-		if (context.getStackSize() > Config.get().getInsertLimit()) {
+		if (context.getStackSize() > Config.insertLimit()) {
 			throw new Merge500("template insert recursion safety, merge stack size exceded");
 		}
 
@@ -515,4 +434,89 @@ public class Insert extends AbstractDataDirective {
 		this.ifValue = ifValue;
 	}
 
+	/*
+	 * Static Constants and Options below here
+	 */
+	public static final int MISSING_THROW 	= 1;
+	public static final int MISSING_IGNORE 	= 2;
+	public static final int MISSING_INSERT 	= 3;
+	public static final HashMap<Integer, String> MISSING_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(MISSING_THROW, 	"throw");
+		options.put(MISSING_IGNORE, "ignore");
+		options.put(MISSING_INSERT, "insert");
+		return options;
+	}
+	
+	public static final int PRIMITIVE_THROW 	= 1;
+	public static final int PRIMITIVE_IGNORE 	= 2;
+	public static final int PRIMITIVE_INSERT 	= 3;
+	public static final int PRIMITIVE_INSERT_IF	= 4;
+	public static final HashMap<Integer, String> PRIMITIVE_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(PRIMITIVE_THROW, 	"throw");
+		options.put(PRIMITIVE_IGNORE, 	"ignore");
+		options.put(PRIMITIVE_INSERT, 	"insert");
+		options.put(PRIMITIVE_INSERT_IF, "insert if");
+		return options;
+	}
+
+	public static final int INSERT_IF_STRING_EQUALS 	= 1;
+	public static final int INSERT_IF_STRING_EMPTY 		= 2;
+	public static final int INSERT_IF_STRING_NOT_EMPTY 	= 3;
+	public static final int INSERT_IF_STRING_GT			= 4;
+	public static final int INSERT_IF_STRING_LT			= 5;
+	public static final int INSERT_IF_VALUE_EQUALS 		= 6;
+	public static final int INSERT_IF_VALUE_GT			= 7;
+	public static final int INSERT_IF_VALUE_LT			= 8;
+	public static final HashMap<Integer, String> INSERT_IF_OPERATORS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(INSERT_IF_STRING_EQUALS,	"string equals");
+		options.put(INSERT_IF_STRING_EMPTY, 	"string is empty");
+		options.put(INSERT_IF_STRING_NOT_EMPTY, "string not empty");
+		options.put(INSERT_IF_STRING_GT, 		"string >");
+		options.put(INSERT_IF_STRING_LT, 		"string <");
+		options.put(INSERT_IF_VALUE_EQUALS, 	"value =");
+		options.put(INSERT_IF_VALUE_GT, 		"value >");
+		options.put(INSERT_IF_VALUE_LT, 		"value <");
+		return options;
+	}
+
+	public static final int OBJECT_THROW 			= 1;
+	public static final int OBJECT_IGNORE 			= 2;
+	public static final int OBJECT_INSERT_OBJECT 	= 3;
+	public static final int OBJECT_INSERT_LIST 	= 4;
+	public static final HashMap<Integer, String> OBJECT_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(OBJECT_THROW, 			"throw");
+		options.put(OBJECT_IGNORE, 			"ignore");
+		options.put(OBJECT_INSERT_OBJECT, 	"insertObject");
+		options.put(OBJECT_INSERT_LIST, 	"insertList");
+		return options;
+	}
+
+	public static final int LIST_THROW 			= 1;
+	public static final int LIST_IGNORE 		= 2;
+	public static final int LIST_INSERT 		= 3;
+	public static final int LIST_INSERT_FIRST 	= 4;
+	public static final int LIST_INSERT_LAST 	= 5;
+	public static final HashMap<Integer, String> LIST_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(LIST_THROW, 		"throw");
+		options.put(LIST_IGNORE, 		"ignore");
+		options.put(LIST_INSERT, 		"insert");
+		options.put(LIST_INSERT_FIRST, 	"insert first member");
+		options.put(LIST_INSERT_LAST, 	"insert last member");
+		return options;
+	}
+
+	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
+		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		options.put("Source Missing", 	MISSING_OPTIONS());
+		options.put("If Primitive", 	PRIMITIVE_OPTIONS());
+		options.put("If Object", 		OBJECT_OPTIONS());
+		options.put("If List", 			LIST_OPTIONS());
+		options.put("Insert If operators", INSERT_IF_OPERATORS());
+		return options;
+	}
 }

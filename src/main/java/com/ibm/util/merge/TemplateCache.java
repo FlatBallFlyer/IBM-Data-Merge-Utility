@@ -67,16 +67,16 @@ public class TemplateCache implements Iterable<String> {
 		this.initialized = new Date();
 		this.buildDefaultTemplates();
 		
-		if (!Config.get().getLoadFolder().isEmpty()) {
-			File templateFolder = new File(Config.get().getLoadFolder());
+		if (!Config.loadFolder().isEmpty()) {
+			File templateFolder = new File(Config.loadFolder());
 			if (!templateFolder.exists()) {
-				LOGGER.log(Level.WARNING, "Template Load Folder not found: " + Config.get().getLoadFolder());
+				LOGGER.log(Level.WARNING, "Template Load Folder not found: " + Config.loadFolder());
 				return;
 			}
 			
 			File[] groups = templateFolder.listFiles();
 			if (null == groups) {
-				LOGGER.log(Level.WARNING, "Template Load Folder is empty: " + Config.get().getLoadFolder());
+				LOGGER.log(Level.WARNING, "Template Load Folder is empty: " + Config.loadFolder());
 				return;
 			}
 			
@@ -184,8 +184,7 @@ public class TemplateCache implements Iterable<String> {
 		if (cache.containsKey(name)) {
 			throw new Merge403("Duplicate Found:" + name);
 		}
-		template.cleanup();
-		template.initStats();
+		template.cachePrepare();
 		cache.put(name, template);
 		return "ok";
 	}
@@ -247,8 +246,7 @@ public class TemplateCache implements Iterable<String> {
 		if (!cache.containsKey(name)) {
 			throw new Merge404("Not Found:" + template.getId().shorthand());
 		}
-		template.cleanup();
-		template.initStats();
+		template.cachePrepare();
 		cache.put(name, template);
 		return "ok";
 	}

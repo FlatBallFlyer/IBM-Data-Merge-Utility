@@ -16,12 +16,21 @@
  */
 package com.ibm.util.merge;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.data.parser.ParserProxyInterface;
@@ -38,74 +47,185 @@ import com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface;
 import com.ibm.util.merge.template.directive.enrich.provider.ProviderMeta;
 
 /**
- * Implements a Singleton Pattern for a Config object
- * 
+ * Provides configuration information for the Merge Utility
+ * You can optionally load a configuration with one of 
+ * the provided load functions.
+ *
+ * Implemented as a singleton with static convience methods
  * @author Mike Storey
  * @since: v4.0.0.B1
  */
 public class Config {
+	/*
+	 * Singleton Code and convience accessors
+	 */
 	private static Config config = null;
 	
-	public static Config initialize() throws MergeException {
-		config = new Config();
-		config.registerDefaultProviders();
-		config.registerDefaultProxies();
-		return config;
-	}
-
-	public static Config get() throws Merge500 {
+	/**
+	 * Singleton Constructor
+	 * @return
+	 * @throws MergeException
+	 */
+	private static Config get() throws MergeException {
 		if (null == config) {
 			config = new Config();
 		}
 		return config;
 	}
 
-	public static Config load(String name) throws MergeException {
-		return Config.get().initialize(name);
+	/**
+	 * @param configuration
+	 * @return
+	 * @throws MergeException
+	 */
+	public static void initialize() throws MergeException {
+		config = new Config();
 	}
 	
+	/**
+	 * @param configuration
+	 * @return
+	 * @throws MergeException
+	 */
+	public static Config load(String configuration) throws MergeException {
+		config = new Config(configuration);
+		return config;
+	}
+	
+	/**
+	 * @param configFile
+	 * @return
+	 * @throws MergeException
+	 */
+	public static Config load(File configFile) throws MergeException {
+		config = new Config(configFile);
+		return config;
+	}
+	
+	/**
+	 * @param configUrl
+	 * @return
+	 * @throws MergeException
+	 */
+	public static Config load(URL configUrl) throws MergeException {
+		config = new Config(configUrl);
+		return config;
+	}
+	
+	/**
+	 * @return
+	 * @throws MergeException
+	 */
+	public static int nestLimit() throws MergeException {
+		return Config.get().getNestLimit();
+	}
+
+	/**
+	 * @return
+	 * @throws MergeException
+	 */
+	public static int insertLimit() throws MergeException {
+		return Config.get().getInsertLimit();
+	}
+	
+	/**
+	 * @return
+	 * @throws MergeException
+	 */
+	public static String tempFolder() throws MergeException {
+		return Config.get().getTempFolder();
+	}
+
+	/**
+	 * @return
+	 * @throws MergeException
+	 */
+	public static String loadFolder() throws MergeException {
+		return Config.get().getLoadFolder();
+	}
+
+	/**
+	 * @return
+	 * @throws MergeException
+	 */
+	public static String env(String varName) throws MergeException {
+		return Config.get().getEnv(varName);
+	}
+
+	/**
+	 * @return
+	 * @throws MergeException
+	 */
+	public static String version() throws MergeException {
+		return Config.get().getVersion();
+	}
+
+	/**
+	 * @param className
+	 * @param source
+	 * @param option
+	 * @param context
+	 * @return
+	 * @throws MergeException
+	 */
+	public static ProviderInterface providerInstance(String className, String source, String option, Merger context) throws MergeException {
+		return Config.get().getProviderInstance(className, source, option, context);
+	}
+	
+	/**
+	 * @param parseAs
+	 * @param value
+	 * @return
+	 * @throws Merge500
+	 * @throws MergeException
+	 */
 	public static DataElement parse(int parseAs, String value) throws Merge500, MergeException {
 		return Config.get().parseString(parseAs, value);
 	}
 	
-	public static int nestLimit() throws Merge500 {
-		return Config.get().getNestLimit();
+	public static String allOptions() throws MergeException {
+		return Config.get().getAllOptions();
 	}
 
-	public static int insertLimit() throws Merge500 {
-		return Config.get().getInsertLimit();
+	public static HashMap<String, Class<ProviderInterface>> providers() throws MergeException {
+		return Config.get().getProviders();
 	}
 	
-	public static String getTemplateFolder() throws Merge500 {
-		return Config.get().getTempFolder();
-	}
 
-	public static final int PARSE_NONE	= 4;
-	public static final int PARSE_CSV	= 1;
-	public static final int PARSE_JSON	= 3;
-	public static final int PARSE_XML	= 5;
-	public static final HashMap<Integer, String> PARSE_OPTIONS() {
-		HashMap<Integer, String> values = new HashMap<Integer, String>();
-		values.put(PARSE_CSV, 	"csv");
-		values.put(PARSE_JSON, 	"json");
-		values.put(PARSE_NONE, 	"none");
-		values.put(PARSE_XML,	"xml");
-		return values;
-	}
-
-	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
-		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
-		options.put("Parse Formats", PARSE_OPTIONS());
-		return options;
-	}
-	
+	/*
+	 * Normal Non-Static Object Attributes and Methods
+	 */
+	/**
+	 * 
+	 */
 	private final String version = "4.0.0.B1";
+	/**
+	 * 
+	 */
 	private int nestLimit 		= 2;
+	/**
+	 * 
+	 */
 	private int insertLimit		= 20;
+	/**
+	 * 
+	 */
 	private String tempFolder	= "/opt/ibm/idmu/archives";
+	/**
+	 * 
+	 */
 	private String loadFolder	= "foo";
+	/**
+	 * 
+	 */
 	private String logLevel 	= "SEVERE";
+	/**
+	 * 
+	 */
 	private HashMap<String, String> envVars = new HashMap<String,String>();
+	/**
+	 * 
+	 */
 	private String[] defaultProviders = {
 			"com.ibm.util.merge.template.directive.enrich.provider.CacheProvider",
 			"com.ibm.util.merge.template.directive.enrich.provider.CloudantProvider",
@@ -116,62 +236,158 @@ public class Config {
 			"com.ibm.util.merge.template.directive.enrich.provider.RestProvider",
 			"com.ibm.util.merge.template.directive.enrich.provider.StubProvider"
 	};
+	/**
+	 * 
+	 */
 	private String[] defaultParsers = {
 			"com.ibm.util.merge.data.parser.DataProxyCsv",
 			"com.ibm.util.merge.data.parser.DataProxyJson",
 			"com.ibm.util.merge.data.parser.DataProxyXmlStrict"
 	};
+
+	/*
+	 * Transient Values - Providers, Parsers and a JSON Proxy
+	 */
 	private transient HashMap<String, Class<ProviderInterface>> providers = new HashMap<String, Class<ProviderInterface>>();
 	private transient HashMap<Integer, ParserProxyInterface> proxies = new HashMap<Integer, ParserProxyInterface>();
-	
 	private transient static final DataProxyJson proxy = new DataProxyJson();
 	
 	/**
-	 * Provide a default configuration
+	 * Provide a default configuration. If the enviornment variable
+	 * idmu-config exists it is parsed as a json configuration value. 
+	 * If the config environment variable does not exist, all defaults
+	 * are provided.
 	 * 
-	 * @throws Merge500
+	 * @throws MergeException
 	 */
-	public Config() throws Merge500 {
+	public Config() throws MergeException {
+		this.proxies = new HashMap<Integer, ParserProxyInterface>();
+		this.providers = new HashMap<String, Class<ProviderInterface>>();
+		String configString = "";
+		try {
+			configString = this.getEnv("idmu-config");
+		} catch (Throwable e) {
+			// ignore
+		}
 	    Logger rootLogger = LogManager.getLogManager().getLogger("");
 	    rootLogger.setLevel(Level.parse(this.logLevel));
+		loadConfig(configString);
 	}
 	
 	/**
 	 * Get a configuration from the provided environment variable name. 
-	 * If an empty string is provided the default "idmu-config" environment
-	 * variable is used. 
 	 * 
 	 * @param configString
 	 * @throws MergeException
 	 */
-	public Config initialize(String configString) throws MergeException {
-		if (configString.isEmpty()) {
-			configString = this.getEnv("idmu-config");
-		}
-		Config me = proxy.fromString(configString, Config.class);
-		this.nestLimit = me.getNestLimit();
-		this.insertLimit = me.insertLimit;
-		this.tempFolder = me.getTempFolder();
-		this.loadFolder = me.getLoadFolder();
-		this.logLevel = me.getLogLevel();
-		this.envVars = me.getEnvVars();
+	public Config(String configString) throws MergeException {
 		this.proxies = new HashMap<Integer, ParserProxyInterface>();
-		if (null != me.defaultParsers) {
-			this.defaultParsers = me.defaultParsers;
-		}
-		this.registerDefaultProxies();
-		
 		this.providers = new HashMap<String, Class<ProviderInterface>>();
-		if (null != me.defaultProviders) {
-			this.defaultProviders = me.defaultProviders;
+	    Logger rootLogger = LogManager.getLogManager().getLogger("");
+	    rootLogger.setLevel(Level.parse(this.logLevel));
+		loadConfig(configString);
+	}
+	
+	/**
+	 * Read a configuration from a config file
+	 * 
+	 * @param configFile
+	 * @throws MergeException
+	 */
+	public Config(File configFile) throws MergeException {
+		this.proxies = new HashMap<Integer, ParserProxyInterface>();
+		this.providers = new HashMap<String, Class<ProviderInterface>>();
+		String configString;
+		try {
+			configString = new String(Files.readAllBytes(configFile.toPath()), "ISO-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			throw new Merge500("Unsupported Encoding Exception reading config file: " + configFile.toString() + " Message: "+ e.getMessage());
+		} catch (IOException e) {
+			throw new Merge500("IO Exception reading config file: " + configFile.toString() + " Message: " + e.getMessage());
+		} 
+	    Logger rootLogger = LogManager.getLogManager().getLogger("");
+	    rootLogger.setLevel(Level.parse(this.logLevel));
+		loadConfig(configString);
+	}
+	
+	/**
+	 * Read a configuration from an anonymous http source
+	 * 
+	 * @param url
+	 * @throws MergeException
+	 */
+	public Config(URL url) throws MergeException {
+		this.proxies = new HashMap<Integer, ParserProxyInterface>();
+		this.providers = new HashMap<String, Class<ProviderInterface>>();
+		String configString = ""; // TODO HTTP Get of ConfigString
+	    Logger rootLogger = LogManager.getLogManager().getLogger("");
+	    rootLogger.setLevel(Level.parse(this.logLevel));
+		loadConfig(configString);
+	}
+	
+	/**
+	 * Load the configuration provided
+	 * 
+	 * @param configString
+	 * @throws MergeException
+	 */
+	public void loadConfig(String configString) throws MergeException {
+		if (null != configString) {
+			JsonElement ele = proxy.fromString(configString, JsonElement.class);
+			if (null != ele && ele.isJsonObject()) {
+				JsonObject me = ele.getAsJsonObject();
+				this.nestLimit 		= this.getIf(me, "nestLimit", this.nestLimit);
+				this.insertLimit 	= this.getIf(me, "insertLimit", this.insertLimit);
+				this.tempFolder 	= this.getIf(me, "tempFolder", this.tempFolder);
+				this.loadFolder 	= this.getIf(me, "loadFolder", this.loadFolder);
+				this.logLevel 		= this.getIf(me, "logLevel", this.logLevel);
+				if (me.has("envVars") && me.get("envVars").isJsonObject()) {
+					this.envVars = new HashMap<String,String>();
+					for (Entry<String, JsonElement> var : me.get("envVars").getAsJsonObject().entrySet()) {
+						this.envVars.put(var.getKey(), var.getValue().getAsString());
+					}
+				}
+				
+				if (me.has("defaultProviders") && me.get("defaultProviders").isJsonArray()) {
+					JsonArray list = me.get("defaultProviders").getAsJsonArray();
+					this.defaultProviders = new String[list.size()];
+					for (int i = 0; i < list.size(); i++ ) {
+						this.defaultProviders[i] = list.get(i).getAsString();
+					}
+				}
+				
+				if (me.has("defaultParsers")) {
+					JsonArray list = me.get("defaultParsers").getAsJsonArray();
+					this.defaultParsers = new String[list.size()];
+					for (int i = 0; i < list.size(); i++ ) {
+						this.defaultParsers[i] = list.get(i).getAsString();
+					}
+				}
+			}
 		}
+		
+		this.registerDefaultProxies();
 		this.registerDefaultProviders();
 		
 	    Logger rootLogger = LogManager.getLogManager().getLogger("");
 	    rootLogger.setLevel(Level.parse(this.logLevel));
-	    return this;
 	}
 	
+	private int getIf(JsonObject me, String name, int value) {
+		if (me.has(name)) {
+			return me.get(name).getAsInt();
+		} else {
+			return value;
+		}
+	}
+
+	private String getIf(JsonObject object, String name, String value) {
+		if (object.has(name)) {
+			return object.get(name).getAsString();
+		} else {
+			return value;
+		}
+	}
 	/**
 	 * Abstraction of Environment access. Will leverage an entry from the 
 	 * local Environment hashmap property. Environment Variables prefixed with 
@@ -331,74 +547,34 @@ public class Config {
 	
 	// Simple Getter/Setter below here
 	
-	/**
-	 * File Folder where archives are created. 
-	 * 
-	 * @return
-	 */
 	public String getTempFolder() {
 		return tempFolder;
 	}
 
-	/**
-	 * File Folder where archives are created. 
-	 * 
-	 * @param tempFolder
-	 */
 	public void setTempFolder(String tempFolder) {
 		this.tempFolder = tempFolder;
 	}
 	
-	/**
-	 * Limit for nested Replace tags
-	 *  
-	 * @return nesting limit
-	 */
 	public int getNestLimit() {
 		return nestLimit;
 	}
 	
-	/**
-	 * Limit for nested Replace tags
-	 *  
-	 * @param limit
-	 */
 	public void setNestLimit(int limit) {
 		this.nestLimit = limit;
 	}
 	
-	/**
-	 * Limit of Sub-Template Insert depth - recursion safety catch
-	 * 
-	 * @return insert limit
-	 */
 	public int getInsertLimit() {
 		return insertLimit;
 	}
 
-	/**
-	 * Limit of Sub-Template Insert depth - recursion safety catch
-	 * 
-	 * @param insertLimit
-	 */
 	public void setInsertLimit(int insertLimit) {
 		this.insertLimit = insertLimit;
 	}
 
-	/**
-	 * HashMap of default environment values - helpful for testing
-	 * 
-	 * @return
-	 */
 	public HashMap<String, String> getEnvVars() {
 		return envVars;
 	}
 
-	/**
-	 * HashMap of default environment values - helpful for testing
-	 * 
-	 * @return
-	 */
 	public String getVersion() {
 		return version;
 	}
@@ -423,6 +599,28 @@ public class Config {
 		return this.providers;
 	}
 	
+	/*
+	 * Constants and Options
+	 */
+	public static final int PARSE_NONE	= 4;
+	public static final int PARSE_CSV	= 1;
+	public static final int PARSE_JSON	= 3;
+	public static final int PARSE_XML	= 5;
+	public static final HashMap<Integer, String> PARSE_OPTIONS() {
+		HashMap<Integer, String> values = new HashMap<Integer, String>();
+		values.put(PARSE_CSV, 	"csv");
+		values.put(PARSE_JSON, 	"json");
+		values.put(PARSE_NONE, 	"none");
+		values.put(PARSE_XML,	"xml");
+		return values;
+	}
+
+	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
+		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		options.put("Parse Formats", PARSE_OPTIONS());
+		return options;
+	}
+	
 	public String getAllOptions() throws MergeException {
 		HashMap<String, HashMap<String, HashMap<Integer, String>>> selectValues;
 		HashMap<String, ProviderMeta> providerList;
@@ -432,8 +630,6 @@ public class Config {
 		
 		selectValues.put("Template", 	Template.getOptions());
 		selectValues.put("Encoding",  Segment.getOptions());
-//		selectValues.put("Parsers", 	Config.getOptions());
-//		selectValues.put("Providers", 	this.providers.keySet());
 		selectValues.put("Enrich", 	Enrich.getOptions());
 		selectValues.put("Insert", 	Insert.getOptions());
 		selectValues.put("Parse", 	ParseData.getOptions());
@@ -446,4 +642,5 @@ public class Config {
 		String value = "[".concat(proxy.toString(selectValues)).concat(",").concat(proxy.toString(providerList)).concat("]");
 		return value;
 	}
+
 }

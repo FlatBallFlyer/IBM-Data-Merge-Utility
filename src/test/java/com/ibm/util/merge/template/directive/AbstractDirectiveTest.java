@@ -27,7 +27,7 @@ public class AbstractDirectiveTest {
 		}
 
 		@Override
-		public void cleanup(Template template)
+		public void cachePrepare(Template template)
 				throws MergeException {
 		}
 

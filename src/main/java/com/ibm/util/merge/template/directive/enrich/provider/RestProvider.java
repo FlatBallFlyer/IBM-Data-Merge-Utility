@@ -72,20 +72,20 @@ public class RestProvider implements ProviderInterface {
 	
 	private void connect() throws Merge500 {
 		try {
-			creds = proxy.fromString(Config.get().getEnv(source), Credentials.class);
+			creds = proxy.fromString(Config.env(source), Credentials.class);
 		} catch (MergeException e) {
 			throw new Merge500("Malformed or Missing Cloudant Source Credentials found for:" + source );
 		}
 	}
 
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws Merge500 {
+	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
 		if (creds == null) {
 			connect();
 		}
 		
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_HTML);
-		query.replace(replace, false, Config.get().getNestLimit());
+		query.replace(replace, false, Config.nestLimit());
 		String theUrl = "";
 		String fetchedData = "";
 

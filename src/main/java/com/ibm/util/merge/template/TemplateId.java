@@ -24,8 +24,17 @@ package com.ibm.util.merge.template;
  * @since: v4.0
  */
 public class TemplateId {
+	/**
+	 * A Template Group - used by the get/put/post cache operations
+	 */
 	public String group = "";
+	/**
+	 * The Template Name
+	 */
 	public String name = "";
+	/**
+	 * The Template Variant - used with Insert VaryBy operations
+	 */
 	public String variant = "";
 	
 	/**
@@ -59,7 +68,7 @@ public class TemplateId {
 	}
 
 	/**
-	 * Get the template shorthand name
+	 * Get the template shorthand name of group.name.variant
 	 *
 	 */
 	public String shorthand() {

@@ -474,7 +474,7 @@ public class ReplaceTest {
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
 		template.addDirective(directive);
-		template.cleanup();
+		template.cachePrepare();
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, "test.object.replace");
 		context.getMergeData().put("data.object", "-", replaceObject);
@@ -917,6 +917,7 @@ public class ReplaceTest {
 	
 	@Test
 	public void testExecuteRepeatTwo() throws MergeException {
+		Config.load("{\"nestLimit\":\"4\"}");
 		Template template = new Template("test", "repeat", "", "<foo parseFirst>", "<", ">");
 		Replace directive = new Replace("data.object", "-", false,"",
 				Replace.MISSING_THROW,
@@ -931,7 +932,6 @@ public class ReplaceTest {
 				true, true);
 		template.addDirective(directive);
 		cache.postTemplate(template);
-		Config.get().setNestLimit(4);
 		Merger context = new Merger(cache, "test.repeat.");
 		DataObject object = new DataObject();
 		object.put("foo", new DataPrimitive("<two parseFirst>"));
@@ -939,7 +939,7 @@ public class ReplaceTest {
 		object.put("two", new DataPrimitive("rab"));
 		context.getMergeData().put("data.object", "-", object);
 		template = context.merge();
-		assertEquals(4, Config.get().getNestLimit());
+		assertEquals(4, Config.nestLimit());
 		assertEquals("rab", template.getMergedOutput().getValue());
 	}
 	

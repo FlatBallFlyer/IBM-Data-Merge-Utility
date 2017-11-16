@@ -83,7 +83,7 @@ public class MergerTest {
 
 	@Test
 	public void testGetArchiveSimple() throws MergeException {
-		Config.get().setTempFolder("test");
+		Config.load("{\"tempFolder\":\"test\"}");
 		Merger merger = new Merger(cache, "system.sample.");
 		Archive archive = merger.getArchive();
 		assertEquals("test", archive.getFilePath());
@@ -94,7 +94,7 @@ public class MergerTest {
 	@Test
 	public void testGetArchiveType() throws MergeException {
 		for (String type : Archive.ARCHIVE_TYPES()) {
-			Config.get().setTempFolder("test");
+			Config.load("{\"tempFolder\":\"test\"}");
 			Merger merger = new Merger(cache, "system.sample.");
 			DataObject parameters = new DataObject();
 			DataList values = new DataList();
@@ -113,7 +113,7 @@ public class MergerTest {
 	
 	@Test
 	public void testGetArchiveName() throws MergeException {
-		Config.get().setTempFolder("test");
+		Config.load("{\"tempFolder\":\"test\"}");
 		Merger merger = new Merger(cache, "system.sample.");
 		DataObject parameters = new DataObject();
 		DataList values = new DataList();

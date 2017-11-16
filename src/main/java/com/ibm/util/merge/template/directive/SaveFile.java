@@ -48,8 +48,8 @@ public class SaveFile extends AbstractDirective {
 	}
 
 	@Override
-	public void cleanup(Template template) throws MergeException {
-		this.cleanupAbstract(template);
+	public void cachePrepare(Template template) throws MergeException {
+		super.cachePrepare(template);
 	}
 
 	@Override

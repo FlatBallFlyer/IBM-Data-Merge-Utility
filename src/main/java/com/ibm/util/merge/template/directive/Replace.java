@@ -38,127 +38,6 @@ import com.ibm.util.merge.template.Template;
  * @since: v4.0
  */
 public class Replace extends AbstractDataDirective {
-	public static final int MISSING_THROW 	= 1;
-	public static final int MISSING_IGNORE = 2;
-	public static final int MISSING_REPLACE = 3;
-	public static final HashMap<Integer, String> MISSING_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(MISSING_THROW, 		"throw");
-		options.put(MISSING_IGNORE, 	"ignore");
-		options.put(MISSING_REPLACE, 	"replace");
-		return options;
-	}
-	
-	public static final int PRIMITIVE_THROW 	= 1;
-	public static final int PRIMITIVE_IGNORE 	= 2;
-	public static final int PRIMITIVE_REPLACE 	= 3;
-	public static final int PRIMITIVE_JSON	 	= 4;
-	public static final HashMap<Integer, String> PRIMITIVE_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(PRIMITIVE_THROW, 	"throw");
-		options.put(PRIMITIVE_IGNORE, 	"ignore");
-		options.put(PRIMITIVE_REPLACE, 	"replace");
-		options.put(PRIMITIVE_JSON, 	"replace with JSON");
-		return options;
-	}
-
-	public static final int OBJECT_THROW 	= 1;
-	public static final int OBJECT_IGNORE 	= 2;
-	public static final int OBJECT_REPLACE 	= 3;
-	public static final int OBJECT_REPLACE_LIST = 4;
-	public static final int OBJECT_REPLACE_JSON = 5;
-	public static final HashMap<Integer, String> OBJECT_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(OBJECT_THROW, 	"throw");
-		options.put(OBJECT_IGNORE, 	"ignore");
-		options.put(OBJECT_REPLACE, "replace object");
-		options.put(OBJECT_REPLACE_LIST, "replace as list");
-		options.put(OBJECT_REPLACE_JSON, 	"replace with JSON");
-		return options;
-	}
-
-	public static final int OBJECT_ATTRIBUTE_PRIMITIVE_THROW	= 1;
-	public static final int OBJECT_ATTRIBUTE_PRIMITIVE_IGNORE 	= 2;
-	public static final int OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE 	= 3;
-	public static final HashMap<Integer, String> OBJECT_ATTRIBUTE_PRIMITIVE_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(OBJECT_ATTRIBUTE_PRIMITIVE_THROW, 	"throw");
-		options.put(OBJECT_ATTRIBUTE_PRIMITIVE_IGNORE, 	"ignore");
-		options.put(OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE, "insertList");
-		return options;
-	}
-
-	public static final int OBJECT_ATTRIBUTE_OBJECT_THROW	= 1;
-	public static final int OBJECT_ATTRIBUTE_OBJECT_IGNORE 	= 2;
-	public static final HashMap<Integer, String> OBJECT_ATTRIBUTE_OBJECT_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(OBJECT_ATTRIBUTE_OBJECT_THROW, 	"throw");
-		options.put(OBJECT_ATTRIBUTE_OBJECT_IGNORE, 	"ignore");
-		return options;
-	}
-
-	public static final int OBJECT_ATTRIBUTE_LIST_THROW 		= 1;
-	public static final int OBJECT_ATTRIBUTE_LIST_IGNORE 		= 2;
-	public static final int OBJECT_ATTRIBUTE_LIST_FIRST 		= 3;
-	public static final int OBJECT_ATTRIBUTE_LIST_LAST 			= 4;
-	public static final HashMap<Integer, String> OBJECT_ATTRIBUTE_LIST_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(OBJECT_ATTRIBUTE_LIST_THROW, 	"throw");
-		options.put(OBJECT_ATTRIBUTE_LIST_IGNORE, 	"ignore");
-		options.put(OBJECT_ATTRIBUTE_LIST_FIRST, 	"use first primitive");
-		options.put(OBJECT_ATTRIBUTE_LIST_LAST, 	"use last primitive");
-		return options;
-	}
-	
-	public static final int LIST_THROW 		= 1;
-	public static final int LIST_IGNORE 	= 2;
-	public static final int LIST_REPLACE 	= 3;
-	public static final int LIST_FIRST 		= 4;
-	public static final int LIST_LAST 		= 5;
-	public static final int LIST_JSON 		= 6;
-	public static final HashMap<Integer, String> LIST_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(LIST_THROW, 	"throw");
-		options.put(LIST_IGNORE, 	"ignore");
-		options.put(LIST_REPLACE, 	"replace");
-		options.put(LIST_FIRST, 	"use first only");
-		options.put(LIST_LAST,	 	"use last only");
-		options.put(LIST_JSON,	 	"replace with json");
-		return options;
-	}
-
-	public static final int LIST_ATTR_MISSING_THROW 	= 1;
-	public static final int LIST_ATTR_MISSING_IGNORE 	= 2;
-	public static final HashMap<Integer, String> LIST_ATTR_MISSING_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(LIST_ATTR_MISSING_THROW, 	"throw");
-		options.put(LIST_ATTR_MISSING_IGNORE, 	"ignore");
-		return options;
-	}
-
-	public static final int LIST_ATTR_NOT_PRIMITIVE_THROW 	= 1;
-	public static final int LIST_ATTR_NOT_PRIMITIVE_IGNORE 	= 2;
-	public static final HashMap<Integer, String> LIST_ATTR_NOT_PRIMITIVE_OPTIONS() {
-		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(LIST_ATTR_NOT_PRIMITIVE_THROW, 	"throw");
-		options.put(LIST_ATTR_NOT_PRIMITIVE_IGNORE,	"ignore");
-		return options;
-	}
-
-	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
-		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
-		options.put("Source Missing", 			MISSING_OPTIONS());
-		options.put("If Primitive", 			PRIMITIVE_OPTIONS());
-		options.put("If Object", 				OBJECT_OPTIONS());
-		options.put("Object-Attr Primitive", 	OBJECT_ATTRIBUTE_PRIMITIVE_OPTIONS());
-		options.put("Object-Attr Object", 	 	OBJECT_ATTRIBUTE_OBJECT_OPTIONS());
-		options.put("Object-Attr List", 	 	OBJECT_ATTRIBUTE_LIST_OPTIONS());
-		options.put("If List", 					LIST_OPTIONS());
-		options.put("List-Attr Missing", 		LIST_ATTR_MISSING_OPTIONS());
-		options.put("List-Attr Not Primitive", 	LIST_ATTR_NOT_PRIMITIVE_OPTIONS());
-		return options;
-	}
-
 	private String fromAttribute;	// used by List
 	private String toAttribute;		// used by List
 	private String toValue;
@@ -220,9 +99,11 @@ public class Replace extends AbstractDataDirective {
 	}
 
 	@Override
-	public void cleanup(Template template) throws MergeException {
-		this.cleanupAbstract(template);
+	public void cachePrepare(Template template) throws MergeException {
+		// TODO Validate Enums
+		super.cachePrepare(template);
 	}
+
 
 	@Override
 	public AbstractDirective getMergable() {
@@ -255,7 +136,7 @@ public class Replace extends AbstractDataDirective {
 			case MISSING_REPLACE : 
 				this.replaceFromString(this.toValue);
 				if (this.processAfter) {
-					this.getTemplate().getMergeContent().replace(this.getTemplate().getReplaceStack(), this.processRequire, Config.get().getNestLimit()); 
+					this.getTemplate().getMergeContent().replace(this.getTemplate().getReplaceStack(), this.processRequire, Config.nestLimit()); 
 				}
 				return;
 			}
@@ -332,7 +213,7 @@ public class Replace extends AbstractDataDirective {
 		}
 		
 		if (this.processAfter) {
-			this.getTemplate().getMergeContent().replace(this.getTemplate().getReplaceStack(), this.processRequire, Config.get().getNestLimit()); 
+			this.getTemplate().getMergeContent().replace(this.getTemplate().getReplaceStack(), this.processRequire, Config.nestLimit()); 
 		}
 	}
 	
@@ -392,7 +273,6 @@ public class Replace extends AbstractDataDirective {
 	 * @throws MergeException
 	 */
 	private void replaceFromObject(DataObject dataObject) throws MergeException {
-//		DataObject dataObject = context.getMergeData().get(this.getDataSource(), this.getDataDelimeter()).getAsObject();
 		String from = "";
 		String to = "";
 		for (Entry<String, DataElement> member: dataObject.entrySet()) {
@@ -447,6 +327,10 @@ public class Replace extends AbstractDataDirective {
 			}
 		}
 	}
+	
+	/*
+	 * Simple getter / setters below here
+	 */
 
 	/**
 	 * @return name of attribute for List To values
@@ -582,5 +466,129 @@ public class Replace extends AbstractDataDirective {
 
 	public void setToValue(String toValue) {
 		this.toValue = toValue;
+	}
+	
+	/*
+	 * Constants and Options below here
+	 */
+	public static final int MISSING_THROW 	= 1;
+	public static final int MISSING_IGNORE = 2;
+	public static final int MISSING_REPLACE = 3;
+	public static final HashMap<Integer, String> MISSING_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(MISSING_THROW, 		"throw");
+		options.put(MISSING_IGNORE, 	"ignore");
+		options.put(MISSING_REPLACE, 	"replace");
+		return options;
+	}
+	
+	public static final int PRIMITIVE_THROW 	= 1;
+	public static final int PRIMITIVE_IGNORE 	= 2;
+	public static final int PRIMITIVE_REPLACE 	= 3;
+	public static final int PRIMITIVE_JSON	 	= 4;
+	public static final HashMap<Integer, String> PRIMITIVE_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(PRIMITIVE_THROW, 	"throw");
+		options.put(PRIMITIVE_IGNORE, 	"ignore");
+		options.put(PRIMITIVE_REPLACE, 	"replace");
+		options.put(PRIMITIVE_JSON, 	"replace with JSON");
+		return options;
+	}
+
+	public static final int OBJECT_THROW 	= 1;
+	public static final int OBJECT_IGNORE 	= 2;
+	public static final int OBJECT_REPLACE 	= 3;
+	public static final int OBJECT_REPLACE_LIST = 4;
+	public static final int OBJECT_REPLACE_JSON = 5;
+	public static final HashMap<Integer, String> OBJECT_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(OBJECT_THROW, 	"throw");
+		options.put(OBJECT_IGNORE, 	"ignore");
+		options.put(OBJECT_REPLACE, "replace object");
+		options.put(OBJECT_REPLACE_LIST, "replace as list");
+		options.put(OBJECT_REPLACE_JSON, 	"replace with JSON");
+		return options;
+	}
+
+	public static final int OBJECT_ATTRIBUTE_PRIMITIVE_THROW	= 1;
+	public static final int OBJECT_ATTRIBUTE_PRIMITIVE_IGNORE 	= 2;
+	public static final int OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE 	= 3;
+	public static final HashMap<Integer, String> OBJECT_ATTRIBUTE_PRIMITIVE_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(OBJECT_ATTRIBUTE_PRIMITIVE_THROW, 	"throw");
+		options.put(OBJECT_ATTRIBUTE_PRIMITIVE_IGNORE, 	"ignore");
+		options.put(OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE, "insertList");
+		return options;
+	}
+
+	public static final int OBJECT_ATTRIBUTE_OBJECT_THROW	= 1;
+	public static final int OBJECT_ATTRIBUTE_OBJECT_IGNORE 	= 2;
+	public static final HashMap<Integer, String> OBJECT_ATTRIBUTE_OBJECT_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(OBJECT_ATTRIBUTE_OBJECT_THROW, 	"throw");
+		options.put(OBJECT_ATTRIBUTE_OBJECT_IGNORE, 	"ignore");
+		return options;
+	}
+
+	public static final int OBJECT_ATTRIBUTE_LIST_THROW 		= 1;
+	public static final int OBJECT_ATTRIBUTE_LIST_IGNORE 		= 2;
+	public static final int OBJECT_ATTRIBUTE_LIST_FIRST 		= 3;
+	public static final int OBJECT_ATTRIBUTE_LIST_LAST 			= 4;
+	public static final HashMap<Integer, String> OBJECT_ATTRIBUTE_LIST_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(OBJECT_ATTRIBUTE_LIST_THROW, 	"throw");
+		options.put(OBJECT_ATTRIBUTE_LIST_IGNORE, 	"ignore");
+		options.put(OBJECT_ATTRIBUTE_LIST_FIRST, 	"use first primitive");
+		options.put(OBJECT_ATTRIBUTE_LIST_LAST, 	"use last primitive");
+		return options;
+	}
+	
+	public static final int LIST_THROW 		= 1;
+	public static final int LIST_IGNORE 	= 2;
+	public static final int LIST_REPLACE 	= 3;
+	public static final int LIST_FIRST 		= 4;
+	public static final int LIST_LAST 		= 5;
+	public static final int LIST_JSON 		= 6;
+	public static final HashMap<Integer, String> LIST_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(LIST_THROW, 	"throw");
+		options.put(LIST_IGNORE, 	"ignore");
+		options.put(LIST_REPLACE, 	"replace");
+		options.put(LIST_FIRST, 	"use first only");
+		options.put(LIST_LAST,	 	"use last only");
+		options.put(LIST_JSON,	 	"replace with json");
+		return options;
+	}
+
+	public static final int LIST_ATTR_MISSING_THROW 	= 1;
+	public static final int LIST_ATTR_MISSING_IGNORE 	= 2;
+	public static final HashMap<Integer, String> LIST_ATTR_MISSING_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(LIST_ATTR_MISSING_THROW, 	"throw");
+		options.put(LIST_ATTR_MISSING_IGNORE, 	"ignore");
+		return options;
+	}
+
+	public static final int LIST_ATTR_NOT_PRIMITIVE_THROW 	= 1;
+	public static final int LIST_ATTR_NOT_PRIMITIVE_IGNORE 	= 2;
+	public static final HashMap<Integer, String> LIST_ATTR_NOT_PRIMITIVE_OPTIONS() {
+		HashMap<Integer, String> options = new HashMap<Integer, String>();
+		options.put(LIST_ATTR_NOT_PRIMITIVE_THROW, 	"throw");
+		options.put(LIST_ATTR_NOT_PRIMITIVE_IGNORE,	"ignore");
+		return options;
+	}
+
+	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
+		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		options.put("Source Missing", 			MISSING_OPTIONS());
+		options.put("If Primitive", 			PRIMITIVE_OPTIONS());
+		options.put("If Object", 				OBJECT_OPTIONS());
+		options.put("Object-Attr Primitive", 	OBJECT_ATTRIBUTE_PRIMITIVE_OPTIONS());
+		options.put("Object-Attr Object", 	 	OBJECT_ATTRIBUTE_OBJECT_OPTIONS());
+		options.put("Object-Attr List", 	 	OBJECT_ATTRIBUTE_LIST_OPTIONS());
+		options.put("If List", 					LIST_OPTIONS());
+		options.put("List-Attr Missing", 		LIST_ATTR_MISSING_OPTIONS());
+		options.put("List-Attr Not Primitive", 	LIST_ATTR_NOT_PRIMITIVE_OPTIONS());
+		return options;
 	}
 }

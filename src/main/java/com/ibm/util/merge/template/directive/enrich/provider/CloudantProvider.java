@@ -78,7 +78,7 @@ public class CloudantProvider implements ProviderInterface {
 	private void connect() throws MergeException {
 		Credentials creds;
 		try {
-			creds = proxy.fromString(Config.get().getEnv(source), Credentials.class);
+			creds = proxy.fromString(Config.env(source), Credentials.class);
 		} catch (MergeException e) {
 			throw new Merge500("Malformed or Missing Cloudant Source Credentials found for:" + source );
 		}

@@ -53,7 +53,7 @@ public class FileSystemProvider implements ProviderInterface {
 	@Override
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_NONE);
-		query.replace(replace, false, Config.get().getNestLimit());
+		query.replace(replace, false, Config.nestLimit());
 		DataObject result = new DataObject();
 
 		File templateFolder = new File(this.getDbName());

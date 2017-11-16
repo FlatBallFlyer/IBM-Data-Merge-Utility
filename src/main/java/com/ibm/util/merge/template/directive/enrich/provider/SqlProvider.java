@@ -74,7 +74,7 @@ public abstract class SqlProvider implements ProviderInterface {
 		}
 		
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_SQL);
-		query.replace(replace, false, Config.get().getNestLimit());
+		query.replace(replace, false, Config.nestLimit());
 		DataList table = new DataList();
 		ResultSet results;
 

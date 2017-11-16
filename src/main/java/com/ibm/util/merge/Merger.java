@@ -153,7 +153,7 @@ public class Merger {
 					break;
 				}
 			}
-			this.archive.setFilePath(Config.getTemplateFolder());
+			this.archive.setFilePath(Config.tempFolder());
 			if (this.mergeData.contians(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_NAME, "-")) {
 				this.archive.setFileName(mergeData.get(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_NAME + "-[0]", "-").getAsPrimitive());
 			}
@@ -171,7 +171,7 @@ public class Merger {
 	public ProviderInterface getProvider(String enrichClass, String enrichSource, String dbName) throws MergeException {
 		String key = enrichSource.concat(dbName);
 		if (!this.providers.containsKey(key)) {
-			providers.put(key,  Config.get().getProviderInstance(enrichClass, enrichSource, dbName, this));
+			providers.put(key,  Config.providerInstance(enrichClass, enrichSource, dbName, this));
 		}
 		return providers.get(key);
 	}

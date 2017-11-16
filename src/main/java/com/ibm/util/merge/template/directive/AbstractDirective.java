@@ -134,16 +134,14 @@ public abstract class AbstractDirective {
 	public abstract AbstractDirective getMergable() throws MergeException;
 
 	/**
-	 * Populate Transient Values
-	 * @param config
+	 * Populate Transient Values and validate enumerations
 	 * @param template
 	 * @throws MergeException 
 	 */
-	public void cleanupAbstract(Template template) throws MergeException {
+	public void cachePrepare(Template template) throws MergeException {
+		// TODO Validate Enums
 		this.template = template;
 		this.gson = new DataProxyJson();
 	}
-
-	public abstract void cleanup(Template template) throws MergeException;
 
 }
