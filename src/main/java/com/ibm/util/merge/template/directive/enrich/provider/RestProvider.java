@@ -30,6 +30,7 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -106,6 +107,12 @@ public class RestProvider implements ProviderInterface {
 		}
 
 		return new DataPrimitive(fetchedData);
+	}
+	
+	@Override
+	public void close() {
+		// nothing to close
+		return;
 	}
 	
 	@Override

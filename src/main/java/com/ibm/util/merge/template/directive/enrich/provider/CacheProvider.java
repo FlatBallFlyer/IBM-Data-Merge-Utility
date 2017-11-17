@@ -72,6 +72,12 @@ public class CacheProvider implements ProviderInterface {
 	}
 
 	@Override
+	public void close() {
+		// nothing to close
+		return;
+	}
+	
+	@Override
 	public String getSource() {
 		return this.source;
 	}
@@ -95,6 +101,5 @@ public class CacheProvider implements ProviderInterface {
 				"No Parsing is supported",
 				"returns an object of <String, Primitive> with cache statistics");
 	}
-	
 	
 }

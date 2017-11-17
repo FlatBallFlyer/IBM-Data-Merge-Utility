@@ -130,6 +130,9 @@ public class Merger {
 	public Template merge() throws MergeException {
 		this.baseTemplate.getMergedOutput();
 		if (this.archive != null) {	this.archive.closeOutputStream();}
+		for (String provider : this.providers.keySet()) {
+			this.providers.get(provider).close();
+		}
 		return this.baseTemplate;
 	}
 	

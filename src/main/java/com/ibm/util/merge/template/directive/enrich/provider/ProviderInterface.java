@@ -45,6 +45,11 @@ public interface ProviderInterface {
 	public abstract DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException;
 
 	/**
+	 * Close any connections
+	 */
+	public abstract void close();
+
+	/**
 	 * @return Source Name
 	 */
 	public abstract String getSource();

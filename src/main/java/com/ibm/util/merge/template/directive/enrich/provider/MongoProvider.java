@@ -105,6 +105,14 @@ public class MongoProvider implements ProviderInterface {
 	}
 
 	@Override
+	public void close() {
+		if (this.connection != null) {
+			// this.connection.close();
+		}
+		return;
+	}
+		
+	@Override
 	public String getSource() {
 		return this.source;
 	}

@@ -113,7 +113,13 @@ public class CloudantProvider implements ProviderInterface {
 		}
 		return result;
 	}
-
+	
+	@Override
+	public void close() {
+		// TODO
+		return;
+	}
+	
 	@Override
 	public String getSource() {
 		return this.source;

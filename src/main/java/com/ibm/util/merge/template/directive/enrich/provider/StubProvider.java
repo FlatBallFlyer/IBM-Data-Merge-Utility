@@ -79,6 +79,12 @@ public class StubProvider implements ProviderInterface {
 	}
 
 	@Override
+	public void close() {
+		// nothing to close
+		return;
+	}
+	
+	@Override
 	public String getSource() {
 		return this.source;
 	}

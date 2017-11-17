@@ -108,6 +108,18 @@ public abstract class SqlProvider implements ProviderInterface {
 	}
 
 	@Override
+	public void close() {
+		if (this.connection != null) {
+			try {
+				this.connection.close();
+			} catch (SQLException e) {
+				// TODO Log Exception?
+			}
+		}
+		return;
+	}
+	
+	@Override
 	public String getSource() {
 		return this.source;
 	}
