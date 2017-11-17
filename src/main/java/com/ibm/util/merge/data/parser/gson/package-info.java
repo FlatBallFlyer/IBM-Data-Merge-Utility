@@ -17,7 +17,7 @@
 /**
  * GSON based custom Template serializer / deserializer
  * 
- * @author flatballflyer
+ * @author Mike Storey
  *
  */
 package com.ibm.util.merge.data.parser.gson;
