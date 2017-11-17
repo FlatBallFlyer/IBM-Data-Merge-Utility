@@ -15,9 +15,7 @@
  *
  */
 /**
- * A provider is used to interact with a data source. Each provider
- * implements the interface which allows it to retrieve data and 
- * provide it back as a DataElement 
+ * The Enrich Provider interface and default implementations
  * 
  * @author Mike Storey
  *

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body>
+<h1>A template based transformation and enrichment utility</h1>
+<h2>Usage</h2>
+	<textarea rows="16" cols="60">
+	// Optionally initialize a configuration
+	Config.load(from Env, String, File or URL)
+	  
+	// Create a template cache
+	TemplateCache cache = new TemplateCache();
+	
+	// Get a Merger for your template
+	Merger merger = new Merger(cache, "some.template.name");
+	  
+	// Merge the template and get the merged template
+	Template template = merger.merge();
+	 
+	// Do something with the output
+	template.getMergedOutput().getValue() - as a string
+	template.getMergedOutput().streamOutput(stream) - as an output stream
+	</textarea>
+
+<h2>Overview</h2>
+	<p>TODO</p>
+</body>
+</html>

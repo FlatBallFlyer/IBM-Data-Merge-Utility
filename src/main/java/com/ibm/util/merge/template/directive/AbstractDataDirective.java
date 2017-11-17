@@ -29,12 +29,33 @@ import com.ibm.util.merge.template.content.Content;
  *
  */
 public abstract class AbstractDataDirective extends AbstractDirective {
+	/**
+	 * The data source that drives the directive - Can contain Replace Tags
+	 */
 	private String dataSource;
+	/**
+	 * The delimiter used in the source name
+	 */
 	private String dataDelimeter;
+	/**
+	 * XX To Be Depricated
+	 */
 	private boolean sourceHasTags;
+	/**
+	 * The ifMissing Operator - See -Directive-_IF_MISSING*
+	 */
 	private int ifMissing;
+	/**
+	 * The ifPrimitive Operator - See -Directive-_IF_PRIMITIVE*
+	 */
 	private int ifPrimitive;
+	/**
+	 * The ifObject Operator - See -Directive-_IF_OBJECT*
+	 */
 	private int ifObject;
+	/**
+	 * The ifList Operator - See -Directive-_IF_LIST*
+	 */
 	private int ifList;
 
 	/**

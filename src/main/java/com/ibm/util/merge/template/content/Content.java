@@ -25,7 +25,7 @@ import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.template.Wrapper;
 
 /**
- * Content represents a parsed string value with replace / insert features
+ * Template Content - a dual linked list of Segments that optimizes Insert and Replace activities during the merge
  * 
  * @author Mike Storey
  *

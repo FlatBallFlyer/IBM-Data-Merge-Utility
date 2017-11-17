@@ -15,7 +15,7 @@
  *
  */
 /**
- * GSON based parser serializer / deserializer classes
+ * GSON based custom Template serializer / deserializer
  * 
  * @author flatballflyer
  *

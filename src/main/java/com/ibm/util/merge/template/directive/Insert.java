@@ -40,12 +40,33 @@ import com.ibm.util.merge.template.content.BookmarkSegment;
  */
 public class Insert extends AbstractDataDirective {
 
+	/**
+	 * List of tags that are emptied on the first insert 
+	 */
 	private HashSet<String> notFirst;
+	/**
+	 * List of tags that are emptied on the last insert 
+	 */
 	private HashSet<String> notLast;
+	/**
+	 * List of tags that are emptied on all but the first insert 
+	 */
 	private HashSet<String> onlyFirst;
+	/**
+	 * List of tags that are emptied on all but the last insert 
+	 */
 	private HashSet<String> onlyLast;
+	/**
+	 * Java Regex pattern that identifies the bookmarks where content will be inserted
+	 */
 	private String bookmarkPattern;
+	/**
+	 * If Primitive Compare operator an IfPrimitive sub-operator see Insert.INSERT_IF_*
+	 */
 	private int ifOperator;
+	/**
+	 * The value used by the IfOperator comparison
+	 */
 	private String ifValue;
 	
 	/**

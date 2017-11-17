@@ -15,9 +15,7 @@
  *
  */
 /**
- * The DataElement class and it's sub-classes represent a Merge Data object. 
- * The DataManager class provides path based access to a DataElement construct.
- * The Path and PathPart classes provide the path functions needed by the DataManager
+ * The DataManager class that provides path-based access to an abstract Object Data structure.
  * 
  * @author Mike Storey
  *

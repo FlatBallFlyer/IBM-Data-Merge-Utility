@@ -19,7 +19,6 @@ package com.ibm.util.merge.template.directive;
 import java.util.HashMap;
 
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
@@ -36,31 +35,23 @@ import com.ibm.util.merge.template.Template;
  */
 public abstract class AbstractDirective {
 
-	public static final int TYPE_ENRICH 			= 1;
-	public static final int TYPE_INSERT				= 2;
-	public static final int TYPE_PARSE	 			= 3;
-	public static final int TYPE_REPLACE		 	= 4;
-	public static final int TYPE_SAVE_FILE			= 5;
-	public static final HashMap<Integer, String> DIRECTIVE_TYPES() {
-		HashMap<Integer, String> values = new HashMap<Integer, String>();
-		values.put(TYPE_ENRICH, 			"enrich");
-		values.put(TYPE_INSERT, 			"insert");
-		values.put(TYPE_REPLACE, 			"replace");
-		values.put(TYPE_PARSE,				"parse");
-		values.put(TYPE_SAVE_FILE,			"save");
-		return values;
-	}
-
-	protected transient DataProxyJson gson;
+	/**
+	 * The template that possess this directive
+	 */
 	private transient Template template;
+	/**
+	 * The template type - See TYPE_* 
+	 */
 	private int type;
+	/**
+	 * The directive name - used logging and exception handling
+	 */
 	private String name = "";
 
 	/**
 	 * Instantiate a Directive 
 	 */
 	public AbstractDirective() {
-		this.gson = new DataProxyJson();
 		this.template = null;
 	}
 	
@@ -141,7 +132,21 @@ public abstract class AbstractDirective {
 	public void cachePrepare(Template template) throws MergeException {
 		// TODO Validate Enums
 		this.template = template;
-		this.gson = new DataProxyJson();
+	}
+
+	public static final int TYPE_ENRICH 			= 1;
+	public static final int TYPE_INSERT				= 2;
+	public static final int TYPE_PARSE	 			= 3;
+	public static final int TYPE_REPLACE		 	= 4;
+	public static final int TYPE_SAVE_FILE			= 5;
+	public static final HashMap<Integer, String> DIRECTIVE_TYPES() {
+		HashMap<Integer, String> values = new HashMap<Integer, String>();
+		values.put(TYPE_ENRICH, 			"enrich");
+		values.put(TYPE_INSERT, 			"insert");
+		values.put(TYPE_REPLACE, 			"replace");
+		values.put(TYPE_PARSE,				"parse");
+		values.put(TYPE_SAVE_FILE,			"save");
+		return values;
 	}
 
 }

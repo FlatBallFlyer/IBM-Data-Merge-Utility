@@ -15,9 +15,9 @@
  *
  */
 /**
- * The primary interface to the merge utility.
+ * The primary DataProxy interface and default implementations
  * 
  * @author Mike Storey
  *
  */
-package com.ibm.util.merge;
+package com.ibm.util.merge.data.parser;

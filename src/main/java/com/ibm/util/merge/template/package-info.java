@@ -15,7 +15,7 @@
  *
  */
 /**
- * The Template object is the core of IDMU processing.
+ * The Template object (the heart of the IDMU Merge Process)
  * 
  * @author Mike Storey
  *

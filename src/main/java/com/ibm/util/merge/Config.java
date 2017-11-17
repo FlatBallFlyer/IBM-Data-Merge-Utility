@@ -47,10 +47,7 @@ import com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface;
 import com.ibm.util.merge.template.directive.enrich.provider.ProviderMeta;
 
 /**
- * Provides configuration information for the Merge Utility
- * You can optionally load a configuration with one of 
- * the provided load functions.
- *
+ * Provides configuration information for the Merge Utility -  
  * Implemented as a singleton with static convenience methods
  * 
  * @author Mike Storey
@@ -157,7 +154,7 @@ public class Config {
 	/**
 	 * @param key The provider to lookup
 	 * @return if the provider is registered
-	 * @throws MergeException
+	 * @throws MergeException on processing errors
 	 */
 	public static boolean hasProvider(String key) throws MergeException{
 		return Config.get().providers.containsKey(key);
@@ -528,23 +525,23 @@ public class Config {
 	
 //	// Simple Getters below here
 //	
-	public String getTempFolder() {
+	private String getTempFolder() {
 		return tempFolder;
 	}
 
-	public int getNestLimit() {
+	private int getNestLimit() {
 		return nestLimit;
 	}
 	
-	public int getInsertLimit() {
+	private int getInsertLimit() {
 		return insertLimit;
 	}
 
-	public String getVersion() {
+	private String getVersion() {
 		return version;
 	}
 
-	public String getLoadFolder() {
+	private String getLoadFolder() {
 		return loadFolder;
 	}
 
@@ -570,7 +567,7 @@ public class Config {
 		return options;
 	}
 	
-	public String getAllOptions() throws MergeException {
+	private String getAllOptions() throws MergeException {
 		HashMap<String, HashMap<String, HashMap<Integer, String>>> selectValues;
 		HashMap<String, ProviderMeta> providerList;
 

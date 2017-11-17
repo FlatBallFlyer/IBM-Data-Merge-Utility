@@ -15,7 +15,7 @@
  *
  */
 /**
- * Directives implement the logic of the merge process. 
+ * Directives that implement the logic of the merge process. 
  * 
  * @author Mike Storey
  *

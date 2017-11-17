@@ -39,12 +39,33 @@ public class Enrich extends AbstractDirective {
 		return options;
 	}
 
+	/**
+	 * The target where the data will be placed
+	 */
 	private String targetDataName; 
+	/**
+	 * The delimiter used in the target data name
+	 */
 	private String targetDataDelimeter;
+	/**
+	 * The class name of the enrich provider
+	 */
 	private String enrichClass;
+	/**
+	 * The Source name for the provider
+	 */
 	private String enrichSource;
+	/**
+	 * The Source initialization parameter for the provider
+	 */
 	private String enrichParameter;
+	/**
+	 * The Execute Command used to retrieve the data
+	 */
 	private String enrichCommand;
+	/**
+	 * The parsAs format for parsing options (See Config.PARSE*)
+	 */
 	private int parseAs;
 
 	/**
