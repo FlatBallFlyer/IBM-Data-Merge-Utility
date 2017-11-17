@@ -34,12 +34,13 @@ import java.nio.file.Files;
 import java.util.HashMap;
 
 /**
- * Implements a local file system data provider that provides a hash of file-name to file-content values
+ * A file system provider - returns hash of FileName:FileContents - will parse Contents if requested
  * 
- * @author flatballflyer
+ * @author Mike Storey
  *
  */
 public class FileSystemProvider implements ProviderInterface {
+	// TODO - Refactor to get path from env
 	private final String source;
 	private final String dbName;
 	private transient final Merger context;

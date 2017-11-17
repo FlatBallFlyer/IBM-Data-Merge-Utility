@@ -29,7 +29,10 @@ import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
 
 /**
- * Implements MongoDb access
+ * A MongoDb provider
+ * <p>Environment Variable Format<blockquote><pre>
+ * TODO
+ * </pre></blockquote>
  * 
  * @author Mike Storey
  *

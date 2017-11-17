@@ -24,7 +24,7 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 
 /**
- * Defines the simple Interface required by all Providers
+ * Defines the Interface required by all Providers.
  * 
  * @author Mike Storey
  *
@@ -59,6 +59,9 @@ public interface ProviderInterface {
 	 */
 	public abstract Merger getContext();
 	
+	/**
+	 * @return Provider Meta Data - describes specifics of provider behavior for end users
+	 */
 	public abstract ProviderMeta getMetaInfo();
 
 }

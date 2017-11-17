@@ -17,7 +17,7 @@
 package com.ibm.util.merge.exception;
 
 /**
- * Not Found exception
+ * Not Allowed exception - Cache Duplicates or Invalid Packages
  * 
  * @author Mike Storey
  *

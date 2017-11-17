@@ -28,6 +28,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
+ * Manages TAR Archives
+ * @author Mike Storey
  *
  */
 public class TarArchive extends Archive {

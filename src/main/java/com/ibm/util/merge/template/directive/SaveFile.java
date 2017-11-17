@@ -24,7 +24,7 @@ import com.ibm.util.merge.storage.Archive;
 import com.ibm.util.merge.template.Template;
 
 /**
- * The Save File directive is used to write the output of a template to the current merge archive.
+ * Save the output of this template to an entry in the merge Archive file
  * 
  * @author Mike Storey
  *

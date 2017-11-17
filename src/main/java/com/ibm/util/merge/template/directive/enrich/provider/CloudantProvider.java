@@ -31,8 +31,11 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 
 /**
- * Implements Cloudant Database support. Environment Variable for credentials
- *  
+ * A Cloudant Provider
+ * <p>Environment Variable Format<blockquote><pre>
+ * TODO
+ * </pre></blockquote>
+ *   
  * @author Mike Storey
  *
  */

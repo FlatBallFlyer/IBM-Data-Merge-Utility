@@ -32,8 +32,7 @@ import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.content.BookmarkSegment;
 
 /**
- * The Class InsertDirective is used 
- * to insert templates at specific bookmarks within a tempalte content. 
+ * Insert Sub-Templates at Bookmarks based on data in the Data Store
  * 
  * @author Mike Storey
  * @since: v4.0

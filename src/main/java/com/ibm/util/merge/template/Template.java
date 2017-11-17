@@ -31,19 +31,24 @@ import com.ibm.util.merge.template.content.TagSegment;
 import com.ibm.util.merge.template.directive.AbstractDirective;
 
 /**
- * The Class Template - represents a Template with a collection of 
- * merge directives, and provides the core "Merge" functionality.
- * 
- * The template is a state-full object that goes through a three phase life
- * - Raw templates are constructed, or parsed from JSON and as such can
- *   have invalid values for some attributes. 
- * - Cached templates have been validated and had transient values initialized. 
+ * A Template and a list of Directives that drive Merge functionality
+ * <p>
+ * The template is a state-full object that goes through a four phase life-cycle
+ * </p>
+ * <ul>
+ * 	<li>Raw templates are constructed, or parsed from JSON and as such can
+ *   have invalid values for some attributes. </li>
+ *  <li> Cached templates have been validated and had transient values initialized. 
  *   The cache put/post methods utilize the cachePrepare() method to transform
- *   a "Raw" template into a Cached template.
- * - Mergable templates are a clone of a cached template. Only in this state can a 
+ *   a "Raw" template into a Cache Ready template.</li>
+ *  <li>Mergable templates are a clone of a cached template. Only in this state can a 
  *   template be "merged". The Merger getMergable method is used to get templates
- *   for merging.
- * 
+ *   for merging.</li>
+ *  <li>Merged templates have completed merge processing and can provide merged output.
+ *  Note that calling getMergedOutput for a non-merged template will cause the merge
+ *  to occur.</li>
+ * </ul>
+ *  
  * @author Mike Storey
  * @since: v4.0
  */
@@ -104,6 +109,14 @@ public class Template {
 	private transient Merger context;
 	
 	/**
+	 * Instantiate a void template - provided for testing only
+	 * @throws MergeException  on processing errors
+	 */
+	public Template() throws MergeException {
+		this(new TemplateId("void","void","void"));
+	}
+	
+	/**
 	 * Instantiate a Template with the given ID
 	 * @param id The Template ID
 	 * @throws MergeException  on processing errors
@@ -114,14 +127,6 @@ public class Template {
 		this.merged = false;
 		this.setContent("");
 		this.replaceStack = new HashMap<String,String>();
-	}
-	
-	/**
-	 * Instantiate a Template with the given ID
-	 * @throws MergeException  on processing errors
-	 */
-	public Template() throws MergeException {
-		this(new TemplateId("void","void","void"));
 	}
 	
 	/**

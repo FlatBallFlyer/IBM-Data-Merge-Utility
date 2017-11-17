@@ -21,10 +21,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.ibm.util.merge.exception.Merge500;
-// TODO refactor nest-limit from config to tag
 
 /**
  * Represents a replace tag in Content
+ * <p>Tags are any wrapped strings that are not bookmarks, and conform to this pattern</p>
+ * <p><b>tag = "<i>name</i>" encode = "<i>encode</i>" format = "<i>formatString</i>" parseFirst</b></p>
+ * <p>All fields are optional - with the wrappers {} {foo} is the same as {tag=foo}</p>
+ * <ul>
+ * 	<li>tag name is the "From" value used in the Replace Processing</li>
+ *  <li>encode will override the default template encoding for this one tag</li>
+ *  <li>format is used to format values with Java String formatting features</li>
+ *  <li>parseFirst if present will cause the replace To value to be parsed for embedded tags</li>
+ * </ul>
+ * <p>See the Replace directive for details on how Tags are used</p> 
  * 
  * @author Mike Storey
  *

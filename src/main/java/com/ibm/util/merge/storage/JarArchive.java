@@ -26,6 +26,11 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 
+/**
+ * Manages Jar Archives
+ * @author Mike Storey
+ *
+ */
 public class JarArchive extends Archive {
 
 	public JarArchive() {

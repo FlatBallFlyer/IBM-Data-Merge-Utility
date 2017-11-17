@@ -27,7 +27,7 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
 /**
- * The Class ParseDirective is used to parse some data into a new data item.
+ * Parse some encoded data from the Data Store and palce the result back in the Data Store
  * 
  * @author Mike Storey
  * @since: v4.0

@@ -26,7 +26,10 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
- * Implements JNDI based data enrichment
+ * A JNDI based provider
+ * <p>Environment Variable Format<blockquote><pre>
+ * TODO
+ * </pre></blockquote>
  * 
  * @author flatballflyer
  *

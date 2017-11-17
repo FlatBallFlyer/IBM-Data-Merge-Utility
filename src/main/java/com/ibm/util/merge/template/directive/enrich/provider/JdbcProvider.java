@@ -26,17 +26,20 @@ import javax.sql.DataSource;
 
 /**
  * A simple JDBC Provider (Not JNDI based)
- * Environment Configuration 
+ * <p>Environment Variable Format<blockquote><pre>
  *   "DATA_SOURCE": [
- *         {
- *             "credentials": {
- *                 "db_type": "",
- *                 "name": "",
- *                 "uri_cli": "",
- *                 "ca_certificate_base64": "",
- *                 "deployment_id": "",
- *                 "uri": ""
- *             },
+ *		{
+ *      	"credentials": {
+ *          	"db_type": "",
+ *          	"name": "",
+ *          	"uri_cli": "",
+ *          	"ca_certificate_base64": "",
+ *          	"deployment_id": "",
+ *              "uri": ""
+ * 		}
+ * ]
+ * </pre></blockquote>
+ * 
  * @author Mike Storey
  *
  */

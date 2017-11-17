@@ -17,7 +17,7 @@
 package com.ibm.util.merge.exception;
 
 /**
- * Not Found exception
+ * Not Found exception - Cache miss
  * @author Mike Storey
  *
  */

@@ -16,8 +16,10 @@
  */
 package com.ibm.util.merge.exception;
 
+import com.ibm.util.merge.Merger;
+
 /**
- *  Custom Exception abstract base class
+ *  Custom Exception abstract base class - provides customized error messaging
  * @author flatballflyer
  *
  */
@@ -30,8 +32,14 @@ public abstract class MergeException extends Exception {
 		super(error);
 		this.error = error;
 	}
+	
 	public String getErrorString() {
 		return error;
+	}
+	
+	public String getErrorMessage(Merger context) {
+		// TODO Merge System Error Template.
+		return "";
 	}
 	
 }

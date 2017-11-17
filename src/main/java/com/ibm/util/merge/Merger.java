@@ -58,11 +58,29 @@ public class Merger {
 	}
 	
 	// Instance Variables
+	/**
+	 * The Template Cache
+	 */
 	private TemplateCache cahce;
+	/**
+	 * The base template to start the merge with
+	 */
 	private Template baseTemplate;
+	/**
+	 * The Data Manager for the merge
+	 */
 	private DataManager mergeData;
+	/**
+	 * The current template stack of inserts
+	 */
 	private ArrayList<String> templateStack;
+	/**
+	 * The current collection of enrichment providers
+	 */
 	HashMap<String,ProviderInterface> providers;
+	/**
+	 * The output archive
+	 */
 	private Archive archive;
 	
 	/**

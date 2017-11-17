@@ -23,15 +23,11 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
 /**
- * The Class AbstractDirective is the base class of the merge directives
- * which are merge instructions used during the merge process.
+ * Base Directive class
  * 
  * @author Mike Storey
  * @since: v4.0
- */
-/**
- * @author flatballflyer
- *
+ * 
  */
 public abstract class AbstractDirective {
 

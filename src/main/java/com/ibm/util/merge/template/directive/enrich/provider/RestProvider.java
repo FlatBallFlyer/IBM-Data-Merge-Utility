@@ -37,7 +37,10 @@ import java.net.URL;
 import java.util.HashMap;
 
 /**
- * Simple HTTP Get based provider.
+ * A Simple HTTP Get based provider.
+ * <p>Environment Variable Format<blockquote><pre>
+ * TODO
+ * </pre></blockquote>
  *     
  * @author Mike Storey
  *

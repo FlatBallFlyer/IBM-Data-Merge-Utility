@@ -27,7 +27,8 @@ import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 
 /**
- *
+ * Manages ZIP Archives
+ * @author Mike Storey
  */
 public class ZipArchive extends Archive {
 

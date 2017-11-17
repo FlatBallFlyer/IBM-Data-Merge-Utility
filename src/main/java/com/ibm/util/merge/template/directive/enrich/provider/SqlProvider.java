@@ -38,7 +38,7 @@ import javax.sql.DataSource;
 
 /**
  * A simple JDBC Provider (Not JNDI based)
- * Environment Configuration 
+ * <p>Environment Variable Format<blockquote><pre>
  *   "DATA_SOURCE": [
  *         {
  *             "credentials": {
@@ -49,6 +49,9 @@ import javax.sql.DataSource;
  *                 "deployment_id": "",
  *                 "uri": ""
  *             },
+ * TODO
+ * </pre></blockquote>
+ * 
  * @author Mike Storey
  *
  */

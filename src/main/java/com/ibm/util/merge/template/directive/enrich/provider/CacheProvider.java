@@ -29,7 +29,7 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 
 /**
- * The cache provider places information about the template cache into the data manager
+ * Provide information about the template cache (for Status templates)
  * 
  * @author Mike Storey
  * @since 4.0.0

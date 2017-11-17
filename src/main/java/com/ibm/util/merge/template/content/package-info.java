@@ -16,8 +16,6 @@
  */
 /**
  * Template Content is the optimized search/replace/insert framework for content. 
- * These optimizations replace string pattern matching and global search replace functions
- * with code that maintains and preserves string pointers and optimizes Java GC
  * 
  * @author Mike Storey
  *

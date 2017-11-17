@@ -29,9 +29,9 @@ import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.directive.*;
 
 /**
- * Implements a stub provider that returns a String with TemplateJson 
+ * A simple stub provider - provides a Sample Template json 
  * 
- * @author flatballflyer
+ * @author Mike Storey
  *
  */
 public class StubProvider implements ProviderInterface {

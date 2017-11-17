@@ -17,7 +17,7 @@
 package com.ibm.util.merge.template.content;
 
 /**
- * Represents a String from with in the tempalte content
+ * A simple String of text. 
  * 
  * @author Mike Storey
  *

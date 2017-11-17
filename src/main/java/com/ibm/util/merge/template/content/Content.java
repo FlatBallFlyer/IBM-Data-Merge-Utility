@@ -25,7 +25,12 @@ import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.template.Wrapper;
 
 /**
- * Template Content - a dual linked list of Segments that optimizes Insert and Replace activities during the merge
+ * Template Content - the root of a circular dual linked list
+ * <p>Content is a dual linked list of Segments that are either Text, a Replace Tag or a Book Mark. 
+ * Segments are parsed at construction based on the Content Wrapper provided. 
+ * 
+ * <p><i>These optimizations replace string pattern matching and global search replace functions
+ * with code that maintains and preserves string pointers and optimizes Java GC</i></p>
  * 
  * @author Mike Storey
  *

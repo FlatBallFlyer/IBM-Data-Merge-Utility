@@ -26,8 +26,7 @@ import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.directive.enrich.provider.*;
 
 /**
- * The Class EnrichDirective is used to retrieve data from a data source 
- * and place it into the Data storage area of the merge context.
+ * Responsible for fetching data with a Provider and placing the output in the Data Store
  * 
  * @author Mike Storey
  * @since: v4.0

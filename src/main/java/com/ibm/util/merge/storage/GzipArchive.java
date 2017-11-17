@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * GZIP Archive Type
+ * Manages GZIP Archives
  * @author Mike Storey
  *
  */

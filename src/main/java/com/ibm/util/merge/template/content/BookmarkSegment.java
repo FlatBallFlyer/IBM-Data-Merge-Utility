@@ -24,7 +24,11 @@ import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 
 /**
- * Bookmark represents a Bookmark Segment within the Content
+ * Represents a Bookmark Segment within the Content
+ * <p>Bookmarks are wrapped strings that start with "bookmark" and conform to this pattern</p>
+ * <p><b>bookmark = "<i>name</i>" group = "<i>group</i>" template = "<i>template</i>" varyby = "<i>varyBy Attribute</i>"</b></p>
+ * <p>All fields are required except the varyby field</p>
+ * <p>See the Insert directive for details on how Book Marks are used</p> 
  * 
  * @author Mike Storey
  *

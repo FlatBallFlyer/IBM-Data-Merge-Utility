@@ -32,7 +32,7 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
 /**
- * The Class ReplaceDirective drives replace processing 
+ * Build a stack of replace from/to values from the Data Store and optionally process that over the content of the template
  * 
  * @author Mike Storey
  * @since: v4.0
