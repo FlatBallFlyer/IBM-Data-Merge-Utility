@@ -49,6 +49,25 @@ import com.ibm.util.merge.template.directive.enrich.provider.ProviderMeta;
 /**
  * Provides configuration information for the Merge Utility -  
  * Implemented as a singleton with static convenience methods
+ *
+ * <p>All configuration load / construct values accept a JSON string. 
+ * This string only needs to provide values when you want to override a default. </p>
+ * <p>
+ * Both the Default Providers and Parsers lists must be complete, providing any 
+ * value removes all default entries. If you add a custom provider, you will need to 
+ * list all of the default providers you want as well as your new provider.</p>
+ * <p>Configuration Format JSON<blockquote><pre>
+ * {
+ * 	"nestLimit": n,
+ * 	"insertLimit": n,
+ * 	"tempFolder": "folder",
+ * 	"loadFolder": "folder",
+ * 	"logLevel": "CRITICAL | SEVERE | WARN | INFO",
+ * 	"envVars" : {"var":"value"},
+ *	"defaultProviders" : ["providerClass","providerClass"],
+ *	"defaultParsers" : ["parserClass","parserClass"],		
+ * }
+ * </pre></blockquote>
  * 
  * @author Mike Storey
  * @since: v4.0.0.B1
