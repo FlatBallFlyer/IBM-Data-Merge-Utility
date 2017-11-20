@@ -126,7 +126,6 @@ public abstract class AbstractDirective {
 	 * @throws MergeException when enumirators fail to validate
 	 */
 	public void cachePrepare(Template template) throws MergeException {
-		// TODO Validate Enums
 		this.template = template;
 	}
 

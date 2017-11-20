@@ -16,11 +16,10 @@
  */
 package com.ibm.util.merge.template.directive;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.content.Content;
-
+import com.ibm.util.merge.template.content.TagSegment;
 
 /**
  * Abstract Directive that provides a set of "Data Source" attributes
@@ -38,10 +37,6 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	 */
 	private String dataDelimeter;
 	/**
-	 * XX To Be Depricated
-	 */
-	private boolean sourceHasTags;
-	/**
 	 * The ifMissing Operator - See -Directive-_IF_MISSING*
 	 */
 	private int ifMissing;
@@ -58,6 +53,11 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	 */
 	private int ifList;
 
+	/*
+	 * Transient Attributes 
+	 */
+	private transient Content sourceContent;
+	
 	/**
 	 * Instantiate a Data Directive with Defaults
 	 */
@@ -65,7 +65,6 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 		super();
 		this.dataSource = "";
 		this.dataDelimeter = "";
-		this.setSourceHasTags(false);
 	}
 	
 	/**
@@ -78,11 +77,10 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	 * @param object The ifObject option
 	 * @param list The ifList option
 	 */
-	public AbstractDataDirective(String source, String delimeter, boolean hasTags, int missing, int primitive, int object, int list) {
+	public AbstractDataDirective(String source, String delimeter, int missing, int primitive, int object, int list) {
 		super();
 		this.dataSource = source;
 		this.dataDelimeter = delimeter;
-		this.sourceHasTags = hasTags;
 		this.ifMissing = missing;
 		this.ifPrimitive = primitive;
 		this.ifObject = object;
@@ -96,20 +94,21 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	 */
 	public void cachePrepare(Template template) throws MergeException {
 		super.cachePrepare(template);
-		// TODO Validate Enums
+		this.sourceContent = new Content(template.getWrapper(), this.getDataSource(), TagSegment.ENCODE_NONE);
 	}
 
 	/**
 	 * Create a mergable clone of the object
 	 * 
 	 * @param mergable The directive to make mergable
+	 * @throws MergeException 
 	 */
-	public void makeMergable(AbstractDataDirective mergable) {
+	public void makeMergable(AbstractDataDirective mergable) throws MergeException {
 		mergable.setType(this.getType());
 		mergable.setName(this.getName());
-		mergable.setDataSource(this.getRawDataSource());
+		mergable.setDataSource(this.getDataSource());
+		mergable.setSourceContent(this.getSourceContent().getMergable());
 		mergable.setDataDelimeter(this.getDataDelimeter());
-		mergable.setSourceHasTags(this.getSourceHasTags());
 		mergable.setIfSourceMissing(this.getIfSourceMissing());
 		mergable.setIfList(this.getIfList());
 		mergable.setIfObject(this.getIfObject());
@@ -117,34 +116,32 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	}
 
 	/**
-	 * @return data source name
-	 * @throws MergeException when source not found
+	 * @param dataSource The data source name
+	 * @throws MergeException on Content Parser Error
 	 */
-	public String getDataSource() throws MergeException {
-		String source = this.dataSource;
-		if (this.sourceHasTags) {
-			Content content = new Content(this.getTemplate().getWrapper(), source, this.getTemplate().getContentEncoding());;
-			content.replace(this.getTemplate().getReplaceStack(), true, Config.nestLimit());
-			source = content.getValue();
-		}
-		return source;
+	public void setDataSource(String dataSource) {
+		this.dataSource = dataSource;
 	}
-	
-	/**
-	 * @return data source name
-	 */
-	public String getRawDataSource() {
-		return dataSource;
-	}
-	
+
 	/*
 	 * Simple Setter/Getter code below here
 	 */
 	/**
-	 * @param dataSource The data source name
+	 * @return data source name
 	 */
-	public void setDataSource(String dataSource) {
-		this.dataSource = dataSource;
+	public String getDataSource() {
+		return dataSource;
+	}
+	
+	/**
+	 * @return The Source Name parsed into a Content Object
+	 */
+	public Content getSourceContent() {
+		return this.sourceContent;
+	}
+
+	public void setSourceContent(Content source) {
+		this.sourceContent = source;
 	}
 
 	/**
@@ -215,20 +212,6 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	public void setDataDelimeter(String dataDelimeter) {
 		this.dataDelimeter = dataDelimeter;
 		
-	}
-
-	/**
-	 * @return the Has Tags inidcator
-	 */
-	public boolean getSourceHasTags() {
-		return sourceHasTags;
-	}
-
-	/**
-	 * @param sourceHasTags The has tags indicator
-	 */
-	public void setSourceHasTags(boolean sourceHasTags) {
-		this.sourceHasTags = sourceHasTags;
 	}
 
 }

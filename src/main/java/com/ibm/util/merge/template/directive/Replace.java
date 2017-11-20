@@ -55,7 +55,7 @@ public class Replace extends AbstractDataDirective {
 	 */
 	public Replace() {
 		this (
-			"", "-", false, "",
+			"", "-", "",
 			MISSING_THROW,
 			PRIMITIVE_THROW,
 			OBJECT_THROW,
@@ -91,10 +91,10 @@ public class Replace extends AbstractDataDirective {
 	 * @param process Process after indicator
 	 * @param require The require all tags indicator
 	 */
-	public Replace(String source, String delimeter, boolean hasTags, String to, int missing, int primitive, 
+	public Replace(String source, String delimeter, String to, int missing, int primitive, 
 			int object, int objectAttrPrimitive, int objectAttrList, int objectAttrObject, 
 			int list, String fromAttr, String toAttr, int listAttrMissing, int listAttrNotPrimitive, boolean process, boolean require) {
-		super(source, delimeter, hasTags, missing, primitive, object, list);
+		super(source, delimeter, missing, primitive, object, list);
 		this.setType(AbstractDirective.TYPE_REPLACE);
 		this.fromAttribute = fromAttr;
 		this.toAttribute = toAttr;
@@ -110,13 +110,48 @@ public class Replace extends AbstractDataDirective {
 
 	@Override
 	public void cachePrepare(Template template) throws MergeException {
-		// TODO Validate Enums
 		super.cachePrepare(template);
+
+		// Validate enums
+		if (!Replace.MISSING_OPTIONS().containsKey(this.getIfSourceMissing())) {
+			throw new Merge500("Invalide Source Missing Option:" + Integer.toString(this.getIfSourceMissing()));
+		}
+		
+		if (!Replace.PRIMITIVE_OPTIONS().containsKey(this.getIfPrimitive())) {
+			throw new Merge500("Invalide If Primitive Option:" + Integer.toString(this.getIfPrimitive()));
+		}
+		
+		if (!Replace.LIST_OPTIONS().containsKey(this.getIfList())) {
+			throw new Merge500("Invalide If List Option:" + Integer.toString(this.getIfList()));
+		}
+
+		if (!Replace.OBJECT_OPTIONS().containsKey(this.getIfObject())) {
+			throw new Merge500("Invalide If Object Option:" + Integer.toString(this.getIfObject()));
+		}
+		
+		if (!Replace.LIST_ATTR_MISSING_OPTIONS().containsKey(this.getListAttrMissing())) {
+			throw new Merge500("Invalide List Attribute Missing Option:" + Integer.toString(this.getListAttrMissing()));
+		}
+
+		if (!Replace.LIST_ATTR_NOT_PRIMITIVE_OPTIONS().containsKey(this.getListAttrNotPrimitive())) {
+			throw new Merge500("Invalide List Attribute Not Primitive Option:" + Integer.toString(this.getListAttrNotPrimitive()));
+		}
+
+		if (!Replace.OBJECT_ATTRIBUTE_LIST_OPTIONS().containsKey(this.getObjectAttrList())) {
+			throw new Merge500("Invalide Object Attribute List Option:" + Integer.toString(this.getObjectAttrList()));
+		}
+
+		if (!Replace.OBJECT_ATTRIBUTE_PRIMITIVE_OPTIONS().containsKey(this.getObjectAttrPrimitive())) {
+			throw new Merge500("Invalide Object Attribute Primitive Option:" + Integer.toString(this.getObjectAttrPrimitive()));
+		}
+
+		if (!Replace.OBJECT_ATTRIBUTE_OBJECT_OPTIONS().containsKey(this.getObjectAttrObject())) {
+			throw new Merge500("Invalide Object Attribute Primitive Option:" + Integer.toString(this.getObjectAttrObject()));
+		}
 	}
 
-
 	@Override
-	public AbstractDirective getMergable() {
+	public AbstractDirective getMergable() throws MergeException {
 		Replace mergable = new Replace();
 		this.makeMergable(mergable);
 		mergable.setFromAttribute(this.fromAttribute);
@@ -137,10 +172,12 @@ public class Replace extends AbstractDataDirective {
 
 	@Override
 	public void execute(Merger context) throws MergeException {
-		if (!context.getMergeData().contians(this.getDataSource(), this.getDataDelimeter())) {
+		this.getSourceContent().replace(this.getTemplate().getReplaceStack(), true, Config.nestLimit());
+		String source = this.getSourceContent().getValue();
+		if (!context.getMergeData().contians(source, this.getDataDelimeter())) {
 			switch (this.getIfSourceMissing()) {
 			case MISSING_THROW :
-				throw new Merge500("Source Data Missing for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
+				throw new Merge500("Source Data Missing for " + source + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case MISSING_IGNORE :
 				return;
 			case MISSING_REPLACE : 
@@ -152,12 +189,12 @@ public class Replace extends AbstractDataDirective {
 			}
 		}
 		
-		DataElement data = context.getMergeData().get(this.getDataSource(), this.getDataDelimeter());
+		DataElement data = context.getMergeData().get(source, this.getDataDelimeter());
 		
 		if (data.isPrimitive()) {
 			switch (this.getIfPrimitive()) {
 			case PRIMITIVE_THROW :
-				throw new Merge500("Primitive Data found for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
+				throw new Merge500("Primitive Data found for " + source + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case PRIMITIVE_IGNORE :
 				return;
 			case PRIMITIVE_REPLACE :
@@ -171,7 +208,7 @@ public class Replace extends AbstractDataDirective {
 		} else if (data.isObject()) {
 			switch (this.getIfObject()) {
 			case OBJECT_THROW :
-				throw new Merge500("Object Data found for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
+				throw new Merge500("Object Data found for " + source + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case OBJECT_IGNORE :
 				return;
 			case OBJECT_REPLACE:
@@ -190,7 +227,7 @@ public class Replace extends AbstractDataDirective {
 		} else if (data.isList()) {
 			switch (this.getIfList()) {
 			case LIST_THROW :
-				throw new Merge500("List Data found for " + this.getDataSource() + " in " + this.getTemplate().getDescription() + " at " + this.getName());
+				throw new Merge500("List Data found for " + source + " in " + this.getTemplate().getDescription() + " at " + this.getName());
 			case LIST_IGNORE :
 				return;
 			case LIST_REPLACE :

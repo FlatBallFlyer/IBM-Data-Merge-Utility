@@ -41,7 +41,7 @@ import com.ibm.util.merge.exception.MergeException;
  *
  */
 public abstract class Archive {
-	public static final String ARCHIVE_TYPE			= "ARCHIVE_TYPE";
+//	public static final String ARCHIVE_TYPE			= "ARCHIVE_TYPE";
 	public static final String ARCHIVE_ZIP			= "zip";
 	public static final String ARCHIVE_TAR		 	= "tar";
 	public static final String ARCHIVE_JAR		 	= "jar";
@@ -57,7 +57,7 @@ public abstract class Archive {
 
 	public static final HashMap<String, HashSet<String>> ENUMS() {
 		HashMap<String, HashSet<String>> enums = new HashMap<String, HashSet<String>>(); 
-		enums.put(ARCHIVE_TYPE, ARCHIVE_TYPES());
+		enums.put("Archive Type", ARCHIVE_TYPES());
 		return enums;
 	}
 

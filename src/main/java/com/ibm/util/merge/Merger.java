@@ -36,13 +36,12 @@ import com.ibm.util.merge.template.directive.enrich.provider.*;
  */
 public class Merger {
 	// Enumeration Constants
-	public static final String DATA_SOURCE			= "DATA_SOURCE";
+	public static final String IDMU_CONTEXT			= "idmuContext";
 	public static final String IDMU_PARAMETERS	 	= "idmuParameters";
 	public static final String IDMU_PAYLOAD			= "idmuPayload";
-	public static final String IDMU_ARCHIVE_TYPE	= "archiveType";
-	public static final String IDMU_ARCHIVE_NAME	= "archiveName";
-	public static final String IDMU_CONTEXT			= "idmuContext";
 	public static final String IDMU_ARCHIVE			= "idmuArchive";
+	public static final String IDMU_ARCHIVE_TYPE	= "idmuArchiveType";
+	public static final String IDMU_ARCHIVE_NAME	= "idmuArchiveName";
 	public static final String IDMU_ARCHIVE_FILES	= "idmuArchiveFiles";
 	public static final String IDMU_ARCHIVE_OUTPUT	= "idmuArchiveOutput";
 	public static final HashSet<String> DATA_SOURCES() {

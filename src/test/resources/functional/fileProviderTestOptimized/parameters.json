@@ -1,6 +1,6 @@
 {
 	"parms": 
 	{
-		"archiveType" : ["zip"]
+		"idmuArchiveType" : ["zip"]
 	}
 }

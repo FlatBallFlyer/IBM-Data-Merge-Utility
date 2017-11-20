@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
@@ -14,7 +13,7 @@ public class AbstractDataDirectiveTest {
 	private class AbstractDataTest extends AbstractDataDirective {
 		
 		@Override
-		public AbstractDirective getMergable() {
+		public AbstractDirective getMergable() throws MergeException {
 			AbstractDataTest mergable = new AbstractDataTest();
 			this.makeMergable(mergable);
 			return mergable;			
@@ -63,12 +62,10 @@ public class AbstractDataDirectiveTest {
 	}
 
 	@Test
-	public void testGetMergable() {
+	public void testGetMergable() throws MergeException {
 		AbstractDataTest mergable = (AbstractDataTest) test.getMergable();
 		assertNotSame(mergable, test);
-		assertEquals(test.getRawDataSource(), 	mergable.getRawDataSource());
 		assertEquals(test.getDataDelimeter(), 	mergable.getDataDelimeter());
-		assertEquals(test.getSourceHasTags(), 	mergable.getSourceHasTags());
 		assertEquals(test.getIfList(), 			mergable.getIfList());
 		assertEquals(test.getIfObject(), 		mergable.getIfObject());
 		assertEquals(test.getIfPrimitive(), 	mergable.getIfPrimitive());
@@ -79,21 +76,6 @@ public class AbstractDataDirectiveTest {
 	public void testSetGetDataSource() throws MergeException {
 		test.setDataSource("Foo");
 		assertEquals("Foo", test.getDataSource());
-	}
-
-	@Test
-	public void testSetGetDataSourceTag() throws MergeException {
-		TemplateCache cache = new TemplateCache();
-		Template template = new Template("test","","","Content","<",">");
-		test.setDataSource("some-<key>-bar");
-		test.setSourceHasTags(true);
-		template.addDirective(test);
-		cache.postTemplate(template);
-		Merger context = new Merger(cache, "test..");
-		template = context.getBaseTemplate();
-		template.addReplace("key","foo");
-		test = (AbstractDataTest) template.getDirectives().get(0);
-		assertEquals("some-foo-bar", test.getDataSource());
 	}
 
 	@Test

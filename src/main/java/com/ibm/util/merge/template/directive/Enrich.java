@@ -21,8 +21,11 @@ import java.util.HashMap;
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
+import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.content.Content;
+import com.ibm.util.merge.template.content.TagSegment;
 import com.ibm.util.merge.template.directive.enrich.provider.*;
 
 /**
@@ -66,6 +69,11 @@ public class Enrich extends AbstractDirective {
 	 * The parsAs format for parsing options (See Config.PARSE*)
 	 */
 	private int parseAs;
+	
+	/*
+	 * Transient Attributes
+	 */
+	private transient Content targetContent;
 
 	/**
 	 * Instantiate an Enrich Directive
@@ -85,14 +93,22 @@ public class Enrich extends AbstractDirective {
 
 	@Override
 	public void cachePrepare(Template template) throws MergeException {
-		// TODO Validate Enums
 		super.cachePrepare(template);
+		
+		// Initialize Transients
+		this.targetContent = new Content(template.getWrapper(), this.targetDataName, TagSegment.ENCODE_NONE);
+
+		// Validate Enums
+		if ((this.parseAs != Config.PARSE_NONE) && (!Config.hasParser(this.parseAs))) {
+			throw new Merge500("Invalide Parse As Value: " + this.parseAs) ;
+		}
 	}
 
 	@Override
 	public AbstractDirective getMergable() throws MergeException {
 		Enrich mergable = new Enrich();
 		this.makeMergable(mergable);
+		mergable.setTargetContent(this.targetContent.getMergable());
 		mergable.setType(AbstractDirective.TYPE_ENRICH);
 		mergable.setTargetDataName(this.targetDataName);
 		mergable.setTargetDataDelimeter(this.targetDataDelimeter);
@@ -108,7 +124,9 @@ public class Enrich extends AbstractDirective {
 	public void execute(Merger context) throws MergeException {
 		ProviderInterface provider = context.getProvider(this.enrichClass, this.enrichSource, this.enrichParameter);
 		DataElement value = provider.provide(this.enrichCommand, this.getTemplate().getWrapper(), context, this.getTemplate().getReplaceStack(), this.parseAs);
-		this.getTemplate().getContext().getMergeData().put(this.targetDataName, this.targetDataDelimeter, value);
+		this.getTargetContent().replace(this.getTemplate().getReplaceStack(), true, Config.nestLimit());
+		String targetName = this.getTargetContent().getValue();
+		this.getTemplate().getContext().getMergeData().put(targetName, this.targetDataDelimeter, value);
 	}
 
 	/**
@@ -208,6 +226,14 @@ public class Enrich extends AbstractDirective {
 	 */
 	public void setEnrichParameter(String enrichParameter) {
 		this.enrichParameter = enrichParameter;
+	}
+
+	public Content getTargetContent() {
+		return targetContent;
+	}
+
+	public void setTargetContent(Content targetContent) {
+		this.targetContent = targetContent;
 	}
 
 }

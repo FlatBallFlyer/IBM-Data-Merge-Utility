@@ -59,6 +59,7 @@ public class EnrichTest {
 		before.setParseAs(Config.PARSE_JSON);
 		before.setTargetDataName("some=name");
 		before.setTargetDataDelimeter("=");
+		before.cachePrepare(template);
 		Enrich after = (Enrich) before.getMergable();
 		assertNotSame(before, after);
 		assertEquals(before.getEnrichClass(), after.getEnrichClass());

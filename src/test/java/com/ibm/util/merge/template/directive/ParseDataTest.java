@@ -40,7 +40,7 @@ public class ParseDataTest {
 		directive.setDataSource("test");
 		directive.setDataDelimeter("-");
 		directive.setDataTarget("target");
-		directive.setDataDelimeter("-");
+		directive.setDataTargetDelimiter("-");
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		merger = new Merger(cache, "system.test.");
@@ -81,7 +81,7 @@ public class ParseDataTest {
 		assertEquals("test", directive.getDataSource());
 		assertEquals("-", directive.getDataDelimeter());
 		assertEquals("target", directive.getDataTarget());
-		assertEquals("\"", directive.getDataTargetDelimiter());
+		assertEquals("-", directive.getDataTargetDelimiter());
 		assertEquals(Config.PARSE_CSV, directive.getParseFormat());
 		assertEquals(ParseData.LIST_THROW, directive.getIfList());
 		assertEquals(ParseData.OBJECT_THROW, directive.getIfObject());
@@ -151,10 +151,10 @@ public class ParseDataTest {
 	
 	@Test
 	public void testExecutePrimitiveParse() throws MergeException {
-		Config.initialize();
+		merger.getMergeData().put("test", "-", jsonString1);
 		directive.setIfPrimitive(ParseData.PRIMITIVE_PARSE);
 		directive.setParseFormat(Config.PARSE_JSON);
-		directive.setStaticData(jsonString1);
+		template.cachePrepare();
 		template = template.getMergable(merger);
 		template.getMergedOutput();
 		DataElement result = merger.getMergeData().get("target", "-");

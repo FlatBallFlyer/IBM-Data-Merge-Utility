@@ -1,6 +1,6 @@
 /*
  * 
- * Copyright 2015-2017 IBM
+c * Copyright 2015-2017 IBM
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -176,14 +176,14 @@ public class Template {
 	 * @throws MergeException on processing errors
 	 */
 	public void cachePrepare() throws MergeException {
-		// TODO Validate Enums
+		this.merged 	= false;
+		this.mergable 	= false;
 		this.stats = new Stat();
 		this.stats.name = this.getId().shorthand();
 		this.stats.size = this.content.length();
-		this.merged 	= false;
-		this.mergable 	= false;
-		this.replaceStack = new HashMap<String,String>();
 		this.setContent(content);
+		this.replaceStack = new HashMap<String,String>();
+		this.context = null;
 		for (AbstractDirective directive : this.directives) {
 			directive.cachePrepare(this);
 		}
@@ -239,13 +239,14 @@ public class Template {
 	public Content getMergedOutput() throws MergeException {
 		if (this.mergable) {
 			if (!this.merged) {
-				// Process Directives
+				Long start = System.currentTimeMillis();
 				for (AbstractDirective directive : this.directives ) {
 					directive.execute(this.context);
 				}
 				this.merged = true;
 				this.directives.clear();
 				this.replaceStack.clear();
+				this.context.getCahce().postStats(this.id.shorthand(), System.currentTimeMillis() - start);
 			}
 			return this.mergeContent;
 		} else {
@@ -328,6 +329,15 @@ public class Template {
 			stats.size = this.content.length();
 			this.mergeContent = new Content(this.wrapper, this.content, this.getContentEncoding() );
 		}
+	}
+	
+	/**
+	 * Update cached template stats - NOTE: Not Synchronized, subject to inaccuracy 
+	 * @param response
+	 */
+	public void postStats(Long response) {
+		this.stats.hits++;
+		this.stats.time += response;
 	}
 	
 	/**

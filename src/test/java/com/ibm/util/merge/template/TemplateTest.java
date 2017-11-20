@@ -8,7 +8,6 @@ import java.util.HashSet;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.template.content.TagSegment;
@@ -20,7 +19,6 @@ public class TemplateTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		Config.initialize();
 		template = new Template("System","Test","");
 		template.setContent("Test Content");
 		template.setDescription("A testing template");
@@ -75,11 +73,12 @@ public class TemplateTest {
 
 	@Test
 	public void testGetMergableWithoutReplace() throws MergeException {
-		template.addDirective(new Replace().getMergable());
-		template.addDirective(new Enrich().getMergable());
-		template.addDirective(new ParseData().getMergable());
-		template.addDirective(new Insert().getMergable());
-
+		template.addDirective(new Replace());
+		template.addDirective(new Enrich());
+		template.addDirective(new ParseData());
+		template.addDirective(new Insert());
+		template.cachePrepare();
+		
 		Template mergable = template.getMergable(null);
 
 		assertNotSame(template, mergable);
@@ -207,6 +206,7 @@ public class TemplateTest {
 		Merger merger = new Merger(cache, "system.sample.");
 		template.setContentDisposition(Template.DISPOSITION_DOWNLOAD);
 		template.setContentFileName("Foo");
+		template.cachePrepare();
 		Template mergable = template.getMergable(merger);
 		assertEquals("attachment;filename=\"Foo\"", mergable.getContentDisposition());
 		template.setContentDisposition(Template.DISPOSITION_NORMAL);
@@ -309,11 +309,12 @@ public class TemplateTest {
 
 	@Test
 	public void testisMerged() throws MergeException {
-		assertFalse(template.isMerged());
-		Template mergable = template.getMergable(null);
-		assertFalse(template.isMerged());
-		mergable.getMergedOutput();
-		assertTrue(mergable.isMerged());
+		TemplateCache cache = new TemplateCache();
+		cache.postTemplate(template);
+		Merger merger = new Merger(cache, "System.Test.");
+		assertFalse(merger.getBaseTemplate().isMerged());
+		merger.merge();
+		assertTrue(merger.getBaseTemplate().isMerged());
 	}
 
 	@Test

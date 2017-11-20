@@ -192,6 +192,15 @@ public class Config {
 	}
 	
 	/**
+	 * @param parseAs The parser desired
+	 * @return True if the parse is supported in the current deployment
+	 * @throws MergeException on Config instantiation errors
+	 */
+	public static boolean hasParser(int parseAs) throws MergeException {
+		return Config.get().proxies.containsKey(new Integer(parseAs));
+	}
+
+	/**
 	 * @param parseAs the parse format
 	 * @param value the value to parse
 	 * @return the parsed data element
@@ -607,5 +616,5 @@ public class Config {
 		String value = "[".concat(proxy.toString(selectValues)).concat(",").concat(proxy.toString(providerList)).concat("]");
 		return value;
 	}
-
 }
+

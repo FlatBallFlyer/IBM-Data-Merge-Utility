@@ -87,7 +87,7 @@ public class InsertTest {
 	public void testInsertRecursionLimit() throws MergeException {
 		Config.load("{\"nestLimit\":\"5\"}");
 		Template template = new Template("test", "child", "Template Content ", this.bkm2, "{", "}" );
-		Insert directive = new Insert("data.primitive","-",false,
+		Insert directive = new Insert("data.primitive","-",
 				Insert.MISSING_THROW,
 				Insert.PRIMITIVE_INSERT,
 				Insert.OBJECT_THROW,
@@ -110,7 +110,7 @@ public class InsertTest {
 	@Test
 	public void testInsertListFirst() throws MergeException {
 		Template template = new Template("test", "parent", "", this.bkm2, "{", "}");
-		Insert directive = new Insert("data.list","-",false,
+		Insert directive = new Insert("data.list","-",
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_IGNORE,
 				Insert.OBJECT_IGNORE,
@@ -120,7 +120,7 @@ public class InsertTest {
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		template = new Template("test", "child", "", "Child Content {col1} {col2}");
-		Replace replace = new Replace("idmuContext", "-",false, "",
+		Replace replace = new Replace("idmuContext", "-", "",
 						Replace.MISSING_THROW,
 						Replace.PRIMITIVE_THROW,
 						Replace.OBJECT_REPLACE, 
@@ -143,7 +143,7 @@ public class InsertTest {
 	@Test
 	public void testInsertListLast() throws MergeException {
 		Template template = new Template("test", "parent", "", this.bkm2, "{", "}");
-		Insert directive = new Insert("data.list","-",false,
+		Insert directive = new Insert("data.list","-",
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_IGNORE,
 				Insert.OBJECT_IGNORE,
@@ -153,7 +153,7 @@ public class InsertTest {
 		template.addDirective(directive);
 		cache.postTemplate(template);
 		template = new Template("test", "child", "", "Child Content {col1} {col2}");
-		Replace replace = new Replace("idmuContext", "-",false,  "",
+		Replace replace = new Replace("idmuContext", "-",  "",
 						Replace.MISSING_THROW,
 						Replace.PRIMITIVE_THROW,
 						Replace.OBJECT_REPLACE, 
@@ -177,7 +177,7 @@ public class InsertTest {
 	public void testInsertSourceDelimeterMissingPrimitiveObjectList() throws MergeException {
 		HashSet<String> list = new HashSet<String>();
 		list.add("One"); list.add("two"); list.add("three");
-		Insert directive = new Insert("source", "delim", false, 
+		Insert directive = new Insert("source", "delim",  
 				Insert.MISSING_INSERT, 
 				Insert.PRIMITIVE_INSERT, 
 				Insert.OBJECT_INSERT_LIST, 
@@ -201,7 +201,7 @@ public class InsertTest {
 	@Test
 	public void testGetMergable() throws MergeException {
 		HashSet<String> empty = new HashSet<String>();
-		Insert directive = new Insert("","-",false, 
+		Insert directive = new Insert("","-", 
 			Insert.MISSING_IGNORE, 
 			Insert.PRIMITIVE_IGNORE, 
 			Insert.OBJECT_IGNORE,
@@ -209,13 +209,13 @@ public class InsertTest {
 			empty, empty, empty, empty,
 			".*",Insert.INSERT_IF_STRING_EQUALS,"");
 
+		directive.cachePrepare(new Template());
 		Insert mergable = directive.getMergable();
 		assertNotSame(directive, mergable);
 		assertEquals(directive.getType(), AbstractDirective.TYPE_INSERT);
 		assertEquals(directive.getName(), mergable.getName());
 		assertEquals(directive.getDataSource(), mergable.getDataSource());
 		assertEquals(directive.getDataDelimeter(), mergable.getDataDelimeter());
-		assertEquals(directive.getSourceHasTags(), mergable.getSourceHasTags());
 		assertEquals(directive.getIfList(), mergable.getIfList());
 		assertEquals(directive.getIfPrimitive(), mergable.getIfPrimitive());
 		assertEquals(directive.getIfObject(), mergable.getIfObject());
@@ -230,7 +230,7 @@ public class InsertTest {
 	@Test
 	public void testMissingThrow() throws MergeException {
 		Template template = new Template("test", "missing", "throw", this.bkm1, "{", "}");
-		Insert directive = new Insert("missing","-",false,
+		Insert directive = new Insert("missing","-",
 				Insert.MISSING_THROW,
 				Insert.PRIMITIVE_IGNORE,
 				Insert.OBJECT_IGNORE,
@@ -251,7 +251,7 @@ public class InsertTest {
 	@Test
 	public void testMissingIgnore() throws MergeException {
 		Template template = new Template("test", "missing", "ignore", this.bkm2, "{", "}" );
-		Insert directive = new Insert("missing","-",false,
+		Insert directive = new Insert("missing","-",
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_THROW,
 				Insert.OBJECT_THROW,
@@ -268,7 +268,7 @@ public class InsertTest {
 	@Test
 	public void testMissingInsert() throws MergeException {
 		Template template = new Template("test", "missing", "ignore", this.bkm2, "{", "}" );
-		Insert directive = new Insert("missing","-",false,
+		Insert directive = new Insert("missing","-",
 				Insert.MISSING_INSERT,
 				Insert.PRIMITIVE_THROW,
 				Insert.OBJECT_THROW,
@@ -286,7 +286,7 @@ public class InsertTest {
 	@Test
 	public void testPrimitiveThrow() throws MergeException {
 		Template template = new Template("test", "primitive", "throw", this.bkm2, "{", "}" );
-		Insert directive = new Insert("data.primitive","-",false,
+		Insert directive = new Insert("data.primitive","-",
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_THROW,
 				Insert.OBJECT_IGNORE,
@@ -308,7 +308,7 @@ public class InsertTest {
 	@Test
 	public void testPrimitiveIgnore() throws MergeException {
 		Template template = new Template("test", "primitive", "ignore", this.bkm2, "{", "}" );
-		Insert directive = new Insert("data.primitive","-",false,
+		Insert directive = new Insert("data.primitive","-",
 				Insert.MISSING_THROW,
 				Insert.PRIMITIVE_IGNORE,
 				Insert.OBJECT_THROW,
@@ -326,7 +326,7 @@ public class InsertTest {
 	@Test
 	public void testPrimitiveInsert() throws MergeException {
 		Template template = new Template("test", "primitive", "insert", this.bkm2, "{", "}" );
-		Insert directive = new Insert("data.primitive","-",false,
+		Insert directive = new Insert("data.primitive","-",
 				Insert.MISSING_THROW,
 				Insert.PRIMITIVE_INSERT,
 				Insert.OBJECT_THROW,
@@ -337,7 +337,7 @@ public class InsertTest {
 		cache.postTemplate(template);
 		
 		template = new Template("test", "child", "", "Child - {idmuContext}");
-		Replace replace = new Replace("idmuContext", "-",false,  "",
+		Replace replace = new Replace("idmuContext", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_REPLACE,
 				Replace.OBJECT_THROW,
@@ -360,7 +360,7 @@ public class InsertTest {
 	@Test
 	public void testObjectThrow() throws MergeException {
 		Template template = new Template("test", "object", "throw", "bkm1", "{", "}");
-		Insert directive = new Insert("data.object","-",false,
+		Insert directive = new Insert("data.object","-",
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_IGNORE,
 				Insert.OBJECT_THROW,
@@ -383,7 +383,7 @@ public class InsertTest {
 	@Test
 	public void testObjectIgnore() throws MergeException {
 		Template template = new Template("test", "object", "ignore", this.bkm1, "{", "}");
-		Insert directive = new Insert("data.object","-",false,
+		Insert directive = new Insert("data.object","-",
 				Insert.MISSING_THROW,
 				Insert.PRIMITIVE_THROW,
 				Insert.OBJECT_IGNORE,
@@ -402,7 +402,7 @@ public class InsertTest {
 	@Test
 	public void testObjectInsertObject() throws MergeException {
 		Template template = new Template("test", "object", "insertObject", this.bkm2, "{", "}");
-		Insert directive = new Insert("data.object","-",false,
+		Insert directive = new Insert("data.object","-",
 				Insert.MISSING_THROW,
 				Insert.PRIMITIVE_THROW,
 				Insert.OBJECT_INSERT_OBJECT,
@@ -414,7 +414,7 @@ public class InsertTest {
 		cache.postTemplate(template);
 		
 		template = new Template("test", "child", "", "Child {attribute}, {value} - ");
-		Replace replace = new Replace("idmuContext", "-",false,  "",
+		Replace replace = new Replace("idmuContext", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -437,7 +437,7 @@ public class InsertTest {
 	@Test
 	public void testObjectInsertList() throws MergeException {
 		Template template = new Template("test", "object", "insertObject", this.bkm2, "{", "}");
-		Insert directive = new Insert("data.object","-",false,
+		Insert directive = new Insert("data.object","-",
 				Insert.MISSING_THROW,
 				Insert.PRIMITIVE_THROW,
 				Insert.OBJECT_INSERT_LIST,
@@ -449,7 +449,7 @@ public class InsertTest {
 		cache.postTemplate(template);
 		
 		template = new Template("test", "child", "", "Child {col1}, {col2} - ");
-		Replace replace = new Replace("idmuContext", "-",false,  "",
+		Replace replace = new Replace("idmuContext", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -472,7 +472,7 @@ public class InsertTest {
 	@Test
 	public void testListThrow() throws MergeException {
 		Template template = new Template("test", "list", "throw", this.bkm2, "{", "}");
-		Insert directive = new Insert("data.list","-",false,
+		Insert directive = new Insert("data.list","-",
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_IGNORE,
 				Insert.OBJECT_IGNORE,
@@ -495,7 +495,7 @@ public class InsertTest {
 	@Test
 	public void testListIgnore() throws MergeException {
 		Template template = new Template("test", "list", "ignore", this.bkm2, "{", "}");
-		Insert directive = new Insert("data.list","-",false,
+		Insert directive = new Insert("data.list","-",
 				Insert.MISSING_THROW,
 				Insert.PRIMITIVE_THROW,
 				Insert.OBJECT_THROW,
@@ -514,7 +514,7 @@ public class InsertTest {
 	@Test
 	public void testListInsert() throws MergeException {
 		Template template = new Template("test", "parent", "", this.bkm2, "{", "}");
-		Insert directive = new Insert("data.list","-",false,
+		Insert directive = new Insert("data.list","-",
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_IGNORE,
 				Insert.OBJECT_IGNORE,
@@ -536,7 +536,7 @@ public class InsertTest {
 	@Test
 	public void testListInsertIf() throws MergeException {
 		Template template = new Template("test", "parent", "", this.bkm2, "{", "}");
-		Insert directive = new Insert("data.primitive","-",false,
+		Insert directive = new Insert("data.primitive","-",
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_INSERT_IF,
 				Insert.OBJECT_IGNORE,
@@ -652,7 +652,7 @@ public class InsertTest {
 	@Test
 	public void testListInsertNested() throws MergeException {
 		Template template = new Template("test", "parent", "", "Root-" + this.bkm2, "{", "}");
-		Insert directive = new Insert("data.list","-",false,
+		Insert directive = new Insert("data.list","-",
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_IGNORE,
 				Insert.OBJECT_IGNORE,
@@ -677,7 +677,7 @@ public class InsertTest {
 	@Test
 	public void testListInsertTable() throws MergeException {
 		Template template = new Template("test", "table", "", "<table>{bookmark=\"bkm\" group=\"test\" template=\"row\"}</table>", "{", "}");
-		Insert directive = new Insert("data.list","-",false,
+		Insert directive = new Insert("data.list","-",
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_IGNORE,
 				Insert.OBJECT_IGNORE,
@@ -689,7 +689,7 @@ public class InsertTest {
 		cache.postTemplate(template);
 
 		template = new Template("test", "row", "", "<row>{bookmark=\"bkm2\" group=\"test\" template=\"col\" }</row>");
-		directive = new Insert("idmuContext", "-",false, 
+		directive = new Insert("idmuContext", "-", 
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_IGNORE,
 				Insert.OBJECT_INSERT_OBJECT,
@@ -701,7 +701,7 @@ public class InsertTest {
 		cache.postTemplate(template);
 		
 		template = new Template("test", "col", "", "<col>{value}</col>");
-		Replace replace = new Replace("idmuContext", "-",false,  "",
+		Replace replace = new Replace("idmuContext", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -724,7 +724,7 @@ public class InsertTest {
 	@Test
 	public void testListInsertMissingVaryBy() throws MergeException {
 		Template template = new Template("test", "parent", "", this.bkm1, "{", "}");
-		Insert directive = new Insert("data.list","-",false,
+		Insert directive = new Insert("data.list","-",
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_IGNORE,
 				Insert.OBJECT_IGNORE,
@@ -751,7 +751,7 @@ public class InsertTest {
 	@Test
 	public void testListInsertVaryBy() throws MergeException {
 		Template template = new Template("test", "parent", "", this.bkm1, "{", "}");
-		Insert directive = new Insert("data.list","-",false,
+		Insert directive = new Insert("data.list","-",
 				Insert.MISSING_IGNORE,
 				Insert.PRIMITIVE_IGNORE,
 				Insert.OBJECT_IGNORE,
@@ -791,7 +791,7 @@ public class InsertTest {
 		HashSet<String> onlyLast  = new HashSet<String>(); onlyLast.add( "D");  onlyLast.add("H");
 		
 		Template template = new Template("test", "list", "notfirstlast", this.bkm2, "{", "}");
-		Replace replace = new Replace("data.replace", "-",false, "",
+		Replace replace = new Replace("data.replace", "-", "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -803,7 +803,7 @@ public class InsertTest {
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, false);
 		template.addDirective(replace);
-		Insert directive = new Insert("data.list","-",false,
+		Insert directive = new Insert("data.list","-",
 				Insert.MISSING_THROW,
 				Insert.PRIMITIVE_THROW,
 				Insert.OBJECT_THROW,
@@ -815,7 +815,7 @@ public class InsertTest {
 		cache.postTemplate(template);
 		
 		template = new Template("test", "child", "", "Child {col1}, {col2}{A}{B}{C}{D}{E}{F}{G}{H}{I}{J} - ");
-		replace = new Replace("idmuContext", "-",false,  "",
+		replace = new Replace("idmuContext", "-",  "",
 				Replace.MISSING_THROW,
 				Replace.PRIMITIVE_THROW,
 				Replace.OBJECT_REPLACE,
@@ -839,7 +839,7 @@ public class InsertTest {
 	@Test
 	public void testListInsertBookmarkSelection() throws MergeException {
 		Template template = new Template("test", "parent", "", this.bkm1 + this.bkm2, "{", "}");
-		Insert directive = new Insert("data.list","-",false,
+		Insert directive = new Insert("data.list","-",
 				Insert.MISSING_THROW,
 				Insert.PRIMITIVE_THROW,
 				Insert.OBJECT_THROW,
@@ -848,7 +848,7 @@ public class InsertTest {
 				"bkm1",Insert.INSERT_IF_STRING_EQUALS,"");
 
 		template.addDirective(directive);
-		directive = new Insert("data.primitive","-",false,
+		directive = new Insert("data.primitive","-",
 				Insert.MISSING_THROW,
 				Insert.PRIMITIVE_INSERT,
 				Insert.OBJECT_THROW,

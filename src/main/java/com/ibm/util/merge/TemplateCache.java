@@ -393,6 +393,17 @@ public class TemplateCache implements Iterable<String> {
 	}
 
 	/**
+	 * Update cached template statistics - NOT SYNCRONIZED Subject to inaccuracy 
+	 * @param template The template shortname to update
+	 * @param response The response time of merging the template
+	 */
+	public void postStats(String template, Long response) {
+		if (this.contains(template)) {
+			this.cache.get(template).postStats(response);
+		}
+	}
+	
+	/**
 	 * @return template statistics
 	 */
 	public Stats getStats() {
