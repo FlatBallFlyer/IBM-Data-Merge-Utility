@@ -18,6 +18,7 @@ package com.ibm.util.merge;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -390,6 +391,22 @@ public class TemplateCache implements Iterable<String> {
 	
 		deleteTheGroup(groupName);
 		return "ok";
+	}
+
+	/**
+	 * Gets the list of template groups and template names.
+	 *
+	 * @return JSON String
+	 */
+	public String getGroupAndTemplateList() {
+		HashMap<String, ArrayList<String>> theTemplates = new HashMap<String, ArrayList<String>>();
+		for (Template template : cache.values()) {
+			if (!theTemplates.containsKey(template.getId().group)) {
+				theTemplates.put(template.getId().group, new ArrayList<String>());
+			}
+			theTemplates.get(template.getId().group).add(template.getId().shorthand());
+		}
+		return gsonProxy.toString(theTemplates);
 	}
 
 	/**
