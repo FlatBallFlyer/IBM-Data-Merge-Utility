@@ -35,8 +35,8 @@ public class SaveFile extends AbstractDirective {
 		return options;
 	}
 
-	private String filename = "";
-	private Boolean clearAfter = true;
+	private String filename = "file";
+	private Boolean clearAfter = false;
 	
 	/**
 	 * Instantiate a SaveFile directive with default values

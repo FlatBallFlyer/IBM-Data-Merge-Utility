@@ -72,10 +72,10 @@ public class InsertTest {
 		assertEquals(AbstractDirective.TYPE_INSERT, directive.getType());
 		assertEquals("", directive.getDataSource());
 		assertEquals("-", directive.getDataDelimeter());
-		assertEquals(Insert.MISSING_THROW, directive.getIfSourceMissing());
-		assertEquals(Insert.PRIMITIVE_THROW, directive.getIfPrimitive());
-		assertEquals(Insert.OBJECT_THROW, directive.getIfObject());
-		assertEquals(Insert.LIST_THROW, directive.getIfList());
+		assertEquals(Insert.MISSING_IGNORE, directive.getIfSourceMissing());
+		assertEquals(Insert.PRIMITIVE_IGNORE, directive.getIfPrimitive());
+		assertEquals(Insert.OBJECT_IGNORE, directive.getIfObject());
+		assertEquals(Insert.LIST_IGNORE, directive.getIfList());
 		assertEquals(".*", directive.getBookmarkPattern());
 		assertTrue(directive.getNotFirst().isEmpty());
 		assertTrue(directive.getNotLast().isEmpty());
@@ -83,6 +83,18 @@ public class InsertTest {
 		assertTrue(directive.getOnlyLast().isEmpty());
 	}
 
+	@Test 
+	public void testExecuteNoOp() throws MergeException {
+		TemplateCache cache = new TemplateCache();
+		Template template = new Template("test","noop","", "Simple Test");
+		Insert directive = new Insert();
+		template.addDirective(directive);
+		cache.postTemplate(template);
+		Merger merger = new Merger(cache, "test.noop.");
+		template = merger.merge();
+		assertEquals("Simple Test", template.getMergedOutput().getValue());
+	}
+	
 	@Test
 	public void testInsertRecursionLimit() throws MergeException {
 		Config.load("{\"nestLimit\":\"5\"}");

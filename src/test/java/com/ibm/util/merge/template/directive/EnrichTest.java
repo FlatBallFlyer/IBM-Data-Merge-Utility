@@ -37,10 +37,11 @@ public class EnrichTest {
 
 	@Test
 	public void testEnrich() throws MergeException {
+		Enrich enrich = new Enrich();
 		assertEquals(AbstractDirective.TYPE_ENRICH, enrich.getType());
-		assertEquals("test",						enrich.getName());
-		assertEquals("test", 							enrich.getTargetDataName());
-		assertEquals("\"", 							enrich.getTargetDataDelimeter());
+		assertEquals("",							enrich.getName());
+		assertEquals("stub", 						enrich.getTargetDataName());
+		assertEquals("-", 							enrich.getTargetDataDelimeter());
 		assertEquals("com.ibm.util.merge.template.directive.enrich.provider.StubProvider", 							enrich.getEnrichClass());
 		assertEquals("", 							enrich.getEnrichSource());
 		assertEquals("", 							enrich.getEnrichParameter());
@@ -72,6 +73,18 @@ public class EnrichTest {
 		assertEquals(before.getTargetDataDelimeter(), after.getTargetDataDelimeter());
 	}
 	
+	@Test 
+	public void testExecuteNoOp() throws MergeException {
+		TemplateCache cache = new TemplateCache();
+		Template template = new Template("test","noop","", "Simple Test");
+		Enrich directive = new Enrich();
+		template.addDirective(directive);
+		cache.postTemplate(template);
+		Merger merger = new Merger(cache, "test.noop.");
+		template = merger.merge();
+		assertEquals("Simple Test", template.getMergedOutput().getValue());
+	}
+	
 	@Test
 	public void testExecuteNoParse() throws MergeException {
 		cache.postTemplate(template);
@@ -94,6 +107,20 @@ public class EnrichTest {
 		assertTrue(output.getAsObject().containsKey("wrapper"));
 	}
 
+	@Test
+	public void testTargetTags() throws MergeException {
+		TemplateCache cache = new TemplateCache();
+		Template template = new Template("test", "targetTags", "", "Some Content", "{", "}");
+		Enrich directive = new Enrich();
+		directive.setTargetDataName("some{foo}name");
+		template.addDirective(directive);
+		cache.postTemplate(template);
+		Merger context = new Merger(cache, "test.targetTags.");
+		context.getBaseTemplate().addReplace("foo", "bar");
+		template = context.merge();
+		assertTrue(context.getMergeData().contians("somebarname", "-"));
+	}
+	
 	@Test
 	public void testGetSetTargetDataName() {
 		enrich.setTargetDataName("foo");

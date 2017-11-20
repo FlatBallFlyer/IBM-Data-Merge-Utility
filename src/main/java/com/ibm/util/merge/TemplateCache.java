@@ -66,7 +66,7 @@ public class TemplateCache implements Iterable<String> {
 	public TemplateCache() throws MergeException {
 		this.cache = new HashMap<String, Template>();
 		this.initialized = new Date();
-		this.buildDefaultTemplates();
+		this.buildDefaultSystemTemplates();
 		
 		if (!Config.loadFolder().isEmpty()) {
 			File templateFolder = new File(Config.loadFolder());
@@ -95,21 +95,33 @@ public class TemplateCache implements Iterable<String> {
 	 * Build the system default templates (exception handling)
 	 * @throws MergeException  on processing errors
 	 */
-	private void buildDefaultTemplates() throws MergeException {
+	public void buildDefaultSystemTemplates() {
 		// Build Default Templates
-		Template error403 = new Template("system","error403","","Error - Forbidden");
-		Template error404 = new Template("system","error404","","Error - Not Found");
-		Template error500 = new Template("system","error500","","Error - Merge Error");
-		Template sample = new Template("system","sample","");
-		sample.addDirective(new Enrich());
-		sample.addDirective(new Insert());
-		sample.addDirective(new ParseData());
-		sample.addDirective(new Replace());
-		sample.addDirective(new SaveFile());
-		postTemplate(error403);
-		postTemplate(error404);
-		postTemplate(error500);
-		postTemplate(sample);
+		try {
+			this.deleteGroup("system");
+		} catch (Throwable e) {
+			// ignore not found
+		}
+		
+		// Add System Templates
+		try {
+			Template error403 = new Template("system","error403","","Error - Forbidden");
+			Template error404 = new Template("system","error404","","Error - Not Found");
+			Template error500 = new Template("system","error500","","Error - Merge Error");
+			Template sample = new Template("system","sample","");
+			sample.addDirective(new Enrich());
+			sample.addDirective(new Insert());
+			sample.addDirective(new ParseData());
+			sample.addDirective(new Replace());
+			sample.addDirective(new SaveFile());
+			postTemplate(error403);
+			postTemplate(error404);
+			postTemplate(error500);
+			postTemplate(sample); 
+		} catch (Throwable e) {
+			LOGGER.log(Level.SEVERE, "Load System Templates Failed!" + e.getMessage());
+		}
+		
 	}
 
 	/**

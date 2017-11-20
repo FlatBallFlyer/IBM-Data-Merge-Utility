@@ -31,6 +31,7 @@ public class Merge500 extends MergeException {
 
 	public Merge500(String error) {
 		super(error);
+		this.setType("Merge500");
 	}
 
 }

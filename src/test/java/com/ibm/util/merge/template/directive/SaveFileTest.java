@@ -39,6 +39,23 @@ public class SaveFileTest {
 		assertEquals(null, mergable.getTemplate());
 	}
 	
+	@Test 
+	public void testExecuteNoOp() throws MergeException {
+		Config.load("{\"tempFolder\":\"src/test/resources/temp\"}");
+		TemplateCache cache = new TemplateCache();
+		Template template = new Template("test","noop","", "Simple Test");
+		SaveFile directive = new SaveFile();
+		template.addDirective(directive);
+		cache.postTemplate(template);
+		Merger merger = new Merger(cache, "test.noop.");
+		template = merger.merge();
+		assertEquals("Simple Test", template.getMergedOutput().getValue());
+		File file = new File(merger.getMergeData().get(Merger.IDMU_ARCHIVE_OUTPUT, "-").getAsPrimitive());
+		assertTrue(file.exists());
+		file.delete();
+		assertFalse(file.exists());
+	}
+	
 	@Test
 	public void testExecute() throws MergeException {
 		Config.load("{\"tempFolder\":\"src/test/resources/temp\"}");

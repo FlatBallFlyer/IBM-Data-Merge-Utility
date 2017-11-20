@@ -72,10 +72,10 @@ public class Insert extends AbstractDataDirective {
 	 * Instantiate an Insert Directive with default values 
 	 */
 	public Insert() {
-		this("", "-", Insert.MISSING_THROW,
-			Insert.PRIMITIVE_THROW,
-			Insert.OBJECT_THROW,
-			Insert.LIST_THROW,
+		this("", "-", Insert.MISSING_IGNORE,
+			Insert.PRIMITIVE_IGNORE,
+			Insert.OBJECT_IGNORE,
+			Insert.LIST_IGNORE,
 			new HashSet<String>(), 
 			new HashSet<String>(), 
 			new HashSet<String>(), 

@@ -30,6 +30,7 @@ public class Merge404 extends MergeException {
 
 	public Merge404(String error) {
 		super(error);
+		this.setType("Merge404");
 	}
 
 }

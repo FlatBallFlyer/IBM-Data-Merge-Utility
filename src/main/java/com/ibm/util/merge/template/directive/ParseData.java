@@ -47,8 +47,8 @@ public class ParseData extends AbstractDataDirective {
 	 * @throws MergeException on processing errors
 	 */
 	public ParseData() throws MergeException {
-		this ("","", SOURCE_MISSING_THROW, PRIMITIVE_THROW, OBJECT_THROW, LIST_THROW, 
-				"", "", "", Config.PARSE_CSV);
+		this ("","-", SOURCE_MISSING_IGNORE, PRIMITIVE_IGNORE, OBJECT_IGNORE, LIST_IGNORE, 
+				"", "-", "", Config.PARSE_JSON);
 	}
 	
 	/**

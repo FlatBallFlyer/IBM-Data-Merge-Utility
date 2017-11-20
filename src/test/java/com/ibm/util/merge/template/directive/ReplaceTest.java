@@ -31,17 +31,17 @@ public class ReplaceTest {
 		assertEquals(AbstractDirective.TYPE_REPLACE, replace.getType());
 		assertEquals("", replace.getDataSource());
 		assertEquals("-", replace.getDataDelimeter());
-		assertEquals(Replace.MISSING_THROW, replace.getIfSourceMissing());
-		assertEquals(Replace.PRIMITIVE_THROW, replace.getIfPrimitive());
-		assertEquals(Replace.OBJECT_THROW, replace.getIfObject());
+		assertEquals(Replace.MISSING_IGNORE, replace.getIfSourceMissing());
+		assertEquals(Replace.PRIMITIVE_IGNORE, replace.getIfPrimitive());
+		assertEquals(Replace.OBJECT_IGNORE, replace.getIfObject());
 		assertEquals(Replace.OBJECT_ATTRIBUTE_LIST_THROW, replace.getObjectAttrList());
 		assertEquals(Replace.OBJECT_ATTRIBUTE_OBJECT_THROW, replace.getObjectAttrObject());
 		assertEquals(Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW, replace.getObjectAttrPrimitive());
-		assertEquals(Replace.LIST_THROW, replace.getIfList());
+		assertEquals(Replace.LIST_IGNORE, replace.getIfList());
 		assertEquals(Replace.LIST_ATTR_MISSING_THROW, replace.getListAttrMissing());
 		assertEquals(Replace.LIST_ATTR_NOT_PRIMITIVE_THROW, replace.getListAttrNotPrimitive());
-		assertEquals(true, replace.getProcessAfter());
-		assertEquals(true, replace.getProcessRequire());
+		assertEquals(false, replace.getProcessAfter());
+		assertEquals(false, replace.getProcessRequire());
 	}
 	
 	@Test
@@ -104,7 +104,20 @@ public class ReplaceTest {
 		assertEquals(Replace.LIST_ATTR_NOT_PRIMITIVE_THROW, 	mergable.getListAttrNotPrimitive());
 		assertEquals(false, 									mergable.getProcessAfter());
 	}
+
+	@Test 
+	public void testExecuteNoOp() throws MergeException {
+		TemplateCache cache = new TemplateCache();
+		Template template = new Template("test","noop","", "Simple Test");
+		Replace directive = new Replace();
+		template.addDirective(directive);
+		cache.postTemplate(template);
+		Merger merger = new Merger(cache, "test.noop.");
+		template = merger.merge();
+		assertEquals("Simple Test", template.getMergedOutput().getValue());
+	}
 	
+
 	@Test
 	public void testExecuteMissingThrow() throws MergeException {
 		Template template = new Template("test", "missing", "throw", "<foo> - <one>", "<", ">" );
@@ -1077,8 +1090,8 @@ public class ReplaceTest {
 	@Test
 	public void testSetGetRequired() {
 		Replace replace = new Replace();
-		assertTrue(replace.getProcessRequire());
-		replace.setProcessRequire(false);
 		assertFalse(replace.getProcessRequire());
+		replace.setProcessRequire(true);
+		assertTrue(replace.getProcessRequire());
 	}
 }

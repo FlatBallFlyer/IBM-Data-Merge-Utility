@@ -76,17 +76,18 @@ public class ParseDataTest {
 	
 	@Test
 	public void testParseData() throws MergeException {
-		assertEquals("name", directive.getName());
+		ParseData directive = new ParseData();
+		assertEquals("", directive.getName());
 		assertEquals(AbstractDirective.TYPE_PARSE, directive.getType());
-		assertEquals("test", directive.getDataSource());
+		assertEquals("", directive.getDataSource());
 		assertEquals("-", directive.getDataDelimeter());
-		assertEquals("target", directive.getDataTarget());
+		assertEquals("", directive.getDataTarget());
 		assertEquals("-", directive.getDataTargetDelimiter());
-		assertEquals(Config.PARSE_CSV, directive.getParseFormat());
-		assertEquals(ParseData.LIST_THROW, directive.getIfList());
-		assertEquals(ParseData.OBJECT_THROW, directive.getIfObject());
-		assertEquals(ParseData.PRIMITIVE_THROW, directive.getIfPrimitive());
-		assertEquals(ParseData.SOURCE_MISSING_THROW, directive.getIfSourceMissing());
+		assertEquals(Config.PARSE_JSON, directive.getParseFormat());
+		assertEquals(ParseData.LIST_IGNORE, directive.getIfList());
+		assertEquals(ParseData.OBJECT_IGNORE, directive.getIfObject());
+		assertEquals(ParseData.PRIMITIVE_IGNORE, directive.getIfPrimitive());
+		assertEquals(ParseData.SOURCE_MISSING_IGNORE, directive.getIfSourceMissing());
 	}
 
 	@Test
@@ -197,7 +198,8 @@ public class ParseDataTest {
 	@Test
 	public void testExecuteListThrow() throws MergeException {
 		directive.setIfList(ParseData.LIST_THROW);
-		merger.getMergeData().put("test", "-", this.sourceObject);
+		merger.getMergeData().put("test", "-", this.sourceList1);
+		template.cachePrepare();
 		template = template.getMergable(merger);
 		try {
 			template.getMergedOutput();

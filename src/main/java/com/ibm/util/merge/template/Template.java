@@ -241,7 +241,13 @@ public class Template {
 			if (!this.merged) {
 				Long start = System.currentTimeMillis();
 				for (AbstractDirective directive : this.directives ) {
-					directive.execute(this.context);
+					try {
+						directive.execute(this.context);
+					} catch (MergeException e) {
+						e.setDirective(directive);
+						e.setTemplate(this);
+						throw e;
+					}
 				}
 				this.merged = true;
 				this.directives.clear();

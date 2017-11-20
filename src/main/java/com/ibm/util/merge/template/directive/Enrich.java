@@ -82,8 +82,8 @@ public class Enrich extends AbstractDirective {
 	public Enrich() throws MergeException {
 		super();
 		this.setType(AbstractDirective.TYPE_ENRICH);
-		this.targetDataName = "";
-		this.targetDataDelimeter = "\"";
+		this.targetDataName = "stub";
+		this.targetDataDelimeter = "-";
 		this.enrichClass = "com.ibm.util.merge.template.directive.enrich.provider.StubProvider";
 		this.enrichSource = "";
 		this.enrichParameter = "";

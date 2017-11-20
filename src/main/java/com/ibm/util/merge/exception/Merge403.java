@@ -31,7 +31,7 @@ public class Merge403 extends MergeException {
 
 	public Merge403(String error) {
 		super(error);
-		// TODO Auto-generated constructor stub
+		this.setType("Merge403");
 	}
 
 

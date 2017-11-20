@@ -88,17 +88,17 @@ public class Replace extends AbstractDataDirective {
 	public Replace() {
 		this (
 			"", "-", "",
-			MISSING_THROW,
-			PRIMITIVE_THROW,
-			OBJECT_THROW,
+			MISSING_IGNORE,
+			PRIMITIVE_IGNORE,
+			OBJECT_IGNORE,
 			OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
 			OBJECT_ATTRIBUTE_LIST_THROW,
 			OBJECT_ATTRIBUTE_OBJECT_THROW,
-			LIST_THROW, "", "",
+			LIST_IGNORE, "", "",
 			LIST_ATTR_MISSING_THROW,
 			LIST_ATTR_NOT_PRIMITIVE_THROW,
-			true,
-			true
+			false,
+			false
 		);
 	}
 
