@@ -333,7 +333,7 @@ public class Template {
 	
 	/**
 	 * Update cached template stats - NOTE: Not Synchronized, subject to inaccuracy 
-	 * @param response
+	 * @param response The response time for a merge action
 	 */
 	public void postStats(Long response) {
 		this.stats.hits++;

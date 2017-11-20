@@ -38,16 +38,48 @@ import com.ibm.util.merge.template.Template;
  * @since: v4.0
  */
 public class Replace extends AbstractDataDirective {
-	private String fromAttribute;	// used by List
-	private String toAttribute;		// used by List
+	/**
+	 * Static "To Value" from primitive replace
+	 */
 	private String toValue;
+	/**
+	 * Indicates replace processing should be done after values are added to the replace stack
+	 */
 	private boolean processAfter;
+	/**
+	 * Indicates that processing should require that all tags are replaced
+	 */
 	private boolean processRequire;
+	/**
+	 * Action to take if the Object Attribute is a Primitive
+	 */
 	private int objectAttrPrimitive;
+	/**
+	 * Action to take if Object Attribute is a List
+	 */
 	private int objectAttrList;
+	/**
+	 * Action to take of the Object Attribute is another object
+	 */
 	private int objectAttrObject;
+	/**
+	 * Attribute for Replace From value when Replacing from a List of Objects
+	 */
+	private String fromAttribute;	// used by List
+	/**
+	 * Attribute for Replace To value when Replacing from a List of Objects
+	 */
+	private String toAttribute;		// used by List
+	/**
+	 * Action to take if List From/To attributes are not present
+	 */
 	private int listAttrMissing;
+	/**
+	 * Action to take if the List From/To attribute is not a primitive
+	 */
 	private int listAttrNotPrimitive;
+
+	// Transient Variables
 	private transient DataProxyJson proxy = new DataProxyJson();
 
 	/**
@@ -75,7 +107,6 @@ public class Replace extends AbstractDataDirective {
 	 * 
 	 * @param source The Data Source
 	 * @param delimeter The Delimiter used in Source
-	 * @param hasTags Indicates the data source has replace tags
 	 * @param missing The If Missing option
 	 * @param primitive The If Primitive option
 	 * @param to The replace To value for If Primitive operator

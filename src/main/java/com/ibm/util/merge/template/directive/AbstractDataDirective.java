@@ -72,7 +72,6 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	 * @param source The Source name
 	 * @param delimeter The source delimiter
 	 * @param missing The ifMissing option
-	 * @param hasTags Indicates the Source Name has Replace Tags in it
 	 * @param primitive The ifPrimitive option
 	 * @param object The ifObject option
 	 * @param list The ifList option
@@ -101,7 +100,7 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	 * Create a mergable clone of the object
 	 * 
 	 * @param mergable The directive to make mergable
-	 * @throws MergeException 
+	 * @throws MergeException on processing errors 
 	 */
 	public void makeMergable(AbstractDataDirective mergable) throws MergeException {
 		mergable.setType(this.getType());
@@ -117,7 +116,6 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 
 	/**
 	 * @param dataSource The data source name
-	 * @throws MergeException on Content Parser Error
 	 */
 	public void setDataSource(String dataSource) {
 		this.dataSource = dataSource;
