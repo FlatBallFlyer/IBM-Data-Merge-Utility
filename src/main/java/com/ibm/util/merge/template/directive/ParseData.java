@@ -234,6 +234,20 @@ public class ParseData extends AbstractDataDirective {
 		this.staticData = staticData;
 	}
 
+	/**
+	 * @return the Target Content 
+	 */
+	public Content getTargetContent() {
+		return targetContent;
+	}
+
+	/**
+	 * @param targetContent the new Content object
+	 */
+	public void setTargetContent(Content targetContent) {
+		this.targetContent = targetContent;
+	}
+
 	@Override
 	public void setIfSourceMissing(int value) {
 		if (MISSING_OPTIONS().keySet().contains(value)) {
@@ -265,8 +279,17 @@ public class ParseData extends AbstractDataDirective {
 	/*
 	 * Constants below here
 	 */
+	/**
+	 * Value for get/setIfMissing - If the data manager doesn't have the Source provided throw an exception and fail the merge
+	 */
 	public static final int SOURCE_MISSING_THROW 	= 1;
+	/**
+	 * Value for get/setIfMissing - If the data manager doesn't have the Source provided ignore this directive and continue with the Merge
+	 */
 	public static final int SOURCE_MISSING_IGNORE 	= 2;
+	/**
+	 * @return Hashmap of supported values for get/setIfMissing
+	 */
 	public static final HashMap<Integer, String> MISSING_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(SOURCE_MISSING_THROW, 	"throw");
@@ -274,9 +297,21 @@ public class ParseData extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Value for get/setIfPrimitive- If the Source provided is a Primitive throw an exception and fail the merge
+	 */
 	public static final int PRIMITIVE_THROW 	= 1;
+	/**
+	 * Value for get/setIfPrimitive- If the Source provided is a Primitive ignore this directive and continue the merge
+	 */
 	public static final int PRIMITIVE_IGNORE 	= 2;
+	/**
+	 * Value for get/setIfPrimitive- If the Source provided is a Primitive parse the value and put it in the target
+	 */
 	public static final int PRIMITIVE_PARSE 	= 3;
+	/**
+	 * @return Hashmap of supported values for get/setIfPrimitive
+	 */
 	public static final HashMap<Integer, String> PRIMITIVE_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(PRIMITIVE_THROW, 	"throw");
@@ -285,8 +320,17 @@ public class ParseData extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Value for get/setIfObject - If the Source provided is an Object throw an exception and fail the merge
+	 */
 	public static final int OBJECT_THROW 	= 1;
+	/**
+	 * Value for get/setIfObject - If the Source provided is an Object ignore this directive and continue the merge
+	 */
 	public static final int OBJECT_IGNORE 	= 2;
+	/**
+	 * @return Hashmap of supported values for get/setIfObject
+	 */
 	public static final HashMap<Integer, String> OBJECT_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(OBJECT_THROW, 	"throw");
@@ -294,10 +338,25 @@ public class ParseData extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Value for get/setIfList - If the Source provided is a List throw an exception and fail the merge
+	 */
 	public static final int LIST_THROW 			= 1;
+	/**
+	 * Value for get/setIfList - If the Source provided is a List ignore this directive and continue the merge
+	 */
 	public static final int LIST_IGNORE 		= 2;
+	/**
+	 * Value for get/setIfList - If the Source provided is a List attempt to parse the first member of the list
+	 */
 	public static final int LIST_PARSE_FIRST 	= 3;
+	/**
+	 * Value for get/setIfList - If the Source provided is a List attempt to parse the last member of the list
+	 */
 	public static final int LIST_PARSE_LAST		= 4;
+	/**
+	 * @return Hashmap of supported values for get/setIfList
+	 */
 	public static final HashMap<Integer, String> LIST_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(LIST_THROW, 	"throw");
@@ -314,14 +373,6 @@ public class ParseData extends AbstractDataDirective {
 		options.put("If Object", 		OBJECT_OPTIONS());
 		options.put("If List", 			LIST_OPTIONS());
 		return options;
-	}
-
-	public Content getTargetContent() {
-		return targetContent;
-	}
-
-	public void setTargetContent(Content targetContent) {
-		this.targetContent = targetContent;
 	}
 
 }

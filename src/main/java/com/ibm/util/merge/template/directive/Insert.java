@@ -483,9 +483,21 @@ public class Insert extends AbstractDataDirective {
 	/*
 	 * Static Constants and Options below here
 	 */
+	/**
+	 * Value for get/setIfMissing - If the data manager doesn't have the Source provided throw an exception and fail the merge
+	 */
 	public static final int MISSING_THROW 	= 1;
+	/**
+	 * Value for get/setIfMissing - If the data manager doesn't have the Source provided ignore this directive and continue with the Merge
+	 */
 	public static final int MISSING_IGNORE 	= 2;
+	/**
+	 * Value for get/setIfMissing - If the data manager doesn't have the Source provided perform a single insert with a null context
+	 */
 	public static final int MISSING_INSERT 	= 3;
+	/**
+	 * @return Hashmap of supported values for get/setIfMissing
+	 */
 	public static final HashMap<Integer, String> MISSING_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(MISSING_THROW, 	"throw");
@@ -494,10 +506,25 @@ public class Insert extends AbstractDataDirective {
 		return options;
 	}
 	
+	/**
+	 * Value used in get/setIfPrimitive value: If the data element identified by Source is a Primitive throw an exception and stop the merge
+	 */
 	public static final int PRIMITIVE_THROW 	= 1;
+	/**
+	 * Value used in get/setIfPrimitive value: If the data element identified by Source is a Primitive ignore the directive and continue the merge
+	 */
 	public static final int PRIMITIVE_IGNORE 	= 2;
+	/**
+	 * Value used in get/setIfPrimitive value: If the data element identified by Source is a Primitive perform a single insert with the Primitive context
+	 */
 	public static final int PRIMITIVE_INSERT 	= 3;
+	/**
+	 * Value used in get/setIfPrimitive value: If the data element identified by Source is a Primitive conditionally insert one sub-template based on IfOperator and Value
+	 */
 	public static final int PRIMITIVE_INSERT_IF	= 4;
+	/**
+	 * @return The options for get/setIfPrimitive
+	 */
 	public static final HashMap<Integer, String> PRIMITIVE_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(PRIMITIVE_THROW, 	"throw");
@@ -507,14 +534,41 @@ public class Insert extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Value used in ifPrimitive-insertIfOperator value: If the value provided is String.equals() the primitive value perform 1 insert 
+	 */
 	public static final int INSERT_IF_STRING_EQUALS 	= 1;
+	/**
+	 * Value used in ifPrimitive-insertIfOperator value: If the primitive is an empty string perform 1 insert
+	 */
 	public static final int INSERT_IF_STRING_EMPTY 		= 2;
+	/**
+	 * Value used in ifPrimitive-insertIfOperator value: If the primitive is not an empty string perform 1 insert
+	 */
 	public static final int INSERT_IF_STRING_NOT_EMPTY 	= 3;
+	/**
+	 * Value used in ifPrimitive-insertIfOperator value: If the primitive is greater than the value provided perform 1 insert
+	 */
 	public static final int INSERT_IF_STRING_GT			= 4;
+	/**
+	 * Value used in ifPrimitive-insertIfOperator value: If the primitive is less than the value provided perform 1 insert
+	 */
 	public static final int INSERT_IF_STRING_LT			= 5;
+	/**
+	 * Value used in ifPrimitive-insertIfOperator value: If the value of the primitive equals the value of the string provided perform 1 insert
+	 */
 	public static final int INSERT_IF_VALUE_EQUALS 		= 6;
+	/**
+	 * Value used in ifPrimitive-insertIfOperator value: If the value of the primitive is greater than the value of the string provided perform 1 insert
+	 */
 	public static final int INSERT_IF_VALUE_GT			= 7;
+	/**
+	 * Value used in ifPrimitive-insertIfOperator value: If the value of the primitive is less than the value of the string provided perform 1 insert
+	 */
 	public static final int INSERT_IF_VALUE_LT			= 8;
+	/**
+	 * @return The options for get/setIfOperator
+	 */
 	public static final HashMap<Integer, String> INSERT_IF_OPERATORS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(INSERT_IF_STRING_EQUALS,	"string equals");
@@ -528,10 +582,25 @@ public class Insert extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Value used in get/setIfObject value: If the data element identified by Source is an Object throw an exception and stop the merge
+	 */
 	public static final int OBJECT_THROW 			= 1;
+	/**
+	 * Value used in get/setIfObject value: If the data element identified by Source is an Object ignore this directive and continue the merge
+	 */
 	public static final int OBJECT_IGNORE 			= 2;
+	/**
+	 * Value used in get/setIfObject value: If the data element identified by Source is an Object perform an insert for each attribute of the object
+	 */
 	public static final int OBJECT_INSERT_OBJECT 	= 3;
+	/**
+	 * Value used in get/setIfObject value: If the data element identified by Source is an Object perform an insert as List for a single object
+	 */
 	public static final int OBJECT_INSERT_LIST 	= 4;
+	/**
+	 * @return The options for get/setIfOjbect
+	 */
 	public static final HashMap<Integer, String> OBJECT_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(OBJECT_THROW, 			"throw");
@@ -541,11 +610,29 @@ public class Insert extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Value used in get/setIfList value: If the data element identified by Source is an List throw an exception and stop the merge
+	 */
 	public static final int LIST_THROW 			= 1;
+	/**
+	 * Value used in get/setIfList value: If the data element identified by Source is an List ignore this directive and continue the merge
+	 */
 	public static final int LIST_IGNORE 		= 2;
+	/**
+	 * Value used in get/setIfList value: If the data element identified by Source is an List insert subtemplates for each member of the list
+	 */
 	public static final int LIST_INSERT 		= 3;
+	/**
+	 * Value used in get/setIfList value: If the data element identified by Source is an List insert one subtemplate for the first member of the list
+	 */
 	public static final int LIST_INSERT_FIRST 	= 4;
+	/**
+	 * Value used in get/setIfList value: If the data element identified by Source is an List insert one subtemplate for the last member of the list
+	 */
 	public static final int LIST_INSERT_LAST 	= 5;
+	/**
+	 * @return The options for get/setIfList
+	 */
 	public static final HashMap<Integer, String> LIST_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(LIST_THROW, 		"throw");

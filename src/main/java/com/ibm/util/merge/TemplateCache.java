@@ -93,7 +93,6 @@ public class TemplateCache implements Iterable<String> {
 	
 	/**
 	 * Build the system default templates (exception handling)
-	 * @throws MergeException  on processing errors
 	 */
 	public void buildDefaultSystemTemplates() {
 		// Build Default Templates

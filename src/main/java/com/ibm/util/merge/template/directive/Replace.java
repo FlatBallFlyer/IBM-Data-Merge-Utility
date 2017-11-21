@@ -549,9 +549,21 @@ public class Replace extends AbstractDataDirective {
 	/*
 	 * Constants and Options below here
 	 */
+	/**
+	 * Value for get/setIfMissing - If the data manager doesn't have the Source provided throw an exception and fail the merge
+	 */
 	public static final int MISSING_THROW 	= 1;
+	/**
+	 * Value for get/setIfMissing - If the data manager doesn't have the Source provided ignore this directive and continue the merge
+	 */
 	public static final int MISSING_IGNORE = 2;
+	/**
+	 * Value for get/setIfMissing - If the data manager doesn't have the Source provided use the toValue provided for the replace action
+	 */
 	public static final int MISSING_REPLACE = 3;
+	/**
+	 * @return Hashmap of supported values for get/setIfMissing
+	 */
 	public static final HashMap<Integer, String> MISSING_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(MISSING_THROW, 		"throw");
@@ -560,10 +572,25 @@ public class Replace extends AbstractDataDirective {
 		return options;
 	}
 	
+	/**
+	 * Value used in get/setIfPrimitive value: If the data element identified by Source is a Primitive throw an exception and stop the merge
+	 */
 	public static final int PRIMITIVE_THROW 	= 1;
+	/**
+	 * Value used in get/setIfPrimitive value: If the data element identified by Source is a Primitive ignore the directive and continue the merge
+	 */
 	public static final int PRIMITIVE_IGNORE 	= 2;
+	/**
+	 * Value used in get/setIfPrimitive value: If the data element identified by Source is a Primitive replace the Source Name (last segment only) with the Primitive value
+	 */
 	public static final int PRIMITIVE_REPLACE 	= 3;
+	/**
+	 * Value used in get/setIfPrimitive value: If the data element identified by Source is a Primitive put the value as a Json String
+	 */
 	public static final int PRIMITIVE_JSON	 	= 4;
+	/**
+	 * @return The options for get/setIfPrimitive
+	 */
 	public static final HashMap<Integer, String> PRIMITIVE_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(PRIMITIVE_THROW, 	"throw");
@@ -573,11 +600,29 @@ public class Replace extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Value used in get/setIfObject value: If the data element identified by Source is an Object throw an exception and stop the merge
+	 */
 	public static final int OBJECT_THROW 	= 1;
+	/**
+	 * Value used in get/setIfObject value: If the data element identified by Source is an Object ignore the directive and continue the merge
+	 */
 	public static final int OBJECT_IGNORE 	= 2;
+	/**
+	 * Value used in get/setIfObject value: If the data element identified by Source is an Object replace all object attributes with their values
+	 */
 	public static final int OBJECT_REPLACE 	= 3;
+	/**
+	 * Value used in get/setIfObject value: If the data element identified by Source is an Object treat is as a list of 1 object and insert using List features
+	 */
 	public static final int OBJECT_REPLACE_LIST = 4;
+	/**
+	 * Value used in get/setIfObject value: If the data element identified by Source is an Object put the value as a Json String
+	 */
 	public static final int OBJECT_REPLACE_JSON = 5;
+	/**
+	 * @return The options for get/setIfObject
+	 */
 	public static final HashMap<Integer, String> OBJECT_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(OBJECT_THROW, 	"throw");
@@ -588,9 +633,21 @@ public class Replace extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Value used in get/setIfObjectAttrPrimitive value: If the Object replace sees an attribute with a primitive value throw and exception and stop the merge
+	 */
 	public static final int OBJECT_ATTRIBUTE_PRIMITIVE_THROW	= 1;
+	/**
+	 * Value used in get/setIfObjectAttrPrimitive value: If the Object replace sees an attribute with a primitive value ignore the directive and continue the merge
+	 */
 	public static final int OBJECT_ATTRIBUTE_PRIMITIVE_IGNORE 	= 2;
+	/**
+	 * Value used in get/setIfObjectAttrPrimitive value: If the Object replace sees an attribute with a primitive value replace the attribute name with it's value
+	 */
 	public static final int OBJECT_ATTRIBUTE_PRIMITIVE_REPLACE 	= 3;
+	/**
+	 * @return The options for get/setIfObjectAttrPrimitive
+	 */
 	public static final HashMap<Integer, String> OBJECT_ATTRIBUTE_PRIMITIVE_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(OBJECT_ATTRIBUTE_PRIMITIVE_THROW, 	"throw");
@@ -599,8 +656,17 @@ public class Replace extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Value used in get/setIfObjectAttrObject value: If the Object replace sees an attribute with a Object value throw and exception and stop the merge
+	 */
 	public static final int OBJECT_ATTRIBUTE_OBJECT_THROW	= 1;
+	/**
+	 * Value used in get/setIfObjectAttrObject value: If the Object replace sees an attribute with a Object value ignore this directive and continue with the merge
+	 */
 	public static final int OBJECT_ATTRIBUTE_OBJECT_IGNORE 	= 2;
+	/**
+	 * @return The options for get/setIfObjectAttrObject
+	 */
 	public static final HashMap<Integer, String> OBJECT_ATTRIBUTE_OBJECT_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(OBJECT_ATTRIBUTE_OBJECT_THROW, 	"throw");
@@ -608,10 +674,25 @@ public class Replace extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Value used in get/setIfObjectAttrList value: If the Object replace sees an attribute with a List value throw and exception and stop the merge
+	 */
 	public static final int OBJECT_ATTRIBUTE_LIST_THROW 		= 1;
+	/**
+	 * Value used in get/setIfObjectAttrList value: If the Object replace sees an attribute with a List value ignore this directive and continue the merge
+	 */
 	public static final int OBJECT_ATTRIBUTE_LIST_IGNORE 		= 2;
+	/**
+	 * Value used in get/setIfObjectAttrList value: If the Object replace sees an attribute with a List use the first primitive member of that list
+	 */
 	public static final int OBJECT_ATTRIBUTE_LIST_FIRST 		= 3;
+	/**
+	 * Value used in get/setIfObjectAttrList value: If the Object replace sees an attribute with a List use the last primitive member of that list
+	 */
 	public static final int OBJECT_ATTRIBUTE_LIST_LAST 			= 4;
+	/**
+	 * @return The options for get/setIfObjectAttrList
+	 */
 	public static final HashMap<Integer, String> OBJECT_ATTRIBUTE_LIST_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(OBJECT_ATTRIBUTE_LIST_THROW, 	"throw");
@@ -621,12 +702,33 @@ public class Replace extends AbstractDataDirective {
 		return options;
 	}
 	
+	/**
+	 * Value used in get/setIfList value: If the Source is a List throw an exception and end the merge
+	 */
 	public static final int LIST_THROW 		= 1;
+	/**
+	 * Value used in get/setIfList value: If the Source is a List ignore this directive and continue the merge
+	 */
 	public static final int LIST_IGNORE 	= 2;
+	/**
+	 * Value used in get/setIfList value: Add replace values based for each member of the list using the fromAttribute and toAttribute names for each object in the list
+	 */
 	public static final int LIST_REPLACE 	= 3;
+	/**
+	 * Value used in get/setIfList value: Add replace values based for the first member of the list
+	 */
 	public static final int LIST_FIRST 		= 4;
+	/**
+	 * Value used in get/setIfList value: Add replace values based for the last member of the list
+	 */
 	public static final int LIST_LAST 		= 5;
+	/**
+	 * Value used in get/setIfList value: Add a replace value with the list JSON string
+	 */
 	public static final int LIST_JSON 		= 6;
+	/**
+	 * @return The options for get/setIfList
+	 */
 	public static final HashMap<Integer, String> LIST_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(LIST_THROW, 	"throw");
@@ -638,8 +740,17 @@ public class Replace extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Value used in get/setIfListAttrMissing value: If the List member object does not have a From or To attribute throw an exception and stop the merge
+	 */
 	public static final int LIST_ATTR_MISSING_THROW 	= 1;
+	/**
+	 * Value used in get/setIfListAttrMissing value: If the List member object does not have a From or To attribute ignore this directive and continue the merge
+	 */
 	public static final int LIST_ATTR_MISSING_IGNORE 	= 2;
+	/**
+	 * @return The options for get/setIfListAttrMissing
+	 */
 	public static final HashMap<Integer, String> LIST_ATTR_MISSING_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(LIST_ATTR_MISSING_THROW, 	"throw");
@@ -647,8 +758,17 @@ public class Replace extends AbstractDataDirective {
 		return options;
 	}
 
+	/**
+	 * Value used in get/setIfListAttrNotPrimitive value: If the List member From or To attribute is not a primitive throw an exception and stop the merge
+	 */
 	public static final int LIST_ATTR_NOT_PRIMITIVE_THROW 	= 1;
+	/**
+	 * Value used in get/setIfListAttrNotPrimitive value: If the List member From or To attribute is not a primitive ignore this directive and continue the merge
+	 */
 	public static final int LIST_ATTR_NOT_PRIMITIVE_IGNORE 	= 2;
+	/**
+	 * @return The options for get/setIfListAttrNotPrimitive
+	 */
 	public static final HashMap<Integer, String> LIST_ATTR_NOT_PRIMITIVE_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
 		options.put(LIST_ATTR_NOT_PRIMITIVE_THROW, 	"throw");
