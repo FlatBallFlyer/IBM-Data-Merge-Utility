@@ -1,15 +1,24 @@
 package com.ibm.util.merge;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
-
-@RunWith(Suite.class)
-@SuiteClasses({ 
-	com.ibm.util.merge.template.directive.enrich.provider.AllIntegrationTests.class
-})
+import java.io.File;
+import org.junit.Test;
 
 public class All_Integration_Tests {
+	//////////////////////////////////////////////////////////////////////////////////
+	// In order to run these integration tests you need to run the docker testing container
+	// which runs all the required test databases. If you have not already done so
+	// install Docker - https://www.docker.com and then run the following command
+	// docker run -p 3306:3306 --name idmu-mysql -e MYSQL_ROOT_PASSWORD=drowssap -d flatballflyer/idmu-test-mysql:1
+	// 
+	// NOTE: If you change the root password you will need to change the corresponding Config Environment variables for the JDBC data source.
+	// TODO: This is just a MySql container, will implement as a full stack with PWD's hidden
+	//////////////////////////////////////////////////////////////////////////////////
+	private final MergeTestHarness harness = new MergeTestHarness();
+
+	@Test
+	public void MySql1() throws Throwable {
+		// Given Customer ID as a parameter - create Contacts Report with Corporate Info
+		harness.testTemplates(new File("src/test/resources/integration/mysql1"));
+	}
 
 }
-

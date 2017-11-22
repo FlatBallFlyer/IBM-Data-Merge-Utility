@@ -1,0 +1,171 @@
+{
+  "templates" : [
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Create Customer Contact list based on \"idcustomer\" parameter value",
+      "content" : "Spacely Sprockets - Customer Contact List for <NAME>\n<corpUrl>\n<corpStreet>\n<corpCity>, <corpState> <corpZip>\n\nCustomer: <NAME>\nAddress: <STREET> <City> <STATE>, <ZIP>\nPrimary Contact: <PRIMARY>\n1930 Revenue / Profit: <REVENUE> / <PROFIT>\n<bookmark=\"contact\" group=\"test\" template=\"contact\">\n==== End of Report ====",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Add idcustomer to replace stack",
+          "dataSource" : "idmuParameters",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 3,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false
+        },
+        {
+          "type" : 1,
+          "name" : "Get Corporate Data",
+          "targetDataName" : "company",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider",
+          "enrichSource" : "mySqlTest",
+          "enrichParameter" : "testGen",
+          "enrichCommand" : "SELECT * FROM testgen.CORPORATE;",
+          "parseAs" : 4
+        },
+        {
+          "type" : 1,
+          "name" : "Get Customer Data",
+          "targetDataName" : "customer",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider",
+          "enrichSource" : "mySqlTest",
+          "enrichParameter" : "testGen",
+          "enrichCommand" : "SELECT * FROM testgen.CUSTOMER where IDCUSTOMER = \"<idcustomer>\";",
+          "parseAs" : 4
+        },
+        {
+          "type" : 1,
+          "name" : "Get Contact Data",
+          "targetDataName" : "contacts",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider",
+          "enrichSource" : "mySqlTest",
+          "enrichParameter" : "testGen",
+          "enrichCommand" : "SELECT * FROM testgen.CONTACT where IDCUSTOMER = \"<idcustomer>\";",
+          "parseAs" : 4
+        },
+        {
+          "type" : 4,
+          "name" : "Add Corporate Values to Replace Stack",
+          "dataSource" : "company",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 3,
+          "fromAttribute" : "FROM_VALUE",
+          "toAttribute" : "TO_VALUE",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false,
+          "processRequire" : "false"
+        },
+        {
+          "type" : 4,
+          "name" : "Add Customer Values and Replace",
+          "dataSource" : "customer-[0]",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 6,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : "false"
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Contacts ",
+          "dataSource" : "contacts",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "contact",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "contact",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "A Contact in the directory",
+      "content" : "ID: <IDCONTACT> NAME: <NAME> PHONE: <PHONE> EMAIL: <EMAIL>\n",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace Contact info from Context",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : true
+        }
+      ]
+    }
+  ]
+}

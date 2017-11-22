@@ -84,10 +84,10 @@ public abstract class SqlProvider implements ProviderInterface {
 		// Execute Command
 		try {
 			results = this.connection.
-					prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).
+					prepareStatement(query.getValue(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).
 					executeQuery();
 		} catch (SQLException e) {
-			throw new Merge500("Invalid SQL Query " + query );
+			throw new Merge500("Invalid SQL Query " + query.getValue() + " Message:" + e.getMessage());
 		}
 
 		// Build result table.

@@ -21,8 +21,9 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
+
+import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.sql.DataSource;
 
 /**
  * A simple JDBC Provider (Not JNDI based)
@@ -30,12 +31,7 @@ import javax.sql.DataSource;
  *   "DATA_SOURCE": [
  *		{
  *      	"credentials": {
- *          	"db_type": "",
- *          	"name": "",
  *          	"uri_cli": "",
- *          	"ca_certificate_base64": "",
- *          	"deployment_id": "",
- *              "uri": ""
  * 		}
  * ]
  * </pre></blockquote>
@@ -46,19 +42,14 @@ import javax.sql.DataSource;
 public class JdbcProvider extends SqlProvider implements ProviderInterface {
 	private final DataProxyJson proxy = new DataProxyJson();
 	private static final ProviderMeta meta = new ProviderMeta(
-			"Option Name",
+			"Database",
 			"Credentials", 
 			"Command Help",
 			"Parse Help",
 			"Return Help");
 	
 	class Credentials {
-		public String db_type;
-		public String name;
 		public String uri_cli;
-		public String ca_cert;
-		public String deployment_id;
-		public String uri;
 	}
 
 	public JdbcProvider(String source, String dbName, Merger context) throws MergeException {
@@ -71,17 +62,15 @@ public class JdbcProvider extends SqlProvider implements ProviderInterface {
 		Credentials creds;
 		try {
 			creds = proxy.fromString(Config.env(source), Credentials.class);
-		} catch (MergeException e) {
-			throw new Merge500("Invalid JDBC Provider for:" + this.source);
+		} catch (Throwable e) {
+			throw new Merge500("Invalid JDBC Provider for:" + this.source + " Message:" + e.getMessage());
 		}
 
 		// Get Connection
 		try {
-			// TODO - Get the JDBC Data source
-			jdbcSource = (DataSource) creds;
-			connection = jdbcSource.getConnection();
+		    connection = DriverManager.getConnection( creds.uri_cli);
 		} catch (SQLException e) {
-			throw new Merge500("SQL Exception connection to data source:" + source);
+			throw new Merge500("SQL Exception connection to data source:" + source + " Message:" + e.getMessage());
 		}
 	}
 	
