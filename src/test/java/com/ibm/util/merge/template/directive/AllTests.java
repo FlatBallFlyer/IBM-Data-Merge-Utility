@@ -6,6 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
+	AbstractDataDirectiveTest.class,
 	AbstractDirectiveTest.class,
 	EnrichTest.class,
 	InsertTest.class,

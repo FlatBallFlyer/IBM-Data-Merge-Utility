@@ -8,9 +8,11 @@ import org.junit.Test;
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.TemplateCache;
+import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
+import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.content.TagSegment;
@@ -18,6 +20,7 @@ import com.ibm.util.merge.template.directive.Replace;
 
 public class ReplaceTest {
 	private TemplateCache cache;
+	private static final DataProxyJson parser = new DataProxyJson();
 	
 	@Before
 	public void setUp() throws Exception {
@@ -387,7 +390,10 @@ public class ReplaceTest {
 		object.put("one", new DataPrimitive("two"));
 		context.getMergeData().put("data.object", "-", object);
 		String output = context.merge().getMergeContent().getValue();
-		assertEquals("{\"one\":\"two\",\"foo\":\"bar\"}", output);
+		DataElement reply = parser.fromString(output);
+		assertTrue(reply.isObject());
+		assertEquals("two", reply.getAsObject().get("one").getAsPrimitive());
+		assertEquals("bar", reply.getAsObject().get("foo").getAsPrimitive());
 	}
 	
 	@Test
@@ -884,7 +890,17 @@ public class ReplaceTest {
 		Merger context = new Merger(cache, "test.list.json");
 		context.getMergeData().put("data.list", "-", list);
 		template = context.merge();
-		assertEquals("[{\"A\":\"a\",\"B\":\"b\"},{\"D\":\"d\",\"C\":\"c\"}]", template.getMergedOutput().getValue());
+		String output = template.getMergedOutput().getValue();
+		DataElement reply = parser.fromString(output);
+		assertTrue(reply.isList());
+		assertTrue(reply.getAsList().get(0).isObject());
+		DataObject obj = reply.getAsList().get(0).getAsObject();
+		assertEquals("a", obj.get("A").getAsPrimitive());
+		assertEquals("b", obj.get("B").getAsPrimitive());
+		assertTrue(reply.getAsList().get(1).isObject());
+		obj = reply.getAsList().get(1).getAsObject();
+		assertEquals("c", obj.get("C").getAsPrimitive());
+		assertEquals("d", obj.get("D").getAsPrimitive());
 	}
 	
 	@Test

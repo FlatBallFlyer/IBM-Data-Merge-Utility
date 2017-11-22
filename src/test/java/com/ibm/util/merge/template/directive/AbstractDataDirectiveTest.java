@@ -43,8 +43,8 @@ public class AbstractDataDirectiveTest {
 		}
 
 		@Override
-		public void cachePrepare(Template template)
-				throws MergeException {
+		public void cachePrepare(Template template) throws MergeException {
+			super.cachePrepare(template);
 		}
 
 	}
@@ -63,6 +63,7 @@ public class AbstractDataDirectiveTest {
 
 	@Test
 	public void testGetMergable() throws MergeException {
+		test.cachePrepare(new Template());
 		AbstractDataTest mergable = (AbstractDataTest) test.getMergable();
 		assertNotSame(mergable, test);
 		assertEquals(test.getDataDelimeter(), 	mergable.getDataDelimeter());

@@ -11,7 +11,7 @@
         "back" : ">"
       },
       "description" : "Create Customer Contact list based on \"idcustomer\" parameter value",
-      "content" : "Spacely Sprockets - Customer Contact List for <NAME>\n<corpUrl>\n<corpStreet>\n<corpCity>, <corpState> <corpZip>\n\nCustomer: <NAME>\nAddress: <STREET> <City> <STATE>, <ZIP>\nPrimary Contact: <PRIMARY>\n1930 Revenue / Profit: <REVENUE> / <PROFIT>\n<bookmark=\"contact\" group=\"test\" template=\"contact\">\n==== End of Report ====",
+      "content" : "Spacely Sprockets - Customer Contact List for <NAME>\n<corpUrl>\n<corpStreet>\n<corpCity>, <corpState> <corpZip>\n\nCustomer: <NAME>\nAddress: <STREET> <City> <STATE>, <ZIP>\nPrimary Contact: <PRIMARY>\n1930 Revenue / Profit: <REVENUE> / <PROFIT>\n\nCONTACTS:\n<bookmark=\"contact\" group=\"test\" template=\"contact\">\n==== End of Report ====",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,

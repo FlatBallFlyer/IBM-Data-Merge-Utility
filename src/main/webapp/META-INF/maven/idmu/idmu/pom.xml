@@ -3,6 +3,7 @@
   <groupId>idmu</groupId>
   <artifactId>idmu</artifactId>
   <version>4.0.0</version>
+  <packaging>war</packaging>
   <name>idmu</name>
   <description>IBM Data Merge Utility</description>
   <build>

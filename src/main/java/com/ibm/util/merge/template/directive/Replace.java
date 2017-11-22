@@ -17,6 +17,7 @@
 package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import com.ibm.util.merge.Config;
@@ -313,7 +314,6 @@ public class Replace extends AbstractDataDirective {
 	 * @throws MergeException
 	 */
 	private void replaceFromList(DataList dataList) throws MergeException {
-//		DataList dataList = context.getMergeData().get(this.getDataSource(), this.getDataDelimeter()).getAsList();
 		for (DataElement row : dataList) {
 			if (row.isObject()) {
 				DataObject orow = row.getAsObject();
@@ -353,7 +353,8 @@ public class Replace extends AbstractDataDirective {
 	private void replaceFromObject(DataObject dataObject) throws MergeException {
 		String from = "";
 		String to = "";
-		for (Entry<String, DataElement> member: dataObject.entrySet()) {
+		TreeMap<String, DataElement> ordered = new TreeMap<String, DataElement>(dataObject);
+		for (Entry<String, DataElement> member: ordered.entrySet()) {
 			if (member.getValue().isPrimitive()) {
 				switch (this.getObjectAttrPrimitive()) {
 				case OBJECT_ATTRIBUTE_PRIMITIVE_THROW :

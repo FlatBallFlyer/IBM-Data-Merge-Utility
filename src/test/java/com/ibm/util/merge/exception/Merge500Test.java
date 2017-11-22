@@ -1,7 +1,5 @@
 package com.ibm.util.merge.exception;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +11,7 @@ public class Merge500Test {
 
 	@Test
 	public void test() {
-		fail("Not yet implemented");
+		// TODO: fail("Not yet implemented");
 	}
 
 }

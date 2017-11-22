@@ -19,6 +19,7 @@ package com.ibm.util.merge.template.directive;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
@@ -295,7 +296,8 @@ public class Insert extends AbstractDataDirective {
 	private void insertFromObject(Merger context, DataObject dataObject) throws MergeException {
 		int loopcount; int size;
 		loopcount = 1; size = dataObject.entrySet().size();
-		for (Entry<String, DataElement> member: dataObject.entrySet()) {
+		TreeMap<String, DataElement> ordered = new TreeMap<String, DataElement>(dataObject);
+		for (Entry<String, DataElement> member: ordered.entrySet()) {
 			DataObject row = new DataObject();
 			row.put("attribute",new DataPrimitive(member.getKey()));
 			row.put("value", 	member.getValue());
