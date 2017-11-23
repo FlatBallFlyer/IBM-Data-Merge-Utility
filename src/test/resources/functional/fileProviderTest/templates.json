@@ -249,7 +249,7 @@
           "targetDataDelimeter" : "-",
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
           "enrichSource" : "testFiles",
-          "enrichParameter" : "src/test/resources/functional/datafiles/",
+          "enrichParameter" : "",
           "enrichCommand" : "owner\\.<idmuContext>\\.xml",
           "parseAs" : 5
         },
@@ -349,7 +349,7 @@
           "targetDataDelimeter" : "-",
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
           "enrichSource" : "testFiles",
-          "enrichParameter" : "src/test/resources/functional/datafiles/",
+          "enrichParameter" : "",
           "enrichCommand" : "employee\\.<idmuContext>\\.csv",
           "parseAs" : 1
         },
@@ -546,8 +546,8 @@
           "targetDataName" : "employees",
           "targetDataDelimeter" : "-",
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
-          "enrichSource" : "files",
-          "enrichParameter" : "src/test/resources/functional/datafiles/",
+          "enrichSource" : "testFiles",
+          "enrichParameter" : "",
           "enrichCommand" : "employee.*csv",
           "parseAs" : 1
         },
@@ -617,8 +617,8 @@
           "targetDataName" : "owners",
           "targetDataDelimeter" : "-",
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
-          "enrichSource" : "files",
-          "enrichParameter" : "src/test/resources/functional/datafiles/",
+          "enrichSource" : "testFiles",
+          "enrichParameter" : "",
           "enrichCommand" : "owner.*xml",
           "parseAs" : 5
         },

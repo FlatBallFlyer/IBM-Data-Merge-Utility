@@ -7,6 +7,8 @@ Customer: Exxon Mobil
 Address: 1309 Burning Trail <City> NE, 68970-0108
 Primary Contact: Robert
 1930 Revenue / Profit: 5661 / 585
+
+CONTACTS:
 ID: 2 NAME: Robert PHONE: (531) 555-0422 EMAIL: Robert@Exxon.com
 ID: 22 NAME: Edward PHONE: (531) 555-2422 EMAIL: Edward@Exxon.com
 ID: 42 NAME: Willie PHONE: (531) 555-4442 EMAIL: 

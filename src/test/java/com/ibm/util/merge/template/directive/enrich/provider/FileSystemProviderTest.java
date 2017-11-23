@@ -31,9 +31,11 @@ public class FileSystemProviderTest {
 
 	@Test
 	public void testFileSystemProvider() throws MergeException {
-		FileSystemProvider provider = new FileSystemProvider("aFolder", "/opt/ibm/idmu", context);
+		Config.load("{\"envVars\":{\"aFolder\":\"{\\\"basePath\\\":\\\"/opt/ibm/idmu\\\"}\"}}");
+		FileSystemProvider provider = new FileSystemProvider("aFolder", "", context);
+		provider.loadBasePath();
 		assertEquals("aFolder", provider.getSource());
-		assertEquals("/opt/ibm/idmu", provider.getDbName());
+		assertEquals("/opt/ibm/idmu", provider.getBasePath().toString());
 		assertSame(context, provider.getContext());
 	}
 
@@ -44,7 +46,8 @@ public class FileSystemProviderTest {
 		assertTrue(folder.exists());
 		
 		// Test the Provider
-		FileSystemProvider provider = new FileSystemProvider("db", "src/test/resources/http", context);
+		Config.load("{\"envVars\":{\"db\":\"{\\\"basePath\\\":\\\"src/test/resources/http\\\"}\"}}");
+		FileSystemProvider provider = new FileSystemProvider("db", "", context);
 		DataElement result = provider.provide(".*", template.getWrapper(), context, template.getReplaceStack(), Config.PARSE_NONE);
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("simple.csv"));
@@ -62,6 +65,7 @@ public class FileSystemProviderTest {
 		assertTrue(folder.exists());
 		
 		// Test the Provider
+		Config.load("{\"envVars\":{\"db\":\"{\\\"basePath\\\":\\\"src/test/resources/http\\\"}\"}}");
 		FileSystemProvider provider = new FileSystemProvider("db", "src/test/resources/http", context);
 		DataElement result = provider.provide("simple.csv", template.getWrapper(), context, template.getReplaceStack(), Config.PARSE_CSV);
 		assertTrue(result.isObject());

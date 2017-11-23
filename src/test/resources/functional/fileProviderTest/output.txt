@@ -61,22 +61,22 @@
 	]
 },
 {"employees":[
-		{"employee": {"type":"employee", "name":"Fred", "title":" CEO", "manager":" Board"}},
 		{"employee": {"type":"employee", "name":"Mike", "title":" CTO", "manager":" Fred"}},
+		{"employee": {"type":"employee", "name":"Fred", "title":" CEO", "manager":" Board"}},
 		{"employee": {"type":"employee", "name":"Alexander", "title":" Manager", "manager":" James"}},
-		{"employee": {"type":"employee", "name":"Liam", "title":" Coder", "manager":" Mike"}},
-		{"employee": {"type":"employee", "name":"Jacob", "title":" Accountant", "manager":" Mason"}},
-		{"employee": {"type":"employee", "name":"Ethan", "title":" CIO", "manager":" Fred"}},
-		{"employee": {"type":"employee", "name":"Mason", "title":" CFO", "manager":" Fred"}},
 		{"employee": {"type":"employee", "name":"James", "title":" COO", "manager":" Fred"}},
-		{"employee": {"type":"employee", "name":"Noah", "title":" Coder", "manager":" Mike"}},
-		{"employee": {"type":"employee", "name":"William", "title":" Bookeeper", "manager":" Mason"}}
+		{"employee": {"type":"employee", "name":"Ethan", "title":" CIO", "manager":" Fred"}},
+		{"employee": {"type":"employee", "name":"William", "title":" Bookeeper", "manager":" Mason"}},
+		{"employee": {"type":"employee", "name":"Jacob", "title":" Accountant", "manager":" Mason"}},
+		{"employee": {"type":"employee", "name":"Mason", "title":" CFO", "manager":" Fred"}},
+		{"employee": {"type":"employee", "name":"Liam", "title":" Coder", "manager":" Mike"}},
+		{"employee": {"type":"employee", "name":"Noah", "title":" Coder", "manager":" Mike"}}
 	]
 },
 {"owners":[
-		{"owner": {"type":"owner", "name":"Owner Two", "age":"82"}},
 		{"owner": {"type":"owner", "name":"Owner One", "age":"22"}},
-		{"owner": {"type":"owner", "name":"Owner Three", "age":"52"}}
+		{"owner": {"type":"owner", "name":"Owner Three", "age":"52"}},
+		{"owner": {"type":"owner", "name":"Owner Two", "age":"82"}}
 	]
 }
 ]

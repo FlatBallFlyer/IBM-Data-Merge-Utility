@@ -21,12 +21,12 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
+import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,30 +40,47 @@ import java.util.HashMap;
  *
  */
 public class FileSystemProvider implements ProviderInterface {
-	// TODO - Refactor to get path from env
+	private final DataProxyJson proxy = new DataProxyJson();
 	private final String source;
 	private final String dbName;
 	private transient final Merger context;
-	
+	private transient File basePath;
+
 	public FileSystemProvider(String source, String dbName, Merger context) throws MergeException {
 		this.source = source;
 		this.dbName = dbName;
 		this.context = context;
 	}
 
+	/**
+	 * @return lazy loader of Provider Configuration values
+	 * @throws Merge500 
+	 */
+	public void loadBasePath() throws Merge500 {
+		DataElement cfg;
+		try {
+			cfg = proxy.fromString(Config.env(source), DataElement.class);
+		} catch (Throwable e) {
+			throw new Merge500("Invalid File Provider Config for:" + this.source + " Message:" + e.getMessage());
+		}
+
+		basePath = new File(cfg.getAsObject().get("basePath").getAsPrimitive());
+        if (this.basePath.listFiles() == null) {
+            throw new Merge500("File System Path Folder was not found:" + basePath.getAbsolutePath());
+        }
+	}
+
 	@Override
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
+		if (this.basePath == null) {
+			loadBasePath();
+		}
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_NONE);
 		query.replace(replace, false, Config.nestLimit());
 		DataObject result = new DataObject();
 
-		File templateFolder = new File(this.getDbName());
-        if (templateFolder.listFiles() == null) {
-            throw new Merge500("File System Path Folder was not found:" + templateFolder);
-        }
-        
 		String fileSelector = query.getValue();
-        for (File file : templateFolder.listFiles()) {
+        for (File file : this.basePath.listFiles()) {
             if (!file.isDirectory() && !file.getName().startsWith(".")) {
             	if (file.getName().matches(fileSelector.toString())) {
             		try {
@@ -88,6 +105,9 @@ public class FileSystemProvider implements ProviderInterface {
 		return result;
 	}
 	
+	public File getBasePath() {
+		return this.basePath;
+	}
 	@Override
 	public void close() {
 		// nothing to close
