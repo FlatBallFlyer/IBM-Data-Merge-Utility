@@ -77,11 +77,6 @@
               "type" : "string",
               "title" : "Delimiter",
               "description" : "Delimiter used in data source path"
-            },
-            "sourceHasTags" : {
-              "type" : "boolean",
-              "title" : "Has Tags",
-              "description" : "Indicates the Data Source has replace tags"
             }
           }
         }

@@ -1,9 +1,11 @@
 # Based on official MySql container
 FROM mysql:5.7
 
-# Set the working directory 
-#WORKDIR /docker-entrypoint-initdb.d
-
-# Copy the current directory contents into the container at /app
+# Copy the load sql into the container at /docker-entrypoint-initdb.d
 ADD ./mysql.test.sql /docker-entrypoint-initdb.d
 
+# Expose the default mysql port
+EXPOSE 3306
+
+# Setup MySql Password
+ENV MYSQL_ROOT_PASSWORD drowssap
