@@ -1,0 +1,14 @@
+{
+  "tempFolder" : "src/test/resources/temp",
+  "loadFolder" : "src/test/resources/integration/mongo1",
+  "logLevel" : "SEVERE",
+  "nestLimit" : 3,
+  "insertLimit" : 20,
+  "defaultProviders" : [
+    "com.ibm.util.merge.template.directive.enrich.provider.MongoProvider"
+  ],
+  "envVars" : {
+    "test" : "value",
+    "mongoTest" : "{\"uri\":\"mongodb://localhost:27017\", \"user\":\"\", \"pword\":\"\", \"dbName\":\"test\"}"
+  }
+}

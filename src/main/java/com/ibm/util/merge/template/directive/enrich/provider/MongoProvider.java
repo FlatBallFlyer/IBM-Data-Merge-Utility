@@ -18,20 +18,37 @@ package com.ibm.util.merge.template.directive.enrich.provider;
 
 import java.util.HashMap;
 
+import org.bson.Document;
+import org.bson.conversions.Bson;
+
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
+import com.ibm.util.merge.data.DataList;
+import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 
 /**
  * A MongoDb provider
  * <p>Environment Variable Format<blockquote><pre>
- * TODO
+ * {
+ * 		"uri" : "mongodb://localhost:27017",
+ * 		"user" : "username",
+ * 		"pword" : "some-password",
+ * 		"dbName" : "some-db-name"
+ * }
  * </pre></blockquote>
  * 
  * @author Mike Storey
@@ -40,25 +57,29 @@ import com.ibm.util.merge.template.content.TagSegment;
 public class MongoProvider implements ProviderInterface {
 	private final DataProxyJson proxy = new DataProxyJson();
 	private static final ProviderMeta meta = new ProviderMeta(
-			"Option Name",
-			"Credentials", 
-			"Command Help",
-			"Parse Help",
-			"Return Help");
+			"Collection",
+			"{uri:uri,user:user,pword:pword,dbName:dbName}", 
+			"Json Mongo Query Object",
+			"Not Supported / Necessary",
+			"List of Document Objects");
 	
 	class Credentials {
-		public String db_type;
-		public String name;
-		public String uri_cli;
-		public String ca_cert;
-		public String deployment_id;
-		public String uri; 
+		public String uri;
+		public String user;
+		public String pword;
+		public String dbName;
+	}
+
+	class Query extends HashMap<String,String> { 
 	}
 
 	private final String source;
-	private final String dbName;
+	private final String collection;
 	private transient final Merger context;
-	private transient String connection = null; // TODO Mongo Connection type
+	private transient Credentials credentials = null;
+	private transient MongoClient client;
+	private transient MongoDatabase database;
+	private transient MongoCollection<Document> dbCollection;
 	
 	/**
 	 * Instantiate the provider and get the db connection
@@ -68,46 +89,53 @@ public class MongoProvider implements ProviderInterface {
 	 * @param context The Merge Context
 	 * @throws MergeException  on processing errors
 	 */
-	public MongoProvider(String source, String dbName, Merger context) throws MergeException {
+	public MongoProvider(String source, String collection, Merger context) throws MergeException {
 		this.source = source;
-		this.dbName = dbName;
+		this.collection = collection;
 		this.context = context;
 	}
 	
 	private void connect() throws Merge500 {
-		Credentials creds;
 		try {
-			creds = proxy.fromString(Config.env(source), Credentials.class);
+			this.credentials = proxy.fromString(Config.env(source), Credentials.class);
 		} catch (MergeException e) {
 			throw new Merge500("Invalid Mongo Provider for:" + source);
 		}
-
-		// TODO - Get Mongo Connection
-		this.connection = creds.db_type + creds.name + creds.uri_cli + creds.ca_cert + creds.deployment_id + creds.uri;
+		
+		this.client = new MongoClient(new MongoClientURI(this.credentials.uri));
+		this.database = this.client.getDatabase(this.credentials.dbName);
+		this.dbCollection = database.getCollection(this.collection);
 	}
 
 	@Override
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
-		if (connection == null) {
+		if (credentials == null) {
 			this.connect();
 		}
 		
-		DataElement result = null;
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_JSON);
 		query.replace(replace, false, Config.nestLimit());
-		
-		String results = ""; // TODO - Make Mongo Call
-		
-		if (parseAs != Config.PARSE_NONE) {
-			result = Config.parse(parseAs, results);
+		DataObject queryObj = Config.parse(Config.PARSE_JSON, query.getValue()).getAsObject();
+
+		DBObject dbquery = new BasicDBObject();
+		for (String key : queryObj.keySet()) {
+			dbquery.put(key, queryObj.get(key).getAsPrimitive());
 		}
+		FindIterable<Document> cursor = this.dbCollection.find((Bson) dbquery);
+		
+		DataList result = new DataList();
+		for (Document aDoc : cursor) {
+			DataElement theDoc = Config.parse(Config.PARSE_JSON, aDoc.toJson());
+			result.add(theDoc);
+		}
+		
 		return result;
 	}
 
 	@Override
 	public void close() {
-		if (this.connection != null) {
-			// this.connection.close();
+		if (this.client != null) {
+			this.client.close();
 		}
 		return;
 	}
@@ -118,11 +146,6 @@ public class MongoProvider implements ProviderInterface {
 	}
 
 	@Override
-	public String getDbName() {
-		return this.dbName;
-	}
-
-	@Override
 	public Merger getContext() {
 		return this.context;
 	}
@@ -130,5 +153,10 @@ public class MongoProvider implements ProviderInterface {
 	@Override
 	public ProviderMeta getMetaInfo() {
 		return MongoProvider.meta;
+	}
+
+	@Override
+	public String getDbName() {
+		return this.collection;
 	}
 }
