@@ -53,8 +53,8 @@ public class FileSystemProvider implements ProviderInterface {
 	}
 
 	/**
-	 * @return lazy loader of Provider Configuration values
-	 * @throws Merge500 
+	 * lazy loader of Provider Configuration values
+	 * @throws Merge500 on configuration and connection errors
 	 */
 	public void loadBasePath() throws Merge500 {
 		DataElement cfg;

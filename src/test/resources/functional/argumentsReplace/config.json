@@ -1,10 +1,2 @@
 {
-	"tempFolder": "/opt/ibm/idmu/",
-	"loadFolder": "src/test/resources/functional/argumentsReplace",
-	"nestLimit": 3,
-	"insertLimit": 20,
-	"envVars": 
-	{
-		"test": "value"
-	}
 }

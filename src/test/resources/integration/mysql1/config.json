@@ -1,14 +1,5 @@
 {
-  "tempFolder" : "src/test/resources/temp",
-  "loadFolder" : "src/test/resources/integration/mysql1",
-  "logLevel" : "SEVERE",
-  "nestLimit" : 3,
-  "insertLimit" : 20,
-  "defaultProviders" : [
-    "com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider"
-  ],
   "envVars" : {
-    "test" : "value",
     "mySqlTest" : "{\"username\": \"root\",\"password\": \"drowssap\",\"uri_cli\": \"jdbc:mysql://localhost:3306?user=root&password=drowssap\"}"
   }
 }

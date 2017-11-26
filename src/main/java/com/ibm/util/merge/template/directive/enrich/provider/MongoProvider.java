@@ -70,7 +70,8 @@ public class MongoProvider implements ProviderInterface {
 		public String dbName;
 	}
 
-	class Query extends HashMap<String,String> { 
+	class Query extends HashMap<String,String> {
+		private static final long serialVersionUID = 1L; 
 	}
 
 	private final String source;
@@ -85,7 +86,7 @@ public class MongoProvider implements ProviderInterface {
 	 * Instantiate the provider and get the db connection
 	 * 
 	 * @param source The Data Source
-	 * @param dbName The DB Name
+	 * @param collection The collection Name
 	 * @param context The Merge Context
 	 * @throws MergeException  on processing errors
 	 */

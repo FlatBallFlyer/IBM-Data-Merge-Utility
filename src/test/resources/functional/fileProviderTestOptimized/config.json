@@ -1,9 +1,5 @@
 {
   "tempFolder" : "src/test/resources/temp",
-  "loadFolder" : "src/test/resources/functional/fileProviderTestOptimized",
-  "logLevel" : "SEVERE",
-  "nestLimit" : 3,
-  "insertLimit" : 20,
   "defaultProviders" : [
 		"com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider"  
   ],
