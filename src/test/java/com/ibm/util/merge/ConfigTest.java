@@ -37,7 +37,7 @@ public class ConfigTest {
 
 	@Test
 	public void testConfigOptions() throws MergeException {
-		String optString = Config.allOptions();
+		String optString = Config.get();
 		JsonElement options = proxy.fromString(optString, JsonElement.class);
 		assertTrue(options.isJsonArray());
 		assertEquals(2, options.getAsJsonArray().size());

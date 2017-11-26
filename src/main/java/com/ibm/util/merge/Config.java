@@ -83,7 +83,7 @@ public class Config {
 	 * @return the singleton config
 	 * @throws MergeException on Processing Errors
 	 */
-	private static Config get() throws MergeException {
+	private static Config getTheConfig() throws MergeException {
 		if (null == config) {
 			config = new Config();
 		}
@@ -126,7 +126,7 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	public static int nestLimit() throws MergeException {
-		return Config.get().getNestLimit();
+		return Config.getTheConfig().getNestLimit();
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	public static int insertLimit() throws MergeException {
-		return Config.get().getInsertLimit();
+		return Config.getTheConfig().getInsertLimit();
 	}
 	
 	/**
@@ -142,7 +142,7 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	public static String tempFolder() throws MergeException {
-		return Config.get().getTempFolder();
+		return Config.getTheConfig().getTempFolder();
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	public static String loadFolder() throws MergeException {
-		return Config.get().getLoadFolder();
+		return Config.getTheConfig().getLoadFolder();
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	public static String env(String varName) throws MergeException {
-		return Config.get().getEnv(varName);
+		return Config.getTheConfig().getEnv(varName);
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	public static String version() throws MergeException {
-		return Config.get().getVersion();
+		return Config.getTheConfig().getVersion();
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class Config {
 	 * @throws MergeException on processing errors
 	 */
 	public static boolean hasProvider(String key) throws MergeException{
-		return Config.get().providers.containsKey(key);
+		return Config.getTheConfig().providers.containsKey(key);
 	}
 	
 	/**
@@ -188,7 +188,7 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	public static ProviderInterface providerInstance(String className, String source, String option, Merger context) throws MergeException {
-		return Config.get().getProviderInstance(className, source, option, context);
+		return Config.getTheConfig().getProviderInstance(className, source, option, context);
 	}
 	
 	/**
@@ -197,7 +197,7 @@ public class Config {
 	 * @throws MergeException on Config instantiation errors
 	 */
 	public static boolean hasParser(int parseAs) throws MergeException {
-		return Config.get().proxies.containsKey(new Integer(parseAs));
+		return Config.getTheConfig().proxies.containsKey(new Integer(parseAs));
 	}
 
 	/**
@@ -207,15 +207,15 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	public static DataElement parse(int parseAs, String value) throws MergeException {
-		return Config.get().parseString(parseAs, value);
+		return Config.getTheConfig().parseString(parseAs, value);
 	}
 	
 	/**
 	 * @return The options json
 	 * @throws MergeException on Processing Errors
 	 */
-	public static String allOptions() throws MergeException {
-		return Config.get().getAllOptions();
+	public static String get() throws MergeException {
+		return Config.getTheConfig().getAllOptions();
 	}
 
 	/* *********************************************************
