@@ -3,6 +3,7 @@
 .project
 .settings
 .classpath
+/docs/
 /*/target
 /bin/
 /target/
