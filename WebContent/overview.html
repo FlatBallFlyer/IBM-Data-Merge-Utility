@@ -18,7 +18,7 @@
 	// Get a Merger for your template
 	Merger merger = new Merger(cache, "some.template.name");
 	  
-	// Merge the template and get the merged template
+	// Merge the template 
 	Template template = merger.merge();
 	 
 	// Do something with the output
@@ -26,7 +26,16 @@
 	template.getMergedOutput().streamOutput(stream) - as an output stream
 	</code></pre>
 
+	<p>See the /src/test/java - com.ibm.util.merge.MergeTestHarness.java for a more complete use case. </p>
 <h2>Overview</h2>
-	<p>TODO</p>
+	<p>The magic is all in the templates<p>
+	<p>In the /src/test/resources folder find:</p><ul>
+		<li>functional - sample templates and expected output that run stand alone - using File System provider for provider testing</li>
+		<li>integration - sample integration templates for default providers - see instructions on running a testing container in All_Integration_Tests.java</li>
+	</ul>
+	<p>See the Template and Directive classes for additional information how templates and directives work</p>
+	<p>See the Content package - BookmarkSegment and TagSegment definitions are there</p>
+	<p>See the Provider Interface for Enrich Provider feature framework, and the individual providers for more detailed configuration options</p>
+	<p>See Config.get() for a json string with all configuration options - including template and directive enums</p>
 </body>
 </html>
