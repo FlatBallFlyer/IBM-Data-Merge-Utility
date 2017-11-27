@@ -8,6 +8,8 @@ The IBM Data Merge Utility is a Java Utility that provides transformation and en
 ### See Also
 1. [Overview](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/overview.html)
 1. Generated JavaDoc
+1. [Template JSON Schema](http://flatballflyer.github.io/IBM-Data-Merge-Utility/schema.template.json)
+1. [Config JSON Schema](http://flatballflyer.github.io/IBM-Data-Merge-Utility/schema.config.json)
 
 ### Related Projects
 1. [IDMU-CLI Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-CLI)
