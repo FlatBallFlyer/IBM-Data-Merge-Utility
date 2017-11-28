@@ -23,6 +23,7 @@ import com.ibm.util.merge.data.parser.gson.DataDeserializer;
 import com.ibm.util.merge.data.parser.gson.DataSerializer;
 import com.ibm.util.merge.data.parser.gson.DirectiveDeserializer;
 import com.ibm.util.merge.data.parser.gson.DirectiveSerializer;
+import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.directive.AbstractDirective;
 
 /**
@@ -36,6 +37,7 @@ public class DataProxyJson implements ParserProxyInterface {
 
     /**
      * Instantiate a Proxy
+     * @throws MergeException 
      */
     public DataProxyJson() {
         builder = new GsonBuilder();

@@ -9,17 +9,18 @@ import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.MergeException;
 
 public class ConfigTest {
-	private transient static final DataProxyJson proxy = new DataProxyJson();
+	private DataProxyJson proxy;
 
 	@Before
 	public void setUp() throws MergeException {
+		proxy = new DataProxyJson();
 		Config.initialize();
 	}
 	
 	@Test
 	public void testConfigDefault() throws MergeException {
 		assertEquals("/opt/ibm/idmu/archives", Config.tempFolder());
-		assertEquals("foo", Config.loadFolder());
+		assertEquals("/opt/ibm/idmu/v4/templates", Config.loadFolder());
 		assertEquals(2, Config.nestLimit());
 	}
 
@@ -85,6 +86,13 @@ public class ConfigTest {
 		assertEquals(2, Config.nestLimit());
 		Config.load("{\"nestLimit\": \"44\"}");
 		assertEquals(44, Config.nestLimit());
+	}
+
+	@Test
+	public void testGetIsPretty() throws MergeException {
+		assertTrue(Config.isPrettyJson());
+		Config.load("{\"prettyJson\": false }");
+		assertFalse(Config.isPrettyJson());
 	}
 
 	@Test

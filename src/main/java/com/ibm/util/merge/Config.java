@@ -62,6 +62,7 @@ import com.ibm.util.merge.template.directive.enrich.provider.ProviderMeta;
  * 	"insertLimit": n,
  * 	"tempFolder": "folder",
  * 	"loadFolder": "folder",
+ *  "prettyJson" : "true",
  * 	"logLevel": "CRITICAL | SEVERE | WARN | INFO",
  * 	"envVars" : {"var":"value"},
  *	"defaultProviders" : ["providerClass","providerClass"],
@@ -196,6 +197,15 @@ public class Config {
 	 * @return True if the parse is supported in the current deployment
 	 * @throws MergeException on Config instantiation errors
 	 */
+	public static boolean isPrettyJson() throws MergeException {
+		return Config.getTheConfig().getPrettyJson();
+	}
+
+	/**
+	 * @param parseAs The parser desired
+	 * @return True if the parse is supported in the current deployment
+	 * @throws MergeException on Config instantiation errors
+	 */
 	public static boolean hasParser(int parseAs) throws MergeException {
 		return Config.getTheConfig().proxies.containsKey(new Integer(parseAs));
 	}
@@ -240,11 +250,15 @@ public class Config {
 	/**
 	 * The template load folder
 	 */
-	private String loadFolder	= "foo";
+	private String loadFolder	= "/opt/ibm/idmu/v4/templates";
 	/**
 	 * The logging level
 	 */
 	private String logLevel 	= "SEVERE";
+	/**
+	 * Json Parser use Pretty Json option
+	 */
+	private boolean prettyJson = true;
 	/**
 	 * Environment Variables used to over-ride values in the system environment
 	 */
@@ -366,6 +380,7 @@ public class Config {
 				this.insertLimit 	= this.getIf(me, "insertLimit", this.insertLimit);
 				this.tempFolder 	= this.getIf(me, "tempFolder", this.tempFolder);
 				this.loadFolder 	= this.getIf(me, "loadFolder", this.loadFolder);
+				this.prettyJson		= this.getIf(me, "prettyJson", true);
 				this.logLevel 		= this.getIf(me, "logLevel", this.logLevel);
 				if (me.has("envVars") && me.get("envVars").isJsonObject()) {
 					this.envVars = new HashMap<String,String>();
@@ -414,6 +429,15 @@ public class Config {
 			return value;
 		}
 	}
+
+	private Boolean getIf(JsonObject object, String name, Boolean value) {
+		if (object.has(name)) {
+			return object.get(name).getAsBoolean();
+		} else {
+			return value;
+		}
+	}
+	
 	/**
 	 * Abstraction of Environment access. Will leverage an entry from the 
 	 * local Environment hashmap property. Environment Variables prefixed with 
@@ -553,6 +577,10 @@ public class Config {
 	
 //	// Simple Getters below here
 //	
+	private Boolean getPrettyJson() {
+		return prettyJson;
+	}
+
 	private String getTempFolder() {
 		return tempFolder;
 	}
