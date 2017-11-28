@@ -22,8 +22,14 @@ public class All_Integration_Tests {
 	}
 
 	@Test
-	public void SqlToMongo() throws Throwable {
+	public void MyDb2() throws Throwable {
 		// Given Customer ID as a parameter - create Contacts Report with Corporate Info
+		harness.testTemplates(new File("src/test/resources/integration/db2Express"));
+	}
+
+	@Test
+	public void SqlToMongo() throws Throwable {
+		// Transform the JDBC MySql database to Mongo Insert commands
 		harness.testTemplates(new File("src/test/resources/integration/mysqlToMongo"));
 	}
 

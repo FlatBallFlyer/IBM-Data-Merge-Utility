@@ -125,7 +125,8 @@ public class MergeTestHarness {
      * @param files2
      * @throws IOException
      */
-    private void assertMembersEqual(ZipFile zip1, HashMap<String, ZipEntry> files1, 
+    @SuppressWarnings("deprecation")
+	private void assertMembersEqual(ZipFile zip1, HashMap<String, ZipEntry> files1, 
                                                  ZipFile zip2, HashMap<String, ZipEntry> files2) throws IOException {
         if (files1.size() != files2.size()) {
             fail("Different Sizes, expected " + Integer.toString(files1.size()) + " found " + Integer.toString(files2.size()));

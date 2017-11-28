@@ -1,21 +1,21 @@
-# Based on official MySql container
-FROM mysql:5.7
+# Based on official DB2 Express container
+FROM ibmcom/db2express-c:latest
 
 # Set the working directory to /app
-WORKDIR /app
+WORKDIR /data
 
 # Copy the current directory contents into the container at /app
-ADD . /app
-
-# Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+ADD ./db2.test.sql /data
+ADD ./superInit.sh /data
+ADD ./initialize.sh /data
 
 # Make port 80 available to the world outside this container
-EXPOSE 80
+#EXPOSE 80
 
 # Define environment variable
-ENV NAME World
+ENV DB2INST1_PASSWORD dr-ow-ss-Ap
+ENV LICENSE=accept
 
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# Load the test data when the container launches
+ENTRYPOINT /data/superInit.sh
 

@@ -1,21 +1,15 @@
-# Based on official MySql container
-FROM mysql:5.7
+# Based on official Cloudant Developer edition
+FROM ibmcom/cloudant-developer
 
 # Set the working directory to /app
-WORKDIR /app
+#WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-ADD . /app
-
-# Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+#ADD . /app
 
 # Make port 80 available to the world outside this container
-EXPOSE 80
+#EXPOSE 80
 
 # Define environment variable
-ENV NAME World
-
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+#ENV NAME World
 

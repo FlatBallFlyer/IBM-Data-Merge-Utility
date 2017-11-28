@@ -45,16 +45,6 @@
 	    <artifactId>gson</artifactId>
 	    <version>2.3.1</version>
 	</dependency>
-       <dependency>
-           <groupId>commons-io</groupId>
-           <artifactId>commons-io</artifactId>
-           <version>2.4</version>
-       </dependency>
-       <dependency>
-           <groupId>org.apache.commons</groupId>
-           <artifactId>commons-dbcp2</artifactId>
-           <version>2.1.1</version>
-       </dependency>
 	<dependency>
 		<groupId>org.apache.commons</groupId>
 		<artifactId>commons-compress</artifactId>
@@ -82,12 +72,6 @@
 		<version>1.4</version>
 		<scope>test</scope>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/com.cloudant/cloudant-client -->
-	<dependency>
-	    <groupId>com.cloudant</groupId>
-	    <artifactId>cloudant-client</artifactId>
-	    <version>2.10.0</version>
-	</dependency>
 	<dependency>
 	    <groupId>org.w3c</groupId>
 	    <artifactId>dom</artifactId>
@@ -109,5 +93,10 @@
         <artifactId>mongodb-driver</artifactId>
         <version>3.5.0</version>
     </dependency>
+	<dependency>
+	    <groupId>com.cloudant</groupId>
+	    <artifactId>cloudant-client</artifactId>
+	    <version>2.10.0</version>
+	</dependency>
 	</dependencies>
 </project>

@@ -42,9 +42,9 @@
           "targetDataName" : "company",
           "targetDataDelimeter" : "-",
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider",
-          "enrichSource" : "mySqlTest",
-          "enrichParameter" : "testgen",
-          "enrichCommand" : "SELECT * FROM CORPORATE;",
+          "enrichSource" : "myDb2Test",
+          "enrichParameter" : "",
+          "enrichCommand" : "select * from CORPORATE",
           "parseAs" : 4
         },
         {
@@ -53,9 +53,9 @@
           "targetDataName" : "customer",
           "targetDataDelimeter" : "-",
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider",
-          "enrichSource" : "mySqlTest",
-          "enrichParameter" : "testgen",
-          "enrichCommand" : "SELECT * FROM testgen.CUSTOMER where IDCUSTOMER = \"<idcustomer>\";",
+          "enrichSource" : "myDb2Test",
+          "enrichParameter" : "",
+          "enrichCommand" : "SELECT * FROM CUSTOMER where IDCUSTOMER = <idcustomer>",
           "parseAs" : 4
         },
         {
@@ -64,9 +64,9 @@
           "targetDataName" : "contacts",
           "targetDataDelimeter" : "-",
           "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider",
-          "enrichSource" : "mySqlTest",
-          "enrichParameter" : "testgen",
-          "enrichCommand" : "SELECT * FROM testgen.CONTACT where IDCUSTOMER = \"<idcustomer>\";",
+          "enrichSource" : "myDb2Test",
+          "enrichParameter" : "",
+          "enrichCommand" : "SELECT * FROM CONTACT where IDCUSTOMER = <idcustomer>",
           "parseAs" : 4
         },
         {

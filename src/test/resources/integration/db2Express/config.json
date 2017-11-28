@@ -1,0 +1,7 @@
+{
+  "envVars" : {
+    "myDb2Test.URI" : "jdbc:db2://localhost:50000/test",
+    "myDb2Test.USER" : "DB2INST1",
+    "myDb2Test.PW" : "dr-ow-ss-Ap"
+  }
+}
