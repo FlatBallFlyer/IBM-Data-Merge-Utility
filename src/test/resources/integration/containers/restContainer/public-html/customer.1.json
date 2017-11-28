@@ -1,0 +1,12 @@
+{
+	"name":"General Motors",
+	"street":"5791 Pleasant Prairie End",
+	"city":"Dysart",
+	"state":"PA",
+	"zip":"16188-0761",
+	"phone":"(878) 179-6603",
+	"primary":"James",
+	"profit":"806",
+	"revenue":"9824",
+	"employees":["1","21","41","61","81","101","121","141","161","181"]
+}

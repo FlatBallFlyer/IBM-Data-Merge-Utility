@@ -1,0 +1,23 @@
+Spacely Sprockets - Customer Contact List for Mobil
+www.spacely.com
+101 Future Ave.
+Space City, IS 99353
+
+Customer: Mobil
+Address: 5016 High Fawn Path <City> OK, 73763-3294
+Primary Contact: Charles
+1930 Revenue / Profit: 1704 / 184
+
+CONTACTS:
+ID: 9 NAME: Charles PHONE: (539) 555-1899 EMAIL: Charles@Mobil.com
+ID: 29 NAME: Frank PHONE: (539) 555-3829 EMAIL: Frank@Mobil.com
+ID: 49 NAME: Dale PHONE: (539) 555-5849 EMAIL: Dale@Mobil.com
+ID: 69 NAME: Russell PHONE: (539) 555-7869 EMAIL: Russell@Mobil.com
+ID: 89 NAME: Eddie PHONE: (539) 555-9889 EMAIL: Eddie@Mobil.com
+ID: 109 NAME: Carol PHONE: (539) 555-1819 EMAIL: Carol@Mobil.com
+ID: 129 NAME: Cheryl PHONE: (539) 555-3819 EMAIL: Cheryl@Mobil.com
+ID: 149 NAME: Ruth PHONE: (539) 555-5819 EMAIL: Ruth@Mobil.com
+ID: 169 NAME: Rose PHONE: (539) 555-7819 EMAIL: Rose@Mobil.com
+ID: 189 NAME: Maureen PHONE: (539) 555-9819 EMAIL: Maureen@Mobil.com
+
+==== End of Report ====

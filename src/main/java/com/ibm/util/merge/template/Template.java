@@ -352,6 +352,7 @@ public class Template {
 	public void clearContent() {
 		// Accessible only during merge
 		if (this.mergable && !this.merged) {
+			this.mergeContent = new Content();
 			this.content = "";
 			stats.size = this.content.length();
 		}

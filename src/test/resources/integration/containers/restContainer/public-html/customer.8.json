@@ -1,0 +1,12 @@
+{
+	"name":"Gulf Oil",
+	"street":"4220 Rocky Wynd",
+	"city":"Bolivia",
+	"state":"MN",
+	"zip":"56253-0991",
+	"phone":"(952) 991-4731",
+	"primary":"Thomas",
+	"profit":"183",
+	"revenue":"1705",
+	"employees":["8","28","48","68","88","108","128","148","168","188"]
+}

@@ -1,0 +1,23 @@
+Spacely Sprockets - Customer Contact List for General Electric
+www.spacely.com
+101 Future Ave.
+Space City, IS 99353
+
+Customer: General Electric
+Address: 4363 Stony Crescent <City> CA, 92186-9180
+Primary Contact: Michael
+1930 Revenue / Profit: 2959 / 213
+
+CONTACTS:
+ID: 4 NAME: Michael PHONE: (650) 555-0844 EMAIL: Michael@General.com
+ID: 24 NAME: Jerry PHONE: (650) 555-2824 EMAIL: Jerry@General.com
+ID: 44 NAME: Carl PHONE: (650) 555-4844 EMAIL: Carl@General.com
+ID: 64 NAME: Phillip PHONE: (650) 555-6864 EMAIL: Phillip@General.com
+ID: 84 NAME: Steve PHONE: (650) 555-8884 EMAIL: Steve@General.com
+ID: 104 NAME: Barbara PHONE: (650) 555-0814 EMAIL: Barbara@General.com
+ID: 124 NAME: Elizabeth PHONE: (650) 555-2814 EMAIL: Elizabeth@General.com
+ID: 144 NAME: Connie PHONE: (650) 555-4814 EMAIL: Connie@General.com
+ID: 164 NAME: Jo PHONE: (650) 555-6814 EMAIL: Jo@General.com
+ID: 184 NAME: Anne PHONE: (650) 555-8814 EMAIL: Anne@General.com
+
+==== End of Report ====

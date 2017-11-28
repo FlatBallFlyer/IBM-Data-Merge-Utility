@@ -24,6 +24,12 @@ public class All_Integration_Tests {
 	}
 
 	@Test
+	public void Rest2() throws Throwable {
+		// Given Customer ID as a parameter - create Contacts Report with Corporate Info
+		harness.testTemplates(new File("src/test/resources/integration/rest2"));
+	}
+
+	@Test
 	public void MySql1() throws Throwable {
 		// Given Customer ID as a parameter - create Contacts Report with Corporate Info
 		harness.testTemplates(new File("src/test/resources/integration/mysql1"));
@@ -39,6 +45,12 @@ public class All_Integration_Tests {
 	public void SqlToMongo() throws Throwable {
 		// Transform the JDBC MySql database to Mongo Insert commands
 		harness.testTemplates(new File("src/test/resources/integration/mysqlToMongo"));
+	}
+
+	@Test
+	public void SqlToRest() throws Throwable {
+		// Transform the JDBC MySql database to Files served up for Rest provider testing
+		harness.testTemplates(new File("src/test/resources/integration/mysqlToRest"));
 	}
 
 	@Test

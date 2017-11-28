@@ -1,0 +1,23 @@
+Spacely Sprockets - Customer Contact List for Esmark
+www.spacely.com
+101 Future Ave.
+Space City, IS 99353
+
+Customer: Esmark
+Address: 9443 Colonial Berry Canyon Fleming DE, 19753-5942
+Primary Contact: David
+1930 Revenue / Profit: 2511 / 19
+
+CONTACTS:
+ID: 5 NAME: David PHONE: (302) 555-1055 EMAIL: David@Esmark.com
+ID: 25 NAME: Gregory PHONE: (302) 555-3025 EMAIL: Gregory@Esmark.com
+ID: 45 NAME: Harold PHONE: (302) 555-5045 EMAIL: Harold@Esmark.com
+ID: 65 NAME: Bobby PHONE: (302) 555-7065 EMAIL: Bobby@Esmark.com
+ID: 85 NAME: Martin PHONE: (302) 555-9085 EMAIL: Martin@Esmark.com
+ID: 105 NAME: Susan PHONE: (302) 555-1015 EMAIL: Susan@Esmark.com
+ID: 125 NAME: Judy PHONE: (302) 555-3015 EMAIL: Judy@Esmark.com
+ID: 145 NAME: Ann PHONE: (302) 555-5015 EMAIL: Ann@Esmark.com
+ID: 165 NAME: Theresa PHONE: (302) 555-7015 EMAIL: Theresa@Esmark.com
+ID: 185 NAME: Constance PHONE: (302) 555-9015 EMAIL: Constance@Esmark.com
+
+==== End of Report ====

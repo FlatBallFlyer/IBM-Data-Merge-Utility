@@ -1,0 +1,12 @@
+{
+	"name":"U.S. Steel",
+	"street":"3930 Iron Walk",
+	"city":"Wild Horse",
+	"state":"MO",
+	"zip":"65453-3393",
+	"phone":"(417) 591-1188",
+	"primary":"John",
+	"profit":"195",
+	"revenue":"3250",
+	"employees":["3","23","43","63","83","103","123","143","163","183"]
+}

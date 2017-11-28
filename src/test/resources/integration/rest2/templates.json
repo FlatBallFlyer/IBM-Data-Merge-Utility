@@ -1,0 +1,189 @@
+{
+  "templates" : [
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Create Customer Contact list based on \"idcustomer\" parameter value",
+      "content" : "Spacely Sprockets - Customer Contact List for <name>\n<corpUrl>\n<corpStreet>\n<corpCity>, <corpState> <corpZip>\n\nCustomer: <name>\nAddress: <street> <City> <state>, <zip>\nPrimary Contact: <primary>\n1930 Revenue / Profit: <revenue> / <profit>\n\nCONTACTS:\n<bookmark=\"contact\" group=\"test\" template=\"contact\">\n==== End of Report ====",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Add idcustomer to replace stack",
+          "dataSource" : "idmuParameters",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 3,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false
+        },
+        {
+          "type" : 1,
+          "name" : "Get Corporate Data",
+          "targetDataName" : "company",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.RestProvider",
+          "enrichSource" : "test",
+          "enrichParameter" : "",
+          "enrichCommand" : "corporate.json",
+          "parseAs" : 3
+        },
+        {
+          "type" : 4,
+          "name" : "Add Corporate Values to Replace Stack",
+          "dataSource" : "company",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false,
+          "processRequire" : "false"
+        },
+        {
+          "type" : 1,
+          "name" : "Get Customer Data",
+          "targetDataName" : "customer",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.RestProvider",
+          "enrichSource" : "test",
+          "enrichParameter" : "",
+          "enrichCommand" : "customer.<idcustomer>.json",
+          "parseAs" : 3
+        },
+        {
+          "type" : 4,
+          "name" : "Add Customer Values and Replace",
+          "dataSource" : "customer",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : "false"
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Contacts ",
+          "dataSource" : "customer-employees",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "contact",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "contact",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "A Contact in the directory",
+      "content" : "ID: <IDCONTACT> NAME: <NAME> PHONE: <PHONE> EMAIL: <EMAIL>\n",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Add idcustomer to replace stack (<idmuContext>)",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false
+        },
+        {
+          "type" : 1,
+          "name" : "Get Contact Data",
+          "targetDataName" : "contact",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.RestProvider",
+          "enrichSource" : "test",
+          "enrichParameter" : "",
+          "enrichCommand" : "employee.<idmuContext>.csv",
+          "parseAs" : 1
+        },
+        {
+          "type" : 4,
+          "name" : "Replace Contact info from Context",
+          "dataSource" : "contact-[0]",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : true
+        }
+      ]
+    }
+  ]
+}

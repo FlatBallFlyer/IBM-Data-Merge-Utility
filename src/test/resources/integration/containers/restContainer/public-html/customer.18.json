@@ -1,0 +1,12 @@
+{
+	"name":"ChevronTexaco",
+	"street":"342 Blue Key",
+	"city":"Zealandia",
+	"state":"MN",
+	"zip":"56268-4891",
+	"phone":"(952) 107-5495",
+	"primary":"Paul",
+	"profit":"212",
+	"revenue":"1113",
+	"employees":["18","38","58","78","98","118","138","158","178","198"]
+}

@@ -1,0 +1,23 @@
+Spacely Sprockets - Customer Contact List for Exxon Mobil
+www.spacely.com
+101 Future Ave.
+Space City, IS 99353
+
+Customer: Exxon Mobil
+Address: 1309 Burning Trail <City> NE, 68970-0108
+Primary Contact: Robert
+1930 Revenue / Profit: 5661 / 585
+
+CONTACTS:
+ID: 2 NAME: Robert PHONE: (531) 555-0422 EMAIL: Robert@Exxon.com
+ID: 22 NAME: Edward PHONE: (531) 555-2422 EMAIL: Edward@Exxon.com
+ID: 42 NAME: Willie PHONE: (531) 555-4442 EMAIL: 
+ID: 62 NAME: Samuel PHONE: (531) 555-6462 EMAIL: Samuel@Exxon.com
+ID: 82 NAME: Scott PHONE: (531) 555-8482 EMAIL: Scott@Exxon.com
+ID: 102 NAME: Mary PHONE: (531) 555-0412 EMAIL: Mary@Exxon.com
+ID: 122 NAME: Janice PHONE: (531) 555-2412 EMAIL: Janice@Exxon.com
+ID: 142 NAME: Gail PHONE: (531) 555-4412 EMAIL: Gail@Exxon.com
+ID: 162 NAME: Sherry PHONE: (531) 555-6412 EMAIL: Sherry@Exxon.com
+ID: 182 NAME: Denise PHONE: (531) 555-8412 EMAIL: Denise@Exxon.com
+
+==== End of Report ====

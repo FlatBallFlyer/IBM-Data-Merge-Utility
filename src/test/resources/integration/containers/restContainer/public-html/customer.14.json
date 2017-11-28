@@ -1,0 +1,12 @@
+{
+	"name":"Texaco",
+	"street":"2820 Amber Acres",
+	"city":"Maple Creek",
+	"state":"WI",
+	"zip":"54112-5496",
+	"phone":"(534) 839-0049",
+	"primary":"Donald",
+	"profit":"226",
+	"revenue":"1574",
+	"employees":["14","34","54","74","94","114","134","154","174","194"]
+}

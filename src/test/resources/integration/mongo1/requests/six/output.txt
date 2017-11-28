@@ -1,0 +1,23 @@
+Spacely Sprockets - Customer Contact List for Chrysler
+www.spacely.com
+101 Future Ave.
+Space City, IS 99353
+
+Customer: Chrysler
+Address: 9386 Easy Vista Wall City MO, 65266-8602
+Primary Contact: William
+1930 Revenue / Profit: 2072 / 19
+
+CONTACTS:
+ID: 6 NAME: William PHONE: (660) 555-1266 EMAIL: William@Chrysler.com
+ID: 26 NAME: Bruce PHONE: (660) 555-3226 EMAIL: Bruce@Chrysler.com
+ID: 46 NAME: Arthur PHONE: (660) 555-5246 EMAIL: Arthur@Chrysler.com
+ID: 66 NAME: Christopher PHONE: (660) 555-7266 EMAIL: Christopher@Chrysler.com
+ID: 86 NAME: Francis PHONE: (660) 555-9286 EMAIL: Francis@Chrysler.com
+ID: 106 NAME: Nancy PHONE: (660) 555-1216 EMAIL: Nancy@Chrysler.com
+ID: 126 NAME: Betty PHONE: (660) 555-3216 EMAIL: Betty@Chrysler.com
+ID: 146 NAME: Kathryn PHONE: (660) 555-5216 EMAIL: Kathryn@Chrysler.com
+ID: 166 NAME: Ellen PHONE: (660) 555-7216 EMAIL: Ellen@Chrysler.com
+ID: 186 NAME: Evelyn PHONE: (660) 555-9216 EMAIL: Evelyn@Chrysler.com
+
+==== End of Report ====

@@ -1,0 +1,23 @@
+Spacely Sprockets - Customer Contact List for DuPont
+www.spacely.com
+101 Future Ave.
+Space City, IS 99353
+
+Customer: DuPont
+Address: 7151 Indian Limits Mock City NE, 69497-1440
+Primary Contact: Gary
+1930 Revenue / Profit: 1688 / 344
+
+CONTACTS:
+ID: 10 NAME: Gary PHONE: (308) 555-2010 EMAIL: Gary@DuPont.com
+ID: 30 NAME: Terry PHONE: (308) 555-4030 EMAIL: Terry@DuPont.com
+ID: 50 NAME: Johnny PHONE: (308) 555-6050 EMAIL: Johnny@DuPont.com
+ID: 70 NAME: Craig PHONE: (308) 555-8070 EMAIL: Craig@DuPont.com
+ID: 90 NAME: Norman PHONE: (308) 555-0090 EMAIL: Norman@DuPont.com
+ID: 110 NAME: Kathleen PHONE: (308) 555-2010 EMAIL: Kathleen@DuPont.com
+ID: 130 NAME: Gloria PHONE: (308) 555-4010 EMAIL: Gloria@DuPont.com
+ID: 150 NAME: Helen PHONE: (308) 555-6010 EMAIL: Helen@DuPont.com
+ID: 170 NAME: Sheila PHONE: (308) 555-8010 EMAIL: Sheila@DuPont.com
+ID: 190 NAME: Dianne PHONE: (308) 555-0010 EMAIL: Dianne@DuPont.com
+
+==== End of Report ====

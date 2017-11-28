@@ -18,10 +18,13 @@ package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.storage.Archive;
 import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.content.Content;
+import com.ibm.util.merge.template.content.TagSegment;
 
 /**
  * Save the output of this template to an entry in the merge Archive file
@@ -37,6 +40,7 @@ public class SaveFile extends AbstractDirective {
 
 	private String filename = "file";
 	private Boolean clearAfter = false;
+	private transient Content fileNameContent;
 	
 	/**
 	 * Instantiate a SaveFile directive with default values
@@ -50,6 +54,7 @@ public class SaveFile extends AbstractDirective {
 	@Override
 	public void cachePrepare(Template template) throws MergeException {
 		super.cachePrepare(template);
+		this.fileNameContent = new Content(this.getTemplate().getWrapper(), this.filename, TagSegment.ENCODE_NONE);
 	}
 
 	@Override
@@ -58,13 +63,15 @@ public class SaveFile extends AbstractDirective {
 		this.makeMergable(mergable);
 		mergable.setFilename(filename);
 		mergable.setClearAfter(clearAfter);
+		mergable.setFilenameContent(this.fileNameContent.getMergable());
 		return mergable;
 	}
 
 	@Override
 	public void execute(Merger context) throws MergeException {
 		Archive archive = context.getArchive();
-		archive.writeFile(this.filename, this.getTemplate().getMergeContent().getValue(), "idmu-user", "idmu-group");
+		this.fileNameContent.replace(this.getTemplate().getReplaceStack(), true, Config.nestLimit());
+		archive.writeFile(this.fileNameContent.getValue(), this.getTemplate().getMergeContent().getValue(), "idmu-user", "idmu-group");
 		if (this.clearAfter) {
 			this.getTemplate().clearContent();
 		}
@@ -97,6 +104,14 @@ public class SaveFile extends AbstractDirective {
 	 */
 	public void setClearAfter(Boolean clearAfter) {
 		this.clearAfter = clearAfter;
+	}
+
+	/**
+	 * get the FileName conetent object
+	 * @param content
+	 */
+	private void setFilenameContent(Content content) {
+		this.fileNameContent = content;
 	}
 
 }

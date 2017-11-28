@@ -1,0 +1,290 @@
+{
+  "templates" : [
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Generate an archive will all json/csv/xml content for Rest Testing",
+      "content" : "{\n\t\"corpUrl\":\"<corpUrl>\",\n\t\"corpStreet\":\"<corpStreet>\",\n\t\"corpCity\":\"<corpCity>\",\n\t\"corpState\":\"<corpState>\",\n\t\"corpZip\":\"<corpZip>\"\n}<bookmark=\"customers\" group=\"test\" template=\"customer\"><bookmark=\"employees\" group=\"test\" template=\"employee\">",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 1,
+          "name" : "Get Corporate Data",
+          "targetDataName" : "company",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider",
+          "enrichSource" : "mySqlTest",
+          "enrichParameter" : "testgen",
+          "enrichCommand" : "SELECT * FROM CORPORATE;",
+          "parseAs" : 4
+        },
+        {
+          "type" : 4,
+          "name" : "Add Corporate Values to Replace Stack",
+          "dataSource" : "company",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 3,
+          "fromAttribute" : "FROM_VALUE",
+          "toAttribute" : "TO_VALUE",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : "true"
+        },
+        {
+          "type" : 1,
+          "name" : "Get Customers",
+          "targetDataName" : "customer",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider",
+          "enrichSource" : "mySqlTest",
+          "enrichParameter" : "testgen",
+          "enrichCommand" : "SELECT * FROM CUSTOMER;",
+          "parseAs" : 4
+        },
+        {
+          "type" : 2,
+          "name" : "Save Customer Files ",
+          "dataSource" : "customer",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "customers",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        },
+        {
+          "type" : 1,
+          "name" : "Get Employees",
+          "targetDataName" : "employees",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider",
+          "enrichSource" : "mySqlTest",
+          "enrichParameter" : "testgen",
+          "enrichCommand" : "SELECT * FROM CONTACT;",
+          "parseAs" : 4
+        },
+        {
+          "type" : 2,
+          "name" : "Save Employee Files ",
+          "dataSource" : "employees",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "employees",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "customer",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "A Customer Json Record",
+      "content" : "{\n\t\"name\":\"<NAME>\",\n\t\"street\":\"<STREET>\",\n\t\"city\":\"<CITY>\",\n\t\"state\":\"<STATE>\",\n\t\"zip\":\"<ZIP>\",\n\t\"phone\":\"<PHONE>\",\n\t\"primary\":\"<PRIMARY>\",\n\t\"profit\":\"<PROFIT>\",\n\t\"revenue\":\"<REVENUE>\",\n\t\"employees\":[<bookmark=\"employees\" group=\"test\" template=\"employeeID\">]\n}",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Setup Coma-Replace",
+          "dataSource" : ",",
+          "dataDelimeter" : "-",
+          "ifMissing" : 3,
+          "toValue" : ",",
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
+        {
+          "type" : 4,
+          "name" : "Customer Context Replace",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : true
+        },
+        {
+          "type" : 1,
+          "name" : "Get Employees for Customer",
+          "targetDataName" : "employees",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider",
+          "enrichSource" : "mySqlTest",
+          "enrichParameter" : "testgen",
+          "enrichCommand" : "SELECT * FROM CONTACT where IDCUSTOMER = \"<IDCUSTOMER>\";",
+          "parseAs" : 4
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Employee ID",
+          "dataSource" : "employees",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "employees",
+          "notFirst" : [],
+          "notLast" : [
+            ","
+          ],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        },
+        {
+          "type" : 5,
+          "name" : "Save Customer File",
+          "filename" : "customer.<IDCUSTOMER>.json",
+          "clearAfter" : true
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "employeeID",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Insert Employee ID",
+      "content" : "\"<IDCONTACT>\"<,>",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Add idcustomer to replace stack",
+          "dataSource" : "idmuContext-IDCONTACT",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "employee",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "A Employee CSV file",
+      "content" : "IDCONTACT,NAME,PREFERENCE,EMAIL,PHONE\n<IDCONTACT>,<NAME>,<PREFERENCE>,<EMAIL>,<PHONE>\n",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Contact Context Replace",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : true
+        },
+        {
+          "type" : 5,
+          "name" : "Save Customer File",
+          "filename" : "employee.<IDCONTACT>.csv",
+          "clearAfter" : true
+        }
+      ]
+    }
+  ]
+}

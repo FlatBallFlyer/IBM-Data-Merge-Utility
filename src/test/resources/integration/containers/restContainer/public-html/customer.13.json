@@ -1,0 +1,12 @@
+{
+	"name":"CBS",
+	"street":"8245 Lazy Cloud Crest",
+	"city":"Treetops",
+	"state":"MO",
+	"zip":"65194-7190",
+	"phone":"(636) 739-9890",
+	"primary":"Joseph",
+	"profit":"85",
+	"revenue":"1631",
+	"employees":["13","33","53","73","93","113","133","153","173","193"]
+}

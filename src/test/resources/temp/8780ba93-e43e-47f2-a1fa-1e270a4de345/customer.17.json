@@ -1,0 +1,12 @@
+{
+	"name":"Kraft",
+	"street":"2789 Silent Vale",
+	"city":"Charcoal Landing",
+	"state":"MO",
+	"zip":"64075-9452",
+	"phone":"(636) 650-5989",
+	"primary":"Dennis",
+	"profit":"37",
+	"revenue":"1210",
+	"employees":["17","37","57","77","97","117","137","157","177","197"]
+}

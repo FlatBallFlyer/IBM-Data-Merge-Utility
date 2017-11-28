@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,39 +53,65 @@ public class MergeTestHarness {
 		assertTrue(testFolder.exists());
 		assertTrue(testFolder.isDirectory());
 		
+		// Biuld list of requests
+		ArrayList<TestUnit> units = new ArrayList<TestUnit>();
 		File[] tests = testFolder.listFiles();
 		for (File test : tests) {
-			File payload = new File(test.getPath() + File.separator + "payload.txt");
-			assertTrue(payload.exists());
-			String thePayload = new String(Files.readAllBytes(payload.toPath()), "ISO-8859-1");
-			
-			File parms = new File(test.getPath() + File.separator + "parameters.json");
-			String theParms = new String(Files.readAllBytes(parms.toPath()), "ISO-8859-1");
-			Parameters parameters = gsonProxy.fromString(theParms, Parameters.class);
-
-			File output = new File(test.getPath() + File.separator + "output.txt");
-			assertTrue(output.exists());
-			String expectedOutput = new String(Files.readAllBytes(output.toPath()), "ISO-8859-1");
-
+			if (test.isDirectory()) {
+				TestUnit unit = new TestUnit();
+				
+				File payload = new File(test.getPath() + File.separator + "payload.txt");
+				assertTrue(payload.exists());
+				unit.payload = new String(Files.readAllBytes(payload.toPath()), "ISO-8859-1");
+				
+				File parms = new File(test.getPath() + File.separator + "parameters.json");
+				String theParms = new String(Files.readAllBytes(parms.toPath()), "ISO-8859-1");
+				unit.parameters = gsonProxy.fromString(theParms, Parameters.class);
+	
+				File output = new File(test.getPath() + File.separator + "output.txt");
+				assertTrue(output.exists());
+				unit.output = new String(Files.readAllBytes(output.toPath()), "ISO-8859-1");
+	
+				unit.archive = new File(test.getPath() + File.separator + "archive.zip");
+				units.add(unit);
+			}
+		}
+		
+		// Process all requests
+		long time = 0;
+		long count = 0;
+		for (TestUnit unit : units) {
+			Long start = System.currentTimeMillis();
 			// Get a Merger and Perform the Merge - validate expected output
-			Merger context = new Merger(cache, "test..", parameters.parms, thePayload);
+			Merger context = new Merger(cache, "test..", unit.parameters.parms, unit.payload);
 			String theOutput = context.merge().getMergeContent().getValue();
-			assertEquals(expectedOutput, theOutput);
+			assertEquals(unit.output, theOutput);
+			Long end = System.currentTimeMillis();
+			time += (end-start); count++;
 			
 			// If an archive is expected (or generated) perform archive equals assertion
-			File archive = new File(test.getPath() + File.separator + "archive.zip");
 			File generated = new File(context.getArchive().getArchiveFile().getAbsolutePath());
-			if (archive.exists() && !generated.exists()) {
+			if (unit.archive.exists() && !generated.exists()) {
 				fail("Merge did not generate expected archive!");
 			}
 			if (generated.exists()) {
-				assertTrue(archive.exists());
-				this.assertEqual(archive.getAbsolutePath(), context.getArchive().getArchiveFile().getAbsolutePath());
+				assertTrue(unit.archive.exists());
+				this.assertEqual(unit.archive.getAbsolutePath(), context.getArchive().getArchiveFile().getAbsolutePath());
 				generated.delete();
 			}
 		}
-
+		System.out.println("Performance for ".concat(folder.getPath()));
+		System.out.print("Test Count: "); System.out.println(count);
+		System.out.print(" Test Time: "); System.out.println(time);
+		System.out.print("  Avg Resp: "); System.out.println(time/count);
 	}
+	class TestUnit {
+		public String payload;
+		public Parameters parameters;
+		public String output;
+		public File archive;
+	}
+
 
 	public void assertEqual(String archive1, String archive2) throws Throwable {
         // Get Archives

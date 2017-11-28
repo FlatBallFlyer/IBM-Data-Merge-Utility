@@ -1,0 +1,12 @@
+{
+	"name":"Chrysler",
+	"street":"9386 Easy Vista",
+	"city":"Wall City",
+	"state":"MO",
+	"zip":"65266-8602",
+	"phone":"(660) 918-4630",
+	"primary":"William",
+	"profit":"19",
+	"revenue":"2072",
+	"employees":["6","26","46","66","86","106","126","146","166","186"]
+}

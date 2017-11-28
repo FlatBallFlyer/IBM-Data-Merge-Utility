@@ -1,0 +1,23 @@
+Spacely Sprockets - Customer Contact List for U.S. Steel
+www.spacely.com
+101 Future Ave.
+Space City, IS 99353
+
+Customer: U.S. Steel
+Address: 3930 Iron Walk <City> MO, 65453-3393
+Primary Contact: John
+1930 Revenue / Profit: 3250 / 195
+
+CONTACTS:
+ID: 3 NAME: John PHONE: (417) 555-0633 EMAIL: 
+ID: 23 NAME: Mark PHONE: (417) 555-2623 EMAIL: Mark@USSteal.com
+ID: 43 NAME: Jeffrey PHONE: (417) 555-4643 EMAIL: Jeffrey@USSteal.com
+ID: 63 NAME: Howard PHONE: (417) 555-6663 EMAIL: Howard@USSteal.com
+ID: 83 NAME: Fred PHONE: (417) 555-8683 EMAIL: Fred@USSteal.com
+ID: 103 NAME: Patricia PHONE: (417) 555-0613 EMAIL: Patricia@USSteal.com
+ID: 123 NAME: Cynthia PHONE: (417) 555-2613 EMAIL: Cynthia@USSteal.com
+ID: 143 NAME: Virginia PHONE: (417) 555-4613 EMAIL: Virginia@USSteal.com
+ID: 163 NAME: Laura PHONE: (417) 555-6613 EMAIL: Laura@USSteal.com
+ID: 183 NAME: Lois PHONE: (417) 555-8613 EMAIL: Lois@USSteal.com
+
+==== End of Report ====

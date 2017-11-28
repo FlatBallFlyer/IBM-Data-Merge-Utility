@@ -1,0 +1,23 @@
+Spacely Sprockets - Customer Contact List for Armour
+www.spacely.com
+101 Future Ave.
+Space City, IS 99353
+
+Customer: Armour
+Address: 532 Umber Lake Highlands <City> RI, 02956-5619
+Primary Contact: Richard
+1930 Revenue / Profit: 2056 / 2
+
+CONTACTS:
+ID: 7 NAME: Richard PHONE: (401) 555-1477 EMAIL: Richard@Armour.com
+ID: 27 NAME: Roger PHONE: (401) 555-3427 EMAIL: Roger@Armour.com
+ID: 47 NAME: Henry PHONE: (401) 555-5447 EMAIL: Henry@Armour.com
+ID: 67 NAME: Louis PHONE: (401) 555-7467 EMAIL: Louis@Armour.com
+ID: 87 NAME: Melvin PHONE: (401) 555-9487 EMAIL: Melvin@Armour.com
+ID: 107 NAME: Deborah PHONE: (401) 555-1417 EMAIL: Deborah@Armour.com
+ID: 127 NAME: Joyce PHONE: (401) 555-3417 EMAIL: Joyce@Armour.com
+ID: 147 NAME: Diana PHONE: (401) 555-5417 EMAIL: Diana@Armour.com
+ID: 167 NAME: Joanne PHONE: (401) 555-7417 EMAIL: Joanne@Armour.com
+ID: 187 NAME: Glenda PHONE: (401) 555-9417 EMAIL: Glenda@Armour.com
+
+==== End of Report ====

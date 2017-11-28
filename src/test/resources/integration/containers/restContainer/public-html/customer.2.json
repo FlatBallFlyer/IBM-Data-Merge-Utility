@@ -1,0 +1,12 @@
+{
+	"name":"Exxon Mobil",
+	"street":"1309 Burning Trail",
+	"city":"Yazoo City",
+	"state":"NE",
+	"zip":"68970-0108",
+	"phone":"(531) 984-8463",
+	"primary":"Robert",
+	"profit":"585",
+	"revenue":"5661",
+	"employees":["2","22","42","62","82","102","122","142","162","182"]
+}

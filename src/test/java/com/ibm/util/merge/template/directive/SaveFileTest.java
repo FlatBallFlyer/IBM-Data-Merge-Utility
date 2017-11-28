@@ -31,6 +31,7 @@ public class SaveFileTest {
 
 	@Test
 	public void testGetMergable() throws MergeException {
+		directive.cachePrepare(new Template());
 		SaveFile mergable = (SaveFile) directive.getMergable();
 		assertNotSame(mergable, directive);
 		assertEquals(directive.getFilename(), mergable.getFilename());
@@ -63,6 +64,7 @@ public class SaveFileTest {
 		directive.setFilename("testMember.txt");
 		directive.setClearAfter(true);
 		template.addDirective(directive);
+		template.cachePrepare();
 		template = template.getMergable(merger);
 		template.getMergedOutput();
 		assertTrue(template.getContent().isEmpty());
@@ -79,6 +81,7 @@ public class SaveFileTest {
 		directive.setFilename("testMember.txt");
 		directive.setClearAfter(false);
 		template.addDirective(directive);
+		template.cachePrepare();
 		template = template.getMergable(merger);
 		template.getMergedOutput();
 		assertEquals("Some Simple Content", template.getContent());

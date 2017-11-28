@@ -1,0 +1,23 @@
+Spacely Sprockets - Customer Contact List for Gulf Oil
+www.spacely.com
+101 Future Ave.
+Space City, IS 99353
+
+Customer: Gulf Oil
+Address: 4220 Rocky Wynd <City> MN, 56253-0991
+Primary Contact: Thomas
+1930 Revenue / Profit: 1705 / 183
+
+CONTACTS:
+ID: 8 NAME: Thomas PHONE: (952) 555-1688 EMAIL: Thomas@Gulf.com
+ID: 28 NAME: Douglas PHONE: (952) 555-3628 EMAIL: Douglas@Gulf.com
+ID: 48 NAME: Jack PHONE: (952) 555-5648 EMAIL: Jack@Gulf.com
+ID: 68 NAME: Andrew PHONE: (952) 555-7668 EMAIL: Andrew@Gulf.com
+ID: 88 NAME: Rodney PHONE: (952) 555-9688 EMAIL: Rodney@Gulf.com
+ID: 108 NAME: Sandra PHONE: (952) 555-1618 EMAIL: Sandra@Gulf.com
+ID: 128 NAME: Christine PHONE: (952) 555-3618 EMAIL: Christine@Gulf.com
+ID: 148 NAME: Jean PHONE: (952) 555-5618 EMAIL: Jean@Gulf.com
+ID: 168 NAME: Marsha PHONE: (952) 555-7618 EMAIL: Marsha@Gulf.com
+ID: 188 NAME: Sarah PHONE: (952) 555-9618 EMAIL: Sarah@Gulf.com
+
+==== End of Report ====

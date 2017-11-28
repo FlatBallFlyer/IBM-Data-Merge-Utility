@@ -1,0 +1,7 @@
+{
+  "envVars" : {
+    "cloudantTest.URL" : "localhost:81",
+    "cloudantTest.USER" : "admin",
+    "cloudantTest.PW" : "pass"
+  }
+}
