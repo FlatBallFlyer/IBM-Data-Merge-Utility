@@ -1,0 +1,630 @@
+{
+  "templates" : [
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "File Provider Test",
+      "content" : "[{\"companies\":[\n\t<bookmark=\"company\" group=\"test\" template=\"company\">\n\t]\n},\n<bookmark=\"employees.file\" group=\"test\" template=\"allEmployees\">,\n<bookmark=\"owners.file\" group=\"test\" template=\"allOwners\">\n]",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Setup Coma-Replace",
+          "dataSource" : ",",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 3,
+          "toValue" : ",",
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : true
+        },
+        {
+          "type" : 3,
+          "name" : "Parse Payload to company",
+          "dataSource" : "idmuPayload",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "ifList" : 1,
+          "dataTarget" : "company",
+          "dataTargetDelimiter" : "-",
+          "staticData" : "",
+          "parseFormat" : 3
+        },
+        {
+          "type" : 1,
+          "name" : "Enrich from File - all Data",
+          "targetDataName" : "content",
+          "targetDataDelimeter" : "-",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.RestProvider",
+          "enrichSource" : "test",
+          "enrichParameter" : "",
+          "enrichCommand" : "allData.json",
+          "parseAs" : 3
+        },
+        {
+          "type" : 2,
+          "name" : "Insert company records",
+          "dataSource" : "company",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "company",
+          "notFirst" : [],
+          "notLast" : [
+            ","
+          ],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        },
+        {
+          "type" : 2,
+          "name" : "insert (save) Archives",
+          "dataSource" : "Missing",
+          "dataDelimeter" : "-",
+          "ifMissing" : 3,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 1,
+          "bookmarkPattern" : ".*file",
+          "notFirst" : [],
+          "notLast" : [
+            ","
+          ],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "company",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "A Company Record, inserts Employee, Customer and Owner",
+      "content" : "{\n\t\"company\" : \"<company>\",\n\t\"owners\" : [<bookmark=\"owners\" group=\"test\" template=\"anOwner\"> \n\t\t\t],\n\t\"employees\" : {<bookmark=\"employees\" group=\"test\" template=\"anEmployee\"> \n\t\t\t},\n\t\"customers\" : {<bookmark=\"customers\" group=\"test\" template=\"aCustomer\">\n\t\t\t}\n\t}<,>",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace First - clean up my coma",
+          "dataSource" : "missing",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 3,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        },
+        {
+          "type" : 4,
+          "name" : "Setup Coma-Replace",
+          "dataSource" : ",",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 3,
+          "toValue" : ",",
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false,
+          "processRequire" : false
+        },
+        {
+          "type" : 4,
+          "name" : "Replace Company info from Context",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Employees",
+          "dataSource" : "idmuContext-employees",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "employees",
+          "notFirst" : [],
+          "notLast" : [
+            ","
+          ],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Owners",
+          "dataSource" : "idmuContext-owners",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "owners",
+          "notFirst" : [],
+          "notLast" : [
+            ","
+          ],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Customers",
+          "dataSource" : "idmuContext-customers",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : "customers",
+          "notFirst" : [],
+          "notLast" : [
+            ","
+          ],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "anOwner",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "anOwner",
+      "content" : "\n\t\t{\"owner\": {\"type\":\"owner\", \"name\":\"<name>\", \"age\":\"<age>\"}}<,>",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace to get Context",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false,
+          "processRequire" : false
+        },
+        {
+          "type" : 4,
+          "name" : "Replace",
+          "dataSource" : "content-Data-theOwners-<idmuContext>",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : true,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "anEmployee",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "anEmployee",
+      "content" : "\n\t\t{\"employee\": {\"type\":\"employee\", \"name\":\"<name>\", \"title\":\"<title>\", \"manager\":\"<manager>\"}}<,>",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace to get Context",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false,
+          "processRequire" : false
+        },
+        {
+          "type" : 4,
+          "name" : "Get Employe Tags",
+          "dataSource" : "content-Data-theEmployees-<idmuContext>",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : true,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "aCustomer",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Customer from Context",
+      "content" : "\n\t\t{\"customer\": \"<idmuContext>\", \"type\":\"customer\", \"name\":\"<name>\", \"address\":\"<address>\", \"age\":\"<age>\", \"bookpage\":\"<bookpage>\"}<,>",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace to get Context",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false,
+          "processRequire" : false
+        },
+        {
+          "type" : 4,
+          "name" : "Replace",
+          "dataSource" : "content-Data-theCustomers-<idmuContext>",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : true,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : true
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "allEmployees",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "All Employees",
+      "content" : "{\"employees\":[<bookmark=\"employee\" group=\"test\" template=\"aEmployee\">\n\t]\n}",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Setup Coma-Replace",
+          "dataSource" : ",",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 3,
+          "toValue" : ",",
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Employee Records",
+          "dataSource" : "content-Data-theEmployees",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 2,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "ifList" : 1,
+          "bookmarkPattern" : "employee",
+          "notFirst" : [],
+          "notLast" : [
+            ","
+          ],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        },
+        {
+          "type" : 5,
+          "name" : "Save Employees File",
+          "filename" : "employees.json",
+          "clearAfter" : false
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "aEmployee",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "aEmployee",
+      "content" : "\n\t\t{\"employee\": {\"type\":\"employee\", \"name\":\"<name>\", \"title\":\"<title>\", \"manager\":\"<manager>\"}}<,>",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Get Employe Tags",
+          "dataSource" : "idmuContext-value",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "allOwners",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "",
+      "content" : "{\"owners\":[<bookmark=\"owner\" group=\"test\" template=\"aOwner\">\n\t]\n}",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Setup Coma-Replace",
+          "dataSource" : ",",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 3,
+          "toValue" : ",",
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Owner Records",
+          "dataSource" : "content-Data-theOwners",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 2,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "ifList" : 1,
+          "bookmarkPattern" : "owner",
+          "notFirst" : [],
+          "notLast" : [
+            ","
+          ],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        },
+        {
+          "type" : 5,
+          "name" : "Save Owners File",
+          "filename" : "owners.json",
+          "clearAfter" : false
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "aOwner",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "aOwner",
+      "content" : "\n\t\t{\"owner\": {\"type\":\"owner\", \"name\":\"<name>\", \"age\":\"<age>\"}}<,>",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Replace",
+          "dataSource" : "idmuContext-value",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        }
+      ]
+    }
+  ]
+}

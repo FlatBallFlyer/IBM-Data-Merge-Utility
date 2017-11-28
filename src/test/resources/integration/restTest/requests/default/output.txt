@@ -1,0 +1,82 @@
+[{"companies":[
+	{
+	"company" : "Fred's Fried Chicken",
+	"owners" : [
+		{"owner": {"type":"owner", "name":"Owner Two", "age":"82"}},
+		{"owner": {"type":"owner", "name":"Owner Three", "age":"52"}} 
+			],
+	"employees" : {
+		{"employee": {"type":"employee", "name":"Mike", "title":" CTO", "manager":" Fred"}},
+		{"employee": {"type":"employee", "name":"Fred", "title":" CEO", "manager":" Board"}},
+		{"employee": {"type":"employee", "name":"Alexander", "title":" Manager", "manager":" James"}},
+		{"employee": {"type":"employee", "name":"James", "title":" COO", "manager":" Fred"}} 
+			},
+	"customers" : {
+		{"customer": "010", "type":"customer", "name":"Customer Ten", "address":"100 Tenth St", "age":"100", "bookpage":""},
+		{"customer": "009", "type":"customer", "name":"Customer Nine", "address":"090 Ninth St", "age":"90", "bookpage":""},
+		{"customer": "008", "type":"customer", "name":"Customer Eight", "address":"080 Eigth St", "age":"80", "bookpage":""},
+		{"customer": "001", "type":"customer", "name":"Customer One", "address":"001 First St", "age":"10", "bookpage":""}
+			}
+	},{
+	"company" : "Barry's Burgers",
+	"owners" : [
+		{"owner": {"type":"owner", "name":"Owner One", "age":"22"}} 
+			],
+	"employees" : {
+		{"employee": {"type":"employee", "name":"Mike", "title":" CTO", "manager":" Fred"}},
+		{"employee": {"type":"employee", "name":"Ethan", "title":" CIO", "manager":" Fred"}},
+		{"employee": {"type":"employee", "name":"William", "title":" Bookeeper", "manager":" Mason"}},
+		{"employee": {"type":"employee", "name":"Jacob", "title":" Accountant", "manager":" Mason"}} 
+			},
+	"customers" : {
+		{"customer": "001", "type":"customer", "name":"Customer One", "address":"001 First St", "age":"10", "bookpage":""},
+		{"customer": "002", "type":"customer", "name":"Customer Two", "address":"001 Seecond St", "age":"20", "bookpage":""},
+		{"customer": "003", "type":"customer", "name":"Customer Three", "address":"030 Third St", "age":"30", "bookpage":""},
+		{"customer": "004", "type":"customer", "name":"Customer Four", "address":"040 Fourth St", "age":"40", "bookpage":""}
+			}
+	},{
+	"company" : "GasUp",
+	"owners" : [
+		{"owner": {"type":"owner", "name":"Owner Two", "age":"82"}} 
+			],
+	"employees" : {
+		{"employee": {"type":"employee", "name":"Mason", "title":" CFO", "manager":" Fred"}},
+		{"employee": {"type":"employee", "name":"Fred", "title":" CEO", "manager":" Board"}},
+		{"employee": {"type":"employee", "name":"Liam", "title":" Coder", "manager":" Mike"}},
+		{"employee": {"type":"employee", "name":"Noah", "title":" Coder", "manager":" Mike"}} 
+			},
+	"customers" : {
+		{"customer": "001", "type":"customer", "name":"Customer One", "address":"001 First St", "age":"10", "bookpage":""},
+		{"customer": "002", "type":"customer", "name":"Customer Two", "address":"001 Seecond St", "age":"20", "bookpage":""},
+		{"customer": "003", "type":"customer", "name":"Customer Three", "address":"030 Third St", "age":"30", "bookpage":""},
+		{"customer": "004", "type":"customer", "name":"Customer Four", "address":"040 Fourth St", "age":"40", "bookpage":""},
+		{"customer": "005", "type":"customer", "name":"Customer Five", "address":"050 Fifth St", "age":"50", "bookpage":""},
+		{"customer": "006", "type":"customer", "name":"Customer Six", "address":"060 Sixth St", "age":"60", "bookpage":""},
+		{"customer": "007", "type":"customer", "name":"Customer Seven", "address":"070 Seventh St", "age":"70", "bookpage":""},
+		{"customer": "008", "type":"customer", "name":"Customer Eight", "address":"080 Eigth St", "age":"80", "bookpage":""},
+		{"customer": "009", "type":"customer", "name":"Customer Nine", "address":"090 Ninth St", "age":"90", "bookpage":""},
+		{"customer": "010", "type":"customer", "name":"Customer Ten", "address":"100 Tenth St", "age":"100", "bookpage":""}
+			}
+	}
+	]
+},
+{"employees":[
+		{"employee": {"type":"employee", "name":"Mike", "title":" CTO", "manager":" Fred"}},
+		{"employee": {"type":"employee", "name":"Fred", "title":" CEO", "manager":" Board"}},
+		{"employee": {"type":"employee", "name":"Alexander", "title":" Manager", "manager":" James"}},
+		{"employee": {"type":"employee", "name":"James", "title":" COO", "manager":" Fred"}},
+		{"employee": {"type":"employee", "name":"Ethan", "title":" CIO", "manager":" Fred"}},
+		{"employee": {"type":"employee", "name":"William", "title":" Bookeeper", "manager":" Mason"}},
+		{"employee": {"type":"employee", "name":"Jacob", "title":" Accountant", "manager":" Mason"}},
+		{"employee": {"type":"employee", "name":"Mason", "title":" CFO", "manager":" Fred"}},
+		{"employee": {"type":"employee", "name":"Liam", "title":" Coder", "manager":" Mike"}},
+		{"employee": {"type":"employee", "name":"Noah", "title":" Coder", "manager":" Mike"}}
+	]
+},
+{"owners":[
+		{"owner": {"type":"owner", "name":"Owner One", "age":"22"}},
+		{"owner": {"type":"owner", "name":"Owner Three", "age":"52"}},
+		{"owner": {"type":"owner", "name":"Owner Two", "age":"82"}}
+	]
+}
+]

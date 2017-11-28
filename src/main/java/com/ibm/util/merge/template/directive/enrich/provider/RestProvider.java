@@ -24,7 +24,6 @@ import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataPrimitive;
-import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
@@ -40,14 +39,16 @@ import java.util.HashMap;
 /**
  * A Simple HTTP Get based provider.
  * <p>Environment Variable Format<blockquote><pre>
- * TODO
+ * source.HOST
+ * source.PORT
+ * source.USER
+ * source.PW
  * </pre></blockquote>
  *     
  * @author Mike Storey
  *
  */
 public class RestProvider implements ProviderInterface {
-	private final DataProxyJson proxy = new DataProxyJson();
 	private static final ProviderMeta meta = new ProviderMeta(
 			"Option Name",
 			"Credentials", 
@@ -55,18 +56,14 @@ public class RestProvider implements ProviderInterface {
 			"Parse Help",
 			"Return Help");
 	
-	class Credentials {
-		public String username;
-		public String password;
-		public String host;
-		public String port;
-		public String url;
-	}
+	public String username;
+	public String password;
+	public String host;
+	public String port;
 
 	private final String source;
 	private final String dbName;
 	private transient final Merger context;
-	private Credentials creds = null;
 	
 	public RestProvider(String source, String dbName, Merger context) throws MergeException {
 		this.source = source;
@@ -76,15 +73,19 @@ public class RestProvider implements ProviderInterface {
 	
 	private void connect() throws Merge500 {
 		try {
-			creds = proxy.fromString(Config.env(source), Credentials.class);
+			host = Config.env(source + ".HOST");
+			port = Config.env(source + ".PORT");
+			username = Config.env(source + ".USER");
+			password = Config.env(source + ".PW");
 		} catch (MergeException e) {
-			throw new Merge500("Malformed or Missing Cloudant Source Credentials found for:" + source );
+			throw new Merge500("Rest Provider did not find environment variables:" + source + ":" + host + ":" + port + ":" + username + ":" + password);
 		}
+		// Add authentication code here and keep a secret
 	}
 
 	@Override
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
-		if (creds == null) {
+		if (host == null) {
 			connect();
 		}
 		
@@ -95,7 +96,7 @@ public class RestProvider implements ProviderInterface {
 
 		try {
 			// TODO- Basic HTML Authentication (username password)
-			theUrl = "http://" + this.creds.host + ":" + this.creds.port + "/" + query.getValue();
+			theUrl = "http://" + this.host + ":" + this.port + "/" + query.getValue();
 			fetchedData = IOUtils.toString(
 					new BufferedReader(
 					new InputStreamReader(
@@ -106,7 +107,11 @@ public class RestProvider implements ProviderInterface {
 			throw new Merge500("I-O Exception at:" + theUrl);
 		}
 
-		return new DataPrimitive(fetchedData);
+		if (parseAs == Config.PARSE_NONE) {
+			return new DataPrimitive(fetchedData);
+		} else {
+			return Config.parse(parseAs, fetchedData);
+		}
 	}
 	
 	@Override

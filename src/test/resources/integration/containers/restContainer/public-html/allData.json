@@ -1,0 +1,95 @@
+{
+  "Data" : {
+    "theOwners" : {
+      "one" : {
+        "type" : "owner",
+        "name" : "Owner One",
+        "age" : "22"
+      },
+      "two" : {
+        "type" : "owner",
+        "name" : "Owner Two",
+        "age" : "82"
+      },
+      "three" : {
+        "type" : "owner",
+        "name" : "Owner Three",
+        "age" : "52"
+      }
+    },
+    "theCustomers" : {
+		"001": {"type":"customer", "name":"Customer One", "address":"001 First St", "age":"10", "bookpage":""},
+		"002": {"type":"customer", "name":"Customer Two", "address":"001 Seecond St", "age":"20", "bookpage":""},
+		"003": {"type":"customer", "name":"Customer Three", "address":"030 Third St", "age":"30", "bookpage":""},
+		"004": {"type":"customer", "name":"Customer Four", "address":"040 Fourth St", "age":"40", "bookpage":""},
+		"005": {"type":"customer", "name":"Customer Five", "address":"050 Fifth St", "age":"50", "bookpage":""},
+		"006": {"type":"customer", "name":"Customer Six", "address":"060 Sixth St", "age":"60", "bookpage":""},
+		"007": {"type":"customer", "name":"Customer Seven", "address":"070 Seventh St", "age":"70", "bookpage":""},
+		"008": {"type":"customer", "name":"Customer Eight", "address":"080 Eigth St", "age":"80", "bookpage":""},
+		"009": {"type":"customer", "name":"Customer Nine", "address":"090 Ninth St", "age":"90", "bookpage":""},
+		"010": {"type":"customer", "name":"Customer Ten", "address":"100 Tenth St", "age":"100", "bookpage":""}
+    },
+    "theEmployees" : {
+      "002" : {
+        "type" : "employee",
+        "name" : "Fred",
+        "title" : " CEO",
+        "manager" : " Board"
+      },
+      "001" : {
+        "type" : "employee",
+        "name" : "Mike",
+        "title" : " CTO",
+        "manager" : " Fred"
+      },
+      "003" : {
+        "type" : "employee",
+        "name" : "Alexander",
+        "title" : " Manager",
+        "manager" : " James"
+      },
+      "009" : {
+        "type" : "employee",
+        "name" : "Liam",
+        "title" : " Coder",
+        "manager" : " Mike"
+      },
+      "007" : {
+        "type" : "employee",
+        "name" : "Jacob",
+        "title" : " Accountant",
+        "manager" : " Mason"
+      },
+      "005" : {
+        "type" : "employee",
+        "name" : "Ethan",
+        "title" : " CIO",
+        "manager" : " Fred"
+      },
+      "008" : {
+        "type" : "employee",
+        "name" : "Mason",
+        "title" : " CFO",
+        "manager" : " Fred"
+      },
+      "004" : {
+        "type" : "employee",
+        "name" : "James",
+        "title" : " COO",
+        "manager" : " Fred"
+      },
+      "010" : {
+        "type" : "employee",
+        "name" : "Noah",
+        "title" : " Coder",
+        "manager" : " Mike"
+      },
+      "006" : {
+        "type" : "employee",
+        "name" : "William",
+        "title" : " Bookeeper",
+        "manager" : " Mason"
+      }
+    }
+  }
+}
