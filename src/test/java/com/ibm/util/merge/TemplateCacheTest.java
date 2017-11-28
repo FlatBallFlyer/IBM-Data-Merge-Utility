@@ -19,17 +19,19 @@ public class TemplateCacheTest {
 	private TemplateCache cache;
 	private Merger context;
 	private HashMap<String,String> replace;
-	private DataProxyJson gson = new DataProxyJson();
+	private DataProxyJson gson;
 	
 	@Before
 	public void setUp() throws Exception {
-		Config.initialize();
+		Config.load("{\"prettyJson\": false }");
 		cache = new TemplateCache();
 		context = new Merger(cache, "system.sample.");
 
 		replace = new HashMap<String,String>();
 		replace .put("foo", "bar");
 		replace .put("one", "two");
+		
+		gson = new DataProxyJson(false);
 	}
 
 	@After

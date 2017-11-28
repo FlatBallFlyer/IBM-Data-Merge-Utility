@@ -13,7 +13,7 @@ public class ConfigTest {
 
 	@Before
 	public void setUp() throws MergeException {
-		proxy = new DataProxyJson();
+		proxy = new DataProxyJson(false);
 		Config.initialize();
 	}
 	

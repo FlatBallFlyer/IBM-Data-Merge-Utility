@@ -45,6 +45,16 @@ public class DataProxyJson implements ParserProxyInterface {
     }
 
     /**
+     * Instantiate a Proxy
+     * @throws MergeException 
+     */
+    public DataProxyJson(Boolean pretty) {
+        builder = new GsonBuilder();
+        registerDefaultAdapters();
+        if (pretty) {builder.setPrettyPrinting();}
+    }
+
+    /**
      * Instantiate a proxy with a BUilder
      * @param builder GsonBuilder to use in parsing
      */

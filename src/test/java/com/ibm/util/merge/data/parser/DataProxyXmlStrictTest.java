@@ -13,7 +13,7 @@ import com.ibm.util.merge.data.parser.DataProxyXmlStrict;
 import com.ibm.util.merge.exception.MergeException;
 
 public class DataProxyXmlStrictTest {
-	DataProxyJson gsonProxy = new DataProxyJson();
+	DataProxyJson gsonProxy = new DataProxyJson(false);
 	DataManager manager;
 	DataProxyXmlStrict proxy;
 

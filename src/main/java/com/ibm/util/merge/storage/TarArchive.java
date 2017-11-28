@@ -34,12 +34,12 @@ import java.io.IOException;
  */
 public class TarArchive extends Archive {
 
-    public TarArchive() {
+    public TarArchive() throws MergeException {
         super();
         this.setArchiveType(Archive.ARCHIVE_TAR);
     }
 
-    public TarArchive(Merger context) {
+    public TarArchive(Merger context) throws MergeException {
         super(context);
         this.setArchiveType(Archive.ARCHIVE_TAR);
     }

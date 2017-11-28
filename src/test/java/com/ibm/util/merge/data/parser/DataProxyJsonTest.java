@@ -22,7 +22,7 @@ import com.ibm.util.merge.template.directive.Replace;
 import com.ibm.util.merge.template.directive.SaveFile;
 
 public class DataProxyJsonTest {
-	DataProxyJson proxy = new DataProxyJson();
+	DataProxyJson proxy = new DataProxyJson(false);
 	
 	@Before
 	public void setUp() throws Exception {
@@ -250,5 +250,23 @@ public class DataProxyJsonTest {
 		assertTrue(result.getAsObject().containsKey("Test"));
 		assertTrue(result.getAsObject().get("Test").isPrimitive());
 		assertNotNull(result.getAsObject().get("Test").getAsPrimitive());
+	}
+
+	@Test
+	public void testPretyJson() throws MergeException {
+		DataObject table = new DataObject();
+		table.put("Bar", new DataPrimitive("Bam"));
+		table.put("Foo", new DataPrimitive("Fam"));
+		DataObject sub = new DataObject();
+		sub.put("One", new DataPrimitive("Two"));
+		table.put("Obj", sub);
+		
+		proxy = new DataProxyJson(false);
+		String json = proxy.toString(table);
+		assertEquals("{\"Obj\":{\"One\":\"Two\"},\"Foo\":\"Fam\",\"Bar\":\"Bam\"}", json);
+		
+		proxy = new DataProxyJson(true);
+		json = proxy.toString(table);
+		assertEquals("{\n  \"Obj\": {\n    \"One\": \"Two\"\n  },\n  \"Foo\": \"Fam\",\n  \"Bar\": \"Bam\"\n}", json);
 	}
 }

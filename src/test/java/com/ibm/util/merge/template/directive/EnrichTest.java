@@ -22,7 +22,7 @@ public class EnrichTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		gsonProxy = new DataProxyJson();
+		gsonProxy = new DataProxyJson(false);
 		Config.initialize();
 		cache = new TemplateCache();
 		template = new Template("test", "enrich", "", "Template Content", "{", "}");

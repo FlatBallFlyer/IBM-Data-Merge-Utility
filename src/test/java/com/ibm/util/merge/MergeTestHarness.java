@@ -18,7 +18,7 @@ import org.apache.commons.io.IOUtils;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 
 public class MergeTestHarness {
-	private final DataProxyJson gsonProxy = new DataProxyJson();
+	private final DataProxyJson gsonProxy = new DataProxyJson(false);
 
 	public MergeTestHarness() {
 	}

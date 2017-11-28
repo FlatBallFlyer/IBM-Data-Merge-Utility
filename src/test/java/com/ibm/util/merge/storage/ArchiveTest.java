@@ -18,7 +18,7 @@ import com.ibm.util.merge.exception.MergeException;
 public class ArchiveTest {
 	private class AbstractTest extends Archive {
 		
-		public AbstractTest(Merger context) {
+		public AbstractTest(Merger context) throws MergeException {
 			super(context);
 		}
 		

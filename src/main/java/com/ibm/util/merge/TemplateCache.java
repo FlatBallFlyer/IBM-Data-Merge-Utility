@@ -52,7 +52,7 @@ import com.ibm.util.merge.template.directive.SaveFile;
 public class TemplateCache implements Iterable<String> {
 	private static final Logger LOGGER = Logger.getLogger(TemplateCache.class.getName());
 	private final HashMap<String, Template> cache;
-	private final DataProxyJson gsonProxy = new DataProxyJson();
+	private final DataProxyJson gsonProxy = new DataProxyJson(Config.isPrettyJson());
 	
 	// Cache Statistics
 	private double cacheHits = 0;

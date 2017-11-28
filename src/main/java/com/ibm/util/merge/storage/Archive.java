@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataManager;
@@ -61,7 +62,7 @@ public abstract class Archive {
 		return enums;
 	}
 
-	private transient DataProxyJson gson = new DataProxyJson();
+	private transient DataProxyJson gson;
 	private transient Merger context;
 	private String archiveType;
 	private String filePath;
@@ -70,16 +71,19 @@ public abstract class Archive {
 
 	/**
 	 * Instantiate an archive
+	 * @throws MergeException 
 	 */
-	public Archive() {
+	public Archive() throws MergeException {
 		this.setFileName(UUID.randomUUID().toString());
+		gson = new DataProxyJson(Config.isPrettyJson());
 	}
 
 	/**
 	 * Instantiate an Archive for the merge
 	 * @param context The merge context
+	 * @throws MergeException 
 	 */
-	public Archive(Merger context) {
+	public Archive(Merger context) throws MergeException {
 		this();
 		this.setContext(context);
 	}

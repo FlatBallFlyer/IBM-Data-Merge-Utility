@@ -33,12 +33,12 @@ import com.ibm.util.merge.exception.MergeException;
  */
 public class JarArchive extends Archive {
 
-	public JarArchive() {
+	public JarArchive() throws MergeException {
         super();
         this.setArchiveType(Archive.ARCHIVE_JAR);
 	}
 
-	public JarArchive(Merger context) {
+	public JarArchive(Merger context) throws MergeException {
         super(context);
         this.setArchiveType(Archive.ARCHIVE_JAR);
 	}

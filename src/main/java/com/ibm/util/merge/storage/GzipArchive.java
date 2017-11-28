@@ -35,12 +35,12 @@ import java.util.zip.GZIPOutputStream;
  */
 public class GzipArchive extends Archive {
 
-    public GzipArchive() {
+    public GzipArchive() throws MergeException {
         super();
         this.setArchiveType(Archive.ARCHIVE_GZIP);
     }
 
-    public GzipArchive(Merger context) {
+    public GzipArchive(Merger context) throws MergeException {
         super(context);
         this.setArchiveType(Archive.ARCHIVE_GZIP);
     }

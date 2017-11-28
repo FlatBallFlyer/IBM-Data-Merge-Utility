@@ -290,7 +290,7 @@ public class Config {
 	 */
 	private transient HashMap<String, Class<ProviderInterface>> providers = new HashMap<String, Class<ProviderInterface>>();
 	private transient HashMap<Integer, ParserProxyInterface> proxies = new HashMap<Integer, ParserProxyInterface>();
-	private transient static final DataProxyJson proxy = new DataProxyJson();
+	private transient static final DataProxyJson proxy = new DataProxyJson(false);
 	
 	/**
 	 * Provide a default configuration. If the enviornment variable

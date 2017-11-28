@@ -20,7 +20,7 @@ import com.ibm.util.merge.template.directive.Replace;
 
 public class ReplaceTest {
 	private TemplateCache cache;
-	private static final DataProxyJson parser = new DataProxyJson();
+	private static final DataProxyJson parser = new DataProxyJson(false);
 	
 	@Before
 	public void setUp() throws Exception {
