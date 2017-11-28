@@ -7,11 +7,12 @@ public class All_Integration_Tests {
 	//////////////////////////////////////////////////////////////////////////////////
 	// In order to run these integration tests you need to run the docker testing container
 	// which runs all the required test databases. If you have not already done so
-	// install Docker - https://www.docker.com and then run the following command
+	// install Docker - https://www.docker.com and then run the following commands to start test containers
+	// TODO: Re-factor to docker stack
 	// docker run -p 3306:3306 --name idmu-mysql -d flatballflyer/idmu-test-mysql:latest
+	// docker run -p 27017:27017 --name idmu-mongo -d flatballflyer/idmu-test-mongo:latest
+	// docker run -p 50000:50000 --name idmu-db2 -v $(pwd):/share -d flatballflyer/idmu-test-db2:latest
 	// 
-	// NOTE: If you change the root password you will need to change the corresponding Config Environment variables for the JDBC data source.
-	// TODO: This is just a MySql container, will implement as a full stack with PWD's hidden
 	//////////////////////////////////////////////////////////////////////////////////
 	private final MergeTestHarness harness = new MergeTestHarness();
 
