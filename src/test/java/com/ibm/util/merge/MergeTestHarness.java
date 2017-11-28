@@ -45,10 +45,7 @@ public class MergeTestHarness {
 		Config.load(new String(Files.readAllBytes(config.toPath()), "ISO-8859-1"));
 		
 		// Create the template cache and post the templates
-		File templates = new File(folder.getPath() + File.separator + "templates.json");
-		assertTrue(templates.exists());
-		TemplateCache cache = new TemplateCache();
-		cache.postGroup(new String(Files.readAllBytes(templates.toPath()), "ISO-8859-1"));
+		TemplateCache cache = new TemplateCache(folder);
 
 		// Iterate over requests performing the merge and validating output
 		File testFolder = new File(folder.getPath() + File.separator + "requests");

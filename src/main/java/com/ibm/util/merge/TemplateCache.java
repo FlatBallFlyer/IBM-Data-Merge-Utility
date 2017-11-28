@@ -59,7 +59,7 @@ public class TemplateCache implements Iterable<String> {
 	Date initialized = new Date();
     
 	/**
-	 * Instantiates a new template cache.
+	 * Instantiates a new template cache, loading config loadFolder if present
 	 *
 	 * @throws MergeException  on processing errors
 	 */
@@ -69,24 +69,45 @@ public class TemplateCache implements Iterable<String> {
 		this.buildDefaultSystemTemplates();
 		
 		if (!Config.loadFolder().isEmpty()) {
-			File templateFolder = new File(Config.loadFolder());
-			if (!templateFolder.exists()) {
-				LOGGER.log(Level.WARNING, "Template Load Folder not found: " + Config.loadFolder());
-				return;
-			}
-			
-			File[] groups = templateFolder.listFiles();
-			if (null == groups) {
-				LOGGER.log(Level.WARNING, "Template Load Folder is empty: " + Config.loadFolder());
-				return;
-			}
-			
-			for (File file : groups) {
-				try {
-					this.postGroup(new String(Files.readAllBytes(file.toPath()), "ISO-8859-1"));
-				} catch (Throwable e) {
-					LOGGER.log(Level.WARNING, "Template Group failed to load: " + file.getAbsolutePath());
-				}
+			loadGroups(new File(Config.loadFolder()));
+		}
+	}
+	
+	/**
+	 * Instantiates a new template cache and loads from a specified file rather than the Config.loadFolder location
+	 *
+	 * @throws MergeException  on processing errors
+	 */
+	public TemplateCache(File load) throws MergeException {
+		this.cache = new HashMap<String, Template>();
+		this.initialized = new Date();
+		this.buildDefaultSystemTemplates();
+		
+		loadGroups(load);
+	}
+	
+	/**
+	 * load template groups from a folder of Template Group json files
+	 * @param templateFolder
+	 * @throws MergeException 
+	 */
+	public void loadGroups(File templateFolder) throws MergeException {
+		if (!templateFolder.exists()) {
+			LOGGER.log(Level.WARNING, "Template Load Folder not found: " + Config.loadFolder());
+			return;
+		}
+		
+		File[] groups = templateFolder.listFiles();
+		if (null == groups) {
+			LOGGER.log(Level.WARNING, "Template Load Folder is empty: " + Config.loadFolder());
+			return;
+		}
+		
+		for (File file : groups) {
+			try {
+				this.postGroup(new String(Files.readAllBytes(file.toPath()), "ISO-8859-1"));
+			} catch (Throwable e) {
+				LOGGER.log(Level.WARNING, "Template Group failed to load: " + file.getAbsolutePath());
 			}
 		}
 	}
