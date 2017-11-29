@@ -1,0 +1,6 @@
+ID,FROM,TO
+5,corpZip,99353
+1,corpUrl,www.spacely.com
+2,corpStreet,101 Future Ave.
+4,corpState,IS
+3,corpCity,Space City

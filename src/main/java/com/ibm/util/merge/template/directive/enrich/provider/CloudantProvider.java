@@ -29,6 +29,7 @@ import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
+import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
@@ -59,6 +60,7 @@ public class CloudantProvider implements ProviderInterface {
 	private transient CloudantClient cloudant = null;
 	private transient Database db = null;
 	private transient final Merger context;
+	private transient DataProxyJson proxy = new DataProxyJson();
 	
 	/**
 	 * Instantiate the provider and get the database connection
@@ -87,21 +89,22 @@ public class CloudantProvider implements ProviderInterface {
 			throw new Merge500("Malformed or Missing Cloudant Source Credentials found for:" + source + ":" + url + ":" + user + ":" + pw);
 		}
 		
-		// Get the connection
 		try {
+			// Get the connection
 			this.cloudant = ClientBuilder
 					.url(new URL(url))
 					.username(user)
 					.password(pw)
+					.gsonBuilder(proxy.getBuilder())
 					.build();
+			// Get the database object
+			db = cloudant.database(this.getDbName(), false);
 		} catch (CouchDbException e) {
-			throw new Merge500("Unable to connect to Cloudant repository" + e.getMessage());
+			throw new Merge500("Unable to connect to Cloudant repository:" + url + ":" + user + ":" + pw + ":" + this.getDbName() + ":" + e.getMessage());
 		} catch (MalformedURLException e) {
 			throw new Merge500("Invalid URL for provider :" + this.source + ":" + this.dbName + "Message:" + e.getMessage());
 		}
 		
-		// Get the database object
-		db = cloudant.database(this.getDbName(), true);
 	}
 	
 	@Override
@@ -113,11 +116,15 @@ public class CloudantProvider implements ProviderInterface {
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_JSON);
 		query.replace(replace, false, Config.nestLimit());
 		
-		List<DataElement> result = new DataList();  
+		List<DataElement> results;
 		
-		result = db.findByIndex(query.getValue(), DataElement.class);
+		results = db.findByIndex(query.getValue(), DataElement.class);
 		
-		return (DataElement) result;
+		DataList reply = new DataList();
+		for (DataElement doc : results) {
+			reply.add(doc);
+		}
+		return reply;
 	}
 	
 	@Override

@@ -11,7 +11,7 @@
         "back" : ">"
       },
       "description" : "Create Customer Contact list based on \"idcustomer\" parameter value",
-      "content" : "Spacely Sprockets - Customer Contact List for <name>\n<corpUrl>\n<corpStreet>\n<corpCity>, <corpState> <corpZip>\n\nCustomer: <name>\nAddress: <street> <city> <state>, <zip>\nPrimary Contact: <primary>\n1930 Revenue / Profit: <revenue> / <profit>\n\nCONTACTS:\n<bookmark=\"contact\" group=\"test\" template=\"contact\">\n==== End of Report ====",
+      "content" : "Spacely Sprockets - Customer Contact List for <name>\n<corpUrl>\n<corpStreet>\n<corpCity>, <corpState> <corpZip>\n\nCustomer: <name>\nAddress: <street> <City> <state>, <zip>\nPrimary Contact: <primary>\n1930 Revenue / Profit: <revenue> / <profit>\n\nCONTACTS:\n<bookmark=\"contact\" group=\"test\" template=\"contact\">\n==== End of Report ====",
       "contentType" : 2,
       "contentDisposition" : 2,
       "contentEncoding" : 4,
@@ -74,9 +74,9 @@
           "name" : "Get Customer Data",
           "targetDataName" : "customer",
           "targetDataDelimeter" : "-",
-          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.MongoProvider",
-          "enrichSource" : "mongoTest",
-          "enrichParameter" : "customers",
+          "enrichClass" : "com.ibm.util.merge.template.directive.enrich.provider.CloudantProvider",
+          "enrichSource" : "cloudantTest",
+          "enrichParameter" : "test",
           "enrichCommand" : "{\"id\" : \"<idcustomer>\"}",
           "parseAs" : 4
         },

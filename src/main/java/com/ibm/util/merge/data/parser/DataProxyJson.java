@@ -90,6 +90,9 @@ public class DataProxyJson implements ParserProxyInterface {
         return gson.toJson(src);
     }
 
+    public GsonBuilder getBuilder() {
+    	return this.builder;
+    }
     /**
      * Register custom adapters for Template Directives and DataElement objects
      */

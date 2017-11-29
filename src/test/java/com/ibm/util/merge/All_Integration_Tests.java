@@ -13,9 +13,16 @@ public class All_Integration_Tests {
 	// docker run -p 27017:27017 --name idmu-mongo -d flatballflyer/idmu-test-mongo:latest
 	// docker run -p 50000:50000 --name idmu-db2 -v $(pwd):/share -d flatballflyer/idmu-test-db2:latest
 	// docker run -p 8383:80 --name idmu-rest -d flatballflyer/idmu-test-rest:latest
+	// docker run -p ??:?? --name idmu-cloudant -d flatballflyer/idmu-test-cloudant:latest TODO - AutoLoad not working yet, will publish soon
 	// 
 	//////////////////////////////////////////////////////////////////////////////////
 	private final MergeTestHarness harness = new MergeTestHarness();
+
+	@Test
+	public void Cloudant1() throws Throwable {
+		// Given Customer ID as a parameter - create Contacts Report with Corporate Info
+		harness.testTemplates(new File("src/test/resources/integration/cloudant1"));
+	}
 
 	@Test
 	public void Rest1() throws Throwable {
