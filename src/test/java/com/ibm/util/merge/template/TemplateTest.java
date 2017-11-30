@@ -12,6 +12,7 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.TemplateCache;
 import com.ibm.util.merge.template.content.TagSegment;
 import com.ibm.util.merge.template.directive.*;
+import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.*;
 
 public class TemplateTest {
@@ -220,6 +221,24 @@ public class TemplateTest {
 		assertEquals("FOO", template.getContentFileName());
 	}
 
+	@Test
+	public void testEncodedContent1() throws Throwable {
+		TemplateCache cache = new TemplateCache();
+		Template template = new Template("test", "encode", "", "A test {foo} tag");
+		template.setContentEncoding(TagSegment.ENCODE_XML);
+		Replace replace = new Replace();
+		replace.setDataSource("foo");
+		replace.setIfPrimitive(Replace.PRIMITIVE_REPLACE);
+		replace.setProcessAfter(true);
+		template.addDirective(replace);
+		cache.postTemplate(template);
+		
+		Merger context = new Merger(cache, "test.encode.");
+		context.getMergeData().put("foo", "-", new DataPrimitive("b&r"));
+		template = context.merge();
+		assertEquals("A test b&amp;r tag", template.getMergedOutput().getValue());
+	}
+	
 	@Test
 	public void testSetGetContentEncoding() throws MergeException {
 		for (int index : TagSegment.ENCODE_VALUES().values()) {
