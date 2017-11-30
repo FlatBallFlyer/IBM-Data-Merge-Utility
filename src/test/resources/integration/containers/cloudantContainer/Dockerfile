@@ -2,14 +2,15 @@
 FROM ibmcom/cloudant-developer
 
 # Set the working directory to /app
-#WORKDIR /app
+WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-#ADD . /app
+# Copy the startup script and load data into the container at /app
+ADD ./testData.txt /app
+ADD ./initialize.sh /app
 
-# Make port 80 available to the world outside this container
-#EXPOSE 80
+# Make port 80 available to the world outside this container as port 81
+EXPOSE 81:80
 
-# Define environment variable
-#ENV NAME World
+# Run data load command
+#RUN bash /app/initialize.sh
 

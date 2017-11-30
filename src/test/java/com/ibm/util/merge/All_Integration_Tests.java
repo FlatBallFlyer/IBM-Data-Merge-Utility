@@ -13,7 +13,7 @@ public class All_Integration_Tests {
 	// docker run -p 27017:27017 --name idmu-mongo -d flatballflyer/idmu-test-mongo:latest
 	// docker run -p 50000:50000 --name idmu-db2 -v $(pwd):/share -d flatballflyer/idmu-test-db2:latest
 	// docker run -p 8383:80 --name idmu-rest -d flatballflyer/idmu-test-rest:latest
-	// docker run -p ??:?? --name idmu-cloudant -d flatballflyer/idmu-test-cloudant:latest TODO - AutoLoad not working yet, will publish soon
+	// docker run -p 81:80 --name idmu-cloudant -d flatballflyer/idmu-test-cloudant:latest;docker exec idmu-cloudant bash /app/initialize.sh
 	// 
 	//////////////////////////////////////////////////////////////////////////////////
 	private final MergeTestHarness harness = new MergeTestHarness();
