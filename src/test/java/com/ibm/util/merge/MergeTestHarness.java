@@ -100,7 +100,7 @@ public class MergeTestHarness {
 				generated.delete();
 			}
 		}
-		System.out.println("Performance for ".concat(folder.getPath()));
+		System.out.println("Completion for ".concat(folder.getPath()));
 		System.out.print("Test Count: "); System.out.println(count);
 		System.out.print(" Test Time: "); System.out.println(time);
 		System.out.print("  Avg Resp: "); System.out.println(time/count);

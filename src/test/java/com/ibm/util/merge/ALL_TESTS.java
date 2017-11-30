@@ -8,7 +8,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ 
 	com.ibm.util.merge.All_Unit_Tests.class,
 	com.ibm.util.merge.All_Functional_Tests.class,
-	com.ibm.util.merge.All_Integration_Tests.class
+	com.ibm.util.merge.All_Integration_Tests.class,
+	com.ibm.util.merge.All_Performance_Tests.class
 })
 
 public class All_TESTS {
