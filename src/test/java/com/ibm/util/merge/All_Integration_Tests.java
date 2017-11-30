@@ -67,6 +67,18 @@ public class All_Integration_Tests {
 	}
 
 	@Test
+	public void SqlToJson() throws Throwable {
+		// Transform the JDBC MySql database to Files served up for Cloudant provider testing
+		harness.testTemplates(new File("src/test/resources/integration/mysqlToJsonFiles"));
+	}
+
+	@Test
+	public void SqlToXml() throws Throwable {
+		// Transform the JDBC MySql database to Files served up for Cloudant provider testing
+		harness.testTemplates(new File("src/test/resources/integration/mysqlToXmlFiles"));
+	}
+
+	@Test
 	public void Mongo1() throws Throwable {
 		// Given Customer ID as a parameter - create Contacts Report with Corporate Info
 		harness.testTemplates(new File("src/test/resources/integration/mongo1"));

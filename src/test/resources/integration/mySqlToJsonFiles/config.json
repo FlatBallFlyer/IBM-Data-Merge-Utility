@@ -1,0 +1,8 @@
+{
+  "tempFolder" : "src/test/resources/temp/",
+  "envVars" : {
+    "mySqlTest.URI" : "jdbc:mysql://localhost:3306",
+    "mySqlTest.USER" : "root",
+    "mySqlTest.PW" : "drowssap"
+  }
+}
