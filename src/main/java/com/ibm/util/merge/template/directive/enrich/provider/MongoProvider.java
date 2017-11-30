@@ -16,26 +16,24 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bson.Document;
-import org.bson.conversions.Bson;
-
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
-import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -43,33 +41,26 @@ import com.mongodb.client.MongoDatabase;
 /**
  * A MongoDb provider
  * <p>Environment Variable Format<blockquote><pre>
- * {
- * 		"uri" : "mongodb://localhost:27017",
- * 		"user" : "username",
- * 		"pword" : "some-password",
- * 		"dbName" : "some-db-name"
- * }
- * </pre></blockquote>
+ *	<source>.URI
+ *	<source>.USER
+ *	<source>.PW
+ *	<source>.DB
+ * </pre></blockquote></p>
+ * <p>
+ * If USER is an empty string, Mongo Anonymous Auth is used, otherwise ScramSha1 authentication is used.
+ * </p>
  * 
  * @author Mike Storey
  *
  */
 public class MongoProvider implements ProviderInterface {
-	private final DataProxyJson proxy = new DataProxyJson();
 	private static final ProviderMeta meta = new ProviderMeta(
 			"Collection",
-			"{uri:uri,user:user,pword:pword,dbName:dbName}", 
+			"ENV", 
 			"Json Mongo Query Object",
 			"Not Supported / Necessary",
 			"List of Document Objects");
 	
-	class Credentials {
-		public String uri;
-		public String user;
-		public String pword;
-		public String dbName;
-	}
-
 	class Query extends HashMap<String,String> {
 		private static final long serialVersionUID = 1L; 
 	}
@@ -77,7 +68,6 @@ public class MongoProvider implements ProviderInterface {
 	private final String source;
 	private final String collection;
 	private transient final Merger context;
-	private transient Credentials credentials = null;
 	private transient MongoClient client;
 	private transient MongoDatabase database;
 	private transient MongoCollection<Document> dbCollection;
@@ -97,20 +87,39 @@ public class MongoProvider implements ProviderInterface {
 	}
 	
 	private void connect() throws Merge500 {
+		// Get Credentials
+		String host = "";
+		String port = "";
+		String user = "";
+		String pw = "";
+		String dbName = "";
 		try {
-			this.credentials = proxy.fromString(Config.env(source), Credentials.class);
+			host = Config.env(source + ".HOST");
+			port = Config.env(source + ".PORT");
+			user = Config.env(source + ".USER");
+			pw = Config.env(source + ".PW");
+			dbName = Config.env(source + ".DB");
 		} catch (MergeException e) {
 			throw new Merge500("Invalid Mongo Provider for:" + source);
 		}
 		
-		this.client = new MongoClient(new MongoClientURI(this.credentials.uri));
-		this.database = this.client.getDatabase(this.credentials.dbName);
+		ServerAddress addr = new ServerAddress(host, Integer.valueOf(port));
+		if (user.isEmpty()) {
+			this.client = new MongoClient(addr);
+		} else {
+			ArrayList<MongoCredential> creds = new ArrayList<MongoCredential>();
+			MongoCredential credential = MongoCredential.createScramSha1Credential(user, dbName, pw.toCharArray());
+			creds.add(credential);
+			this.client = new MongoClient(addr, creds);
+		}
+		this.database = this.client.getDatabase(dbName);
 		this.dbCollection = database.getCollection(this.collection);
 	}
 
 	@Override
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
-		if (credentials == null) {
+		DataList result = new DataList();
+		if (this.dbCollection == null) {
 			this.connect();
 		}
 		
@@ -118,18 +127,31 @@ public class MongoProvider implements ProviderInterface {
 		query.replace(replace, false, Config.nestLimit());
 		DataObject queryObj = Config.parse(Config.PARSE_JSON, query.getValue()).getAsObject();
 
-		DBObject dbquery = new BasicDBObject();
+		BasicDBObject dbquery = new BasicDBObject();
 		for (String key : queryObj.keySet()) {
 			dbquery.put(key, queryObj.get(key).getAsPrimitive());
 		}
-		FindIterable<Document> cursor = this.dbCollection.find((Bson) dbquery);
+		FindIterable<Document> find = this.dbCollection.find(dbquery);
+//		if (sort != null) {
+//			find.sort(sort);
+//		}
+//		if (limit != null) {
+//			find.limit(limit);
+//		}
 		
-		DataList result = new DataList();
-		for (Document aDoc : cursor) {
-			DataElement theDoc = Config.parse(Config.PARSE_JSON, aDoc.toJson());
-			result.add(theDoc);
+//		MongoCursor<Document> cursor = find.iterator();
+//		while (cursor.hasNext()) {
+//			Document aDoc = cursor.next();
+//			DataElement theDoc = Config.parse(Config.PARSE_JSON, aDoc.toJson());
+//			result.add(theDoc);
+//		}
+		
+		if (find != null) {
+			for (Document aDoc : find) {
+				DataElement theDoc = Config.parse(Config.PARSE_JSON, aDoc.toJson());
+				result.add(theDoc);
+			}
 		}
-		
 		return result;
 	}
 

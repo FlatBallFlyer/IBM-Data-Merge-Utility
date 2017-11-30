@@ -1,5 +1,9 @@
 {
   "envVars" : {
-    "mongoTest" : "{\"uri\":\"mongodb://localhost:27017\", \"user\":\"\", \"pword\":\"\", \"dbName\":\"test\"}"
+    "mongoTest.HOST" : "localhost",
+    "mongoTest.PORT" : "27017",
+    "mongoTest.USER" : "",
+    "mongoTest.PW"   : "pass",
+    "mongoTest.DB"   : "test"
   }
 }

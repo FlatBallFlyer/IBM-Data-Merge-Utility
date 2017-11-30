@@ -69,7 +69,7 @@ public class All_Integration_Tests {
 	@Test
 	public void Mongo1() throws Throwable {
 		// Given Customer ID as a parameter - create Contacts Report with Corporate Info
-//		harness.testTemplates(new File("src/test/resources/integration/mongo1"));
+		harness.testTemplates(new File("src/test/resources/integration/mongo1"));
 	}
 
 }
