@@ -12,5 +12,5 @@ ADD ./initialize.sh /app
 EXPOSE 81:80
 
 # Run data load command
-#RUN bash /app/initialize.sh
+#bash /app/initialize.sh"
 
