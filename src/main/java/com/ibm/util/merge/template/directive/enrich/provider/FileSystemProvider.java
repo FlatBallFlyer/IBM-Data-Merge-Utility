@@ -21,12 +21,12 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
-import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,7 +40,6 @@ import java.util.HashMap;
  *
  */
 public class FileSystemProvider implements ProviderInterface {
-	private final DataProxyJson proxy = new DataProxyJson();
 	private final String source;
 	private final String dbName;
 	private transient final Merger context;
@@ -57,14 +56,15 @@ public class FileSystemProvider implements ProviderInterface {
 	 * @throws Merge500 on configuration and connection errors
 	 */
 	public void loadBasePath() throws Merge500 {
-		DataElement cfg;
+		// Get the credentials
+		String path = "";
 		try {
-			cfg = proxy.fromString(Config.env(source), DataElement.class);
-		} catch (Throwable e) {
-			throw new Merge500("Invalid File Provider Config for:" + this.source + " Message:" + e.getMessage());
+			path = Config.env(source + ".PATH");
+		} catch (MergeException e) {
+			throw new Merge500("Malformed or Missing File Source Credentials found for:" + source + ":" + path);
 		}
 
-		basePath = new File(cfg.getAsObject().get("basePath").getAsPrimitive());
+		basePath = new File(path);
         if (this.basePath.listFiles() == null) {
             throw new Merge500("File System Path Folder was not found:" + basePath.getAbsolutePath());
         }
