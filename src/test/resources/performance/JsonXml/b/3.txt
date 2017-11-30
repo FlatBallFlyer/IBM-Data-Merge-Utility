@@ -1,0 +1,14 @@
+<customer>
+	<info id="3" name="U.S. Steel" street="3930 Iron Walk" city="Wild Horse" state="MO" zip="65453-3393" revenue="3250" profit="195" primary="John">
+		<contact id="3" name="John" phone="(417) 555-0633" email=""/>
+		<contact id="23" name="Mark" phone="(417) 555-2623" email="Mark@USSteal.com"/>
+		<contact id="43" name="Jeffrey" phone="(417) 555-4643" email="Jeffrey@USSteal.com"/>
+		<contact id="63" name="Howard" phone="(417) 555-6663" email="Howard@USSteal.com"/>
+		<contact id="83" name="Fred" phone="(417) 555-8683" email="Fred@USSteal.com"/>
+		<contact id="103" name="Patricia" phone="(417) 555-0613" email="Patricia@USSteal.com"/>
+		<contact id="123" name="Cynthia" phone="(417) 555-2613" email="Cynthia@USSteal.com"/>
+		<contact id="143" name="Virginia" phone="(417) 555-4613" email="Virginia@USSteal.com"/>
+		<contact id="163" name="Laura" phone="(417) 555-6613" email="Laura@USSteal.com"/>
+		<contact id="183" name="Lois" phone="(417) 555-8613" email="Lois@USSteal.com"/>
+	</info>
+</customer>

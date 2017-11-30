@@ -1,0 +1,14 @@
+<customer>
+	<info id="17" name="Kraft" street="2789 Silent Vale" city="Charcoal Landing" state="MO" zip="64075-9452" revenue="1210" profit="37" primary="Dennis">
+		<contact id="17" name="Dennis" phone="(636) 555-3417" email="Dennis@Kraft.com"/>
+		<contact id="37" name="Peter" phone="(636) 555-5437" email="Peter@Kraft.com"/>
+		<contact id="57" name="Billy" phone="(636) 555-7457" email="Billy@Kraft.com"/>
+		<contact id="77" name="Leonard" phone="(636) 555-9477" email="Leonard@Kraft.com"/>
+		<contact id="97" name="Curtis" phone="(636) 555-1497" email="Curtis@Kraft.com"/>
+		<contact id="117" name="Pamela" phone="(636) 555-3417" email="Pamela@Kraft.com"/>
+		<contact id="137" name="Marilyn" phone="(636) 555-5417" email="Marilyn@Kraft.com"/>
+		<contact id="157" name="Alice" phone="(636) 555-7417" email="Alice@Kraft.com"/>
+		<contact id="177" name="Marcia" phone="(636) 555-9417" email="Marcia@Kraft.com"/>
+		<contact id="197" name="Sylvia" phone="(636) 555-1417" email="Sylvia@Kraft.com"/>
+	</info>
+</customer>

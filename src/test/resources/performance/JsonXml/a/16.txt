@@ -1,0 +1,25 @@
+{
+	"id" : "16",
+	"name" : "Shell Oil",
+	"address":  {
+		"street" : "2638 Lost Robin Alley",
+		"city" : "Warroad",
+		"state" : "MO",
+		"zip" : "64001-0474"
+	},
+	"revenue" : "1312",
+	"profit" : "121",
+	"primary" : "Steven",
+	"contacts" : [
+		{"id" : "16", "name" : "Steven", "phone" : "(417) 555-3216", "email" : "Steven@Shell.com"},
+		{"id" : "36", "name" : "Anthony", "phone" : "(417) 555-5236", "email" : "Anthony@Shell.com"},
+		{"id" : "56", "name" : "Jimmy", "phone" : "(417) 555-7256", "email" : "Jimmy@Shell.com"},
+		{"id" : "76", "name" : "Ronnie", "phone" : "(417) 555-9276", "email" : "Ronnie@Shell.com"},
+		{"id" : "96", "name" : "Alfred", "phone" : "(417) 555-1296", "email" : "Alfred@Shell.com"},
+		{"id" : "116", "name" : "Diane", "phone" : "(417) 555-3216", "email" : "Diane@Shell.com"},
+		{"id" : "136", "name" : "Rebecca", "phone" : "(417) 555-5216", "email" : "Rebecca@Shell.com"},
+		{"id" : "156", "name" : "Rita", "phone" : "(417) 555-7216", "email" : "Rita@Shell.com"},
+		{"id" : "176", "name" : "Lynn", "phone" : "(417) 555-9216", "email" : "Lynn@Shell.com"},
+		{"id" : "196", "name" : "Roberta", "phone" : "(417) 555-1216", "email" : "Roberta@Shell.com"}
+	]
+}

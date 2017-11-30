@@ -1,0 +1,14 @@
+<customer>
+	<info id="15" name="AT&amp;T Technologies" street="5414 Hidden Byway" city="Beersville" state="HI" zip="96732-5653" revenue="1526" profit="56" primary="Kenneth">
+		<contact id="15" name="Kenneth" phone="(808) 555-3015" email="Kenneth@ATT.com"/>
+		<contact id="35" name="Wayne" phone="(808) 555-5035" email="Wayne@ATT.com"/>
+		<contact id="55" name="Albert" phone="" email="Albert@ATT.com"/>
+		<contact id="75" name="Frederick" phone="(808) 555-9075" email="Frederick@ATT.com"/>
+		<contact id="95" name="Clarence" phone="(808) 555-1095" email="Clarence@ATT.com"/>
+		<contact id="115" name="Margaret" phone="(808) 555-3015" email="Margaret@ATT.com"/>
+		<contact id="135" name="Dorothy" phone="(808) 555-5015" email="Dorothy@ATT.com"/>
+		<contact id="155" name="Jacqueline" phone="(808) 555-7015" email="Jacqueline@ATT.com"/>
+		<contact id="175" name="Cathy" phone="(808) 555-9015" email="Cathy@ATT.com"/>
+		<contact id="195" name="Jeanne" phone="(808) 555-1015" email="Jeanne@ATT.com"/>
+	</info>
+</customer>

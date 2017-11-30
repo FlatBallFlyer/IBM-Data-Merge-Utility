@@ -1,0 +1,25 @@
+{
+	"id" : "18",
+	"name" : "ChevronTexaco",
+	"address":  {
+		"street" : "342 Blue Key",
+		"city" : "Zealandia",
+		"state" : "MN",
+		"zip" : "56268-4891"
+	},
+	"revenue" : "1113",
+	"profit" : "212",
+	"primary" : "Paul",
+	"contacts" : [
+		{"id" : "18", "name" : "Paul", "phone" : "(952) 555-3618", "email" : "Paul@Chevron.com"},
+		{"id" : "38", "name" : "Patrick", "phone" : "(952) 555-5638", "email" : "Patrick@Chevron.com"},
+		{"id" : "58", "name" : "Eugene", "phone" : "(952) 555-7658", "email" : "Eugene@Chevron.com"},
+		{"id" : "78", "name" : "Keith", "phone" : "(952) 555-9678", "email" : "Keith@Chevron.com"},
+		{"id" : "98", "name" : "Eric", "phone" : "(952) 555-1698", "email" : "Eric@Chevron.com"},
+		{"id" : "118", "name" : "Janet", "phone" : "(952) 555-3618", "email" : "Janet@Chevron.com"},
+		{"id" : "138", "name" : "Kathy", "phone" : "(952) 555-5618", "email" : "Kathy@Chevron.com"},
+		{"id" : "158", "name" : "Katherine", "phone" : "(952) 555-7618", "email" : "Katherine@Chevron.com"},
+		{"id" : "178", "name" : "Sally", "phone" : "(952) 555-9618", "email" : "Sally@Chevron.com"},
+		{"id" : "198", "name" : "Joann", "phone" : "(952) 555-1618", "email" : "Joann@Chevron.com"}
+	]
+}

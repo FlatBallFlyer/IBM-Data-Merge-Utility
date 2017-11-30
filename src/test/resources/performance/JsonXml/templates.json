@@ -1,0 +1,261 @@
+{
+  "templates" : [
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "aToB",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "{",
+        "back" : "}"
+      },
+      "description" : "Transform JSON Data to XML output",
+      "content" : "<customer>\n\t<info id=\"{id}\" name=\"{name}\" street=\"{street}\" city=\"{city}\" state=\"{state}\" zip=\"{zip}\" revenue=\"{revenue}\" profit=\"{profit}\" primary=\"{primary}\">\n{bookmark=\"contact\" group=\"test\" template=\"xmlContact\"}\t</info>\n</customer> ",
+      "contentType" : 3,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "Parse Input",
+          "type" : 3,
+          "staticData" : "",
+          "dataSource" : "idmuPayload",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "ifList" : 1,
+          "dataTarget" : "data",
+          "dataTargetDelimiter" : "-",
+          "parseFormat" : 3
+        },
+        {
+          "type" : 4,
+          "name" : "Replace Customer Data",
+          "dataSource" : "data",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "toValue" : "",
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        },
+        {
+          "type" : 4,
+          "name" : "Replace Customer Address",
+          "dataSource" : "data-address",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "toValue" : "",
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Contacts",
+          "dataSource" : "data-contacts",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "xmlContact",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "{",
+        "back" : "}"
+      },
+      "description" : "XML Contact Fragment",
+      "content" : "\t\t<contact id=\"{id}\" name=\"{name}\" phone=\"{phone}\" email=\"{email}\"/>\n",
+      "contentType" : 3,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "Replace from Context",
+          "processAfter" : true,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 3,
+          "objectAttrObject" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "ifList" : 1,
+          "type" : 4
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "bToA",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Convert XML Payload to JSON output",
+      "content" : "{\n\t\"id\" : \"<id>\",\n\t\"name\" : \"<name>\",\n\t\"address\":  {\n\t\t\"street\" : \"<street>\",\n\t\t\"city\" : \"<city>\",\n\t\t\"state\" : \"<state>\",\n\t\t\"zip\" : \"<zip>\"\n\t},\n\t\"revenue\" : \"<revenue>\",\n\t\"profit\" : \"<profit>\",\n\t\"primary\" : \"<primary>\",\n\t\"contacts\" : [\n<bookmark=\"contact\" group=\"test\" template=\"jsonContact\">\t]\n}\n",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "Parse Input",
+          "type" : 3,
+          "staticData" : "",
+          "dataSource" : "idmuPayload",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "ifList" : 1,
+          "dataTarget" : "data",
+          "dataTargetDelimiter" : "-",
+          "parseFormat" : 5
+        },
+        {
+          "type" : 4,
+          "name" : "Setup Coma Replace",
+          "dataSource" : ",",
+          "dataDelimeter" : "-",
+          "ifMissing" : 3,
+          "toValue" : ",",
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        },
+        {
+          "type" : 4,
+          "name" : "Replace Customer Data",
+          "dataSource" : "data-members-[0]-attrs",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "toValue" : "",
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Contacts",
+          "dataSource" : "data-members-[0]-members",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [
+            ","
+          ],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "jsonContact",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "A Contact Json fragment",
+      "content" : "\t\t{\"id\" : \"<id>\", \"name\" : \"<name>\", \"phone\" : \"<phone>\", \"email\" : \"<email>\"}<,>\n",
+      "contentType" : 3,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "Replace JSON Contact info from Context",
+          "processAfter" : true,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "dataSource" : "idmuContext-attrs",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "ifList" : 1,
+          "type" : 4,
+          "processRequre" : false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+<customer>
+	<info id="11" name="Amoco" street="8109 Quaking Extension" city="Freeze Fork" state="RI" zip="02823-7971" revenue="1667" profit="133" primary="Larry">
+		<contact id="11" name="Larry" phone="(401) 555-2211" email="Larry@Amoco.com"/>
+		<contact id="31" name="Raymond" phone="(401) 555-4231" email="Raymond@Amoco.com"/>
+		<contact id="51" name="Roy" phone="(401) 555-6251" email="Roy@Amoco.com"/>
+		<contact id="71" name="Randall" phone="(401) 555-8271" email="Randall@Amoco.com"/>
+		<contact id="91" name="Lee" phone="(401) 555-0291" email="Lee@Amoco.com"/>
+		<contact id="111" name="Sharon" phone="(401) 555-2211" email="Sharon@Amoco.com"/>
+		<contact id="131" name="Beverly" phone="(401) 555-4211" email="Beverly@Amoco.com"/>
+		<contact id="151" name="Frances" phone="(401) 555-6211" email="Frances@Amoco.com"/>
+		<contact id="171" name="Suzanne" phone="(401) 555-8211" email="Suzanne@Amoco.com"/>
+		<contact id="191" name="Eileen" phone="(401) 555-0211" email="Eileen@Amoco.com"/>
+	</info>
+</customer>

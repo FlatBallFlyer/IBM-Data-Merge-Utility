@@ -1,0 +1,14 @@
+<customer>
+	<info id="6" name="Chrysler" street="9386 Easy Vista" city="Wall City" state="MO" zip="65266-8602" revenue="2072" profit="19" primary="William">
+		<contact id="6" name="William" phone="(660) 555-1266" email="William@Chrysler.com"/>
+		<contact id="26" name="Bruce" phone="(660) 555-3226" email="Bruce@Chrysler.com"/>
+		<contact id="46" name="Arthur" phone="(660) 555-5246" email="Arthur@Chrysler.com"/>
+		<contact id="66" name="Christopher" phone="(660) 555-7266" email="Christopher@Chrysler.com"/>
+		<contact id="86" name="Francis" phone="(660) 555-9286" email="Francis@Chrysler.com"/>
+		<contact id="106" name="Nancy" phone="(660) 555-1216" email="Nancy@Chrysler.com"/>
+		<contact id="126" name="Betty" phone="(660) 555-3216" email="Betty@Chrysler.com"/>
+		<contact id="146" name="Kathryn" phone="(660) 555-5216" email="Kathryn@Chrysler.com"/>
+		<contact id="166" name="Ellen" phone="(660) 555-7216" email="Ellen@Chrysler.com"/>
+		<contact id="186" name="Evelyn" phone="(660) 555-9216" email="Evelyn@Chrysler.com"/>
+	</info>
+</customer>

@@ -1,0 +1,14 @@
+<customer>
+	<info id="4" name="General Electric" street="4363 Stony Crescent" city="Ste. Rose du Lac" state="CA" zip="92186-9180" revenue="2959" profit="213" primary="Michael">
+		<contact id="4" name="Michael" phone="(650) 555-0844" email="Michael@General.com"/>
+		<contact id="24" name="Jerry" phone="(650) 555-2824" email="Jerry@General.com"/>
+		<contact id="44" name="Carl" phone="(650) 555-4844" email="Carl@General.com"/>
+		<contact id="64" name="Phillip" phone="(650) 555-6864" email="Phillip@General.com"/>
+		<contact id="84" name="Steve" phone="(650) 555-8884" email="Steve@General.com"/>
+		<contact id="104" name="Barbara" phone="(650) 555-0814" email="Barbara@General.com"/>
+		<contact id="124" name="Elizabeth" phone="(650) 555-2814" email="Elizabeth@General.com"/>
+		<contact id="144" name="Connie" phone="(650) 555-4814" email="Connie@General.com"/>
+		<contact id="164" name="Jo" phone="(650) 555-6814" email="Jo@General.com"/>
+		<contact id="184" name="Anne" phone="(650) 555-8814" email="Anne@General.com"/>
+	</info>
+</customer>

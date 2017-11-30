@@ -1,0 +1,14 @@
+<customer>
+	<info id="19" name="Goodyear Tire &amp; Rubber" street="5479 Silver Villas" city="Effort" state="MN" zip="56108-2359" revenue="1090" profit="48" primary="Stephen">
+		<contact id="19" name="Stephen" phone="(763) 555-3819" email="Stephen@Goodyear.com"/>
+		<contact id="39" name="Danny" phone="(763) 555-5839" email="Danny@Goodyear.com"/>
+		<contact id="59" name="Glenn" phone="(763) 555-7859" email="Glenn@Goodyear.com"/>
+		<contact id="79" name="Brian" phone="(763) 555-9879" email="Brian@Goodyear.com"/>
+		<contact id="99" name="Theodore" phone="(763) 555-1899" email="Theodore@Goodyear.com"/>
+		<contact id="119" name="Shirley" phone="(763) 555-3819" email="Shirley@Goodyear.com"/>
+		<contact id="139" name="Jane" phone="(763) 555-5819" email="Jane@Goodyear.com"/>
+		<contact id="159" name="Debra" phone="(763) 555-7819" email="Debra@Goodyear.com"/>
+		<contact id="179" name="Darlene" phone="(763) 555-9819" email="Darlene@Goodyear.com"/>
+		<contact id="199" name="Anita" phone="(763) 555-1819" email="Anita@Goodyear.com"/>
+	</info>
+</customer>

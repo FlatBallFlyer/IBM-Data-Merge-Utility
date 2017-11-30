@@ -1,0 +1,25 @@
+{
+	"id" : "10",
+	"name" : "DuPont",
+	"address":  {
+		"street" : "7151 Indian Limits",
+		"city" : "Mock City",
+		"state" : "NE",
+		"zip" : "69497-1440"
+	},
+	"revenue" : "1688",
+	"profit" : "344",
+	"primary" : "Gary",
+	"contacts" : [
+		{"id" : "10", "name" : "Gary", "phone" : "(308) 555-2010", "email" : "Gary@DuPont.com"},
+		{"id" : "30", "name" : "Terry", "phone" : "(308) 555-4030", "email" : "Terry@DuPont.com"},
+		{"id" : "50", "name" : "Johnny", "phone" : "(308) 555-6050", "email" : "Johnny@DuPont.com"},
+		{"id" : "70", "name" : "Craig", "phone" : "(308) 555-8070", "email" : "Craig@DuPont.com"},
+		{"id" : "90", "name" : "Norman", "phone" : "(308) 555-0090", "email" : "Norman@DuPont.com"},
+		{"id" : "110", "name" : "Kathleen", "phone" : "(308) 555-2010", "email" : "Kathleen@DuPont.com"},
+		{"id" : "130", "name" : "Gloria", "phone" : "(308) 555-4010", "email" : "Gloria@DuPont.com"},
+		{"id" : "150", "name" : "Helen", "phone" : "(308) 555-6010", "email" : "Helen@DuPont.com"},
+		{"id" : "170", "name" : "Sheila", "phone" : "(308) 555-8010", "email" : "Sheila@DuPont.com"},
+		{"id" : "190", "name" : "Dianne", "phone" : "(308) 555-0010", "email" : "Dianne@DuPont.com"}
+	]
+}

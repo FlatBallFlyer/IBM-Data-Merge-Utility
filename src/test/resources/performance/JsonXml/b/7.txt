@@ -1,0 +1,14 @@
+<customer>
+	<info id="7" name="Armour" street="532 Umber Lake Highlands" city="Englefeld" state="RI" zip="02956-5619" revenue="2056" profit="2" primary="Richard">
+		<contact id="7" name="Richard" phone="(401) 555-1477" email="Richard@Armour.com"/>
+		<contact id="27" name="Roger" phone="(401) 555-3427" email="Roger@Armour.com"/>
+		<contact id="47" name="Henry" phone="(401) 555-5447" email="Henry@Armour.com"/>
+		<contact id="67" name="Louis" phone="(401) 555-7467" email="Louis@Armour.com"/>
+		<contact id="87" name="Melvin" phone="(401) 555-9487" email="Melvin@Armour.com"/>
+		<contact id="107" name="Deborah" phone="(401) 555-1417" email="Deborah@Armour.com"/>
+		<contact id="127" name="Joyce" phone="(401) 555-3417" email="Joyce@Armour.com"/>
+		<contact id="147" name="Diana" phone="(401) 555-5417" email="Diana@Armour.com"/>
+		<contact id="167" name="Joanne" phone="(401) 555-7417" email="Joanne@Armour.com"/>
+		<contact id="187" name="Glenda" phone="(401) 555-9417" email="Glenda@Armour.com"/>
+	</info>
+</customer>
