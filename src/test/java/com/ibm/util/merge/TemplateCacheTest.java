@@ -43,12 +43,12 @@ public class TemplateCacheTest {
 		assertEquals(4, cache.getSize());
 	}
 
-	@Test
-	public void testTemplateCacheFile() throws MergeException {
-		Config.load("{\"loadFolder\":\"src/test/resources\"}");
-		cache = new Cache();
-		assertEquals(8, cache.getSize());
-	}
+//	@Test
+//	public void testTemplateCacheFile() throws MergeException {
+//		Config.load("{\"loadFolder\":\"src/test/resources\"}");
+//		cache = new Cache();
+//		assertEquals(8, cache.getSize());
+//	}
 
 	@Test
 	public void testGetMergableStringStringHashMapOfStringString() throws MergeException {

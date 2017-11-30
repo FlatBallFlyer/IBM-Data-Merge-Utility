@@ -61,7 +61,6 @@ import com.ibm.util.merge.template.directive.enrich.provider.ProviderMeta;
  * 	"nestLimit": n,
  * 	"insertLimit": n,
  * 	"tempFolder": "folder",
- * 	"loadFolder": "folder",
  *  "prettyJson" : "true",
  * 	"logLevel": "CRITICAL | SEVERE | WARN | INFO",
  * 	"envVars" : {"var":"value"},
@@ -150,9 +149,9 @@ public class Config {
 	 * @return The template load folder where templates are located
 	 * @throws MergeException on Processing Errors
 	 */
-	public static String loadFolder() throws MergeException {
-		return Config.getTheConfig().getLoadFolder();
-	}
+//	public static String loadFolder() throws MergeException {
+//		return Config.getTheConfig().getLoadFolder();
+//	}
 
 	/**
 	 * @param varName The variable to get
@@ -247,10 +246,6 @@ public class Config {
 	 * The folder where archives are created
 	 */
 	private String tempFolder	= "/opt/ibm/idmu/archives";
-	/**
-	 * The template load folder
-	 */
-	private String loadFolder	= "/opt/ibm/idmu/v4/templates";
 	/**
 	 * The logging level
 	 */
@@ -378,8 +373,7 @@ public class Config {
 				JsonObject me = ele.getAsJsonObject();
 				this.nestLimit 		= this.getIf(me, "nestLimit", this.nestLimit);
 				this.insertLimit 	= this.getIf(me, "insertLimit", this.insertLimit);
-				this.tempFolder 	= this.getIf(me, "tempFolder", this.tempFolder);
-				this.loadFolder 	= this.getIf(me, "loadFolder", this.loadFolder);
+				this.tempFolder 		= this.getIf(me, "tempFolder", this.tempFolder);
 				this.prettyJson		= this.getIf(me, "prettyJson", true);
 				this.logLevel 		= this.getIf(me, "logLevel", this.logLevel);
 				if (me.has("envVars") && me.get("envVars").isJsonObject()) {
@@ -595,10 +589,6 @@ public class Config {
 
 	private String getVersion() {
 		return version;
-	}
-
-	private String getLoadFolder() {
-		return loadFolder;
 	}
 
 	/*

@@ -68,9 +68,9 @@ public class Cache implements Iterable<String> {
 		this.initialized = new Date();
 		this.buildDefaultSystemTemplates();
 		
-		if (!Config.loadFolder().isEmpty()) {
-			loadGroups(new File(Config.loadFolder()));
-		}
+//		if (!Config.loadFolder().isEmpty()) {
+//			loadGroups(new File(Config.loadFolder()));
+//		}
 	}
 	
 	/**
@@ -93,13 +93,13 @@ public class Cache implements Iterable<String> {
 	 */
 	public void loadGroups(File templateFolder) throws MergeException {
 		if (!templateFolder.exists()) {
-			LOGGER.log(Level.WARNING, "Template Load Folder not found: " + Config.loadFolder());
+			LOGGER.log(Level.WARNING, "Template Load Folder not found: " + templateFolder.getPath());
 			return;
 		}
 		
 		File[] groups = templateFolder.listFiles();
 		if (null == groups) {
-			LOGGER.log(Level.WARNING, "Template Load Folder is empty: " + Config.loadFolder());
+			LOGGER.log(Level.WARNING, "Template Load Folder is empty: " + templateFolder.getPath());
 			return;
 		}
 		
