@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.TemplateCache;
+import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
@@ -19,7 +19,7 @@ import com.ibm.util.merge.template.directive.AbstractDirective;
 import com.ibm.util.merge.template.directive.ParseData;
 
 public class ParseDataTest {
-	private TemplateCache cache;
+	private Cache cache;
 	private Merger merger;
 	private Template template;
 	private ParseData directive;
@@ -33,7 +33,7 @@ public class ParseDataTest {
 	@Before
 	public void setUp() throws Exception {
 		Config.initialize();
-		cache = new TemplateCache();
+		cache = new Cache();
 		template = new Template("system", "test", "", "test content");
 		directive = new ParseData();
 		directive.setName("name");

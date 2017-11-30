@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.TemplateCache;
+import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.template.content.TagSegment;
 import com.ibm.util.merge.template.directive.*;
 import com.ibm.util.merge.data.DataPrimitive;
@@ -115,7 +115,7 @@ public class TemplateTest {
 
 	@Test
 	public void testGetMergedOutput() throws MergeException {
-		TemplateCache cache = new TemplateCache();
+		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.sample.");
 		template.setContent("Some Simple Content");
 		
@@ -203,7 +203,7 @@ public class TemplateTest {
 
 	@Test
 	public void testSetGetContentDisposition() throws MergeException {
-		TemplateCache cache = new TemplateCache();
+		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.sample.");
 		template.setContentDisposition(Template.DISPOSITION_DOWNLOAD);
 		template.setContentFileName("Foo");
@@ -223,7 +223,7 @@ public class TemplateTest {
 
 	@Test
 	public void testEncodedContent1() throws Throwable {
-		TemplateCache cache = new TemplateCache();
+		Cache cache = new Cache();
 		Template template = new Template("test", "encode", "", "A test {foo} tag");
 		template.setContentEncoding(TagSegment.ENCODE_XML);
 		Replace replace = new Replace();
@@ -328,7 +328,7 @@ public class TemplateTest {
 
 	@Test
 	public void testisMerged() throws MergeException {
-		TemplateCache cache = new TemplateCache();
+		Cache cache = new Cache();
 		cache.postTemplate(template);
 		Merger merger = new Merger(cache, "System.Test.");
 		assertFalse(merger.getBaseTemplate().isMerged());
@@ -361,7 +361,7 @@ public class TemplateTest {
 	@Test
 	public void testGetSetContext() throws MergeException {
 		assertEquals(null, template.getContext());
-		TemplateCache cache = new TemplateCache();
+		Cache cache = new Cache();
 		Merger context = new Merger(cache, "system.sample.");
 		template.setContext(context);
 		assertSame(context, template.getContext());

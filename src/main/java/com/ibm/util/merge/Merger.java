@@ -60,7 +60,7 @@ public class Merger {
 	/**
 	 * The Template Cache
 	 */
-	private TemplateCache cache;
+	private Cache cache;
 	/**
 	 * The base template to start the merge with
 	 */
@@ -90,7 +90,7 @@ public class Merger {
 	 * @throws MergeException on processing errors
 	 */
 	public Merger(
-			TemplateCache cache, 
+			Cache cache, 
 			String template) throws MergeException {
 		this.cache = cache;
 		this.baseTemplate = cache.getMergable(this, template, new HashMap<String,String>());
@@ -111,7 +111,7 @@ public class Merger {
 	 * @throws MergeException on processing errors
 	 */
 	public Merger(
-			TemplateCache cache, 
+			Cache cache, 
 			String template, 
 			Map<String,String[]> parameterMap,
 			String requestData) throws MergeException {
@@ -269,7 +269,7 @@ public class Merger {
 	/**
 	 * @return cache The Template Cache
 	 */
-	public TemplateCache getCahce() {
+	public Cache getCahce() {
 		return cache;
 	}
 

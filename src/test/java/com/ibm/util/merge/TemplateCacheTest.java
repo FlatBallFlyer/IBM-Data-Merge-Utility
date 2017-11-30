@@ -16,7 +16,7 @@ import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.TemplateList;
 
 public class TemplateCacheTest {
-	private TemplateCache cache;
+	private Cache cache;
 	private Merger context;
 	private HashMap<String,String> replace;
 	private DataProxyJson gson;
@@ -24,7 +24,7 @@ public class TemplateCacheTest {
 	@Before
 	public void setUp() throws Exception {
 		Config.load("{\"prettyJson\": false }");
-		cache = new TemplateCache();
+		cache = new Cache();
 		context = new Merger(cache, "system.sample.");
 
 		replace = new HashMap<String,String>();
@@ -46,7 +46,7 @@ public class TemplateCacheTest {
 	@Test
 	public void testTemplateCacheFile() throws MergeException {
 		Config.load("{\"loadFolder\":\"src/test/resources\"}");
-		cache = new TemplateCache();
+		cache = new Cache();
 		assertEquals(8, cache.getSize());
 	}
 

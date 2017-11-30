@@ -49,8 +49,8 @@ import com.ibm.util.merge.template.directive.SaveFile;
  * @author Mike Storey
  * @since: v4.0
  */
-public class TemplateCache implements Iterable<String> {
-	private static final Logger LOGGER = Logger.getLogger(TemplateCache.class.getName());
+public class Cache implements Iterable<String> {
+	private static final Logger LOGGER = Logger.getLogger(Cache.class.getName());
 	private final HashMap<String, Template> cache;
 	private final DataProxyJson gsonProxy = new DataProxyJson(Config.isPrettyJson());
 	
@@ -63,7 +63,7 @@ public class TemplateCache implements Iterable<String> {
 	 *
 	 * @throws MergeException  on processing errors
 	 */
-	public TemplateCache() throws MergeException {
+	public Cache() throws MergeException {
 		this.cache = new HashMap<String, Template>();
 		this.initialized = new Date();
 		this.buildDefaultSystemTemplates();
@@ -78,7 +78,7 @@ public class TemplateCache implements Iterable<String> {
 	 *
 	 * @throws MergeException  on processing errors
 	 */
-	public TemplateCache(File load) throws MergeException {
+	public Cache(File load) throws MergeException {
 		this.cache = new HashMap<String, Template>();
 		this.initialized = new Date();
 		this.buildDefaultSystemTemplates();

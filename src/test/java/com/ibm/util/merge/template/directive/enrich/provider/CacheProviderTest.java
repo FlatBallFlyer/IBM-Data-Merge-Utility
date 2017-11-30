@@ -7,20 +7,20 @@ import org.junit.Test;
 
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.TemplateCache;
+import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
 public class CacheProviderTest {
-	private TemplateCache cache;
+	private Cache cache;
 	private Template template;
 	private Merger context;
 	
 	@Before
 	public void setUp() throws Exception {
 		Config.initialize();
-		cache = new TemplateCache();
+		cache = new Cache();
 		template = new Template("system", "test", "", "Content");
 		cache.postTemplate(template);
 		context = new Merger(cache, "system.test.");

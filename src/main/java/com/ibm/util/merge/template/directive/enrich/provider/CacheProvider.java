@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.TemplateCache;
+import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
@@ -56,7 +56,7 @@ public class CacheProvider implements ProviderInterface {
 	
 	@Override
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
-		TemplateCache cache = context.getCahce();
+		Cache cache = context.getCahce();
 		DataObject cacheData = new DataObject();
 		cacheData.put("version", 		new DataPrimitive(Config.version()));
 		cacheData.put("runningSince", 	new DataPrimitive(cache.getInitialized().toString()));

@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.TemplateCache;
+import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
@@ -19,7 +19,7 @@ import com.ibm.util.merge.template.directive.AbstractDirective;
 import com.ibm.util.merge.template.directive.Insert;
 
 public class InsertTest {
-	private TemplateCache cache;
+	private Cache cache;
 	private String bkm1 = "{bookmark=\"bkm1\" group=\"test\" template=\"child\" varyby=\"type\"}";
 	private String bkm2 = "{bookmark=\"bkm2\" group=\"test\" template=\"child\" }";
 	private String bkm3 = "{bookmark=\"bkm3\" group=\"test\" template=\"sub\" }";
@@ -31,7 +31,7 @@ public class InsertTest {
 	@Before
 	public void setUp() throws Exception {
 		Config.initialize();
-		cache = new TemplateCache();
+		cache = new Cache();
 		
 		simpleObject = new DataObject();
 		simpleObject.put("col1", new DataPrimitive("val1"));
@@ -85,7 +85,7 @@ public class InsertTest {
 
 	@Test 
 	public void testExecuteNoOp() throws MergeException {
-		TemplateCache cache = new TemplateCache();
+		Cache cache = new Cache();
 		Template template = new Template("test","noop","", "Simple Test");
 		Insert directive = new Insert();
 		template.addDirective(directive);

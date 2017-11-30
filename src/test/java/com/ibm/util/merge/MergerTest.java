@@ -18,12 +18,12 @@ import com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface;
 import com.ibm.util.merge.template.directive.enrich.provider.StubProvider;
 
 public class MergerTest {
-	private TemplateCache cache;
+	private Cache cache;
 	
 	@Before
 	public void setUp() throws Exception {
 		Config.initialize();
-		cache = new TemplateCache();
+		cache = new Cache();
 	}
 
 	@Test

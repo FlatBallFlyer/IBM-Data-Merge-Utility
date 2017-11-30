@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.TemplateCache;
+import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.data.DataManager;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
@@ -42,14 +42,14 @@ public class ArchiveTest {
 	    }
 		
 	}
-	private TemplateCache cache;
+	private Cache cache;
 	private Merger context;
 	Archive archive;
 	
 	@Before
 	public void setUp() throws Exception {
 		Config.initialize();
-		cache = new TemplateCache();
+		cache = new Cache();
 		context = new Merger(cache, "system.error500.");
 		archive = new AbstractTest(context);
 	}

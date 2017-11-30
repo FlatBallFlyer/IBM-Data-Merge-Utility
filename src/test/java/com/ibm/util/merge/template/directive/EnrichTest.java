@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.TemplateCache;
+import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.MergeException;
@@ -15,7 +15,7 @@ import com.ibm.util.merge.template.Template;
 
 public class EnrichTest {
 	DataProxyJson gsonProxy;	
-	TemplateCache cache;
+	Cache cache;
 	Merger context;
 	Template template;
 	Enrich enrich;
@@ -24,7 +24,7 @@ public class EnrichTest {
 	public void setUp() throws Exception {
 		gsonProxy = new DataProxyJson(false);
 		Config.initialize();
-		cache = new TemplateCache();
+		cache = new Cache();
 		template = new Template("test", "enrich", "", "Template Content", "{", "}");
 		enrich = new Enrich();
 		enrich.setTargetDataName("test");
@@ -75,7 +75,7 @@ public class EnrichTest {
 	
 	@Test 
 	public void testExecuteNoOp() throws MergeException {
-		TemplateCache cache = new TemplateCache();
+		Cache cache = new Cache();
 		Template template = new Template("test","noop","", "Simple Test");
 		Enrich directive = new Enrich();
 		template.addDirective(directive);
@@ -109,7 +109,7 @@ public class EnrichTest {
 
 	@Test
 	public void testTargetTags() throws MergeException {
-		TemplateCache cache = new TemplateCache();
+		Cache cache = new Cache();
 		Template template = new Template("test", "targetTags", "", "Some Content", "{", "}");
 		Enrich directive = new Enrich();
 		directive.setTargetDataName("some{foo}name");

@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.TemplateCache;
+import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
@@ -19,13 +19,13 @@ import com.ibm.util.merge.template.content.TagSegment;
 import com.ibm.util.merge.template.directive.Replace;
 
 public class ReplaceTest {
-	private TemplateCache cache;
+	private Cache cache;
 	private static final DataProxyJson parser = new DataProxyJson(false);
 	
 	@Before
 	public void setUp() throws Exception {
 		Config.initialize();
-		cache = new TemplateCache();
+		cache = new Cache();
 	}
 
 	@Test
@@ -110,7 +110,7 @@ public class ReplaceTest {
 
 	@Test 
 	public void testExecuteNoOp() throws MergeException {
-		TemplateCache cache = new TemplateCache();
+		Cache cache = new Cache();
 		Template template = new Template("test","noop","", "Simple Test");
 		Replace directive = new Replace();
 		template.addDirective(directive);

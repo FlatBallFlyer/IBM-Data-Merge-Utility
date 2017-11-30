@@ -35,7 +35,7 @@ public class All_Performance_Tests {
 		Config.load(new String(Files.readAllBytes(config.toPath()), "ISO-8859-1"));
 		
 		// Create the template cache and post the templates
-		TemplateCache cache = new TemplateCache(folder);
+		Cache cache = new Cache(folder);
 
 		// Load a/b List
 		File aFolder = new File(folder.getPath() + File.separator + "a");

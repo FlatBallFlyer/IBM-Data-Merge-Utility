@@ -9,14 +9,14 @@ import org.junit.Test;
 
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
-import com.ibm.util.merge.TemplateCache;
+import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.directive.AbstractDirective;
 import com.ibm.util.merge.template.directive.SaveFile;
 
 public class SaveFileTest {
-	private TemplateCache cache;
+	private Cache cache;
 	private Merger merger;
 	private Template template;
 	private SaveFile directive;
@@ -24,7 +24,7 @@ public class SaveFileTest {
 	@Before
 	public void setUp() throws Exception {
 		Config.initialize();
-		cache = new TemplateCache();
+		cache = new Cache();
 		merger = new Merger(cache, "system.sample.");
 		directive = new SaveFile();
 	}
@@ -43,7 +43,7 @@ public class SaveFileTest {
 	@Test 
 	public void testExecuteNoOp() throws MergeException {
 		Config.load("{\"tempFolder\":\"src/test/resources/temp\"}");
-		TemplateCache cache = new TemplateCache();
+		Cache cache = new Cache();
 		Template template = new Template("test","noop","", "Simple Test");
 		SaveFile directive = new SaveFile();
 		template.addDirective(directive);
