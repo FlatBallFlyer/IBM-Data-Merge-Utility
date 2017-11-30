@@ -338,15 +338,6 @@ public class Template {
 	}
 	
 	/**
-	 * Update cached template stats - NOTE: Not Synchronized, subject to inaccuracy 
-	 * @param response The response time for a merge action
-	 */
-	public void postStats(Long response) {
-		this.stats.hits++;
-		this.stats.time += response;
-	}
-	
-	/**
 	 * Clears the content.
 	 */
 	public void clearContent() {
@@ -622,6 +613,15 @@ public class Template {
 		options.put("Content Type", CONTENT_TYPES());
 		options.put("Content Disposition", DISPOSITION_VALUES());
 		return options;
+	}
+	
+	/**
+	 * Update cached template stats - NOTE: Not Synchronized, subject to inaccuracy 
+	 * @param response The response time for a merge action
+	 */
+	public void postStats(Long response) {
+		this.stats.hits++;
+		this.stats.time += response;
 	}
 	
 }
