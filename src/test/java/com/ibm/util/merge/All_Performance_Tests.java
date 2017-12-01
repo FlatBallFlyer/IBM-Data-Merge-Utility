@@ -11,7 +11,7 @@ import org.junit.Test;
 public class All_Performance_Tests {
 
 	@Test
-	public void MySql1() throws Throwable {
+	public void JsonXml1() throws Throwable {
 		// Given Customer ID as a parameter - create Contacts Report with Corporate Info
 		testTemplatePerformance(new File("src/test/resources/performance/JsonXml"));
 	}
@@ -25,7 +25,7 @@ public class All_Performance_Tests {
 	 * @throws Throwable
 	 */
 	public void testTemplatePerformance(File folder ) throws Throwable {
-		int repeatCount = 25;
+		int repeatCount = 50;
 		assertTrue(folder.exists());
 		assertTrue(folder.isDirectory());
 		
