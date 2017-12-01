@@ -5,6 +5,11 @@ The IBM Data Merge Utility is an open source Java Utility that provides high per
 
 ---
 
+### Start Here
+After cloning 
+. mvn install will build the project
+. mvn javadoc:javadoc to build the java doc
+
 ### Overview
 Merging Templates produces output, and the merge process is similar to the familiar Mail Merge feature in most word processors. 
 A template is just a block of text that can contain Replacement Tags and Book-marks along with directives that drive the merge process.
