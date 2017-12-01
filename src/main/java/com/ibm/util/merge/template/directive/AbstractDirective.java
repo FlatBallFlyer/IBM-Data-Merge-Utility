@@ -24,16 +24,14 @@ import com.ibm.util.merge.template.Template;
 
 /**
  * <p>Base Directive class for all Directives. Provides simple type/name functions and requires execute implementation</p>
- * <p>See Also</p>
- * <ul>	<li>{@link com.ibm.util.merge.template.directive.Enrich} - Fetch Data</li>
- * 		<li>{@link com.ibm.util.merge.template.directive.Replace} - Replace Tags with Data</li>
- * 		<li>{@link com.ibm.util.merge.template.directive.Insert} - Insert SubTempalts at Book-marks based on Data</li>
- * 		<li>{@link com.ibm.util.merge.template.directive.ParseData} - Parse some Data</li>
- * 		<li>{@link com.ibm.util.merge.template.directive.SaveFile} - Save Template output to the Merge Archive</li>
- *  </ul>
  * 
  * @author Mike Storey
  * @since: v4.0
+ * @see com.ibm.util.merge.template.directive.Enrich
+ * @see com.ibm.util.merge.template.directive.Replace
+ * @see com.ibm.util.merge.template.directive.Insert
+ * @see com.ibm.util.merge.template.directive.ParseData
+ * @see com.ibm.util.merge.template.directive.SaveFile
  * 
  */
 public abstract class AbstractDirective {

@@ -38,13 +38,6 @@ import com.ibm.util.merge.template.directive.AbstractDirective;
  * that surround the tag and book-mark segments.</p>  
  * <p><b>Note:</b> Wrapper characters can not appear anywhere in the template 
  * content except to identify a Tag or Book-mark.</p>
- * <p>See Also</p>
- * <ul>	<li>Content: {@link com.ibm.util.merge.template.content.Content}</li>
- * 		<li>Replace Tag: {@link com.ibm.util.merge.template.content.TagSegment}</li>
- * 		<li>BookmarkTag: {@link com.ibm.util.merge.template.content.BookmarkSegment}</li>
-		<li>Directives: {@link com.ibm.util.merge.template.directive.AbstractDirective}</li>
- * 		<li>DataManager: {@link com.ibm.util.merge.data.DataManager}</li>
- *  </ul>
  * <p>The template is a state-full object that goes through a four phase life-cycle</p>
  * <ul>
  * 	<li>Raw templates are constructed, or parsed from JSON and as such can
@@ -61,6 +54,11 @@ import com.ibm.util.merge.template.directive.AbstractDirective;
  * </ul>
  * @author Mike Storey
  * @since: v4.0
+ * @see com.ibm.util.merge.template.content.Content
+ * @see com.ibm.util.merge.template.content.TagSegment
+ * @see com.ibm.util.merge.template.content.BookmarkSegment
+ * @see com.ibm.util.merge.template.directive.AbstractDirective
+ * @see com.ibm.util.merge.data.DataManager
  */
 public class Template {
 

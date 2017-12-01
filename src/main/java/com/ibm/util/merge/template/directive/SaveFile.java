@@ -28,12 +28,9 @@ import com.ibm.util.merge.template.content.TagSegment;
 
 /**
  * Save the output of this template to an entry in the merge Archive file, and optionally clear the template content.
- * <p>See Also</p>
- * <ul>	<li>Storage: {@link com.ibm.util.merge.storage}</li>
- *  </ul>
  * 
  * @author Mike Storey
- *
+ * @see com.ibm.util.merge.storage
  */
 public class SaveFile extends AbstractDirective {
 	public static final HashMap<String,HashMap<Integer, String>> getOptions() {

@@ -37,20 +37,7 @@ import java.util.HashMap;
 import javax.sql.DataSource;
 
 /**
- * A simple JDBC Provider (Not JNDI based)
- * <p>Environment Variable Format<blockquote><pre>
- *   "DATA_SOURCE": [
- *         {
- *             "credentials": {
- *                 "db_type": "",
- *                 "name": "",
- *                 "uri_cli": "",
- *                 "ca_certificate_base64": "",
- *                 "deployment_id": "",
- *                 "uri": ""
- *             },
- * TODO
- * </pre></blockquote>
+ * A common base clase for JNDI and JDBC Providers
  * 
  * @author Mike Storey
  *

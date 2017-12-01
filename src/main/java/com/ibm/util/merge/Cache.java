@@ -41,16 +41,15 @@ import com.ibm.util.merge.template.directive.Replace;
 import com.ibm.util.merge.template.directive.SaveFile;
 
 /**
- * The Class TemplateCache provides a cache of all templates used in the
- * merge process. The cache has get / put / post / delete methods that 
- * should map to a Rest Interface.  
- * <p>See Also</p>
- * <ul>	<li>Config: {@link com.ibm.util.merge.Config}</li>
- * 		<li>Template: {@link com.ibm.util.merge.template.Template}</li>
- *  </ul>
+ * A Cache of Templates used by the Merge Process.
+ * In production use cases the Cache should be initialized once, and then used for multiple merges.
  * 
  * @author Mike Storey
  * @since: v4.0
+ * @see #Cache()
+ * @see #Cache(File)
+ * @see com.ibm.util.merge.Config
+ * @see com.ibm.util.merge.template.Template
  */
 public class Cache implements Iterable<String> {
 	private static final Logger LOGGER = Logger.getLogger(Cache.class.getName());
@@ -62,8 +61,7 @@ public class Cache implements Iterable<String> {
 	Date initialized = new Date();
     
 	/**
-	 * Instantiates a new template cache, loading config loadFolder if present
-	 *
+	 * Instantiates a new template cache with only default System templates
 	 * @throws MergeException  on processing errors
 	 */
 	public Cache() throws MergeException {
@@ -73,7 +71,7 @@ public class Cache implements Iterable<String> {
 	}
 	
 	/**
-	 * Instantiates a new template cache and loads from a specified file rather than the Config.loadFolder location
+	 * Instantiates a new template cache and loads from a specified file folder
 	 * @param load A folder with one or more json tempalte group files.
 	 * @throws MergeException  on processing errors
 	 */

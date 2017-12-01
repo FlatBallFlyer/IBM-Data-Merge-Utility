@@ -30,16 +30,13 @@ import com.ibm.util.merge.template.Wrapper;
  * Segments are parsed at construction based on the Content Wrapper provided. Note that the wrappers
  * caon only appear in the content to identify a Tag or Bookmark segment, invalid content will throw
  * an exception on creation.</p>
- * <p>See Also</p>
- * <ul>	<li>Content: {@link com.ibm.util.merge.template.content.Content}</li>
- * 		<li>Replace Tag: {@link com.ibm.util.merge.template.content.TagSegment}</li>
- * 		<li>BookmarkTag: {@link com.ibm.util.merge.template.content.BookmarkSegment}</li>
- *  </ul>
  * 
  * <p><i>These optimizations replace string pattern matching and global search replace functions
  * with code that maintains and preserves string pointers and optimizes Java GC</i></p>
  * 
  * @author Mike Storey
+ * @see com.ibm.util.merge.template.content.TagSegment
+ * @see com.ibm.util.merge.template.content.BookmarkSegment
  *
  */
 public class Content extends Segment {

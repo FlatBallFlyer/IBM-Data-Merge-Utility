@@ -35,14 +35,12 @@ import com.ibm.util.merge.template.Template;
 /**
  * Add replace from/to values from the Data Store to the replace stack, and optionally process 
  * that over the content of the template. See class constants for information on replace options.
- * <p>See Also</p>
- * <ul>	<li>Content: {@link com.ibm.util.merge.template.content.Content}</li>
- * 		<li>RepalceTag: {@link com.ibm.util.merge.template.content.TagSegment}</li>
- * 		<li>DataManager: {@link com.ibm.util.merge.data.DataManager}</li>
- *  </ul>
  * 
  * @author Mike Storey
  * @since: v4.0
+ * @see com.ibm.util.merge.template.content.Content
+ * @see com.ibm.util.merge.template.content.TagSegment
+ * @see com.ibm.util.merge.data.DataManager
  */
 public class Replace extends AbstractDataDirective {
 	/**

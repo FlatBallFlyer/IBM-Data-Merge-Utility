@@ -33,12 +33,10 @@ import com.ibm.util.merge.template.content.TagSegment;
  * and palce it back in the data manager at the specified target. Data placed
  * in the data manager will remain after the merge, so take care if using idmuContext
  * related path's for the target data.
- * <p>See Also</p>
- * <ul>	<li>DataManager: {@link com.ibm.util.merge.data.DataManager}</li>
- *  </ul>
  * 
  * @author Mike Storey
  * @since: v4.0
+ * @see com.ibm.util.merge.data.DataManager
  */
 public class ParseData extends AbstractDataDirective {
 	private String dataTarget = "";

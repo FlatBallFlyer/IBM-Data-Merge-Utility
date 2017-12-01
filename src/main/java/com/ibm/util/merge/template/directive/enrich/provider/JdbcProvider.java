@@ -28,7 +28,6 @@ import java.sql.SQLException;
  * <p>A simple JDBC Provider. 
  * This provider does not utilize a connection pool and as such is not well suited to high performance requirements.
  * If you have high performance requirements, see the {@link com.ibm.util.merge.template.directive.enrich.provider.JndiProvider}</p> 
- * @see #JdbcProvider(String, String, Merger)
  * 
  * <p>Provide Parameters usage</p>
  * <ul>
@@ -45,6 +44,7 @@ import java.sql.SQLException;
  *		<li>{source}.PW - The Password for the User ID</li>
  * </ul>
  * @author Mike Storey
+ * @see #JdbcProvider(String, String, Merger)
  *
  */
 public class JdbcProvider extends SqlProvider implements ProviderInterface {

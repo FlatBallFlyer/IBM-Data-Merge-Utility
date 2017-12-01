@@ -30,9 +30,9 @@ import com.ibm.util.merge.template.directive.enrich.provider.*;
 
 /**
  * <p>The enrich directive is responsible for fetching data with a Provider and placing the output in the Data Store.</p>
- * <p>See Also: {@link com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface}
  * @author Mike Storey
  * @since: v4.0
+ * @see com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface
  */
 public class Enrich extends AbstractDirective {
 

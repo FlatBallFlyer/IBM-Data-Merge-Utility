@@ -29,7 +29,6 @@ import javax.sql.DataSource;
 
 /**
  * <p>A JDBC Provider that uses a JNDI Naming context to access a connection pool.</p>  
- * @see #JndiProvider(String, String, Merger) 
  *  
  * <p>Provide Parameters usage</p>
  * <ul>
@@ -45,6 +44,7 @@ import javax.sql.DataSource;
  * </ul>
  * 
  * @author flatballflyer
+ * @see #JndiProvider(String, String, Merger) 
  *
  */
 public class JndiProvider extends SqlProvider implements ProviderInterface {

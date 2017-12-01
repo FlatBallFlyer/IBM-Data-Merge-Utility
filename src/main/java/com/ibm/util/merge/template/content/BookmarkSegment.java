@@ -28,11 +28,9 @@ import com.ibm.util.merge.exception.MergeException;
  * <p>Bookmarks are wrapped strings that start with "bookmark" and conform to this pattern</p>
  * <p><b>bookmark = "<i>name</i>" group = "<i>group</i>" template = "<i>template</i>" varyby = "<i>varyBy Attribute</i>"</b></p>
  * <p>All fields are required except the varyby field</p>
- * <p>See Also</p>
- * <ul>	<li>Insert Directive: {@link com.ibm.util.merge.template.directive.Insert}</li>
- * </ul>
  * 
  * @author Mike Storey
+ * @see com.ibm.util.merge.template.directive.Insert
  *
  */
 public class BookmarkSegment extends Segment {

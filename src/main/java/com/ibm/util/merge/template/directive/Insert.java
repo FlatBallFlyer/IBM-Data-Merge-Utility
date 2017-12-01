@@ -37,14 +37,12 @@ import com.ibm.util.merge.template.content.BookmarkSegment;
  * are inserted based on data from the Data Manager. A sub-template is inserted 
  * for each member of a list, or each attribute of an object, or a 
  * single template for a primitive. See the Object Properties for more details.
- * <p>See Also</p>
- * <ul>	<li>Content: {@link com.ibm.util.merge.template.content.Content}</li>
- * 		<li>BookmarkTag: {@link com.ibm.util.merge.template.content.BookmarkSegment}</li>
- * 		<li>DataManager: {@link com.ibm.util.merge.data.DataManager}</li>
- *  </ul>
  * 
  * @author Mike Storey
  * @since: v4.0
+ * @see com.ibm.util.merge.template.content.Content
+ * @see com.ibm.util.merge.template.content.BookmarkSegment
+ * @see com.ibm.util.merge.data.DataManager
  */
 public class Insert extends AbstractDataDirective {
 

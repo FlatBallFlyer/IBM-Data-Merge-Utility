@@ -24,10 +24,10 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 
 /**
- * Defines the Interface required by all Providers.
+ * Defines the Interface required by all Providers. See implementations for details
  * 
  * @author Mike Storey
- *
+ * @see #provide(String, Wrapper, Merger, HashMap, int)
  */
 public interface ProviderInterface {
 
