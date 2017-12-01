@@ -19,11 +19,11 @@ There are 5 directives you can use during the merge, see the JavaDoc for the pac
 	
 As you can see, the Data Manager is a key component of the Merge Utility - and it basically provides "path" style access to an object data store. See the package com.ibm.util.merge.data for more details.
 
-###Processing Overview
+### Processing Overview
 ![alt text][logo]
 [logo]: http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Processing Overview" 
 
-###Example Template and Merges###
+### Example Template and Merges###
 In the /src/test/resources folder find:
 1. functional - sample templates and expected output that run stand alone - using File System provider for provider testing
 1. integration - sample integration templates for default providers - see instructions on running a testing container in All_Integration_Tests.java
@@ -31,7 +31,7 @@ In the /src/test/resources folder find:
 See the Provider Interface for Enrich Provider feature framework, and the individual providers for more detailed configuration options
 See Config.get() for a json string with all configuration options - including template and directive enums
 
-###Usage
+### Usage
 ```
 // Optionally initialize a configuration
 Config.load(from Env, String, File or URL)
