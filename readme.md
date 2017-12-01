@@ -4,7 +4,9 @@ Overview
 
 ### What Is IDMU
 The IBM Data Merge Utility is an open source Java Utility that provides high performance transformation and enrichment services through a simple template based process. If you can use your word processors Mail Merge feature, then you can use the IBM Data Merge utility. The use of templates makes this transformation tool uniquely well suited to creating Scripts, Code or other complex documents. Optimized performance of small payload transformations makes it well suited to doing JSON or XML microservice transformations. While this utility does not expose a Rest API directly it is designed with that in mind. See [IDMU-REST Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-REST)  
+
 ---
+
 ### Overview
 Merging Templates produces output, and the merge process is similar to the familiar Mail Merge feature in most word processors. 
 A template is just a block of text that can contain Replacement Tags and Book-marks along with directives that drive the merge process.
