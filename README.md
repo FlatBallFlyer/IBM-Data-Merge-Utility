@@ -88,7 +88,7 @@ See the /src/test/java - com.ibm.util.merge.MergeTestHarness.java for a more com
 1. Generated JavaDoc
 1. [Template JSON Schema](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/WebContent/jsonSchema/schema.template.json)
 1. [Config JSON Schema](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/WebContent/jsonSchema/schema.config.json)
-
+1. [Sample Template with All Directive](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/src/test/resources/system.sample.json) - NOT MERGABLE
 ---
 
 ### Related Projects
