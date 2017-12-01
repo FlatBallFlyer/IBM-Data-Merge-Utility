@@ -17,18 +17,18 @@
 	"contentRedirectUrl": "",
 	"directives": [{
 		"type": 1,
-		"name": "Enrich"
+		"name": "Enrich",
 		"targetDataName": "stub",
 		"targetDataDelimeter": "-",
 		"enrichClass": "com.ibm.util.merge.template.directive.enrich.provider.StubProvider",
 		"enrichSource": "",
 		"enrichParameter": "",
 		"enrichCommand": "",
-		"parseAs": 4,
+		"parseAs": 4
 	},
 	{
 		"type": 2,
-		"name": "Insert"
+		"name": "Insert",
 		"notFirst": [],
 		"notLast": [],
 		"onlyFirst": [],
@@ -41,11 +41,11 @@
 		"ifOperator": 1,
 		"ifValue": "",
 		"ifObject": 2,
-		"ifList": 2,
+		"ifList": 2
 	},
 	{
 		"type": 3,
-		"name": "Parse"
+		"name": "Parse",
 		"staticData": "",
 		"parseFormat": 3,
 		"dataSource": "",
@@ -55,11 +55,11 @@
 		"ifMissing": 2,
 		"ifPrimitive": 2,
 		"ifObject": 2,
-		"ifList": 2,
+		"ifList": 2
 	},
 	{
 		"type": 4,
-		"name": "Replace"
+		"name": "Replace",
 		"dataSource": "",
 		"dataDelimeter": "-",
 		"processAfter": false,
@@ -75,12 +75,12 @@
 		"fromAttribute": "",
 		"toAttribute": "",
 		"listAttrMissing": 1,
-		"listAttrNotPrimitive": 1,
+		"listAttrNotPrimitive": 1
 	},
 	{
 		"type": 5,
-		"name": "Save"
+		"name": "Save",
 		"filename": "file",
-		"clearAfter": false,
+		"clearAfter": false
 	}]
 }]
