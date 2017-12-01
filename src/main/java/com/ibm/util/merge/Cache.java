@@ -70,10 +70,6 @@ public class Cache implements Iterable<String> {
 		this.cache = new HashMap<String, Template>();
 		this.initialized = new Date();
 		this.buildDefaultSystemTemplates();
-		
-//		if (!Config.loadFolder().isEmpty()) {
-//			loadGroups(new File(Config.loadFolder()));
-//		}
 	}
 	
 	/**

@@ -146,14 +146,6 @@ public class Config {
 	}
 
 	/**
-	 * @return The template load folder where templates are located
-	 * @throws MergeException on Processing Errors
-	 */
-//	public static String loadFolder() throws MergeException {
-//		return Config.getTheConfig().getLoadFolder();
-//	}
-
-	/**
 	 * @param varName The variable to get
 	 * @return The environment value
 	 * @throws MergeException on Processing Errors
