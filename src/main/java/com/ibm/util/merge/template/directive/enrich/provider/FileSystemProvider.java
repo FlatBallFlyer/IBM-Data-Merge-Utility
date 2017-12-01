@@ -34,10 +34,22 @@ import java.nio.file.Files;
 import java.util.HashMap;
 
 /**
- * A file system provider - returns hash of FileName:FileContents - will parse Contents if requested
+ * <p>A file system provider that reads all the files which match a file name pattern into an Object of FileName-FileContents.</p>
+ * <p>Provide Parameters usage</p>
+ * <ul>
+ * 		<li>String command - A Java RegEx expression used as a file name selector, can contain replace tags</li>
+ * 		<li>int parseAs - Value from {@link com.ibm.util.merge.Config#PARSE_OPTIONS} If not NONE, contents are parsed, otherwise they are returned as a single primitive</li>
+ * 		<li>Wrapper wrapper - Wrapper for tags in command</li>
+ * 		<li>HashMap&lt;String,String&gt; replace - The Replace HashMap used to process tags in command</li>
+ * 		<li>Merger context - Merger managing the merge</li>
+ * </ul>
+ * <p>Configuration Environment Variables</p>
+ * <ul>
+ * 		<li>{SourceName}.PATH - The Path where files are to be read from.</li>
+ * </ul>
  * 
  * @author Mike Storey
- *
+ * @see #FileSystemProvider(String, String, Merger)
  */
 public class FileSystemProvider implements ProviderInterface {
 	private final String source;
@@ -45,7 +57,14 @@ public class FileSystemProvider implements ProviderInterface {
 	private transient final Merger context;
 	private transient File basePath;
 
-	public FileSystemProvider(String source, String dbName, Merger context) throws MergeException {
+	/**
+	 * Provider Constructor
+	 * 
+	 * @param source - The Source Prefix for Environment Variables
+	 * @param dbName - Not Used by this provider
+	 * @param context - The Merger hosting this provider
+	 */
+	public FileSystemProvider(String source, String dbName, Merger context) {
 		this.source = source;
 		this.dbName = dbName;
 		this.context = context;

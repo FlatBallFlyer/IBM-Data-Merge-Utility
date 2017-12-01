@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bson.Document;
+
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
@@ -39,18 +40,23 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 /**
- * A MongoDb provider
- * <p>Environment Variable Format</p>
- * <blockquote><pre>
- *	{source}.URI
- *	{source}.USER
- *	{source}.PW
- *	{source}.DB
- * </pre></blockquote>
- * <p>
- * If USER is an empty string, Mongo Anonymous Auth is used, otherwise ScramSha1 authentication is used.
- * </p>
- * 
+ * A MongoDb provider that gets data from a Mongo database
+ * <p>Provide Parameters usage</p>
+ * <ul>
+ * 		<li>String command - A Mongo query JSON object, can contain replace tags</li>
+ * 		<li>int parseAs - Not Applicable - Mongo data is always parsed as JSON</li>
+ * 		<li>Wrapper wrapper - Wrapper for tags in command</li>
+ * 		<li>HashMap&lt;String,String&gt; replace - The Replace HashMap used to process tags in command</li>
+ * 		<li>Merger context - Merger managing the merge</li>
+ * </ul>
+ * <p>Configuration Environment Variables</p>
+ * <ul>
+ * 		<li>{SourceName}.URI - The database connection URL</li> 
+ * 		<li>{SourceName}.USER - The database User ID, if empty Mongo Anonymous Auth is used, otherwise ScramSha1 authentication is used.</li>
+ * 		<li>{SourceName}.PW - The database Password</li>
+ * 		<li>{SourceName}.DB - The database name</li>
+ * </ul>
+ * @see #MongoProvider(String, String, Merger)
  * @author Mike Storey
  *
  */

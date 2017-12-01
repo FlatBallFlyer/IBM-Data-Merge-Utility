@@ -25,11 +25,11 @@ import com.ibm.util.merge.template.Template;
 /**
  * <p>Base Directive class for all Directives. Provides simple type/name functions and requires execute implementation</p>
  * <p>See Also</p>
- * <ul>	<li>Enrich - Fetch Data: {@link com.ibm.util.merge.template.directive.Enrich}</li>
- * 		<li>Replace - Replace Tags: {@link com.ibm.util.merge.template.directive.Replace}</li>
- * 		<li>Insert - SubTempalts at Book-marks: {@link com.ibm.util.merge.template.directive.Insert}</li>
- * 		<li>Parse - Parse Data: {@link com.ibm.util.merge.template.directive.ParseData}</li>
- * 		<li>Save - A file to archive output: {@link com.ibm.util.merge.template.directive.SaveFile}</li>
+ * <ul>	<li>{@link com.ibm.util.merge.template.directive.Enrich} - Fetch Data</li>
+ * 		<li>{@link com.ibm.util.merge.template.directive.Replace} - Replace Tags with Data</li>
+ * 		<li>{@link com.ibm.util.merge.template.directive.Insert} - Insert SubTempalts at Book-marks based on Data</li>
+ * 		<li>{@link com.ibm.util.merge.template.directive.ParseData} - Parse some Data</li>
+ * 		<li>{@link com.ibm.util.merge.template.directive.SaveFile} - Save Template output to the Merge Archive</li>
  *  </ul>
  * 
  * @author Mike Storey

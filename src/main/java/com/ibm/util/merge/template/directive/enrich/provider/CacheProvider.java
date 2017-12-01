@@ -29,7 +29,19 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
 
 /**
- * Provide information about the template cache (for Status templates)
+ * <p>Provide information about the template cache (for Status templates). Always returns an object with a summary of Cache info</p>
+ * <p>Provide Parameters usage</p>
+ * <ul>
+ * 		<li>String command - Not Applicable</li>
+ * 		<li>int parseAs - Not Applicable
+ * 		<li>Wrapper wrapper - Not Applicable</li>
+ * 		<li>HashMap&lt;String,String&gt; replace - Not Applicable</li>
+ * 		<li>Merger context - Merger managing the merge</li>
+ * </ul>
+ * <p>Configuration Environment Variables</p>
+ * <ul>
+ * 		<li>None</li> 
+ * </ul>
  * 
  * @author Mike Storey
  * @since 4.0.0

@@ -29,7 +29,7 @@ import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.directive.*;
 
 /**
- * A simple stub provider - provides a Sample Template json 
+ * A simple stub provider - provides a Sample Template json object
  * 
  * @author Mike Storey
  *

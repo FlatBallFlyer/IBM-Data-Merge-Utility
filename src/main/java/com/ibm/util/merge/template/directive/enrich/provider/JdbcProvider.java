@@ -25,13 +25,25 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * A simple JDBC Provider (Not JNDI based)
- * <p>Environment Variable Format<blockquote><pre>
- *	{source}.URI
- *	{source}.USER
- *	{source}.PW
- * </pre></blockquote>
+ * <p>A simple JDBC Provider. 
+ * This provider does not utilize a connection pool and as such is not well suited to high performance requirements.
+ * If you have high performance requirements, see the {@link com.ibm.util.merge.template.directive.enrich.provider.JndiProvider}</p> 
+ * @see #JdbcProvider(String, String, Merger)
  * 
+ * <p>Provide Parameters usage</p>
+ * <ul>
+ * 		<li>String command - A SQL Select Statement. Can contain Tags, all Tags are processed with SQL Encoding</li>
+ * 		<li>Wrapper wrapper - Wrapper for tags </li>
+ * 		<li>Merger context - Merger managing the merge</li>
+ * 		<li>HashMap&lt;String,String&gt; replace - The Replace HashMap used to process tags in command</li>
+ * 		<li>int parseAs - Not Applicable / Used</li>
+ * </ul>
+ * <p>Configuration Environment Variables</p>
+ * <ul>
+ *		<li>{source}.URI - Database Connection URI, without UserName/PW components</li>
+ *		<li>{source}.USER - The Database User ID to use</li>
+ *		<li>{source}.PW - The Password for the User ID</li>
+ * </ul>
  * @author Mike Storey
  *
  */
@@ -43,6 +55,14 @@ public class JdbcProvider extends SqlProvider implements ProviderInterface {
 			"Parse Help",
 			"Return Help");
 	
+	/**
+	 * JDBC Provider Constructor
+	 * 
+	 * @param source - Environment Variable Prefix used to fetch configuration values
+	 * @param dbName - The Database Name to select. Not required or supported by all JDBC Drivers
+	 * @param context - The Merger managing this provider
+	 * @throws MergeException - On SQL Construction Errors
+	 */
 	public JdbcProvider(String source, String dbName, Merger context) throws MergeException {
 		super(source, dbName, context);
 	}

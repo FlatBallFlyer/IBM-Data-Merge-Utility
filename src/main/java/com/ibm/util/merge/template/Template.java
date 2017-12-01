@@ -31,23 +31,8 @@ import com.ibm.util.merge.template.content.TagSegment;
 import com.ibm.util.merge.template.directive.AbstractDirective;
 
 /**
- * A Template and a list of Directives that drive Merge functionality
- * <p>
- * The template is a state-full object that goes through a four phase life-cycle
- * </p>
- * <ul>
- * 	<li>Raw templates are constructed, or parsed from JSON and as such can
- *   have invalid values for some attributes. </li>
- *  <li> Cached templates have been validated and had transient values initialized. 
- *   The cache put/post methods utilize the cachePrepare() method to transform
- *   a "Raw" template into a Cache Ready template.</li>
- *  <li>Mergable templates are a clone of a cached template. Only in this state can a 
- *   template be "merged". The Merger getMergable method is used to get templates
- *   for merging.</li>
- *  <li>Merged templates have completed merge processing and can provide merged output.
- *  Note that calling getMergedOutput for a non-merged template will cause the merge
- *  to occur.</li>
- * </ul>
+ * <p>Template Content and a list of Directives that drive Merge functionality</p>
+ * 
  * <p>Template content consist of text, with any number of Replace Tag or Book-mark segments 
  * that are identified by the template.wrapper which is a simple "open" and "close" pair 
  * that surround the tag and book-mark segments.</p>  
@@ -60,6 +45,20 @@ import com.ibm.util.merge.template.directive.AbstractDirective;
 		<li>Directives: {@link com.ibm.util.merge.template.directive.AbstractDirective}</li>
  * 		<li>DataManager: {@link com.ibm.util.merge.data.DataManager}</li>
  *  </ul>
+ * <p>The template is a state-full object that goes through a four phase life-cycle</p>
+ * <ul>
+ * 	<li>Raw templates are constructed, or parsed from JSON and as such can
+ *   have invalid values for some attributes. </li>
+ *  <li> Cached templates have been validated and had transient values initialized. 
+ *   The cache put/post methods utilize the cachePrepare() method to transform
+ *   a "Raw" template into a Cache Ready template.</li>
+ *  <li>Mergable templates are a clone of a cached template. Only in this state can a 
+ *   template be "merged". The Cache uses the getMergable() method to get a mergable
+ *   clone of the cached template.</li>
+ *  <li>Merged templates have completed merge processing and can provide merged output.
+ *  Note that calling getMergedOutput for a non-merged template will cause the merge
+ *  to occur.</li>
+ * </ul>
  * @author Mike Storey
  * @since: v4.0
  */

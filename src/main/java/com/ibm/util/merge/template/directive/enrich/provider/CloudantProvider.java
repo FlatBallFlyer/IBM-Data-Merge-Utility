@@ -37,15 +37,24 @@ import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
 
 /**
- * A Cloudant Provider
- * <p>Environment Variable Format<blockquote><pre>
- * {source}.URL
- * {source}.USER
- * {source}.PW
- * </pre></blockquote>
+ * <p>A Cloudant provider that fetches documents from a Cloudant Database</p>
+ * <p>Provide Parameters usage</p>
+ * <ul>
+ * 		<li>String command - A Cloudant query JSON object, can contain replace tags</li>
+ * 		<li>int parseAs - Not Applicable
+ * 		<li>Wrapper wrapper - Wrapper for tags in command</li>
+ * 		<li>HashMap&lt;String,String&gt; replace - The Replace HashMap used to process tags in command</li>
+ * 		<li>Merger context - Merger managing the merge</li>
+ * </ul>
+ * <p>Configuration Environment Variables</p>
+ * <ul>
+ * 		<li>{SourceName}.URL - The database connection URL</li> 
+ * 		<li>{SourceName}.USER - The database User ID</li>
+ * 		<li>{SourceName}.PW - The database Password</li>
+ * </ul>
+ * @see #CloudantProvider(String source, String dbName, Merger context)
  *   
  * @author Mike Storey
- *
  */
 public class CloudantProvider implements ProviderInterface {
 	private static final ProviderMeta meta = new ProviderMeta(

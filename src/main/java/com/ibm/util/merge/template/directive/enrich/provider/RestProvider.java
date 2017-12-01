@@ -37,14 +37,23 @@ import java.net.URL;
 import java.util.HashMap;
 
 /**
- * A Simple HTTP Get based provider.
- * <p>Environment Variable Format<blockquote><pre>
- * source.HOST
- * source.PORT
- * source.USER
- * source.PW
- * </pre></blockquote>
- *     
+ * <p>A Simple Anonymous HTTP Get based provider.</p>
+ * <p>Provide Parameters usage</p>
+ * <ul>
+ * 		<li>String command - A Java RegEx expression used as a file name selector, can contain replace tags</li>
+ * 		<li>int parseAs - Value from {@link com.ibm.util.merge.Config#PARSE_OPTIONS} If not NONE, contents are parsed, otherwise they are returned as a single primitive</li>
+ * 		<li>Wrapper wrapper - Wrapper for tags in command</li>
+ * 		<li>HashMap&lt;String,String&gt; replace - The Replace HashMap used to process tags in command</li>
+ * 		<li>Merger context - Merger managing the merge</li>
+ * </ul>
+ * <p>Configuration Environment Variables</p>
+ * <ul>
+ * 		<li>{SourceName}.HOST - The Host</li>
+ * 		<li>{SourceName}.PORT - The Port.</li>
+ * 		<li>{SourceName}.USER - The HTTP User (not implemented).</li>
+ * 		<li>{SourceName}.PW - The HTTP User PW (not implemented).</li>
+ * </ul>
+ * @see #RestProvider(String, String, Merger)    
  * @author Mike Storey
  *
  */
@@ -65,7 +74,13 @@ public class RestProvider implements ProviderInterface {
 	private final String dbName;
 	private transient final Merger context;
 	
-	public RestProvider(String source, String dbName, Merger context) throws MergeException {
+	/**
+	 * Construct a provider
+	 * @param source - Environment Variable prefix
+	 * @param dbName - Not Applicable
+	 * @param context - The Merger managing the provider
+	 */
+	public RestProvider(String source, String dbName, Merger context) {
 		this.source = source;
 		this.dbName = dbName;
 		this.context = context;
