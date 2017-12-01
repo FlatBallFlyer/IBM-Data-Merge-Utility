@@ -4,6 +4,6 @@
 		"com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider"  
   ],
   "envVars" : {
-    "testFiles.PATH" : "src/test/resources/functional/datafiles"
+    "testFiles.PATH" : "src/test/resources/datafiles"
   }
 }

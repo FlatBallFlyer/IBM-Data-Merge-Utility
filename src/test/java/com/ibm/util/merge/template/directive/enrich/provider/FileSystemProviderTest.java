@@ -42,11 +42,11 @@ public class FileSystemProviderTest {
 	@Test
 	public void testProvide() throws MergeException, IOException {
 		// Create some files to provide
-		File folder = new File("src/test/resources/http");
+		File folder = new File("src/test/resources/datafiles");
 		assertTrue(folder.exists());
 		
 		// Test the Provider
-		Config.load("{\"envVars\":{\"db.PATH\":\"src/test/resources/http\"}}");
+		Config.load("{\"envVars\":{\"db.PATH\":\"src/test/resources/datafiles\"}}");
 		FileSystemProvider provider = new FileSystemProvider("db", "", context);
 		DataElement result = provider.provide(".*", template.getWrapper(), context, template.getReplaceStack(), Config.PARSE_NONE);
 		assertTrue(result.isObject());
@@ -61,11 +61,11 @@ public class FileSystemProviderTest {
 	@Test
 	public void testProvideParseAsCsv() throws MergeException, IOException {
 		// Create some files to provide
-		File folder = new File("src/test/resources/http");
+		File folder = new File("src/test/resources/datafiles");
 		assertTrue(folder.exists());
 		
 		// Test the Provider
-		Config.load("{\"envVars\":{\"db.PATH\":\"src/test/resources/http\"}}");
+		Config.load("{\"envVars\":{\"db.PATH\":\"src/test/resources/datafiles\"}}");
 		FileSystemProvider provider = new FileSystemProvider("db", "src/test/resources/http", context);
 		DataElement result = provider.provide("simple.csv", template.getWrapper(), context, template.getReplaceStack(), Config.PARSE_CSV);
 		assertTrue(result.isObject());
