@@ -7,11 +7,10 @@ The IBM Data Merge Utility is an open source Java Utility that provides high per
 
 ### Start Here
 After cloning the project
-
-. mvn install will build the project
-
-. mvn javadoc:javadoc to build the java doc
-
+```
+> mvn install 
+> mvn javadoc:javadoc 
+```
 Javadoc will be located in target/site/apidocs/index.html
 
 
