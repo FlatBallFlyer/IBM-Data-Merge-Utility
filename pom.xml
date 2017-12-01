@@ -32,6 +32,18 @@
           <target>1.7</target>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.0-M1</version>
+        <configuration>
+          <show>public</show>
+          <nohelp>true</nohelp>
+          <doctitle>IBM Data Merge Utility</doctitle>
+          <overview>WebContent/overview.html</overview>
+          <javadocDirectory>/src/main/java</javadocDirectory>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
