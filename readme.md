@@ -20,8 +20,7 @@ There are 5 directives you can use during the merge, see the JavaDoc for the pac
 As you can see, the Data Manager is a key component of the Merge Utility - and it basically provides "path" style access to an object data store. See the package com.ibm.util.merge.data for more details.
 
 ### Processing Overview
-![alt text][logo]
-[logo]: http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Processing Overview" 
+![alt text](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Logo Title Text 1")
 
 ### Example Template and Merges###
 In the /src/test/resources folder find:
