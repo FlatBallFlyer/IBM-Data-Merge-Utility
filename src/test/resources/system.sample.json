@@ -4,12 +4,12 @@
 		"name": "sample",
 		"variant": ""
 	},
-	"content": "",
+	"content": "Some Template Content {tag} {bookmark=\"name\" group=\"aGroup\" template=\"aTemplate\"} ",
 	"wrapper": {
 		"front": "{",
 		"back": "}"
 	},
-	"description": "",
+	"description": "A sample template JSON with all Directives - NOTE: This template will always throw execptions on merge",
 	"contentType": 4,
 	"contentDisposition": 2,
 	"contentEncoding": 1,
