@@ -18,12 +18,16 @@ There are 5 directives you can use during the merge, see the JavaDoc for the pac
 1. Insert - Insert sub-templates at Book Marks based on some data in the Data Manager
 1. Parse - Get some makred up data from the DataManager, parse it and place the resulting data structure back in the Data Manager
 1. Save - Save the output of the current template to an entry in the Merge Archive
-	
+
 As you can see, the Data Manager is a key component of the Merge Utility - and it basically provides "path" style access to an object data store. See the package com.ibm.util.merge.data for more details.
+
 ---
+
 ### Processing Overview
 ![alt text](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Logo Title Text 1")
+
 ---
+
 ### Example Template and Merges
 In the /src/test/resources folder find:
 1. functional - sample templates and expected output that run stand alone - using File System provider for provider testing
@@ -31,7 +35,9 @@ In the /src/test/resources folder find:
 
 See the Provider Interface for Enrich Provider feature framework, and the individual providers for more detailed configuration options
 See Config.get() for a json string with all configuration options - including template and directive enums
+
 ---
+
 ### Usage
 ```
 // Optionally initialize a configuration
@@ -55,12 +61,16 @@ template.getMergedOutput().streamOutput(stream) - as an output stream
 ```
 
 See the /src/test/java - com.ibm.util.merge.MergeTestHarness.java for a more complete use case.
+
 ---
+
 ### See Also
 1. Generated JavaDoc
 1. [Template JSON Schema](http://flatballflyer.github.io/IBM-Data-Merge-Utility/schema.template.json)
 1. [Config JSON Schema](http://flatballflyer.github.io/IBM-Data-Merge-Utility/schema.config.json)
+
 ---
+
 ### Related Projects
 1. [IDMU-CLI Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-CLI)
 1. [IDMU-REST Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-REST)
