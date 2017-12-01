@@ -47,11 +47,13 @@ Config.load(from Env, String, File or URL)
 Cache cache = new Cache();
 cache.put/post template/groups;
 or
-Cache cache = new Cache(File) - a Folder with one or more .json files with valid Template Groups
+Cache cache = new Cache(File) 
 
 while (processing) {
+  // Get payload and parameters for parsing (like from an http request)
+  
   // Get a Merger for your template
-  Merger merger = new Merger(cache, "some.template.name");
+  Merger merger = new Merger(cache, "some.template.name", parameters, payload);
 	  
   // Merge the template 
   Template template = merger.merge();
