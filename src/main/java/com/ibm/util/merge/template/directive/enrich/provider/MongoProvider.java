@@ -40,12 +40,13 @@ import com.mongodb.client.MongoDatabase;
 
 /**
  * A MongoDb provider
- * <p>Environment Variable Format<blockquote><pre>
- *	<source>.URI
- *	<source>.USER
- *	<source>.PW
- *	<source>.DB
- * </pre></blockquote></p>
+ * <p>Environment Variable Format</p>
+ * <blockquote><pre>
+ *	{source}.URI
+ *	{source}.USER
+ *	{source}.PW
+ *	{source}.DB
+ * </pre></blockquote>
  * <p>
  * If USER is an empty string, Mongo Anonymous Auth is used, otherwise ScramSha1 authentication is used.
  * </p>

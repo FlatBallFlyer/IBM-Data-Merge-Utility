@@ -75,7 +75,7 @@ public class Cache implements Iterable<String> {
 	
 	/**
 	 * Instantiates a new template cache and loads from a specified file rather than the Config.loadFolder location
-	 *
+	 * @param load A folder with one or more json tempalte group files.
 	 * @throws MergeException  on processing errors
 	 */
 	public Cache(File load) throws MergeException {
@@ -88,10 +88,9 @@ public class Cache implements Iterable<String> {
 	
 	/**
 	 * load template groups from a folder of Template Group json files
-	 * @param templateFolder
-	 * @throws MergeException 
+	 * @param templateFolder a Folder with one or more .json files that contain a valid Template Group
 	 */
-	public void loadGroups(File templateFolder) throws MergeException {
+	public void loadGroups(File templateFolder) {
 		if (!templateFolder.exists()) {
 			LOGGER.log(Level.WARNING, "Template Load Folder not found: " + templateFolder.getPath());
 			return;

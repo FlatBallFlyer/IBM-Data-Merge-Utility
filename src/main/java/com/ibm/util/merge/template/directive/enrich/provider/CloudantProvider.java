@@ -39,9 +39,9 @@ import com.ibm.util.merge.template.content.TagSegment;
 /**
  * A Cloudant Provider
  * <p>Environment Variable Format<blockquote><pre>
- * <source>.URL
- * <source>.USER
- * <source>.PW
+ * {source}.URL
+ * {source}.USER
+ * {source}.PW
  * </pre></blockquote>
  *   
  * @author Mike Storey

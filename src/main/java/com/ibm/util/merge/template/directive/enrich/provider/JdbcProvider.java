@@ -27,9 +27,9 @@ import java.sql.SQLException;
 /**
  * A simple JDBC Provider (Not JNDI based)
  * <p>Environment Variable Format<blockquote><pre>
- *	<source>.URI
- *	<source>.USER
- *	<source>.PW
+ *	{source}.URI
+ *	{source}.USER
+ *	{source}.PW
  * </pre></blockquote>
  * 
  * @author Mike Storey

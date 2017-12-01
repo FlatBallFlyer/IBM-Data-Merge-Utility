@@ -192,7 +192,6 @@ public class Config {
 	}
 	
 	/**
-	 * @param parseAs The parser desired
 	 * @return True if the parse is supported in the current deployment
 	 * @throws MergeException on Config instantiation errors
 	 */

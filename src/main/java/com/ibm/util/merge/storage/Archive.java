@@ -71,7 +71,7 @@ public abstract class Archive {
 
 	/**
 	 * Instantiate an archive
-	 * @throws MergeException 
+	 * @throws MergeException on config errors
 	 */
 	public Archive() throws MergeException {
 		this.setFileName(UUID.randomUUID().toString());
@@ -81,7 +81,7 @@ public abstract class Archive {
 	/**
 	 * Instantiate an Archive for the merge
 	 * @param context The merge context
-	 * @throws MergeException 
+	 * @throws MergeException on configuration errors 
 	 */
 	public Archive(Merger context) throws MergeException {
 		this();
