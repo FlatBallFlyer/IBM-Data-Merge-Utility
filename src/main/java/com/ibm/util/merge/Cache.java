@@ -42,9 +42,12 @@ import com.ibm.util.merge.template.directive.SaveFile;
 
 /**
  * The Class TemplateCache provides a cache of all templates used in the
- * merge process. The cache has get / put / post / delete method that 
- * should map to a Rest Interface. Initial templates are loaded from the
- * configured Config.loadFolder if it exists. 
+ * merge process. The cache has get / put / post / delete methods that 
+ * should map to a Rest Interface.  
+ * <p>See Also</p>
+ * <ul>	<li>Config: {@link com.ibm.util.merge.Config}</li>
+ * 		<li>Template: {@link com.ibm.util.merge.template.Template}</li>
+ *  </ul>
  * 
  * @author Mike Storey
  * @since: v4.0

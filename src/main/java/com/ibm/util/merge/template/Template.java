@@ -48,7 +48,18 @@ import com.ibm.util.merge.template.directive.AbstractDirective;
  *  Note that calling getMergedOutput for a non-merged template will cause the merge
  *  to occur.</li>
  * </ul>
- *  
+ * <p>Template content consist of text, with any number of Replace Tag or Book-mark segments 
+ * that are identified by the template.wrapper which is a simple "open" and "close" pair 
+ * that surround the tag and book-mark segments.</p>  
+ * <p><b>Note:</b> Wrapper characters can not appear anywhere in the template 
+ * content except to identify a Tag or Book-mark.</p>
+ * <p>See Also</p>
+ * <ul>	<li>Content: {@link com.ibm.util.merge.template.content.Content}</li>
+ * 		<li>Replace Tag: {@link com.ibm.util.merge.template.content.TagSegment}</li>
+ * 		<li>BookmarkTag: {@link com.ibm.util.merge.template.content.BookmarkSegment}</li>
+		<li>Directives: {@link com.ibm.util.merge.template.directive.AbstractDirective}</li>
+ * 		<li>DataManager: {@link com.ibm.util.merge.data.DataManager}</li>
+ *  </ul>
  * @author Mike Storey
  * @since: v4.0
  */
@@ -60,7 +71,8 @@ public class Template {
 	private final TemplateId id;
 	/**
 	 * The content of the template. Template content consist of text, with any number 
-	 * of Replace Tag or Book-mark segments that are identified by the template.wrapper.  
+	 * of Replace Tag or Book-mark segments that are identified by the template.wrapper
+	 * which is a simple "open" and "close" pair that surround the tag and book-mark segments.  
 	 * Note that the wrapper characters can not appear anywhere in the template 
 	 * content except to identify a Tag or Book-mark.
 	 */
@@ -201,7 +213,7 @@ public class Template {
 	}
 	
 	/**
-	 * Gets a mergable copy of this template (Clone like action)
+	 * Gets a mergable copy of this template with the replace stack pre-loaded
 	 * 
 	 * @param context The Merge Context
 	 * @param replace The repalce stack

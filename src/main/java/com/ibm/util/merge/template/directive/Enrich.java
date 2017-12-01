@@ -29,8 +29,8 @@ import com.ibm.util.merge.template.content.TagSegment;
 import com.ibm.util.merge.template.directive.enrich.provider.*;
 
 /**
- * Responsible for fetching data with a Provider and placing the output in the Data Store
- * 
+ * <p>The enrich directive is responsible for fetching data with a Provider and placing the output in the Data Store.</p>
+ * <p>See Also: {@link com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface}
  * @author Mike Storey
  * @since: v4.0
  */

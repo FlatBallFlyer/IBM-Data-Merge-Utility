@@ -23,7 +23,14 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
 /**
- * Base Directive class
+ * <p>Base Directive class for all Directives. Provides simple type/name functions and requires execute implementation</p>
+ * <p>See Also</p>
+ * <ul>	<li>Enrich - Fetch Data: {@link com.ibm.util.merge.template.directive.Enrich}</li>
+ * 		<li>Replace - Replace Tags: {@link com.ibm.util.merge.template.directive.Replace}</li>
+ * 		<li>Insert - SubTempalts at Book-marks: {@link com.ibm.util.merge.template.directive.Insert}</li>
+ * 		<li>Parse - Parse Data: {@link com.ibm.util.merge.template.directive.ParseData}</li>
+ * 		<li>Save - A file to archive output: {@link com.ibm.util.merge.template.directive.SaveFile}</li>
+ *  </ul>
  * 
  * @author Mike Storey
  * @since: v4.0

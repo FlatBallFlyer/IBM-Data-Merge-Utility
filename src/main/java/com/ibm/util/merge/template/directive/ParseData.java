@@ -29,7 +29,13 @@ import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
 
 /**
- * Parse some encoded data from the Data Store and palce the result back in the Data Store
+ * The Parse directive will take some data from the Data Manager, parse it 
+ * and palce it back in the data manager at the specified target. Data placed
+ * in the data manager will remain after the merge, so take care if using idmuContext
+ * related path's for the target data.
+ * <p>See Also</p>
+ * <ul>	<li>DataManager: {@link com.ibm.util.merge.data.DataManager}</li>
+ *  </ul>
  * 
  * @author Mike Storey
  * @since: v4.0

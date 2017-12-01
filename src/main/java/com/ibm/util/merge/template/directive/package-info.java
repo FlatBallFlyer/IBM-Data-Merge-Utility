@@ -15,7 +15,16 @@
  *
  */
 /**
- * Directives that implement the logic of the merge process. 
+ * Directives that implement the logic of the merge process. All directives have a type and name, and 
+ * implement an execute method. 
+ * <p>See Also</p>
+ * <ul>	<li>Enrich - Fetch Data: {@link com.ibm.util.merge.template.directive.Enrich}</li>
+ * 		<li>Replace - Replace Tags: {@link com.ibm.util.merge.template.directive.Replace}</li>
+ * 		<li>Insert - SubTempalts at Book-marks: {@link com.ibm.util.merge.template.directive.Insert}</li>
+ * 		<li>Parse - Parse Data: {@link com.ibm.util.merge.template.directive.ParseData}</li>
+ * 		<li>Save - A file to archive output: {@link com.ibm.util.merge.template.directive.SaveFile}</li>
+ *  </ul>
+ * 
  * 
  * @author Mike Storey
  *

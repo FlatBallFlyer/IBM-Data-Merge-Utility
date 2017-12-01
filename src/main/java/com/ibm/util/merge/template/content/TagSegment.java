@@ -33,7 +33,9 @@ import com.ibm.util.merge.exception.Merge500;
  *  <li>format is used to format values with Java String formatting features</li>
  *  <li>parseFirst if present will cause the replace To value to be parsed for embedded tags</li>
  * </ul>
- * <p>See the Replace directive for details on how Tags are used</p> 
+ * <p>See Also</p>
+ * <ul>	<li>Replace Directive: {@link com.ibm.util.merge.template.directive.Replace}</li>
+ * </ul>
  * 
  * @author Mike Storey
  *

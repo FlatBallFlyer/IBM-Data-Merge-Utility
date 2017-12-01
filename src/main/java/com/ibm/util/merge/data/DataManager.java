@@ -24,8 +24,35 @@ import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 
 /**
- * The data manager provides a path based interface to the Data Element structure
+ * <p>The data manager provides a path based interface to an Object Data store.
+ * The object data store consists of 3 data types data elements - 
+ * Primitive(a string), List&lt;Element&gt; Map&lt;String,Element&gt; similar to a Json Object structure
+ * with only String primitives.</p>
  * 
+ * <p>The path based access allows you to specifiy a point in the object store using a path
+ * of attribute names / list indexes separated by a delimiter. For example, given the data 
+ * object</p>
+ * <blockquote><pre>
+{	
+	"name":"me",
+	"address" : {
+		"street" : "first",
+		"state": "XX" 
+	},
+	"folks" : [
+		"one",
+		"two",
+		"three"
+	]
+}
+ * </pre></blockquote>
+ * <p>Using a - for a delimiter</p>
+ * <ul>	<li>"name" would return "me"</li>
+ * 		<li>"address" would return the object {"street":"first","state":"XX"}</li>
+ * 		<li>"address-state" would return "XX"</li>
+ * 		<li>"folks" would return the list ["one","two","three"]</li>
+ * 		<li>"folks-[1] would return "two"</li> 
+ * </ul>
  * @author Mike Storey
  *
  */

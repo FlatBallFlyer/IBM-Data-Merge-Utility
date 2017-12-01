@@ -29,7 +29,12 @@ import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.directive.enrich.provider.*;
 
 /**
- * The Class Merger is the primary interface to IDMU. Usage as follows
+ * <p>The Class Merger provides context to the merge process and hosts the 
+ * data manager and provider instances for the merge process.</p>
+ * <ul>	<li>Config: {@link com.ibm.util.merge.Config}</li>
+ * 		<li>Template: {@link com.ibm.util.merge.template.Template}</li>
+ * 		<li>Providers: {@link com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface}</li>
+ *  </ul>
  * 
  * @author Mike Storey
  * @since: v4.0
