@@ -44,23 +44,23 @@ See Config.get() for a json string with all configuration options - including te
 Config.load(from Env, String, File or URL)
 	
 // Create a template cache
-Cache cache = new Cache();
-cache.put/post template/groups;
-or
 Cache cache = new Cache(File) 
 
 while (processing) {
-  // Get payload and parameters for parsing (like from an http request)
+  // Get payload and parameters (like from an http request)
   
   // Get a Merger for your template
-  Merger merger = new Merger(cache, "some.template.name", parameters, payload);
+  Merger merger = new Merger(cache, 
+  	"some.template.name", 
+  	parameters, payload);
 	  
   // Merge the template 
   Template template = merger.merge();
  
-  // Do something with the output
-  template.getMergedOutput().getValue() - as a string
-  template.getMergedOutput().streamOutput(stream) - as an output stream
+  // Get Output as a simple String
+  template.getMergedOutput().getValue()
+  // Get Output as a i/o Stream
+  template.getMergedOutput().streamOutput(stream)
 }
 ```
 

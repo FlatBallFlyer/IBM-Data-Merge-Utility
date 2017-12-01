@@ -6,30 +6,7 @@
 </head>
 
 <body>
-<h1>A template based transformation and enrichment utility</h1>
-<h2>Usage</h2>
-	<pre><code>
-	// Optionally initialize a configuration
-	Config.load(from Env, String, File or URL)
-	  
-	// Create a template cache
-	Cache cache = new Cache();
-	cache.put/post template/groups;
-	or
-	Cache cache = new Cache(File) - a Folder with one or more .json files with valid Template Groups
-	
-	// Get a Merger for your template
-	Merger merger = new Merger(cache, "some.template.name");
-	  
-	// Merge the template 
-	Template template = merger.merge();
-	 
-	// Do something with the output
-	template.getMergedOutput().getValue() - as a string
-	template.getMergedOutput().streamOutput(stream) - as an output stream
-	</code></pre>
-
-	<p>See the /src/test/java - com.ibm.util.merge.MergeTestHarness.java for a more complete use case. </p>
-	<p><a href="http://flatballflyer.github.io/IBM-Data-Merge-Utility/">ReadMe on Docker</a></p>
+<h1>A Template based Transformation and Enrichment utility</h1>
+	<p>For more info see <a href="http://flatballflyer.github.io/IBM-Data-Merge-Utility/">ReadMe on Docker</a></p>
 </body>
 </html>
