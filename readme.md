@@ -49,15 +49,17 @@ cache.put/post template/groups;
 or
 Cache cache = new Cache(File) - a Folder with one or more .json files with valid Template Groups
 
-// Get a Merger for your template
-Merger merger = new Merger(cache, "some.template.name");
+while (processing) {
+  // Get a Merger for your template
+  Merger merger = new Merger(cache, "some.template.name");
 	  
-// Merge the template 
-Template template = merger.merge();
+  // Merge the template 
+  Template template = merger.merge();
  
-// Do something with the output
-template.getMergedOutput().getValue() - as a string
-template.getMergedOutput().streamOutput(stream) - as an output stream
+  // Do something with the output
+  template.getMergedOutput().getValue() - as a string
+  template.getMergedOutput().streamOutput(stream) - as an output stream
+}
 ```
 
 See the /src/test/java - com.ibm.util.merge.MergeTestHarness.java for a more complete use case.
