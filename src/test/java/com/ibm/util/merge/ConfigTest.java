@@ -38,13 +38,12 @@ public class ConfigTest {
 	public void testConfigOptions() throws MergeException {
 		String optString = Config.get();
 		JsonElement options = proxy.fromString(optString, JsonElement.class);
-		assertTrue(options.isJsonArray());
-		assertEquals(2, options.getAsJsonArray().size());
-		options = options.getAsJsonArray().get(0);
-		assertTrue(options.getAsJsonObject().has("Template"));
+		assertTrue(options.isJsonObject());
+		assertTrue(options.getAsJsonObject().has("config"));
+		assertTrue(options.getAsJsonObject().has("providers"));
+		assertTrue(options.getAsJsonObject().has("parsers"));
 		assertTrue(options.getAsJsonObject().has("Template"));
 		assertTrue(options.getAsJsonObject().has("Encoding"));
-//		assertTrue(options.getAsJsonObject().has("Parser"));
 		assertTrue(options.getAsJsonObject().has("Enrich"));
 		assertTrue(options.getAsJsonObject().has("Insert"));
 		assertTrue(options.getAsJsonObject().has("Parse"));

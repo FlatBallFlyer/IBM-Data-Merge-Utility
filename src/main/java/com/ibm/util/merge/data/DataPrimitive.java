@@ -64,6 +64,10 @@ public class DataPrimitive implements DataElement {
 		this.value = Double.toString(value);
 	}
 	
+	public DataPrimitive(boolean prettyJson) {
+		this.value = (prettyJson ? "true" : "false");
+	}
+
 	/**
 	 * @return the value
 	 */

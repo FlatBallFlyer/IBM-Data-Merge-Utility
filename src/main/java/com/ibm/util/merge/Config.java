@@ -16,8 +16,10 @@
  */
 package com.ibm.util.merge;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -28,10 +30,14 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.IOUtils;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ibm.util.merge.data.DataElement;
+import com.ibm.util.merge.data.DataObject;
+import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.data.parser.ParserProxyInterface;
 import com.ibm.util.merge.exception.Merge500;
@@ -345,7 +351,15 @@ public class Config {
 	private Config(URL url) throws MergeException {
 		this.proxies = new HashMap<Integer, ParserProxyInterface>();
 		this.providers = new HashMap<String, Class<ProviderInterface>>();
-		String configString = ""; // TODO HTTP Get of ConfigString
+		String configString;
+		try {
+			configString = IOUtils.toString(
+					new BufferedReader(
+					new InputStreamReader(
+					url.openStream())));
+		} catch (IOException e) {
+			throw new Merge500("Unable to laod config " + url.toString());
+		}
 	    Logger rootLogger = LogManager.getLogManager().getLogger("");
 	    rootLogger.setLevel(Level.parse(this.logLevel));
 		loadConfig(configString);
@@ -604,26 +618,75 @@ public class Config {
 		return options;
 	}
 	
+	/**
+	 * Build a configuration object and return the json
+	 * @return A json string of all configuration and template/directive options
+	 * @throws MergeException on build errors.
+	 */
 	private String getAllOptions() throws MergeException {
-		HashMap<String, HashMap<String, HashMap<Integer, String>>> selectValues;
-		HashMap<String, ProviderMeta> providerList;
-
-		selectValues = new HashMap<String, HashMap<String, HashMap<Integer, String>>>();
-		providerList = new HashMap<String, ProviderMeta>();
-		
-		selectValues.put("Template", 	Template.getOptions());
-		selectValues.put("Encoding",  Segment.getOptions());
-		selectValues.put("Enrich", 	Enrich.getOptions());
-		selectValues.put("Insert", 	Insert.getOptions());
-		selectValues.put("Parse", 	ParseData.getOptions());
-		selectValues.put("Replace", 	Replace.getOptions());
-		selectValues.put("Save", 		SaveFile.getOptions());
-		
-		for (String provider : this.providers.keySet()) {
-			providerList.put(provider, this.getProviderInstance(provider, "", "", null).getMetaInfo());
+		// Build the return object and Config values
+		DataObject returnObject = new DataObject();
+		DataObject config = new DataObject();
+		config.put("version", new DataPrimitive(version));
+		config.put("nestLimit", new DataPrimitive(nestLimit));
+		config.put("insertLimit", new DataPrimitive(insertLimit));
+		config.put("tempFolder", new DataPrimitive(tempFolder));
+		config.put("logLevel", new DataPrimitive(logLevel));
+		config.put("prettyJson", new DataPrimitive(prettyJson));
+		DataObject env = new DataObject();
+		for (String key : envVars.keySet()) {
+			env.put(key, new DataPrimitive(envVars.get(key)));
 		}
-		String value = "[".concat(proxy.toString(selectValues)).concat(",").concat(proxy.toString(providerList)).concat("]");
-		return value;
+		returnObject.put("config", config);
+		
+		// Build the Providers List
+		DataObject providers = new DataObject();
+		for (String provider : this.providers.keySet()) {
+			ProviderMeta meta = this.getProviderInstance(provider, "", "", null).getMetaInfo();
+			DataObject providerData = new DataObject();
+			providerData.put("optionName", new DataPrimitive(meta.optionName));
+			providerData.put("sourceJson", new DataPrimitive(meta.sourceJson));
+			providerData.put("commandHelp", new DataPrimitive(meta.commandHelp));
+			providerData.put("parseHelp", new DataPrimitive(meta.parseHelp));
+			providerData.put("returnHelp", new DataPrimitive(meta.returnHelp));
+			providers.put(provider, providerData);
+		}
+		returnObject.put("providers", providers);
+		
+		// Build Parser List
+		DataObject parsers = new DataObject();
+		for (Integer parser : this.proxies.keySet()) {
+			parsers.put(Integer.toString(parser), new DataPrimitive(proxies.get(parser).getClass().getName()));
+		}
+		returnObject.put("parsers", parsers);
+		
+		// Build the Object Enum Options list
+		returnObject.put("Template",	theOptions(Template.getOptions()));
+		returnObject.put("Encoding",	theOptions(Segment.getOptions()));
+		returnObject.put("Enrich", 	theOptions(Enrich.getOptions()));
+		returnObject.put("Insert", 	theOptions(Insert.getOptions()));
+		returnObject.put("Parse", 	theOptions(ParseData.getOptions()));
+		returnObject.put("Replace", 	theOptions(Replace.getOptions()));
+		returnObject.put("Save", 	theOptions(SaveFile.getOptions()));
+		
+		return proxy.toString(returnObject);
+	}
+	
+	/**
+	 * Helper for "get" method
+	 * @param values Options from an Object getOptions
+	 * @return the Options converted to a DataElement
+	 */
+	private DataElement theOptions(HashMap<String, HashMap<Integer, String>> values) {
+		DataObject enums = new DataObject();
+		for (String name : values.keySet()) {
+			DataObject options = new DataObject();
+			enums.put(name, options);
+			for (Integer option : values.get(name).keySet()) {
+				options.put(Integer.toString(option), new DataPrimitive(values.get(name).get(option)));
+			}
+		}
+		return enums;
 	}
 }
 
