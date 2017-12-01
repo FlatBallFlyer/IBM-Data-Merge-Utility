@@ -8,6 +8,7 @@ The IBM Data Merge Utility is an open source Java Utility that provides high per
 ### Start Here
 After cloning the project
 ```
+> git clone https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility.git
 > mvn install 
 > mvn javadoc:javadoc 
 ```
