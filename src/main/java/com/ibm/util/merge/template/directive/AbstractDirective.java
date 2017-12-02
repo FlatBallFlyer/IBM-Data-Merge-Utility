@@ -36,17 +36,9 @@ import com.ibm.util.merge.template.Template;
  */
 public abstract class AbstractDirective {
 
-	/**
-	 * The template that possess this directive
-	 */
 	private transient Template template;
-	/**
-	 * The template type - See TYPE_* 
-	 */
+	private int state = Template.STATE_RAW;
 	private int type;
-	/**
-	 * The directive name - used logging and exception handling
-	 */
 	private String name = "";
 
 	/**
@@ -57,66 +49,14 @@ public abstract class AbstractDirective {
 	}
 	
 	/**
-	 * Get a mergable copy of this directive
-	 * 
-	 * @param target The directive to make mergable
-	 */
-	public void makeMergable(AbstractDirective target) {
-		target.setType(this.getType());
-		target.setName(name);
-	}
-	
-	/**
-	 * @return the Template (Owner)
-	 */
-	public Template getTemplate() {
-		return template;
-	}
-	
-	/**
+	 * Populate Transient Values and validate enumerations
 	 * @param template The template to bind to
+	 * @throws MergeException when enumirators fail to validate
 	 */
-	public void setTemplate(Template template) {
+	public void cachePrepare(Template template) throws MergeException {
 		this.template = template;
+		this.state = Template.STATE_CACHED;
 	}
-	
-	/**
-	 * @return Directive Name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name The directive name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @return member of DIRECTIVE_TYPES
-	 */
-	public int getType() {
-		return type;
-	}
-	
-	/**
-	 * @param type The directive type
-	 */
-	public void setType(int type) {
-		if (DIRECTIVE_TYPES().containsKey(type)) {
-			this.type = type;
-		}
-	}
-	
-	/**
-	 * This is the meat of the Directive 
-	 * 
-	 * @param context The context to execute within
-	 * @throws MergeException on processing errors
-	 */
-	public abstract void execute(Merger context) throws MergeException;
 
 	/**
 	 * Each directive must implement a clone-like get mergable
@@ -126,14 +66,75 @@ public abstract class AbstractDirective {
 	public abstract AbstractDirective getMergable() throws MergeException;
 
 	/**
-	 * Populate Transient Values and validate enumerations
-	 * @param template The template to bind to
-	 * @throws MergeException when enumirators fail to validate
+	 * Get a mergable copy of this directive
+	 * 
+	 * @param target The directive to make mergable
 	 */
-	public void cachePrepare(Template template) throws MergeException {
-		this.template = template;
+	public void makeMergable(AbstractDirective target) {
+		target.setType(this.getType());
+		target.setName(name);
+		target.state = Template.STATE_MERGABLE;
 	}
 
+	/**
+	 * This is the meat of the Directive 
+	 * 
+	 * @param context The context to execute within
+	 * @throws MergeException on processing errors
+	 */
+	public abstract void execute(Merger context) throws MergeException;
+
+	/**
+	 * @return Directive Name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @return member of DIRECTIVE_TYPES
+	 */
+	public int getState() {
+		return state;
+	}
+
+	/**
+	 * @return member of DIRECTIVE_TYPES
+	 */
+	public int getType() {
+		return type;
+	}
+
+	/**
+	 * @return the Template (Owner)
+	 */
+	public Template getTemplate() {
+		return template;
+	}
+	
+	/**
+	 * @param name The directive name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @param type The directive type
+	 */
+	public void setType(int type) {
+		if (DIRECTIVE_TYPES().containsKey(type)) {
+			this.type = type;
+		}
+	}
+
+	/**
+	 * @param template The template to bind to
+	 */
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+	
 	public static final int TYPE_ENRICH 			= 1;
 	public static final int TYPE_INSERT				= 2;
 	public static final int TYPE_PARSE	 			= 3;

@@ -41,33 +41,12 @@ public class Enrich extends AbstractDirective {
 		return options;
 	}
 
-	/**
-	 * The target where the data will be placed
-	 */
 	private String targetDataName; 
-	/**
-	 * The delimiter used in the target data name
-	 */
 	private String targetDataDelimeter;
-	/**
-	 * The class name of the enrich provider
-	 */
 	private String enrichClass;
-	/**
-	 * The Source name for the provider
-	 */
 	private String enrichSource;
-	/**
-	 * The Source initialization parameter for the provider
-	 */
 	private String enrichParameter;
-	/**
-	 * The Execute Command used to retrieve the data
-	 */
 	private String enrichCommand;
-	/**
-	 * The parsAs format for parsing options (See Config.PARSE*)
-	 */
 	private int parseAs;
 	
 	/*
@@ -130,34 +109,6 @@ public class Enrich extends AbstractDirective {
 	}
 
 	/**
-	 * @return target data object
-	 */
-	public String getTargetDataName() {
-		return targetDataName;
-	}
-	
-	/**
-	 * @param dataName The target data name
-	 */
-	public void setTargetDataName(String dataName) {
-		this.targetDataName = dataName;
-	}
-	
-	/**
-	 * @return target data name delimiter
-	 */
-	public String getTargetDataDelimeter() {
-		return this.targetDataDelimeter;
-	}
-
-	/**
-	 * @param dataDelimeter The path delimiter
-	 */
-	public void setTargetDataDelimeter(String dataDelimeter) {
-		this.targetDataDelimeter = dataDelimeter;
-	}
-
-	/**
 	 * @return enrich source name
 	 */
 	public String getEnrichSource() {
@@ -165,24 +116,10 @@ public class Enrich extends AbstractDirective {
 	}
 
 	/**
-	 * @param enrichSource The Source Name
+	 * @return Parameters for Enrich Command
 	 */
-	public void setEnrichSource(String enrichSource) {
-		this.enrichSource = enrichSource;
-	}
-	
-	/**
-	 * @return Parsing format
-	 */
-	public int getParseAs() {
-		return parseAs;
-	}
-
-	/**
-	 * @param parseAs The ParseAs option
-	 */
-	public void setParseAs(int parseAs) {
-		this.parseAs = parseAs;
+	public String getEnrichParameter() {
+		return enrichParameter;
 	}
 
 	/**
@@ -193,17 +130,59 @@ public class Enrich extends AbstractDirective {
 	}
 
 	/**
-	 * @param enrichClass The enrichment provider class name
-	 */
-	public void setEnrichClass(String enrichClass) {
-		this.enrichClass = enrichClass;
-	}
-
-	/**
 	 * @return Command to execute
 	 */
 	public String getEnrichCommand() {
 		return enrichCommand;
+	}
+
+	/**
+	 * @return target data object
+	 */
+	public String getTargetDataName() {
+		return targetDataName;
+	}
+
+	/**
+	 * @return target data name delimiter
+	 */
+	public String getTargetDataDelimeter() {
+		return this.targetDataDelimeter;
+	}
+
+	/**
+	 * @return Content parsed from TargetDataName
+	 */
+	public Content getTargetContent() {
+		return targetContent;
+	}
+
+	/**
+	 * @return Parsing format
+	 */
+	public int getParseAs() {
+		return parseAs;
+	}
+
+	/**
+	 * @param enrichSource The Source Name
+	 */
+	public void setEnrichSource(String enrichSource) {
+		this.enrichSource = enrichSource;
+	}
+
+	/**
+	 * @param enrichParameter The Provider parameter
+	 */
+	public void setEnrichParameter(String enrichParameter) {
+		this.enrichParameter = enrichParameter;
+	}
+
+	/**
+	 * @param enrichClass The enrichment provider class name
+	 */
+	public void setEnrichClass(String enrichClass) {
+		this.enrichClass = enrichClass;
 	}
 
 	/**
@@ -215,25 +194,31 @@ public class Enrich extends AbstractDirective {
 	}
 
 	/**
-	 * @return Parameters for Enrich Command
+	 * @param dataName The target data name
 	 */
-	public String getEnrichParameter() {
-		return enrichParameter;
+	public void setTargetDataName(String dataName) {
+		this.targetDataName = dataName;
 	}
 
 	/**
-	 * @param enrichParameter The Provider parameter
+	 * @param dataDelimeter The path delimiter
 	 */
-	public void setEnrichParameter(String enrichParameter) {
-		this.enrichParameter = enrichParameter;
+	public void setTargetDataDelimeter(String dataDelimeter) {
+		this.targetDataDelimeter = dataDelimeter;
 	}
 
-	public Content getTargetContent() {
-		return targetContent;
-	}
-
+	/**
+	 * @param targetContent a Content object that was parsed from TargetData
+	 */
 	public void setTargetContent(Content targetContent) {
 		this.targetContent = targetContent;
+	}
+
+	/**
+	 * @param parseAs The ParseAs option
+	 */
+	public void setParseAs(int parseAs) {
+		this.parseAs = parseAs;
 	}
 
 }

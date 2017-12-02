@@ -78,10 +78,24 @@ public class SaveFile extends AbstractDirective {
 	}
 
 	/**
+	 * @return clear replace stack after replace indicator
+	 */
+	public Boolean getClearAfter() {
+		return clearAfter;
+	}
+
+	/**
 	 * @return the File Name
 	 */
 	public String getFilename() {
 		return filename;
+	}
+
+	/**
+	 * @param clearAfter Clear Content after Saving indicator
+	 */
+	public void setClearAfter(Boolean clearAfter) {
+		this.clearAfter = clearAfter;
 	}
 
 	/**
@@ -90,20 +104,6 @@ public class SaveFile extends AbstractDirective {
 	 */
 	public void setFilename(String filename) throws MergeException {
 		this.filename = filename;
-	}
-
-	/**
-	 * @return clear replace stack after replace indicator
-	 */
-	public Boolean getClearAfter() {
-		return clearAfter;
-	}
-
-	/**
-	 * @param clearAfter Clear Content after Saving indicator
-	 */
-	public void setClearAfter(Boolean clearAfter) {
-		this.clearAfter = clearAfter;
 	}
 
 	/**

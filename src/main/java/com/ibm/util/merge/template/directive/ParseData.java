@@ -181,33 +181,10 @@ public class ParseData extends AbstractDataDirective {
 	}
 
 	/**
-	 * @return parse format
-	 */
-	public int getParseFormat() {
-		return this.parseFormat;
-	}
-	
-	/**
-	 * @param format The parse format option
-	 */
-	public void setParseFormat(int format) {
-		if (Config.PARSE_OPTIONS().containsKey(format)) {
-			this.parseFormat = format;
-		}
-	}
-
-	/**
 	 * @return data target path
 	 */
 	public String getDataTarget() {
 		return dataTarget;
-	}
-
-	/**
-	 * @param dataTarget The Target Data address
-	 */
-	public void setDataTarget(String dataTarget) {
-		this.dataTarget = dataTarget;
 	}
 
 	/**
@@ -218,12 +195,12 @@ public class ParseData extends AbstractDataDirective {
 	}
 
 	/**
-	 * @param dataTargetDelimiter The target address delimiter
+	 * @return parse format
 	 */
-	public void setDataTargetDelimiter(String dataTargetDelimiter) {
-		this.dataTargetDelimiter = dataTargetDelimiter;
+	public int getParseFormat() {
+		return this.parseFormat;
 	}
-
+	
 	/**
 	 * @return Static data for Parsing
 	 */
@@ -232,17 +209,40 @@ public class ParseData extends AbstractDataDirective {
 	}
 
 	/**
-	 * @param staticData The static data
-	 */
-	public void setStaticData(String staticData) {
-		this.staticData = staticData;
-	}
-
-	/**
 	 * @return the Target Content 
 	 */
 	public Content getTargetContent() {
 		return targetContent;
+	}
+
+	/**
+	 * @param dataTarget The Target Data address
+	 */
+	public void setDataTarget(String dataTarget) {
+		this.dataTarget = dataTarget;
+	}
+
+	/**
+	 * @param dataTargetDelimiter The target address delimiter
+	 */
+	public void setDataTargetDelimiter(String dataTargetDelimiter) {
+		this.dataTargetDelimiter = dataTargetDelimiter;
+	}
+
+	/**
+	 * @param format The parse format option
+	 */
+	public void setParseFormat(int format) {
+		if (Config.PARSE_OPTIONS().containsKey(format)) {
+			this.parseFormat = format;
+		}
+	}
+
+	/**
+	 * @param staticData The static data
+	 */
+	public void setStaticData(String staticData) {
+		this.staticData = staticData;
 	}
 
 	/**

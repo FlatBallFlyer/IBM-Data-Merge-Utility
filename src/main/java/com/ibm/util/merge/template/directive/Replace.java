@@ -43,45 +43,15 @@ import com.ibm.util.merge.template.Template;
  * @see com.ibm.util.merge.data.DataManager
  */
 public class Replace extends AbstractDataDirective {
-	/**
-	 * Static "To Value" from primitive replace
-	 */
 	private String toValue;
-	/**
-	 * Indicates replace processing should be done after values are added to the replace stack
-	 */
 	private boolean processAfter;
-	/**
-	 * Indicates that processing should require that all tags are replaced
-	 */
 	private boolean processRequire;
-	/**
-	 * Action to take if the Object Attribute is a Primitive
-	 */
 	private int objectAttrPrimitive;
-	/**
-	 * Action to take if Object Attribute is a List
-	 */
 	private int objectAttrList;
-	/**
-	 * Action to take of the Object Attribute is another object
-	 */
 	private int objectAttrObject;
-	/**
-	 * Attribute for Replace From value when Replacing from a List of Objects
-	 */
 	private String fromAttribute;	// used by List
-	/**
-	 * Attribute for Replace To value when Replacing from a List of Objects
-	 */
 	private String toAttribute;		// used by List
-	/**
-	 * Action to take if List From/To attributes are not present
-	 */
 	private int listAttrMissing;
-	/**
-	 * Action to take if the List From/To attribute is not a primitive
-	 */
 	private int listAttrNotPrimitive;
 
 	// Transient Variables
@@ -436,6 +406,10 @@ public class Replace extends AbstractDataDirective {
 		return processAfter;
 	}
 
+	public boolean getProcessRequire() {
+		return processRequire;
+	}
+
 	public int getObjectAttrPrimitive() {
 		return objectAttrPrimitive;
 	}
@@ -454,6 +428,10 @@ public class Replace extends AbstractDataDirective {
 
 	public int getListAttrMissing() {
 		return listAttrMissing;
+	}
+
+	public String getToValue() {
+		return toValue;
 	}
 
 	/**
@@ -475,6 +453,10 @@ public class Replace extends AbstractDataDirective {
 	 */
 	public void setProcessAfter(boolean processAfter) {
 		this.processAfter = processAfter;
+	}
+
+	public void setProcessRequire(boolean processRequire) {
+		this.processRequire = processRequire;
 	}
 
 	public void setObjectAttrPrimitive(int objectAttrPrimitive) {
@@ -507,12 +489,8 @@ public class Replace extends AbstractDataDirective {
 		}
 	}
 
-	public boolean getProcessRequire() {
-		return processRequire;
-	}
-
-	public void setProcessRequire(boolean processRequire) {
-		this.processRequire = processRequire;
+	public void setToValue(String toValue) {
+		this.toValue = toValue;
 	}
 
 	@Override
@@ -543,14 +521,6 @@ public class Replace extends AbstractDataDirective {
 		}
 	}
 
-	public String getToValue() {
-		return toValue;
-	}
-
-	public void setToValue(String toValue) {
-		this.toValue = toValue;
-	}
-	
 	/*
 	 * Constants and Options below here
 	 */
