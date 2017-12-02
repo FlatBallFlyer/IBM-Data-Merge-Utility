@@ -80,7 +80,7 @@ public class DataProxyJson implements ParserProxyInterface {
 
     public DataElement fromString(String value) {
         Gson gson = builder.create();
-    	return gson.fromJson(value, DataElement.class);
+        return gson.fromJson(value, DataElement.class);
     }
     
     public String toString(Object src) {
