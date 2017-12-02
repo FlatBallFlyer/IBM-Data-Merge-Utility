@@ -320,7 +320,6 @@ public class Template {
 	 * Sets the content.
 	 *
 	 * @param content the new content
-	 * @throws MergeException  on processing errors
 	 */
 	public void setContent(String content) {
 		if (this.state == STATE_RAW) {
