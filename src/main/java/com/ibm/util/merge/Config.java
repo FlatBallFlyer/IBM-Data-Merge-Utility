@@ -645,7 +645,7 @@ public class Config {
 			ProviderMeta meta = this.getProviderInstance(provider, "", "", null).getMetaInfo();
 			DataObject providerData = new DataObject();
 			providerData.put("optionName", new DataPrimitive(meta.optionName));
-			providerData.put("sourceJson", new DataPrimitive(meta.sourceJson));
+			providerData.put("sourceJson", new DataPrimitive(meta.sourceEnv));
 			providerData.put("commandHelp", new DataPrimitive(meta.commandHelp));
 			providerData.put("parseHelp", new DataPrimitive(meta.parseHelp));
 			providerData.put("returnHelp", new DataPrimitive(meta.returnHelp));
@@ -661,13 +661,13 @@ public class Config {
 		returnObject.put("parsers", parsers);
 		
 		// Build the Object Enum Options list
-		returnObject.put("Template",	theOptions(Template.getOptions()));
-		returnObject.put("Encoding",	theOptions(Segment.getOptions()));
-		returnObject.put("Enrich", 	theOptions(Enrich.getOptions()));
-		returnObject.put("Insert", 	theOptions(Insert.getOptions()));
-		returnObject.put("Parse", 	theOptions(ParseData.getOptions()));
-		returnObject.put("Replace", 	theOptions(Replace.getOptions()));
-		returnObject.put("Save", 	theOptions(SaveFile.getOptions()));
+		returnObject.put("template",	theOptions(Template.getOptions()));
+		returnObject.put("encoding",	theOptions(Segment.getOptions()));
+		returnObject.put("enrich", 	theOptions(Enrich.getOptions()));
+		returnObject.put("insert", 	theOptions(Insert.getOptions()));
+		returnObject.put("parse", 	theOptions(ParseData.getOptions()));
+		returnObject.put("replace", 	theOptions(Replace.getOptions()));
+		returnObject.put("save", 	theOptions(SaveFile.getOptions()));
 		
 		return proxy.toString(returnObject);
 	}

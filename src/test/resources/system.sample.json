@@ -4,11 +4,11 @@
 		"name": "sample",
 		"variant": ""
 	},
-	"content": "Some Template Content {tag} {bookmark=\"name\" group=\"aGroup\" template=\"aTemplate\"} ",
 	"wrapper": {
 		"front": "{",
 		"back": "}"
 	},
+	"content": "Some Template Content {tag} {bookmark=\"name\" group=\"aGroup\" template=\"aTemplate\"} ",
 	"description": "A sample template JSON with all Directives - NOTE: This template will always throw execptions on merge",
 	"contentType": 4,
 	"contentDisposition": 2,
@@ -29,11 +29,6 @@
 	{
 		"type": 2,
 		"name": "Insert",
-		"notFirst": [],
-		"notLast": [],
-		"onlyFirst": [],
-		"onlyLast": [],
-		"bookmarkPattern": ".*",
 		"dataSource": "",
 		"dataDelimeter": "-",
 		"ifMissing": 2,
@@ -41,7 +36,12 @@
 		"ifOperator": 1,
 		"ifValue": "",
 		"ifObject": 2,
-		"ifList": 2
+		"ifList": 2,
+		"notFirst": [],
+		"notLast": [],
+		"onlyFirst": [],
+		"onlyLast": [],
+		"bookmarkPattern": ".*"
 	},
 	{
 		"type": 3,
@@ -83,4 +83,4 @@
 		"filename": "file",
 		"clearAfter": false
 	}]
-}]
+}

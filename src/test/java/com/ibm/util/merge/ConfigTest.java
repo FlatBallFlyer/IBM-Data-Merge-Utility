@@ -42,13 +42,13 @@ public class ConfigTest {
 		assertTrue(options.getAsJsonObject().has("config"));
 		assertTrue(options.getAsJsonObject().has("providers"));
 		assertTrue(options.getAsJsonObject().has("parsers"));
-		assertTrue(options.getAsJsonObject().has("Template"));
-		assertTrue(options.getAsJsonObject().has("Encoding"));
-		assertTrue(options.getAsJsonObject().has("Enrich"));
-		assertTrue(options.getAsJsonObject().has("Insert"));
-		assertTrue(options.getAsJsonObject().has("Parse"));
-		assertTrue(options.getAsJsonObject().has("Replace"));
-		assertTrue(options.getAsJsonObject().has("Save"));
+		assertTrue(options.getAsJsonObject().has("template"));
+		assertTrue(options.getAsJsonObject().has("encoding"));
+		assertTrue(options.getAsJsonObject().has("enrich"));
+		assertTrue(options.getAsJsonObject().has("insert"));
+		assertTrue(options.getAsJsonObject().has("parse"));
+		assertTrue(options.getAsJsonObject().has("replace"));
+		assertTrue(options.getAsJsonObject().has("save"));
 	}
 
 	@Test

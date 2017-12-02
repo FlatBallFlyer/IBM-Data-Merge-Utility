@@ -1,739 +1,405 @@
 {
-  "definitions" : {
-    "parseFormat" : {
-      "type" : "int",
-      "enum" : [
-        1,
-        2,
-        3,
-        4,
-        5
-      ],
-      "choices" : {
-        "1" : "csv",
-        "2" : "html",
-        "3" : "json",
-        "4" : "non",
-        "5" : "xml"
-      }
-    },
-    "encoding" : {
-      "type" : "int",
-      "enum" : [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "choices" : {
-        "1" : "none",
-        "2" : "html",
-        "3" : "sql",
-        "4" : "json",
-        "5" : "xml",
-        "6" : "default"
-      }
-    },
-    "directive" : {
-      "type" : {
-        "type" : "int",
-        "title" : "Enrich Type",
-        "enum" : [
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
-        "choices" : {
-          "1" : "enrich",
-          "2" : "insert",
-          "3" : "parse",
-          "4" : "replace",
-          "5" : "save"
-        }
-      },
-      "name" : {
-        "type" : "string",
-        "title" : "Variant",
-        "description" : "The variant of the template"
-      }
-    },
-    "sourceDirective" : {
-      "allOf" : [
-        {
-          "$ref" : "#/definitions/directive"
-        },
-        {
-          "properties" : {
-            "dataSource" : {
-              "type" : "string",
-              "title" : "Data Source",
-              "description" : "Path of source data"
-            },
-            "dataDelimeter" : {
-              "type" : "string",
-              "title" : "Delimiter",
-              "description" : "Delimiter used in data source path"
-            }
-          }
-        }
-      ]
-    },
-    "enrich" : {
-      "type" : "object",
-      "allOf" : [
-        {
-          "$ref" : "#/definitions/directive"
-        },
-        {
-          "properties" : {
-            "type" : {
-              "type" : "int",
-              "value" : 1
-            },
-            "targetDataName" : {
-              "type" : "string",
-              "title" : "Target",
-              "description" : "The path where data will be put"
-            },
-            "targetDataDelimiter" : {
-              "type" : "string",
-              "title" : "Delimiter",
-              "description" : "The path delimeter"
-            },
-            "enrichClass" : {
-              "type" : "string",
-              "title" : "Provider Class",
-              "description" : "See Config Object",
-              "enum" : [
-                "com.ibm.util.merge.template.directive.enrich.provider.CacheProvider",
-                "com.ibm.util.merge.template.directive.enrich.provider.CloudantProvider",
-                "com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider",
-                "com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider",
-                "com.ibm.util.merge.template.directive.enrich.provider.JndiProvider",
-                "com.ibm.util.merge.template.directive.enrich.provider.MongoProvider",
-                "com.ibm.util.merge.template.directive.enrich.provider.RestProvider",
-                "com.ibm.util.merge.template.directive.enrich.provider.StubProvider"
-              ],
-              "" : ""
-            },
-            "enrichSource" : {
-              "type" : "string",
-              "title" : "Source",
-              "description" : "The name of the data source"
-            },
-            "enrichParameter" : {
-              "type" : "string",
-              "title" : "Parameter",
-              "description" : "See Config Object"
-            },
-            "enrichCommand" : {
-              "type" : "string",
-              "title" : "Command",
-              "description" : "See Config Object"
-            },
-            "parseAs" : {
-              "$ref" : "#/definitions/parseFormat"
-            }
-          }
-        }
-      ]
-    },
-    "insert" : {
-      "type" : "object",
-      "allOf" : [
-        {
-          "$ref" : "#/definitions/sourceDirective"
-        },
-        {
-          "properties" : {
-            "type" : {
-              "type" : "int",
-              "value" : 2
-            },
-            "ifMissing" : {
-              "type" : "int",
-              "title" : "If Missing",
-              "description" : "Action to take if source is missing",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore",
-                "3" : "insert"
-              }
-            },
-            "ifPrimitive" : {
-              "type" : "int",
-              "title" : "If Primitive",
-              "description" : "Action to take if source is a Primitive",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3,
-                4
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore",
-                "3" : "insert",
-                "4" : "insert if"
-              }
-            },
-            "ifOperator" : {
-              "type" : "int",
-              "title" : "If Operator",
-              "description" : "operator for Insert If",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8
-              ],
-              "choices" : {
-                "1" : "string equals",
-                "2" : "string is empty",
-                "3" : "string not empty",
-                "4" : "string >",
-                "5" : "string <",
-                "6" : "value =",
-                "7" : "value >",
-                "8" : "value <"
-              }
-            },
-            "ifValue" : {
-              "type" : "string",
-              "title" : "If Value",
-              "description" : "Values used wiht If Operator"
-            },
-            "ifObject" : {
-              "type" : "int",
-              "title" : "If Object",
-              "description" : "Action to take if source is a Object",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3,
-                4
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore",
-                "3" : "insertObject",
-                "4" : "insertList"
-              }
-            },
-            "ifList" : {
-              "type" : "int",
-              "title" : "If List",
-              "description" : "Action to take if source is a List",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3,
-                4,
-                5
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore",
-                "3" : "insert",
-                "4" : "insert first member",
-                "5" : "insert last member"
-              }
-            },
-            "bookmarkPattern" : {
-              "type" : "string",
-              "title" : "Variant",
-              "description" : "The variant of the template"
-            },
-            "notFirst" : {
-              "type" : "array",
-              "title" : "Not First tags",
-              "description" : "Replace tags that will be blank on the first insertion in a list",
-              "items" : {
-                "type" : "string"
-              }
-            },
-            "notLast" : {
-              "type" : "array",
-              "title" : "Not Last tags",
-              "description" : "Replace tags that will be blank on the last insertion in a list",
-              "items" : {
-                "type" : "string"
-              }
-            },
-            "onlyFirst" : {
-              "type" : "array",
-              "title" : "Only First tags",
-              "description" : "Replace tags that will be blank on all but the first insertion in a list",
-              "items" : {
-                "type" : "string"
-              }
-            },
-            "onlyLast" : {
-              "type" : "array",
-              "title" : "Only Last tags",
-              "description" : "Replace tags that will be blank on all but the last insertion in a list",
-              "items" : {
-                "type" : "string"
-              }
-            }
-          }
-        }
-      ]
-    },
-    "parse" : {
-      "type" : "object",
-      "allOf" : [
-        {
-          "$ref" : "#/definitions/directive"
-        },
-        {
-          "properties" : {
-            "type" : {
-              "type" : "int",
-              "value" : 3
-            },
-            "ifMissing" : {
-              "type" : "int",
-              "title" : "If Missing",
-              "description" : "Action to take if source is missing",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore",
-                "3" : "insert"
-              }
-            },
-            "ifPrimitive" : {
-              "type" : "int",
-              "title" : "If Primitive",
-              "description" : "Action to take if source is a Primitive type",
-              "default" : 1,
-              "enum" : [
-                1,
-                2
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore"
-              }
-            },
-            "ifObject" : {
-              "type" : "int",
-              "title" : "If Object",
-              "description" : "Action to take if source is a Object",
-              "default" : 1,
-              "enum" : [
-                1,
-                2
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore"
-              }
-            },
-            "ifList" : {
-              "type" : "int",
-              "title" : "If List",
-              "description" : "Action to take if source is a List",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3,
-                4
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore",
-                "3" : "parse first primitive",
-                "4" : "parse last primitive"
-              }
-            },
-            "dataTarget" : {
-              "type" : "string",
-              "title" : "File Name",
-              "description" : "The name of the file to be written to the archive"
-            },
-            "dataTargetDelimiter" : {
-              "type" : "boolean",
-              "title" : "Clear After",
-              "description" : "Clear Content afte saving"
-            },
-            "staticData" : {
-              "type" : "boolean",
-              "title" : "Clear After",
-              "description" : "Clear Content afte saving"
-            },
-            "parseAs" : {
-              "$ref" : "#/definitions/parseFormat"
-            }
-          }
-        }
-      ]
-    },
-    "replace" : {
-      "type" : "object",
-      "allOf" : [
-        {
-          "$ref" : "#/definitions/sourceDirective"
-        },
-        {
-          "properties" : {
-            "type" : {
-              "type" : "int",
-              "value" : 4
-            },
-            "ifMissing" : {
-              "type" : "int",
-              "title" : "If Missing",
-              "description" : "Action to take if source is missing",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore",
-                "3" : "replace"
-              }
-            },
-            "toValue" : {
-              "type" : "string",
-              "title" : "To Value",
-              "description" : "To value to be used if source is missing"
-            },
-            "ifPrimitive" : {
-              "type" : "int",
-              "title" : "If Primitive",
-              "description" : "Action to take if source is a Primitive type",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3,
-                4
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore",
-                "3" : "replace",
-                "4" : "replace with JSON"
-              }
-            },
-            "ifObject" : {
-              "type" : "int",
-              "title" : "If Object",
-              "description" : "Action to take if source is a Object",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3,
-                4,
-                5
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore",
-                "3" : "replace object",
-                "4" : "replace as list",
-                "5" : "replace with JSON"
-              }
-            },
-            "objectAttrPrimitive" : {
-              "type" : "int",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore",
-                "3" : "insertList"
-              }
-            },
-            "objectAttrList" : {
-              "type" : "int",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3,
-                4
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore",
-                "3" : "use first primitive",
-                "4" : "use last primitive"
-              }
-            },
-            "objectAttrObject" : {
-              "type" : "int",
-              "default" : 1,
-              "enum" : [
-                1,
-                2
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore"
-              }
-            },
-            "ifList" : {
-              "type" : "int",
-              "title" : "If List",
-              "description" : "Action to take if source is a List",
-              "default" : 1,
-              "enum" : [
-                1,
-                2,
-                3,
-                4,
-                5,
-                6
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore",
-                "3" : "replace",
-                "4" : "use first only",
-                "5" : "use last only",
-                "6" : "replace with json"
-              }
-            },
-            "fromAttribute" : {
-              "type" : "string",
-              "title" : "From Attribute",
-              "description" : "Attribute name with From value"
-            },
-            "toAttribute" : {
-              "type" : "string",
-              "title" : "To Attribute",
-              "description" : "Attribute name with To value"
-            },
-            "listAttrMissing" : {
-              "type" : "int",
-              "default" : 1,
-              "enum" : [
-                1,
-                2
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore"
-              }
-            },
-            "listAttrNotPrimitive" : {
-              "type" : "int",
-              "default" : 1,
-              "enum" : [
-                1,
-                2
-              ],
-              "choices" : {
-                "1" : "throw",
-                "2" : "ignore"
-              }
-            },
-            "processAfter" : {
-              "type" : "boolean",
-              "title" : "Clear After",
-              "description" : "Clear Content afte saving"
-            },
-            "processRequire" : {
-              "type" : "boolean",
-              "title" : "Clear After",
-              "description" : "Clear Content afte saving"
-            }
-          }
-        }
-      ]
-    },
-    "save" : {
-      "type" : "object",
-      "allOf" : [
-        {
-          "$ref" : "#/definitions/directive"
-        },
-        {
-          "properties" : {
-            "type" : {
-              "type" : "int",
-              "value" : 5
-            },
-            "fileName" : {
-              "type" : "string",
-              "title" : "File Name",
-              "description" : "The name of the file to be written to the archive"
-            },
-            "clearAfter" : {
-              "type" : "boolean",
-              "title" : "Clear After",
-              "description" : "Clear Content afte saving"
-            }
-          }
-        }
-      ]
-    }
-  },
-  "$schema" : "http://json-schema.org/draft-06/schema#",
-  "$id" : "http://example.com/example.json",
-  "type" : "object",
-  "properties" : {
-    "id" : {
-      "type" : "object",
-      "description" : "Unique Template Identifier",
-      "properties" : {
-        "group" : {
-          "type" : "string",
-          "title" : "Group",
-          "description" : "Defines a group of related templates"
-        },
-        "name" : {
-          "type" : "string",
-          "title" : "Name",
-          "description" : "The template name"
-        },
-        "variant" : {
-          "type" : "string",
-          "title" : "Variant",
-          "description" : "The variant of the template"
-        }
-      }
-    },
-    "wrapper" : {
-      "type" : "object",
-      "description" : "The strings used to identify a tag/bookmark in content",
-      "properties" : {
-        "front" : {
-          "type" : "string",
-          "title" : "Open",
-          "description" : "indicates beginning of tag/bookmark"
-        },
-        "back" : {
-          "type" : "string",
-          "title" : "Close",
-          "description" : "indicates ending of tag/bookmark"
-        }
-      }
-    },
-    "description" : {
-      "type" : "string",
-      "title" : "Description",
-      "description" : "Describes the template, used in error logging"
-    },
-    "content" : {
-      "type" : "string",
-      "title" : "Content",
-      "description" : "The tempalte content"
-    },
-    "contentType" : {
-      "type" : "integer",
-      "title" : "The Contenttype Schema.",
-      "description" : "An explanation about the purpose of this instance.",
-      "default" : 4,
-      "enum" : [
-        1,
-        2,
-        3,
-        4
-      ],
-      "choices" : {
-        "1" : "html",
-        "2" : "json",
-        "3" : "xml",
-        "4" : "text"
-      }
-    },
-    "contentDisposition" : {
-      "type" : "integer",
-      "title" : "The Contentdisposition Schema.",
-      "description" : "An explanation about the purpose of this instance.",
-      "default" : 2,
-      "enum" : [
-        1,
-        2
-      ],
-      "choices" : {
-        "1" : "download",
-        "2" : "normal"
-      }
-    },
-    "contentEncoding" : {
-      "type" : "integer",
-      "title" : "The Contentencoding Schema.",
-      "description" : "An explanation about the purpose of this instance.",
-      "default" : 0,
-      "enum" : [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "choices" : {
-        "1" : "none",
-        "2" : "html",
-        "3" : "sql",
-        "4" : "json",
-        "5" : "xml",
-        "6" : "default"
-      }
-    },
-    "contentFileName" : {
-      "type" : "string",
-      "title" : "Output Filename",
-      "description" : "Filename to save - can contain tags"
-    },
-    "contentRedirectUrl" : {
-      "type" : "string",
-      "title" : "Redirect URL",
-      "description" : "Provided for Rest API related uses"
-    },
-    "directives" : {
-      "type" : "array",
-      "title" : "Not First tags",
-      "description" : "Replace tags that will be blank on the first insertion in a list",
-      "items" : {
-        "type" : {
-          "anyOf" : [
-            "enrich",
-            "replace",
-            "insert",
-            "parse",
-            "save"
-          ]
-        }
-      }
-    }
-  }
+	"definitions": {
+		"directive": {
+			"name": {
+				"type": "string",
+				"title": "Name",
+				"description": "The name of the directive"
+			}
+		},
+		
+		"sourceDirective": {
+			"allOf": [{"$ref": "#/definitions/directive"},
+			{
+				"properties": {
+					"dataSource": {
+						"type": "string",
+						"title": "Data Source",
+						"description": "Path of source data"
+					},
+					"dataDelimeter": {
+						"type": "string",
+						"title": "Delimiter",
+						"description": "Delimiter used in data source path"
+					}
+				}
+			}]
+		},
+		
+		"enrich": {
+			"type": "object",
+			"allOf": [{"$ref": "#/definitions/directive"},
+				{
+				"properties": {
+					"type": {
+						"type": "integer",
+						"value": 1
+					},
+					"targetDataName": {
+						"type": "string",
+						"title": "Target",
+						"description": "The path where data will be put"
+					},
+					"targetDataDelimiter": {
+						"type": "string",
+						"title": "Delimiter",
+						"description": "The path delimeter"
+					},
+					"enrichClass": {
+						"type": "string",
+						"title": "Provider Class",
+						"description": "See Config Object for options"
+					},
+					"enrichSource": {
+						"type": "string",
+						"title": "Source",
+						"description": "The name of the data source"
+					},
+					"enrichParameter": {
+						"type": "string",
+						"title": "Parameter",
+						"description": "See Config Object for title and help"
+					},
+					"enrichCommand": {
+						"type": "string",
+						"title": "Command",
+						"description": "See Config Object for help"
+					},
+					"parseAs": {
+						"type": "integer"
+					}
+				}
+			}]
+		},
+		"insert": {
+			"type": "object",
+			"allOf": [{"$ref": "#/definitions/sourceDirective"},
+				{
+				"properties": {
+					"type": {
+						"type": "integer",
+						"value": 2
+					},
+					"ifMissing": {
+						"type": "integer",
+						"title": "If Missing",
+						"description": "Action to take if source is missing, see Config for options"
+					},
+					"ifPrimitive": {
+						"type": "integer",
+						"title": "If Primitive",
+						"description": "Action to take if source is a Primitive, see Config for options"
+					},
+					"ifOperator": {
+						"type": "integer",
+						"title": "If Operator",
+						"description": "operator for Insert If, see Config for options"
+					},
+					"ifValue": {
+						"type": "string",
+						"title": "If Value",
+						"description": "Values used wiht If Operator"
+					},
+					"ifObject": {
+						"type": "integer",
+						"title": "If Object",
+						"description": "Action to take if source is a Object, see Config for options"
+					},
+					"ifList": {
+						"type": "integer",
+						"title": "If List",
+						"description": "Action to take if source is a List, see Config for options"
+					},
+					"bookmarkPattern": {
+						"type": "string",
+						"title": "Variant",
+						"description": "The variant of the template"
+					},
+					"notFirst": {
+						"type": "array",
+						"title": "Not First tags",
+						"description": "Replace tags that will be blank on the first insertion in a list",
+						"items": {
+							"type": "string"
+						}
+					},
+					"notLast": {
+						"type": "array",
+						"title": "Not Last tags",
+						"description": "Replace tags that will be blank on the last insertion in a list",
+						"items": {
+							"type": "string"
+						}
+					},
+					"onlyFirst": {
+						"type": "array",
+						"title": "Only First tags",
+						"description": "Replace tags that will be blank on all but the first insertion in a list",
+						"items": {
+							"type": "string"
+						}
+					},
+					"onlyLast": {
+						"type": "array",
+						"title": "Only Last tags",
+						"description": "Replace tags that will be blank on all but the last insertion in a list",
+						"items": {
+							"type": "string"
+						}
+					}
+				}
+			}]
+		},
+		
+		"parse": {
+			"type": "object",
+			"allOf": [{"$ref": "#/definitions/sourceDirective"},
+				{
+				"properties": {
+					"type": {
+						"type": "integer",
+						"value": 3
+					},
+					"ifMissing": {
+						"type": "integer",
+						"title": "If Missing",
+						"description": "Action to take if source is missing, see Config for options"
+					},
+					"ifPrimitive": {
+						"type": "integer",
+						"title": "If Primitive",
+						"description": "Action to take if source is a Primitive type, see Config for options"
+					},
+					"ifObject": {
+						"type": "integer",
+						"title": "If Object",
+						"description": "Action to take if source is a Object, see Config for options"
+					},
+					"ifList": {
+						"type": "integer",
+						"title": "If List",
+						"description": "Action to take if source is a List, see Config for options"
+					},
+					"dataTarget": {
+						"type": "string",
+						"title": "File Name",
+						"description": "The name of the file to be written to the archive"
+					},
+					"dataTargetDelimiter": {
+						"type": "boolean",
+						"title": "Clear After",
+						"description": "Clear Content afte saving"
+					},
+					"staticData": {
+						"type": "boolean",
+						"title": "Clear After",
+						"description": "Clear Content afte saving"
+					},
+					"parseFormat": {
+						"type": "integer"
+					}
+				}
+			}]
+		},
+		
+		"replace": {
+			"type": "object",
+			"allOf": [{
+				"$ref": "#/definitions/sourceDirective"
+			},
+			{
+				"properties": {
+					"type": {
+						"type": "integer",
+						"value": 4
+					},
+					"ifMissing": {
+						"type": "integer",
+						"title": "If Missing",
+						"description": "Action to take if source is missing, see Config for options"
+					},
+					"toValue": {
+						"type": "string",
+						"title": "To Value",
+						"description": "To value to be used if source is missing"
+					},
+					"ifPrimitive": {
+						"type": "integer",
+						"title": "If Primitive",
+						"description": "Action to take if source is a Primitive type, see Config for options"
+					},
+					"ifObject": {
+						"type": "integer",
+						"title": "If Object",
+						"description": "Action to take if source is a Object, see Config for options"
+					},
+					"objectAttrPrimitive": {
+						"type": "integer",
+						"title": "If Attribute Primitive",
+						"description": "Action to take if source is a Object and Attribute is Primitive, see Config for options"
+					},
+					"objectAttrList": {
+						"type": "integer",
+						"title": "If Attribute Primitive",
+						"description": "Action to take if source is a Object and Attribute is List, see Config for options"
+					},
+					"objectAttrObject": {
+						"type": "integer",
+						"title": "If Attribute Object",
+						"description": "Action to take if source is a Object and Attribute is Object, see Config for options"
+					},
+					"ifList": {
+						"type": "integer",
+						"title": "If List",
+						"description": "Action to take if source is a List, see Config for options"
+					},
+					"fromAttribute": {
+						"type": "string",
+						"title": "From Attribute",
+						"description": "Attribute name with From value"
+					},
+					"toAttribute": {
+						"type": "string",
+						"title": "To Attribute",
+						"description": "Attribute name with To value"
+					},
+					"listAttrMissing": {
+						"type": "integer",
+						"title": "If List Attr Missing",
+						"description": "Action to take if a List From / To attribute are missing, see Config for options"
+					},
+					"listAttrNotPrimitive": {
+						"type": "integer",
+						"title": "If List Attr Not Primitive",
+						"description": "Action to take if a List From / To attribute is not a primitive, see Config for options"
+					},
+					"processAfter": {
+						"type": "boolean",
+						"title": "Clear After",
+						"description": "Clear Content afte saving"
+					},
+					"processRequire": {
+						"type": "boolean",
+						"title": "Clear After",
+						"description": "Clear Content afte saving"
+					}
+				}
+			}]
+		},
+		
+		"save": {
+			"type": "object",
+			"allOf": [{"$ref": "#/definitions/directive"},
+				{
+				"properties": {
+					"type": {
+						"type": "integer",
+						"value": 5
+					},
+					"fileName": {
+						"type": "string",
+						"title": "File Name",
+						"description": "The name of the file to be written to the archive"
+					},
+					"clearAfter": {
+						"type": "boolean",
+						"title": "Clear After",
+						"description": "Clear Content afte saving"
+					}
+				}
+			}]
+		}
+	},
+	
+	"$schema": "http://json-schema.org/draft-06/schema#",
+	"$id": "http://example.com/example.json",
+	"type": "object",
+	"properties": {
+		"id": {
+			"type": "object",
+			"description": "Unique Template Identifier",
+			"properties": {
+				"group": {
+					"type": "string",
+					"title": "Group",
+					"description": "Defines a group of related templates"
+				},
+				"name": {
+					"type": "string",
+					"title": "Name",
+					"description": "The template name"
+				},
+				"variant": {
+					"type": "string",
+					"title": "Variant",
+					"description": "The variant of the template"
+				}
+			}
+		},
+		"wrapper": {
+			"type": "object",
+			"description": "The strings used to identify a tag/bookmark in content",
+			"properties": {
+				"front": {
+					"type": "string",
+					"title": "Open",
+					"description": "indicates beginning of tag/bookmark"
+				},
+				"back": {
+					"type": "string",
+					"title": "Close",
+					"description": "indicates ending of tag/bookmark"
+				}
+			}
+		},
+		"description": {
+			"type": "string",
+			"title": "Description",
+			"description": "Describes the template, used in error logging"
+		},
+		"content": {
+			"type": "string",
+			"title": "Content",
+			"description": "The tempalte content"
+		},
+		"contentType": {
+			"type": "integer",
+			"title": "The Content type",
+			"description": "Content Type, see Config for options"
+		},
+		"contentDisposition": {
+			"type": "integer",
+			"title": "The Content disposition",
+			"description": "Content disposition, , see Config for options"
+		},
+		"contentEncoding": {
+			"type": "integer",
+			"title": "The Contentencoding",
+			"description": "Content Encoding , see Config for options"
+		},
+		"contentFileName": {
+			"type": "string",
+			"title": "Output Filename",
+			"description": "Filename to save - can contain tags"
+		},
+		"contentRedirectUrl": {
+			"type": "string",
+			"title": "Redirect URL",
+			"description": "Provided for Rest API related uses"
+		},
+		"directives": {
+			"type": "array",
+			"title": "Directives",
+			"description": "The directives that drive the merge",
+			"items": {
+					"anyOf" : [
+						{"$ref": "#/definitions/enrich"},
+						{"$ref": "#/definitions/replace"},
+						{"$ref": "#/definitions/insert"},
+						{"$ref": "#/definitions/parse"},
+						{"$ref": "#/definitions/save"}
+					]
+				}
+			}
+		}
 }

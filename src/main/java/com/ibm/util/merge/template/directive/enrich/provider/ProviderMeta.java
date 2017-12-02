@@ -12,9 +12,9 @@ public class ProviderMeta {
 	 */
 	public String optionName;
 	/**
-	 * The format of the Json Configuration value used by this provider
+	 * The provider environment memory variable rquriements
 	 */
-	public String sourceJson;
+	public String sourceEnv;
 	/**
 	 * The help to be displayed for provider command
 	 */
@@ -28,10 +28,10 @@ public class ProviderMeta {
 	 */
 	public String returnHelp;
 	
-	public ProviderMeta(String optionName, String sourceJson,
+	public ProviderMeta(String optionName, String sourceEnv,
 			String commandHelp, String parseHelp, String returnHelp) {
 		this.optionName = optionName;
-		this.sourceJson = sourceJson;
+		this.sourceEnv = sourceEnv;
 		this.commandHelp = commandHelp;
 		this.parseHelp = parseHelp;
 		this.returnHelp = returnHelp;

@@ -1,6 +1,46 @@
 {
   "definitions" : {
-		"Encoding": {
+		"config": {
+			"type" : "object",
+			"title" : "Configuration Options",
+			"description" : "Options for the IDMU runtime",
+			"properties" : {
+				"logLevel" : {
+					"type" : "string",
+					"title" : "Logging Level",
+					"description" : "Logging Level",
+			        "enum" : ["CRITICAL","SEVERE","WARN","INFO"]
+				},
+				"nestLimit" : {
+					"type" : "string",
+					"title" : "Nest Limit",
+					"description" : "Limit on Nested Replace actions"
+				},
+				"prettyJson" : {
+					"type" : "string",
+					"title" : "Pretty Json",
+					"description" : "Generate pretty json",
+			        "enum" : ["true","false"]
+				},
+				"tempFolder" : {
+					"type" : "string",
+					"title" : "Temp Folder",
+					"description" : "Local files system folder were archives are placed"
+				},
+				"insertLimit" : {
+					"type" : "string",
+					"title" : "Insert Limit",
+					"description" : "Limit on Nested Sub-Template Inserts"
+				},
+				"version" : {
+					"type" : "string",
+					"title" : "Version",
+					"description" : "IDMU Version Number"
+				},
+			}
+		},
+
+		"encoding": {
 			"type" : "object",
 			"title" : "Encoding Options",
 			"description" : "Options for Encode As template values",
@@ -8,28 +48,61 @@
 				"Encoding" : {
 					"type" : "object",
 					"title" : "Encode Options",
-					"description" : "Encode Options"
+					"description" : "Encode Option code/value pairs"
 				}
 			}
 		},
 			
-		"Parser" : {
+		"parsers" : {
 			"type" : "object",
-			"title" : "Parser Options",
-			"description" : "Options for Parse As template values",
-			"properties" : {
-				"Parse Formats": {
-					"type" : "object",
-					"title" : "Parse As Options",
-					"description" : "Parse As Options"
-				}
-			}
+			"title" : "Registered Parsers",
+			"description" : "Options for Parse As template values with parser classes"
 		},
 	
-		"Template": {
+		"providers" : {
 			"type" : "object",
-			"title" : "Template",
-			"description" : "Template Options",
+			"title" : "Providers",
+			"description" : "Registered Enrichment Providers",
+			"properties" : {} 
+		},
+	
+		"provider" : {
+			"type" : "object",
+			"title" : "Provider",
+			"description" : "Registered Enrichment Provider",
+			"properties" : {
+				"sourceEnv" : {
+					"type" : "string",
+					"title" : "Environment",
+					"description" : "Provider Environment Variable Requirements"
+				},
+				"optionName" : {
+					"type" : "string",
+					"title" : "Option Name",
+					"description" : "Provider Option Title"
+				},
+				"parseHelp" : {
+					"type" : "string",
+					"title" : "Parse Help",
+					"description" : "Information on how this provider implements Parsing"
+				},
+				"commandHelp" : {
+					"type" : "string",
+					"title" : "Command Help",
+					"description" : "Information on how this provider uses the command string"
+				},
+				"returnHelp" : {
+					"type" : "string",
+					"title" : "Return Help",
+					"description" : "Information on what this provider places in the Data Manager"
+				},
+			}
+		},
+
+		"template": {
+			"type" : "object",
+			"title" : "Template Options",
+			"description" : "Objections for Template enumarators",
 			"properties" : {
 				"Content Type": {
 					"type":"object",
@@ -44,45 +117,45 @@
 			}
 		},
 		
-		"Enrich": {
+		"enrich": {
 			"type" : "object",
 			"title" : "Enrich Options",
 			"description" : "Options for Enrich Directive"
 		},
 		
-		"Insert": {
+		"insert": {
 			"type" : "object",
-			"title" : "Enrich Options",
-			"description" : "Options for Enrich Directive",
+			"title" : "Insert Options",
+			"description" : "Options for Enrich Directive enumarators",
 			"properties" : {
 				"If List": { 
 					"type": "object", 
 					"title" : "If List Options",
-					"description" : "If List Options for Enrich Directive"
+					"description" : "ifList Options for Enrich Directive"
 				},
 				"Source Missing": { 
 					"type": "object",
 					"title" : "If Object Options",
-					"description" : "If Object Options for Enrich Directive"
+					"description" : "ifObject Options for Enrich Directive"
 				},
 				"If Primitive": {  
 					"type": "object" ,
 					"title" : "If Primitive Options",
-					"description" : "If Primitive Options for Enrich Directive"
+					"description" : "ifPrimitive Options for Enrich Directive"
 				},
 				"If Object": { 
 					"type": "object",
 					"title" : "If Object Options",
-					"description" : "If Object Options for Enrich Directive"
+					"description" : "ifObject Options for Enrich Directive"
 				},
 				"Insert If operators": { 
 					"type": "object",
 					"title" : "If Value Operators",
-					"description" : "If Value Operator values"
+					"description" : "ifValue Operator values"
 				}
 		},
 	
-		"Parse": {
+		"parse": {
 			"type" : "object",
 			"title" : "Parse Options",
 			"description" : "Options for Parse Directive",
@@ -110,7 +183,7 @@
 			}
 		},	
 		
-		"Replace": {
+		"replace": {
 			"type" : "object",
 			"title" : "Replace Options",
 			"description" : "Options for Replace Directive",
@@ -163,7 +236,7 @@
 			}
 		},
 		
-		"Save": {
+		"save": {
 			"type" : "object",
 			"title" : "Parse Options",
 			"description" : "Options for Parse Directive"
@@ -174,14 +247,16 @@
   "$id" : "http://example.com/example.json",
   "type" : "object",
   "properties" : {
-  		"Encoding" :	{ "$ref" : "#/definitions/Encoding" },
-        "Parser" : 		{ "$ref" : "#/definitions/Parser" },
-    	"Template": 	{ "$ref" : "#/definitions/Template"},
-		"Enrich": 		{ "$ref" : "#/definitions/Enrich"},
-		"Insert": 		{ "$ref" : "#/definitions/Insert"},
-		"Parse": 		{ "$ref" : "#/definitions/Parse"},
-		"Replace": 		{ "$ref" : "#/definitions/Replace"},
-		"Save": 		{ "$ref" : "#/definitions/Save"}
+  		"config" :	{ "$ref" : "#/definitions/config" },
+	    	"template": 	{ "$ref" : "#/definitions/template"},
+		"enrich": 	{ "$ref" : "#/definitions/enrich"},
+		"insert": 	{ "$ref" : "#/definitions/insert"},
+		"replace": 	{ "$ref" : "#/definitions/replace"},
+		"parse": 	{ "$ref" : "#/definitions/parse"},
+		"save": 		{ "$ref" : "#/definitions/save"},
+        "providers":	{ "$ref" : "#/definitions/providers" },
+        "parsers" : 	{ "$ref" : "#/definitions/parser" },
+  		"encoding" :	{ "$ref" : "#/definitions/encoding" }
     }
   }
 }
