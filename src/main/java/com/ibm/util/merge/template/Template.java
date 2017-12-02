@@ -629,8 +629,7 @@ public class Template {
 	 * @param response The response time for a merge action
 	 */
 	public void postStats(Long response) {
-		this.stats.hits++;
-		this.stats.time += response;
+		this.stats.post(response);
 	}
 	
 }

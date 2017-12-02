@@ -26,4 +26,9 @@ public class Stat {
 	public long hits = 0;
 	public long size = 0;
 	public long time = 0;
+	
+	public synchronized void post(long duration) {
+		hits++;
+		time+=duration;
+	}
 }
