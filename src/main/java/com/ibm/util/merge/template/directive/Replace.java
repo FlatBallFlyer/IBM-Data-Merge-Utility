@@ -157,9 +157,9 @@ public class Replace extends AbstractDataDirective {
 	}
 
 	@Override
-	public AbstractDirective getMergable() throws MergeException {
+	public AbstractDirective getMergable(Merger context) throws MergeException {
 		Replace mergable = new Replace();
-		this.makeMergable(mergable);
+		this.makeMergable(mergable, context);
 		mergable.setFromAttribute(this.fromAttribute);
 		mergable.setToAttribute(this.toAttribute);
 		mergable.setProcessAfter(this.processAfter);

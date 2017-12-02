@@ -32,7 +32,7 @@ public class SaveFileTest {
 	@Test
 	public void testGetMergable() throws MergeException {
 		directive.cachePrepare(new Template());
-		SaveFile mergable = (SaveFile) directive.getMergable();
+		SaveFile mergable = (SaveFile) directive.getMergable(null);
 		assertNotSame(mergable, directive);
 		assertEquals(directive.getFilename(), mergable.getFilename());
 		assertEquals(directive.getClearAfter(), mergable.getClearAfter());

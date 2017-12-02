@@ -36,10 +36,12 @@ import com.ibm.util.merge.template.Template;
  */
 public abstract class AbstractDirective {
 
-	private transient Template template;
-	private int state = Template.STATE_RAW;
 	private int type;
 	private String name = "";
+
+	private transient Template template;
+	private transient Merger context;
+	private transient int state = Template.STATE_RAW;
 
 	/**
 	 * Instantiate a Directive 
@@ -60,20 +62,22 @@ public abstract class AbstractDirective {
 
 	/**
 	 * Each directive must implement a clone-like get mergable
+	 * @param context The merge context to be used
 	 * @return the Mergable directive
 	 * @throws MergeException on processing errors
 	 */
-	public abstract AbstractDirective getMergable() throws MergeException;
+	public abstract AbstractDirective getMergable(Merger context) throws MergeException;
 
 	/**
 	 * Get a mergable copy of this directive
-	 * 
+	 * @param context The merge context to be used
 	 * @param target The directive to make mergable
 	 */
-	public void makeMergable(AbstractDirective target) {
+	public void makeMergable(AbstractDirective target, Merger context) {
 		target.setType(this.getType());
 		target.setName(name);
 		target.state = Template.STATE_MERGABLE;
+		target.context = context;
 	}
 
 	/**
@@ -89,6 +93,13 @@ public abstract class AbstractDirective {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * @return Merge Context
+	 */
+	public Merger getContext() {
+		return context;
 	}
 
 	/**

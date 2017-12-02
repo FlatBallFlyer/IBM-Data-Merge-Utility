@@ -58,9 +58,9 @@ public class SaveFile extends AbstractDirective {
 	}
 
 	@Override
-	public AbstractDirective getMergable() throws MergeException {
+	public AbstractDirective getMergable(Merger context) throws MergeException {
 		SaveFile mergable = new SaveFile();
-		this.makeMergable(mergable);
+		this.makeMergable(mergable, context);
 		mergable.setFilename(filename);
 		mergable.setClearAfter(clearAfter);
 		mergable.setFilenameContent(this.fileNameContent.getMergable());

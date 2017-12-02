@@ -359,13 +359,4 @@ public class TemplateTest {
 		assertEquals(0, template.getStats().time);
 	}
 	
-	@Test
-	public void testGetSetContext() throws MergeException {
-		assertEquals(null, template.getContext());
-		Cache cache = new Cache();
-		Merger context = new Merger(cache, "system.sample.");
-		template.setContext(context);
-		assertSame(context, template.getContext());
-	}
-	
 }

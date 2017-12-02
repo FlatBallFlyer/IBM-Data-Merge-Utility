@@ -61,7 +61,7 @@ public class EnrichTest {
 		before.setTargetDataName("some=name");
 		before.setTargetDataDelimeter("=");
 		before.cachePrepare(template);
-		Enrich after = (Enrich) before.getMergable();
+		Enrich after = (Enrich) before.getMergable(null);
 		assertNotSame(before, after);
 		assertEquals(before.getEnrichClass(), after.getEnrichClass());
 		assertEquals(before.getEnrichCommand(), after.getEnrichCommand());

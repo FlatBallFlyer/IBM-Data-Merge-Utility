@@ -201,7 +201,7 @@ public class Template {
 		mergable.mergeContent = this.getMergeContent().getMergable();
 		mergable.replaceStack.putAll(replace);
 		for (AbstractDirective directive : this.directives) {
-			mergable.addDirective(directive.getMergable());
+			mergable.addDirective(directive.getMergable(context));
 		}
 		mergable.state = STATE_MERGABLE;
 		return mergable;
@@ -537,13 +537,6 @@ public class Template {
 	 */
 	public int getState() {
 		return state;
-	}
-
-	/**
-	 * @return merge context
-	 */
-	public Merger getContext() {
-		return context;
 	}
 
 	///////////////////////////////////////////////////////////

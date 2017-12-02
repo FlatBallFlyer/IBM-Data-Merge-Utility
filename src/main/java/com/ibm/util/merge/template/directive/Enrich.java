@@ -84,9 +84,9 @@ public class Enrich extends AbstractDirective {
 	}
 
 	@Override
-	public AbstractDirective getMergable() throws MergeException {
+	public AbstractDirective getMergable(Merger context) throws MergeException {
 		Enrich mergable = new Enrich();
-		this.makeMergable(mergable);
+		this.makeMergable(mergable, context);
 		mergable.setTargetContent(this.targetContent.getMergable());
 		mergable.setType(AbstractDirective.TYPE_ENRICH);
 		mergable.setTargetDataName(this.targetDataName);
@@ -105,7 +105,7 @@ public class Enrich extends AbstractDirective {
 		DataElement value = provider.provide(this.enrichCommand, this.getTemplate().getWrapper(), context, this.getTemplate().getReplaceStack(), this.parseAs);
 		this.getTargetContent().replace(this.getTemplate().getReplaceStack(), true, Config.nestLimit());
 		String targetName = this.getTargetContent().getValue();
-		this.getTemplate().getContext().getMergeData().put(targetName, this.targetDataDelimeter, value);
+		this.getContext().getMergeData().put(targetName, this.targetDataDelimeter, value);
 	}
 
 	/**

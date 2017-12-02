@@ -16,6 +16,7 @@
  */
 package com.ibm.util.merge.template.directive;
 
+import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 import com.ibm.util.merge.template.content.Content;
@@ -28,29 +29,11 @@ import com.ibm.util.merge.template.content.TagSegment;
  *
  */
 public abstract class AbstractDataDirective extends AbstractDirective {
-	/**
-	 * The data source that drives the directive - Can contain Replace Tags
-	 */
 	private String dataSource;
-	/**
-	 * The delimiter used in the source name
-	 */
 	private String dataDelimeter;
-	/**
-	 * The ifMissing Operator - See -Directive-_IF_MISSING*
-	 */
 	private int ifMissing;
-	/**
-	 * The ifPrimitive Operator - See -Directive-_IF_PRIMITIVE*
-	 */
 	private int ifPrimitive;
-	/**
-	 * The ifObject Operator - See -Directive-_IF_OBJECT*
-	 */
 	private int ifObject;
-	/**
-	 * The ifList Operator - See -Directive-_IF_LIST*
-	 */
 	private int ifList;
 
 	/*
@@ -100,11 +83,11 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	 * Create a mergable clone of the object
 	 * 
 	 * @param mergable The directive to make mergable
+	 * @param context The merge context to be used
 	 * @throws MergeException on processing errors 
 	 */
-	public void makeMergable(AbstractDataDirective mergable) throws MergeException {
-		mergable.setType(this.getType());
-		mergable.setName(this.getName());
+	public void makeMergable(AbstractDataDirective mergable, Merger context) throws MergeException {
+		super.makeMergable(mergable, context);
 		mergable.setDataSource(this.getDataSource());
 		mergable.setSourceContent(this.getSourceContent().getMergable());
 		mergable.setDataDelimeter(this.getDataDelimeter());

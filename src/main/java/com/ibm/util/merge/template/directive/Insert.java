@@ -130,9 +130,9 @@ public class Insert extends AbstractDataDirective {
 	}
 
 	@Override
-	public Insert getMergable() throws MergeException {
+	public Insert getMergable(Merger context) throws MergeException {
 		Insert mergable = new Insert();
-		this.makeMergable(mergable);
+		this.makeMergable(mergable, context);
 		mergable.setType(TYPE_INSERT);
 		mergable.setBookmarkPattern(bookmarkPattern);
 		mergable.setDataSource(this.getDataSource());

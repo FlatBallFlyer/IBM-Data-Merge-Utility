@@ -102,9 +102,9 @@ public class ParseData extends AbstractDataDirective {
 	}
 
 	@Override
-	public ParseData getMergable() throws MergeException {
+	public ParseData getMergable(Merger context) throws MergeException {
 		ParseData mergable = new ParseData();
-		this.makeMergable(mergable);
+		this.makeMergable(mergable, context);
 		mergable.setTargetContent(this.targetContent.getMergable());
 		mergable.setDataTarget(dataTarget);
 		mergable.setDataTargetDelimiter(dataTargetDelimiter);

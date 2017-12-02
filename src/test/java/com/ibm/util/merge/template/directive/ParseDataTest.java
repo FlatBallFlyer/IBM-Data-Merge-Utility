@@ -92,7 +92,7 @@ public class ParseDataTest {
 
 	@Test
 	public void testGetMergable() throws MergeException {
-		ParseData mergable = (ParseData) directive.getMergable();
+		ParseData mergable = (ParseData) directive.getMergable(null);
 		assertNotSame(mergable, directive);
 		assertEquals(mergable.getName(), directive.getName());
 		assertEquals(mergable.getType(), directive.getType());

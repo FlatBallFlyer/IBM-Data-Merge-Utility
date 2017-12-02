@@ -222,7 +222,7 @@ public class InsertTest {
 			".*",Insert.INSERT_IF_STRING_EQUALS,"");
 
 		directive.cachePrepare(new Template());
-		Insert mergable = directive.getMergable();
+		Insert mergable = directive.getMergable(null);
 		assertNotSame(directive, mergable);
 		assertEquals(directive.getType(), AbstractDirective.TYPE_INSERT);
 		assertEquals(directive.getName(), mergable.getName());

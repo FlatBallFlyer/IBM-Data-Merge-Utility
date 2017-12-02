@@ -20,9 +20,9 @@ public class AbstractDirectiveTest {
 		}
 
 		@Override
-		public AbstractDirective getMergable() {
+		public AbstractDirective getMergable(Merger context) {
 			AbstractTest mergable = new AbstractTest();
-			this.makeMergable(mergable);
+			this.makeMergable(mergable, context);
 			return mergable;
 		}
 
@@ -47,7 +47,7 @@ public class AbstractDirectiveTest {
 
 	@Test
 	public void testMakeMergable() {
-		AbstractDirective mergable = test.getMergable();
+		AbstractDirective mergable = test.getMergable(null);
 		assertNotSame(mergable, test);
 		assertEquals(test.getType(), mergable.getType());
 		assertEquals(test.getName(), mergable.getName());

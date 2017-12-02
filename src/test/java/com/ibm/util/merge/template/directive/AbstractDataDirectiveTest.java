@@ -13,9 +13,9 @@ public class AbstractDataDirectiveTest {
 	private class AbstractDataTest extends AbstractDataDirective {
 		
 		@Override
-		public AbstractDirective getMergable() throws MergeException {
+		public AbstractDirective getMergable(Merger context) throws MergeException {
 			AbstractDataTest mergable = new AbstractDataTest();
-			this.makeMergable(mergable);
+			this.makeMergable(mergable, context);
 			return mergable;			
 		}
 		
@@ -64,7 +64,7 @@ public class AbstractDataDirectiveTest {
 	@Test
 	public void testGetMergable() throws MergeException {
 		test.cachePrepare(new Template());
-		AbstractDataTest mergable = (AbstractDataTest) test.getMergable();
+		AbstractDataTest mergable = (AbstractDataTest) test.getMergable(null);
 		assertNotSame(mergable, test);
 		assertEquals(test.getDataDelimeter(), 	mergable.getDataDelimeter());
 		assertEquals(test.getIfList(), 			mergable.getIfList());

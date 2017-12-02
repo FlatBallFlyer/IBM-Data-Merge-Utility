@@ -92,7 +92,7 @@ public class ReplaceTest {
 				false, true);
 
 		replace.cachePrepare(new Template());
-		Replace mergable = (Replace) replace.getMergable();
+		Replace mergable = (Replace) replace.getMergable(null);
 		assertEquals(AbstractDirective.TYPE_REPLACE, 			mergable.getType());
 		assertEquals("source", 									mergable.getDataSource());
 		assertEquals("P", 										mergable.getDataDelimeter());
