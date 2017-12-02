@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,7 +54,7 @@ import com.ibm.util.merge.template.directive.SaveFile;
  */
 public class Cache implements Iterable<String> {
 	private static final Logger LOGGER = Logger.getLogger(Cache.class.getName());
-	private final HashMap<String, Template> cache;
+	private final ConcurrentHashMap<String, Template> cache;
 	private final DataProxyJson gsonProxy = new DataProxyJson(Config.isPrettyJson());
 	
 	// Cache Statistics
@@ -65,7 +66,7 @@ public class Cache implements Iterable<String> {
 	 * @throws MergeException  on processing errors
 	 */
 	public Cache() throws MergeException {
-		this.cache = new HashMap<String, Template>();
+		this.cache = new ConcurrentHashMap<String, Template>();
 		this.initialized = new Date();
 		this.buildDefaultSystemTemplates();
 	}
@@ -76,7 +77,7 @@ public class Cache implements Iterable<String> {
 	 * @throws MergeException  on processing errors
 	 */
 	public Cache(File load) throws MergeException {
-		this.cache = new HashMap<String, Template>();
+		this.cache = new ConcurrentHashMap<String, Template>();
 		this.initialized = new Date();
 		this.buildDefaultSystemTemplates();
 		
