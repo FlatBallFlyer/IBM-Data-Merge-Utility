@@ -494,7 +494,6 @@ public class ReplaceTest {
 				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
 				true, true);
 		template.addDirective(directive);
-		template.cachePrepare();
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, "test.object.replace");
 		context.getMergeData().put("data.object", "-", replaceObject);

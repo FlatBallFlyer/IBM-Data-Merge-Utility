@@ -155,7 +155,6 @@ public class ParseDataTest {
 		merger.getMergeData().put("test", "-", jsonString1);
 		directive.setIfPrimitive(ParseData.PRIMITIVE_PARSE);
 		directive.setParseFormat(Config.PARSE_JSON);
-		template.cachePrepare();
 		template = template.getMergable(merger);
 		template.getMergedOutput();
 		DataElement result = merger.getMergeData().get("target", "-");
@@ -199,7 +198,6 @@ public class ParseDataTest {
 	public void testExecuteListThrow() throws MergeException {
 		directive.setIfList(ParseData.LIST_THROW);
 		merger.getMergeData().put("test", "-", this.sourceList1);
-		template.cachePrepare();
 		template = template.getMergable(merger);
 		try {
 			template.getMergedOutput();

@@ -85,60 +85,191 @@ public class Cache implements Iterable<String> {
 	}
 	
 	/**
-	 * load template groups from a folder of Template Group json files
-	 * @param templateFolder a Folder with one or more .json files that contain a valid Template Group
+	 * @param key Template ID
+	 * @return if cache contains a template
 	 */
-	public void loadGroups(File templateFolder) {
-		if (!templateFolder.exists()) {
-			LOGGER.log(Level.WARNING, "Template Load Folder not found: " + templateFolder.getPath());
-			return;
+	public boolean contains(String key) {
+		return this.cache.containsKey(key);
+	}
+
+	@Override
+	public Iterator<String> iterator() {
+		return cache.keySet().iterator();
+	}
+
+	/**
+	 * Delete template.
+	 *
+	 * @param shorthand the template id 
+	 * @return the string
+	 * @throws MergeException  on processing errors
+	 */
+	public String deleteTemplate(String shorthand) throws MergeException {
+		TemplateId id = new TemplateId(shorthand);
+		deleteTemplate(id);
+		return "ok";
+	}
+
+	/**
+	 * Delete template.
+	 *
+	 * @param id The template id 
+	 * @return The success message
+	 * @throws MergeException  on processing errors
+	 */
+	public String deleteTemplate(TemplateId id) throws MergeException {
+		if (!cache.containsKey(id.shorthand())) {
+			throw new Merge403("Not Found:" + id.shorthand());
 		}
-		
-		File[] groups = templateFolder.listFiles();
-		if (null == groups) {
-			LOGGER.log(Level.WARNING, "Template Load Folder is empty: " + templateFolder.getPath());
-			return;
+		cache.remove(id.shorthand());
+		return "ok";
+	}
+
+	/**
+	 * Delete group.
+	 *
+	 * @param groupName the group name
+	 * @return the string
+	 * @throws MergeException  on processing errors
+	 */
+	public String deleteGroup(String groupName) throws MergeException {
+		if (groupName.equals("system")) {
+			throw new Merge403("Forbidden:" + groupName);
 		}
-		
-		for (File file : groups) {
-			try {
-				this.postGroup(new String(Files.readAllBytes(file.toPath()), "ISO-8859-1"));
-			} catch (Throwable e) {
-				LOGGER.log(Level.WARNING, "Template Group failed to load: " + file.getAbsolutePath());
+	
+		if (!this.getGroupList().contains(groupName)) {
+			throw new Merge403("Not Found:" + groupName);
+		}
+	
+		deleteTheGroup(groupName);
+		return "ok";
+	}
+
+	/**
+	 * Delete the group
+	 * @param groupName
+	 */
+	private void deleteTheGroup(String groupName) {
+		HashSet<String> names = new HashSet<String>();
+		for (String name : cache.keySet()) {
+			if (cache.get(name).getId().group.equals(groupName)) {
+				names.add(name);
 			}
 		}
+		
+		for (String name : names) {
+			cache.remove(name);
+		}
 	}
-	
+
 	/**
-	 * Build the system default templates (exception handling)
+	 * @return number of cache hits since instantiation
 	 */
-	public void buildDefaultSystemTemplates() {
-		// Build Default Templates
-		try {
-			this.deleteGroup("system");
-		} catch (Throwable e) {
-			// ignore not found
+	public double getCacheHits() {
+		return this.cacheHits;
+	}
+
+	/**
+	 * @return the date/time the cache was initialized
+	 */
+	public Date getInitialized() {
+		return initialized;
+	}
+
+	/**
+	 * Gets the template.
+	 *
+	 * @param shortHand the Template Name
+	 * @return the template
+	 */
+	public String getTemplate(String shortHand) {
+		TemplateId id = new TemplateId(shortHand);
+		TemplateList templates = getTemplates(id);
+		return gsonProxy.toString(templates);
+	}
+
+	/**
+	 * Gets the template.
+	 *
+	 * @param id the template id 
+	 * @return the template List
+	 */
+	public TemplateList getTemplates(TemplateId id) {
+		TemplateList templates = new TemplateList();
+		for (Template template : cache.values()) {
+			if (	(id.group.isEmpty() 	|| id.group.equals(template.getId().group)) &&
+					(id.name.isEmpty() 		|| id.name.equals(template.getId().name) ) &&
+					(id.variant.isEmpty() 	|| id.variant.equals(template.getId().variant))) {
+				templates.add(template);
+			}
 		}
-		
-		// Add System Templates
-		try {
-			Template error403 = new Template("system","error403","","Error - Forbidden");
-			Template error404 = new Template("system","error404","","Error - Not Found");
-			Template error500 = new Template("system","error500","","Error - Merge Error");
-			Template sample = new Template("system","sample","");
-			sample.addDirective(new Enrich());
-			sample.addDirective(new Insert());
-			sample.addDirective(new ParseData());
-			sample.addDirective(new Replace());
-			sample.addDirective(new SaveFile());
-			postTemplate(error403);
-			postTemplate(error404);
-			postTemplate(error500);
-			postTemplate(sample); 
-		} catch (Throwable e) {
-			LOGGER.log(Level.SEVERE, "Load System Templates Failed!" + e.getMessage());
+		return templates;
+	}
+
+	/**
+	 * Gets the group.
+	 *
+	 * @param groupName the group name
+	 * @return the group
+	 */
+	public String getGroup(String groupName) {
+		if (groupName.isEmpty()) {
+			return this.gsonProxy.toString(getGroupList());
+		} 
+		TemplateList group = new TemplateList();
+		for (Template template : cache.values()) {
+			if (template.getId().group.equals(groupName)) {
+				group.add(template);
+			}
 		}
-		
+		return gsonProxy.toString(group);
+	}
+
+	/**
+	 * Gets the list of template groups.
+	 *
+	 * @return the group
+	 */
+	public HashSet<String> getGroupList() {
+		HashSet<String> groups = new HashSet<String>();
+		for (Template template : cache.values()) {
+			groups.add(template.getId().group);
+		}
+		return groups;
+	}
+
+	/**
+	 * Gets the list of template groups and template names.
+	 *
+	 * @return JSON String
+	 */
+	public String getGroupAndTemplateList() {
+		HashMap<String, ArrayList<String>> theTemplates = new HashMap<String, ArrayList<String>>();
+		for (Template template : cache.values()) {
+			if (!theTemplates.containsKey(template.getId().group)) {
+				theTemplates.put(template.getId().group, new ArrayList<String>());
+			}
+			theTemplates.get(template.getId().group).add(template.getId().shorthand());
+		}
+		return gsonProxy.toString(theTemplates);
+	}
+
+	/**
+	 * @return template statistics
+	 */
+	public Stats getStats() {
+		Stats stats = new Stats();
+		for (String name : cache.keySet()) {
+			stats.add(cache.get(name).getStats());
+		}
+		return stats;
+	}
+
+	/**
+	 * @return number of templates in cache
+	 */
+	public int getSize() {
+		return this.cache.size();
 	}
 
 	/**
@@ -209,7 +340,7 @@ public class Cache implements Iterable<String> {
 		}
 		return postTemplate(template);
 	}
-	
+
 	/**
 	 * Post template.
 	 *
@@ -226,35 +357,43 @@ public class Cache implements Iterable<String> {
 		cache.put(name, template);
 		return "ok";
 	}
-	
+
 	/**
-	 * Gets the template.
+	 * Post group.
 	 *
-	 * @param shortHand the Template Name
-	 * @return the template
+	 * @param groupJson the group json
+	 * @return the string
+	 * @throws MergeException  on processing errors
 	 */
-	public String getTemplate(String shortHand) {
-		TemplateId id = new TemplateId(shortHand);
-		TemplateList templates = getTemplates(id);
-		return gsonProxy.toString(templates);
+	public String postGroup(String groupJson) throws MergeException {
+		TemplateList templates = gsonProxy.fromString(groupJson, TemplateList.class);
+		if (null == templates) {
+			throw new Merge403("Invalid Json");
+		}
+	
+		String group = templates.get(0).getId().group;
+		if (getGroupList().contains(group)) {
+			throw new Merge403("Duplicate Found:" + group);
+		}
+		for (Template template : templates) {
+			if (template.getId().group.equals(group)) {
+				this.postTemplate(template);
+			} else {
+				throw new Merge403("Invalid Group - multi-group:" + group + ":" + template.getId().group);
+			}
+		}
+		return "ok";
 	}
 
 	/**
-	 * Gets the template.
-	 *
-	 * @param id the template id 
-	 * @return the template List
+	 * Update cached template statistics - NOT SYNCRONIZED Subject to inaccuracy 
+	 * @param template The template shortname to update
+	 * @param response The response time of merging the template
 	 */
-	public TemplateList getTemplates(TemplateId id) {
-		TemplateList templates = new TemplateList();
-		for (Template template : cache.values()) {
-			if (	(id.group.isEmpty() 	|| id.group.equals(template.getId().group)) &&
-					(id.name.isEmpty() 		|| id.name.equals(template.getId().name) ) &&
-					(id.variant.isEmpty() 	|| id.variant.equals(template.getId().variant))) {
-				templates.add(template);
-			}
+	public void postStats(String template, Long response) {
+		if (this.contains(template)) {
+			this.cache.get(template).postStats(response);
 		}
-		return templates;
 	}
 
 	/**
@@ -271,7 +410,7 @@ public class Cache implements Iterable<String> {
 		}
 		return putTemplate(template);
 	}
-	
+
 	/**
 	 * Put template.
 	 *
@@ -287,93 +426,6 @@ public class Cache implements Iterable<String> {
 		template.cachePrepare();
 		cache.put(name, template);
 		return "ok";
-	}
-	
-	/**
-	 * Delete template.
-	 *
-	 * @param shorthand the template id 
-	 * @return the string
-	 * @throws MergeException  on processing errors
-	 */
-	public String deleteTemplate(String shorthand) throws MergeException {
-		TemplateId id = new TemplateId(shorthand);
-		deleteTemplate(id);
-		return "ok";
-	}
-	
-	/**
-	 * Delete template.
-	 *
-	 * @param id The template id 
-	 * @return The success message
-	 * @throws MergeException  on processing errors
-	 */
-	public String deleteTemplate(TemplateId id) throws MergeException {
-		if (!cache.containsKey(id.shorthand())) {
-			throw new Merge403("Not Found:" + id.shorthand());
-		}
-		cache.remove(id.shorthand());
-		return "ok";
-	}
-	
-	/**
-	 * Gets the list of template groups.
-	 *
-	 * @return the group
-	 */
-	public HashSet<String> getGroupList() {
-		HashSet<String> groups = new HashSet<String>();
-		for (Template template : cache.values()) {
-			groups.add(template.getId().group);
-		}
-		return groups;
-	}
-
-	/**
-	 * Post group.
-	 *
-	 * @param groupJson the group json
-	 * @return the string
-	 * @throws MergeException  on processing errors
-	 */
-	public String postGroup(String groupJson) throws MergeException {
-		TemplateList templates = gsonProxy.fromString(groupJson, TemplateList.class);
-		if (null == templates) {
-			throw new Merge403("Invalid Json");
-		}
-
-		String group = templates.get(0).getId().group;
-		if (getGroupList().contains(group)) {
-			throw new Merge403("Duplicate Found:" + group);
-		}
-		for (Template template : templates) {
-			if (template.getId().group.equals(group)) {
-				this.postTemplate(template);
-			} else {
-				throw new Merge403("Invalid Group - multi-group:" + group + ":" + template.getId().group);
-			}
-		}
-		return "ok";
-	}
-	
-	/**
-	 * Gets the group.
-	 *
-	 * @param groupName the group name
-	 * @return the group
-	 */
-	public String getGroup(String groupName) {
-		if (groupName.isEmpty()) {
-			return this.gsonProxy.toString(getGroupList());
-		} 
-		TemplateList group = new TemplateList();
-		for (Template template : cache.values()) {
-			if (template.getId().group.equals(groupName)) {
-				group.add(template);
-			}
-		}
-		return gsonProxy.toString(group);
 	}
 
 	/**
@@ -393,122 +445,70 @@ public class Cache implements Iterable<String> {
 		if (!this.getGroupList().contains(groupName)) {
 			throw new Merge403("Not Found:" + groupName);
 		}
-
+	
 		deleteTheGroup(groupName);
-
+	
 		for (Template template : templates) {
 			this.postTemplate(template);
 		}
 		return "ok";
 	}
-	
-	/**
-	 * Delete group.
-	 *
-	 * @param groupName the group name
-	 * @return the string
-	 * @throws MergeException  on processing errors
-	 */
-	public String deleteGroup(String groupName) throws MergeException {
-		if (groupName.equals("system")) {
-			throw new Merge403("Forbidden:" + groupName);
-		}
-
-		if (!this.getGroupList().contains(groupName)) {
-			throw new Merge403("Not Found:" + groupName);
-		}
-	
-		deleteTheGroup(groupName);
-		return "ok";
-	}
 
 	/**
-	 * Gets the list of template groups and template names.
-	 *
-	 * @return JSON String
+	 * load template groups from a folder of Template Group json files
+	 * @param templateFolder a Folder with one or more .json files that contain a valid Template Group
 	 */
-	public String getGroupAndTemplateList() {
-		HashMap<String, ArrayList<String>> theTemplates = new HashMap<String, ArrayList<String>>();
-		for (Template template : cache.values()) {
-			if (!theTemplates.containsKey(template.getId().group)) {
-				theTemplates.put(template.getId().group, new ArrayList<String>());
-			}
-			theTemplates.get(template.getId().group).add(template.getId().shorthand());
-		}
-		return gsonProxy.toString(theTemplates);
-	}
-
-	/**
-	 * Update cached template statistics - NOT SYNCRONIZED Subject to inaccuracy 
-	 * @param template The template shortname to update
-	 * @param response The response time of merging the template
-	 */
-	public void postStats(String template, Long response) {
-		if (this.contains(template)) {
-			this.cache.get(template).postStats(response);
-		}
-	}
-	
-	/**
-	 * @return template statistics
-	 */
-	public Stats getStats() {
-		Stats stats = new Stats();
-		for (String name : cache.keySet()) {
-			stats.add(cache.get(name).getStats());
-		}
-		return stats;
-	}
-	
-	/**
-	 * @return number of templates in cache
-	 */
-	public int getSize() {
-		return this.cache.size();
-	}
-
-	/**
-	 * @param key Template ID
-	 * @return if cache contains a template
-	 */
-	public boolean contains(String key) {
-		return this.cache.containsKey(key);
-	}
-
-	/**
-	 * @return number of cache hits since instantiation
-	 */
-	public double getCacheHits() {
-		return this.cacheHits;
-	}
-
-	/**
-	 * @return the date/time the cache was initialized
-	 */
-	public Date getInitialized() {
-		return initialized;
-	}
-
-	@Override
-	public Iterator<String> iterator() {
-		return cache.keySet().iterator();
-	}
-
-	/**
-	 * Delete the group
-	 * @param groupName
-	 */
-	private void deleteTheGroup(String groupName) {
-		HashSet<String> names = new HashSet<String>();
-		for (String name : cache.keySet()) {
-			if (cache.get(name).getId().group.equals(groupName)) {
-				names.add(name);
-			}
+	public void loadGroups(File templateFolder) {
+		if (!templateFolder.exists()) {
+			LOGGER.log(Level.WARNING, "Template Load Folder not found: " + templateFolder.getPath());
+			return;
 		}
 		
-		for (String name : names) {
-			cache.remove(name);
+		File[] groups = templateFolder.listFiles();
+		if (null == groups) {
+			LOGGER.log(Level.WARNING, "Template Load Folder is empty: " + templateFolder.getPath());
+			return;
 		}
+		
+		for (File file : groups) {
+			try {
+				this.postGroup(new String(Files.readAllBytes(file.toPath()), "ISO-8859-1"));
+			} catch (Throwable e) {
+				LOGGER.log(Level.WARNING, "Template Group failed to load: " + file.getAbsolutePath());
+			}
+		}
+	}
+
+	/**
+	 * Build the system default templates (exception handling)
+	 */
+	public void buildDefaultSystemTemplates() {
+		// Build Default Templates
+		try {
+			this.deleteGroup("system");
+		} catch (Throwable e) {
+			// ignore not found
+		}
+		
+		// Add System Templates
+		try {
+			Template error403 = new Template("system","error403","","Error - Forbidden");
+			Template error404 = new Template("system","error404","","Error - Not Found");
+			Template error500 = new Template("system","error500","","Error - Merge Error");
+			Template sample = new Template("system","sample","");
+			sample.addDirective(new Enrich());
+			sample.addDirective(new Insert());
+			sample.addDirective(new ParseData());
+			sample.addDirective(new Replace());
+			sample.addDirective(new SaveFile());
+			postTemplate(error403);
+			postTemplate(error404);
+			postTemplate(error500);
+			postTemplate(sample); 
+		} catch (Throwable e) {
+			LOGGER.log(Level.SEVERE, "Load System Templates Failed!" + e.getMessage());
+		}
+		
 	}
 	
 }

@@ -62,56 +62,21 @@ import com.ibm.util.merge.template.directive.AbstractDirective;
  */
 public class Template {
 
-	/**
-	 * The unique Template ID
-	 */
 	private final TemplateId id;
-	/**
-	 * The content of the template. Template content consist of text, with any number 
-	 * of Replace Tag or Book-mark segments that are identified by the template.wrapper
-	 * which is a simple "open" and "close" pair that surround the tag and book-mark segments.  
-	 * Note that the wrapper characters can not appear anywhere in the template 
-	 * content except to identify a Tag or Book-mark.
-	 */
 	private String content 				= "";
-	/**
-	 * The wrapper used in the content
-	 */
 	private Wrapper wrapper				= new Wrapper();
-	/**
-	 * Content Type - provided for rest content type reply
-	 */
 	private int contentType				= Template.CONTENT_TEXT; 
-	/**
-	 * Content Disposition - provided for rest "Download" dispositions
-	 */
 	private int contentDisposition		= Template.DISPOSITION_NORMAL;
-	/**
-	 * Content Encoding - drives default data encoding
-	 */
 	private int contentEncoding			= TagSegment.ENCODE_NONE;
-	/**
-	 * A file name for Download Content Dispositions
-	 */
 	private String contentFileName		= "";
-	/**
-	 * A redirect URL - Provided for Rest implementations
-	 */
 	private String contentRedirectUrl	= "";
-	/**
-	 * A short description of the template - used in exception handling and logging 
-	 */
 	private String description			= "";
-	/**
-	 * The directives to execute during a merge
-	 */
 	private List<AbstractDirective> directives = new ArrayList<AbstractDirective>(); 
 	
 	/*
 	 * Transient values - initialized in cachePrepare, copied in getMergavble
 	 */
-	private transient Boolean merged 	= false;
-	private transient Boolean mergable 	= false;
+	private transient int state			= STATE_RAW;
 	private transient Stat stats 		= new Stat();
 	private transient Content mergeContent;
 	private transient HashMap<String, String> replaceStack = new HashMap<String,String>();
@@ -132,8 +97,6 @@ public class Template {
 	 */
 	public Template(TemplateId id) throws MergeException {
 		this.id = id;
-		this.mergable = false;
-		this.merged = false;
 		this.setContent("");
 		this.replaceStack = new HashMap<String,String>();
 	}
@@ -185,17 +148,20 @@ public class Template {
 	 * @throws MergeException on processing errors
 	 */
 	public void cachePrepare() throws MergeException {
-		this.merged 	= false;
-		this.mergable 	= false;
+		if (this.state != STATE_RAW) {
+			throw new Merge500("Can only prepare a RAW template");
+		}
+		
 		this.stats = new Stat();
 		this.stats.name = this.getId().shorthand();
 		this.stats.size = this.content.length();
-		this.setContent(content);
+		this.mergeContent = new Content(this.wrapper, this.content, this.contentEncoding);
 		this.replaceStack = new HashMap<String,String>();
 		this.context = null;
 		for (AbstractDirective directive : this.directives) {
 			directive.cachePrepare(this);
 		}
+		this.state = STATE_CACHED;
 	}
 	
 	/**
@@ -218,7 +184,10 @@ public class Template {
 	 * @throws MergeException on processing errors
 	 */
 	public Template getMergable(Merger context, HashMap<String,String> replace) throws MergeException {
-		this.stats.hits++;
+		if (this.state != STATE_CACHED) {
+			throw new Merge500("Can only get a mergable template from cached template");
+		}
+		
 		Template mergable = new Template(this.id);
 		mergable.setContext(context);
 		mergable.setContentDisposition(contentDisposition);
@@ -227,15 +196,14 @@ public class Template {
 		mergable.setDescription(description);
 		mergable.setContentFileName(contentFileName);
 		mergable.setContentRedirectUrl(contentRedirectUrl);
-		mergable.content = this.content;
-		mergable.wrapper = this.wrapper;
-		mergable.mergable = true;
-		mergable.merged = false;
+		mergable.setContent(this.content);
+		mergable.setWrapper(this.wrapper);
 		mergable.mergeContent = this.getMergeContent().getMergable();
 		mergable.replaceStack.putAll(replace);
 		for (AbstractDirective directive : this.directives) {
 			mergable.addDirective(directive.getMergable());
 		}
+		mergable.state = STATE_MERGABLE;
 		return mergable;
 	}
 
@@ -246,27 +214,214 @@ public class Template {
 	 * @throws MergeException  on processing errors
 	 */
 	public Content getMergedOutput() throws MergeException {
-		if (this.mergable) {
-			if (!this.merged) {
-				Long start = System.currentTimeMillis();
-				for (AbstractDirective directive : this.directives ) {
-					try {
-						directive.execute(this.context);
-					} catch (MergeException e) {
-						e.setDirective(directive);
-						e.setTemplate(this);
-						throw e;
-					}
-				}
-				this.merged = true;
-				this.directives.clear();
-				this.replaceStack.clear();
-				this.context.getCahce().postStats(this.id.shorthand(), System.currentTimeMillis() - start);
-			}
-			return this.mergeContent;
-		} else {
-			throw new Merge500("Can not merge a non-mergable tempalte");
+		if (this.state < STATE_MERGABLE) { 
+			throw new Merge500("Template is not in a mergable state");
 		}
+		
+		if (this.state == STATE_MERGABLE) {
+			Long start = System.currentTimeMillis();
+			for (AbstractDirective directive : this.directives ) {
+				try {
+					directive.execute(this.context);
+				} catch (MergeException e) {
+					e.setDirective(directive);
+					e.setTemplate(this);
+					throw e;
+				}
+			}
+			this.state = STATE_MERGED;
+			this.context.getCahce().postStats(this.id.shorthand(), System.currentTimeMillis() - start);
+		}
+		return this.mergeContent;
+	}
+
+	/**
+	 * Adds the directive.
+	 *
+	 * @param directive the directive
+	 */
+	public void addDirective(AbstractDirective directive) {
+		if (this.state == STATE_RAW) {
+			directive.setTemplate(this);
+			directives.add(directive);
+		}
+	}
+
+	/**
+	 * Adds a from/to pair to the replace stack.
+	 *
+	 * @param from From Value
+	 * @param to To Value
+	 */
+	public void addReplace(String from, String to) {
+		if (this.state == STATE_MERGABLE) {
+			this.replaceStack.put(from, to);
+		}
+	}
+	
+	/**
+	 * Adds a from/to pair to the replace stack.
+	 * @param values The values to add
+	 */
+	public void addReplace(HashMap<String,String> values) {
+		if (this.state == STATE_MERGABLE) {
+			this.replaceStack.putAll(values);
+		}
+	}
+
+	/**
+	 * Remove the replace value for one or more tags.
+	 * 
+	 * @param tags Tags to set to ""
+	 */
+	public void blankReplace(HashSet<String> tags) {
+		if (this.state == STATE_MERGABLE) {
+			for (String tag : tags) {
+				this.replaceStack.put(tag, "");
+			}
+		}
+	}
+
+	/**
+	 * Clears the content.
+	 */
+	public void clearContent() {
+		if (this.state == STATE_MERGABLE) {
+			this.mergeContent = new Content();
+			this.content = "";
+		}
+	}
+	
+	/**
+	 * Set the Content Wrapper strings
+	 * @param wrapper the value
+	 */
+	private void setWrapper(Wrapper wrapper) {
+		if (this.state == STATE_RAW) {
+			this.wrapper = wrapper;
+		}
+	}
+
+	/**
+	 * Sets the wrapper.
+	 *
+	 * @param front the Front wrapper
+	 * @param back The back wrapper
+	 */
+	public void setWrapper(String front, String back) {
+		if (this.state == STATE_RAW) {
+			this.wrapper = new Wrapper();
+			this.wrapper.front = front;
+			this.wrapper.back = back;
+		}
+	}
+
+	/**
+	 * Sets the content.
+	 *
+	 * @param content the new content
+	 * @throws MergeException  on processing errors
+	 */
+	public void setContent(String content) {
+		if (this.state == STATE_RAW) {
+			this.content = content;
+		}
+	}
+
+	/**
+	 * Sets the content type.
+	 *
+	 * @param contentType the new content type
+	 */
+	public void setContentType(int contentType) {
+		if (this.state == STATE_RAW) {
+			if (CONTENT_TYPES().containsKey(contentType)) {
+				this.contentType = contentType;
+			}
+		}
+	}
+
+	/**
+	 * Sets the content disposition.
+	 *
+	 * @param contentDisposition the new content disposition
+	 */
+	public void setContentDisposition(int contentDisposition) {
+		if (this.state == STATE_RAW) {
+			if (DISPOSITION_VALUES().containsKey(contentDisposition)) {
+				this.contentDisposition = contentDisposition;
+			}
+		}
+	}
+
+	public void setContentFileName(String contentFileName) {
+		if (this.state == STATE_RAW) {
+			this.contentFileName = contentFileName;
+		}
+	}
+
+	/**
+	 * Sets the content encoding.
+	 *
+	 * @param contentEncoding the new content encoding
+	 */
+	public void setContentEncoding(int contentEncoding) {
+		if (this.state == STATE_RAW) {
+			if (TagSegment.ENCODE_VALUES().containsValue(contentEncoding)) {
+				this.contentEncoding = contentEncoding;
+			}
+		}
+	}
+
+	/**
+	 * Sets the description.
+	 *
+	 * @param description the new description
+	 */
+	public void setDescription(String description) {
+		if (this.state == STATE_RAW) {
+			this.description = description;
+		}
+	}
+
+	/**
+	 * @param contentRedirectUrl The redirect URL
+	 */
+	public void setContentRedirectUrl(String contentRedirectUrl) {
+		if (this.state == STATE_RAW) {
+			this.contentRedirectUrl = contentRedirectUrl;
+		}
+	}
+
+	/**
+	 * Set merge context 
+	 * 
+	 * @param context The merge context
+	 */
+	public void setContext(Merger context) {
+		this.context = context;
+	}
+
+	/**
+	 * Update cached template stats - NOTE: Not Synchronized, subject to inaccuracy 
+	 * @param response The response time for a merge action
+	 */
+	public void postStats(Long response) {
+		if (this.state == STATE_CACHED) {
+			this.stats.post(response);
+		}
+	}
+
+	///////////////////////////////////////////////////////////
+	// Simple Getters 
+	///////////////////////////////////////////////////////////
+	/**
+	 * Gets the Merge Content
+	 *
+	 * @return the content
+	 */
+	public Content getMergeContent() {
+		return this.mergeContent;
 	}
 
 	/**
@@ -279,38 +434,30 @@ public class Template {
 	}
 
 	/**
-	 * Adds a from/to pair to the replace stack.
+	 * Gets the id.
 	 *
-	 * @param from From Value
-	 * @param to To Value
+	 * @return the id
 	 */
-	public void addReplace(String from, String to) {
-		// Accessible during merge
-		if (this.mergable && !this.merged) {
-			this.replaceStack.put(from, to);
-		}
-	}
-	
-	/**
-	 * Adds a from/to pair to the replace stack.
-	 * @param values The values to add
-	 */
-	public void addReplace(HashMap<String,String> values) {
-		// Accessible during merge
-		if (this.mergable && !this.merged) {
-			this.replaceStack.putAll(values);
-		}
+	public TemplateId getId() {
+		return id;
 	}
 
 	/**
-	 * Remove the replace value for one or more tags.
-	 * 
-	 * @param tags Tags to set to ""
+	 * Gets the description.
+	 *
+	 * @return the description
 	 */
-	public void blankReplace(HashSet<String> tags) {
-		for (String tag : tags) {
-			this.replaceStack.put(tag, "");
-		}
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * Gets the wrapper.
+	 *
+	 * @return the wrapper
+	 */
+	public Wrapper getWrapper() {
+		return wrapper;
 	}
 
 	/**
@@ -319,45 +466,9 @@ public class Template {
 	 * @return the content
 	 */
 	public String getContent() {
-		return content.toString();
+		return this.content;
 	}
-	
-	/**
-	 * Gets the content.
-	 *
-	 * @return the content
-	 */
-	public Content getMergeContent() {
-		return this.mergeContent;
-	}
-	
-	/**
-	 * Sets the content.
-	 *
-	 * @param content the new content
-	 * @throws MergeException  on processing errors
-	 */
-	public void setContent(String content) throws MergeException {
-		// Accessible only before merge
-		if (!this.mergable) {
-			this.content = content;
-			stats.size = this.content.length();
-			this.mergeContent = new Content(this.wrapper, this.content, this.getContentEncoding() );
-		}
-	}
-	
-	/**
-	 * Clears the content.
-	 */
-	public void clearContent() {
-		// Accessible only during merge
-		if (this.mergable && !this.merged) {
-			this.mergeContent = new Content();
-			this.content = "";
-			stats.size = this.content.length();
-		}
-	}
-	
+
 	/**
 	 * Gets the content type.
 	 *
@@ -365,20 +476,6 @@ public class Template {
 	 */
 	public int getContentType() {
 		return contentType;
-	}
-
-	/**
-	 * Sets the content type.
-	 *
-	 * @param contentType the new content type
-	 */
-	public void setContentType(int contentType) {
-		// Accessible only before merge
-		if (!this.mergable) {
-			if (CONTENT_TYPES().containsKey(contentType)) {
-				this.contentType = contentType;
-			}
-		}
 	}
 
 	/**
@@ -398,34 +495,6 @@ public class Template {
 	}
 
 	/**
-	 * Sets the content disposition.
-	 *
-	 * @param contentDisposition the new content disposition
-	 */
-	public void setContentDisposition(int contentDisposition) {
-		// Accessible only before merge
-		if (!this.mergable) {
-			if (DISPOSITION_VALUES().containsKey(contentDisposition)) {
-				this.contentDisposition = contentDisposition;
-			}
-		}
-	}
-
-	/**
-	 * @return file name for output archive
-	 */
-	public String getContentFileName() {
-		return contentFileName;
-	}
-
-	public void setContentFileName(String contentFileName) {
-		// Accessible only before merge
-		if (!this.mergable) {
-			this.contentFileName = contentFileName;
-		}
-	}
-
-	/**
 	 * Gets the content encoding.
 	 *
 	 * @return the content encoding
@@ -435,71 +504,17 @@ public class Template {
 	}
 
 	/**
-	 * Sets the content encoding.
-	 *
-	 * @param contentEncoding the new content encoding
+	 * @return file name for output archive
 	 */
-	public void setContentEncoding(int contentEncoding) {
-		// Accessible only before merge
-		if (!this.mergable) {
-			if (TagSegment.ENCODE_VALUES().containsValue(contentEncoding)) {
-				this.contentEncoding = contentEncoding;
-			}
-		}
+	public String getContentFileName() {
+		return contentFileName;
 	}
 
 	/**
-	 * Gets the description.
-	 *
-	 * @return the description
+	 * @return redirect URL
 	 */
-	public String getDescription() {
-		return description;
-	}
-	
-	/**
-	 * Sets the description.
-	 *
-	 * @param description the new description
-	 */
-	public void setDescription(String description) {
-		// Accessible only before merge
-		if (!this.mergable) {
-			this.description = description;
-		}
-	}
-
-	/**
-	 * Gets the wrapper.
-	 *
-	 * @return the wrapper
-	 */
-	public Wrapper getWrapper() {
-		return wrapper;
-	}
-
-	/**
-	 * Sets the wrapper.
-	 *
-	 * @param front the Front wrapper
-	 * @param back The back wrapper
-	 */
-	public void setWrapper(String front, String back) {
-		// Accessible only before merge
-		if (!this.mergable) {
-			this.wrapper = new Wrapper();
-			this.wrapper.front = front;
-			this.wrapper.back = back;
-		}
-	}
-	
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public TemplateId getId() {
-		return id;
+	public String getContentRedirectUrl() {
+		return contentRedirectUrl;
 	}
 
 	/**
@@ -512,63 +527,17 @@ public class Template {
 	}
 
 	/**
-	 * Adds the directive.
-	 *
-	 * @param directive the directive
-	 */
-	public void addDirective(AbstractDirective directive) {
-		directive.setTemplate(this);
-		directives.add(directive);
-	}
-
-	/**
-	 * Gets the merged.
-	 *
-	 * @return the merged
-	 */
-	public Boolean isMerged() {
-		return merged;
-	}
-
-	/**
-	 * Gets the merged.
-	 *
-	 * @return the merged
-	 */
-	public Boolean isMergable() {
-		return mergable;
-	}
-
-	/**
-	 * @return redirect URL
-	 */
-	public String getContentRedirectUrl() {
-		return contentRedirectUrl;
-	}
-
-	/**
-	 * @param contentRedirectUrl The redirect URL
-	 */
-	public void setContentRedirectUrl(String contentRedirectUrl) {
-		// Accessible only before merge
-		if (!this.mergable) {
-			this.contentRedirectUrl = contentRedirectUrl;
-		}
-	}
-
-	/**
-	 * @return The redirect URL
-	 */
-	public String getEncodedRedirectURL() {
-		// TODO Replace Process?
-		return null;
-	}
-	
-	/**
 	 * @return Statistics.
 	 */
 	public Stat getStats() {
 		return stats;
+	}
+
+	/**
+	 * @return State.
+	 */
+	public int getState() {
+		return state;
 	}
 
 	/**
@@ -578,13 +547,17 @@ public class Template {
 		return context;
 	}
 
+	///////////////////////////////////////////////////////////
+	// Static Values 
+	///////////////////////////////////////////////////////////
 	/**
-	 * Set merge context 
-	 * 
-	 * @param context The merge context
+	 * @return option values and descriptions for the Tempalte Class
 	 */
-	public void setContext(Merger context) {
-		this.context = context;
+	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
+		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		options.put("Content Type", CONTENT_TYPES());
+		options.put("Content Disposition", DISPOSITION_VALUES());
+		return options;
 	}
 
 	/*
@@ -614,22 +587,9 @@ public class Template {
 		return values;
 	}
 
-	/**
-	 * @return option values and descriptions for the Tempalte Class
-	 */
-	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
-		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
-		options.put("Content Type", CONTENT_TYPES());
-		options.put("Content Disposition", DISPOSITION_VALUES());
-		return options;
-	}
-	
-	/**
-	 * Update cached template stats - NOTE: Not Synchronized, subject to inaccuracy 
-	 * @param response The response time for a merge action
-	 */
-	public void postStats(Long response) {
-		this.stats.post(response);
-	}
+	public static final int STATE_RAW 		= 0;
+	public static final int STATE_CACHED 	= 1;
+	public static final int STATE_MERGABLE 	= 3;
+	public static final int STATE_MERGED 	= 4;
 	
 }

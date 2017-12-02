@@ -57,14 +57,14 @@ public class TemplateCacheTest {
 		assertEquals(template.getId().group, "system");
 		assertEquals(template.getId().name, "error403");
 		assertTrue(template.getId().variant.isEmpty());
-		assertTrue(template.isMergable());
+		assertEquals(Template.STATE_MERGABLE, template.getState());
 		assertEquals(2, template.getReplaceStack().size());
 
 		template = cache.getMergable(context, "Foo", "system.error404.", replace);
 		assertEquals(template.getId().group, "system");
 		assertEquals(template.getId().name, "error404");
 		assertTrue(template.getId().variant.isEmpty());
-		assertTrue(template.isMergable());
+		assertEquals(Template.STATE_MERGABLE, template.getState());
 		assertEquals(2, template.getReplaceStack().size());
 	}
 
@@ -85,7 +85,7 @@ public class TemplateCacheTest {
 		assertEquals(template.getId().group, "system");
 		assertEquals(template.getId().name, "error403");
 		assertTrue(template.getId().variant.isEmpty());
-		assertTrue(template.isMergable());
+		assertEquals(Template.STATE_MERGABLE, template.getState());
 		assertEquals(2, template.getReplaceStack().size());
 	}
 
@@ -107,6 +107,7 @@ public class TemplateCacheTest {
 		assertEquals(5, cache.getSize());
 		cache.getTemplate("new.test.");
 		assertEquals(5, cache.getSize());
+		newTemplate = new Template("new","test","");
 		cache.putTemplate(newTemplate);
 		assertEquals(5, cache.getSize());
 		cache.deleteTemplate("new.test");
@@ -297,11 +298,12 @@ public class TemplateCacheTest {
 
 	@Test
 	public void testGetStats() throws MergeException {
+		Long response = new Long(5);
 		cache.postTemplate(new Template("test","stats",""));
-		cache.getMergable(context, "test.stats.", replace);
-		cache.getMergable(context, "test.stats.", replace);
-		cache.getMergable(context, "test.stats.", replace);
-		cache.getMergable(context, "test.stats.", replace);
+		cache.postStats("test.stats.", response);
+		cache.postStats("test.stats.", response);
+		cache.postStats("test.stats.", response);
+		cache.postStats("test.stats.", response);
 		Stats stats = cache.getStats();
 		assertEquals(5,stats.size());
 		for (Stat stat : stats) {

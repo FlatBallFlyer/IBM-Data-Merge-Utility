@@ -37,8 +37,7 @@ public class TemplateTest {
 		assertEquals("void",template.getId().group);
 		assertEquals("void",template.getId().name);
 		assertEquals("void",template.getId().variant);
-		assertFalse(template.isMergable());
-		assertFalse(template.isMerged());
+		assertEquals(Template.STATE_RAW, template.getState());
 	}
 
 	@Test
@@ -47,8 +46,7 @@ public class TemplateTest {
 		assertEquals("System",template.getId().group);
 		assertEquals("Test",template.getId().name);
 		assertTrue(template.getId().variant.isEmpty());
-		assertFalse(template.isMergable());
-		assertFalse(template.isMerged());
+		assertEquals(Template.STATE_RAW, template.getState());
 	}
 
 	@Test
@@ -58,8 +56,7 @@ public class TemplateTest {
 		assertEquals("Test",template.getId().name);
 		assertTrue(template.getId().variant.isEmpty());
 		assertEquals("SomeContent", template.getContent());
-		assertFalse(template.isMergable());
-		assertFalse(template.isMerged());
+		assertEquals(Template.STATE_RAW, template.getState());
 	}
 
 	@Test
@@ -68,8 +65,7 @@ public class TemplateTest {
 		assertEquals("System",template.getId().group);
 		assertEquals("Test",template.getId().name);
 		assertTrue(template.getId().variant.isEmpty());
-		assertFalse(template.isMergable());
-		assertFalse(template.isMerged());
+		assertEquals(Template.STATE_RAW, template.getState());
 	}
 
 	@Test
@@ -90,8 +86,8 @@ public class TemplateTest {
 		assertEquals(template.getContentType(), mergable.getContentType());
 		assertEquals(template.getWrapper().front, mergable.getWrapper().front);
 		assertEquals(template.getWrapper().back, mergable.getWrapper().back);
-		assertTrue(mergable.isMergable());
-		assertFalse(mergable.isMerged());
+		assertEquals(Template.STATE_CACHED, template.getState());
+		assertEquals(Template.STATE_MERGABLE, mergable.getState());
 		
 		assertEquals(template.getDirectives().size(), mergable.getDirectives().size());
 		for (int index=0; index < template.getDirectives().size(); index++) {
@@ -105,7 +101,7 @@ public class TemplateTest {
 		HashMap<String, String> replace = new HashMap<String,String>();
 		replace.put("foo", "bar");
 		replace.put("one", "two");
-
+		template.cachePrepare();
 		Template mergable = template.getMergable(null, replace);
 		for (String key : replace.keySet()) {
 			assertTrue(mergable.getReplaceStack().containsKey(key));
@@ -118,10 +114,10 @@ public class TemplateTest {
 		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.sample.");
 		template.setContent("Some Simple Content");
-		
+		template.cachePrepare();
 		Template mergable = template.getMergable(merger);
 		assertEquals("Some Simple Content", mergable.getMergedOutput().getValue());
-		assertTrue(mergable.isMerged());
+		assertEquals(Template.STATE_MERGED, mergable.getState());
 		assertTrue(mergable.getDirectives().isEmpty());
 		assertTrue(mergable.getReplaceStack().isEmpty());
 	}
@@ -131,6 +127,7 @@ public class TemplateTest {
 		assertEquals(0,template.getReplaceStack().size());
 		template.addReplace("From", "TO");
 		assertEquals(0,template.getReplaceStack().size());
+		template.cachePrepare();
 		Template mergable = template.getMergable(null);
 		assertEquals(0,mergable.getReplaceStack().size());
 		mergable.addReplace("From", "TO");
@@ -143,6 +140,7 @@ public class TemplateTest {
 		HashMap<String,String> replace = new HashMap<String,String>();
 		replace.put("foo", "bar");
 		replace.put("one", "two");
+		template.cachePrepare();
 		template = template.getMergable(null);
 		template.addReplace(replace);
 		assertEquals(2, template.getReplaceStack().size());
@@ -152,6 +150,7 @@ public class TemplateTest {
 	
 	@Test
 	public void testBlankReplace() throws MergeException {
+		template.cachePrepare();
 		template = template.getMergable(null);
 		template.addReplace("one", "one");
 		template.addReplace("two", "two");
@@ -180,6 +179,8 @@ public class TemplateTest {
 		template.setContent("test");
 		assertEquals("test", template.getContent());
 		template.clearContent();
+		assertEquals("test", template.getContent());
+		template.cachePrepare();
 		assertEquals("test", template.getContent());
 		template = template.getMergable(null);
 		assertEquals("test", template.getContent());
@@ -210,9 +211,6 @@ public class TemplateTest {
 		template.cachePrepare();
 		Template mergable = template.getMergable(merger);
 		assertEquals("attachment;filename=\"Foo\"", mergable.getContentDisposition());
-		template.setContentDisposition(Template.DISPOSITION_NORMAL);
-		mergable = template.getMergable(null);
-		assertEquals("", mergable.getContentDisposition());
 	}
 
 	@Test
@@ -251,6 +249,7 @@ public class TemplateTest {
 		assertEquals(TagSegment.ENCODE_XML, template.getContentEncoding());
 		template.setContentEncoding(0);
 		assertEquals(TagSegment.ENCODE_XML, template.getContentEncoding());
+		template.cachePrepare();
 		Template mergable = template.getMergable(null);
 		assertEquals(TagSegment.ENCODE_XML, template.getContentEncoding());
 		mergable.setContentEncoding(TagSegment.ENCODE_HTML);
@@ -283,6 +282,7 @@ public class TemplateTest {
 		assertEquals("{", template.getWrapper().front);
 		assertEquals("}", template.getWrapper().back);
 		assertEquals("{test}", template.getWrapper().wrapp("test"));
+		template.cachePrepare();
 		Template mergable = template.getMergable(null);
 		mergable.setWrapper("<", ">");
 		assertEquals("{", template.getWrapper().front);
@@ -331,15 +331,16 @@ public class TemplateTest {
 		Cache cache = new Cache();
 		cache.postTemplate(template);
 		Merger merger = new Merger(cache, "System.Test.");
-		assertFalse(merger.getBaseTemplate().isMerged());
+		assertEquals(Template.STATE_MERGABLE, merger.getBaseTemplate().getState());
 		merger.merge();
-		assertTrue(merger.getBaseTemplate().isMerged());
+		assertEquals(Template.STATE_MERGED, merger.getBaseTemplate().getState());
 	}
 
 	@Test
 	public void testSetGetContentRedirectUrl() throws MergeException {
 		template.setContentRedirectUrl("Foo");
 		assertEquals("Foo", template.getContentRedirectUrl());
+		template.cachePrepare();
 		template = template.getMergable(null);
 		template.setContentRedirectUrl("Bar");
 		assertEquals("Foo", template.getContentRedirectUrl());

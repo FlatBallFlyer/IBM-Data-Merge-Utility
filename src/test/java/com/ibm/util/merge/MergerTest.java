@@ -30,7 +30,7 @@ public class MergerTest {
 	public void testMergerCacheConfigTemplate() throws MergeException {
 		Merger merger = new Merger(cache, "system.sample.");
 		assertSame(cache, merger.getCahce());
-		assertTrue(merger.getBaseTemplate().isMergable());
+		assertEquals(Template.STATE_MERGABLE, merger.getBaseTemplate().getState());
 		assertTrue(merger.getTemplateStack().isEmpty());
 		assertTrue(merger.getMergeData() instanceof DataManager);
 		assertEquals(4, merger.getCahce().getSize());
@@ -61,7 +61,7 @@ public class MergerTest {
 	public void testGetMergable() throws MergeException {
 		Merger merger = new Merger(cache, "system.error403.");
 		Template template = merger.getMergable("system.error403.",  "", new HashMap<String,String>());
-		assertTrue(template.isMergable());
+		assertEquals(Template.STATE_MERGABLE, template.getState());
 		assertEquals("Error - Forbidden", template.getContent());
 		assertEquals(0, merger.getTemplateStack().size());
 	}
