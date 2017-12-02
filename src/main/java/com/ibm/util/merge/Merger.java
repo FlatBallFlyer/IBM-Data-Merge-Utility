@@ -40,51 +40,11 @@ import com.ibm.util.merge.template.directive.enrich.provider.*;
  * @since: v4.0
  */
 public class Merger {
-	// Enumeration Constants
-	public static final String IDMU_CONTEXT			= "idmuContext";
-	public static final String IDMU_PARAMETERS	 	= "idmuParameters";
-	public static final String IDMU_PAYLOAD			= "idmuPayload";
-	public static final String IDMU_ARCHIVE			= "idmuArchive";
-	public static final String IDMU_ARCHIVE_TYPE	= "idmuArchiveType";
-	public static final String IDMU_ARCHIVE_NAME	= "idmuArchiveName";
-	public static final String IDMU_ARCHIVE_FILES	= "idmuArchiveFiles";
-	public static final String IDMU_ARCHIVE_OUTPUT	= "idmuArchiveOutput";
-	public static final HashSet<String> DATA_SOURCES() {
-		HashSet<String> values = new HashSet<String>();
-		values.add(IDMU_PARAMETERS);
-		values.add(IDMU_PAYLOAD);
-		values.add(IDMU_CONTEXT);
-		values.add(IDMU_ARCHIVE);
-		values.add(IDMU_ARCHIVE_TYPE);
-		values.add(IDMU_ARCHIVE_NAME);
-		values.add(IDMU_ARCHIVE_FILES);
-		return values;
-	}
-	
-	// Instance Variables
-	/**
-	 * The Template Cache
-	 */
 	private Cache cache;
-	/**
-	 * The base template to start the merge with
-	 */
 	private Template baseTemplate;
-	/**
-	 * The Data Manager for the merge
-	 */
 	private DataManager mergeData;
-	/**
-	 * The current template stack of inserts
-	 */
 	private ArrayList<String> templateStack;
-	/**
-	 * The current collection of enrichment providers
-	 */
 	HashMap<String,ProviderInterface> providers;
-	/**
-	 * The output archive
-	 */
 	private Archive archive;
 	
 	/**
@@ -145,28 +105,6 @@ public class Merger {
 	}
 	
 	/**
-	 * @param templateName The Template to get
-	 * @param defaultTemplate The Default template to get if Template not found
-	 * @param replace The replace list to initialize
-	 * @return template - Get a mergable template from the cache
-	 * @throws MergeException on processing errors
-	 */
-	public Template getMergable(String templateName, String defaultTemplate, HashMap<String,String> replace) throws MergeException {
-		Template template = cache.getMergable(this, templateName, defaultTemplate, replace);
-		return template;
-	}
-	
-	/**
-	 * @param templateName The Template to get
-	 * @return template - A mergable template from the cache
-	 * @throws MergeException on processing errors
-	 */
-	public Template getMergable(String templateName) throws MergeException {
-		Template template = cache.getMergable(this, templateName);
-		return template;
-	}
-	
-	/**
 	 * @return archive The merge output archive
 	 * @throws MergeException on processing errors
 	 */
@@ -197,28 +135,35 @@ public class Merger {
 		return archive;
 	}
 
+	// Simple Getters below here
+	
 	/**
-	 * @param enrichClass The provider class name
-	 * @param enrichSource The provider source name
-	 * @param dbName The provider database name (or option name)
-	 * @return provider A Data Provider
+	 * @return cache The Template Cache
+	 */
+	public Cache getCahce() {
+		return cache;
+	}
+
+	/**
+	 * @param templateName The Template to get
+	 * @param defaultTemplate The Default template to get if Template not found
+	 * @param replace The replace list to initialize
+	 * @return template - Get a mergable template from the cache
 	 * @throws MergeException on processing errors
 	 */
-	public ProviderInterface getProvider(String enrichClass, String enrichSource, String dbName) throws MergeException {
-		String key = enrichSource.concat(dbName);
-		if (!this.providers.containsKey(key)) {
-			providers.put(key,  Config.providerInstance(enrichClass, enrichSource, dbName, this));
-		}
-		return providers.get(key);
+	public Template getMergable(String templateName, String defaultTemplate, HashMap<String,String> replace) throws MergeException {
+		return cache.getMergable(this, templateName, defaultTemplate, replace);
 	}
-
+	
 	/**
-	 * @return providers
+	 * @param templateName The Template to get
+	 * @return template - A mergable template from the cache
+	 * @throws MergeException on processing errors
 	 */
-	public HashMap<String, ProviderInterface> getProviders() {
-		return providers;
+	public Template getMergable(String templateName) throws MergeException {
+		return cache.getMergable(this, templateName);
 	}
-
+	
 	/**
 	 * @return manager The Data Manager
 	 */
@@ -235,6 +180,21 @@ public class Merger {
 	}
 
 	/**
+	 * @param enrichClass The provider class name
+	 * @param enrichSource The provider source name
+	 * @param dbName The provider database name (or option name)
+	 * @return provider A Data Provider
+	 * @throws MergeException on processing errors
+	 */
+	public ProviderInterface getProvider(String enrichClass, String enrichSource, String dbName) throws MergeException {
+		String key = enrichSource.concat(dbName);
+		if (!this.providers.containsKey(key)) {
+			providers.put(key,  Config.providerInstance(enrichClass, enrichSource, dbName, this));
+		}
+		return providers.get(key);
+	}
+
+	/**
 	 * The templateStack represents the current insert context and the size indicates the level of sub-templates
 	 * @return merging template stack
 	 */
@@ -243,13 +203,6 @@ public class Merger {
 	}
 
 	/**
-	 * @return Template Stack Size (nested sub-template level)
-	 */
-	public int getStackSize() {
-		return templateStack.size();
-	}
-	
-	/**
 	 * @param name Template Name to push on to insert stack
 	 * @param context The merge context
 	 */
@@ -257,7 +210,7 @@ public class Merger {
 		templateStack.add(name);
 		this.mergeData.pushContext(context);
 	}
-	
+
 	/**
 	 * remove a template from the stack
 	 */
@@ -267,17 +220,26 @@ public class Merger {
 			this.mergeData.popContext();
 		}
 	}
+
+	/**
+	 * @return providers
+	 */
+	public HashMap<String, ProviderInterface> getProviders() {
+		return providers;
+	}
+
+	/**
+	 * @return Template Stack Size (nested sub-template level)
+	 */
+	public int getStackSize() {
+		return templateStack.size();
+	}
+	
+	
 	
 
 	// Simple Getters below here
 	
-	/**
-	 * @return cache The Template Cache
-	 */
-	public Cache getCahce() {
-		return cache;
-	}
-
 	/**
 	 * @return template The Base template
 	 */
@@ -285,4 +247,24 @@ public class Merger {
 		return baseTemplate;
 	}
 
+	// Enumeration Constants
+	public static final String IDMU_CONTEXT			= "idmuContext";
+	public static final String IDMU_PARAMETERS	 	= "idmuParameters";
+	public static final String IDMU_PAYLOAD			= "idmuPayload";
+	public static final String IDMU_ARCHIVE			= "idmuArchive";
+	public static final String IDMU_ARCHIVE_TYPE	= "idmuArchiveType";
+	public static final String IDMU_ARCHIVE_NAME	= "idmuArchiveName";
+	public static final String IDMU_ARCHIVE_FILES	= "idmuArchiveFiles";
+	public static final String IDMU_ARCHIVE_OUTPUT	= "idmuArchiveOutput";
+	public static final HashSet<String> DATA_SOURCES() {
+		HashSet<String> values = new HashSet<String>();
+		values.add(IDMU_PARAMETERS);
+		values.add(IDMU_PAYLOAD);
+		values.add(IDMU_CONTEXT);
+		values.add(IDMU_ARCHIVE);
+		values.add(IDMU_ARCHIVE_TYPE);
+		values.add(IDMU_ARCHIVE_NAME);
+		values.add(IDMU_ARCHIVE_FILES);
+		return values;
+	}
 }
