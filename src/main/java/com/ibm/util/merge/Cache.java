@@ -55,20 +55,27 @@ import com.ibm.util.merge.template.directive.SaveFile;
 public class Cache implements Iterable<String> {
 	private static final Logger LOGGER = Logger.getLogger(Cache.class.getName());
 	private final ConcurrentHashMap<String, Template> cache;
-	private final DataProxyJson gsonProxy = new DataProxyJson(Config.isPrettyJson());
+	private final DataProxyJson gsonProxy;
 	
 	// Cache Statistics
 	private double cacheHits = 0;
 	Date initialized = new Date();
+    private Config config;
     
 	/**
-	 * Instantiates a new template cache with only default System templates
+	 * Instantiates a new template cache with only default System templates and a default config
 	 * @throws MergeException  on processing errors
 	 */
 	public Cache() throws MergeException {
-		this.cache = new ConcurrentHashMap<String, Template>();
-		this.initialized = new Date();
-		this.buildDefaultSystemTemplates();
+		this(new Config(), new File(""));
+	}
+	
+	/**
+	 * Instantiates a new template cache with the provided config
+	 * @throws MergeException  on processing errors
+	 */
+	public Cache(Config config) throws MergeException {
+		this(config, new File(""));
 	}
 	
 	/**
@@ -77,6 +84,17 @@ public class Cache implements Iterable<String> {
 	 * @throws MergeException  on processing errors
 	 */
 	public Cache(File load) throws MergeException {
+		this(new Config(), load);
+	}
+	
+	/**
+	 * Instantiates a new template cache and loads from a specified file folder
+	 * @param load A folder with one or more json tempalte group files.
+	 * @throws MergeException  on processing errors
+	 */
+	public Cache(Config config, File load) throws MergeException {
+		this.config = config;
+		this.gsonProxy = new DataProxyJson(config.isPrettyJson());
 		this.cache = new ConcurrentHashMap<String, Template>();
 		this.initialized = new Date();
 		this.buildDefaultSystemTemplates();
@@ -273,6 +291,14 @@ public class Cache implements Iterable<String> {
 	}
 
 	/**
+	 * Get the cache config object
+	 * @return the configuration
+	 */
+	public Config getConfig() {
+		return this.config;
+	}
+	
+	/**
 	 * Gets a mergable template - getting the default template if the primary template does not exist.
 	 *
 	 * @param context The Merge Context
@@ -353,7 +379,7 @@ public class Cache implements Iterable<String> {
 		if (cache.containsKey(name)) {
 			throw new Merge403("Duplicate Found:" + name);
 		}
-		template.cachePrepare();
+		template.cachePrepare(this);
 		cache.put(name, template);
 		return "ok";
 	}
@@ -423,7 +449,7 @@ public class Cache implements Iterable<String> {
 		if (!cache.containsKey(name)) {
 			throw new Merge404("Not Found:" + template.getId().shorthand());
 		}
-		template.cachePrepare();
+		template.cachePrepare(this);
 		cache.put(name, template);
 		return "ok";
 	}
@@ -510,5 +536,5 @@ public class Cache implements Iterable<String> {
 		}
 		
 	}
-	
+
 }

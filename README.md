@@ -56,28 +56,27 @@ See Config.get() for a json string with all configuration options - including te
 
 ### Usage
 ```
-// Optionally initialize a configuration
-Config.load(from Env, String, File or URL)
-	
-// Create a template cache
-Cache cache = new Cache(File) 
+   // Get a cache (Default configuration)
+   Cache cache = new Cache(File); 
 
-while (processing) {
-  // Get payload and parameters (like from an http request)
-  
-  // Get a Merger for your template
-  Merger merger = new Merger(cache, 
+   // Get a cache (Custom configuration)
+   Config config = new Config(from Env, String, File or URL)
+   Cache cache = new Cache(config, File); 
+
+   // Get a Merger for your template
+   Merger merger = new Merger(cache, 
   	"some.template.name", 
   	parameters, payload);
 	  
-  // Merge the template 
-  Template template = merger.merge();
+   // Merge the template 
+   Template template = merger.merge();
  
-  // Get Output as a simple String
-  template.getMergedOutput().getValue()
-  // Get Output as a i/o Stream
-  template.getMergedOutput().streamOutput(stream)
-}
+   // Get Output as a simple String
+   template.getMergedOutput().getValue()
+
+   // Get Output as a i/o Stream
+   template.getMergedOutput().streamOutput(stream)
+
 ```
 
 See the /src/test/java - com.ibm.util.merge.MergeTestHarness.java for a more complete use case.

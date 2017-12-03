@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataManager;
@@ -62,21 +61,21 @@ public abstract class Archive {
 		return enums;
 	}
 
-	private transient DataProxyJson gson;
-	private transient Merger context;
 	private String archiveType;
 	private String filePath;
 	private String fileName;
+	private transient DataProxyJson gson;
+	private transient Merger context;
     private transient OutputStream outputStream;
 
 	/**
 	 * Instantiate an archive
 	 * @throws MergeException on config errors
 	 */
-	public Archive() throws MergeException {
-		this.setFileName(UUID.randomUUID().toString());
-		gson = new DataProxyJson(Config.isPrettyJson());
-	}
+//	public Archive() throws MergeException {
+//		this.setFileName(UUID.randomUUID().toString());
+//		gson = new DataProxyJson(context.getConfig().isPrettyJson());
+//	}
 
 	/**
 	 * Instantiate an Archive for the merge
@@ -84,7 +83,8 @@ public abstract class Archive {
 	 * @throws MergeException on configuration errors 
 	 */
 	public Archive(Merger context) throws MergeException {
-		this();
+		this.setFileName(UUID.randomUUID().toString());
+		gson = new DataProxyJson(context.getConfig().isPrettyJson());
 		this.setContext(context);
 	}
 
@@ -174,6 +174,31 @@ public abstract class Archive {
 	}
 
 	/**
+	 * @return File Path for output
+	 */
+	public String getFilePath() {
+		return filePath;
+	}
+
+	/**
+	 * @return Output Stream
+	 */
+	public OutputStream getOutputStream() {
+		return outputStream;
+	}
+
+	/**
+	 * @return File Name
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+	public Merger getContext() {
+		return context;
+	}
+
+	/**
 	 * Set Archive type
 	 * @param archiveType The archive type
 	 */
@@ -184,25 +209,11 @@ public abstract class Archive {
 	}
 
 	/**
-	 * @return File Path for output
-	 */
-	public String getFilePath() {
-		return filePath;
-	}
-
-	/**
 	 * Set Output File Path
 	 * @param filePath The file path for output files
 	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
-	}
-
-	/**
-	 * @return Output Stream
-	 */
-	public OutputStream getOutputStream() {
-		return outputStream;
 	}
 
 	/**
@@ -219,22 +230,11 @@ public abstract class Archive {
 	}
 
 	/**
-	 * @return File Name
-	 */
-	public String getFileName() {
-		return fileName;
-	}
-
-	/**
 	 * Set the output file name
 	 * @param fileName The File Name
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
-	}
-
-	public Merger getContext() {
-		return context;
 	}
 
 	public void setContext(Merger context) {

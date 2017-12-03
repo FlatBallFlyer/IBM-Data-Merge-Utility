@@ -71,14 +71,14 @@ public class Enrich extends AbstractDirective {
 	}
 
 	@Override
-	public void cachePrepare(Template template) throws MergeException {
-		super.cachePrepare(template);
+	public void cachePrepare(Template template, Config config) throws MergeException {
+		super.cachePrepare(template, config);
 		
 		// Initialize Transients
 		this.targetContent = new Content(template.getWrapper(), this.targetDataName, TagSegment.ENCODE_NONE);
 
 		// Validate Enums
-		if ((this.parseAs != Config.PARSE_NONE) && (!Config.hasParser(this.parseAs))) {
+		if ((this.parseAs != Config.PARSE_NONE) && (!this.getConfig().hasParser(this.parseAs))) {
 			throw new Merge500("Invalide Parse As Value: " + this.parseAs) ;
 		}
 	}
@@ -103,7 +103,7 @@ public class Enrich extends AbstractDirective {
 	public void execute(Merger context) throws MergeException {
 		ProviderInterface provider = context.getProvider(this.enrichClass, this.enrichSource, this.enrichParameter);
 		DataElement value = provider.provide(this.enrichCommand, this.getTemplate().getWrapper(), context, this.getTemplate().getReplaceStack(), this.parseAs);
-		this.getTargetContent().replace(this.getTemplate().getReplaceStack(), true, Config.nestLimit());
+		this.getTargetContent().replace(this.getTemplate().getReplaceStack(), true, this.getConfig().getNestLimit());
 		String targetName = this.getTargetContent().getValue();
 		this.getContext().getMergeData().put(targetName, this.targetDataDelimeter, value);
 	}

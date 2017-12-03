@@ -19,7 +19,6 @@ public class CacheProviderTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		Config.initialize();
 		cache = new Cache();
 		template = new Template("system", "test", "", "Content");
 		cache.postTemplate(template);

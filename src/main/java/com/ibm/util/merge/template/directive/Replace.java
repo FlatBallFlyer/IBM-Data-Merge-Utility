@@ -115,8 +115,8 @@ public class Replace extends AbstractDataDirective {
 	}
 
 	@Override
-	public void cachePrepare(Template template) throws MergeException {
-		super.cachePrepare(template);
+	public void cachePrepare(Template template, Config config) throws MergeException {
+		super.cachePrepare(template, config);
 
 		// Validate enums
 		if (!Replace.MISSING_OPTIONS().containsKey(this.getIfSourceMissing())) {
@@ -178,7 +178,7 @@ public class Replace extends AbstractDataDirective {
 
 	@Override
 	public void execute(Merger context) throws MergeException {
-		this.getSourceContent().replace(this.getTemplate().getReplaceStack(), true, Config.nestLimit());
+		this.getSourceContent().replace(this.getTemplate().getReplaceStack(), true, this.getConfig().getNestLimit());
 		String source = this.getSourceContent().getValue();
 		if (!context.getMergeData().contians(source, this.getDataDelimeter())) {
 			switch (this.getIfSourceMissing()) {
@@ -189,7 +189,11 @@ public class Replace extends AbstractDataDirective {
 			case MISSING_REPLACE : 
 				this.replaceFromString(this.toValue);
 				if (this.processAfter) {
-					this.getTemplate().getMergeContent().replace(this.getTemplate().getReplaceStack(), this.processRequire, Config.nestLimit()); 
+					this.getTemplate()
+						.getMergeContent()
+						.replace(this.getTemplate().getReplaceStack(), 
+								this.processRequire, 
+								this.getConfig().getNestLimit()); 
 				}
 				return;
 			}
@@ -266,7 +270,11 @@ public class Replace extends AbstractDataDirective {
 		}
 		
 		if (this.processAfter) {
-			this.getTemplate().getMergeContent().replace(this.getTemplate().getReplaceStack(), this.processRequire, Config.nestLimit()); 
+			this.getTemplate()
+				.getMergeContent()
+				.replace(this.getTemplate().getReplaceStack(), 
+						this.processRequire, 
+						this.getConfig().getNestLimit()); 
 		}
 	}
 	

@@ -26,7 +26,6 @@ public class DataProxyJsonTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		Config.initialize();
 	}
 
 	@Test

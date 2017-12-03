@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ibm.util.merge.Cache;
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
@@ -43,8 +45,8 @@ public class AbstractDataDirectiveTest {
 		}
 
 		@Override
-		public void cachePrepare(Template template) throws MergeException {
-			super.cachePrepare(template);
+		public void cachePrepare(Template template, Config config) throws MergeException {
+			super.cachePrepare(template, config);
 		}
 
 	}
@@ -63,8 +65,9 @@ public class AbstractDataDirectiveTest {
 
 	@Test
 	public void testGetMergable() throws MergeException {
-		test.cachePrepare(new Template());
-		AbstractDataTest mergable = (AbstractDataTest) test.getMergable(null);
+		Merger context = new Merger(new Cache(), "system.sample.");
+		test.cachePrepare(new Template(), new Config());
+		AbstractDataTest mergable = (AbstractDataTest) test.getMergable(context);
 		assertNotSame(mergable, test);
 		assertEquals(test.getDataDelimeter(), 	mergable.getDataDelimeter());
 		assertEquals(test.getIfList(), 			mergable.getIfList());

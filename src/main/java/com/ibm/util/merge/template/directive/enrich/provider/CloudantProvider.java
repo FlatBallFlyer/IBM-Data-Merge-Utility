@@ -69,6 +69,7 @@ public class CloudantProvider implements ProviderInterface {
 	private transient CloudantClient cloudant = null;
 	private transient Database db = null;
 	private transient final Merger context;
+	private transient final Config config;
 	private transient DataProxyJson proxy = new DataProxyJson();
 	
 	/**
@@ -82,6 +83,7 @@ public class CloudantProvider implements ProviderInterface {
 		this.source = source;
 		this.dbName = dbName;
 		this.context = context;
+		this.config = context.getConfig();
 	}
 	
 	private void connect() throws MergeException {
@@ -91,9 +93,9 @@ public class CloudantProvider implements ProviderInterface {
 		String pw = "";
 		String url = "";
 		try {
-			url = Config.env(source + ".URL");
-			user = Config.env(source + ".USER");
-			pw = Config.env(source + ".PW");
+			url = config.getEnv(source + ".URL");
+			user = config.getEnv(source + ".USER");
+			pw = config.getEnv(source + ".PW");
 		} catch (MergeException e) {
 			throw new Merge500("Malformed or Missing Cloudant Source Credentials found for:" + source + ":" + url + ":" + user + ":" + pw);
 		}
@@ -123,7 +125,7 @@ public class CloudantProvider implements ProviderInterface {
 		}
 
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_JSON);
-		query.replace(replace, false, Config.nestLimit());
+		query.replace(replace, false, config.getNestLimit());
 		
 		List<DataElement> results;
 		

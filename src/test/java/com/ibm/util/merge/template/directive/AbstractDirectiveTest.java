@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.MergeException;
@@ -27,8 +28,9 @@ public class AbstractDirectiveTest {
 		}
 
 		@Override
-		public void cachePrepare(Template template)
+		public void cachePrepare(Template template, Config config)
 				throws MergeException {
+			super.cachePrepare(template, config);
 		}
 
 	}
@@ -36,7 +38,6 @@ public class AbstractDirectiveTest {
 
 	@Before
 	public void setUp() throws Exception {
-		Config.initialize();
 		 test = new AbstractTest();
 	}
 
@@ -46,8 +47,10 @@ public class AbstractDirectiveTest {
 	}
 
 	@Test
-	public void testMakeMergable() {
-		AbstractDirective mergable = test.getMergable(null);
+	public void testMakeMergable() throws MergeException {
+		Cache cache = new Cache();
+		Merger context = new Merger(cache, "system.sample.");
+		AbstractDirective mergable = test.getMergable(context);
 		assertNotSame(mergable, test);
 		assertEquals(test.getType(), mergable.getType());
 		assertEquals(test.getName(), mergable.getName());

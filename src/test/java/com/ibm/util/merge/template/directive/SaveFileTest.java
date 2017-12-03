@@ -16,23 +16,17 @@ import com.ibm.util.merge.template.directive.AbstractDirective;
 import com.ibm.util.merge.template.directive.SaveFile;
 
 public class SaveFileTest {
-	private Cache cache;
-	private Merger merger;
-	private Template template;
-	private SaveFile directive;
 	
 	@Before
 	public void setUp() throws Exception {
-		Config.initialize();
-		cache = new Cache();
-		merger = new Merger(cache, "system.sample.");
-		directive = new SaveFile();
 	}
 
 	@Test
 	public void testGetMergable() throws MergeException {
-		directive.cachePrepare(new Template());
-		SaveFile mergable = (SaveFile) directive.getMergable(null);
+		Merger context = new Merger(new Cache(), "system.sample.");
+		SaveFile directive = new SaveFile();
+		directive.cachePrepare(new Template(), new Config());
+		SaveFile mergable = (SaveFile) directive.getMergable(context);
 		assertNotSame(mergable, directive);
 		assertEquals(directive.getFilename(), mergable.getFilename());
 		assertEquals(directive.getClearAfter(), mergable.getClearAfter());
@@ -42,8 +36,8 @@ public class SaveFileTest {
 	
 	@Test 
 	public void testExecuteNoOp() throws MergeException {
-		Config.load("{\"tempFolder\":\"src/test/resources/temp\"}");
-		Cache cache = new Cache();
+		Config config = new Config("{\"tempFolder\":\"src/test/resources/temp\"}");
+		Cache cache = new Cache(config);
 		Template template = new Template("test","noop","", "Simple Test");
 		SaveFile directive = new SaveFile();
 		template.addDirective(directive);
@@ -59,14 +53,16 @@ public class SaveFileTest {
 	
 	@Test
 	public void testExecute() throws MergeException {
-		Config.load("{\"tempFolder\":\"src/test/resources/temp\"}");
-		template = new Template("save", "test", "", "Some Simple Content");
+		Config config = new Config("{\"tempFolder\":\"src/test/resources/temp\"}");
+		Cache cache = new Cache(config);
+		SaveFile directive = new SaveFile();
 		directive.setFilename("testMember.txt");
 		directive.setClearAfter(true);
+		Template template = new Template("save", "test", "", "Some Simple Content");
 		template.addDirective(directive);
-		template.cachePrepare();
-		template = template.getMergable(merger);
-		template.getMergedOutput();
+		cache.postTemplate(template);
+		Merger merger = new Merger(cache, "save.test.");
+		template = merger.merge();
 		assertTrue(template.getContent().isEmpty());
 		File file = new File(merger.getMergeData().get(Merger.IDMU_ARCHIVE_OUTPUT, "-").getAsPrimitive());
 		assertTrue(file.exists());
@@ -76,14 +72,16 @@ public class SaveFileTest {
 
 	@Test
 	public void testExecuteNoClear() throws MergeException {
-		Config.load("{\"tempFolder\":\"src/test/resources/temp\"}");
-		template = new Template("save", "test", "", "Some Simple Content");
+		Config config = new Config("{\"tempFolder\":\"src/test/resources/temp\"}");
+		Cache cache = new Cache(config);
+		Template template = new Template("save", "test", "", "Some Simple Content");
+		SaveFile directive = new SaveFile();
 		directive.setFilename("testMember.txt");
 		directive.setClearAfter(false);
 		template.addDirective(directive);
-		template.cachePrepare();
-		template = template.getMergable(merger);
-		template.getMergedOutput();
+		cache.postTemplate(template);
+		Merger merger = new Merger(cache, "save.test.");
+		template = merger.merge();
 		assertEquals("Some Simple Content", template.getContent());
 		File file = new File(merger.getMergeData().get(Merger.IDMU_ARCHIVE_OUTPUT,"-").getAsPrimitive());
 		assertTrue(file.exists());
@@ -93,12 +91,14 @@ public class SaveFileTest {
 
 	@Test
 	public void testGetSetFilename() throws MergeException {
+		SaveFile directive = new SaveFile();
 		directive.setFilename("Foo");
 		assertEquals("Foo", directive.getFilename());
 	}
 
 	@Test
 	public void testGetSetClearAfter() {
+		SaveFile directive = new SaveFile();
 		directive.setClearAfter(true);
 		assertTrue(directive.getClearAfter());
 		directive.setClearAfter(false);

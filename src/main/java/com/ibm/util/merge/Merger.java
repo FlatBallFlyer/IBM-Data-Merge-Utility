@@ -41,6 +41,7 @@ import com.ibm.util.merge.template.directive.enrich.provider.*;
  */
 public class Merger {
 	private Cache cache;
+	private Config config;
 	private Template baseTemplate;
 	private DataManager mergeData;
 	private ArrayList<String> templateStack;
@@ -58,6 +59,7 @@ public class Merger {
 			Cache cache, 
 			String template) throws MergeException {
 		this.cache = cache;
+		this.config = cache.getConfig();
 		this.baseTemplate = cache.getMergable(this, template, new HashMap<String,String>());
 		this.mergeData = new DataManager();
 		this.templateStack = new ArrayList<String>();
@@ -127,7 +129,7 @@ public class Merger {
 					break;
 				}
 			}
-			this.archive.setFilePath(Config.tempFolder());
+			this.archive.setFilePath(config.getTempFolder());
 			if (this.mergeData.contians(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_NAME, "-")) {
 				this.archive.setFileName(mergeData.get(Merger.IDMU_PARAMETERS + "-" + Merger.IDMU_ARCHIVE_NAME + "-[0]", "-").getAsPrimitive());
 			}
@@ -144,6 +146,14 @@ public class Merger {
 		return cache;
 	}
 
+	/**
+	 * Get the cache config object
+	 * @return the configuration
+	 */
+	public Config getConfig() {
+		return this.config;
+	}
+	
 	/**
 	 * @param templateName The Template to get
 	 * @param defaultTemplate The Default template to get if Template not found
@@ -189,7 +199,7 @@ public class Merger {
 	public ProviderInterface getProvider(String enrichClass, String enrichSource, String dbName) throws MergeException {
 		String key = enrichSource.concat(dbName);
 		if (!this.providers.containsKey(key)) {
-			providers.put(key,  Config.providerInstance(enrichClass, enrichSource, dbName, this));
+			providers.put(key,  config.getProviderInstance(enrichClass, enrichSource, dbName, this));
 		}
 		return providers.get(key);
 	}

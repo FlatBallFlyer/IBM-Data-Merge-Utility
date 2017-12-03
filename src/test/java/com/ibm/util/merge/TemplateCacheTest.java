@@ -23,8 +23,8 @@ public class TemplateCacheTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		Config.load("{\"prettyJson\": false }");
-		cache = new Cache();
+		Config config = new Config("{\"prettyJson\": false }");
+		cache = new Cache(config);
 		context = new Merger(cache, "system.sample.");
 
 		replace = new HashMap<String,String>();

@@ -32,7 +32,6 @@ public class ParseDataTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		Config.initialize();
 		cache = new Cache();
 		template = new Template("system", "test", "", "test content");
 		directive = new ParseData();
@@ -92,7 +91,8 @@ public class ParseDataTest {
 
 	@Test
 	public void testGetMergable() throws MergeException {
-		ParseData mergable = (ParseData) directive.getMergable(null);
+		Merger context = new Merger(new Cache(), "system.sample.");
+		ParseData mergable = (ParseData) directive.getMergable(context);
 		assertNotSame(mergable, directive);
 		assertEquals(mergable.getName(), directive.getName());
 		assertEquals(mergable.getType(), directive.getType());

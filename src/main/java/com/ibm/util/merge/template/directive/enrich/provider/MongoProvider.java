@@ -78,6 +78,7 @@ public class MongoProvider implements ProviderInterface {
 	private transient MongoClient client;
 	private transient MongoDatabase database;
 	private transient MongoCollection<Document> dbCollection;
+	private transient final Config config;
 	
 	/**
 	 * Instantiate the provider and get the db connection
@@ -91,6 +92,7 @@ public class MongoProvider implements ProviderInterface {
 		this.source = source;
 		this.collection = collection;
 		this.context = context;
+		this.config = context.getConfig();
 	}
 	
 	private void connect() throws Merge500 {
@@ -101,11 +103,11 @@ public class MongoProvider implements ProviderInterface {
 		String pw = "";
 		String dbName = "";
 		try {
-			host = Config.env(source + ".HOST");
-			port = Config.env(source + ".PORT");
-			user = Config.env(source + ".USER");
-			pw = Config.env(source + ".PW");
-			dbName = Config.env(source + ".DB");
+			host = this.config.getEnv(source + ".HOST");
+			port = this.config.getEnv(source + ".PORT");
+			user = this.config.getEnv(source + ".USER");
+			pw = this.config.getEnv(source + ".PW");
+			dbName = this.config.getEnv(source + ".DB");
 		} catch (MergeException e) {
 			throw new Merge500("Invalid Mongo Provider for:" + source);
 		}
@@ -131,8 +133,8 @@ public class MongoProvider implements ProviderInterface {
 		}
 		
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_JSON);
-		query.replace(replace, false, Config.nestLimit());
-		DataObject queryObj = Config.parse(Config.PARSE_JSON, query.getValue()).getAsObject();
+		query.replace(replace, false, this.config.getNestLimit());
+		DataObject queryObj = this.config.parseString(Config.PARSE_JSON, query.getValue()).getAsObject();
 
 		BasicDBObject dbquery = new BasicDBObject();
 		for (String key : queryObj.keySet()) {
@@ -146,16 +148,9 @@ public class MongoProvider implements ProviderInterface {
 //			find.limit(limit);
 //		}
 		
-//		MongoCursor<Document> cursor = find.iterator();
-//		while (cursor.hasNext()) {
-//			Document aDoc = cursor.next();
-//			DataElement theDoc = Config.parse(Config.PARSE_JSON, aDoc.toJson());
-//			result.add(theDoc);
-//		}
-		
 		if (find != null) {
 			for (Document aDoc : find) {
-				DataElement theDoc = Config.parse(Config.PARSE_JSON, aDoc.toJson());
+				DataElement theDoc = this.config.parseString(Config.PARSE_JSON, aDoc.toJson());
 				result.add(theDoc);
 			}
 		}

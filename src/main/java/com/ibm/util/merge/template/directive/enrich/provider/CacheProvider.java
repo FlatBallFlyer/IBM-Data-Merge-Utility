@@ -51,6 +51,7 @@ public class CacheProvider implements ProviderInterface {
 	private final String source;
 	private final String dbName;
 	private transient final Merger context;
+	private transient final Config config;
 	private transient final DataProxyJson proxy = new DataProxyJson();
 	
 	/**
@@ -64,18 +65,19 @@ public class CacheProvider implements ProviderInterface {
 		this.source = source;
 		this.dbName = dbName;
 		this.context = context;
+		this.config = context.getConfig();
 	}
 	
 	@Override
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
 		Cache cache = context.getCahce();
 		DataObject cacheData = new DataObject();
-		cacheData.put("version", 		new DataPrimitive(Config.version()));
+		cacheData.put("version", 		new DataPrimitive(config.getVersion()));
 		cacheData.put("runningSince", 	new DataPrimitive(cache.getInitialized().toString()));
 		cacheData.put("CachedTemplates",new DataPrimitive(cache.getSize()));
 		cacheData.put("CacheHits", 		new DataPrimitive(cache.getCacheHits()));
-		cacheData.put("TempFolder", 	new DataPrimitive(Config.tempFolder()));
-		cacheData.put("MaxRecursion", 	new DataPrimitive(Config.nestLimit()));
+		cacheData.put("TempFolder", 	new DataPrimitive(config.getTempFolder()));
+		cacheData.put("MaxRecursion", 	new DataPrimitive(config.getNestLimit()));
 		cacheData.put("Statistics", 	proxy.fromString(proxy.toString(cache.getStats()), DataObject.class));
 		// DEFERRED: cacheData.put("totalMergeCount", cache.getTotalMergeCount());
 		// DEFERRED: cacheData.put("mergeTime", cache.getMergeTime());

@@ -16,22 +16,18 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
 public class FileSystemProviderTest {
-	private Cache cache;
-	private Template template;
-	private Merger context;
 	
 	@Before
 	public void setUp() throws Exception {
-		Config.initialize();
-		cache = new Cache();
-		template = new Template("system", "test", "", "Content");
-		cache.postTemplate(template);
-		context = new Merger(cache, "system.test.");
 	}
 
 	@Test
 	public void testFileSystemProvider() throws MergeException {
-		Config.load("{\"envVars\":{\"aFolder.PATH\":\"/opt/ibm/idmu\"}}");
+		Config config = new Config("{\"envVars\":{\"aFolder.PATH\":\"/opt/ibm/idmu\"}}");
+		Cache cache = new Cache(config);
+		Template template = new Template("system", "test", "", "Content");
+		cache.postTemplate(template);
+		Merger context = new Merger(cache, "system.test.");
 		FileSystemProvider provider = new FileSystemProvider("aFolder", "", context);
 		provider.loadBasePath();
 		assertEquals("aFolder", provider.getSource());
@@ -46,7 +42,11 @@ public class FileSystemProviderTest {
 		assertTrue(folder.exists());
 		
 		// Test the Provider
-		Config.load("{\"envVars\":{\"db.PATH\":\"src/test/resources/datafiles\"}}");
+		Config config = new Config("{\"envVars\":{\"db.PATH\":\"src/test/resources/datafiles\"}}");
+		Cache cache = new Cache(config);
+		Template template = new Template("system", "test", "", "Content");
+		cache.postTemplate(template);
+		Merger context = new Merger(cache, "system.test.");
 		FileSystemProvider provider = new FileSystemProvider("db", "", context);
 		DataElement result = provider.provide(".*", template.getWrapper(), context, template.getReplaceStack(), Config.PARSE_NONE);
 		assertTrue(result.isObject());
@@ -65,7 +65,11 @@ public class FileSystemProviderTest {
 		assertTrue(folder.exists());
 		
 		// Test the Provider
-		Config.load("{\"envVars\":{\"db.PATH\":\"src/test/resources/datafiles\"}}");
+		Config config = new Config("{\"envVars\":{\"db.PATH\":\"src/test/resources/datafiles\"}}");
+		Cache cache = new Cache(config);
+		Template template = new Template("system", "test", "", "Content");
+		cache.postTemplate(template);
+		Merger context = new Merger(cache, "system.test.");
 		FileSystemProvider provider = new FileSystemProvider("db", "src/test/resources/http", context);
 		DataElement result = provider.provide("simple.csv", template.getWrapper(), context, template.getReplaceStack(), Config.PARSE_CSV);
 		assertTrue(result.isObject());

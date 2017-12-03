@@ -18,6 +18,7 @@ package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
@@ -40,6 +41,7 @@ public abstract class AbstractDirective {
 	private String name = "";
 
 	private transient Template template;
+	private transient Config config;
 	private transient Merger context;
 	private transient int state = Template.STATE_RAW;
 
@@ -55,8 +57,9 @@ public abstract class AbstractDirective {
 	 * @param template The template to bind to
 	 * @throws MergeException when enumirators fail to validate
 	 */
-	public void cachePrepare(Template template) throws MergeException {
+	public void cachePrepare(Template template, Config config) throws MergeException {
 		this.template = template;
+		this.config = config;
 		this.state = Template.STATE_CACHED;
 	}
 
@@ -78,6 +81,7 @@ public abstract class AbstractDirective {
 		target.setName(name);
 		target.state = Template.STATE_MERGABLE;
 		target.context = context;
+		target.config = context.getConfig();
 	}
 
 	/**
@@ -102,6 +106,14 @@ public abstract class AbstractDirective {
 		return context;
 	}
 
+	/**
+	 * Get the cache config object
+	 * @return the configuration
+	 */
+	public Config getConfig() {
+		return this.config;
+	}
+	
 	/**
 	 * @return member of DIRECTIVE_TYPES
 	 */

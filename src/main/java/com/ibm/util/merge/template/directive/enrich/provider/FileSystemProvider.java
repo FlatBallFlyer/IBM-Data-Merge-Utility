@@ -55,6 +55,7 @@ public class FileSystemProvider implements ProviderInterface {
 	private final String source;
 	private final String dbName;
 	private transient final Merger context;
+	private transient final Config config;
 	private transient File basePath;
 
 	/**
@@ -68,6 +69,7 @@ public class FileSystemProvider implements ProviderInterface {
 		this.source = source;
 		this.dbName = dbName;
 		this.context = context;
+		this.config = context.getConfig();
 	}
 
 	/**
@@ -78,7 +80,7 @@ public class FileSystemProvider implements ProviderInterface {
 		// Get the credentials
 		String path = "";
 		try {
-			path = Config.env(source + ".PATH");
+			path = config.getEnv(source + ".PATH");
 		} catch (MergeException e) {
 			throw new Merge500("Malformed or Missing File Source Credentials found for:" + source + ":" + path);
 		}
@@ -95,7 +97,7 @@ public class FileSystemProvider implements ProviderInterface {
 			loadBasePath();
 		}
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_NONE);
-		query.replace(replace, false, Config.nestLimit());
+		query.replace(replace, false, config.getNestLimit());
 		DataObject result = new DataObject();
 
 		String fileSelector = query.getValue();
@@ -116,7 +118,7 @@ public class FileSystemProvider implements ProviderInterface {
         
 		if (parseAs != Config.PARSE_NONE) {
 			for (String fileName : result.keySet()) {
-				DataElement element = Config.parse(parseAs, result.get(fileName).getAsPrimitive()); 
+				DataElement element = config.parseString(parseAs, result.get(fileName).getAsPrimitive()); 
 				result.put(fileName, element);
 			}
 		}

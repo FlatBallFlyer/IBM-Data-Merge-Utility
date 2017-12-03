@@ -30,12 +30,11 @@ public class All_Performance_Tests {
 		assertTrue(folder.isDirectory());
 		
 		// Load the configuration
-		File config = new File(folder.getPath() + File.separator + "config.json");
-		assertTrue(config.exists());
-		Config.load(new String(Files.readAllBytes(config.toPath()), "ISO-8859-1"));
+		File configFile = new File(folder.getPath() + File.separator + "config.json");
+		Config config = new Config(configFile);
 		
 		// Create the template cache and post the templates
-		Cache cache = new Cache(folder);
+		Cache cache = new Cache(config, folder);
 
 		// Load a/b List
 		File aFolder = new File(folder.getPath() + File.separator + "a");

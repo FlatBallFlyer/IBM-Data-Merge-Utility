@@ -30,7 +30,6 @@ public class InsertTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		Config.initialize();
 		cache = new Cache();
 		
 		simpleObject = new DataObject();
@@ -97,7 +96,8 @@ public class InsertTest {
 	
 	@Test
 	public void testInsertRecursionLimit() throws MergeException {
-		Config.load("{\"nestLimit\":\"5\"}");
+		Config config = new Config("{\"nestLimit\":\"5\"}");
+		Cache cache = new Cache(config);
 		Template template = new Template("test", "child", "Template Content ", this.bkm2, "{", "}" );
 		Insert directive = new Insert("data.primitive","-",
 				Insert.MISSING_THROW,
@@ -221,8 +221,9 @@ public class InsertTest {
 			empty, empty, empty, empty,
 			".*",Insert.INSERT_IF_STRING_EQUALS,"");
 
-		directive.cachePrepare(new Template());
-		Insert mergable = directive.getMergable(null);
+		Merger context = new Merger(new Cache(), "system.sample.");
+		directive.cachePrepare(new Template(), new Config());
+		Insert mergable = directive.getMergable(context);
 		assertNotSame(directive, mergable);
 		assertEquals(directive.getType(), AbstractDirective.TYPE_INSERT);
 		assertEquals(directive.getName(), mergable.getName());

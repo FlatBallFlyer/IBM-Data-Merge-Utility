@@ -18,8 +18,8 @@ public class TarArchiveTest {
 
 	@Before
 	public void setUp() throws Exception {
-		Config.load("{\"tempFolder\":\"src/test/resources/temp\"}");
-		cache = new Cache();
+		Config config = new Config("{\"tempFolder\":\"src/test/resources/temp\"}");
+		cache = new Cache(config);
 		context = new Merger(cache, "system.sample.");
 		archive = new TarArchive(context);
 		archive.setFilePath("");

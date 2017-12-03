@@ -16,6 +16,7 @@
  */
 package com.ibm.util.merge.template.directive;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
@@ -74,8 +75,8 @@ public abstract class AbstractDataDirective extends AbstractDirective {
 	 * @param template the Template to connect to
 	 * @throws MergeException on failed validations
 	 */
-	public void cachePrepare(Template template) throws MergeException {
-		super.cachePrepare(template);
+	public void cachePrepare(Template template, Config config) throws MergeException {
+		super.cachePrepare(template, config);
 		this.sourceContent = new Content(template.getWrapper(), this.getDataSource(), TagSegment.ENCODE_NONE);
 	}
 

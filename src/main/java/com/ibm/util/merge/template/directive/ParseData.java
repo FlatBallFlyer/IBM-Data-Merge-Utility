@@ -77,8 +77,8 @@ public class ParseData extends AbstractDataDirective {
 		this.parseFormat = 	parseAs;
 	}
 	@Override
-	public void cachePrepare(Template template) throws MergeException {
-		super.cachePrepare(template);
+	public void cachePrepare(Template template, Config config) throws MergeException {
+		super.cachePrepare(template, config);
 		
 		this.targetContent = new Content(this.getTemplate().getWrapper(), this.dataTarget, TagSegment.ENCODE_NONE);
 		
@@ -116,7 +116,7 @@ public class ParseData extends AbstractDataDirective {
 
 	@Override
 	public void execute(Merger context) throws MergeException {
-		this.getSourceContent().replace(this.getTemplate().getReplaceStack(), true, Config.nestLimit());
+		this.getSourceContent().replace(this.getTemplate().getReplaceStack(), true, this.getConfig().getNestLimit());
 		String source = this.getSourceContent().getValue();
 		DataElement data;
 		if (!this.staticData.isEmpty()) {
@@ -140,7 +140,7 @@ public class ParseData extends AbstractDataDirective {
 			case PRIMITIVE_IGNORE :
 				return;
 			case PRIMITIVE_PARSE :
-				context.getMergeData().put(this.dataTarget, this.dataTargetDelimiter, Config.parse(parseFormat, data.getAsPrimitive()));
+				context.getMergeData().put(this.dataTarget, this.dataTargetDelimiter, this.getConfig().parseString(parseFormat, data.getAsPrimitive()));
 				return;
 			}
 
@@ -162,7 +162,7 @@ public class ParseData extends AbstractDataDirective {
 				for (DataElement member : data.getAsList()) {
 					if (member.isPrimitive()) {
 						String dataSource = member.getAsPrimitive();
-						context.getMergeData().put(this.dataTarget, this.dataTargetDelimiter, Config.parse(parseFormat, dataSource));
+						context.getMergeData().put(this.dataTarget, this.dataTargetDelimiter, this.getConfig().parseString(parseFormat, dataSource));
 						return;
 					}
 				}
@@ -171,7 +171,7 @@ public class ParseData extends AbstractDataDirective {
 				for (int i = data.getAsList().size()-1 ; i >= 0; i--) {
 					if (data.getAsList().get(i).isPrimitive()) {
 						String dataSource = data.getAsList().get(i).getAsPrimitive();
-						context.getMergeData().put(this.dataTarget, this.getDataDelimeter(), Config.parse(parseFormat, dataSource));
+						context.getMergeData().put(this.dataTarget, this.getDataDelimeter(), this.getConfig().parseString(parseFormat, dataSource));
 						return;
 					}
 				}

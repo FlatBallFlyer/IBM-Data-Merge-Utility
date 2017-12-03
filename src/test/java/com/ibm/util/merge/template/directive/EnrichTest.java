@@ -14,25 +14,17 @@ import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
 
 public class EnrichTest {
-	DataProxyJson gsonProxy;	
-	Cache cache;
-	Merger context;
-	Template template;
-	Enrich enrich;
+	DataProxyJson gsonProxy = new DataProxyJson(false);
 	
 	@Before
 	public void setUp() throws Exception {
-		gsonProxy = new DataProxyJson(false);
-		Config.initialize();
-		cache = new Cache();
-		template = new Template("test", "enrich", "", "Template Content", "{", "}");
-		enrich = new Enrich();
-		enrich.setTargetDataName("test");
-		enrich.setName("test");
-		template.addDirective(enrich);
-//		cache.postTemplate(template);
-//		context = new Merger(cache, config, "test.enrich.");
-//		context.merge();
+//		gsonProxy = new DataProxyJson(false);
+//		cache = new Cache();
+//		template = new Template("test", "enrich", "", "Template Content", "{", "}");
+//		enrich = new Enrich();
+//		enrich.setTargetDataName("test");
+//		enrich.setName("test");
+//		template.addDirective(enrich);
 	}
 
 	@Test
@@ -51,8 +43,10 @@ public class EnrichTest {
 
 	@Test
 	public void testGetMergable() throws MergeException {
+		Cache cache = new Cache();
+		Merger context = new Merger(cache, "system.sample.");
+		Template template = new Template("test", "enrich", "", "Template Content", "{", "}");
 		Enrich before = new Enrich();
-		before.setEnrichClass("com.ibm.util.merge.template.directive.enrich.provider.StubProvider");
 		before.setEnrichCommand("foo");
 		before.setEnrichParameter("somedb");
 		before.setEnrichSource("some source");
@@ -60,8 +54,8 @@ public class EnrichTest {
 		before.setParseAs(Config.PARSE_JSON);
 		before.setTargetDataName("some=name");
 		before.setTargetDataDelimeter("=");
-		before.cachePrepare(template);
-		Enrich after = (Enrich) before.getMergable(null);
+		before.cachePrepare(template, new Config());
+		Enrich after = (Enrich) before.getMergable(context);
 		assertNotSame(before, after);
 		assertEquals(before.getEnrichClass(), after.getEnrichClass());
 		assertEquals(before.getEnrichCommand(), after.getEnrichCommand());
@@ -87,8 +81,13 @@ public class EnrichTest {
 	
 	@Test
 	public void testExecuteNoParse() throws MergeException {
+		Cache cache = new Cache();
+		Template template = new Template("test", "enrich", "", "Template Content", "{", "}");
+		Enrich enrich = new Enrich();
+		enrich.setTargetDataName("test");
+		template.addDirective(enrich);
 		cache.postTemplate(template);
-		context = new Merger(cache, "test.enrich.");
+		Merger context = new Merger(cache, "test.enrich.");
 		context.merge();
 		Template test = gsonProxy.fromString(context.getMergeData().get("test", "\"").getAsPrimitive(), Template.class);
 		assertTrue(test instanceof Template);
@@ -96,9 +95,15 @@ public class EnrichTest {
 
 	@Test
 	public void testExecuteParse() throws MergeException {
+		Template template = new Template("test","enrich","", "Simple Test");
+		Enrich enrich = new Enrich();
+		enrich.setTargetDataName("test");
 		enrich.setParseAs(Config.PARSE_JSON);
+		template.addDirective(enrich);
+		
+		Cache cache = new Cache();
 		cache.postTemplate(template);
-		context = new Merger(cache, "test.enrich.");
+		Merger context = new Merger(cache, "test.enrich.");
 		context.merge();
 		DataElement output = context.getMergeData().get("test", "\"");
 		assertTrue(output.isObject());
@@ -122,43 +127,50 @@ public class EnrichTest {
 	}
 	
 	@Test
-	public void testGetSetTargetDataName() {
+	public void testGetSetTargetDataName() throws MergeException {
+		Enrich enrich = new Enrich();
 		enrich.setTargetDataName("foo");
 		assertEquals("foo", enrich.getTargetDataName());
 	}
 
 	@Test
-	public void testGetSetEnrichSource() {
+	public void testGetSetEnrichSource() throws MergeException {
+		Enrich enrich = new Enrich();
 		enrich.setEnrichSource("foo");
 		assertEquals("foo", enrich.getEnrichSource());
 	}
 
 	@Test
-	public void testGetSetTargetDataDelimeter() {
+	public void testGetSetTargetDataDelimeter() throws MergeException {
+		Enrich enrich = new Enrich();
 		enrich.setTargetDataDelimeter("foo");
 		assertEquals("foo", enrich.getTargetDataDelimeter());
 	}
 
 	@Test
-	public void testGetSetParseAs() {
+	public void testGetSetParseAs() throws MergeException {
+		Enrich enrich = new Enrich();
 		enrich.setParseAs(Config.PARSE_CSV);
 		assertEquals(Config.PARSE_CSV, enrich.getParseAs());
 	}
 
 	@Test
-	public void testGetSetEnrichClass() {
+	public void testGetSetEnrichClass() throws MergeException {
+		Enrich enrich = new Enrich();
 		enrich.setEnrichClass("foo");
 		assertEquals("foo", enrich.getEnrichClass());
 	}
 
 	@Test
 	public void testGetSetEnrichCommand() throws MergeException {
+		Enrich enrich = new Enrich();
 		enrich.setEnrichCommand("foo");
 		assertEquals("foo", enrich.getEnrichCommand());
 	}
 
 	@Test
-	public void testGetSetEnrichParameter() {
+	public void testGetSetEnrichParameter() throws MergeException {
+		Enrich enrich = new Enrich();
 		enrich.setEnrichParameter("foo");
 		assertEquals("foo", enrich.getEnrichParameter());
 	}

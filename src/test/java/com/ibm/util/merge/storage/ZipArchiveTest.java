@@ -7,7 +7,6 @@ import java.util.zip.ZipOutputStream;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.exception.MergeException;
@@ -19,7 +18,6 @@ public class ZipArchiveTest {
 
 	@Before
 	public void setUp() throws Exception {
-		Config.initialize();
 		cache = new Cache();
 		context = new Merger(cache, "system.sample.");
 		archive = new ZipArchive(context);

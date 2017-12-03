@@ -18,16 +18,14 @@ import com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface;
 import com.ibm.util.merge.template.directive.enrich.provider.StubProvider;
 
 public class MergerTest {
-	private Cache cache;
 	
 	@Before
 	public void setUp() throws Exception {
-		Config.initialize();
-		cache = new Cache();
 	}
 
 	@Test
 	public void testMergerCacheConfigTemplate() throws MergeException {
+		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.sample.");
 		assertSame(cache, merger.getCahce());
 		assertEquals(Template.STATE_MERGABLE, merger.getBaseTemplate().getState());
@@ -38,6 +36,7 @@ public class MergerTest {
 
 	@Test
 	public void testMergerCacheConfigTemplateParametersRequest() throws MergeException {
+		Cache cache = new Cache();
 		HashMap<String,String[]> parameters = new HashMap<String, String[]>();
 		String request = "Some Input Data";
 		String[] option = {"yes"};
@@ -52,6 +51,7 @@ public class MergerTest {
 
 	@Test
 	public void testMerge() throws MergeException {
+		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.error403.");
 		Template template = merger.merge();
 		assertEquals("Error - Forbidden", template.getContent());
@@ -59,6 +59,7 @@ public class MergerTest {
 
 	@Test
 	public void testGetMergable() throws MergeException {
+		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.error403.");
 		Template template = merger.getMergable("system.error403.",  "", new HashMap<String,String>());
 		assertEquals(Template.STATE_MERGABLE, template.getState());
@@ -68,6 +69,7 @@ public class MergerTest {
 
 	@Test
 	public void testPushPopGetStack() throws MergeException {
+		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.sample.");
 		DataObject object = new DataObject();
 		assertEquals(0, merger.getStackSize());
@@ -83,7 +85,8 @@ public class MergerTest {
 
 	@Test
 	public void testGetArchiveSimple() throws MergeException {
-		Config.load("{\"tempFolder\":\"test\"}");
+		Config config = new Config("{\"tempFolder\":\"test\"}");
+		Cache cache = new Cache(config);
 		Merger merger = new Merger(cache, "system.sample.");
 		Archive archive = merger.getArchive();
 		assertEquals("test", archive.getFilePath());
@@ -94,7 +97,8 @@ public class MergerTest {
 	@Test
 	public void testGetArchiveType() throws MergeException {
 		for (String type : Archive.ARCHIVE_TYPES()) {
-			Config.load("{\"tempFolder\":\"test\"}");
+			Config config = new Config("{\"tempFolder\":\"test\"}");
+			Cache cache = new Cache(config);
 			Merger merger = new Merger(cache, "system.sample.");
 			DataObject parameters = new DataObject();
 			DataList values = new DataList();
@@ -113,7 +117,8 @@ public class MergerTest {
 	
 	@Test
 	public void testGetArchiveName() throws MergeException {
-		Config.load("{\"tempFolder\":\"test\"}");
+		Config config = new Config("{\"tempFolder\":\"test\"}");
+		Cache cache = new Cache(config);
 		Merger merger = new Merger(cache, "system.sample.");
 		DataObject parameters = new DataObject();
 		DataList values = new DataList();
@@ -128,18 +133,21 @@ public class MergerTest {
 
 	@Test
 	public void testGetMergeData() throws MergeException {
+		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.sample.");
 		assertTrue(merger.getMergeData() instanceof DataManager);
 	}
 	
 	@Test
 	public void testGetCache() throws MergeException {
+		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.sample.");
 		assertSame(cache, merger.getCahce());
 	}
 	
 	@Test
 	public void testGetBaseTemplate() throws MergeException {
+		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.sample.");
 		assertEquals("system", merger.getBaseTemplate().getId().group);
 		assertEquals("sample", merger.getBaseTemplate().getId().name);
@@ -148,7 +156,7 @@ public class MergerTest {
 	
 	@Test
 	public void testGetProviders() throws MergeException {
-		Config.initialize();
+		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.sample.");
 		assertEquals(0, merger.getProviders().size());
 		ProviderInterface provider1 = merger.getProvider("com.ibm.util.merge.template.directive.enrich.provider.StubProvider", "TheSource", "TheDb");
@@ -160,6 +168,7 @@ public class MergerTest {
 	
 	@Test
 	public void testGetStack() throws MergeException {
+		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.sample.");
 		DataObject object = new DataObject();
 		assertEquals(0, merger.getTemplateStack().size());
@@ -168,6 +177,7 @@ public class MergerTest {
 	}
 	@Test
 	public void testClearData() throws MergeException {
+		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.sample.");
 		merger.getMergeData().put("Test", "-", "Test Value");
 		assertTrue(merger.getMergeData().contians("Test", "-"));

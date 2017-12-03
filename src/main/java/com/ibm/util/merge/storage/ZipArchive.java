@@ -32,11 +32,6 @@ import com.ibm.util.merge.exception.MergeException;
  */
 public class ZipArchive extends Archive {
 
-    public ZipArchive() throws MergeException {
-    	super();
-    	this.setArchiveType(Archive.ARCHIVE_ZIP);
-    }
-
     public ZipArchive(Merger context) throws MergeException {
         super(context);
         this.setArchiveType(Archive.ARCHIVE_ZIP);

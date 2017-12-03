@@ -52,8 +52,8 @@ public class SaveFile extends AbstractDirective {
 	}
 
 	@Override
-	public void cachePrepare(Template template) throws MergeException {
-		super.cachePrepare(template);
+	public void cachePrepare(Template template, Config config) throws MergeException {
+		super.cachePrepare(template,config);
 		this.fileNameContent = new Content(this.getTemplate().getWrapper(), this.filename, TagSegment.ENCODE_NONE);
 	}
 
@@ -70,7 +70,7 @@ public class SaveFile extends AbstractDirective {
 	@Override
 	public void execute(Merger context) throws MergeException {
 		Archive archive = context.getArchive();
-		this.fileNameContent.replace(this.getTemplate().getReplaceStack(), true, Config.nestLimit());
+		this.fileNameContent.replace(this.getTemplate().getReplaceStack(), true, this.getConfig().getNestLimit());
 		archive.writeFile(this.fileNameContent.getValue(), this.getTemplate().getMergeContent().getValue(), "idmu-user", "idmu-group");
 		if (this.clearAfter) {
 			this.getTemplate().clearContent();

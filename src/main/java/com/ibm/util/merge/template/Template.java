@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.Merge500;
@@ -81,6 +82,7 @@ public class Template {
 	private transient Content mergeContent;
 	private transient HashMap<String, String> replaceStack = new HashMap<String,String>();
 	private transient Merger context;
+	private transient Config config;
 	
 	/**
 	 * Instantiate a void template - provided for testing only
@@ -147,11 +149,11 @@ public class Template {
 	 * Validate all ordinal values, populate transient values.
 	 * @throws MergeException on processing errors
 	 */
-	public void cachePrepare() throws MergeException {
+	public void cachePrepare(Cache cache) throws MergeException {
 		if (this.state != STATE_RAW) {
 			throw new Merge500("Can only prepare a RAW template");
 		}
-		
+		this.config = cache.getConfig();
 		this.stats = new Stat();
 		this.stats.name = this.getId().shorthand();
 		this.stats.size = this.content.length();
@@ -159,7 +161,7 @@ public class Template {
 		this.replaceStack = new HashMap<String,String>();
 		this.context = null;
 		for (AbstractDirective directive : this.directives) {
-			directive.cachePrepare(this);
+			directive.cachePrepare(this, config);
 		}
 		this.state = STATE_CACHED;
 	}
@@ -189,6 +191,7 @@ public class Template {
 		}
 		
 		Template mergable = new Template(this.id);
+		mergable.setConfig(config);
 		mergable.setContext(context);
 		mergable.setContentDisposition(contentDisposition);
 		mergable.setContentEncoding(contentEncoding);
@@ -314,6 +317,10 @@ public class Template {
 			this.wrapper.front = front;
 			this.wrapper.back = back;
 		}
+	}
+
+	private void setConfig(Config config) {
+		this.config = config;
 	}
 
 	/**
@@ -486,7 +493,7 @@ public class Template {
 	public String getContentDisposition() throws MergeException {
 		if (DISPOSITION_DOWNLOAD == contentDisposition) {
 			Content fileName = new Content(this.wrapper, this.contentFileName, this.contentEncoding);
-			fileName.replace(replaceStack, false, Config.nestLimit() );
+			fileName.replace(replaceStack, false, config.getNestLimit());
 			return "attachment;filename=\"" + fileName.getValue() + "\"";
 		} else {
 			return "";

@@ -103,8 +103,8 @@ public class Insert extends AbstractDataDirective {
 	}
 	
 	@Override
-	public void cachePrepare(Template template) throws MergeException {
-		super.cachePrepare(template);
+	public void cachePrepare(Template template, Config config) throws MergeException {
+		super.cachePrepare(template, config);
 		
 		// Validate enums
 		if (!Insert.MISSING_OPTIONS().containsKey(this.getIfSourceMissing())) {
@@ -152,7 +152,7 @@ public class Insert extends AbstractDataDirective {
 	
 	@Override
 	public void execute(Merger context) throws MergeException {
-		this.getSourceContent().replace(this.getTemplate().getReplaceStack(), true, Config.nestLimit());
+		this.getSourceContent().replace(this.getTemplate().getReplaceStack(), true, this.getConfig().getNestLimit());
 		String source = this.getSourceContent().getValue();
 		if (!context.getMergeData().contians(source, this.getDataDelimeter())) {
 			switch (this.getIfSourceMissing()) {
@@ -325,7 +325,7 @@ public class Insert extends AbstractDataDirective {
 	 * @throws MergeException on processing errors
 	 */
 	public void insertAtBookmarks(Merger context, DataElement value, boolean isFirst, boolean isLast) throws MergeException {
-		if (context.getStackSize() > Config.insertLimit()) {
+		if (context.getStackSize() > this.getConfig().getInsertLimit()) {
 			throw new Merge500("template insert recursion safety, merge stack size exceded");
 		}
 

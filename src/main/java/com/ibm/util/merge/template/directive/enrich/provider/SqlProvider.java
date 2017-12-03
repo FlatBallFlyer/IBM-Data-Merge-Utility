@@ -48,14 +48,24 @@ public abstract class SqlProvider implements ProviderInterface {
 	protected final transient Merger context;
 	protected transient DataSource jdbcSource = null;
 	protected transient Connection connection = null;
+	private transient final Config config;
 	
 	public SqlProvider(String source, String dbName, Merger context) throws MergeException {
 		this.source = source;
 		this.dbName = dbName;
 		this.context = context;
+		this.config = context.getConfig();
 	}
 	
 	protected abstract void connect() throws MergeException;
+	
+	/**
+	 * Get the cache config object
+	 * @return the configuration
+	 */
+	public Config getConfig() {
+		return this.config;
+	}
 	
 	@Override
 	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
@@ -64,7 +74,7 @@ public abstract class SqlProvider implements ProviderInterface {
 		}
 		
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_SQL);
-		query.replace(replace, false, Config.nestLimit());
+		query.replace(replace, false, config.getNestLimit());
 		DataList table = new DataList();
 		ResultSet results;
 

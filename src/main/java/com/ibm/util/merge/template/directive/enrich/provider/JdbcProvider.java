@@ -16,7 +16,6 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
@@ -74,9 +73,9 @@ public class JdbcProvider extends SqlProvider implements ProviderInterface {
 		String user = "";
 		String pw = "";
 		try {
-			uri = Config.env(source + ".URI");
-			user = Config.env(source + ".USER");
-			pw = Config.env(source + ".PW");
+			uri = this.getConfig().getEnv(source + ".URI");
+			user = this.getConfig().getEnv(source + ".USER");
+			pw = this.getConfig().getEnv(source + ".PW");
 		} catch (MergeException e) {
 			throw new Merge500("JDBC Provider did not find environment variables:" + source + ":" + uri + ":" + user + ":" + pw);
 		}

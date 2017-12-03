@@ -73,6 +73,7 @@ public class RestProvider implements ProviderInterface {
 	private final String source;
 	private final String dbName;
 	private transient final Merger context;
+	private transient final Config config;
 	
 	/**
 	 * Construct a provider
@@ -84,14 +85,15 @@ public class RestProvider implements ProviderInterface {
 		this.source = source;
 		this.dbName = dbName;
 		this.context = context;
+		this.config = context.getConfig();
 	}
 	
 	private void connect() throws Merge500 {
 		try {
-			host = Config.env(source + ".HOST");
-			port = Config.env(source + ".PORT");
-			username = Config.env(source + ".USER");
-			password = Config.env(source + ".PW");
+			host = config.getEnv(source + ".HOST");
+			port = config.getEnv(source + ".PORT");
+			username = config.getEnv(source + ".USER");
+			password = config.getEnv(source + ".PW");
 		} catch (MergeException e) {
 			throw new Merge500("Rest Provider did not find environment variables:" + source + ":" + host + ":" + port + ":" + username + ":" + password);
 		}
@@ -105,7 +107,7 @@ public class RestProvider implements ProviderInterface {
 		}
 		
 		Content query = new Content(wrapper, command, TagSegment.ENCODE_HTML);
-		query.replace(replace, false, Config.nestLimit());
+		query.replace(replace, false, config.getNestLimit());
 		String theUrl = "";
 		String fetchedData = "";
 
@@ -125,7 +127,7 @@ public class RestProvider implements ProviderInterface {
 		if (parseAs == Config.PARSE_NONE) {
 			return new DataPrimitive(fetchedData);
 		} else {
-			return Config.parse(parseAs, fetchedData);
+			return config.parseString(parseAs, fetchedData);
 		}
 	}
 	
