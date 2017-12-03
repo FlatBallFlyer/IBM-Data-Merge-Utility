@@ -123,8 +123,8 @@ public class BookmarkSegmentTest {
 	}
 
 	@Test
-	public void testGetTemplateShorthand3() throws Merge500 {
-		BookmarkSegment test = new BookmarkSegment("bookmark=\"name\" group=\"group\" template=\"template\" varyby=\"0\"");
+	public void testGetTemplateShorthandFail() throws Merge500 {
+		BookmarkSegment test = new BookmarkSegment("bookmark=\"name\" group=\"group\" template=\"template\" varyby=\"XXX\"");
 		DataElement data = new DataList();
 		data.getAsList().add(new DataPrimitive("Foo"));
 		try {
@@ -133,6 +133,13 @@ public class BookmarkSegmentTest {
 			return;
 		}
 		fail("Exception Expected!");
+	}
+
+	@Test
+	public void testGetTemplateShorthandAlways() throws MergeException {
+		BookmarkSegment test = new BookmarkSegment("bookmark=\"name\" group=\"group\" template=\"template\" varyby=\"XXX\" insertAlways");
+		DataElement data = new DataList();
+		assertEquals("group.template.", test.getTemplateShorthand(data));
 	}
 
 }

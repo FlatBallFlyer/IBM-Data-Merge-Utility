@@ -26,8 +26,10 @@ import com.ibm.util.merge.exception.MergeException;
 /**
  * A Bookmark Segment marks a location within the Content where sub-templates can be inserted
  * <p>Bookmarks are wrapped strings that start with "bookmark" and conform to this pattern</p>
- * <p><b>bookmark = "<i>name</i>" group = "<i>group</i>" template = "<i>template</i>" varyby = "<i>varyBy Attribute</i>"</b></p>
- * <p>All fields are required except the varyby field</p>
+ * <p><b>bookmark = "<i>name</i>" group = "<i>group</i>" template = "<i>template</i>" varyby = "<i>varyBy Attribute</i>" insertAlways</b></p>
+ * <p>All fields are required except the varyby field and insertAlways indicator</p>
+ * <p>The insert always indicator will allow bookmarks to insert sub-templates when the varyby attr is missing or not-primitive
+ * without this parameter an exception is thrown on missing or non-primitive varyby attribute values.</p>
  * 
  * @author Mike Storey
  * @see com.ibm.util.merge.template.directive.Insert
@@ -37,12 +39,14 @@ public class BookmarkSegment extends Segment {
 	private static final Pattern NAME_PATTERN 		= Pattern.compile("bookmark\\W*?=\\W*?\"(.*?)\"");
 	private static final Pattern GROUP_PATTERN 		= Pattern.compile("group\\W*?=\\W*?\"(.*?)\"");
 	private static final Pattern TEMPLATE_PATTERN 	= Pattern.compile("template\\W*?=\\W*?\"(.*?)\"");
-	private static final Pattern VARYBY_PATTERN 	= Pattern.compile("varyby\\W*?=\\W*?\"(.*?)\"");
+	private static final Pattern VARYBY_PATTERN 		= Pattern.compile("varyby\\W*?=\\W*?\"(.*?)\"");
+	private static final Pattern INSERT_PATTERN		= Pattern.compile("insertAlways");
 
 	private String bookmarkName = "";
 	private String templateGroup = "";
 	private String templateName = "";
 	private String varyByAttribute = "";
+	private boolean insertAlways;
 
 	public BookmarkSegment() {
 		
@@ -82,6 +86,9 @@ public class BookmarkSegment extends Segment {
 		if (matcher.find()) {
 			varyByAttribute = matcher.group(1);
 		} 
+
+		matcher = INSERT_PATTERN.matcher(source);
+		insertAlways = matcher.find();
 	}
 
 
@@ -107,14 +114,28 @@ public class BookmarkSegment extends Segment {
 		if (!this.varyByAttribute.isEmpty()) {
 			if (value.isObject()) {
 				if (!value.getAsObject().keySet().contains(varyByAttribute)) {
-					throw new Merge500("Vary by Attribute not found in Insert Context:" + varyByAttribute);
+					if (insertAlways) {
+						reply += "";
+					} else {
+						throw new Merge500("Vary by Attribute not found in Insert Context:" + varyByAttribute);
+					}
+				} else if (!value.getAsObject().get(varyByAttribute).isPrimitive()) {
+					if (insertAlways) {
+						reply += "";
+					} else {
+						throw new Merge500("Vary by Attribute not found in Insert Context:" + varyByAttribute);
+					}
 				} else {
 					reply += value.getAsObject().get(varyByAttribute).getAsPrimitive();
 				}
 			} else if (value.isPrimitive()) {
 				reply += value.getAsPrimitive();
 			} else if (value.isList()) {
-				throw new Merge500("Insert Context is a list!");
+				if (insertAlways) {
+					reply += "";
+				} else {
+					throw new Merge500("Insert Context is a list!");
+				}
 			}
 		}
 		return reply;

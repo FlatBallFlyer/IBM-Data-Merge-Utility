@@ -8,7 +8,6 @@ import java.util.HashSet;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.template.content.TagSegment;
