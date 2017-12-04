@@ -290,8 +290,8 @@ public class Config {
 	}
 	
 	/**
-	 * @param serviceName
-	 * @return
+	 * @param serviceName The VCAP Service Name to lookup
+	 * @return the VCAP entry
 	 * @throws MergeException on Processing Errors
 	 */
 	public String getVcapEntry(String serviceName) throws MergeException {

@@ -55,6 +55,7 @@ public abstract class AbstractDirective {
 	/**
 	 * Populate Transient Values and validate enumerations
 	 * @param template The template to bind to
+	 * @param config The configuration to be used by the Cache and all Mergers that come from it.
 	 * @throws MergeException when enumirators fail to validate
 	 */
 	public void cachePrepare(Template template, Config config) throws MergeException {

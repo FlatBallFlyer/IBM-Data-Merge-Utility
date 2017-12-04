@@ -147,6 +147,7 @@ public class Template {
 	
 	/**
 	 * Validate all ordinal values, populate transient values.
+	 * @param cache The cache we're being added to.
 	 * @throws MergeException on processing errors
 	 */
 	public void cachePrepare(Cache cache) throws MergeException {

@@ -73,6 +73,7 @@ public class Cache implements Iterable<String> {
 	
 	/**
 	 * Instantiates a new template cache with the provided config
+	 * @param config The configuration to be used by the Cache and all Mergers that come from it.
 	 * @throws MergeException  on processing errors
 	 */
 	public Cache(Config config) throws MergeException {
@@ -91,6 +92,7 @@ public class Cache implements Iterable<String> {
 	/**
 	 * Instantiates a new template cache and loads from a specified file folder
 	 * @param load A folder with one or more json tempalte group files.
+	 * @param config The configuration to be used by the Cache and all Mergers that come from it.
 	 * @throws MergeException  on processing errors
 	 */
 	public Cache(Config config, File load) throws MergeException {
