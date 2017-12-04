@@ -74,12 +74,13 @@ public class MergeExceptionTest {
 			assertEquals("Source Data Missing for  in  at ", e.getMessage());
 			assertEquals("Merge500", e.getType());
 			String detailed = e.getErrorMessage(merger);
-//			assertEquals("", detailed); // Commented out - cheat point to get output
 			
 			DataElement error = proxy.fromString(detailed, DataElement.class);
 			assertTrue(error.isObject());
 			assertTrue(error.getAsObject().containsKey("exception"));
 			assertTrue(error.getAsObject().containsKey("stackTrace"));
+			assertTrue(error.getAsObject().containsKey("errorMessage"));
+			assertEquals("Source Data Missing for  in  at ", error.getAsObject().get("errorMessage").getAsPrimitive());
 			assertTrue(error.getAsObject().containsKey("dataManager"));
 			assertTrue(error.getAsObject().get("exception").isObject());
 			DataObject data = error.getAsObject().get("exception").getAsObject();
@@ -195,7 +196,8 @@ public class MergeExceptionTest {
 		Template theTemplate = new Template(group, template, varyBy, 
 				"{ \"exception\": 	<idmuException>,"
 				+ "\"dataManager\": <idmuExceptionData>,"
-				+ "\"stackTrace\": \"<idmuStackTrace encode=\"json\">\""
+				+ "\"stackTrace\": \"<idmuStackTrace encode=\"json\">\","
+				+ "\"errorMessage\": \"<idmuErrorMessage>\""
 				+ "}", "<", ">");
 		Replace replace;
 		replace = new Replace();
@@ -206,6 +208,11 @@ public class MergeExceptionTest {
 		replace = new Replace();
 		replace.setIfPrimitive(Replace.PRIMITIVE_REPLACE);
 		replace.setDataSource("idmuExceptionData");
+		theTemplate.addDirective(replace);
+
+		replace = new Replace();
+		replace.setIfPrimitive(Replace.PRIMITIVE_REPLACE);
+		replace.setDataSource("idmuErrorMessage");
 		theTemplate.addDirective(replace);
 
 		replace = new Replace();

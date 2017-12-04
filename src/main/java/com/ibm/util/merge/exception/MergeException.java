@@ -39,6 +39,7 @@ public abstract class MergeException extends Exception {
 	private static final String IDMU_EXCEPTION 				= "idmuException";
 	private static final String IDMU_EXCEPTION_DATA 			= "idmuExceptionData";
 	private static final String IDMU_STACK_TRACE 			= "idmuStackTrace";
+	private static final String IDMU_ERROR_MSG	 			= "idmuErrorMessage";
 
 	private String type;
 	private String error;
@@ -68,6 +69,7 @@ public abstract class MergeException extends Exception {
 			context.getMergeData().put(IDMU_EXCEPTION_DATA, "-", proxy.toString(context.getMergeData()));
 			context.getMergeData().put(IDMU_EXCEPTION, "-", 		proxy.toString(this));
 			context.getMergeData().put(IDMU_STACK_TRACE, "-", 	stacktrace);
+			context.getMergeData().put(IDMU_ERROR_MSG, "-", 		this.error);
 			
 			Template errorMessage = context.getMergable(specific, general, new HashMap<String,String>());
 			return errorMessage.getMergedOutput().getValue();
