@@ -1,0 +1,208 @@
+{
+  "templates" : [
+    {
+      "id" : {
+        "group" : "system",
+        "name" : "Merge500",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Debug Error Template 500",
+      "content" : "{\t\n\t\"exception\": <idmuException>,\n\t\"dataManager\": <idmuExceptionData>,\n\t\"stackTrace\": \"<idmuStackTrace encode=\"json\">\"\n}",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "processAfter" : true,
+          "objectAttrPrimitive" : 2,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "listAttrMissing" : 2,
+          "listAttrNotPrimitive" : 2,
+          "dataSource" : "idmuException",
+          "dataDelimeter" : "-",
+          "ifMissing" : 2,
+          "ifPrimitive" : 3,
+          "ifObject" : 2,
+          "ifList" : 2,
+          "type" : 4,
+          "name" : "get Exception"
+        },
+        {
+          "processAfter" : true,
+          "objectAttrPrimitive" : 2,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "listAttrMissing" : 2,
+          "listAttrNotPrimitive" : 2,
+          "dataSource" : "idmuExceptionData",
+          "dataDelimeter" : "-",
+          "ifMissing" : 2,
+          "ifPrimitive" : 3,
+          "ifObject" : 2,
+          "ifList" : 2,
+          "type" : 4,
+          "name" : "get DataManager"
+        },
+        {
+          "processAfter" : true,
+          "objectAttrPrimitive" : 2,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "listAttrMissing" : 2,
+          "listAttrNotPrimitive" : 2,
+          "dataSource" : "idmuStackTrace",
+          "dataDelimeter" : "-",
+          "ifMissing" : 2,
+          "ifPrimitive" : 3,
+          "ifObject" : 2,
+          "ifList" : 2,
+          "type" : 4,
+          "name" : "get Exception"
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "system",
+        "name" : "Merge404",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Debug Error Template 404",
+      "content" : "{\t\n\t\"exception\": <idmuException>,\n\t\"dataManager\": <idmuExceptionData>,\n\t\"stackTrace\": \"<idmuStackTrace encode=\"json\">\"\n}",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "processAfter" : true,
+          "objectAttrPrimitive" : 2,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "listAttrMissing" : 2,
+          "listAttrNotPrimitive" : 2,
+          "dataSource" : "idmuException",
+          "dataDelimeter" : "-",
+          "ifMissing" : 2,
+          "ifPrimitive" : 3,
+          "ifObject" : 2,
+          "ifList" : 2,
+          "type" : 4,
+          "name" : "get Exception"
+        },
+        {
+          "processAfter" : true,
+          "objectAttrPrimitive" : 2,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "listAttrMissing" : 2,
+          "listAttrNotPrimitive" : 2,
+          "dataSource" : "idmuExceptionData",
+          "dataDelimeter" : "-",
+          "ifMissing" : 2,
+          "ifPrimitive" : 3,
+          "ifObject" : 2,
+          "ifList" : 2,
+          "type" : 4,
+          "name" : "get DataManager"
+        },
+        {
+          "processAfter" : true,
+          "objectAttrPrimitive" : 2,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "listAttrMissing" : 2,
+          "listAttrNotPrimitive" : 2,
+          "dataSource" : "idmuStackTrace",
+          "dataDelimeter" : "-",
+          "ifMissing" : 2,
+          "ifPrimitive" : 3,
+          "ifObject" : 2,
+          "ifList" : 2,
+          "type" : 4,
+          "name" : "get Exception"
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "system",
+        "name" : "Merge403",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Debug Error Template 403",
+      "content" : "{\t\n\t\"exception\": <idmuException>,\n\t\"dataManager\": <idmuExceptionData>,\n\t\"stackTrace\": \"<idmuStackTrace encode=\"json\">\"\n}",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "processAfter" : true,
+          "objectAttrPrimitive" : 2,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "listAttrMissing" : 2,
+          "listAttrNotPrimitive" : 2,
+          "dataSource" : "idmuException",
+          "dataDelimeter" : "-",
+          "ifMissing" : 2,
+          "ifPrimitive" : 1,
+          "ifObject" : 2,
+          "ifList" : 1,
+          "type" : 4,
+          "name" : "get Exception"
+        },
+        {
+          "processAfter" : true,
+          "objectAttrPrimitive" : 2,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "listAttrMissing" : 2,
+          "listAttrNotPrimitive" : 2,
+          "dataSource" : "idmuExceptionData",
+          "dataDelimeter" : "-",
+          "ifMissing" : 2,
+          "ifPrimitive" : 3,
+          "ifObject" : 2,
+          "ifList" : 2,
+          "type" : 4,
+          "name" : "get DataManager"
+        },
+        {
+          "processAfter" : true,
+          "objectAttrPrimitive" : 2,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "listAttrMissing" : 2,
+          "listAttrNotPrimitive" : 2,
+          "dataSource" : "idmuStackTrace",
+          "dataDelimeter" : "-",
+          "ifMissing" : 2,
+          "ifPrimitive" : 3,
+          "ifObject" : 2,
+          "ifList" : 2,
+          "type" : 4,
+          "name" : "get Exception"
+        }
+      ]
+    }
+  ]
+}

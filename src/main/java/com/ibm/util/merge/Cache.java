@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge403;
 import com.ibm.util.merge.exception.Merge404;
+import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Stats;
 import com.ibm.util.merge.template.Template;
@@ -511,16 +512,16 @@ public class Cache implements Iterable<String> {
 	public void buildDefaultSystemTemplates() {
 		// Build Default Templates
 		try {
-			this.deleteGroup("system");
+			this.deleteTheGroup("system");
 		} catch (Throwable e) {
 			// ignore not found
 		}
 		
 		// Add System Templates
 		try {
-			Template error403 = new Template("system","error403","","Error - Forbidden");
-			Template error404 = new Template("system","error404","","Error - Not Found");
-			Template error500 = new Template("system","error500","","Error - Merge Error");
+			Template error403 = new Template("system", Merge403.TEMPLATE, "", "Error - Forbidden");
+			Template error404 = new Template("system", Merge404.TEMPLATE, "", "Error - Not Found");
+			Template error500 = new Template("system", Merge500.TEMPLATE, "", "Error - Merge Error");
 			Template sample = new Template("system","sample","");
 			sample.addDirective(new Enrich());
 			sample.addDirective(new Insert());

@@ -1,20 +1,239 @@
-{
-	"persistModel": "provider",
-	"persistSource": "templateCloudant",
-	"tempFolder": "/opt/ibm/idmu/temp",
-	"maxStack": 20,
-	"sources": 
-	{
-		"templateCloudant": 
-		{
-			"type": 2,
-			"parseAs": 4,
-			"name": "",
-			"env": "",
-			"getCommand": "",
-			"putCommand": "",
-			"postCommand": "",
-			"deleteCommand": ""
-		}
-	}
-}
+{ "exception": 	{
+  "type": "Merge500",
+  "error": "Source Data Missing for  in  at ",
+  "template": {
+    "id": {
+      "group": "unit",
+      "name": "fail",
+      "variant": ""
+    },
+    "content": "",
+    "wrapper": {
+      "front": "{",
+      "back": "}"
+    },
+    "contentType": 4,
+    "contentDisposition": 2,
+    "contentEncoding": 1,
+    "contentFileName": "",
+    "contentRedirectUrl": "",
+    "description": "",
+    "directives": [
+      {
+        "toValue": "",
+        "processAfter": false,
+        "processRequire": false,
+        "objectAttrPrimitive": 1,
+        "objectAttrList": 1,
+        "objectAttrObject": 1,
+        "fromAttribute": "",
+        "toAttribute": "",
+        "listAttrMissing": 1,
+        "listAttrNotPrimitive": 1,
+        "dataSource": "",
+        "dataDelimeter": "-",
+        "ifMissing": 1,
+        "ifPrimitive": 2,
+        "ifObject": 2,
+        "ifList": 2,
+        "type": 4,
+        "name": ""
+      }
+    ]
+  },
+  "directive": {
+    "toValue": "",
+    "processAfter": false,
+    "processRequire": false,
+    "objectAttrPrimitive": 1,
+    "objectAttrList": 1,
+    "objectAttrObject": 1,
+    "fromAttribute": "",
+    "toAttribute": "",
+    "listAttrMissing": 1,
+    "listAttrNotPrimitive": 1,
+    "dataSource": "",
+    "dataDelimeter": "-",
+    "ifMissing": 1,
+    "ifPrimitive": 2,
+    "ifObject": 2,
+    "ifList": 2,
+    "type": 4,
+    "name": ""
+  },
+  "detailMessage": "Source Data Missing for  in  at ",
+  "stackTrace": [
+    {
+      "declaringClass": "com.ibm.util.merge.template.directive.Replace",
+      "methodName": "execute",
+      "fileName": "Replace.java",
+      "lineNumber": 186
+    },
+    {
+      "declaringClass": "com.ibm.util.merge.template.Template",
+      "methodName": "getMergedOutput",
+      "fileName": "Template.java",
+      "lineNumber": 228
+    },
+    {
+      "declaringClass": "com.ibm.util.merge.Merger",
+      "methodName": "merge",
+      "fileName": "Merger.java",
+      "lineNumber": 98
+    },
+    {
+      "declaringClass": "com.ibm.util.merge.exception.MergeExceptionTest",
+      "methodName": "testCustom",
+      "fileName": "MergeExceptionTest.java",
+      "lineNumber": 69
+    },
+    {
+      "declaringClass": "sun.reflect.NativeMethodAccessorImpl",
+      "methodName": "invoke0",
+      "fileName": "NativeMethodAccessorImpl.java",
+      "lineNumber": -2
+    },
+    {
+      "declaringClass": "sun.reflect.NativeMethodAccessorImpl",
+      "methodName": "invoke",
+      "fileName": "NativeMethodAccessorImpl.java",
+      "lineNumber": 57
+    },
+    {
+      "declaringClass": "sun.reflect.DelegatingMethodAccessorImpl",
+      "methodName": "invoke",
+      "fileName": "DelegatingMethodAccessorImpl.java",
+      "lineNumber": 43
+    },
+    {
+      "declaringClass": "java.lang.reflect.Method",
+      "methodName": "invoke",
+      "fileName": "Method.java",
+      "lineNumber": 606
+    },
+    {
+      "declaringClass": "org.junit.runners.model.FrameworkMethod$1",
+      "methodName": "runReflectiveCall",
+      "fileName": "FrameworkMethod.java",
+      "lineNumber": 50
+    },
+    {
+      "declaringClass": "org.junit.internal.runners.model.ReflectiveCallable",
+      "methodName": "run",
+      "fileName": "ReflectiveCallable.java",
+      "lineNumber": 12
+    },
+    {
+      "declaringClass": "org.junit.runners.model.FrameworkMethod",
+      "methodName": "invokeExplosively",
+      "fileName": "FrameworkMethod.java",
+      "lineNumber": 47
+    },
+    {
+      "declaringClass": "org.junit.internal.runners.statements.InvokeMethod",
+      "methodName": "evaluate",
+      "fileName": "InvokeMethod.java",
+      "lineNumber": 17
+    },
+    {
+      "declaringClass": "org.junit.internal.runners.statements.RunBefores",
+      "methodName": "evaluate",
+      "fileName": "RunBefores.java",
+      "lineNumber": 26
+    },
+    {
+      "declaringClass": "org.junit.runners.ParentRunner",
+      "methodName": "runLeaf",
+      "fileName": "ParentRunner.java",
+      "lineNumber": 325
+    },
+    {
+      "declaringClass": "org.junit.runners.BlockJUnit4ClassRunner",
+      "methodName": "runChild",
+      "fileName": "BlockJUnit4ClassRunner.java",
+      "lineNumber": 78
+    },
+    {
+      "declaringClass": "org.junit.runners.BlockJUnit4ClassRunner",
+      "methodName": "runChild",
+      "fileName": "BlockJUnit4ClassRunner.java",
+      "lineNumber": 57
+    },
+    {
+      "declaringClass": "org.junit.runners.ParentRunner$3",
+      "methodName": "run",
+      "fileName": "ParentRunner.java",
+      "lineNumber": 290
+    },
+    {
+      "declaringClass": "org.junit.runners.ParentRunner$1",
+      "methodName": "schedule",
+      "fileName": "ParentRunner.java",
+      "lineNumber": 71
+    },
+    {
+      "declaringClass": "org.junit.runners.ParentRunner",
+      "methodName": "runChildren",
+      "fileName": "ParentRunner.java",
+      "lineNumber": 288
+    },
+    {
+      "declaringClass": "org.junit.runners.ParentRunner",
+      "methodName": "access$000",
+      "fileName": "ParentRunner.java",
+      "lineNumber": 58
+    },
+    {
+      "declaringClass": "org.junit.runners.ParentRunner$2",
+      "methodName": "evaluate",
+      "fileName": "ParentRunner.java",
+      "lineNumber": 268
+    },
+    {
+      "declaringClass": "org.junit.runners.ParentRunner",
+      "methodName": "run",
+      "fileName": "ParentRunner.java",
+      "lineNumber": 363
+    },
+    {
+      "declaringClass": "org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference",
+      "methodName": "run",
+      "fileName": "JUnit4TestReference.java",
+      "lineNumber": 50
+    },
+    {
+      "declaringClass": "org.eclipse.jdt.internal.junit.runner.TestExecution",
+      "methodName": "run",
+      "fileName": "TestExecution.java",
+      "lineNumber": 38
+    },
+    {
+      "declaringClass": "org.eclipse.jdt.internal.junit.runner.RemoteTestRunner",
+      "methodName": "runTests",
+      "fileName": "RemoteTestRunner.java",
+      "lineNumber": 459
+    },
+    {
+      "declaringClass": "org.eclipse.jdt.internal.junit.runner.RemoteTestRunner",
+      "methodName": "runTests",
+      "fileName": "RemoteTestRunner.java",
+      "lineNumber": 675
+    },
+    {
+      "declaringClass": "org.eclipse.jdt.internal.junit.runner.RemoteTestRunner",
+      "methodName": "run",
+      "fileName": "RemoteTestRunner.java",
+      "lineNumber": 382
+    },
+    {
+      "declaringClass": "org.eclipse.jdt.internal.junit.runner.RemoteTestRunner",
+      "methodName": "main",
+      "fileName": "RemoteTestRunner.java",
+      "lineNumber": 192
+    }
+  ],
+  "suppressedExceptions": []
+},"dataManager": {
+  "data": {},
+  "contextStack": []
+},"stackTrace": "com.ibm.util.merge.exception.Merge500: Source Data Missing for  in  at \n\tat com.ibm.util.merge.template.directive.Replace.execute(Replace.java:186)\n\tat com.ibm.util.merge.template.Template.getMergedOutput(Template.java:228)\n\tat com.ibm.util.merge.Merger.merge(Merger.java:98)\n\tat com.ibm.util.merge.exception.MergeExceptionTest.testCustom(MergeExceptionTest.java:69)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:606)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)\n\tat org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)\n\tat org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)\n\tat org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)\n\tat org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)\n\tat org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)\n"}

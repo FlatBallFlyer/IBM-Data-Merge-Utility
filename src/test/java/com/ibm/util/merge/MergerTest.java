@@ -52,7 +52,7 @@ public class MergerTest {
 	@Test
 	public void testMerge() throws MergeException {
 		Cache cache = new Cache();
-		Merger merger = new Merger(cache, "system.error403.");
+		Merger merger = new Merger(cache, "system.Merge403.");
 		Template template = merger.merge();
 		assertEquals("Error - Forbidden", template.getContent());
 	}
@@ -60,8 +60,8 @@ public class MergerTest {
 	@Test
 	public void testGetMergable() throws MergeException {
 		Cache cache = new Cache();
-		Merger merger = new Merger(cache, "system.error403.");
-		Template template = merger.getMergable("system.error403.",  "", new HashMap<String,String>());
+		Merger merger = new Merger(cache, "system.Merge403.");
+		Template template = merger.getMergable("system.Merge403.",  "", new HashMap<String,String>());
 		assertEquals(Template.STATE_MERGABLE, template.getState());
 		assertEquals("Error - Forbidden", template.getContent());
 		assertEquals(0, merger.getTemplateStack().size());

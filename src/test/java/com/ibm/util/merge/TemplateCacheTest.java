@@ -53,16 +53,16 @@ public class TemplateCacheTest {
 	@Test
 	public void testGetMergableStringStringHashMapOfStringString() throws MergeException {
 		Template template; 
-		template = cache.getMergable(context, "system.error403.", "foo", replace);
+		template = cache.getMergable(context, "system.Merge403.", "foo", replace);
 		assertEquals(template.getId().group, "system");
-		assertEquals(template.getId().name, "error403");
+		assertEquals(template.getId().name, "Merge403");
 		assertTrue(template.getId().variant.isEmpty());
 		assertEquals(Template.STATE_MERGABLE, template.getState());
 		assertEquals(2, template.getReplaceStack().size());
 
-		template = cache.getMergable(context, "Foo", "system.error404.", replace);
+		template = cache.getMergable(context, "Foo", "system.Merge404.", replace);
 		assertEquals(template.getId().group, "system");
-		assertEquals(template.getId().name, "error404");
+		assertEquals(template.getId().name, "Merge404");
 		assertTrue(template.getId().variant.isEmpty());
 		assertEquals(Template.STATE_MERGABLE, template.getState());
 		assertEquals(2, template.getReplaceStack().size());
@@ -81,9 +81,9 @@ public class TemplateCacheTest {
 
 	@Test
 	public void testGetMergableStringHashMapOfStringString() throws MergeException {
-		Template template = cache.getMergable(context, "system.error403.", replace);
+		Template template = cache.getMergable(context, "system.Merge403.", replace);
 		assertEquals(template.getId().group, "system");
-		assertEquals(template.getId().name, "error403");
+		assertEquals(template.getId().name, "Merge403");
 		assertTrue(template.getId().variant.isEmpty());
 		assertEquals(Template.STATE_MERGABLE, template.getState());
 		assertEquals(2, template.getReplaceStack().size());
@@ -168,11 +168,11 @@ public class TemplateCacheTest {
 
 	@Test
 	public void testGetTemplate() throws MergeException {
-		String template = cache.getTemplate("system.error404.");
+		String template = cache.getTemplate("system.Merge404.");
 		TemplateList list = gson.fromString(template, TemplateList.class);
 		assertEquals(1,list.size());
 		assertEquals("system", list.get(0).getId().group);
-		assertEquals("error404",  list.get(0).getId().name);
+		assertEquals("Merge404",  list.get(0).getId().name);
 		assertTrue(list.get(0).getId().variant.isEmpty());
 	}
 

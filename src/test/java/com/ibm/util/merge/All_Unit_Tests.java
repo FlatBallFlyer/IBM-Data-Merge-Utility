@@ -11,6 +11,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	com.ibm.util.merge.data.parser.AllTests.class,
 	com.ibm.util.merge.storage.AllTests.class,
 	com.ibm.util.merge.template.AllTests.class,
+	com.ibm.util.merge.exception.AllTests.class,
 	com.ibm.util.merge.template.content.AllTests.class,
 	com.ibm.util.merge.template.directive.AllTests.class,
 	com.ibm.util.merge.template.directive.enrich.provider.AllUnitTests.class

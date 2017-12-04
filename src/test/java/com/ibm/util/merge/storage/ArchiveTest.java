@@ -48,7 +48,7 @@ public class ArchiveTest {
 	@Before
 	public void setUp() throws Exception {
 		cache = new Cache();
-		context = new Merger(cache, "system.error500.");
+		context = new Merger(cache, "system.Merge500.");
 		archive = new AbstractTest(context);
 	}
 

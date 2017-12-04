@@ -23,6 +23,7 @@ package com.ibm.util.merge.exception;
  *
  */
 public class Merge500 extends MergeException {
+	public static final String TEMPLATE = "Merge500";
 
 	/**
 	 * 
@@ -31,7 +32,7 @@ public class Merge500 extends MergeException {
 
 	public Merge500(String error) {
 		super(error);
-		this.setType("Merge500");
+		this.setType(TEMPLATE);
 	}
 
 }

@@ -22,6 +22,7 @@ package com.ibm.util.merge.exception;
  *
  */
 public class Merge404 extends MergeException {
+	public static final String TEMPLATE = "Merge404";
 
 	/**
 	 * 
@@ -30,7 +31,7 @@ public class Merge404 extends MergeException {
 
 	public Merge404(String error) {
 		super(error);
-		this.setType("Merge404");
+		this.setType(TEMPLATE);
 	}
 
 }

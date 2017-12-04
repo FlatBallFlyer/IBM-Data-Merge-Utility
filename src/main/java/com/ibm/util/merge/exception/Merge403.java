@@ -23,7 +23,8 @@ package com.ibm.util.merge.exception;
  *
  */
 public class Merge403 extends MergeException {
-
+	public static final String TEMPLATE = "Merge403";
+	
 	/**
 	 * 
 	 */
@@ -31,7 +32,7 @@ public class Merge403 extends MergeException {
 
 	public Merge403(String error) {
 		super(error);
-		this.setType("Merge403");
+		this.setType(TEMPLATE);
 	}
 
 
