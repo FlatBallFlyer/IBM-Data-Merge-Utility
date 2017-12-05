@@ -87,8 +87,8 @@ Cache cache = new Cache(config, Folder);
 #### Passing Request-Parameters and Request-Payload into the merge
 
 ```
-	Merger merger = new Merger(cache,"some.template.name", 
-			parameters, payload);
+Merger merger = new Merger(cache,"some.template.name", 
+	parameters, payload);
 
 ```
 
