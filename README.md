@@ -1,16 +1,16 @@
 # IBM Data Merge Utility v4.0.0
 
-### What Is IDMU
+## What Is IDMU
 The IBM Data Merge Utility is an open source Java Utility that provides high performance transformation and enrichment services through a simple template based process. If you can use your word processors Mail Merge feature, then you can use the IBM Data Merge utility. The use of templates makes this transformation tool uniquely well suited to creating Scripts, Code or other complex documents. Optimized performance of small payload transformations makes it well suited to doing JSON or XML microservice transformations. While this utility does not expose a Rest API directly it is designed with that in mind. See [IDMU-REST Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-REST)  
 
 ---
 
-### Start Here
+## Start Here
 
 ```
 > git clone https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility.git
 > mvn install 
-> mvn javadoc:javadoc 
+
 ```
 Javadoc will be located in target/site/apidocs/index.html
 
@@ -23,7 +23,7 @@ docker run -p 8383:80 --name idmu-rest -d flatballflyer/idmu-test-rest:latest
 docker run -p 81:80 --name idmu-cloudant -d flatballflyer/idmu-test-cloudant:latest;docker exec idmu-cloudant bash /app/initialize.sh
 ```
 
-### Overview
+## Overview
 Merging Templates produces output, and the merge process is similar to the familiar Mail Merge feature in most word processors. 
 A template is just a block of text that can contain Replacement Tags and Book-marks along with directives that drive the merge process.
 See JavaDoc for the com.ibm.util.merge.template.content package for more details, specifically the BookmarkSegment and TagSegment mark-up definitions
@@ -39,12 +39,12 @@ As you can see, the Data Manager is a key component of the Merge Utility - and i
 
 ---
 
-### Processing Overview
+## Processing Overview
 ![alt text](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Logo Title Text 1")
 
 ---
 
-### Example Template and Merges
+## Example Templates and Merges
 In the /src/test/resources folder find:
 1. functional - sample templates and expected output that run stand alone - using File System provider for provider testing
 1. integration - sample integration templates for default providers - see instructions on running a testing container in All_Integration_Tests.java
@@ -54,36 +54,57 @@ See Config.get() for a json string with all configuration options - including te
 
 ---
 
-### Usage
+## Usage
+
+#### Simple
 ```
-   // Get a cache (Default configuration)
-   Cache cache = new Cache(File); 
+// Get a cache and load templates (using a Default Configuration)
+Cache cache = new Cache(Folder);
 
-   // Get a cache (Custom configuration)
-   Config config = new Config(from Env, String, File or URL)
-   Cache cache = new Cache(config, File); 
+while (processing) {
+	// Get a Merger
+	Merger merger = new Merger(cache, "your.template.name"); 
+	
+	// Merge the template 
+	Template template = merger.merge();
 
-   // Get a Merger for your template
-   Merger merger = new Merger(cache, 
-  	"some.template.name", 
-  	parameters, payload);
-	  
-   // Merge the template 
-   Template template = merger.merge();
+	// Get Output as a i/o Stream
+	template.getMergedOutput().streamOutput(Your Output Stream)
+}
+```
+
+#### Using a custom configuration
+
+```
+// Get a custom configuration
+Config config = new Config(String, File or URL)
+  
+// Get a cache using the Configuration
+Cache cache = new Cache(config, Folder); 
+
+```
+
+#### Passing Request-Parameters and Request-Payload into the merge
+
+```
+	Merger merger = new Merger(cache,"some.template.name", 
+			parameters, payload);
+
+```
+
+#### Manually creating templates
  
-   // Get Output as a simple String
-   template.getMergedOutput().getValue()
-
-   // Get Output as a i/o Stream
-   template.getMergedOutput().streamOutput(stream)
+```
+Cache cache = new Cache();
+Template template = new Tempalte(....);
+template.set....
+cache.get|put|post|delete Template(template)
 
 ```
-
-See the /src/test/java - com.ibm.util.merge.MergeTestHarness.java for a more complete use case.
 
 ---
 
-### See Also
+## See Also
 1. Generated JavaDoc
 1. [Template JSON Schema](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/WebContent/jsonSchema/schema.template.json)
 1. [Config JSON Schema](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility/blob/master/WebContent/jsonSchema/schema.config.json)
@@ -92,7 +113,7 @@ See the /src/test/java - com.ibm.util.merge.MergeTestHarness.java for a more com
 
 ---
 
-### Related Projects
+## Related Projects
 1. [IDMU-CLI Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-CLI)
 1. [IDMU-REST Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-REST)
 1. [IDMU-DEV Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-DEV)
