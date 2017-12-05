@@ -1,10 +1,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>idmu</groupId>
+  <groupId>com.ibm.util.merge</groupId>
   <artifactId>idmu</artifactId>
   <version>4.0.0</version>
   <name>idmu</name>
   <description>IBM Data Merge Utility</description>
+  <url>http://flatballflyer.github.io/IBM-Data-Merge-Utility/</url>
+  <licenses>
+  	<license>http://www.apache.org/licenses/LICENSE-2.0.txt</license>
+  </licenses>
+  <developers>
+  	<developer>
+  		<name>Mike Storey</name>
+  		<email>mike.storey@us.ibm.com</email>
+  		<organization>IBM</organization>
+  		<organizationUrl>www.ibm.com</organizationUrl>
+  	</developer>
+  </developers>
+  <scm>
+  	<connection>scm:git:git@github.com:FlatBallFlyer/IBM-Data-Merge-Utility.git</connection>
+  	<developerConnection>scm:git:git@github.com:FlatBallFlyer/IBM-Data-Merge-Utility.git</developerConnection>
+  	<url>git@github.com:flatballflyer.github.io/IBM-Data-Merge-Utility/</url>
+  </scm>
   <build>
 	<defaultGoal>install</defaultGoal>
     <sourceDirectory>src/main/java</sourceDirectory>
