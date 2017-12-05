@@ -7,7 +7,10 @@
   <description>IBM Data Merge Utility</description>
   <url>http://flatballflyer.github.io/IBM-Data-Merge-Utility/</url>
   <licenses>
-  	<license>http://www.apache.org/licenses/LICENSE-2.0.txt</license>
+  	<license>
+  		<name>The Apache Software License, Version 2.0</name>
+  		<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+  	</license>
   </licenses>
   <developers>
   	<developer>
