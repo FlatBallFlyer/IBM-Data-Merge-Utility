@@ -37,11 +37,11 @@ import com.ibm.util.merge.template.directive.*;
 public class StubProvider implements ProviderInterface {
 	private final DataProxyJson proxy = new DataProxyJson();
 	private static final ProviderMeta meta = new ProviderMeta(
-			"Option Name",
-			"Credentials", 
-			"Command Help",
-			"Parse Help",
-			"Return Help");
+			"N/A",
+			"N/A", 
+			"N/A",
+			"Will parse the Template JSON",
+			"Primitive with TemplateJson if not parsed, Template object if parsed");
 	
 	private final String source;
 	private final String dbName;

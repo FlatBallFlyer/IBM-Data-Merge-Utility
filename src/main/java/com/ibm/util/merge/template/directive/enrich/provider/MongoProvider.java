@@ -63,9 +63,13 @@ import com.mongodb.client.MongoDatabase;
 public class MongoProvider implements ProviderInterface {
 	private static final ProviderMeta meta = new ProviderMeta(
 			"Collection",
-			"ENV", 
+			"The following environment variables are expected\n"
+			+ "{SourceName}.URI - The database connection URL\n"
+			+ "{SourceName}.USER - The database User ID, if empty Mongo Anonymous Auth is used, otherwise ScramSha1 authentication is used.\n"
+			+ "{SourceName}.PW - The database Password\n"
+			+ "{SourceName}.DB - The database name", 
 			"Json Mongo Query Object",
-			"Not Supported / Necessary",
+			"N/A",
 			"List of Document Objects");
 	
 	class Query extends HashMap<String,String> {

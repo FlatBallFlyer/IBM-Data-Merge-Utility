@@ -58,11 +58,14 @@ import com.ibm.util.merge.template.content.TagSegment;
  */
 public class CloudantProvider implements ProviderInterface {
 	private static final ProviderMeta meta = new ProviderMeta(
-			"Option Name",
-			"Credentials", 
-			"Command Help",
-			"Parse Help",
-			"Return Help");
+			"Database",
+			"The following environment variables are expected: /n"
+			+ "{SourceName}.URL - The database connection URL/n"
+			+ "{SourceName}.USER - The database User ID/n"
+			+ "{SourceName}.PW - The database Password", 
+			"A cloudant Query JSON string - Replace Tags are supported and jSon encoded",
+			"N/A",
+			"This provider always returns a List of Objects");
 	
 	private final String source;
 	private final String dbName;

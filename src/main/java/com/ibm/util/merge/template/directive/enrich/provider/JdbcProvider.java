@@ -49,10 +49,13 @@ import java.sql.SQLException;
 public class JdbcProvider extends SqlProvider implements ProviderInterface {
 	private static final ProviderMeta meta = new ProviderMeta(
 			"Database",
-			"Credentials", 
-			"Command Help",
-			"Parse Help",
-			"Return Help");
+			"The following environment variables are expected\n"
+			+ "{source}.URI - Database Connection URI, without UserName/PW components\n"
+			+ "{source}.USER - The Database User ID to use\n"
+			+ "{source}.PW - The Password for the User ID", 
+			"A SQL Select Statement - Replace Tags are supported and SQL encoded",
+			"N/A",
+			"Always returns a List of Object");
 	
 	/**
 	 * JDBC Provider Constructor

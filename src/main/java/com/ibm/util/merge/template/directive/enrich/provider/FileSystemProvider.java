@@ -153,8 +153,9 @@ public class FileSystemProvider implements ProviderInterface {
 	@Override
 	public ProviderMeta getMetaInfo() {
 		return new ProviderMeta(
-				"Directory to read files from",
-				"No further configuration needed",
+				"N/A",
+				"The following environment variables are expected\n"
+				+ "{SourceName}.PATH - The Path where files are to be read from.",
 				"A Java RegEx file selector",
 				"file content is parsed in the return object",
 				"returns an object of <String, Primitive> if not parsed, and String, Element if parsed");

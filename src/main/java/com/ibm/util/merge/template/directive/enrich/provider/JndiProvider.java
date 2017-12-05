@@ -49,11 +49,11 @@ import javax.sql.DataSource;
  */
 public class JndiProvider extends SqlProvider implements ProviderInterface {
 	private static final ProviderMeta meta = new ProviderMeta(
-			"Option Name",
-			"Credentials", 
-			"Command Help",
-			"Parse Help",
-			"Return Help");
+			"Database",
+			"N/A - Source specifies a JNDI Name", 
+			"A SQL Select Statement",
+			"N/A",
+			"Always returns a List of Object");
 	
 	class Credentials {
 		public String db_type;

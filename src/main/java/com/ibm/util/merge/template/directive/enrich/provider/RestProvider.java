@@ -59,11 +59,13 @@ import java.util.HashMap;
  */
 public class RestProvider implements ProviderInterface {
 	private static final ProviderMeta meta = new ProviderMeta(
-			"Option Name",
-			"Credentials", 
-			"Command Help",
-			"Parse Help",
-			"Return Help");
+			"N/A",
+			"The following environment variables are expected\n"
+			+ "{SourceName}.HOST - The Host\n"
+			+ "{SourceName}.PORT - The Port\n",
+			"The URL to make a http get request to",
+			"Will parse the entire response",
+			"Returns a Primitive if not parsed, or the Element from the parsing");
 	
 	public String username;
 	public String password;

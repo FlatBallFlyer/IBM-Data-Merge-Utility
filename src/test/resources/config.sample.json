@@ -1,11 +1,54 @@
 {
-	"config": {
-		"logLevel": "SEVERE",
-		"nestLimit": "2",
-		"prettyJson": "true",
-		"tempFolder": "/opt/ibm/idmu/archives",
-		"insertLimit": "20",
-		"version": "4.0.0.B1"
+	"replace": {
+		"Object-Attr Object": {
+			"2": "ignore",
+			"1": "throw"
+		},
+		"If List": {
+			"3": "replace",
+			"2": "ignore",
+			"1": "throw",
+			"6": "replace with json",
+			"5": "use last only",
+			"4": "use first only"
+		},
+		"Source Missing": {
+			"3": "replace",
+			"2": "ignore",
+			"1": "throw"
+		},
+		"List-Attr Not Primitive": {
+			"2": "ignore",
+			"1": "throw"
+		},
+		"If Primitive": {
+			"3": "replace",
+			"2": "ignore",
+			"1": "throw",
+			"4": "replace with JSON"
+		},
+		"Object-Attr Primitive": {
+			"3": "insertList",
+			"2": "ignore",
+			"1": "throw"
+		},
+		"List-Attr Missing": {
+			"2": "ignore",
+			"1": "throw"
+		},
+		"If Object": {
+			"3": "replace object",
+			"2": "ignore",
+			"1": "throw",
+			"5": "replace with JSON",
+			"4": "replace as list"
+		},
+		"Object-Attr List": {
+			"3": "use first primitive",
+			"2": "ignore",
+			"1": "throw",
+			"4": "use last primitive"
+		}
 	},
 	"template": {
 		"Content Type": {
@@ -20,8 +63,114 @@
 			"1": "download"
 		}
 	},
-	"enrich": {
+	"save": {
+		
+	},
+	"providers": {
+		"com.ibm.util.merge.template.directive.enrich.provider.JndiProvider": {
+			"sourceJson": "N/A - Source specifies a JNDI Name",
+			"optionName": "Database",
+			"parseHelp": "N/A",
+			"commandHelp": "A SQL Select Statement",
+			"returnHelp": "Always returns a List of Object"
 		},
+		"com.ibm.util.merge.template.directive.enrich.provider.RestProvider": {
+			"sourceJson": "The following environment variables are expected\n{SourceName}.HOST - The Host\n{SourceName}.PORT - The Port\n",
+			"optionName": "N/A",
+			"parseHelp": "Will parse the entire response",
+			"commandHelp": "The URL to make a http get request to",
+			"returnHelp": "Returns a Primitive if not parsed, or the Element from the parsing"
+		},
+		"com.ibm.util.merge.template.directive.enrich.provider.CacheProvider": {
+			"sourceJson": "No further configuration needed",
+			"optionName": "No Options are Supported",
+			"parseHelp": "No Parsing is supported",
+			"commandHelp": "No Command is needed",
+			"returnHelp": "returns an object of \u003cString, Primitive\u003e with cache statistics"
+		},
+		"com.ibm.util.merge.template.directive.enrich.provider.CloudantProvider": {
+			"sourceJson": "The following environment variables are expected: /n{SourceName}.URL - The database connection URL/n{SourceName}.USER - The database User ID/n{SourceName}.PW - The database Password",
+			"optionName": "Database",
+			"parseHelp": "N/A",
+			"commandHelp": "A cloudant Query JSON string - Replace Tags are supported and jSon encoded",
+			"returnHelp": "This provider always returns a List of Objects"
+		},
+		"com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider": {
+			"sourceJson": "The following environment variables are expected\n{SourceName}.PATH - The Path where files are to be read from.",
+			"optionName": "N/A",
+			"parseHelp": "file content is parsed in the return object",
+			"commandHelp": "A Java RegEx file selector",
+			"returnHelp": "returns an object of \u003cString, Primitive\u003e if not parsed, and String, Element if parsed"
+		},
+		"com.ibm.util.merge.template.directive.enrich.provider.MongoProvider": {
+			"sourceJson": "The following environment variables are expected\n{SourceName}.URI - The database connection URL\n{SourceName}.USER - The database User ID, if empty Mongo Anonymous Auth is used, otherwise ScramSha1 authentication is used.\n{SourceName}.PW - The database Password\n{SourceName}.DB - The database name",
+			"optionName": "Collection",
+			"parseHelp": "N/A",
+			"commandHelp": "Json Mongo Query Object",
+			"returnHelp": "List of Document Objects"
+		},
+		"com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider": {
+			"sourceJson": "The following environment variables are expected\n{source}.URI - Database Connection URI, without UserName/PW components\n{source}.USER - The Database User ID to use\n{source}.PW - The Password for the User ID",
+			"optionName": "Database",
+			"parseHelp": "N/A",
+			"commandHelp": "A SQL Select Statement - Replace Tags are supported and SQL encoded",
+			"returnHelp": "Always returns a List of Object"
+		},
+		"com.ibm.util.merge.template.directive.enrich.provider.StubProvider": {
+			"sourceJson": "N/A",
+			"optionName": "N/A",
+			"parseHelp": "Will parse the Template JSON",
+			"commandHelp": "N/A",
+			"returnHelp": "Primitive with TemplateJson if not parsed, Template object if parsed"
+		}
+	},
+	"encoding": {
+		"Encoding": {
+			"3": "sql",
+			"2": "html",
+			"1": "none",
+			"6": "default",
+			"5": "xml",
+			"4": "json"
+		}
+	},
+	"parsers": {
+		"3": "com.ibm.util.merge.data.parser.DataProxyJson",
+		"1": "com.ibm.util.merge.data.parser.DataProxyCsv",
+		"5": "com.ibm.util.merge.data.parser.DataProxyXmlStrict"
+	},
+	"config": {
+		"logLevel": "SEVERE",
+		"nestLimit": "2",
+		"prettyJson": "true",
+		"tempFolder": "/opt/ibm/idmu/archives",
+		"insertLimit": "20",
+		"version": "4.0.0.B1"
+	},
+	"enrich": {
+		
+	},
+	"parse": {
+		"If List": {
+			"3": "parse first primitive",
+			"2": "ignore",
+			"1": "throw",
+			"4": "parse last primitive"
+		},
+		"Source Missing": {
+			"2": "ignore",
+			"1": "throw"
+		},
+		"If Primitive": {
+			"3": "parse",
+			"2": "ignore",
+			"1": "throw"
+		},
+		"If Object": {
+			"2": "ignore",
+			"1": "throw"
+		}
+	},
 	"insert": {
 		"If List": {
 			"3": "insert",
@@ -56,153 +205,6 @@
 			"5": "string \u003c",
 			"4": "string \u003e",
 			"8": "value \u003c"
-		}
-	},
-	"replace": {
-		"Source Missing": {
-			"3": "replace",
-			"2": "ignore",
-			"1": "throw"
-		},
-		"If Primitive": {
-			"3": "replace",
-			"2": "ignore",
-			"1": "throw",
-			"4": "replace with JSON"
-		},
-		"If List": {
-			"3": "replace",
-			"2": "ignore",
-			"1": "throw",
-			"6": "replace with json",
-			"5": "use last only",
-			"4": "use first only"
-		},
-		"List-Attr Not Primitive": {
-			"2": "ignore",
-			"1": "throw"
-		},
-		"List-Attr Missing": {
-			"2": "ignore",
-			"1": "throw"
-		},
-		"If Object": {
-			"3": "replace object",
-			"2": "ignore",
-			"1": "throw",
-			"5": "replace with JSON",
-			"4": "replace as list"
-		},
-		"Object-Attr Primitive": {
-			"3": "insertList",
-			"2": "ignore",
-			"1": "throw"
-		},
-		"Object-Attr Object": {
-			"2": "ignore",
-			"1": "throw"
-		},
-		"Object-Attr List": {
-			"3": "use first primitive",
-			"2": "ignore",
-			"1": "throw",
-			"4": "use last primitive"
-		}
-	},
-	"parse": {
-		"If List": {
-			"3": "parse first primitive",
-			"2": "ignore",
-			"1": "throw",
-			"4": "parse last primitive"
-		},
-		"Source Missing": {
-			"2": "ignore",
-			"1": "throw"
-		},
-		"If Primitive": {
-			"3": "parse",
-			"2": "ignore",
-			"1": "throw"
-		},
-		"If Object": {
-			"2": "ignore",
-			"1": "throw"
-		}
-	},
-	"save": {
-	},
-	"providers": {
-		"com.ibm.util.merge.template.directive.enrich.provider.JndiProvider": {
-			"sourceEnv": "Credentials",
-			"optionName": "Option Name",
-			"parseHelp": "Parse Help",
-			"commandHelp": "Command Help",
-			"returnHelp": "Return Help"
-		},
-		"com.ibm.util.merge.template.directive.enrich.provider.RestProvider": {
-			"sourceEnv": "Credentials",
-			"optionName": "Option Name",
-			"parseHelp": "Parse Help",
-			"commandHelp": "Command Help",
-			"returnHelp": "Return Help"
-		},
-		"com.ibm.util.merge.template.directive.enrich.provider.CacheProvider": {
-			"sourceEnv": "No further configuration needed",
-			"optionName": "No Options are Supported",
-			"parseHelp": "No Parsing is supported",
-			"commandHelp": "No Command is needed",
-			"returnHelp": "returns an object of \u003cString, Primitive\u003e with cache statistics"
-		},
-		"com.ibm.util.merge.template.directive.enrich.provider.CloudantProvider": {
-			"sourceEnv": "Credentials",
-			"optionName": "Option Name",
-			"parseHelp": "Parse Help",
-			"commandHelp": "Command Help",
-			"returnHelp": "Return Help"
-		},
-		"com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider": {
-			"sourceEnv": "No further configuration needed",
-			"optionName": "Directory to read files from",
-			"parseHelp": "file content is parsed in the return object",
-			"commandHelp": "A Java RegEx file selector",
-			"returnHelp": "returns an object of \u003cString, Primitive\u003e if not parsed, and String, Element if parsed"
-		},
-		"com.ibm.util.merge.template.directive.enrich.provider.MongoProvider": {
-			"sourceEnv": "ENV",
-			"optionName": "Collection",
-			"parseHelp": "Not Supported / Necessary",
-			"commandHelp": "Json Mongo Query Object",
-			"returnHelp": "List of Document Objects"
-		},
-		"com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider": {
-			"sourceEnv": "Credentials",
-			"optionName": "Database",
-			"parseHelp": "Parse Help",
-			"commandHelp": "Command Help",
-			"returnHelp": "Return Help"
-		},
-		"com.ibm.util.merge.template.directive.enrich.provider.StubProvider": {
-			"sourceEnv": "Credentials",
-			"optionName": "Option Name",
-			"parseHelp": "Parse Help",
-			"commandHelp": "Command Help",
-			"returnHelp": "Return Help"
-		}
-	},
-	"parsers": {
-		"3": "com.ibm.util.merge.data.parser.DataProxyJson",
-		"1": "com.ibm.util.merge.data.parser.DataProxyCsv",
-		"5": "com.ibm.util.merge.data.parser.DataProxyXmlStrict"
-	},
-	"encoding": {
-		"Encoding": {
-			"3": "sql",
-			"2": "html",
-			"1": "none",
-			"6": "default",
-			"5": "xml",
-			"4": "json"
 		}
 	}
 }
