@@ -5,6 +5,11 @@ The IBM Data Merge Utility is an open source Java Utility that provides high per
 
 ---
 
+## Requirements
+1. maven package manager - see (https://maven.apache.org/install.html)
+1. gpg - see (https://gnupg.org/download/) 
+if your new to gpg I suggest this howto - (http://central.sonatype.org/pages/working-with-pgp-signatures.html)
+
 ## Start Here
 
 ```
@@ -14,7 +19,8 @@ The IBM Data Merge Utility is an open source Java Utility that provides high per
 ```
 Javadoc will be located in target/site/apidocs/index.html
 
-If you want to run the integration testing, start these docker images:
+## Integration Testing
+There are several integration tests that touch JDBC, Cloudant, Mongo and rest services. If you want to run the integration testing, start these docker images:
 ```
 docker run -p 3306:3306 --name idmu-mysql -d flatballflyer/idmu-test-mysql:latest
 docker run -p 27017:27017 --name idmu-mongo -d flatballflyer/idmu-test-mongo:latest
