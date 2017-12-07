@@ -38,7 +38,7 @@ There are 5 directives you can use during the merge, see the JavaDoc for the pac
 1. Enrich - Get some data and put it in the DataManager
 1. Replace - Take some data from the data manager and Replace Tags with Values
 1. Insert - Insert sub-templates at Book Marks based on some data in the Data Manager
-1. Parse - Get some makred up data from the DataManager, parse it and place the resulting data structure back in the Data Manager
+1. Parse - Get some marked-up data from the DataManager, parse it and place the resulting data structure back in the Data Manager
 1. Save - Save the output of the current template to an entry in the Merge Archive
 
 As you can see, the Data Manager is a key component of the Merge Utility - and it basically provides "path" style access to an object data store. See the package com.ibm.util.merge.data for more details.
@@ -63,6 +63,7 @@ See Config.get() for a json string with all configuration options - including te
 ## Usage
 
 #### Simple
+
 ```
 // Get a cache and load templates (using a Default Configuration)
 Cache cache = new Cache(Folder);
@@ -70,7 +71,7 @@ Cache cache = new Cache(Folder);
 while (processing) {
 	// Get a Merger
 	Merger merger = new Merger(cache, "your.template.name"); 
-	
+
 	// Merge the template 
 	Template template = merger.merge();
 
@@ -82,6 +83,7 @@ while (processing) {
 #### Using a custom configuration
 
 ```
+
 // Get a custom configuration
 Config config = new Config(String, File or URL)
   
@@ -98,8 +100,22 @@ Merger merger = new Merger(cache,"some.template.name",
 
 ```
 
+#### Manually Pre-Loading custom data for a merge
+Useful in highly customized applications
+```
+Merger merger = new Merger(cache,"some.template.name");
+DataElement myData = new DataObject(); 
+// (or Primitive or List - see merge.data.DataManager class and DataProxyJson for more options)
+
+merger.getMergeData.set("some-path", "-", myData); 
+// the datasource "some-path" (with a - path separator) will be available to the template when it's merged
+
+merger.merge();
+
+```
+
 #### Manually creating templates
- 
+Your much better off using a JSON editor (see the JSON Schema the sample template and config files)
 ```
 Cache cache = new Cache();
 Template template = new Tempalte(....);
