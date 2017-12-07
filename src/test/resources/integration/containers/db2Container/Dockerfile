@@ -13,9 +13,9 @@ ADD ./initialize.sh /data
 #EXPOSE 80
 
 # Define environment variable
-ENV DB2INST1_PASSWORD dr-ow-ss-Ap
+ENV DB2INST1_PASSWORD=dr-ow-ss-Ap
 ENV LICENSE=accept
 
 # Load the test data when the container launches
-ENTRYPOINT /data/superInit.sh
+#ENTRYPOINT /data/superInit.sh
 

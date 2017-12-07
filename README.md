@@ -20,14 +20,11 @@ if your new to gpg I suggest this howto - (http://central.sonatype.org/pages/wor
 Javadoc will be located in target/site/apidocs/index.html
 
 ## Integration Testing
-There are several integration tests that touch JDBC, Cloudant, Mongo and rest services. If you want to run the integration testing, start these docker images:
-```
-docker run -p 3306:3306 --name idmu-mysql -d flatballflyer/idmu-test-mysql:latest
-docker run -p 27017:27017 --name idmu-mongo -d flatballflyer/idmu-test-mongo:latest
-docker run -p 50000:50000 --name idmu-db2 -v $(pwd):/share -d flatballflyer/idmu-test-db2:latest
-docker run -p 8383:80 --name idmu-rest -d flatballflyer/idmu-test-rest:latest
-docker run -p 81:80 --name idmu-cloudant -d flatballflyer/idmu-test-cloudant:latest;docker exec idmu-cloudant bash /app/initialize.sh
-```
+There are several integration tests that touch JDBC, Cloudant, Mongo and rest services. If you want to run the integration testing, use the scripts located in /src/test/resources/integration/containers to start Docker containers with test data.
+ - Use pull.sh to download and run the 5 containers
+ - Use stop.sh to stop the containers
+ - Use start.sh to start the containers
+ - Use remove.sh to delete the containers from your system. 
 
 ## Overview
 Merging Templates produces output, and the merge process is similar to the familiar Mail Merge feature in most word processors. 
@@ -65,18 +62,18 @@ See Config.get() for a json string with all configuration options - including te
 #### Simple
 
 ```
-// Get a cache and load templates (using a Default Configuration)
-Cache cache = new Cache(Folder);
+// Get a cache and load templates from default folders (using a Default Configuration)
+Cache cache = new Cache();
 
 while (processing) {
-	// Get a Merger
-	Merger merger = new Merger(cache, "your.template.name"); 
-
-	// Merge the template 
-	Template template = merger.merge();
-
-	// Get Output as a i/o Stream
-	template.getMergedOutput().streamOutput(Your Output Stream)
+  // Get a Merger
+  Merger merger = new Merger(cache, "your.template.name"); 
+	 
+  // Merge the template 
+  Template template = merger.merge();
+	
+  // Get Output as a i/o Stream
+  template.getMergedOutput().streamOutput(Your Output Stream)
 }
 ```
 
@@ -87,7 +84,7 @@ while (processing) {
 // Get a custom configuration
 Config config = new Config(String, File or URL)
   
-// Get a cache using the Configuration
+// Get a cache using the Configuration and a custom load folder
 Cache cache = new Cache(config, Folder); 
 
 ```
