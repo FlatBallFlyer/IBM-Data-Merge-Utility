@@ -19,7 +19,8 @@ public class ConfigTest {
 	@Test
 	public void testConfigDefault() throws MergeException {
 		Config config = new Config();
-		assertEquals("/opt/ibm/idmu/archives", config.getTempFolder());
+		assertEquals("/opt/ibm/idmu/v4/archives", config.getTempFolder());
+		assertEquals("/opt/ibm/idmu/v4/packages", config.getLoadFolder());
 		assertEquals(2, config.getNestLimit());
 	}
 
@@ -73,7 +74,7 @@ public class ConfigTest {
 	@Test
 	public void testGetTempFolder() throws MergeException {
 		Config config = new Config();
-		assertEquals("/opt/ibm/idmu/archives", config.getTempFolder());
+		assertEquals("/opt/ibm/idmu/v4/archives", config.getTempFolder());
 		String configString = 
 				"{\"tempFolder\": \"Bar\"}";
 		config = new Config(configString);

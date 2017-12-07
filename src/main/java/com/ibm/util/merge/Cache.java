@@ -68,7 +68,7 @@ public class Cache implements Iterable<String> {
 	 * @throws MergeException  on processing errors
 	 */
 	public Cache() throws MergeException {
-		this(new Config(), new File(""));
+		this(new Config(), null);
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class Cache implements Iterable<String> {
 	 * @throws MergeException  on processing errors
 	 */
 	public Cache(Config config) throws MergeException {
-		this(config, new File(""));
+		this(config, null);
 	}
 	
 	/**
@@ -101,7 +101,7 @@ public class Cache implements Iterable<String> {
 		this.cache = new ConcurrentHashMap<String, Template>();
 		this.initialized = new Date();
 		this.buildDefaultSystemTemplates();
-		
+		if (load == null) load = new File(config.getLoadFolder());
 		loadGroups(load);
 	}
 	

@@ -82,7 +82,8 @@ public class Config {
 	private final String version = "4.0.0.B1";
 	private int nestLimit 		= 2;
 	private int insertLimit		= 20;
-	private String tempFolder	= "/opt/ibm/idmu/archives";
+	private String tempFolder	= "/opt/ibm/idmu/v4/archives";
+	private String loadFolder	= "/opt/ibm/idmu/v4/packages";
 	private String logLevel 	= "SEVERE";
 	private boolean prettyJson = true;
 	private HashMap<String, String> envVars = new HashMap<String,String>();
@@ -204,6 +205,7 @@ public class Config {
 				this.nestLimit 		= this.getIf(me, "nestLimit", this.nestLimit);
 				this.insertLimit 	= this.getIf(me, "insertLimit", this.insertLimit);
 				this.tempFolder 		= this.getIf(me, "tempFolder", this.tempFolder);
+				this.loadFolder 		= this.getIf(me, "loadFolder", this.loadFolder);
 				this.prettyJson		= this.getIf(me, "prettyJson", true);
 				this.logLevel 		= this.getIf(me, "logLevel", this.logLevel);
 				if (me.has("envVars") && me.get("envVars").isJsonObject()) {
@@ -318,6 +320,10 @@ public class Config {
 
 	public String getTempFolder() {
 		return tempFolder;
+	}
+
+	public String getLoadFolder() {
+		return loadFolder;
 	}
 
 	public int getNestLimit() {
