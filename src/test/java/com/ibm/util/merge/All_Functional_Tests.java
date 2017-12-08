@@ -49,6 +49,11 @@ public class All_Functional_Tests {
 	}
 	
 	@Test
+	public void generateArchives() throws Throwable {
+		harness.testTemplates(new File("src/test/resources/functional/generateArchives"));
+	}
+	
+	@Test
 	public void fileProviderOptimized() throws Throwable {
 		harness.testTemplates(new File("src/test/resources/functional/fileProviderTestOptimized"));
 	}

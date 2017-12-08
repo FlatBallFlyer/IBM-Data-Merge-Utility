@@ -1,0 +1,5 @@
+Batch: 000
+Batch: 001
+Batch: 002
+Batch: 003
+Batch: idmuArchiveType

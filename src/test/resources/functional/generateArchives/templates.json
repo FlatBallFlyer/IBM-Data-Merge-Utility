@@ -1,0 +1,319 @@
+{
+  "templates" : [
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Generate Json Files for Transformation Performance Testing",
+      "content" : "<bookmark=\"batch\" group=\"test\" template=\"batch\">",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 3,
+          "name" : "Parse Payload",
+          "staticData" : "",
+          "parseFormat" : 3,
+          "dataSource" : "idmuPayload",
+          "dataDelimeter" : "-",
+          "dataTarget" : "payload",
+          "dataTargetDelimiter" : "-",
+          "ifMissing" : 2,
+          "ifPrimitive" : 3,
+          "ifObject" : 2,
+          "ifList" : 2
+        },
+        {
+          "type" : 2,
+          "name" : "Save a batch of Customer Files",
+          "dataSource" : "idmuParameters",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "ifList" : 1,
+          "bookmarkPattern" : "batch",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "batch",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Generate Json Files for Transformation Performance Testing",
+      "content" : "<bookmark=\"customers\" group=\"test\" template=\"customer\">Batch: <batch>\n",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Add batch to replace stack",
+          "dataSource" : "idmuContext-attribute",
+          "fromValue" : "batch",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : true
+        },
+        {
+          "type" : 2,
+          "name" : "Save Customer Files",
+          "dataSource" : "payload-customers",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "ifList" : 1,
+          "bookmarkPattern" : "customers",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : "",
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 1
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "customer",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "A Customer Json Record",
+      "content" : "{\n\t\"id\" : \"<custId>\",\n\t\"name\" : \"<custName>\",\n\t\"address\":  {\n\t\t\"street\" : \"<street>\",\n\t\t\"city\" : \"<city>\",\n\t\t\"state\" : \"<state>\",\n\t\t\"zip\" : \"<zip>\"\n\t},\n\t\"revenue\" : \"<revenue>\",\n\t\"profit\" : \"<profit>\",\n\t\"primary\" : \"<primary>\",\n\t\"contacts\" : [\n<bookmark=\"contact\" group=\"test\" template=\"contact\">\t]\n}",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Setup Coma-Replace",
+          "dataSource" : ",",
+          "dataDelimeter" : "-",
+          "ifMissing" : 3,
+          "toValue" : ",",
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false
+        },
+        {
+          "type" : 4,
+          "name" : "get idcustomer info",
+          "dataSource" : "idmuContext-attribute",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "toValue" : ",",
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : false
+        },
+        {
+          "type" : 4,
+          "name" : "get Customer ID",
+          "dataSource" : "payload-customers-<attribute>",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        },
+        {
+          "type" : 4,
+          "name" : "get Customer address",
+          "dataSource" : "payload-customers-<attribute>-address",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 2,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : false
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Employee ID",
+          "dataSource" : "idmuContext-value-contacts",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [
+            ","
+          ],
+          "onlyFirst" : [],
+          "onlyLast" : [],
+          "ifOperator" : 1,
+          "ifValue" : ""
+        },
+        {
+          "type" : 5,
+          "name" : "Save Customer File",
+          "filename" : "<batch>.<custId>.C1.json",
+          "clearAfter" : false
+        },
+        {
+          "type" : 5,
+          "name" : "Save Customer File",
+          "filename" : "<batch>.<custId>.C2.json",
+          "clearAfter" : false
+        },
+        {
+          "type" : 5,
+          "name" : "Save Customer File",
+          "filename" : "<batch>.<custId>.C3.json",
+          "clearAfter" : false
+        },
+        {
+          "type" : 5,
+          "name" : "Save Customer File",
+          "filename" : "<batch>.<custId>.C4.json",
+          "clearAfter" : false
+        },
+        {
+          "type" : 5,
+          "name" : "Save Customer File",
+          "filename" : "<batch>.<custId>.C5.json",
+          "clearAfter" : true
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "contact",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Insert Contact Info",
+      "content" : "\t\t{\"id\" : \"<id>\", \"name\" : \"<name>\", \"phone\" : \"<phone>\", \"email\" : \"<email>\"}<,>\n",
+      "contentType" : 2,
+      "contentDisposition" : 2,
+      "contentEncoding" : 4,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "type" : 4,
+          "name" : "Add idcustomer to replace stack",
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
+        {
+          "type" : 4,
+          "name" : "Customer Context Replace",
+          "dataSource" : "payload-employees-<idmuContext>",
+          "dataDelimeter" : "-",
+          "sourceHasTags" : false,
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "fromAttribute" : "",
+          "toAttribute" : "",
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "processRequire" : true
+        }
+      ]
+    }
+  ]
+}

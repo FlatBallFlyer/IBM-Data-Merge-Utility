@@ -66,6 +66,7 @@
 		"processRequire": false,
 		"ifMissing": 2,
 		"ifPrimitive": 2,
+		"fromValue": "",
 		"toValue": "",
 		"ifObject": 2,
 		"objectAttrPrimitive": 1,
