@@ -44,6 +44,11 @@ public class All_Functional_Tests {
 	}
 	
 	@Test
+	public void replaceOveride() throws Throwable {
+		harness.testTemplates(new File("src/test/resources/functional/insertListPrimitives"));
+	}
+	
+	@Test
 	public void fileProviderOptimized() throws Throwable {
 		harness.testTemplates(new File("src/test/resources/functional/fileProviderTestOptimized"));
 	}

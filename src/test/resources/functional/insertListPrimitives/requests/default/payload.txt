@@ -1,0 +1,27 @@
+[
+	{
+		"name": "row1",
+		"type": "a",
+		"value": ["value1a", "value1b", "value1c"]
+	},
+	{
+		"name": "row2",
+		"type": "a",
+		"value": ["value2a", "value2b", "value2c", "value2d", "value2e"] 
+	},
+	{
+		"name": "row3",
+		"type": "b",
+		"value": ["value3a", "value3b", "value3c", "value3d", "value3e", "value3f"]
+	},
+	{
+		"name": "row4",
+		"type": "b",
+		"value": ["value4a", "value4b", "value4c"]
+	},
+	{
+		"name": "rowX",
+		"type": "x",
+		"value": ["valueXa", "value4b", "value4c", "value4d", "value4e", "value4f", "value4g", "value4h"]
+	}
+]

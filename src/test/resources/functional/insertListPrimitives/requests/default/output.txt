@@ -1,0 +1,6 @@
+Master Template with Subs 
+SubTemplate Type A name:row1, type:a, values:[Base:value2b Local:value1a,Base:value2b Local:value1b,Base:value2b Local:value1c,]
+SubTemplate Type A name:row2, type:a, values:[Base:value2b Local:value2a,Base:value2b Local:value2b,Base:value2b Local:value2c,Base:value2b Local:value2d,Base:value2b Local:value2e,]
+SubTemplate Type B name:row3, type:b, values:[Base:value2b Local:value3a,Base:value2b Local:value3b,Base:value2b Local:value3c,Base:value2b Local:value3d,Base:value2b Local:value3e,Base:value2b Local:value3f,]
+SubTemplate Type B name:row4, type:b, values:[Base:value2b Local:value4a,Base:value2b Local:value4b,Base:value2b Local:value4c,]
+SubTemplate Default name:rowX, type:x, values:[Base:value2b Local:valueXa,Base:value2b Local:value4b,Base:value2b Local:value4c,Base:value2b Local:value4d,Base:value2b Local:value4e,Base:value2b Local:value4f,Base:value2b Local:value4g,Base:value2b Local:value4h,]

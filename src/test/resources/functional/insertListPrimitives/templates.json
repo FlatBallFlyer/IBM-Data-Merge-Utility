@@ -1,0 +1,262 @@
+{
+  "templates" : [
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Test insert sub-Template with from override (insert vary by, insert from list of primitives)",
+      "content" : "Master Template with Subs \n<bookmark=\"subs\" group=\"test\" template=\"sub\" varyby=\"type\">",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "Parse Input",
+          "type" : 3,
+          "staticData" : "",
+          "dataSource" : "idmuPayload",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "ifList" : 1,
+          "dataTarget" : "data",
+          "dataTargetDelimiter" : "-",
+          "parseFormat" : 3
+        },
+        {
+          "name" : "add inherited replace",
+          "type" : 4,
+          "dataSource" : "data-[1]-value-[1]",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "fromValue" : "fromBase",
+          "processRequire" : true
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Subtemplates",
+          "dataSource" : "data",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "sub",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Top Level Object",
+      "content" : "SubTemplate Default name:<name>, type:<type>, values:[<bookmark=\"subs\" group=\"test\" template=\"value\">]\n",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "replace values",
+          "type" : 4,
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Values",
+          "dataSource" : "idmuContext-value",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "sub",
+        "variant" : "a"
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Test insert type-a sub-Template",
+      "content" : "SubTemplate Type A name:<name>, type:<type>, values:[<bookmark=\"subs\" group=\"test\" template=\"value\">]\n",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "replace values",
+          "type" : 4,
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Values",
+          "dataSource" : "idmuContext-value",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "sub",
+        "variant" : "b"
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Test insert type-b sub-Template",
+      "content" : "SubTemplate Type B name:<name>, type:<type>, values:[<bookmark=\"subs\" group=\"test\" template=\"value\">]\n",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "replace values",
+          "type" : 4,
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 3,
+          "objectAttrPrimitive" : 3,
+          "objectAttrList" : 2,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true
+        },
+        {
+          "type" : 2,
+          "name" : "Insert Values",
+          "dataSource" : "idmuContext-value",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 1,
+          "ifObject" : 1,
+          "ifList" : 3,
+          "bookmarkPattern" : ".*",
+          "notFirst" : [],
+          "notLast" : [],
+          "onlyFirst" : [],
+          "onlyLast" : []
+        }
+      ]
+    },
+    {
+      "id" : {
+        "group" : "test",
+        "name" : "value",
+        "variant" : ""
+      },
+      "wrapper" : {
+        "front" : "<",
+        "back" : ">"
+      },
+      "description" : "Value Insert with Overide",
+      "content" : "Base:<fromBase> Local:<valueOveride>,",
+      "contentType" : 4,
+      "contentDisposition" : 2,
+      "contentEncoding" : 1,
+      "contentFileName" : "",
+      "contentRedirectUrl" : "",
+      "directives" : [
+        {
+          "name" : "replace values",
+          "type" : 4,
+          "dataSource" : "idmuContext",
+          "dataDelimeter" : "-",
+          "ifMissing" : 1,
+          "ifPrimitive" : 3,
+          "ifObject" : 1,
+          "objectAttrPrimitive" : 1,
+          "objectAttrList" : 1,
+          "objectAttrObject" : 1,
+          "ifList" : 1,
+          "listAttrMissing" : 1,
+          "listAttrNotPrimitive" : 1,
+          "processAfter" : true,
+          "fromValue" : "valueOveride",
+          "processRequire" : true
+        }
+      ]
+    }
+  ]
+}
