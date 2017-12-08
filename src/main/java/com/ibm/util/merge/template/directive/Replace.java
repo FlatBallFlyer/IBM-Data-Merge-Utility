@@ -44,6 +44,7 @@ import com.ibm.util.merge.template.Template;
  */
 public class Replace extends AbstractDataDirective {
 	private String toValue;
+	private String fromValue = "";
 	private boolean processAfter;
 	private boolean processRequire;
 	private int objectAttrPrimitive;
@@ -173,6 +174,7 @@ public class Replace extends AbstractDataDirective {
 		mergable.setListAttrMissing(this.getListAttrMissing());
 		mergable.setListAttrNotPrimitive(this.getListAttrNotPrimitive());
 		mergable.setToValue(this.getToValue());
+		mergable.setFromValue(this.getFromValue());
 		return mergable;
 	}
 
@@ -285,9 +287,15 @@ public class Replace extends AbstractDataDirective {
 	 */
 	private void replaceFromString(String to) throws MergeException {
 		Path dataPath = new Path(this.getDataSource(), this.getDataDelimeter());
-		PathPart from = dataPath.remove();
-		while (from.isList) from = dataPath.remove(); 
-		this.getTemplate().addReplace(from.part, to); 
+		String from;
+		if (this.fromValue.isEmpty()) {
+			PathPart partFrom = dataPath.remove();
+			while (partFrom.isList) partFrom = dataPath.remove(); 
+			from  = partFrom.part;
+		} else {
+			from = this.fromValue;
+		}
+		this.getTemplate().addReplace(from, to); 
 	}
 	
 	/**
@@ -438,6 +446,10 @@ public class Replace extends AbstractDataDirective {
 		return listAttrMissing;
 	}
 
+	public String getFromValue() {
+		return fromValue;
+	}
+
 	public String getToValue() {
 		return toValue;
 	}
@@ -527,6 +539,10 @@ public class Replace extends AbstractDataDirective {
 		if (LIST_OPTIONS().keySet().contains(value)) {
 			super.setIfList(value);
 		}
+	}
+
+	public void setFromValue(String fromValue) {
+		this.fromValue = fromValue;
 	}
 
 	/*
