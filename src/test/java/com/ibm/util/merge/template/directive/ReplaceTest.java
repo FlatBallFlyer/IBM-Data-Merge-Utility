@@ -264,6 +264,32 @@ public class ReplaceTest {
 	}
 	
 	@Test
+	public void testExecutePrimitiveReplaceOverride() throws MergeException {
+		Template template = new Template("test", "replace", "primitive", "<one>", "<", ">");
+		Replace directive = new Replace("data.object-foo", "-", "",
+				Replace.MISSING_THROW,
+				Replace.PRIMITIVE_REPLACE,
+				Replace.OBJECT_THROW,
+				Replace.OBJECT_ATTRIBUTE_PRIMITIVE_THROW,
+				Replace.OBJECT_ATTRIBUTE_LIST_FIRST,
+				Replace.OBJECT_ATTRIBUTE_OBJECT_THROW,
+				Replace.LIST_THROW, "", "",
+				Replace.LIST_ATTR_MISSING_THROW,
+				Replace.LIST_ATTR_NOT_PRIMITIVE_THROW,
+				true, true);
+		directive.setFromValue("one");
+		template.addDirective(directive);
+		cache.postTemplate(template);
+		Merger context = new Merger(cache, "test.replace.primitive");
+		DataObject object = new DataObject();
+		object.put("foo", new DataPrimitive("bar"));
+		object.put("one", new DataPrimitive("two"));
+		context.getMergeData().put("data.object", "-", object);
+		template = context.merge();
+		assertEquals("bar", template.getMergeContent().getValue());
+	}
+	
+	@Test
 	public void testExecutePrimitiveJson() throws MergeException {
 		Template template = new Template("test", "replace", "primitive", "<data>", "<", ">");
 		template.setContentEncoding(TagSegment.ENCODE_NONE);
