@@ -223,6 +223,11 @@
 						"title": "To Value",
 						"description": "To value to be used if source is missing"
 					},
+					"fromValue": {
+						"type": "string",
+						"title": "From Value",
+						"description": "If provided will override the From value from the source path"
+					},
 					"ifPrimitive": {
 						"type": "integer",
 						"title": "If Primitive",
