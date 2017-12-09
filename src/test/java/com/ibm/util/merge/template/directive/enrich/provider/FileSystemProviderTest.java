@@ -14,6 +14,7 @@ import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.directive.Enrich;
 
 public class FileSystemProviderTest {
 	
@@ -26,13 +27,16 @@ public class FileSystemProviderTest {
 		Config config = new Config("{\"envVars\":{\"aFolder.PATH\":\"/opt/ibm/idmu\"}}");
 		Cache cache = new Cache(config);
 		Template template = new Template("system", "test", "", "Content");
+		Enrich directive = new Enrich();
+		directive.setEnrichSource("aFolder");
+		template.addDirective(directive);
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, "system.test.");
-		FileSystemProvider provider = new FileSystemProvider("aFolder", "", context);
-		provider.loadBasePath();
-		assertEquals("aFolder", provider.getSource());
+		template = template.getMergable(context);
+		directive = (Enrich) template.getDirectives().get(0);
+		FileSystemProvider provider = new FileSystemProvider();
+		provider.loadBasePath(directive);
 		assertEquals("/opt/ibm/idmu", provider.getBasePath().toString());
-		assertSame(context, provider.getContext());
 	}
 
 	@Test
@@ -45,10 +49,16 @@ public class FileSystemProviderTest {
 		Config config = new Config("{\"envVars\":{\"db.PATH\":\"src/test/resources/datafiles\"}}");
 		Cache cache = new Cache(config);
 		Template template = new Template("system", "test", "", "Content");
+		Enrich directive = new Enrich();
+		directive.setEnrichSource("db");
+		directive.setEnrichCommand(".*");
+		template.addDirective(directive);
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, "system.test.");
-		FileSystemProvider provider = new FileSystemProvider("db", "", context);
-		DataElement result = provider.provide(".*", template.getWrapper(), context, template.getReplaceStack(), Config.PARSE_NONE);
+		template = template.getMergable(context);
+		directive = (Enrich) template.getDirectives().get(0);
+		FileSystemProvider provider = new FileSystemProvider();
+		DataElement result = provider.provide(directive);
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("simple.csv"));
 		assertEquals("col1,col2,col3\nr1c1,r1c2,r1c3\nr2c1,r2c2,r2c3\n", result.getAsObject().get("simple.csv").getAsPrimitive());
@@ -68,10 +78,17 @@ public class FileSystemProviderTest {
 		Config config = new Config("{\"envVars\":{\"db.PATH\":\"src/test/resources/datafiles\"}}");
 		Cache cache = new Cache(config);
 		Template template = new Template("system", "test", "", "Content");
+		Enrich directive = new Enrich();
+		directive.setEnrichSource("db");
+		directive.setEnrichCommand("simple.csv");
+		directive.setParseAs(Config.PARSE_CSV);
+		template.addDirective(directive);
 		cache.postTemplate(template);
 		Merger context = new Merger(cache, "system.test.");
-		FileSystemProvider provider = new FileSystemProvider("db", "src/test/resources/http", context);
-		DataElement result = provider.provide("simple.csv", template.getWrapper(), context, template.getReplaceStack(), Config.PARSE_CSV);
+		template = template.getMergable(context);
+		directive = (Enrich) template.getDirectives().get(0);
+		FileSystemProvider provider = new FileSystemProvider();
+		DataElement result = provider.provide(directive);
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("simple.csv"));
 		assertTrue(result.getAsObject().get("simple.csv").isList());

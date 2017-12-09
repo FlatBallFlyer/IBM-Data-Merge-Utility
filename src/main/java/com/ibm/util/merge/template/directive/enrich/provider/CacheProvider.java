@@ -16,17 +16,14 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
-import java.util.HashMap;
-
 import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.Wrapper;
+import com.ibm.util.merge.template.directive.Enrich;
 
 /**
  * <p>Provide information about the template cache (for Status templates). Always returns an object with a summary of Cache info</p>
@@ -48,10 +45,6 @@ import com.ibm.util.merge.template.Wrapper;
  *
  */
 public class CacheProvider implements ProviderInterface {
-	private final String source;
-	private final String dbName;
-	private transient final Merger context;
-	private transient final Config config;
 	private transient final DataProxyJson proxy = new DataProxyJson();
 	
 	/**
@@ -61,17 +54,14 @@ public class CacheProvider implements ProviderInterface {
 	 * @param context The Merge Context
 	 * @throws MergeException Never
 	 */
-	public CacheProvider(String source, String dbName, Merger context) throws MergeException {
-		this.source = source;
-		this.dbName = dbName;
-		this.context = context;
-		this.config = context.getConfig();
+	public CacheProvider() throws MergeException {
 	}
 	
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
-		Cache cache = context.getCahce();
+	public DataElement provide(Enrich context) throws MergeException {
+		Cache cache = context.getContext().getCahce();
 		DataObject cacheData = new DataObject();
+		Config config = context.getConfig();
 		cacheData.put("version", 		new DataPrimitive(config.getVersion()));
 		cacheData.put("runningSince", 	new DataPrimitive(cache.getInitialized().toString()));
 		cacheData.put("CachedTemplates",new DataPrimitive(cache.getSize()));
@@ -91,21 +81,6 @@ public class CacheProvider implements ProviderInterface {
 		return;
 	}
 	
-	@Override
-	public String getSource() {
-		return this.source;
-	}
-
-	@Override
-	public String getDbName() {
-		return this.dbName;
-	}
-
-	@Override
-	public Merger getContext() {
-		return this.context;
-	}
-
 	@Override
 	public ProviderMeta getMetaInfo() {
 		return new ProviderMeta(

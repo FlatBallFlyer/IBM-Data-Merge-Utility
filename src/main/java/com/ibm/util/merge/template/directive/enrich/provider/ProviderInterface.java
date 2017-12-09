@@ -22,6 +22,7 @@ import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Wrapper;
+import com.ibm.util.merge.template.directive.Enrich;
 
 /**
  * Defines the Interface required by all Providers. See implementations for details
@@ -42,28 +43,13 @@ public interface ProviderInterface {
 	 * @return the DataElement that was fetched
 	 * @throws MergeException when processing errors occur
 	 */
-	public abstract DataElement provide(String enrichCommand, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException;
+	public abstract DataElement provide(Enrich context) throws MergeException;
 
 	/**
 	 * Close any connections
 	 */
 	public abstract void close();
 
-	/**
-	 * @return Source Name
-	 */
-	public abstract String getSource();
-
-	/**
-	 * @return DB Name
-	 */
-	public abstract String getDbName();
-
-	/**
-	 * @return Context
-	 */
-	public abstract Merger getContext();
-	
 	/**
 	 * @return Provider Meta Data - describes specifics of provider behavior for end users
 	 */

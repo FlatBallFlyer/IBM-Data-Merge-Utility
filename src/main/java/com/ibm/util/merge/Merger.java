@@ -26,6 +26,7 @@ import com.ibm.util.merge.data.DataManager;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.storage.*;
 import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.directive.Enrich;
 import com.ibm.util.merge.template.directive.enrich.provider.*;
 
 /**
@@ -196,10 +197,11 @@ public class Merger {
 	 * @return provider A Data Provider
 	 * @throws MergeException on processing errors
 	 */
-	public ProviderInterface getProvider(String enrichClass, String enrichSource, String dbName) throws MergeException {
-		String key = enrichSource.concat(dbName);
+	public ProviderInterface getProvider(Enrich directive) throws MergeException {
+		String key = directive.getEnrichSource().concat(directive.getEnrichParameter());
 		if (!this.providers.containsKey(key)) {
-			providers.put(key,  config.getProviderInstance(enrichClass, enrichSource, dbName, this));
+			providers.put(key,  
+				config.getProviderInstance(directive));
 		}
 		return providers.get(key);
 	}

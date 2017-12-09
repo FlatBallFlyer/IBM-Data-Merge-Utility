@@ -26,15 +26,14 @@ import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
+import com.ibm.util.merge.template.directive.Enrich;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 
 /**
  * <p>A Simple Anonymous HTTP Get based provider.</p>
@@ -71,11 +70,6 @@ public class RestProvider implements ProviderInterface {
 	public String password;
 	public String host;
 	public String port;
-
-	private final String source;
-	private final String dbName;
-	private transient final Merger context;
-	private transient final Config config;
 	
 	/**
 	 * Construct a provider
@@ -83,14 +77,12 @@ public class RestProvider implements ProviderInterface {
 	 * @param dbName - Not Applicable
 	 * @param context - The Merger managing the provider
 	 */
-	public RestProvider(String source, String dbName, Merger context) {
-		this.source = source;
-		this.dbName = dbName;
-		this.context = context;
-		this.config = context.getConfig();
+	public RestProvider() {
 	}
 	
-	private void connect() throws Merge500 {
+	private void connect(Enrich context) throws Merge500 {
+		String source = context.getEnrichSource();
+		Config config = context.getConfig();
 		try {
 			host = config.getEnv(source + ".HOST");
 			port = config.getEnv(source + ".PORT");
@@ -103,13 +95,13 @@ public class RestProvider implements ProviderInterface {
 	}
 
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
+	public DataElement provide(Enrich context) throws MergeException {
 		if (host == null) {
-			connect();
+			connect(context);
 		}
 		
-		Content query = new Content(wrapper, command, TagSegment.ENCODE_HTML);
-		query.replace(replace, false, config.getNestLimit());
+		Content query = new Content(context.getTemplate().getWrapper(), context.getEnrichCommand(), TagSegment.ENCODE_HTML);
+		query.replace(context.getTemplate().getReplaceStack(), false, context.getConfig().getNestLimit());
 		String theUrl = "";
 		String fetchedData = "";
 
@@ -126,10 +118,10 @@ public class RestProvider implements ProviderInterface {
 			throw new Merge500("I-O Exception at:" + theUrl);
 		}
 
-		if (parseAs == Config.PARSE_NONE) {
+		if (context.getParseAs() == Config.PARSE_NONE) {
 			return new DataPrimitive(fetchedData);
 		} else {
-			return config.parseString(parseAs, fetchedData);
+			return context.getConfig().parseString(context.getParseAs(), fetchedData);
 		}
 	}
 	
@@ -139,21 +131,6 @@ public class RestProvider implements ProviderInterface {
 		return;
 	}
 	
-	@Override
-	public String getSource() {
-		return this.source;
-	}
-
-	@Override
-	public String getDbName() {
-		return this.dbName;
-	}
-
-	@Override
-	public Merger getContext() {
-		return this.context;
-	}
-
 	@Override
 	public ProviderMeta getMetaInfo() {
 		return RestProvider.meta;

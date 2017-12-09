@@ -28,9 +28,9 @@ import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
+import com.ibm.util.merge.template.directive.Enrich;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
@@ -76,13 +76,9 @@ public class MongoProvider implements ProviderInterface {
 		private static final long serialVersionUID = 1L; 
 	}
 
-	private final String source;
-	private final String collection;
-	private transient final Merger context;
 	private transient MongoClient client;
 	private transient MongoDatabase database;
 	private transient MongoCollection<Document> dbCollection;
-	private transient final Config config;
 	
 	/**
 	 * Instantiate the provider and get the db connection
@@ -92,28 +88,26 @@ public class MongoProvider implements ProviderInterface {
 	 * @param context The Merge Context
 	 * @throws MergeException  on processing errors
 	 */
-	public MongoProvider(String source, String collection, Merger context) throws MergeException {
-		this.source = source;
-		this.collection = collection;
-		this.context = context;
-		this.config = context.getConfig();
+	public MongoProvider() throws MergeException {
 	}
 	
-	private void connect() throws Merge500 {
+	private void connect(Enrich context) throws Merge500 {
 		// Get Credentials
 		String host = "";
 		String port = "";
 		String user = "";
 		String pw = "";
 		String dbName = "";
+		Config config = context.getConfig();
+		String source = context.getEnrichSource();
 		try {
-			host = this.config.getEnv(source + ".HOST");
-			port = this.config.getEnv(source + ".PORT");
-			user = this.config.getEnv(source + ".USER");
-			pw = this.config.getEnv(source + ".PW");
-			dbName = this.config.getEnv(source + ".DB");
+			host = config.getEnv(source + ".HOST");
+			port = config.getEnv(source + ".PORT");
+			user = config.getEnv(source + ".USER");
+			pw = config.getEnv(source + ".PW");
+			dbName = config.getEnv(source + ".DB");
 		} catch (MergeException e) {
-			throw new Merge500("Invalid Mongo Provider for:" + source);
+			throw new Merge500("Invalid Mongo Provider for:" + context.getEnrichSource());
 		}
 		
 		ServerAddress addr = new ServerAddress(host, Integer.valueOf(port));
@@ -126,19 +120,19 @@ public class MongoProvider implements ProviderInterface {
 			this.client = new MongoClient(addr, creds);
 		}
 		this.database = this.client.getDatabase(dbName);
-		this.dbCollection = database.getCollection(this.collection);
+		this.dbCollection = database.getCollection(context.getEnrichParameter());
 	}
 
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
+	public DataElement provide(Enrich context) throws MergeException {
 		DataList result = new DataList();
 		if (this.dbCollection == null) {
-			this.connect();
+			this.connect(context);
 		}
 		
-		Content query = new Content(wrapper, command, TagSegment.ENCODE_JSON);
-		query.replace(replace, false, this.config.getNestLimit());
-		DataObject queryObj = this.config.parseString(Config.PARSE_JSON, query.getValue()).getAsObject();
+		Content query = new Content(context.getTemplate().getWrapper(), context.getEnrichCommand(), TagSegment.ENCODE_JSON);
+		query.replace(context.getTemplate().getReplaceStack(), false, context.getConfig().getNestLimit());
+		DataObject queryObj = context.getConfig().parseString(Config.PARSE_JSON, query.getValue()).getAsObject();
 
 		BasicDBObject dbquery = new BasicDBObject();
 		for (String key : queryObj.keySet()) {
@@ -154,7 +148,7 @@ public class MongoProvider implements ProviderInterface {
 		
 		if (find != null) {
 			for (Document aDoc : find) {
-				DataElement theDoc = this.config.parseString(Config.PARSE_JSON, aDoc.toJson());
+				DataElement theDoc = context.getConfig().parseString(Config.PARSE_JSON, aDoc.toJson());
 				result.add(theDoc);
 			}
 		}
@@ -170,22 +164,7 @@ public class MongoProvider implements ProviderInterface {
 	}
 		
 	@Override
-	public String getSource() {
-		return this.source;
-	}
-
-	@Override
-	public Merger getContext() {
-		return this.context;
-	}
-
-	@Override
 	public ProviderMeta getMetaInfo() {
 		return MongoProvider.meta;
-	}
-
-	@Override
-	public String getDbName() {
-		return this.collection;
 	}
 }

@@ -14,6 +14,7 @@ import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.storage.Archive;
 import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.directive.Enrich;
 import com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface;
 import com.ibm.util.merge.template.directive.enrich.provider.StubProvider;
 
@@ -157,11 +158,20 @@ public class MergerTest {
 	@Test
 	public void testGetProviders() throws MergeException {
 		Cache cache = new Cache();
-		Merger merger = new Merger(cache, "system.sample.");
+		Template template = new Template("system", "test", "");
+		Enrich directive = new Enrich();
+		directive.setEnrichClass("com.ibm.util.merge.template.directive.enrich.provider.StubProvider");
+		directive.setEnrichSource("TheSource");
+		directive.setEnrichParameter("TheDb");
+		template.addDirective(directive);
+		cache.postTemplate(template);
+		Merger merger = new Merger(cache, "system.test.");
 		assertEquals(0, merger.getProviders().size());
-		ProviderInterface provider1 = merger.getProvider("com.ibm.util.merge.template.directive.enrich.provider.StubProvider", "TheSource", "TheDb");
+		template = template.getMergable(merger);
+		directive = (Enrich) template.getDirectives().get(0);
+		ProviderInterface provider1 = merger.getProvider(directive);
 		assertTrue(provider1 instanceof StubProvider);
-		ProviderInterface provider2 = merger.getProvider("Foo", "TheSource", "TheDb");
+		ProviderInterface provider2 = merger.getProvider(directive);
 		assertTrue(provider2 instanceof StubProvider);
 		assertEquals(provider1, provider2);
 	}

@@ -19,6 +19,7 @@ package com.ibm.util.merge.template.directive.enrich.provider;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
+import com.ibm.util.merge.template.directive.Enrich;
 
 import java.sql.SQLException;
 
@@ -74,20 +75,19 @@ public class JndiProvider extends SqlProvider implements ProviderInterface {
 	 * @param context - The Merger managing the provider
 	 * @throws MergeException - On SqlProvider instaintation errors
 	 */
-	public JndiProvider(String source, String dbName, Merger context) throws MergeException {
-		super(source, dbName, context);
+	public JndiProvider() throws MergeException {
 	}
 
 	@Override
-	protected void connect() throws Merge500 {
+	protected void connect(Enrich context) throws Merge500 {
     	try {
 	    	Context initContext = new InitialContext();
-	    	this.jndiSource = (DataSource) initContext.lookup(this.getSource());
+	    	this.jndiSource = (DataSource) initContext.lookup(context.getEnrichSource());
 	    	this.connection = this.jndiSource.getConnection();
 	    } catch (NamingException e) {
-	    	throw new Merge500("Naming Exception: " + this.getSource());
+	    		throw new Merge500("Naming Exception: " + context.getEnrichSource());
 	    } catch (SQLException e) {
-	    	throw new Merge500("Error acquiring connection for " + this.source + ":" + e.getMessage());
+	    		throw new Merge500("Error acquiring connection for " + context.getEnrichSource() + ":" + e.getMessage());
 	    }
 	}
 	

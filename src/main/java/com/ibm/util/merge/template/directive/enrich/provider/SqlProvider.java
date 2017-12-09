@@ -16,24 +16,20 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
-import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
+import com.ibm.util.merge.template.directive.Enrich;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.HashMap;
-
 import javax.sql.DataSource;
 
 /**
@@ -43,38 +39,22 @@ import javax.sql.DataSource;
  *
  */
 public abstract class SqlProvider implements ProviderInterface {
-	protected final String source;
-	protected final String dbName;
-	protected final transient Merger context;
 	protected transient DataSource jdbcSource = null;
 	protected transient Connection connection = null;
-	private transient final Config config;
 	
-	public SqlProvider(String source, String dbName, Merger context) throws MergeException {
-		this.source = source;
-		this.dbName = dbName;
-		this.context = context;
-		this.config = context.getConfig();
+	public SqlProvider() throws MergeException {
 	}
 	
-	protected abstract void connect() throws MergeException;
-	
-	/**
-	 * Get the cache config object
-	 * @return the configuration
-	 */
-	public Config getConfig() {
-		return this.config;
-	}
+	protected abstract void connect(Enrich context) throws MergeException;
 	
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
+	public DataElement provide(Enrich context) throws MergeException {
 		if (this.connection == null) {
-			connect();
+			connect(context);
 		}
 		
-		Content query = new Content(wrapper, command, TagSegment.ENCODE_SQL);
-		query.replace(replace, false, config.getNestLimit());
+		Content query = new Content(context.getTemplate().getWrapper(), context.getEnrichCommand(), TagSegment.ENCODE_SQL);
+		query.replace(context.getTemplate().getReplaceStack(), false, context.getConfig().getNestLimit());
 		DataList table = new DataList();
 		ResultSet results;
 
@@ -114,21 +94,6 @@ public abstract class SqlProvider implements ProviderInterface {
 			}
 		}
 		return;
-	}
-	
-	@Override
-	public String getSource() {
-		return this.source;
-	}
-
-	@Override
-	public String getDbName() {
-		return this.dbName;
-	}
-
-	@Override
-	public Merger getContext() {
-		return this.context;
 	}
 }
 

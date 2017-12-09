@@ -23,15 +23,14 @@ import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
+import com.ibm.util.merge.template.directive.Enrich;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashMap;
 
 /**
  * <p>A file system provider that reads all the files which match a file name pattern into an Object of FileName-FileContents.</p>
@@ -52,10 +51,6 @@ import java.util.HashMap;
  * @see #FileSystemProvider(String, String, Merger)
  */
 public class FileSystemProvider implements ProviderInterface {
-	private final String source;
-	private final String dbName;
-	private transient final Merger context;
-	private transient final Config config;
 	private transient File basePath;
 
 	/**
@@ -65,22 +60,19 @@ public class FileSystemProvider implements ProviderInterface {
 	 * @param dbName - Not Used by this provider
 	 * @param context - The Merger hosting this provider
 	 */
-	public FileSystemProvider(String source, String dbName, Merger context) {
-		this.source = source;
-		this.dbName = dbName;
-		this.context = context;
-		this.config = context.getConfig();
+	public FileSystemProvider() {
 	}
 
 	/**
 	 * lazy loader of Provider Configuration values
 	 * @throws Merge500 on configuration and connection errors
 	 */
-	public void loadBasePath() throws Merge500 {
+	public void loadBasePath(Enrich context) throws Merge500 {
 		// Get the credentials
 		String path = "";
+		String source = context.getEnrichSource();
 		try {
-			path = config.getEnv(source + ".PATH");
+			path = context.getConfig().getEnv(source + ".PATH");
 		} catch (MergeException e) {
 			throw new Merge500("Malformed or Missing File Source Credentials found for:" + source + ":" + path);
 		}
@@ -92,12 +84,12 @@ public class FileSystemProvider implements ProviderInterface {
 	}
 
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
+	public DataElement provide(Enrich context) throws MergeException {
 		if (this.basePath == null) {
-			loadBasePath();
+			loadBasePath(context);
 		}
-		Content query = new Content(wrapper, command, TagSegment.ENCODE_NONE);
-		query.replace(replace, false, config.getNestLimit());
+		Content query = new Content(context.getTemplate().getWrapper(), context.getEnrichCommand(), TagSegment.ENCODE_NONE);
+		query.replace(context.getTemplate().getReplaceStack(), false, context.getConfig().getNestLimit());
 		DataObject result = new DataObject();
 
 		String fileSelector = query.getValue();
@@ -116,9 +108,11 @@ public class FileSystemProvider implements ProviderInterface {
             }
         }
         
-		if (parseAs != Config.PARSE_NONE) {
+		if (context.getParseAs() != Config.PARSE_NONE) {
 			for (String fileName : result.keySet()) {
-				DataElement element = config.parseString(parseAs, result.get(fileName).getAsPrimitive()); 
+				DataElement element = context.getConfig().parseString(
+						context.getParseAs(), 
+						result.get(fileName).getAsPrimitive()); 
 				result.put(fileName, element);
 			}
 		}
@@ -135,21 +129,6 @@ public class FileSystemProvider implements ProviderInterface {
 		return;
 	}
 	
-	@Override
-	public String getSource() {
-		return this.source;
-	}
-
-	@Override
-	public String getDbName() {
-		return this.dbName;
-	}
-
-	@Override
-	public Merger getContext() {
-		return this.context;
-	}
-
 	@Override
 	public ProviderMeta getMetaInfo() {
 		return new ProviderMeta(

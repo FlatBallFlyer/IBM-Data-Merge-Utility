@@ -18,7 +18,6 @@ package com.ibm.util.merge.template.directive.enrich.provider;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 
 import com.cloudant.client.api.ClientBuilder;
@@ -32,9 +31,9 @@ import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.parser.DataProxyJson;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.content.Content;
 import com.ibm.util.merge.template.content.TagSegment;
+import com.ibm.util.merge.template.directive.Enrich;
 
 /**
  * <p>A Cloudant provider that fetches documents from a Cloudant Database</p>
@@ -67,12 +66,8 @@ public class CloudantProvider implements ProviderInterface {
 			"N/A",
 			"This provider always returns a List of Objects");
 	
-	private final String source;
-	private final String dbName;
 	private transient CloudantClient cloudant = null;
 	private transient Database db = null;
-	private transient final Merger context;
-	private transient final Config config;
 	private transient DataProxyJson proxy = new DataProxyJson();
 	
 	/**
@@ -82,20 +77,19 @@ public class CloudantProvider implements ProviderInterface {
 	 * @param context The Merge Context
 	 * @throws MergeException on processing errors
 	 */
-	public CloudantProvider(String source, String dbName, Merger context) throws MergeException {
-		this.source = source;
-		this.dbName = dbName;
-		this.context = context;
-		this.config = context.getConfig();
+	public CloudantProvider() throws MergeException {
 	}
 	
-	private void connect() throws MergeException {
+	private void connect(Enrich context) throws MergeException {
 
 		// Get the credentials
 		String user = "";
 		String pw = "";
 		String url = "";
+		String source = "";
+		Config config = context.getConfig();
 		try {
+			source = context.getEnrichSource();
 			url = config.getEnv(source + ".URL");
 			user = config.getEnv(source + ".USER");
 			pw = config.getEnv(source + ".PW");
@@ -112,23 +106,23 @@ public class CloudantProvider implements ProviderInterface {
 					.gsonBuilder(proxy.getBuilder())
 					.build();
 			// Get the database object
-			db = cloudant.database(this.getDbName(), false);
+			db = cloudant.database(context.getEnrichParameter(), false);
 		} catch (CouchDbException e) {
-			throw new Merge500("Unable to connect to Cloudant repository:" + url + ":" + user + ":" + pw + ":" + this.getDbName() + ":" + e.getMessage());
+			throw new Merge500("Unable to connect to Cloudant repository:" + url + ":" + user + ":" + pw + ":" + context.getEnrichParameter() + ":" + e.getMessage());
 		} catch (MalformedURLException e) {
-			throw new Merge500("Invalid URL for provider :" + this.source + ":" + this.dbName + "Message:" + e.getMessage());
+			throw new Merge500("Invalid URL for provider :" + context.getEnrichSource() + ":" + context.getEnrichParameter() + "Message:" + e.getMessage());
 		}
 		
 	}
 	
 	@Override
-	public DataElement provide(String command, Wrapper wrapper, Merger context, HashMap<String,String> replace, int parseAs) throws MergeException {
+	public DataElement provide(Enrich context) throws MergeException {
 		if (this.cloudant == null) {
-			this.connect();
+			this.connect(context);
 		}
 
-		Content query = new Content(wrapper, command, TagSegment.ENCODE_JSON);
-		query.replace(replace, false, config.getNestLimit());
+		Content query = new Content(context.getTemplate().getWrapper(), context.getEnrichCommand(), TagSegment.ENCODE_JSON);
+		query.replace(context.getTemplate().getReplaceStack(), false, context.getConfig().getNestLimit());
 		
 		List<DataElement> results;
 		
@@ -147,21 +141,6 @@ public class CloudantProvider implements ProviderInterface {
 		return;
 	}
 	
-	@Override
-	public String getSource() {
-		return this.source;
-	}
-
-	@Override
-	public String getDbName() {
-		return this.dbName;
-	}
-
-	@Override
-	public Merger getContext() {
-		return this.context;
-	}
-
 	@Override
 	public ProviderMeta getMetaInfo() {
 		return CloudantProvider.meta;

@@ -101,8 +101,8 @@ public class Enrich extends AbstractDirective {
 	
 	@Override
 	public void execute(Merger context) throws MergeException {
-		ProviderInterface provider = context.getProvider(this.enrichClass, this.enrichSource, this.enrichParameter);
-		DataElement value = provider.provide(this.enrichCommand, this.getTemplate().getWrapper(), context, this.getTemplate().getReplaceStack(), this.parseAs);
+		ProviderInterface provider = context.getProvider(this);
+		DataElement value = provider.provide(this);
 		this.getTargetContent().replace(this.getTemplate().getReplaceStack(), true, this.getConfig().getNestLimit());
 		String targetName = this.getTargetContent().getValue();
 		this.getContext().getMergeData().put(targetName, this.targetDataDelimeter, value);

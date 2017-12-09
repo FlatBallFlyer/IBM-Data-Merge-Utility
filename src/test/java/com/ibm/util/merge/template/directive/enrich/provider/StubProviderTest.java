@@ -5,38 +5,33 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.directive.Enrich;
 
 public class StubProviderTest {
 	private Cache cache;
 	private Template template;
-	private Merger context;
 	
 	@Before
 	public void setUp() throws Exception {
 		cache = new Cache();
 		template = new Template("system", "test", "", "Content");
 		cache.postTemplate(template);
-		context = new Merger(cache, "system.test.");
 	}
 
 	@Test
 	public void testStubProvider() throws MergeException {
-		StubProvider provider = new StubProvider("source", "db", context);
-		assertEquals("source", provider.getSource());
-		assertEquals("db", provider.getDbName());
-		assertSame(context, provider.getContext());
+		StubProvider provider = new StubProvider();
+		assertNotNull(provider);
 	}
 
 	@Test
 	public void testProvide() throws MergeException {
-		StubProvider provider = new StubProvider("source", "db", context);
-		DataElement result = provider.provide("", template.getWrapper(), context, template.getReplaceStack(), Config.PARSE_NONE);
+		StubProvider provider = new StubProvider();
+		DataElement result = provider.provide(new Enrich());
 		assertTrue(result.isPrimitive());
 	}
 	

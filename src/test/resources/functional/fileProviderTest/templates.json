@@ -303,7 +303,7 @@
           "listAttrMissing" : 1,
           "listAttrNotPrimitive" : 1,
           "processAfter" : true,
-          "processRequire" : false
+          "processRequire" : true
         }
       ]
     },

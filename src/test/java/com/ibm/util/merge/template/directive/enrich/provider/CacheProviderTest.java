@@ -5,38 +5,40 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ibm.util.merge.Config;
 import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.Cache;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
+import com.ibm.util.merge.template.directive.Enrich;
 
 public class CacheProviderTest {
 	private Cache cache;
 	private Template template;
-	private Merger context;
+	private Enrich directive;
 	
 	@Before
 	public void setUp() throws Exception {
 		cache = new Cache();
 		template = new Template("system", "test", "", "Content");
+		directive = new Enrich();
+		template.addDirective(directive);
 		cache.postTemplate(template);
-		context = new Merger(cache, "system.test.");
+		Merger merger = new Merger(cache, "system.test.");
+		template = template.getMergable(merger);
+		directive = (Enrich) template.getDirectives().get(0);
 	}
 
 	@Test
 	public void testCacheProvider() throws MergeException {
-		CacheProvider provider = new CacheProvider("source", "db", context);
-		assertEquals("source", provider.getSource());
-		assertEquals("db", provider.getDbName());
-		assertSame(context, provider.getContext());
+		CacheProvider provider = new CacheProvider();
+		assertNotNull(provider);
 	}
 
 	@Test
 	public void testProvide() throws MergeException {
-		CacheProvider provider = new CacheProvider("source", "db", context);
-		DataElement result = provider.provide("", template.getWrapper(), context, template.getReplaceStack(), Config.PARSE_NONE);
+		CacheProvider provider = new CacheProvider();
+		DataElement result = provider.provide(directive);
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("version"));
 		assertTrue(result.getAsObject().containsKey("runningSince"));
@@ -45,24 +47,6 @@ public class CacheProviderTest {
 		assertTrue(result.getAsObject().containsKey("TempFolder"));
 		assertTrue(result.getAsObject().containsKey("MaxRecursion"));
 		assertTrue(result.getAsObject().containsKey("Statistics"));
-	}
-
-	@Test
-	public void testGetSource() throws MergeException {
-		CacheProvider provider = new CacheProvider("source", "db", context);
-		assertEquals("source", provider.getSource());
-	}
-
-	@Test
-	public void testGetDbName() throws MergeException {
-		CacheProvider provider = new CacheProvider("source", "db", context);
-		assertEquals("db", provider.getDbName());
-	}
-
-	@Test
-	public void testGetContext() throws MergeException {
-		CacheProvider provider = new CacheProvider("source", "db", context);
-		assertSame(context, provider.getContext());
 	}
 
 }
