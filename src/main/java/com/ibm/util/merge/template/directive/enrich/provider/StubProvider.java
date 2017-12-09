@@ -41,9 +41,10 @@ public class StubProvider implements ProviderInterface {
 	
 	/**
 	 * Instantiate the provider
-	 * 
+	 * @param source ignored
+	 * @param name ignored
 	 */
-	public StubProvider() {
+	public StubProvider(String source, String name) {
 	}
 
 	@Override

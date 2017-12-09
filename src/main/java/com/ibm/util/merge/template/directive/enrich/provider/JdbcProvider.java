@@ -16,10 +16,9 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.directive.Enrich;
-
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -58,21 +57,26 @@ public class JdbcProvider extends SqlProvider implements ProviderInterface {
 	
 	/**
 	 * JDBC Provider Constructor
+	 * @param source The jdbc environment variable name
+	 * @param parameter The database - ignored if blank
 	 */
-	public JdbcProvider() {
+	public JdbcProvider(String source, String parameter) {
+		super(source, parameter);
 	}
 	
 	@Override
-	protected void connect(Enrich context) throws MergeException {
+	protected void connect(Config config) throws MergeException {
+		// Implements lazy connetor
+		if (this.connection != null) return;
+		
 		// Get Credentials
 		String uri = "";
 		String user = "";
 		String pw = "";
-		String source = context.getEnrichSource();
 		try {
-			uri = context.getConfig().getEnv(source + ".URI");
-			user = context.getConfig().getEnv(source + ".USER");
-			pw = context.getConfig().getEnv(source + ".PW");
+			uri = config.getEnv(source + ".URI");
+			user = config.getEnv(source + ".USER");
+			pw = config.getEnv(source + ".PW");
 		} catch (MergeException e) {
 			throw new Merge500("JDBC Provider did not find environment variables:" + source + ":" + uri + ":" + user + ":" + pw);
 		}
@@ -80,8 +84,8 @@ public class JdbcProvider extends SqlProvider implements ProviderInterface {
 		// Get Connection
 		try {
 		    connection = DriverManager.getConnection(uri, user, pw);
-		    if (!context.getEnrichParameter().isEmpty()) {
-		    	this.connection.prepareStatement("USE " + context.getEnrichParameter()).execute();
+		    if (!parameter.isEmpty()) {
+		    		this.connection.prepareStatement("USE " + parameter).execute();
 		    }
 		    connection.setReadOnly(true);
 		} catch (SQLException e) {

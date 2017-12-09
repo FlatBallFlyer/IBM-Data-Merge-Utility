@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.HashMap;
@@ -378,22 +379,30 @@ public class Config {
 	}
 	
 	// Provider Management
-	public ProviderInterface getProviderInstance(Enrich context) throws MergeException {
-		if (!this.providers.containsKey(context.getEnrichClass())) {
+	public ProviderInterface getProviderInstance(String className, String source, String parameter) throws MergeException {
+		if (!this.providers.containsKey(className)) {
 			throw new Merge500("Provider not found, did you register it?");
 		}
 		
 		ProviderInterface theProvider;
 		try {
-			theProvider = (ProviderInterface) this.providers.get(context.getEnrichClass()).newInstance();
+			@SuppressWarnings("rawtypes")
+			Class[] cArg = new Class[2]; 
+			cArg[0] = String.class;
+			cArg[1] = String.class;
+			theProvider = (ProviderInterface) this.providers.get(className).getDeclaredConstructor(cArg).newInstance(source, parameter);
 		} catch (InstantiationException e) {
-			throw new Merge500("Error instantiating class: " + context.getEnrichClass() + " message: " + e.getMessage());
+			throw new Merge500("Error instantiating class: " + className + " message: " + e.getMessage());
 		} catch (IllegalAccessException e) {
-			throw new Merge500("Error accessing class: " + context.getEnrichClass() + " message: " + e.getMessage());
+			throw new Merge500("Error accessing class: " + className + " message: " + e.getMessage());
 		} catch (IllegalArgumentException e) {
-			throw new Merge500("IllegalArgumentException : " + context.getEnrichClass() + " message: " + e.getMessage());
+			throw new Merge500("IllegalArgumentException : " + className + " message: " + e.getMessage());
 		} catch (SecurityException e) {
-			throw new Merge500("Error accessing class: " + context.getEnrichClass() + " message: " + e.getMessage());
+			throw new Merge500("Error accessing class: " + className + " message: " + e.getMessage());
+		} catch (InvocationTargetException e) {
+			throw new Merge500("InvocationTargetException: " + className + " message: " + e.getMessage());
+		} catch (NoSuchMethodException e) {
+			throw new Merge500("NoSuchMethodException: " + className + " message: " + e.getMessage());
 		}
 		
 		return theProvider;
@@ -463,7 +472,7 @@ public class Config {
 		// Build the Providers List
 		DataObject providers = new DataObject();
 		for (String provider : this.providers.keySet()) {
-			ProviderMeta meta = this.getProviderInstance(new Enrich()).getMetaInfo();
+			ProviderMeta meta = this.getProviderInstance(provider, "source", "parameters").getMetaInfo();
 			DataObject providerData = new DataObject();
 			providerData.put("optionName", new DataPrimitive(meta.optionName));
 			providerData.put("sourceJson", new DataPrimitive(meta.sourceEnv));

@@ -49,8 +49,10 @@ public class CacheProvider implements ProviderInterface {
 	
 	/**
 	 * Instantiate a Cache Provider
+	 * @param source Source Environment Variable - ignored
+	 * @param parameter Source parameter - ignored
 	 */
-	public CacheProvider() {
+	public CacheProvider(String source, String parameter) {
 	}
 	
 	@Override

@@ -31,13 +31,13 @@ public class CacheProviderTest {
 
 	@Test
 	public void testCacheProvider() throws MergeException {
-		CacheProvider provider = new CacheProvider();
+		CacheProvider provider = new CacheProvider("source", "parameter");
 		assertNotNull(provider);
 	}
 
 	@Test
 	public void testProvide() throws MergeException {
-		CacheProvider provider = new CacheProvider();
+		CacheProvider provider = new CacheProvider("source", "parameter");
 		DataElement result = provider.provide(directive);
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("version"));

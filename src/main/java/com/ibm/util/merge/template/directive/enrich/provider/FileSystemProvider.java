@@ -50,24 +50,25 @@ import java.nio.file.Files;
  */
 public class FileSystemProvider implements ProviderInterface {
 	private transient File basePath;
-
+	private transient final String source;
+	
 	/**
 	 * Provider Constructor
+	 * @param source The source environment name
+	 * @param parameter - ignored
 	 */
-	public FileSystemProvider() {
+	public FileSystemProvider(String source, String parameter) {
+		this.source = source;
 	}
 
-	/**
-	 * lazy loader of Provider Configuration values
-	 * @param context the Enrich Directive to provide for
-	 * @throws Merge500 on configuration and connection errors
-	 */
-	public void loadBasePath(Enrich context) throws Merge500 {
+	private void connect(Config config) throws Merge500 {
+		// implements lazy connection
+		if (this.basePath != null) return;
+		
 		// Get the credentials
 		String path = "";
-		String source = context.getEnrichSource();
 		try {
-			path = context.getConfig().getEnv(source + ".PATH");
+			path = config.getEnv(source + ".PATH");
 		} catch (MergeException e) {
 			throw new Merge500("Malformed or Missing File Source Credentials found for:" + source + ":" + path);
 		}
@@ -80,9 +81,8 @@ public class FileSystemProvider implements ProviderInterface {
 
 	@Override
 	public DataElement provide(Enrich context) throws MergeException {
-		if (this.basePath == null) {
-			loadBasePath(context);
-		}
+		connect(context.getConfig());
+		
 		Content query = new Content(context.getTemplate().getWrapper(), context.getEnrichCommand(), TagSegment.ENCODE_NONE);
 		query.replace(context.getTemplate().getReplaceStack(), false, context.getConfig().getNestLimit());
 		DataObject result = new DataObject();

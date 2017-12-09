@@ -67,23 +67,28 @@ public class CloudantProvider implements ProviderInterface {
 	private transient CloudantClient cloudant = null;
 	private transient Database db = null;
 	private transient DataProxyJson proxy = new DataProxyJson();
+	private transient final String source;
+	private transient final String parameter;
 	
 	/**
 	 * Instantiate the provider and get the database connection
+	 * @param source The Source environment name
+	 * @param parameter The cloudant database name
 	 */
-	public CloudantProvider() {
+	public CloudantProvider(String source, String parameter) {
+		this.source = source;
+		this.parameter = parameter;
 	}
 	
-	private void connect(Enrich context) throws MergeException {
-
+	private void connect(Config config) throws MergeException {
+		// implements lazy connection
+		if (db != null) 	return;
+		
 		// Get the credentials
 		String user = "";
 		String pw = "";
 		String url = "";
-		String source = "";
-		Config config = context.getConfig();
 		try {
-			source = context.getEnrichSource();
 			url = config.getEnv(source + ".URL");
 			user = config.getEnv(source + ".USER");
 			pw = config.getEnv(source + ".PW");
@@ -100,21 +105,18 @@ public class CloudantProvider implements ProviderInterface {
 					.gsonBuilder(proxy.getBuilder())
 					.build();
 			// Get the database object
-			db = cloudant.database(context.getEnrichParameter(), false);
+			db = cloudant.database(parameter, false);
 		} catch (CouchDbException e) {
-			throw new Merge500("Unable to connect to Cloudant repository:" + url + ":" + user + ":" + pw + ":" + context.getEnrichParameter() + ":" + e.getMessage());
+			throw new Merge500("Unable to connect to Cloudant repository:" + url + ":" + user + ":" + pw + ":" + parameter + ":" + e.getMessage());
 		} catch (MalformedURLException e) {
-			throw new Merge500("Invalid URL for provider :" + context.getEnrichSource() + ":" + context.getEnrichParameter() + "Message:" + e.getMessage());
+			throw new Merge500("Invalid URL for provider :" + source + ":" + parameter + "Message:" + e.getMessage());
 		}
 		
 	}
 	
 	@Override
 	public DataElement provide(Enrich context) throws MergeException {
-		if (this.cloudant == null) {
-			this.connect(context);
-		}
-
+		connect(context.getConfig());
 		Content query = new Content(context.getTemplate().getWrapper(), context.getEnrichCommand(), TagSegment.ENCODE_JSON);
 		query.replace(context.getTemplate().getReplaceStack(), false, context.getConfig().getNestLimit());
 		

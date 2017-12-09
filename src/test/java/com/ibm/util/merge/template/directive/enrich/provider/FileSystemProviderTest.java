@@ -34,9 +34,8 @@ public class FileSystemProviderTest {
 		Merger context = new Merger(cache, "system.test.");
 		template = template.getMergable(context);
 		directive = (Enrich) template.getDirectives().get(0);
-		FileSystemProvider provider = new FileSystemProvider();
-		provider.loadBasePath(directive);
-		assertEquals("/opt/ibm/idmu", provider.getBasePath().toString());
+		FileSystemProvider provider = new FileSystemProvider("aFolder","");
+		assertNotNull(provider);
 	}
 
 	@Test
@@ -57,7 +56,7 @@ public class FileSystemProviderTest {
 		Merger context = new Merger(cache, "system.test.");
 		template = template.getMergable(context);
 		directive = (Enrich) template.getDirectives().get(0);
-		FileSystemProvider provider = new FileSystemProvider();
+		FileSystemProvider provider = new FileSystemProvider("db","");
 		DataElement result = provider.provide(directive);
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("simple.csv"));
@@ -87,7 +86,7 @@ public class FileSystemProviderTest {
 		Merger context = new Merger(cache, "system.test.");
 		template = template.getMergable(context);
 		directive = (Enrich) template.getDirectives().get(0);
-		FileSystemProvider provider = new FileSystemProvider();
+		FileSystemProvider provider = new FileSystemProvider("db","");
 		DataElement result = provider.provide(directive);
 		assertTrue(result.isObject());
 		assertTrue(result.getAsObject().containsKey("simple.csv"));

@@ -16,9 +16,8 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.exception.Merge500;
-import com.ibm.util.merge.template.directive.Enrich;
-
 import java.sql.SQLException;
 
 import javax.naming.Context;
@@ -66,20 +65,29 @@ public class JndiProvider extends SqlProvider implements ProviderInterface {
 	
 	/**
 	 * Construct a Jndi Based SQL provider
+	 * @param source The JNDI Data Source name
+	 * @param parameter The database name, ignored if blank
 	 */
-	public JndiProvider() {
+	public JndiProvider(String source, String parameter) {
+		super(source, parameter);
 	}
 
 	@Override
-	protected void connect(Enrich context) throws Merge500 {
-    	try {
-	    	Context initContext = new InitialContext();
-	    	this.jndiSource = (DataSource) initContext.lookup(context.getEnrichSource());
-	    	this.connection = this.jndiSource.getConnection();
+	protected void connect(Config config) throws Merge500 {
+		// Implements lazy connection
+		if (this.connection != null) return;
+		
+	    	try {
+		    	Context initContext = new InitialContext();
+		    	this.jndiSource = (DataSource) initContext.lookup(source);
+		    	this.connection = this.jndiSource.getConnection();
+		    if (!parameter.isEmpty()) {
+		    		this.connection.prepareStatement("USE " + parameter).execute();
+		    }
 	    } catch (NamingException e) {
-	    		throw new Merge500("Naming Exception: " + context.getEnrichSource());
+	    		throw new Merge500("Naming Exception: " + source);
 	    } catch (SQLException e) {
-	    		throw new Merge500("Error acquiring connection for " + context.getEnrichSource() + ":" + e.getMessage());
+	    		throw new Merge500("Error acquiring connection for " + source + ":" + e.getMessage());
 	    }
 	}
 	

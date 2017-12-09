@@ -24,13 +24,13 @@ public class StubProviderTest {
 
 	@Test
 	public void testStubProvider() throws MergeException {
-		StubProvider provider = new StubProvider();
+		StubProvider provider = new StubProvider("","");
 		assertNotNull(provider);
 	}
 
 	@Test
 	public void testProvide() throws MergeException {
-		StubProvider provider = new StubProvider();
+		StubProvider provider = new StubProvider("","");
 		DataElement result = provider.provide(new Enrich());
 		assertTrue(result.isPrimitive());
 	}

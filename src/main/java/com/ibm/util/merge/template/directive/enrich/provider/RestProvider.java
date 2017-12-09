@@ -68,16 +68,18 @@ public class RestProvider implements ProviderInterface {
 	public String password;
 	public String host;
 	public String port;
-	
+	private transient final String source;
+
 	/**
 	 * Construct a provider
+	 * @param source The rest provider environment variable prefix
+	 * @param parameter The mongo database name
 	 */
-	public RestProvider() {
+	public RestProvider(String source, String parameter) {
+		this.source = source;
 	}
 	
-	private void connect(Enrich context) throws Merge500 {
-		String source = context.getEnrichSource();
-		Config config = context.getConfig();
+	private void connect(Config config) throws Merge500 {
 		try {
 			host = config.getEnv(source + ".HOST");
 			port = config.getEnv(source + ".PORT");
@@ -91,9 +93,7 @@ public class RestProvider implements ProviderInterface {
 
 	@Override
 	public DataElement provide(Enrich context) throws MergeException {
-		if (host == null) {
-			connect(context);
-		}
+		connect(context.getConfig());
 		
 		Content query = new Content(context.getTemplate().getWrapper(), context.getEnrichCommand(), TagSegment.ENCODE_HTML);
 		query.replace(context.getTemplate().getReplaceStack(), false, context.getConfig().getNestLimit());

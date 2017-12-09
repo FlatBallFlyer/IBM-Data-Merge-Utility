@@ -196,10 +196,13 @@ public class Merger {
 	 * @throws MergeException on processing errors
 	 */
 	public ProviderInterface getProvider(Enrich directive) throws MergeException {
-		String key = directive.getEnrichSource().concat(directive.getEnrichParameter());
+		String className = directive.getEnrichClass();
+		String source = directive.getEnrichSource();
+		String parameter = directive.getEnrichParameter();
+		String key = source.concat(":").concat(parameter);
 		if (!this.providers.containsKey(key)) {
 			providers.put(key,  
-				config.getProviderInstance(directive));
+				config.getProviderInstance(className, source, parameter));
 		}
 		return providers.get(key);
 	}

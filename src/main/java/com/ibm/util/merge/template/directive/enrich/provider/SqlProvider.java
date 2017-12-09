@@ -16,6 +16,7 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
+import com.ibm.util.merge.Config;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
@@ -30,6 +31,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+
 import javax.sql.DataSource;
 
 /**
@@ -41,17 +43,19 @@ import javax.sql.DataSource;
 public abstract class SqlProvider implements ProviderInterface {
 	protected transient DataSource jdbcSource = null;
 	protected transient Connection connection = null;
+	protected transient final String source;
+	protected transient final String parameter;
 	
-	public SqlProvider() {
+	public SqlProvider(String source, String parameter) {
+		this.source = source;
+		this.parameter = parameter;
 	}
 	
-	protected abstract void connect(Enrich context) throws MergeException;
+	protected abstract void connect(Config config) throws MergeException;
 	
 	@Override
 	public DataElement provide(Enrich context) throws MergeException {
-		if (this.connection == null) {
-			connect(context);
-		}
+		connect(context.getConfig());
 		
 		Content query = new Content(context.getTemplate().getWrapper(), context.getEnrichCommand(), TagSegment.ENCODE_SQL);
 		query.replace(context.getTemplate().getReplaceStack(), false, context.getConfig().getNestLimit());

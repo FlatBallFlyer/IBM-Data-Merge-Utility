@@ -77,22 +77,29 @@ public class MongoProvider implements ProviderInterface {
 	private transient MongoClient client;
 	private transient MongoDatabase database;
 	private transient MongoCollection<Document> dbCollection;
+	private transient final String source;
+	private transient final String parameter;
 	
 	/**
 	 * Instantiate the provider and get the db connection
+	 * @param source The mongo provider environment variable prefix
+	 * @param parameter The mongo database name
 	 */
-	public MongoProvider() {
+	public MongoProvider(String source, String parameter) {
+		this.source = source;
+		this.parameter = parameter;
 	}
 	
-	private void connect(Enrich context) throws Merge500 {
+	private void connect(Config config) throws Merge500 {
+		// Implements lazy connection
+		if (dbCollection != null) return;
+		
 		// Get Credentials
 		String host = "";
 		String port = "";
 		String user = "";
 		String pw = "";
 		String dbName = "";
-		Config config = context.getConfig();
-		String source = context.getEnrichSource();
 		try {
 			host = config.getEnv(source + ".HOST");
 			port = config.getEnv(source + ".PORT");
@@ -100,7 +107,7 @@ public class MongoProvider implements ProviderInterface {
 			pw = config.getEnv(source + ".PW");
 			dbName = config.getEnv(source + ".DB");
 		} catch (MergeException e) {
-			throw new Merge500("Invalid Mongo Provider for:" + context.getEnrichSource());
+			throw new Merge500("Invalid Mongo Provider for:" + source);
 		}
 		
 		ServerAddress addr = new ServerAddress(host, Integer.valueOf(port));
@@ -113,15 +120,13 @@ public class MongoProvider implements ProviderInterface {
 			this.client = new MongoClient(addr, creds);
 		}
 		this.database = this.client.getDatabase(dbName);
-		this.dbCollection = database.getCollection(context.getEnrichParameter());
+		this.dbCollection = database.getCollection(parameter);
 	}
 
 	@Override
 	public DataElement provide(Enrich context) throws MergeException {
+		this.connect(context.getConfig());
 		DataList result = new DataList();
-		if (this.dbCollection == null) {
-			this.connect(context);
-		}
 		
 		Content query = new Content(context.getTemplate().getWrapper(), context.getEnrichCommand(), TagSegment.ENCODE_JSON);
 		query.replace(context.getTemplate().getReplaceStack(), false, context.getConfig().getNestLimit());
