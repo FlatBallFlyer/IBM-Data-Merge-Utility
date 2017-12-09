@@ -42,7 +42,7 @@ public abstract class SqlProvider implements ProviderInterface {
 	protected transient DataSource jdbcSource = null;
 	protected transient Connection connection = null;
 	
-	public SqlProvider() throws MergeException {
+	public SqlProvider() {
 	}
 	
 	protected abstract void connect(Enrich context) throws MergeException;

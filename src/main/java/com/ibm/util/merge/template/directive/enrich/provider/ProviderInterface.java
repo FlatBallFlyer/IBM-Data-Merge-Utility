@@ -16,30 +16,22 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
-import java.util.HashMap;
-
-import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.exception.MergeException;
-import com.ibm.util.merge.template.Wrapper;
 import com.ibm.util.merge.template.directive.Enrich;
 
 /**
  * Defines the Interface required by all Providers. See implementations for details
  * 
  * @author Mike Storey
- * @see #provide(String, Wrapper, Merger, HashMap, int)
+ * @see #provide(Enrich context)
  */
 public interface ProviderInterface {
 
 	/**
 	 * The meat of a provider - go get the data and put it in the DataManager
 	 * 
-	 * @param enrichCommand The command to be executed to fetch data
-	 * @param wrapper The wrapper used for tags in the command
-	 * @param context The merge context
-	 * @param replace The replace stack 
-	 * @param parseAs The parse format used if parsing fetched data
+	 * @param context - the Provider requesting data
 	 * @return the DataElement that was fetched
 	 * @throws MergeException when processing errors occur
 	 */

@@ -16,7 +16,6 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
-import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.directive.Enrich;
@@ -44,7 +43,6 @@ import java.sql.SQLException;
  *		<li>{source}.PW - The Password for the User ID</li>
  * </ul>
  * @author Mike Storey
- * @see #JdbcProvider(String, String, Merger)
  *
  */
 public class JdbcProvider extends SqlProvider implements ProviderInterface {
@@ -60,13 +58,8 @@ public class JdbcProvider extends SqlProvider implements ProviderInterface {
 	
 	/**
 	 * JDBC Provider Constructor
-	 * 
-	 * @param source - Environment Variable Prefix used to fetch configuration values
-	 * @param dbName - The Database Name to select. Not required or supported by all JDBC Drivers
-	 * @param context - The Merger managing this provider
-	 * @throws MergeException - On SQL Construction Errors
 	 */
-	public JdbcProvider() throws MergeException {
+	public JdbcProvider() {
 	}
 	
 	@Override

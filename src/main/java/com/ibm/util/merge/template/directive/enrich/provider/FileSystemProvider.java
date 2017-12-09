@@ -17,7 +17,6 @@
 package com.ibm.util.merge.template.directive.enrich.provider;
 
 import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
@@ -48,23 +47,19 @@ import java.nio.file.Files;
  * </ul>
  * 
  * @author Mike Storey
- * @see #FileSystemProvider(String, String, Merger)
  */
 public class FileSystemProvider implements ProviderInterface {
 	private transient File basePath;
 
 	/**
 	 * Provider Constructor
-	 * 
-	 * @param source - The Source Prefix for Environment Variables
-	 * @param dbName - Not Used by this provider
-	 * @param context - The Merger hosting this provider
 	 */
 	public FileSystemProvider() {
 	}
 
 	/**
 	 * lazy loader of Provider Configuration values
+	 * @param context the Enrich Directive to provide for
 	 * @throws Merge500 on configuration and connection errors
 	 */
 	public void loadBasePath(Enrich context) throws Merge500 {

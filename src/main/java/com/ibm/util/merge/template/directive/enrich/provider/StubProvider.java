@@ -42,12 +42,8 @@ public class StubProvider implements ProviderInterface {
 	/**
 	 * Instantiate the provider
 	 * 
-	 * @param source The provider source name
-	 * @param dbName The DB Name
-	 * @param context The Merge Context
-	 * @throws MergeException on processing errors
 	 */
-	public StubProvider() throws MergeException {
+	public StubProvider() {
 	}
 
 	@Override

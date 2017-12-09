@@ -49,12 +49,8 @@ public class CacheProvider implements ProviderInterface {
 	
 	/**
 	 * Instantiate a Cache Provider
-	 * @param source The source name (ignored)
-	 * @param dbName The dbName (ignored)
-	 * @param context The Merge Context
-	 * @throws MergeException Never
 	 */
-	public CacheProvider() throws MergeException {
+	public CacheProvider() {
 	}
 	
 	@Override

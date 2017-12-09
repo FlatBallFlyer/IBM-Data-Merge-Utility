@@ -25,7 +25,6 @@ import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.Database;
 import com.cloudant.client.org.lightcouch.CouchDbException;
 import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.parser.DataProxyJson;
@@ -51,7 +50,6 @@ import com.ibm.util.merge.template.directive.Enrich;
  * 		<li>{SourceName}.USER - The database User ID</li>
  * 		<li>{SourceName}.PW - The database Password</li>
  * </ul>
- * @see #CloudantProvider(String source, String dbName, Merger context)
  *   
  * @author Mike Storey
  */
@@ -72,12 +70,8 @@ public class CloudantProvider implements ProviderInterface {
 	
 	/**
 	 * Instantiate the provider and get the database connection
-	 * @param source The Source Name
-	 * @param dbName The DB Name
-	 * @param context The Merge Context
-	 * @throws MergeException on processing errors
 	 */
-	public CloudantProvider() throws MergeException {
+	public CloudantProvider() {
 	}
 	
 	private void connect(Enrich context) throws MergeException {

@@ -191,9 +191,7 @@ public class Merger {
 	}
 
 	/**
-	 * @param enrichClass The provider class name
-	 * @param enrichSource The provider source name
-	 * @param dbName The provider database name (or option name)
+	 * @param directive The enrich directive
 	 * @return provider A Data Provider
 	 * @throws MergeException on processing errors
 	 */

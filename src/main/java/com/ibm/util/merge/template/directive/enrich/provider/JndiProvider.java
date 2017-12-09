@@ -16,9 +16,7 @@
  */
 package com.ibm.util.merge.template.directive.enrich.provider;
 
-import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.exception.Merge500;
-import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.directive.Enrich;
 
 import java.sql.SQLException;
@@ -44,8 +42,7 @@ import javax.sql.DataSource;
  *		<li>Not Applicable - Source provided during construction is the JNDI Data Source Name</li>
  * </ul>
  * 
- * @author flatballflyer
- * @see #JndiProvider(String, String, Merger) 
+ * @author Mike Storey
  *
  */
 public class JndiProvider extends SqlProvider implements ProviderInterface {
@@ -69,13 +66,8 @@ public class JndiProvider extends SqlProvider implements ProviderInterface {
 	
 	/**
 	 * Construct a Jndi Based SQL provider
-	 * 
-	 * @param source - The JNDI Data Source Name
-	 * @param dbName - The Database Name within the source
-	 * @param context - The Merger managing the provider
-	 * @throws MergeException - On SqlProvider instaintation errors
 	 */
-	public JndiProvider() throws MergeException {
+	public JndiProvider() {
 	}
 
 	@Override

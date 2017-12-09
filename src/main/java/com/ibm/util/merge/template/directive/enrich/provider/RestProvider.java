@@ -21,7 +21,6 @@ import java.io.BufferedReader;
 import org.apache.commons.io.IOUtils;
 
 import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.Merge500;
@@ -52,7 +51,6 @@ import java.net.URL;
  * 		<li>{SourceName}.USER - The HTTP User (not implemented).</li>
  * 		<li>{SourceName}.PW - The HTTP User PW (not implemented).</li>
  * </ul>
- * @see #RestProvider(String, String, Merger)    
  * @author Mike Storey
  *
  */
@@ -73,9 +71,6 @@ public class RestProvider implements ProviderInterface {
 	
 	/**
 	 * Construct a provider
-	 * @param source - Environment Variable prefix
-	 * @param dbName - Not Applicable
-	 * @param context - The Merger managing the provider
 	 */
 	public RestProvider() {
 	}

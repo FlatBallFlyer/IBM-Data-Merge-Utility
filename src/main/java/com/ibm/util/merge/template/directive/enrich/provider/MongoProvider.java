@@ -22,7 +22,6 @@ import java.util.HashMap;
 import org.bson.Document;
 
 import com.ibm.util.merge.Config;
-import com.ibm.util.merge.Merger;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataList;
 import com.ibm.util.merge.data.DataObject;
@@ -56,7 +55,6 @@ import com.mongodb.client.MongoDatabase;
  * 		<li>{SourceName}.PW - The database Password</li>
  * 		<li>{SourceName}.DB - The database name</li>
  * </ul>
- * @see #MongoProvider(String, String, Merger)
  * @author Mike Storey
  *
  */
@@ -82,13 +80,8 @@ public class MongoProvider implements ProviderInterface {
 	
 	/**
 	 * Instantiate the provider and get the db connection
-	 * 
-	 * @param source The Data Source
-	 * @param collection The collection Name
-	 * @param context The Merge Context
-	 * @throws MergeException  on processing errors
 	 */
-	public MongoProvider() throws MergeException {
+	public MongoProvider() {
 	}
 	
 	private void connect(Enrich context) throws Merge500 {
