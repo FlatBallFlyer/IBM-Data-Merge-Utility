@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.HashMap;
@@ -39,7 +38,7 @@ import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.data.parser.DataProxyJson;
-import com.ibm.util.merge.data.parser.ParserProxyInterface;
+import com.ibm.util.merge.data.parser.Parsers;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.template.Template;
@@ -51,6 +50,7 @@ import com.ibm.util.merge.template.directive.Replace;
 import com.ibm.util.merge.template.directive.SaveFile;
 import com.ibm.util.merge.template.directive.enrich.provider.ProviderInterface;
 import com.ibm.util.merge.template.directive.enrich.provider.ProviderMeta;
+import com.ibm.util.merge.template.directive.enrich.provider.Providers;
 
 /**
  * Provides configuration information for the Merge Utility -  
@@ -106,8 +106,8 @@ public class Config {
 	/*
 	 * Transient Values - Providers, Parsers and a JSON Proxy
 	 */
-	private transient HashMap<String, Class<ProviderInterface>> providers = new HashMap<String, Class<ProviderInterface>>();
-	private transient HashMap<Integer, ParserProxyInterface> proxies = new HashMap<Integer, ParserProxyInterface>();
+	private transient Providers providers = new Providers();
+	private transient Parsers proxies = new Parsers();
 	private transient static final DataProxyJson proxy = new DataProxyJson(false);
 	
 	/**
@@ -119,8 +119,6 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	public Config() throws MergeException {
-		this.proxies = new HashMap<Integer, ParserProxyInterface>();
-		this.providers = new HashMap<String, Class<ProviderInterface>>();
 		String configString = "";
 		try {
 			configString = this.getEnv("idmu-config");
@@ -139,8 +137,6 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	public Config(String configString) throws MergeException {
-		this.proxies = new HashMap<Integer, ParserProxyInterface>();
-		this.providers = new HashMap<String, Class<ProviderInterface>>();
 	    Logger rootLogger = LogManager.getLogManager().getLogger("");
 	    rootLogger.setLevel(Level.parse(this.logLevel));
 		loadConfig(configString);
@@ -153,8 +149,6 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	public Config(File configFile) throws MergeException {
-		this.proxies = new HashMap<Integer, ParserProxyInterface>();
-		this.providers = new HashMap<String, Class<ProviderInterface>>();
 		String configString;
 		try {
 			configString = new String(Files.readAllBytes(configFile.toPath()), "ISO-8859-1");
@@ -175,8 +169,6 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	public Config(URL url) throws MergeException {
-		this.proxies = new HashMap<Integer, ParserProxyInterface>();
-		this.providers = new HashMap<String, Class<ProviderInterface>>();
 		String configString;
 		try {
 			configString = IOUtils.toString(
@@ -340,93 +332,23 @@ public class Config {
 
 	// Parser Management
 	public void registerDefaultProxies() throws MergeException {
-		proxies = new HashMap<Integer, ParserProxyInterface>();
-		for (String proxy : this.defaultParsers) {
-			registerProxy(proxy);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public void registerProxy(String className) throws MergeException {
-		Class<ParserProxyInterface> clazz;
-		ParserProxyInterface theProxy;
-		try {
-			clazz = (Class<ParserProxyInterface>) Class.forName(className);
-			theProxy = (ParserProxyInterface) clazz.newInstance();
-			this.proxies.put(theProxy.getKey(), theProxy);
-		} catch (ClassNotFoundException e) {
-			throw new Merge500("Class Not Found exception: " + className + " message: " + e.getMessage());
-		} catch (InstantiationException e) {
-			throw new Merge500("InstantiationException " + e.getMessage());
-		} catch (IllegalAccessException e) {
-			throw new Merge500("IllegalAccessException " + e.getMessage());
-		}
+		this.proxies.registerDefaultProxies(this.defaultParsers);
 	}
 	
 	public DataElement parseString(int parseAs, String value) throws MergeException {
-		Integer key = new Integer(parseAs);
-		if (parseAs == Config.PARSE_NONE) {
-			throw new Merge500("Parse Type is None!");
-		}
-		if (!this.proxies.containsKey(key)) {
-			throw new Merge500("Parser not found, did you register it?" + Integer.toString(parseAs));
-		}
-		if (null == value) {
-			throw new Merge500("Can't Parse Null!");
-		}
-		ParserProxyInterface proxy = this.proxies.get(parseAs);
-		return proxy.fromString(value);
+		return this.proxies.parseString(parseAs, value);
 	}
 	
 	// Provider Management
 	public ProviderInterface getProviderInstance(String className, String source, String parameter) throws MergeException {
-		if (!this.providers.containsKey(className)) {
-			throw new Merge500("Provider not found, did you register it?");
-		}
-		
-		ProviderInterface theProvider;
-		try {
-			@SuppressWarnings("rawtypes")
-			Class[] cArg = new Class[2]; 
-			cArg[0] = String.class;
-			cArg[1] = String.class;
-			theProvider = (ProviderInterface) this.providers.get(className).getDeclaredConstructor(cArg).newInstance(source, parameter);
-		} catch (InstantiationException e) {
-			throw new Merge500("Error instantiating class: " + className + " message: " + e.getMessage());
-		} catch (IllegalAccessException e) {
-			throw new Merge500("Error accessing class: " + className + " message: " + e.getMessage());
-		} catch (IllegalArgumentException e) {
-			throw new Merge500("IllegalArgumentException : " + className + " message: " + e.getMessage());
-		} catch (SecurityException e) {
-			throw new Merge500("Error accessing class: " + className + " message: " + e.getMessage());
-		} catch (InvocationTargetException e) {
-			throw new Merge500("InvocationTargetException: " + className + " message: " + e.getMessage());
-		} catch (NoSuchMethodException e) {
-			throw new Merge500("NoSuchMethodException: " + className + " message: " + e.getMessage());
-		}
-		
-		return theProvider;
+		return this.providers.getProviderInstance(className, source, parameter);
 	}
 	
 	public void registerDefaultProviders() throws MergeException {
-		providers = new HashMap<String, Class<ProviderInterface>>();
-		for (String provider : this.defaultProviders) {
-			registerProvider(provider);
-		}
+		this.providers.registerDefaultProviders(this.defaultProviders);
 	}
 
-	@SuppressWarnings("unchecked")
-	public void registerProvider(String className) throws MergeException {
-		Class<ProviderInterface> clazz;
-		try {
-			clazz = (Class<ProviderInterface>) Class.forName(className);
-			this.providers.put(className, clazz);
-		} catch (ClassNotFoundException e) {
-			throw new Merge500("Class Not Found exception: " + className + " message: " + e.getMessage());
-		}
-	}
-	
-/*
+	/*
 	 * Constants and Options
 	 */
 	public static final int PARSE_NONE	= 4;
