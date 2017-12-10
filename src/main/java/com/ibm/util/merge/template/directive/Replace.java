@@ -18,6 +18,7 @@ package com.ibm.util.merge.template.directive;
 
 import java.util.HashMap;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.Map.Entry;
 
 import com.ibm.util.merge.Config;
@@ -191,11 +192,21 @@ public class Replace extends AbstractDataDirective {
 			case MISSING_REPLACE : 
 				this.replaceFromString(this.toValue);
 				if (this.processAfter) {
-					this.getTemplate()
-						.getMergeContent()
-						.replace(this.getTemplate().getReplaceStack(), 
-								this.processRequire, 
-								this.getConfig().getNestLimit()); 
+					this.getTemplate().getMergeContent().replace(
+							this.getTemplate().getReplaceStack(), 
+							this.processRequire, 
+							this.getConfig().getNestLimit()
+					); 
+				}
+				return;
+			case MISSING_GUID :
+				this.replaceFromString(UUID.randomUUID().toString());
+				if (this.processAfter) {
+					this.getTemplate().getMergeContent().replace(
+							this.getTemplate().getReplaceStack(), 
+							this.processRequire, 
+							this.getConfig().getNestLimit()
+					); 
 				}
 				return;
 			}
@@ -561,13 +572,18 @@ public class Replace extends AbstractDataDirective {
 	 */
 	public static final int MISSING_REPLACE = 3;
 	/**
+	 * Value for get/setIfMissing - If the data manager doesn't have the Source provided use a Java Generated GUID
+	 */
+	public static final int MISSING_GUID = 4;
+	/**
 	 * @return Hashmap of supported values for get/setIfMissing
 	 */
 	public static final HashMap<Integer, String> MISSING_OPTIONS() {
 		HashMap<Integer, String> options = new HashMap<Integer, String>();
-		options.put(MISSING_THROW, 		"throw");
+		options.put(MISSING_THROW, 	"throw");
 		options.put(MISSING_IGNORE, 	"ignore");
-		options.put(MISSING_REPLACE, 	"replace");
+		options.put(MISSING_REPLACE,	"replace");
+		options.put(MISSING_GUID,  	"guidValue");
 		return options;
 	}
 	
