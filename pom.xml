@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ibm.util.merge</groupId>
 	<artifactId>idmu</artifactId>
-	<version>4.0.0-SNAPSHOT</version>
-	<name>idmu</name>
+	<version>4.0.0</version>
+	<name>IBM Data Merge Utility</name>
 	<description>IBM Data Merge Utility - a template based transformation and enrichment engine</description>
 	<url>http://flatballflyer.github.io/IBM-Data-Merge-Utility/</url>
 	<licenses>
