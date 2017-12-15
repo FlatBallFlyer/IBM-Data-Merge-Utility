@@ -4,35 +4,6 @@
 The IBM Data Merge Utility is an open source Java Utility that provides high performance transformation and enrichment services through a simple template based process. If you can use your word processors Mail Merge feature, then you can use the IBM Data Merge utility. The use of templates makes this transformation tool uniquely well suited to creating Scripts, Code or other complex documents. Optimized performance of small payload transformations makes it well suited to doing JSON or XML microservice transformations. When combined with enrichment services this becomes a powerful tool for the composition of complex microservice structures from a variety of sources. While this utility does not expose a Rest API directly it is designed with that in mind. See [IDMU-REST Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-REST)  
 
 ---
-## From the Maven central repository (for Users of IDMU)
-
-```
-<dependency>
-	<groupId>com.ibm.util.merge</groupId>
-	<artifactId>idmu</artifactId>
-	<version>4.0.0</version>
-</dependency>
-```
-
-## Requirements (for Contributors to IDMU)
-1. maven package manager - see (https://maven.apache.org/install.html)
-
-### Start Here
-
-```
-> git clone https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility.git
-> mvn install 
-
-```
-Javadoc will be located in target/site/apidocs/index.html
-
-### Integration Testing
-There are several integration tests that touch JDBC, Cloudant, Mongo and rest services. If you want to run the integration testing, use the scripts located in /src/test/resources/integration/containers to start Docker containers with test data.
- - Use pull.sh to download and run the 5 containers
- - Use stop.sh to stop the containers
- - Use start.sh to start the containers
- - Use remove.sh to delete the containers from your system. 
-
 ## Overview
 Merging Templates produces output, and the merge process is similar to the familiar Mail Merge feature in most word processors. 
 A template is just a block of text that can contain Replacement Tags and Book-marks along with directives that drive the merge process.
@@ -61,6 +32,36 @@ In the /src/test/resources folder find:
 
 See the Provider Interface for Enrich Provider feature framework, and the individual providers for more detailed configuration options
 See Config.get() for a json string with all configuration options - including template and directive enums
+
+---
+## From the Maven central repository (for Users of IDMU)
+
+```
+<dependency>
+	<groupId>com.ibm.util.merge</groupId>
+	<artifactId>idmu</artifactId>
+	<version>4.0.0</version>
+</dependency>
+```
+
+## Requirements (for Contributors to IDMU)
+1. maven package manager - see (https://maven.apache.org/install.html)
+
+### Start Here
+
+```
+> git clone https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility.git
+> mvn install 
+
+```
+Javadoc will be located in target/site/apidocs/index.html
+
+### Integration Testing
+There are several integration tests that touch JDBC, Cloudant, Mongo and rest services. If you want to run the integration testing, use the scripts located in /src/test/resources/integration/containers to start Docker containers with test data.
+ - Use pull.sh to download and run the 5 containers
+ - Use stop.sh to stop the containers
+ - Use start.sh to start the containers
+ - Use remove.sh to delete the containers from your system. 
 
 ---
 
