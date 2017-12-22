@@ -3,6 +3,7 @@
 .project
 .settings
 .classpath
+.factorypath
 /docs
 /*/target
 /bin/
