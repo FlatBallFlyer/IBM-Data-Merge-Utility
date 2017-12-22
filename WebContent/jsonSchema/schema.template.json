@@ -70,8 +70,13 @@
               "title" : "Command",
               "description" : "See Config Object for help"
             },
-            "parseAs" : {
-              "type" : "integer"
+            "parseFormat" : {
+              "type" : "integer",
+              "description" : "Parse Fromat"
+            },
+            "parseOptions" : {
+              "type" : "string",
+              "description" : "Parse Options"
             }
           }
         }
@@ -208,7 +213,12 @@
               "description" : "Clear Content afte saving"
             },
             "parseFormat" : {
-              "type" : "integer"
+              "type" : "integer",
+              "description" : "Parse Fromat"
+            },
+            "parseOptions" : {
+              "type" : "string",
+              "description" : "Parse Options"
             }
           }
         }

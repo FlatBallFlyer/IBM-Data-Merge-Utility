@@ -24,7 +24,8 @@
 		"enrichSource": "",
 		"enrichParameter": "",
 		"enrichCommand": "",
-		"parseAs": 4
+		"parseAs": 4,
+		"parseOptions" : ""
 	},
 	{
 		"type": 2,
@@ -48,6 +49,7 @@
 		"name": "Parse",
 		"staticData": "",
 		"parseFormat": 3,
+		"parseOptions": "",
 		"dataSource": "",
 		"dataDelimeter": "-",
 		"dataTarget": "",
