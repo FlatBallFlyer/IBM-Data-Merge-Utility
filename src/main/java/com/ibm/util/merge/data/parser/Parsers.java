@@ -6,6 +6,7 @@ import com.ibm.util.merge.Config;
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
+import com.ibm.util.merge.template.Template;
 
 public class Parsers extends HashMap<Integer, ParserProxyInterface> {
 	private static final long serialVersionUID = 1L;
@@ -37,7 +38,7 @@ public class Parsers extends HashMap<Integer, ParserProxyInterface> {
 		}
 	}
 	
-	public DataElement parseString(int parseAs, String value) throws MergeException {
+	public DataElement parseString(int parseAs, String value, String options, Template context) throws MergeException {
 		Integer key = new Integer(parseAs);
 		if (parseAs == Config.PARSE_NONE) {
 			throw new Merge500("Parse Type is None!");
@@ -49,7 +50,7 @@ public class Parsers extends HashMap<Integer, ParserProxyInterface> {
 			throw new Merge500("Can't Parse Null!");
 		}
 		ParserProxyInterface proxy = this.get(parseAs);
-		return proxy.fromString(value);
+		return proxy.fromString(value, options, context);
 	}
 	
 }

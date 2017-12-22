@@ -130,7 +130,12 @@ public class MongoProvider implements ProviderInterface {
 		
 		Content query = new Content(context.getTemplate().getWrapper(), context.getEnrichCommand(), TagSegment.ENCODE_JSON);
 		query.replace(context.getTemplate().getReplaceStack(), false, context.getConfig().getNestLimit());
-		DataObject queryObj = context.getConfig().parseString(Config.PARSE_JSON, query.getValue()).getAsObject();
+		DataObject queryObj = context.getConfig().parseString(
+				Config.PARSE_JSON, 
+				query.getValue(), 
+				context.getParseOptions(), 
+				context.getTemplate())
+					.getAsObject();
 
 		BasicDBObject dbquery = new BasicDBObject();
 		for (String key : queryObj.keySet()) {
@@ -146,7 +151,11 @@ public class MongoProvider implements ProviderInterface {
 		
 		if (find != null) {
 			for (Document aDoc : find) {
-				DataElement theDoc = context.getConfig().parseString(Config.PARSE_JSON, aDoc.toJson());
+				DataElement theDoc = context.getConfig().parseString(
+						Config.PARSE_JSON, 
+						aDoc.toJson(), 
+						context.getParseOptions(), 
+						context.getTemplate());
 				result.add(theDoc);
 			}
 		}

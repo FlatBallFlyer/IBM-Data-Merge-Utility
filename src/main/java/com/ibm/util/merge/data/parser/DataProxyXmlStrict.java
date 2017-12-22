@@ -37,6 +37,7 @@ import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
+import com.ibm.util.merge.template.Template;
 
 
 /**
@@ -65,7 +66,7 @@ public class DataProxyXmlStrict implements ParserProxyInterface {
      * @return the parsed object
      * @throws MergeException on processing errors
      */
-    public DataElement fromString(String xmlString) throws MergeException {
+    public DataElement fromString(String xmlString, String options, Template context) throws MergeException {
         Document doc = null;
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

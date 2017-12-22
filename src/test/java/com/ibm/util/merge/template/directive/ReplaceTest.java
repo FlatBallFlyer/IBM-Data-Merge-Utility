@@ -416,7 +416,7 @@ public class ReplaceTest {
 		object.put("one", new DataPrimitive("two"));
 		context.getMergeData().put("data.object", "-", object);
 		String output = context.merge().getMergeContent().getValue();
-		DataElement reply = parser.fromString(output);
+		DataElement reply = parser.fromString(output, "", null);
 		assertTrue(reply.isObject());
 		assertEquals("two", reply.getAsObject().get("one").getAsPrimitive());
 		assertEquals("bar", reply.getAsObject().get("foo").getAsPrimitive());
@@ -916,7 +916,7 @@ public class ReplaceTest {
 		context.getMergeData().put("data.list", "-", list);
 		template = context.merge();
 		String output = template.getMergedOutput().getValue();
-		DataElement reply = parser.fromString(output);
+		DataElement reply = parser.fromString(output, "", null);
 		assertTrue(reply.isList());
 		assertTrue(reply.getAsList().get(0).isObject());
 		DataObject obj = reply.getAsList().get(0).getAsObject();

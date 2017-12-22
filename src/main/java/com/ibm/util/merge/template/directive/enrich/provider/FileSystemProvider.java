@@ -107,7 +107,9 @@ public class FileSystemProvider implements ProviderInterface {
 			for (String fileName : result.keySet()) {
 				DataElement element = context.getConfig().parseString(
 						context.getParseAs(), 
-						result.get(fileName).getAsPrimitive()); 
+						result.get(fileName).getAsPrimitive(), 
+						context.getParseOptions(),
+						context.getTemplate()); 
 				result.put(fileName, element);
 			}
 		}

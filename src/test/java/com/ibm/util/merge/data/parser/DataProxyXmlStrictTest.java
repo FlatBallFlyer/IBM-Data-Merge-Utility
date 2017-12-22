@@ -39,7 +39,7 @@ public class DataProxyXmlStrictTest {
 				"	<row id=\"r3\" col1=\"r3c1\" col2=\"r3c2\" col3=\"r3c3\" > </row>" +
 				"</table>";
 		
-		DataElement element = proxy.fromString(xmlString);
+		DataElement element = proxy.fromString(xmlString, "", null);
 		manager.put("test", "-", element);
 		assertTrue(manager.contians("test", "-"));
 		assertEquals("table",manager.get("test-name", "-").getAsPrimitive());
@@ -67,7 +67,7 @@ public class DataProxyXmlStrictTest {
 				"	<row><id>r3</id><col1>r3c1</col1><col2>r3c2</col2><col3>r3c3</col3></row>" +
 				"</table>";
 		
-		DataElement element = proxy.fromString(xmlString);
+		DataElement element = proxy.fromString(xmlString, "", null);
 		manager.put("test", "-", element);
 		assertEquals("table",manager.get("test-name", "-").getAsPrimitive());
 		assertEquals("row",  manager.get("test-members-[0]-name", "-").getAsPrimitive());
@@ -99,7 +99,7 @@ public class DataProxyXmlStrictTest {
 				"	<row id=\"r3\" col1=\"r3c1\"><col2>r3c2</col2><col3>r3c3</col3></row>" +
 				"</table>";
 		
-		DataElement element = proxy.fromString(xmlString);
+		DataElement element = proxy.fromString(xmlString, "", null);
 		manager.put("test", "-", element);
 		assertTrue(manager.contians("test", "-"));
 		assertEquals("table",manager.get("test-name", "-").getAsPrimitive());
@@ -138,7 +138,7 @@ public class DataProxyXmlStrictTest {
 				"	<row id=\"r3\" col1=\"r3c1\"><col2>r3c2</col2><col3>r3c3</col3></row>" +
 				"</table>";
 		
-		DataElement element = proxy.fromString(xmlString);
+		DataElement element = proxy.fromString(xmlString, "", null);
 		manager.put("test", "-", element);
 		assertEquals("row",  manager.get("test-members-[0]-name", "-").getAsPrimitive());
         assertEquals("r1",   manager.get("test-members-[0]-attrs-id","-").getAsPrimitive());
@@ -160,7 +160,7 @@ public class DataProxyXmlStrictTest {
 	@Test
 	public void testfromString5() throws MergeException {
 		String xmlString = "<root><owner name=\"Owner One\" age=\"22\"></owner></root>";
-		DataElement element = proxy.fromString(xmlString);
+		DataElement element = proxy.fromString(xmlString, "", null);
 		assertTrue(element.isObject());
 		assertEquals(2, element.getAsObject().keySet().size());
 		assertTrue(element.getAsObject().containsKey("members"));

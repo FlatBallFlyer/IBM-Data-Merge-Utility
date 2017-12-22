@@ -335,8 +335,8 @@ public class Config {
 		this.proxies.registerDefaultProxies(this.defaultParsers);
 	}
 	
-	public DataElement parseString(int parseAs, String value) throws MergeException {
-		return this.proxies.parseString(parseAs, value);
+	public DataElement parseString(int parseAs, String value, String options, Template context) throws MergeException {
+		return this.proxies.parseString(parseAs, value, options, context);
 	}
 	
 	// Provider Management

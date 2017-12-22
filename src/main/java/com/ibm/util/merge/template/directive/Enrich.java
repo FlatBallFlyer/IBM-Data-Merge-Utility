@@ -48,6 +48,7 @@ public class Enrich extends AbstractDirective {
 	private String enrichParameter;
 	private String enrichCommand;
 	private int parseAs;
+	private String parseOptions;
 	
 	/*
 	 * Transient Attributes
@@ -68,6 +69,7 @@ public class Enrich extends AbstractDirective {
 		this.enrichParameter = "";
 		this.enrichCommand = "";
 		this.parseAs = Config.PARSE_NONE;
+		this.parseOptions = "";
 	}
 
 	@Override
@@ -165,6 +167,13 @@ public class Enrich extends AbstractDirective {
 	}
 
 	/**
+	 * @return Parsing options
+	 */
+	public String getParseOptions() {
+		return parseOptions;
+	}
+
+	/**
 	 * @param enrichSource The Source Name
 	 */
 	public void setEnrichSource(String enrichSource) {
@@ -219,6 +228,13 @@ public class Enrich extends AbstractDirective {
 	 */
 	public void setParseAs(int parseAs) {
 		this.parseAs = parseAs;
+	}
+
+	/**
+	 * @param parseOptions The ParseOptoions
+	 */
+	public void setParseOptions(String options) {
+		this.parseOptions = options;
 	}
 
 }

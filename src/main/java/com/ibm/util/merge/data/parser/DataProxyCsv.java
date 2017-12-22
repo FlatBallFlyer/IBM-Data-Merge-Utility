@@ -30,6 +30,7 @@ import com.ibm.util.merge.data.DataObject;
 import com.ibm.util.merge.data.DataPrimitive;
 import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
+import com.ibm.util.merge.template.Template;
 
 
 /**
@@ -59,7 +60,7 @@ public class DataProxyCsv implements ParserProxyInterface {
      * @throws MergeException on processing errors
      */
 	@Override
-    public DataElement fromString(String data) throws MergeException {
+    public DataElement fromString(String data, String options, Template context) throws MergeException {
 		DataList list = new DataList();
 		String sourceCsv = data;
 		CSVParser parser;

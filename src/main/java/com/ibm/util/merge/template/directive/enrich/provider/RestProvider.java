@@ -116,7 +116,11 @@ public class RestProvider implements ProviderInterface {
 		if (context.getParseAs() == Config.PARSE_NONE) {
 			return new DataPrimitive(fetchedData);
 		} else {
-			return context.getConfig().parseString(context.getParseAs(), fetchedData);
+			return context.getConfig().parseString(
+					context.getParseAs(), 
+					fetchedData, 
+					context.getParseOptions(), 
+					context.getTemplate());
 		}
 	}
 	
