@@ -16,13 +16,18 @@
  */
 package com.ibm.util.merge;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
+
 import com.ibm.util.merge.data.DataElement;
 import com.ibm.util.merge.data.DataManager;
+import com.ibm.util.merge.exception.Merge500;
 import com.ibm.util.merge.exception.MergeException;
 import com.ibm.util.merge.storage.*;
 import com.ibm.util.merge.template.Template;
@@ -66,6 +71,31 @@ public class Merger {
 		this.templateStack = new ArrayList<String>();
 		this.mergeData = new DataManager();
 		this.providers = new HashMap<String, ProviderInterface>();
+	}
+	
+	/**
+	 * @param cache The cache to use when merging
+	 * @param template The root template to merge
+	 * @param parameterMap The parameters to preload in the data manager
+	 * @param payload The input stream for the request payload
+	 * @param encoding The encoding of the input stream
+	 * @throws MergeException on bad parameters
+	 */
+	public Merger(
+			Cache cache, 
+			String template, 
+			Map<String,String[]> parameterMap,
+			InputStream payload,
+			String encoding) throws MergeException {
+		this(cache,template);
+		mergeData.put(Merger.IDMU_PARAMETERS, "-", parameterMap);
+		String requestData;
+		try {
+			requestData = IOUtils.toString(payload, encoding);
+		} catch (IOException e) {
+			throw new Merge500("Error - invalid encoding when constructing Merger");
+		}
+		mergeData.put(Merger.IDMU_PAYLOAD, 	  "-", requestData);
 	}
 	
 	/**
