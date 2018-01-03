@@ -9,7 +9,7 @@ The IBM Data Merge Utility is an open source Java Utility that provides high per
 
 ---
 ## Overview
-A suprisingly large segment of Information Processing can be thought of as consisting of Transformation Services (take this data and transform it into another format) or Enrichment Services (take this data and go get me some more data). The IDMU utilizes a template based approach to these services, in which Merging Templates produces Transformed/Enriched output. The merge process is similar to the familiar Mail Merge feature in most word processors. Potential uses for this tool include:
+A surprisingly large segment of Information Processing can be thought of as consisting of Transformation Services (take this data and transform it into another format) or Enrichment Services (take this data and go get me some more data). The IDMU utilizes a template based approach to these services, in which Merging Templates produces Transformed/Enriched output. The merge process is similar to the familiar Mail Merge feature in most word processors. Potential uses for this tool include:
 - Simple transformations of XML to JSON or the other way around
 - Enriching a JSON request with additional data from a database
 - Enriching a JSON request with additional data from a Rest data source 
