@@ -3,20 +3,56 @@
 ## What Is IDMU
 The IBM Data Merge Utility is an open source Java Utility that provides high performance transformation and enrichment services through a simple template based process. If you can use your word processors Mail Merge feature, then you can use the IBM Data Merge utility. The use of templates makes this transformation tool uniquely well suited to creating Scripts, Code or other complex documents. Optimized performance of small payload transformations makes it well suited to doing JSON or XML microservice transformations. When combined with enrichment services this becomes a powerful tool for the composition of complex microservice structures from a variety of sources. While this utility does not expose a Rest API directly it is designed with that in mind. See [IDMU-REST Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-REST)  
 
+## Related Projects
+1. [IDMU-CLI Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-CLI) - Command Line merge tool
+1. [IDMU-REST Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-REST) - Rest Interface merge tool
+
 ---
 ## Overview
-Merging Templates produces output, and the merge process is similar to the familiar Mail Merge feature in most word processors. 
-A template is just a block of text that can contain Replacement Tags and Book-marks along with directives that drive the merge process.
-See JavaDoc for the com.ibm.util.merge.template.content package for more details, specifically the BookmarkSegment and TagSegment mark-up definitions
+A suprisingly large segment of Information Processing can be thought of as consisting of Transformation Services (take this data and transform it into another format) or Enrichment Services (take this data and go get me some more data). The IDMU utilizes a template based approach to these services, in which Merging Templates produces Transformed/Enriched output. The merge process is similar to the familiar Mail Merge feature in most word processors. Potential uses for this tool include:
+- Simple transformations of XML to JSON or the other way around
+- Enriching a JSON request with additional data from a database
+- Enriching a JSON request with additional data from a Rest data source 
+- Generating a XML or HTML document with data from a database
+- Generating Configurations, Script or Code based on options specified as parameters.  
 
-There are 5 directives you can use during the merge, see the JavaDoc for the package com.ibm.util.merge.directive:
-1. Enrich - Get some data and put it in the DataManager
-1. Replace - Take some data from the data manager and Replace Tags with Values
-1. Insert - Insert sub-templates at Book Marks based on some data in the Data Manager
+From an IDMU perspective, template content is just a block of text, it could be JSON, XML, HTML, a Bash Script, a Java Class, a NodeJs program, a CSV file.... anything you want to generate. The text in a template can have **Replacement Tags** and **Bookmarks** that identify where in the template data is to be placed, or sub-templates are to be inserted. A template also has other attributes, including a list of **Directives** that are the instructions which drive the merge process. Here is a sample of some JSON Template content:
+```
+{
+	name: "<NAME>",
+	address: "<ADDRESS>",
+	friends: [<bookmark="friend" group="test" template="friend">]
+}
+```  
+In this template we are using < and > to wrap the **tags** and **bookmarks**. The tags <NAME> and <ADDRESS> will be replaced with data during the merge process (by a **Replace** directive). Sub-Templates for each "friend" will be inserted at the **friend bookmark** by an **Insert** directive. 
+
+IDMU has an internal Object Data store called the Data Manager. This object store will be used to store request data and parameters as well as data that is fetched from an external data source (by an **Enrich** directive). This data is transient, and is released from memory after the merge is completed. Most directives will either read data from the data store and take some action, or write data to the data store for use by other directives. Data in the Data Manager is accessed via a "path" style address. For example, given this data structure:
+```
+{ 
+	mydata: { 
+		name: "fred", 
+		address: "123 Anywhere",
+		friends: [
+			{ 	name: "allen",
+		  		since: "way back" 
+		  	},
+			{ 	name: "betty", 
+		  		since: "last week" 
+		  	}
+		]
+	},
+ 	someOtherData: { ... }
+ }
+	.
+```
+the Data Manager address "mydata-friends-[0]-name" would refer to "allen". 
+
+Merge Directives are specified as part of the template. Each Directive is executed in order and the resulting template content is then returned as the output of the Merge. The following directives are used to drive merge processing, and any number of directives can be used.   
+1. Enrich - Get some data from an external source and put it in the DataManager
+1. Replace - Take some data from the data manager and Replace **Tags** with data values
+1. Insert - Insert sub-templates at **Bookmarks** based on some data in the Data Manager. Sub-Templates are full-fledged templates and can contain their own directives.
 1. Parse - Get some marked-up data from the DataManager, parse it and place the resulting data structure back in the Data Manager
-1. Save - Save the output of the current template to an entry in the Merge Archive
-
-As you can see, the Data Manager is a key component of the Merge Utility - and it basically provides "path" style access to an object data store. See the package com.ibm.util.merge.data for more details.
+1. Save - Save the output of the current template to an entry in the Merge Archive. (for archive creation - tar, zip, jar, gzip...)
 
 ---
 
@@ -140,8 +176,4 @@ cache.get|put|post|delete Template(template)
 
 ---
 
-## Related Projects
-1. [IDMU-CLI Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-CLI)
-1. [IDMU-REST Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-REST)
-1. [IDMU-DEV Project](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-DEV)
   
