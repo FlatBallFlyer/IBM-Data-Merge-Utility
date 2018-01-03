@@ -1,11 +1,11 @@
 # IBM Data Merge Utility v4.0.0 - Users Guide
 
 ## Contents
-1. [Overview](overview)
-1. [Template Developers Guide](template-developers-guide)
-1. [IDMU Developers Guide](IDMU-developers-guide)
-1. [IDMU Rest Administrators Guide](idmu-rest-administrators-guide)
-1. [Configuring IDMU](configuring-idmu)
+1. [Overview](#overview)
+1. [Template Developers Guide](#template-developers-guide)
+1. [IDMU Developers Guide](#idmu-developers-guide)
+1. [IDMU Rest Administrators Guide](#idmu-rest-administrators-guide)
+1. [Configuring IDMU](#configuring-idmu)
   
 ---
 ## Overview
