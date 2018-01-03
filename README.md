@@ -24,7 +24,7 @@ From an IDMU perspective, template content is just a block of text, it could be 
 	friends: [<bookmark="friend" group="test" template="friend">]
 }
 ```  
-In this template we are using < and > to wrap the **tags** and **bookmarks**. The tags <NAME> and <ADDRESS> will be replaced with data during the merge process (by a **Replace** directive). Sub-Templates for each "friend" will be inserted at the **friend bookmark** by an **Insert** directive. 
+In this template we are using &GT; and > to wrap the **tags** and **bookmarks**. The tags &GT;NAME> and &GT;ADDRESS> will be replaced with data during the merge process (by a **Replace** directive). Sub-Templates for each "friend" will be inserted at the **friend bookmark** by an **Insert** directive. 
 
 IDMU has an internal Object Data store called the Data Manager. This object store will be used to store request data and parameters as well as data that is fetched from an external data source (by an **Enrich** directive). This data is transient, and is released from memory after the merge is completed. Most directives will either read data from the data store and take some action, or write data to the data store for use by other directives. Data in the Data Manager is accessed via a "path" style address. For example, given this data structure:
 ```
