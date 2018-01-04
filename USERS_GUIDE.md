@@ -8,14 +8,9 @@
 - [Template Developers Guide](#template-developers-guide)
    - [Developing Templates](#developing-templates)
    - [The Data Manager](#the-data-manager)
-   - [Templates Reference](#templates)
-   - Directive Reference
-      - [Enrich](#enrich)
-      - [Replace](#replace)
-      - [Insert](#insert)
-      - [Parse](#parse)
-      - [Save](#save)
    - [Merge Processing](#merge-processing)
+   - [Templates Reference](#templates)
+   - [Directive Reference](#directives)
 - [IDMU Developers Guide](#idmu-developers-guide)
    - [Extending Parsing Capabilities](#extending-parsing-capabilities)
    - [Extending Provider Capabilities](#extending-provider-capabilities)
@@ -91,6 +86,12 @@ the Data Manager address "mydata-friends-[0]-name" would refer to "allen". Since
 
 #### Using Replace Tags in an Address
 Data Manager addresses can contain replace tags. Replace tags will be processed during execution using the current Template Replace stack. See the [Replace Directive](#replace) for details on Tags and the Replace Stack
+
+---
+### Merge Processing
+This diagram shows an overview of Merge Processing
+![Processing Overview](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Processing Overview")
+
 ---
 ### Templates
 The Template is the primary configuration item used by IDMU and describes both the structure of the data to be returned by a merge and the directives that drive the merge process. 
@@ -147,9 +148,9 @@ The replace directive does not directly replace the Tags in the template with da
 
 ##### Replace Tags
 Replace Tags are any wrapped strings that are not bookmarks, and conform to this pattern
-```
-tag = "name" encode = "encode" format = "formatString" parseFirst
-```
+
+tag = "**name**" encode = "**encode**" format = "**formatString**" parseFirst
+
 All fields are optional - using the wrappers { and } {foo} is the same as {tag=foo}. Attributes are:
 - tag name is the "From" value used in the Replace Processing
 - encode will override the default template encoding for this one tag - supported values are:
@@ -279,7 +280,7 @@ The default providers are shown below:
    - Data Returned: Returns a List of Object data structure
    - parsing: Will parse the entire response
 
-- com.ibm.util.merge.template.directive.enrich.provider.CacheProvider": {
+- com.ibm.util.merge.template.directive.enrich.provider.CacheProvider
    - enrichSource:  N/A
    - enrichParameter: N/A
    - enrichCommand: N/A
@@ -340,9 +341,9 @@ The Insert directive will insert sub-templates at bookmarks within the content.
 ##### Bookmarks
 A Bookmark Segment marks a location within the Content where sub-templates can be inserted
 Bookmarks are wrapped strings that start with "bookmark" and conform to this pattern
-```
-bookmark = "name" group = "group" template = "template" varyby = "varyBy Attribute" insertAlways
-```
+
+bookmark = "**name**" group = "**group**" template = "**template**" varyby = "**varyBy**" insertAlways
+
 All fields are required except the varyby field and insertAlways indicator. 
 - name is the bookmark name, specified by the "bookmark pattern" attribute of an Insert directive
 - group is the template group that a template will be inserted from
@@ -410,10 +411,6 @@ The generated archive will have a GUID name, you can override this name by provi
 
 ##### Working with Archives
 If you are using the IDMU-REST interface, the GET http://host/idmu/Archive/archiveName will retrieve the archive from the server and remove it from the temporary folder. If you are running the CLI you can find the archives in the output folder which defaults to /opt/ibm/idmu/v4/archives. You can overide this value in the idmu-config environment variable.
-
-### Merge Processing
-This diagram shows an overview of Merge Processing
-![Processing Overview](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Processing Overview")
 
 
 ---
