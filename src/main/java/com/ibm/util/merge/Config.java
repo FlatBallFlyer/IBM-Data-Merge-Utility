@@ -67,7 +67,8 @@ import com.ibm.util.merge.template.directive.enrich.provider.Providers;
  * 	"nestLimit": n,
  * 	"insertLimit": n,
  * 	"tempFolder": "folder",
- *  "prettyJson" : "true",
+ *  "loadFolder" : "folder",
+ *  "prettyJson" : true | false
  * 	"logLevel": "CRITICAL | SEVERE | WARN | INFO",
  * 	"envVars" : {"var":"value"},
  *	"defaultProviders" : ["providerClass","providerClass"],

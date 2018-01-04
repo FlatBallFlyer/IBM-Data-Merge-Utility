@@ -22,8 +22,6 @@
    - [Deploying IDMU on Tomcat](#deploying-idmu-on-tomcat) 
 - [Configuring IDMU](#configuring-idmu)
    - [Using the idmu-config Environment Variable](#using-the-idmu-config-environment-variable)  
-   - [About Enrichment Providers](#about-enrichment-providers)
-   - [Configuring Provider Environment Variables](#configuring-provider-environment-variables)
   
 ---
 ## Overview
@@ -130,8 +128,9 @@ From an IDMU perspective, template content is just a block of text, it could be 
 	friends: [<bookmark="friend" group="test" template="friend">]
 }
 ```  
-In this template we are using &lt; and &gt; to wrap the **tags** and **bookmarks**. The tags &lt;NAME&gt; and &lt;ADDRESS&gt; will be replaced with data during the merge process (by a [Replace](#replace) directive). Sub-Templates for each "friend" will be inserted at the **friend bookmark** by an [Insert](#insert) directive. 
-     
+In this template we are using &lt; and &gt; to wrap the **tags** and **bookmarks**. The tags &lt;NAME&gt; and &lt;ADDRESS&gt; will be replaced with data during the merge process (by a [Replace](#replace) directive). Sub-Templates for each "friend" will be inserted at the **friend bookmark** by an [Insert](#insert) directive.
+ 
+---     
 ### Directives
 Each template will have a list of directives that are executed during the merge process. Most directives interact with the [Data Manager](#the-data-manager), and there are currently five directive types:
 - [Enrich](#enrich) - Fetch Data and put it in the Data Manager
@@ -140,6 +139,7 @@ Each template will have a list of directives that are executed during the merge 
 - [Insert](#insert) - Insert Sub-Templates based on values from the Data Manager
 - [Save](#save) - Save a template output to the Merge Archive
  
+---     
 #### Replace
 The replace directive is used to replace Tags in the template with data values from the Data Manager.
  
@@ -214,6 +214,7 @@ All fields are optional - using the wrappers { and } {foo} is the same as {tag=f
 - processAfter: Boolean indicating that after adding values the merge should Process the Replace Stack over the Content
 - processRequire: Boolean indicating that a Merge Exception should be thrown if a tag is not replaced
   
+---     
 #### Parse
 The Parse directive will take a Primitive String in the data manager, parse it and place the resulting structure in the Data Manager at a specified target. 
 
@@ -246,6 +247,7 @@ The Parse directive will take a Primitive String in the data manager, parse it a
 ##### Default Parsing Engines
 Parsing engines can be added to the IDMU tool. To find out what parsing formats are supported in your implementation check the HTTP GET http://host/idmu/Config output. If you need to add a new parser, see the [IDMU Developers Guide](#idmu-developers-guide) below. 
 
+---     
 #### Enrich
 The enrich directive will retrieve data from an external data source, and place that data into the Data Manager. 
 
@@ -335,6 +337,7 @@ The default providers are shown below:
 
 Providers can be added to the IDMU tool. To find out what providers are supported and the environment variable requirements of themcheck the HTTP GET http://host/idmu/Config output. If you need to add a new parser, see the [IDMU Developers Guide](#idmu-developers-guide) below. 
 
+---     
 #### Insert
 The Insert directive will insert sub-templates at bookmarks within the content. 
 
@@ -395,6 +398,7 @@ Sub templates are inserted in the context of some data in the Data Manager, typi
 - onlyFirst: Replace tags that will be blank on all but the first insertion in a list
 - onlyLast: Replace tags that will be blank on all but the last insertion in a list
  
+---     
 #### Save
 The save directive will write the contents of the tempalte out to an entry in the Merge Archive. The default archive type is tar, you can change this by specifying a value for the parameter ***idmuArchiveType*** with one of the following:
 - zip
@@ -416,22 +420,69 @@ If you are using the IDMU-REST interface, the GET http://host/idmu/Archive/archi
 ---
 ## IDMU Developers Guide
 ### Extending Parsing Capabilities
+IDMU is designed to support additional custom parsers. Simply implement the com.ibm.util.merge.data.parser.ParseProxyInterface and then register your parser [see Configuring IDMU](#configuring-idmu)
+
 ### Extending Provider Capabilities
+IDMU is designed to support additional custom providers for the [Enrich](#enrich) directive. Simply implement the com.ibm.util.merge.data.template.directive.enrich.provider.ProviderInterface and then register your provider [see Configuring IDMU](#configuring-idmu)
+
 ---
 ## IDMU Rest Administrators Guide
 ### Building a Production Ready WAR
-
+Until IDMU-REST Issue #2 is addressed you will have to manually change the web.xml file contained in the WAR package. After extracting the package, edit the web.xml file to remove all servlets except Initialize and Merge. This will prevent templates from being changed through the API while the IDMU instance is running. It will only load templates from the loadFolder specified in idmu-config.
+ 
 ### Deploying IDMU on Docker
+Create a docker file and build a docker image with your custom templates. It should look something like:
+```
+# Based on official IDMU docker container
+FROM idmu:latest
 
+# Add our own templates to the file
+ADD ./templates/* /opt/ibm/idmu/v4/packages/
+```
+You can now use the ***docker build*** and ***docker run*** commands to build and deploy the image. You will want to make sure you expose port 9080 as your http port, and port 9443 as your https port. For example, you might use this docker run command:
+```
+docker run -d -p 80:9080 -p 443:9443 --name aName myContainer
+```
 ### Deploying IDMU on BlueMix
+TBD - Kubernettes YAML under development
 
 ### Deploying IDMU on WebSphere Liberty
+When running under WebSphere Liberty you can simply place the WAR file in the DropIn folder
 
 ### Deploying IDMU on Tomcat
+When running under Tomcat you can simply place the WAR file in the Tomcat Deploy folder
 
-
+---     
 ## Configuring IDMU
-### Using the idmu-config Environment Variable  
-### About Enrichment Providers
-### Configuring Provider Environment Variables
+### Using the idmu-config Environment Variable
+IDMU will use the configuration specified in the idmu-config environment variable to override the default values. The idmu-config environment variable (or the config.json file for IDMU-CLI usage) is a JSON data structure. Here is the structure and default values:
+```
+{
+	"nestLimit": 2,
+	"insertLimit": 20,
+	"tempFolder": "/opt/ibm/idmu/v4/archives",
+	"loadFolder": "/opt/ibm/idmu/v4/packages"
+	"prettyJson" : true,
+	"logLevel": "SEVERE",
+	"defaultProviders" : ["providerClass","providerClass"],
+	"defaultParsers" : ["parserClass","parserClass"],		
+	"envVars" : {"var":"value"}
+}
+```
+The values provided for envVars will override Environment Variables of the same name. This can be a convienent way to define provider configuration values in the same configuration file, but tends to not be Docker/Kubernettes friendly.
+
+The default parsers provided in the default IDMU build are:
+- com.ibm.util.merge.data.parser.DataProxyCsv
+- com.ibm.util.merge.data.parser.DataProxyJson
+- com.ibm.util.merge.data.parser.DataProxyXmlStrict
+ 
+The default providers provided in the default IDMU build are:
+- com.ibm.util.merge.template.directive.enrich.provider.CacheProvider
+- com.ibm.util.merge.template.directive.enrich.provider.CloudantProvider
+- com.ibm.util.merge.template.directive.enrich.provider.FileSystemProvider
+- com.ibm.util.merge.template.directive.enrich.provider.JdbcProvider
+- com.ibm.util.merge.template.directive.enrich.provider.JndiProvider
+- com.ibm.util.merge.template.directive.enrich.provider.MongoProvider
+- com.ibm.util.merge.template.directive.enrich.provider.RestProvider
+- com.ibm.util.merge.template.directive.enrich.provider.StubProvider
  
