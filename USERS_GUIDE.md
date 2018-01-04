@@ -1,11 +1,11 @@
 # IBM Data Merge Utility v4.0.0 - Users Guide
 
 ## Contents
-1. [Overview](#overview)
-1. [Setting up a Template Development environment](#setting-up-a-template-development-environment)
+1 [Overview](#overview)
+1 [Setting up a Template Development environment](#setting-up-a-template-development-environment)
    - [Using IDMU-REST](#using-idmu-rest)
    - [JSON Editors](#json-editors) - until idmu-rest gets a UI
-1. [Template Developers Guide](#template-developers-guide)
+1 [Template Developers Guide](#template-developers-guide)
    - [Developing Templates](#developing-templates)
    - [The Data Manager](#the-data-manager)
    - [Templates Reference](#templates)
@@ -16,16 +16,16 @@
       - [Parse](#parse)
       - [Save](#save)
    - [Merge Processing](#merge-processing)
-1. [IDMU Developers Guide](#idmu-developers-guide)
+1 [IDMU Developers Guide](#idmu-developers-guide)
    - [Extending Parsing Capabilities](#extending-parsing-capabilities)
    - [Extending Provider Capabilities](#extending-provider-capabilities)
-1. [IDMU Rest Administrators Guide](#idmu-rest-administrators-guide)
+1 [IDMU Rest Administrators Guide](#idmu-rest-administrators-guide)
    - [Building a Production Ready WAR](#building-a-production-ready-war) 
    - [Deploying IDMU on Docker](#deploying-idmu-on-docker) 
    - [Deploying IDMU on BlueMix](#deploying-idmu-on-bluemix) 
    - [Deploying IDMU on WebSphere Liberty](#deploying-idmu-on-websphere-liberty) 
    - [Deploying IDMU on Tomcat](#deploying-idmu-on-tomcat) 
-1. [Configuring IDMU](#configuring-idmu)
+1 [Configuring IDMU](#configuring-idmu)
    - [Using the idmu-config Environment Variable](#using-the-idmu-config-environment-variable)  
    - [About Enrichment Providers](#about-enrichment-providers)
    - [Configuring Provider Environment Variables](#configuring-provider-environment-variables)
@@ -157,7 +157,7 @@ The replace directive does not directly replace the Tags in the template with da
 ##### Replace Tags
 Replace Tags are any wrapped strings that are not bookmarks, and conform to this pattern
 ```
-tag = "***name***" encode = "***encode***" format = "***formatString***" parseFirst
+tag = "name" encode = "encode" format = "formatString" parseFirst
 ```
 All fields are optional - using the wrappers { and } {foo} is the same as {tag=foo}. Attributes are:
 - tag name is the "From" value used in the Replace Processing
@@ -350,7 +350,7 @@ The Insert directive will insert sub-templates at bookmarks within the content.
 A Bookmark Segment marks a location within the Content where sub-templates can be inserted
 Bookmarks are wrapped strings that start with "bookmark" and conform to this pattern
 ```
-bookmark = "***name***" group = "***group***" template = "***template***" varyby = "***varyBy Attribute***" insertAlways
+bookmark = "name" group = "group" template = "template" varyby = "varyBy Attribute" insertAlways
 ```
 All fields are required except the varyby field and insertAlways indicator. 
 - name is the bookmark name, specified by the "bookmark pattern" attribute of an Insert directive
