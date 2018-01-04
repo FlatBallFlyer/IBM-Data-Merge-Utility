@@ -1,11 +1,11 @@
 # IBM Data Merge Utility v4.0.0 - Users Guide
 
 ## Contents
-1 [Overview](#overview)
-1 [Setting up a Template Development environment](#setting-up-a-template-development-environment)
+- [Overview](#overview)
+- [Setting up a Template Development environment](#setting-up-a-template-development-environment)
    - [Using IDMU-REST](#using-idmu-rest)
    - [JSON Editors](#json-editors) - until idmu-rest gets a UI
-1 [Template Developers Guide](#template-developers-guide)
+- [Template Developers Guide](#template-developers-guide)
    - [Developing Templates](#developing-templates)
    - [The Data Manager](#the-data-manager)
    - [Templates Reference](#templates)
@@ -16,16 +16,16 @@
       - [Parse](#parse)
       - [Save](#save)
    - [Merge Processing](#merge-processing)
-1 [IDMU Developers Guide](#idmu-developers-guide)
+- [IDMU Developers Guide](#idmu-developers-guide)
    - [Extending Parsing Capabilities](#extending-parsing-capabilities)
    - [Extending Provider Capabilities](#extending-provider-capabilities)
-1 [IDMU Rest Administrators Guide](#idmu-rest-administrators-guide)
+- [IDMU Rest Administrators Guide](#idmu-rest-administrators-guide)
    - [Building a Production Ready WAR](#building-a-production-ready-war) 
    - [Deploying IDMU on Docker](#deploying-idmu-on-docker) 
    - [Deploying IDMU on BlueMix](#deploying-idmu-on-bluemix) 
    - [Deploying IDMU on WebSphere Liberty](#deploying-idmu-on-websphere-liberty) 
    - [Deploying IDMU on Tomcat](#deploying-idmu-on-tomcat) 
-1 [Configuring IDMU](#configuring-idmu)
+- [Configuring IDMU](#configuring-idmu)
    - [Using the idmu-config Environment Variable](#using-the-idmu-config-environment-variable)  
    - [About Enrichment Providers](#about-enrichment-providers)
    - [Configuring Provider Environment Variables](#configuring-provider-environment-variables)
@@ -56,7 +56,7 @@ Until the IDMU-REST project has a Web-UI you'll need a good JSON editor. I'm sti
 ---
 ## Template Developers Guide
 ### Developing Templates
-Developing Templates is the main skill needed to use IDMU. The best starting place is to have a sample input / output that your templates should create. Start with a template that is just the expected output and work out from there. When developing templates, start at without any bookmarks or sub-templates and then add complexity in steps. Use of the Replace with Json options can be helpful if the data is not what you are expecting. 
+Developing Templates is the main skill needed to use IDMU. The best starting place is to have a sample input / output that your templates should create. Start with a template that is just the expected output and work out from there. When developing templates, start without any bookmarks or sub-templates and then add complexity in steps. Use of the Replace with Json options can be helpful if the data is not what you are expecting. 
 
 ---
 ### The Data Manager
@@ -64,6 +64,7 @@ IDMU has an internal Object Data store called the Data Manager. You can think of
 - Primitive: A simple string, IDMU does not have numeric or boolean primitives.
 - Object: A list of unique attribute names and an Element value for each
 - List: A list of Elements
+
 The REST API will automatically place the HTTP Request Parameters in the data manager at the address **idmuParameters**, and the HTTP Request Payload at **idmuPayload**. The payload will be a simple primitive, and the parameters are an object of primitive lists.
 
 #### Data Addresses
@@ -93,17 +94,8 @@ Data Manager addresses can contain replace tags. Replace tags will be processed 
 ---
 ### Templates
 The Template is the primary configuration item used by IDMU and describes both the structure of the data to be returned by a merge and the directives that drive the merge process. 
-1. [Template Attributes](#template-attributes)
-1. [Directives](#directives)
-   - [The Data Manager](#the-data-manager)
-   - [Replace](#replace)
-   - [Parse](#parse)
-   - [Enrich](#enrich)
-   - [Insert](#insert)
-   - [Save](#save)
 
 #### Template Attributes:
-
 - id: Unique Template Identifier consisting of
    - group: Defines a group of related templates. NOTE: A group name can not contain a period
    - name: The template name. NOTE: A template name can not contain a period
@@ -128,7 +120,6 @@ A template Short Name can be experssed with period separators as in "group.templ
 - contentRedirectUrl: Reserved for Rest API, not currently used and does not have any effect on the Merge
 
 #### Template Content
-
 From an IDMU perspective, template content is just a block of text, it could be JSON, XML, HTML, a Bash Script, a Java Class, a NodeJs program, a CSV file.... anything you want to generate. The text in a template can have [**Replacement Tags**](#replace-tags) and [**Bookmarks**](#bookmarks) that identify where in the template data is to be placed, or sub-templates are to be inserted. Here is a sample of some JSON Template content:
 
 ```
@@ -141,7 +132,6 @@ From an IDMU perspective, template content is just a block of text, it could be 
 In this template we are using &lt; and &gt; to wrap the **tags** and **bookmarks**. The tags &lt;NAME&gt; and &lt;ADDRESS&gt; will be replaced with data during the merge process (by a [Replace](#replace) directive). Sub-Templates for each "friend" will be inserted at the **friend bookmark** by an [Insert](#insert) directive. 
      
 ### Directives
-
 Each template will have a list of directives that are executed during the merge process. Most directives interact with the [Data Manager](#the-data-manager), and there are currently five directive types:
 - [Enrich](#enrich) - Fetch Data and put it in the Data Manager
 - [Parse](#parse) - Parse Data and put it in the Data Manager
@@ -150,7 +140,8 @@ Each template will have a list of directives that are executed during the merge 
 - [Save](#save) - Save a template output to the Merge Archive
  
 #### Replace
-The replace directive is used to replace Tags in the template with data values from the Data Manager. 
+The replace directive is used to replace Tags in the template with data values from the Data Manager.
+ 
 ##### The Replace Stack
 The replace directive does not directly replace the Tags in the template with data values, rather it loads a Replace Stack which is a list of "From" and "To" values and then optionally processes that stack over the template. This is useful if you want to place default values in the replace stack. It is also important to know that different directives can use the values in the replace stack during processing. The JDBC and JNDI data providers process replacement tags in a SQL statement from the templates Replace stack. It is also important to know that sub-templates inherit their parent's replacement stack.
 
