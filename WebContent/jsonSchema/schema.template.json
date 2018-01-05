@@ -393,25 +393,20 @@
       "title" : "Content",
       "description" : "The tempalte content"
     },
-    "contentType" : {
-      "type" : "integer",
-      "title" : "The Content type",
-      "description" : "Content Type, see Config for options"
-    },
-    "contentDisposition" : {
-      "type" : "integer",
-      "title" : "The Content disposition",
-      "description" : "Content disposition, , see Config for options"
-    },
     "contentEncoding" : {
       "type" : "integer",
       "title" : "The Contentencoding",
       "description" : "Content Encoding , see Config for options"
     },
-    "contentFileName" : {
-      "type" : "string",
-      "title" : "Output Filename",
-      "description" : "Filename to save - can contain tags"
+    "contentType" : {
+      "type" : "integer",
+      "title" : "The Content type",
+      "description" : "HTTP Content Type used on reply"
+    },
+    "contentDisposition" : {
+      "type" : "String",
+      "title" : "The Content disposition",
+      "description" : "HTTP Content Disposition used on reply - such as - attachment;filename=\"FileToReturn.json\""
     },
     "contentRedirectUrl" : {
       "type" : "string",

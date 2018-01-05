@@ -104,16 +104,6 @@
 			"title" : "Template Options",
 			"description" : "Objections for Template enumarators",
 			"properties" : {
-				"Content Type": {
-					"type":"object",
-					"title" : "Content Type",
-					"description" : "Template Content Type options"
-				},
-				"Content Disposition": {
-					"type":"object",
-					"title" : "Content Disposition Options",
-					"description" : "Content Disposition Options"
-				}
 			}
 		},
 		
