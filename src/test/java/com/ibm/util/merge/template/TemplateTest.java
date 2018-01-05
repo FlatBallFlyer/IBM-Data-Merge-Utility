@@ -23,10 +23,9 @@ public class TemplateTest {
 		template = new Template("System","Test","");
 		template.setContent("Test Content");
 		template.setDescription("A testing template");
-		template.setContentDisposition(Template.DISPOSITION_DOWNLOAD);
+		template.setContentDisposition("attachment;filename=\"FileToReturn.json\"");
 		template.setContentEncoding(TagSegment.ENCODE_JSON);
-		template.setContentFileName("FileToReturn.json");
-		template.setContentType(Template.CONTENT_JSON);
+		template.setContentType("application/json");
 		template.setContentRedirectUrl("Redirect");
 		template.setWrapper("<", ">");
 	}
@@ -83,7 +82,6 @@ public class TemplateTest {
 		assertNotSame(template, mergable);
 		assertEquals(template.getContent(), mergable.getContent());
 		assertEquals(template.getContentEncoding(), mergable.getContentEncoding());
-		assertEquals(template.getContentFileName(), mergable.getContentFileName());
 		assertEquals(template.getContentRedirectUrl(), mergable.getContentRedirectUrl());
 		assertEquals(template.getContentType(), mergable.getContentType());
 		assertEquals(template.getWrapper().front, mergable.getWrapper().front);
@@ -192,33 +190,19 @@ public class TemplateTest {
 
 	@Test
 	public void testSetGetContentType() {
-		template.setContentType(Template.CONTENT_HTML);
-		assertEquals(Template.CONTENT_HTML, template.getContentType());
-		template.setContentType(Template.CONTENT_JSON);
-		assertEquals(Template.CONTENT_JSON, template.getContentType());
-		template.setContentType(Template.CONTENT_TEXT);
-		assertEquals(Template.CONTENT_TEXT, template.getContentType());
-		template.setContentType(Template.CONTENT_XML);
-		assertEquals(Template.CONTENT_XML, template.getContentType());
-		template.setContentType(0);
-		assertEquals(Template.CONTENT_XML, template.getContentType());
+		template.setContentType("application/html");
+		assertEquals("application/html", template.getContentType());
+		template.setContentType("text/plain");
+		assertEquals("text/plain", template.getContentType());
 	}
 
 	@Test
 	public void testSetGetContentDisposition() throws MergeException {
 		Cache cache = new Cache();
 		Merger merger = new Merger(cache, "system.sample.");
-		template.setContentDisposition(Template.DISPOSITION_DOWNLOAD);
-		template.setContentFileName("Foo");
 		template.cachePrepare(cache);
 		Template mergable = template.getMergable(merger);
-		assertEquals("attachment;filename=\"Foo\"", mergable.getContentDisposition());
-	}
-
-	@Test
-	public void testSetGetContentFile() {
-		template.setContentFileName("FOO");
-		assertEquals("FOO", template.getContentFileName());
+		assertEquals("attachment;filename=\"FileToReturn.json\"", mergable.getContentDisposition());
 	}
 
 	@Test

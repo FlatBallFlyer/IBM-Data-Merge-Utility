@@ -66,10 +66,9 @@ public class Template {
 	private final TemplateId id;
 	private String content 				= "";
 	private Wrapper wrapper				= new Wrapper();
-	private int contentType				= Template.CONTENT_TEXT; 
-	private int contentDisposition		= Template.DISPOSITION_NORMAL;
 	private int contentEncoding			= TagSegment.ENCODE_NONE;
-	private String contentFileName		= "";
+	private String contentType			= ""; 
+	private String contentDisposition	= "";
 	private String contentRedirectUrl	= "";
 	private String description			= "";
 	private List<AbstractDirective> directives = new ArrayList<AbstractDirective>(); 
@@ -198,7 +197,6 @@ public class Template {
 		mergable.setContentEncoding(contentEncoding);
 		mergable.setContentType(contentType);
 		mergable.setDescription(description);
-		mergable.setContentFileName(contentFileName);
 		mergable.setContentRedirectUrl(contentRedirectUrl);
 		mergable.setContent(this.content);
 		mergable.setWrapper(this.wrapper);
@@ -340,11 +338,9 @@ public class Template {
 	 *
 	 * @param contentType the new content type
 	 */
-	public void setContentType(int contentType) {
+	public void setContentType(String contentType) {
 		if (this.state == STATE_RAW) {
-			if (CONTENT_TYPES().containsKey(contentType)) {
-				this.contentType = contentType;
-			}
+			this.contentType = contentType;
 		}
 	}
 
@@ -353,17 +349,9 @@ public class Template {
 	 *
 	 * @param contentDisposition the new content disposition
 	 */
-	public void setContentDisposition(int contentDisposition) {
+	public void setContentDisposition(String contentDisposition) {
 		if (this.state == STATE_RAW) {
-			if (DISPOSITION_VALUES().containsKey(contentDisposition)) {
-				this.contentDisposition = contentDisposition;
-			}
-		}
-	}
-
-	public void setContentFileName(String contentFileName) {
-		if (this.state == STATE_RAW) {
-			this.contentFileName = contentFileName;
+			this.contentDisposition = contentDisposition;
 		}
 	}
 
@@ -481,7 +469,7 @@ public class Template {
 	 *
 	 * @return the content type
 	 */
-	public int getContentType() {
+	public String getContentType() {
 		return contentType;
 	}
 
@@ -492,12 +480,12 @@ public class Template {
 	 * @throws MergeException  on processing errors
 	 */
 	public String getContentDisposition() throws MergeException {
-		if (DISPOSITION_DOWNLOAD == contentDisposition) {
-			Content fileName = new Content(this.wrapper, this.contentFileName, this.contentEncoding);
-			fileName.replace(replaceStack, false, config.getNestLimit());
-			return "attachment;filename=\"" + fileName.getValue() + "\"";
+		if (this.state == STATE_MERGED) {
+			Content disposition = new Content(this.wrapper, this.contentDisposition, this.contentEncoding);
+			disposition.replace(replaceStack, false, config.getNestLimit());
+			return disposition.getValue();
 		} else {
-			return "";
+			return this.contentDisposition;
 		}
 	}
 
@@ -508,13 +496,6 @@ public class Template {
 	 */
 	public int getContentEncoding() {
 		return contentEncoding;
-	}
-
-	/**
-	 * @return file name for output archive
-	 */
-	public String getContentFileName() {
-		return contentFileName;
 	}
 
 	/**
@@ -555,36 +536,7 @@ public class Template {
 	 */
 	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
 		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
-		options.put("Content Type", CONTENT_TYPES());
-		options.put("Content Disposition", DISPOSITION_VALUES());
 		return options;
-	}
-
-	/*
-	 * Class Constants and getOptions()
-	 */
-	public static final int CONTENT_HTML 	= 1;
-	public static final int CONTENT_JSON 	= 2;
-	public static final int CONTENT_XML 	= 3;
-	public static final int CONTENT_TEXT 	= 4;
-	public static final HashMap<Integer, String> CONTENT_TYPES() {
-		HashMap<Integer, String> values = new HashMap<Integer, String>();
-		values.put(CONTENT_HTML, 	"html");
-		values.put(CONTENT_JSON, 	"json");
-		values.put(CONTENT_XML, 	"xml");
-		values.put(CONTENT_TEXT,	"text");
-		return values;
-	}
-
-	public static final int DISPOSITION_DOWNLOAD 	= 1;
-	public static final int DISPOSITION_NORMAL	 	= 2;
-	public static final int DISPOSITION_ARCHIVE	 	= 3;
-	public static final HashMap<Integer, String> DISPOSITION_VALUES() {
-		HashMap<Integer, String> values = new HashMap<Integer, String>();
-		values.put(DISPOSITION_DOWNLOAD, 	"download");
-		values.put(DISPOSITION_ARCHIVE, 	"download archive");
-		values.put(DISPOSITION_NORMAL, 		"normal");
-		return values;
 	}
 
 	public static final int STATE_RAW 		= 0;
