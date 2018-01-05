@@ -17,7 +17,7 @@
 - [IDMU Rest Administrators Guide](#idmu-rest-administrators-guide)
    - [Building a Production Ready WAR](#building-a-production-ready-war) 
    - [Deploying IDMU on Docker](#deploying-idmu-on-docker) 
-   - [Deploying IDMU on BlueMix](#deploying-idmu-on-bluemix) 
+   - [Deploying IDMU on BlueMix](#deploying-idmu-on-bluemix)
    - [Deploying IDMU on WebSphere Liberty](#deploying-idmu-on-websphere-liberty) 
    - [Deploying IDMU on Tomcat](#deploying-idmu-on-tomcat) 
 - [Configuring IDMU](#configuring-idmu)
@@ -104,19 +104,20 @@ A template Short Name can be experssed with period separators as in "group.templ
    - front: Indicates beginning of tag/bookmark
    - back: Indicates ending of tag/bookmark
 - contentEncoding: Default Encoding to be used by [Replace Directives](#replace) 
-			"3": "sql",
-			"2": "html",
-			"1": "none",
-			"6": "default",
-			"5": "xml",
-			"4": "json"
+   - 1: none
+   - 2: html
+   - 3: sql
+   - 4: json
+   - 5: xml
+   - 6: default
 - content: The [Template Content](#template-content)
 - directives: A list of directives to execute during the merge
 - description: Describes the template, used in error logging
-- contentType: Used by Rest API as the return content type, does not have any effect on the Merge
-- contentDisposition: Used by Rest API as the reutn content disposition, does not have any effect on the Merge 
-- contentFileName: Reserved for Rest API, not currently used and does not have any effect on the Merge
-- contentRedirectUrl: Reserved for Rest API, not currently used and does not have any effect on the Merge
+
+The following fields are only used by the Rest API and only apply to a "Base" template. These fields do not affect merge processing in any way.
+- contentType: Used by Rest API as the return http content type
+- contentDisposition: Used by Rest API as the return http content disposition 
+- contentRedirectUrl: Reserved for Rest API, not currently used
 
 #### Template Content
 From an IDMU perspective, template content is just a block of text, it could be JSON, XML, HTML, a Bash Script, a Java Class, a NodeJs program, a CSV file.... anything you want to generate. The text in a template can have [**Replacement Tags**](#replace-tags) and [**Bookmarks**](#bookmarks) that identify where in the template data is to be placed, or sub-templates are to be inserted. Here is a sample of some JSON Template content:
@@ -149,24 +150,24 @@ The replace directive does not directly replace the Tags in the template with da
 ##### Replace Tags
 Replace Tags are any wrapped strings that are not bookmarks, and conform to this pattern
 
-tag = "**name**" encode = "**encode**" format = "**formatString**" parseFirst
+tag="**name**" encode="**encode**" format="**formatString**" parseFirst
 
-All fields are optional - using the wrappers { and } {foo} is the same as {tag=foo}. Attributes are:
+All fields except **name** are optional - using the wrappers { and } {foo} is the same as {tag=foo}. Attributes are:
 - tag name is the "From" value used in the Replace Processing
 - encode will override the default template encoding for this one tag - supported values are:
    - none - Do not encode
    - sql - Encode special characters and " marks
    - json - Encode new lines, tabs and slashes
    - xml - Encode &gt;, &lt; and &amp;
-   - default - Use the template default encoding
+   - default - Use the template default encoding - the same as omitting the encode value
 - format is used to format values with Java String formatting features
 - parseFirst if present will cause the replace To value to be parsed for embedded tags
 
 ##### Replace Directive Attributes
+- type: The Directive Type - always 4 for Replace Directive
 - name: The name of the directive - used in Logging
 - dataSource: Path of source data in the Data Manager
 - dataDelimeter: Delimiter used in data source path"
-- type: The Directive Type - always 4 for Replace Directive
 - ifMissing: Action to take if the specified dataSource is not in the Data Manager
    - 1: Throw - Throw a merge exception
    - 2: Ignore - Ignore this directive and continue processing
@@ -219,10 +220,10 @@ All fields are optional - using the wrappers { and } {foo} is the same as {tag=f
 The Parse directive will take a Primitive String in the data manager, parse it and place the resulting structure in the Data Manager at a specified target. 
 
 ##### Parse Directive Attributes
+- type: The Directive Type - always 3 for Parse Directive
 - name: The name of the directive - used in Logging
 - dataSource: Path of source data in the Data Manager
 - dataDelimeter: Delimiter used in data source path"
-- type: The Directive Type - always 3 for Parse Directive
 - ifMissing: Action to take if the specified dataSource is not in the Data Manager
    - 1: Throw - Throw a merge exception
    - 2: Ignore - Ignore this directive and continue processing
@@ -252,12 +253,13 @@ Parsing engines can be added to the IDMU tool. To find out what parsing formats 
 The enrich directive will retrieve data from an external data source, and place that data into the Data Manager. 
 
 ##### Enrich Directive Attributes
-- name: The name of the directive - used in Logging
 - type: Always 1 for Enrich Directives
+- name: The name of the directive - used in Logging
 - targetDataName: The path where data will be put
 - targetDataDelimiter: The path delimeter
 - parseFormat: Parse Format
 - parseOptions: Parse Options  
+
 The use of the following fields will be defined by the provider being used. See [Default Providers](#default-providers) below for details.
 - enrichClass: The Enrichment Provider Class. 
 - enrichSource: The name of the data source
@@ -358,8 +360,8 @@ All fields are required except the varyby field and insertAlways indicator.
 Sub templates are inserted in the context of some data in the Data Manager, typically a member of a list, or an attribute of an object. The Data Manager address "idmuContext" will always point to the insert context object within the Data Manager. 
 
 ##### Insert Directive Attributes
-- name: The name of the directive - used in Logging
 - type: The Directive Type - always 2 for Insert Directive
+- name: The name of the directive - used in Logging
 - dataSource: Path of source data in the Data Manager
 - dataDelimeter: Delimiter used in data source path"
 - ifMissing: Action to take if source is missing, see Config for options
@@ -408,8 +410,8 @@ The save directive will write the contents of the tempalte out to an entry in th
 The generated archive will have a GUID name, you can override this name by providing a value for the parameter ***idmuArchiveName***  
 
 ##### Save Directive Attributes
-- name: The name of the directive - used in Logging
 - type: The Directive Type - always 5 for Save Directive
+- name: The name of the directive - used in Logging
 - fileName: The name of the file to be written to the archive
 - clearAfter: Clear Content after saving"
 
@@ -443,7 +445,8 @@ You can now use the ***docker build*** and ***docker run*** commands to build an
 ```
 docker run -d -p 80:9080 -p 443:9443 --name aName myContainer
 ```
-### Deploying IDMU on BlueMix
+
+### Deploying IDMU on Bluemix
 TBD - Kubernettes YAML under development
 
 ### Deploying IDMU on WebSphere Liberty

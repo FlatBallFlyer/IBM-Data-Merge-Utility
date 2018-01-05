@@ -9,6 +9,5 @@ REQUIREMENTS
 INSTALL (After Clone)
 ####################
 mvn install 
-mvn javadoc:javadoc
 
 View JavaDoc at target/site/apidocs/index.html
