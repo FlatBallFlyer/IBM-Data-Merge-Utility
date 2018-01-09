@@ -36,7 +36,9 @@ A surprisingly large segment of Information Processing can be thought of as cons
 ## Setting up a Template Development environment
 ### Using IDMU-REST 
 The fastest way to get started working with templates is to use the Docker IDMU image.
-You'll need Docker: https://docs.docker.com/engine/installation/ 
+
+You'll need [Docker](https://docs.docker.com/engine/installation/)
+ 
 Then you can run this command to start and IDMU instance
 ```
 docker run -d -p 9080:9080 -p 9443:9443 --name idmu flatballflyer/idmu:4.0.0.Beta1
@@ -168,16 +170,16 @@ All fields except **name** are optional - using the wrappers { and } {foo} is th
 - name: The name of the directive - used in Logging
 - dataSource: Path of source data in the Data Manager
 - dataDelimeter: Delimiter used in data source path"
+- fromValue: This ifMissing and ifPrimitive options will use the last segment of the data source path as a Tag identifier unless this value is provided, in which case it will override the From value from the source path.
 - ifMissing: Action to take if the specified dataSource is not in the Data Manager
    - 1: Throw - Throw a merge exception
    - 2: Ignore - Ignore this directive and continue processing
    - 3: Replace - Replace with the specified to value below
    - toValue: To value to be used if source is missing
-   - fromValue: If provided will override the From value from the source path, if not provided the last element of the path is used as the "From" value.
 - ifPrimitive: Action to take if source is a Primitive type
    - 1: Throw - Throw a merge exception
    - 2: Ignore - Ignore this directive and continue processing
-   - 3: Replace - Add Replace values with the last element of the dataSource path Value used for From and the Primitive value for To
+   - 3: Replace - Add Replace with the Primitive value to replace the tag with
    - 4: Replace with JSON - Acts just like a regular Replace for a Primitive
 - ifObject: Action to take if source is a Object, see Config for options"
    - 1: Throw - Throw a merge exception
@@ -357,13 +359,24 @@ All fields are required except the varyby field and insertAlways indicator.
 - insertAlways will allow bookmarks to insert sub-templates even when the varyby attr is missing or not-primitive, without this parameter an exception is thrown on missing or non-primitive varyby attribute values.
 
 ##### Insert Context
-Sub templates are inserted in the context of some data in the Data Manager, typically a member of a list, or an attribute of an object. The Data Manager address "idmuContext" will always point to the insert context object within the Data Manager. 
+Sub templates are inserted in the context of some data in the Data Manager, typically a member of a list, or an attribute of an object. The Data Manager address "idmuContext" will always point to the insert context object within the Data Manager. For example, if we are inserting sub-templates for each member of a list such as:
+```
+{
+	myList:[
+		{object1}
+		{object2}
+		{object3}
+	]
+}
+```
+Three sub-templates would be inserted, and when the first sub-template is merged for insertion the address idmuContext will be the same as myList-object1.
 
 ##### Insert Directive Attributes
 - type: The Directive Type - always 2 for Insert Directive
 - name: The name of the directive - used in Logging
 - dataSource: Path of source data in the Data Manager
 - dataDelimeter: Delimiter used in data source path"
+- bookmarkPattern: A regex pattern used to select bookmarks where sub-templates will be inserted.
 - ifMissing: Action to take if source is missing, see Config for options
    - 1: Throw - Throw a merge exception
    - 2: Ignore - Ignore this directive and continue processing
@@ -394,7 +407,6 @@ Sub templates are inserted in the context of some data in the Data Manager, typi
    - 3: Insert a sub-template for each member of the list
    - 4: Insert  a sub-template for the first member of the list
    - 5: Insert a sub-template for the last member of the list
-- bookmarkPattern: The variant of the template
 - notFirst: Replace tags that will be blank on the first insertion in a list
 - notLast: Replace tags that will be blank on the last insertion in a list
 - onlyFirst: Replace tags that will be blank on all but the first insertion in a list
