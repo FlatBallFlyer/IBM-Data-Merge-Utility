@@ -343,11 +343,10 @@ Providers can be added to the IDMU tool. To find out what providers are supporte
 
 ---     
 #### Insert
-The Insert directive will insert sub-templates at bookmarks within the content. 
+The Insert directive will insert sub-templates at bookmarks within the content. During the execution of this directive sub-templates will be merged and their output will be inserted into the parent template at a bookmark. All bookmarks are removed from the template before it is inserted. Un-replaced tags are inserted along with content.  
 
 ##### Bookmarks
-A Bookmark Segment marks a location within the Content where sub-templates can be inserted
-Bookmarks are wrapped strings that start with "bookmark" and conform to this pattern
+A Bookmark Segment marks a location within the Content where sub-templates can be inserted and identifies the sub-template to be inserted. Bookmarks are wrapped strings that start with "bookmark" and conform to this pattern
 
 bookmark = "**name**" group = "**group**" template = "**template**" varyby = "**varyBy**" insertAlways
 
