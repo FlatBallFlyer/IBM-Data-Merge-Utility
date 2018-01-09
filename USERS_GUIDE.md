@@ -91,7 +91,7 @@ Data Manager addresses can contain replace tags. Replace tags will be processed 
 ### Merge Processing
 This diagram shows an overview of Merge Processing
 ![Processing Overview](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Processing Overview")
-
+When a template is merged, each directive is executed in order. Simple Transformation templates usually have a [Parse](parse) directive to parse the idmuPayload value and then [Replace](replace) and/or [Insert](insert) directives to put that data into a template. Sub-templates are merge processed when they are inserted at a bookmark. Templates that need additional data from an outside data source such as a Database, File or Rest Service can use the Enrich directive to get that data. Use cases that need to generate a collection of files instead of a single output message can use the Save directive to create an archive with multiple files in it.  
 ---
 ### Templates
 The Template is the primary configuration item used by IDMU and describes both the structure of the data to be returned by a merge and the directives that drive the merge process. 
@@ -139,7 +139,7 @@ Each template will have a list of directives that are executed during the merge 
 - [Enrich](#enrich) - Fetch Data and put it in the Data Manager
 - [Parse](#parse) - Parse Data and put it in the Data Manager
 - [Replace](#replace) - Replace **tags** with Data Values from the Data Manager
-- [Insert](#insert) - Insert Sub-Templates based on values from the Data Manager
+- [Insert](#insert) - Insert Sub-Templates at **bookmarks** based on values from the Data Manager
 - [Save](#save) - Save a template output to the Merge Archive
  
 ---     
@@ -170,7 +170,7 @@ All fields except **name** are optional - using the wrappers { and } {foo} is th
 - name: The name of the directive - used in Logging
 - dataSource: Path of source data in the Data Manager
 - dataDelimeter: Delimiter used in data source path"
-- fromValue: This ifMissing and ifPrimitive options will use the last segment of the data source path as a Tag identifier unless this value is provided, in which case it will override the From value from the source path.
+- fromValue: This ifMissing and ifPrimitive options will use the last segment of the data source path as a "From" value or Tag identifier unless this value is provided, in which case it will override the From value from the source path.
 - ifMissing: Action to take if the specified dataSource is not in the Data Manager
    - 1: Throw - Throw a merge exception
    - 2: Ignore - Ignore this directive and continue processing
