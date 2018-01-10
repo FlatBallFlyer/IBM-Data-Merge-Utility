@@ -59,7 +59,7 @@ Merge Directives are specified as part of the template. Each Directive is execut
 
 ## Processing Overview
 ![alt text](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Logo Title Text 1")
-When a template is merged, each directive is executed in order. Simple Transformation templates usually have a [Parse](parse) directive to parse the idmuPayload value and then **Replace** and/or **Insert** directives to put that data into a template. Sub-templates are merge processed when they are inserted at a bookmark. Templates that need additional data from an outside data source such as a Database, File or Rest Service can use the Enrich directive to get that data. Use cases that need to generate a collection of files instead of a single output message can use the Save directive to create an archive with multiple files in it.  
+When a template is merged, each directive is executed in order. Simple Transformation templates usually have a **Parse** directive to parse the idmuPayload value and then **Replace** and/or **Insert** directives to put that data into a template. Sub-templates are merge processed when they are inserted at a bookmark. Templates that need additional data from an outside data source such as a Database, File or Rest Service can use the **Enrich** directive to get that data. Use cases that need to generate a collection of files instead of a single output message can use the **Save** directive to create an archive with multiple files in it.  
 ---
 
 ## Example Templates and Merges
