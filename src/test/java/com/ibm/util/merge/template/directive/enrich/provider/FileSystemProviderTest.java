@@ -45,7 +45,7 @@ public class FileSystemProviderTest {
 		assertTrue(folder.exists());
 		
 		// Test the Provider
-		Config config = new Config("{\"envVars\":{\"db.PATH\":\"src/test/resources/datafiles\"}}");
+		Config config = new Config("{\"envVars\":{\"db_PATH\":\"src/test/resources/datafiles\"}}");
 		Cache cache = new Cache(config);
 		Template template = new Template("system", "test", "", "Content");
 		Enrich directive = new Enrich();
@@ -74,7 +74,7 @@ public class FileSystemProviderTest {
 		assertTrue(folder.exists());
 		
 		// Test the Provider
-		Config config = new Config("{\"envVars\":{\"db.PATH\":\"src/test/resources/datafiles\"}}");
+		Config config = new Config("{\"envVars\":{\"db_PATH\":\"src/test/resources/datafiles\"}}");
 		Cache cache = new Cache(config);
 		Template template = new Template("system", "test", "", "Content");
 		Enrich directive = new Enrich();

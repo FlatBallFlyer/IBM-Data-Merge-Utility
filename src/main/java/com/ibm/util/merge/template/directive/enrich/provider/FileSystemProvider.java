@@ -43,7 +43,7 @@ import java.nio.file.Files;
  * </ul>
  * <p>Configuration Environment Variables</p>
  * <ul>
- * 		<li>{SourceName}.PATH - The Path where files are to be read from.</li>
+ * 		<li>{SourceName}_PATH - The Path where files are to be read from.</li>
  * </ul>
  * 
  * @author Mike Storey
@@ -68,7 +68,7 @@ public class FileSystemProvider implements ProviderInterface {
 		// Get the credentials
 		String path = "";
 		try {
-			path = config.getEnv(source + ".PATH");
+			path = config.getEnv(source + "_PATH");
 		} catch (MergeException e) {
 			throw new Merge500("Malformed or Missing File Source Credentials found for:" + source + ":" + path);
 		}
@@ -131,7 +131,7 @@ public class FileSystemProvider implements ProviderInterface {
 		return new ProviderMeta(
 				"N/A",
 				"The following environment variables are expected\n"
-				+ "{SourceName}.PATH - The Path where files are to be read from.",
+				+ "{SourceName}_PATH - The Path where files are to be read from.",
 				"A Java RegEx file selector",
 				"file content is parsed in the return object",
 				"returns an object of <String, Primitive> if not parsed, and String, Element if parsed");

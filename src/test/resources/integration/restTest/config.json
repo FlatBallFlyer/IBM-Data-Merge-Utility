@@ -1,9 +1,9 @@
 {
   "tempFolder" : "src/test/resources/temp/",
   "envVars" : {
-    "test.HOST" : "localhost",
-    "test.PORT" : "8383",
-    "test.USER" : "",
-    "test.PW"   : ""
+    "test_HOST" : "localhost",
+    "test_PORT" : "8383",
+    "test_USER" : "",
+    "test_PW"   : ""
   }
 }

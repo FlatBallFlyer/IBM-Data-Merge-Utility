@@ -46,10 +46,10 @@ import java.net.URL;
  * </ul>
  * <p>Configuration Environment Variables</p>
  * <ul>
- * 		<li>{SourceName}.HOST - The Host</li>
- * 		<li>{SourceName}.PORT - The Port.</li>
- * 		<li>{SourceName}.USER - The HTTP User (not implemented).</li>
- * 		<li>{SourceName}.PW - The HTTP User PW (not implemented).</li>
+ * 		<li>{SourceName}_HOST - The Host</li>
+ * 		<li>{SourceName}_PORT - The Port.</li>
+ * 		<li>{SourceName}_USER - The HTTP User (not implemented).</li>
+ * 		<li>{SourceName}_PW - The HTTP User PW (not implemented).</li>
  * </ul>
  * @author Mike Storey
  *
@@ -58,8 +58,8 @@ public class RestProvider implements ProviderInterface {
 	private static final ProviderMeta meta = new ProviderMeta(
 			"N/A",
 			"The following environment variables are expected\n"
-			+ "{SourceName}.HOST - The Host\n"
-			+ "{SourceName}.PORT - The Port\n",
+			+ "{SourceName}_HOST - The Host\n"
+			+ "{SourceName}_PORT - The Port\n",
 			"The URL to make a http get request to",
 			"Will parse the entire response",
 			"Returns a Primitive if not parsed, or the Element from the parsing");
@@ -81,10 +81,10 @@ public class RestProvider implements ProviderInterface {
 	
 	private void connect(Config config) throws Merge500 {
 		try {
-			host = config.getEnv(source + ".HOST");
-			port = config.getEnv(source + ".PORT");
-			username = config.getEnv(source + ".USER");
-			password = config.getEnv(source + ".PW");
+			host = config.getEnv(source + "_HOST");
+			port = config.getEnv(source + "_PORT");
+//			username = config.getEnv(source + "_USER");
+//			password = config.getEnv(source + "_PW");
 		} catch (MergeException e) {
 			throw new Merge500("Rest Provider did not find environment variables:" + source + ":" + host + ":" + port + ":" + username + ":" + password);
 		}

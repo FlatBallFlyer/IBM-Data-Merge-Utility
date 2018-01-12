@@ -1,7 +1,7 @@
 {
   "envVars" : {
-    "mySqlTest.URI" : "jdbc:mysql://localhost:3306",
-    "mySqlTest.USER" : "root",
-    "mySqlTest.PW" : "drowssap"
+    "mySqlTest_URI" : "jdbc:mysql://localhost:3306",
+    "mySqlTest_USER" : "root",
+    "mySqlTest_PW" : "drowssap"
   }
 }

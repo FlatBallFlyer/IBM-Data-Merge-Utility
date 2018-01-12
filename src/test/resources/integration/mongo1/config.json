@@ -1,9 +1,9 @@
 {
   "envVars" : {
-    "mongoTest.HOST" : "localhost",
-    "mongoTest.PORT" : "27017",
-    "mongoTest.USER" : "",
-    "mongoTest.PW"   : "pass",
-    "mongoTest.DB"   : "test"
+    "mongoTest_HOST" : "localhost",
+    "mongoTest_PORT" : "27017",
+    "mongoTest_USER" : "",
+    "mongoTest_PW"   : "pass",
+    "mongoTest_DB"   : "test"
   }
 }

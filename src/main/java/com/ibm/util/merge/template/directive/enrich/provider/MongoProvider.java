@@ -50,10 +50,10 @@ import com.mongodb.client.MongoDatabase;
  * </ul>
  * <p>Configuration Environment Variables</p>
  * <ul>
- * 		<li>{SourceName}.URI - The database connection URL</li> 
- * 		<li>{SourceName}.USER - The database User ID, if empty Mongo Anonymous Auth is used, otherwise ScramSha1 authentication is used.</li>
- * 		<li>{SourceName}.PW - The database Password</li>
- * 		<li>{SourceName}.DB - The database name</li>
+ * 		<li>{SourceName}_URI - The database connection URL</li> 
+ * 		<li>{SourceName}_USER - The database User ID, if empty Mongo Anonymous Auth is used, otherwise ScramSha1 authentication is used.</li>
+ * 		<li>{SourceName}_PW - The database Password</li>
+ * 		<li>{SourceName}_DB - The database name</li>
  * </ul>
  * @author Mike Storey
  *
@@ -62,10 +62,10 @@ public class MongoProvider implements ProviderInterface {
 	private static final ProviderMeta meta = new ProviderMeta(
 			"Collection",
 			"The following environment variables are expected\n"
-			+ "{SourceName}.URI - The database connection URL\n"
-			+ "{SourceName}.USER - The database User ID, if empty Mongo Anonymous Auth is used, otherwise ScramSha1 authentication is used.\n"
-			+ "{SourceName}.PW - The database Password\n"
-			+ "{SourceName}.DB - The database name", 
+			+ "{SourceName}_URI - The database connection URL\n"
+			+ "{SourceName}_USER - The database User ID, if empty Mongo Anonymous Auth is used, otherwise ScramSha1 authentication is used.\n"
+			+ "{SourceName}_PW - The database Password\n"
+			+ "{SourceName}_DB - The database name", 
 			"Json Mongo Query Object",
 			"N/A",
 			"List of Document Objects");
@@ -101,11 +101,11 @@ public class MongoProvider implements ProviderInterface {
 		String pw = "";
 		String dbName = "";
 		try {
-			host = config.getEnv(source + ".HOST");
-			port = config.getEnv(source + ".PORT");
-			user = config.getEnv(source + ".USER");
-			pw = config.getEnv(source + ".PW");
-			dbName = config.getEnv(source + ".DB");
+			host = config.getEnv(source + "_HOST");
+			port = config.getEnv(source + "_PORT");
+			user = config.getEnv(source + "_USER");
+			pw = config.getEnv(source + "_PW");
+			dbName = config.getEnv(source + "_DB");
 		} catch (MergeException e) {
 			throw new Merge500("Invalid Mongo Provider for:" + source);
 		}

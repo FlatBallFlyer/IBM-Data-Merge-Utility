@@ -37,9 +37,9 @@ import java.sql.SQLException;
  * </ul>
  * <p>Configuration Environment Variables</p>
  * <ul>
- *		<li>{source}.URI - Database Connection URI, without UserName/PW components</li>
- *		<li>{source}.USER - The Database User ID to use</li>
- *		<li>{source}.PW - The Password for the User ID</li>
+ *		<li>{source}_URI - Database Connection URI, without UserName/PW components</li>
+ *		<li>{source}_USER - The Database User ID to use</li>
+ *		<li>{source}_PW - The Password for the User ID</li>
  * </ul>
  * @author Mike Storey
  *
@@ -48,9 +48,9 @@ public class JdbcProvider extends SqlProvider implements ProviderInterface {
 	private static final ProviderMeta meta = new ProviderMeta(
 			"Database",
 			"The following environment variables are expected\n"
-			+ "{source}.URI - Database Connection URI, without UserName/PW components\n"
-			+ "{source}.USER - The Database User ID to use\n"
-			+ "{source}.PW - The Password for the User ID", 
+			+ "{source}_URI - Database Connection URI, without UserName/PW components\n"
+			+ "{source}_USER - The Database User ID to use\n"
+			+ "{source}_PW - The Password for the User ID", 
 			"A SQL Select Statement - Replace Tags are supported and SQL encoded",
 			"N/A",
 			"Always returns a List of Object");
@@ -74,9 +74,9 @@ public class JdbcProvider extends SqlProvider implements ProviderInterface {
 		String user = "";
 		String pw = "";
 		try {
-			uri = config.getEnv(source + ".URI");
-			user = config.getEnv(source + ".USER");
-			pw = config.getEnv(source + ".PW");
+			uri = config.getEnv(source + "_URI");
+			user = config.getEnv(source + "_USER");
+			pw = config.getEnv(source + "_PW");
 		} catch (MergeException e) {
 			throw new Merge500("JDBC Provider did not find environment variables:" + source + ":" + uri + ":" + user + ":" + pw);
 		}

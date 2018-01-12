@@ -46,9 +46,9 @@ import com.ibm.util.merge.template.directive.Enrich;
  * </ul>
  * <p>Configuration Environment Variables</p>
  * <ul>
- * 		<li>{SourceName}.URL - The database connection URL</li> 
- * 		<li>{SourceName}.USER - The database User ID</li>
- * 		<li>{SourceName}.PW - The database Password</li>
+ * 		<li>{SourceName}_URL - The database connection URL</li> 
+ * 		<li>{SourceName}_USER - The database User ID</li>
+ * 		<li>{SourceName}_PW - The database Password</li>
  * </ul>
  *   
  * @author Mike Storey
@@ -57,9 +57,9 @@ public class CloudantProvider implements ProviderInterface {
 	private static final ProviderMeta meta = new ProviderMeta(
 			"Database",
 			"The following environment variables are expected: /n"
-			+ "{SourceName}.URL - The database connection URL/n"
-			+ "{SourceName}.USER - The database User ID/n"
-			+ "{SourceName}.PW - The database Password", 
+			+ "{SourceName}_URL - The database connection URL/n"
+			+ "{SourceName}_USER - The database User ID/n"
+			+ "{SourceName}_PW - The database Password", 
 			"A cloudant Query JSON string - Replace Tags are supported and jSon encoded",
 			"N/A",
 			"This provider always returns a List of Objects");
@@ -89,9 +89,9 @@ public class CloudantProvider implements ProviderInterface {
 		String pw = "";
 		String url = "";
 		try {
-			url = config.getEnv(source + ".URL");
-			user = config.getEnv(source + ".USER");
-			pw = config.getEnv(source + ".PW");
+			url = config.getEnv(source + "_URL");
+			user = config.getEnv(source + "_USER");
+			pw = config.getEnv(source + "_PW");
 		} catch (MergeException e) {
 			throw new Merge500("Malformed or Missing Cloudant Source Credentials found for:" + source + ":" + url + ":" + user + ":" + pw);
 		}
