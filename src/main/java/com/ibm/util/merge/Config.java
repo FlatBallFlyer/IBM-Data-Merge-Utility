@@ -80,7 +80,7 @@ import com.ibm.util.merge.template.directive.enrich.provider.Providers;
  * @since: v4.0.0.B1
  */
 public class Config {
-	private final String version = "4.0.0.B1";
+	private final String version = "4.0.0.B3";
 	private int nestLimit 		= 2;
 	private int insertLimit		= 20;
 	private String tempFolder	= "/opt/ibm/idmu/v4/archives";
@@ -109,7 +109,7 @@ public class Config {
 	 */
 	private transient Providers providers = new Providers();
 	private transient Parsers proxies = new Parsers();
-	private transient static final DataProxyJson proxy = new DataProxyJson(false);
+	private transient static DataProxyJson proxy;
 	
 	/**
 	 * Provide a default configuration. If the enviornment variable
@@ -191,6 +191,7 @@ public class Config {
 	 * @throws MergeException on Processing Errors
 	 */
 	private void loadConfig(String configString) throws MergeException {
+	    proxy = new DataProxyJson(false);
 		if (null != configString) {
 			JsonElement ele = proxy.fromString(configString, JsonElement.class);
 			if (null != ele && ele.isJsonObject()) {
@@ -231,6 +232,7 @@ public class Config {
 		
 	    Logger rootLogger = LogManager.getLogManager().getLogger("");
 	    rootLogger.setLevel(Level.parse(this.logLevel));
+	    proxy = new DataProxyJson(this.isPrettyJson());
 	}
 	
 	private int getIf(JsonObject me, String name, int value) {
