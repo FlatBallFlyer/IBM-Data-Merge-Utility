@@ -69,7 +69,7 @@ public class Template {
 	private int contentEncoding			= TagSegment.ENCODE_NONE;
 	private String contentType			= ""; 
 	private String description			= "";
-	private String contentDisposition	= "";
+	private String contentDisposition	= "inline";
 	private String contentRedirectUrl	= "";
 	private int mergeReturn				= RETURN_CONTENT;
 	private List<AbstractDirective> directives = new ArrayList<AbstractDirective>(); 
