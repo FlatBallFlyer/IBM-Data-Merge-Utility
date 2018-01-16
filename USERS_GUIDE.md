@@ -2,15 +2,15 @@
 
 ## Contents
 - [Overview](#overview)
-- [Setting up a Template Development environment](#setting-up-a-template-development-environment)
-   - [Using IDMU-REST](#using-idmu-rest)
-   - [JSON Editors](#json-editors) - until idmu-rest gets a UI
 - [Template Developers Guide](#template-developers-guide)
    - [Developing Templates](#developing-templates)
    - [The Data Manager](#the-data-manager)
    - [Merge Processing](#merge-processing)
    - [Templates Reference](#templates)
    - [Directive Reference](#directives)
+- [Setting up a Template Development environment](#setting-up-a-template-development-environment)
+   - [Using IDMU-REST](#using-idmu-rest)
+   - [JSON Editors](#json-editors) - until idmu-rest gets a UI
 - [IDMU Developers Guide](#idmu-developers-guide)
    - [Extending Parsing Capabilities](#extending-parsing-capabilities)
    - [Extending Provider Capabilities](#extending-provider-capabilities)
@@ -31,22 +31,11 @@ A surprisingly large segment of Information Processing can be thought of as cons
 - Enriching a JSON request with additional data from a Rest data source 
 - Generating a XML or HTML document with data from a database
 - Generating Configurations, Script or Code based on options specified as parameters.  
-
 ---
-## Setting up a Template Development environment
-### Using IDMU-REST 
-The fastest way to get started working with templates is to use the Docker IDMU image.
-
-You'll need [Docker](https://docs.docker.com/engine/installation/)
- 
-Then you can run this command to start and IDMU instance
-```
-docker run -d -p 9080:9080 -p 9443:9443 --name idmu flatballflyer/idmu:4.0.0.Beta1
-```
-See [The IDMU-REST Wiki](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-REST/wiki/Curl-Command-cheat-sheet) for a curl cheat sheet
-
-### JSON Editors
-Until the IDMU-REST project has a Web-UI you'll need a good JSON editor. I'm still looking for a good Windows JSON editor. For users on Mac I can recommend [Power Json Editor](https://itunes.apple.com/us/app/power-json-editor/id499768540?mt=12)
+### Merge Processing
+This diagram shows an overview of Merge Processing
+![Processing Overview](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Processing Overview")
+When a template is merged, each directive is executed in order. Simple Transformation templates usually have a [Parse](#parse) directive to parse the idmuPayload value and then [Replace](#replace) and/or [Insert](#insert) directives to put that data into a template. Sub-templates are merge processed when they are inserted at a bookmark. Templates that need additional data from an outside data source such as a Database, File or Rest Service can use the Enrich directive to get that data. Use cases that need to generate a collection of files instead of a single output message can use the Save directive to create an archive with multiple files in it.  
 
 ---
 ## Template Developers Guide
@@ -82,16 +71,11 @@ This object store will be used to store data that is fetched from an external da
  }
 	.
 ```
-the Data Manager address "mydata-friends-[0]-name" would refer to "allen". Since you can't always predict what special characters might be used you your data names, whenever you provide a data address you specify the delimiter used as a path separator. The above address uses a dash "-" as the path separator.
+the Data Manager address "mydata-friends-[0]-name" would refer to "allen". Since you can't always predict what special characters might be used you your data names, whenever you provide a data address you specify the delimiter used as a path separator. The above address uses a dash "-" as the path separator. In addition to the two special addresses mentioned above (***idmuParameters*** and ***idmuPayload***) the address ***idmuContext*** has special meaning during [insert](#insert) operations. 
 
 #### Using Replace Tags in an Address
 Data Manager addresses can contain replace tags. Replace tags will be processed during execution using the current Template Replace stack. See the [Replace Directive](#replace) for details on Tags and the Replace Stack
 
----
-### Merge Processing
-This diagram shows an overview of Merge Processing
-![Processing Overview](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Processing Overview")
-When a template is merged, each directive is executed in order. Simple Transformation templates usually have a [Parse](#parse) directive to parse the idmuPayload value and then [Replace](#replace) and/or [Insert](#insert) directives to put that data into a template. Sub-templates are merge processed when they are inserted at a bookmark. Templates that need additional data from an outside data source such as a Database, File or Rest Service can use the Enrich directive to get that data. Use cases that need to generate a collection of files instead of a single output message can use the Save directive to create an archive with multiple files in it.  
 ---
 ### Templates
 The Template is the primary configuration item used by IDMU and describes both the structure of the data to be returned by a merge and the directives that drive the merge process. 
@@ -428,7 +412,21 @@ The generated archive will have a GUID name, you can override this name by provi
 
 ##### Working with Archives
 If you are using the IDMU-REST interface, the GET http://host/idmu/Archive/archiveName will retrieve the archive from the server and remove it from the temporary folder. If you are running the CLI you can find the archives in the output folder which defaults to /opt/ibm/idmu/v4/archives. You can overide this value in the idmu-config environment variable.
+---
+## Setting up a Template Development environment
+### Using IDMU-REST 
+The fastest way to get started working with templates is to use the Docker IDMU image.
 
+You'll need [Docker](https://docs.docker.com/engine/installation/)
+ 
+Then you can run this command to start and IDMU instance
+```
+docker run -d -p 9080:9080 -p 9443:9443 --name idmu flatballflyer/idmu:4.0.0.Beta1
+```
+See [The IDMU-REST Wiki](https://github.com/FlatBallFlyer/IBM-Data-Merge-Utility-REST/wiki/Curl-Command-cheat-sheet) for a curl cheat sheet
+
+### JSON Editors
+Until the IDMU-REST project has a Web-UI you'll need a good JSON editor. I'm still looking for a good Windows JSON editor. For users on Mac I can recommend [Power Json Editor](https://itunes.apple.com/us/app/power-json-editor/id499768540?mt=12)
 
 ---
 ## IDMU Developers Guide
