@@ -548,6 +548,7 @@ public class Template {
 	 */
 	public static final HashMap<String,HashMap<Integer, String>> getOptions() {
 		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
+		options.put("MergeReturn", RETURN_TYPES());
 		return options;
 	}
 
