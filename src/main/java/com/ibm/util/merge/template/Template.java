@@ -197,6 +197,7 @@ public class Template {
 		mergable.setContentDisposition(contentDisposition);
 		mergable.setContentEncoding(contentEncoding);
 		mergable.setContentType(contentType);
+		mergable.setMergeReturn(mergeReturn);
 		mergable.setDescription(description);
 		mergable.setContentRedirectUrl(contentRedirectUrl);
 		mergable.setContent(this.content);
