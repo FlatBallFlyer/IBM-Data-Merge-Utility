@@ -31,16 +31,12 @@ A surprisingly large segment of Information Processing can be thought of as cons
 - Enriching a JSON request with additional data from a Rest data source 
 - Generating a XML or HTML document with data from a database
 - Generating Configurations, Script or Code based on options specified as parameters.  
+
 ---
 ### Merge Processing
 This diagram shows an overview of Merge Processing
 ![Processing Overview](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Processing Overview")
 When a template is merged, each directive is executed in order. Simple Transformation templates usually have a [Parse](#parse) directive to parse the idmuPayload value and then [Replace](#replace) and/or [Insert](#insert) directives to put that data into a template. Sub-templates are merge processed when they are inserted at a bookmark. Templates that need additional data from an outside data source such as a Database, File or Rest Service can use the Enrich directive to get that data. Use cases that need to generate a collection of files instead of a single output message can use the Save directive to create an archive with multiple files in it.  
-
----
-## Template Developers Guide
-### Developing Templates
-Developing Templates is the main skill needed to use IDMU. The best starting place is to have a sample input / output that your templates should create. Start with a template that is just the expected output and work out from there. When developing templates, start without any bookmarks or sub-templates and then add complexity in steps. Use of the Replace with Json options can be helpful if the data is not what you are expecting. 
 
 ---
 ### The Data Manager
@@ -75,6 +71,11 @@ the Data Manager address "mydata-friends-[0]-name" would refer to "allen". Since
 
 #### Using Replace Tags in an Address
 Data Manager addresses can contain replace tags. Replace tags will be processed during execution using the current Template Replace stack. See the [Replace Directive](#replace) for details on Tags and the Replace Stack
+
+---
+## Template Developers Guide
+### Developing Templates
+Developing Templates is the main skill needed to use IDMU. The best starting place is to have a sample input / output that your templates should create. Start with a template that is just the expected output and work out from there. When developing templates, start without any bookmarks or sub-templates and then add complexity in steps. Use of the Replace with Json options can be helpful if the data is not what you are expecting. 
 
 ---
 ### Templates
