@@ -68,9 +68,10 @@ public class Template {
 	private Wrapper wrapper				= new Wrapper();
 	private int contentEncoding			= TagSegment.ENCODE_NONE;
 	private String contentType			= ""; 
+	private String description			= "";
 	private String contentDisposition	= "";
 	private String contentRedirectUrl	= "";
-	private String description			= "";
+	private int mergeReturn				= RETURN_CONTENT;
 	private List<AbstractDirective> directives = new ArrayList<AbstractDirective>(); 
 	
 	/*
@@ -397,6 +398,10 @@ public class Template {
 		this.context = context;
 	}
 
+	public void setMergeReturn(int mergeReturn) {
+		this.mergeReturn = mergeReturn;
+	}
+
 	/**
 	 * Update cached template stats - NOTE: Not Synchronized, subject to inaccuracy 
 	 * @param response The response time for a merge action
@@ -417,6 +422,13 @@ public class Template {
 	 */
 	public Content getMergeContent() {
 		return this.mergeContent;
+	}
+
+	/**
+	 * @return the Merge Return instruction
+	 */
+	public int getMergeReturn() {
+		return mergeReturn;
 	}
 
 	/**
@@ -538,6 +550,18 @@ public class Template {
 		HashMap<String,HashMap<Integer, String>> options = new HashMap<String,HashMap<Integer, String>>();
 		return options;
 	}
+
+	public static final int RETURN_CONTENT	= 1;
+	public static final int RETURN_ARCHIVE	= 2;
+	public static final int RETURN_FORWARD 	= 3;
+	public static final HashMap<Integer, String> RETURN_TYPES() {
+		HashMap<Integer, String> values = new HashMap<Integer, String>();
+		values.put(RETURN_CONTENT, 			"content");
+		values.put(RETURN_ARCHIVE, 			"archive");
+		values.put(RETURN_FORWARD, 			"forward");
+		return values;
+	}
+	
 
 	public static final int STATE_RAW 		= 0;
 	public static final int STATE_CACHED 	= 1;

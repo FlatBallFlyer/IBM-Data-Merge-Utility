@@ -206,6 +206,16 @@ public class TemplateTest {
 	}
 
 	@Test
+	public void testSetGetReturn() throws MergeException {
+		template.setMergeReturn(Template.RETURN_ARCHIVE);
+		assertEquals(Template.RETURN_ARCHIVE, template.getMergeReturn());
+		template.setMergeReturn(Template.RETURN_CONTENT);
+		assertEquals(Template.RETURN_CONTENT, template.getMergeReturn());
+		template.setMergeReturn(Template.RETURN_FORWARD);
+		assertEquals(Template.RETURN_FORWARD, template.getMergeReturn());
+	}
+
+	@Test
 	public void testEncodedContent1() throws Throwable {
 		Cache cache = new Cache();
 		Template template = new Template("test", "encode", "", "A test {foo} tag");
