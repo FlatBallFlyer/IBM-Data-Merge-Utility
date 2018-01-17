@@ -17,6 +17,19 @@ A surprisingly large segment of Information Processing can be thought of as cons
 - Generating a XML or HTML document with data from a database
 - Generating Configurations, Script or Code based on options specified as parameters.  
 
+## Processing Overview
+Merge Directives are specified as part of the template. Each Directive is executed in order and the resulting template content is then returned as the output of the Merge. The following directives are used to drive merge processing, and any number of directives can be used.   
+1. Enrich - Get some data from an external source and put it in the DataManager
+1. Replace - Take some data from the data manager and Replace **Tags** with data values
+1. Insert - Insert sub-templates at **Bookmarks** based on some data in the Data Manager. Sub-Templates are full-fledged templates and can contain their own directives.
+1. Parse - Get some marked-up data from the DataManager, parse it and place the resulting data structure back in the Data Manager
+1. Save - Save the output of the current template to an entry in the Merge Archive. (for archive creation - tar, zip, jar, gzip...)
+
+![alt text](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Logo Title Text 1")
+When a template is merged, each directive is executed in order. Simple Transformation templates usually have a **Parse** directive to parse the idmuPayload value and then **Replace** and/or **Insert** directives to put that data into a template. Sub-templates are merge processed when they are inserted at a bookmark. Templates that need additional data from an outside data source such as a Database, File or Rest Service can use the **Enrich** directive to get that data. Use cases that need to generate a collection of files instead of a single output message can use the **Save** directive to create an archive with multiple files in it.  
+---
+
+## Template Content
 From an IDMU perspective, template content is just a block of text, it could be JSON, XML, HTML, a Bash Script, a Java Class, a NodeJs program, a CSV file.... anything you want to generate. The text in a template can have **Replacement Tags** and **Bookmarks** that identify where in the template data is to be placed, or sub-templates are to be inserted. A template also has other attributes, including a list of **Directives** that are the instructions which drive the merge process. Here is a sample of some JSON Template content:
 ```
 {
@@ -27,6 +40,7 @@ From an IDMU perspective, template content is just a block of text, it could be 
 ```  
 In this template we are using &lt; and &gt; to wrap the **tags** and **bookmarks**. The tags &lt;NAME&gt; and &lt;ADDRESS&gt; will be replaced with data during the merge process (by a **Replace** directive). Sub-Templates for each "friend" will be inserted at the **friend bookmark** by an **Insert** directive. 
 
+## The Data Manager
 IDMU has an internal Object Data store called the Data Manager. This object store will be used to store request data and parameters as well as data that is fetched from an external data source (by an **Enrich** directive). This data is transient, and is released from memory after the merge is completed. Most directives will either read data from the data store and take some action, or write data to the data store for use by other directives. Data in the Data Manager is accessed via a "path" style address. For example, given this data structure:
 ```
 { 
@@ -48,18 +62,6 @@ IDMU has an internal Object Data store called the Data Manager. This object stor
 ```
 the Data Manager address "mydata-friends-[0]-name" would refer to "allen". 
 
-Merge Directives are specified as part of the template. Each Directive is executed in order and the resulting template content is then returned as the output of the Merge. The following directives are used to drive merge processing, and any number of directives can be used.   
-1. Enrich - Get some data from an external source and put it in the DataManager
-1. Replace - Take some data from the data manager and Replace **Tags** with data values
-1. Insert - Insert sub-templates at **Bookmarks** based on some data in the Data Manager. Sub-Templates are full-fledged templates and can contain their own directives.
-1. Parse - Get some marked-up data from the DataManager, parse it and place the resulting data structure back in the Data Manager
-1. Save - Save the output of the current template to an entry in the Merge Archive. (for archive creation - tar, zip, jar, gzip...)
-
----
-
-## Processing Overview
-![alt text](http://flatballflyer.github.io/IBM-Data-Merge-Utility/WebContent/images/overview.png "Logo Title Text 1")
-When a template is merged, each directive is executed in order. Simple Transformation templates usually have a **Parse** directive to parse the idmuPayload value and then **Replace** and/or **Insert** directives to put that data into a template. Sub-templates are merge processed when they are inserted at a bookmark. Templates that need additional data from an outside data source such as a Database, File or Rest Service can use the **Enrich** directive to get that data. Use cases that need to generate a collection of files instead of a single output message can use the **Save** directive to create an archive with multiple files in it.  
 ---
 
 ## Example Templates and Merges
