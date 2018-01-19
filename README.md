@@ -60,7 +60,15 @@ IDMU has an internal Object Data store called the Data Manager. This object stor
  }
 	.
 ```
-the Data Manager address "mydata-friends-[0]-name" would refer to "allen". 
+the Data Manager address "mydata-friends-[0]-name" would refer to "allen". The following special addresses are used by IDMU.
+- idmuParameters - Request Parameters
+- idmuPayload - Request Payload
+- idmuContext - Insert Context
+- idmuArchive - Archive Descriptor
+- idmuArchiveType - Archive Type
+- idmuArchiveName - Archive Filename
+- idmuArchiveFiles - List of Files in Archive
+- idmuArchiveOutput - Path to Archive Filename 
 
 ---
 
